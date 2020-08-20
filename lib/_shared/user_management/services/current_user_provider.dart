@@ -1,0 +1,18 @@
+import 'package:wallpost/_shared/user_management/entities/user.dart';
+import 'package:wallpost/_shared/user_management/repositories/user_repository.dart';
+
+class CurrentUserProvider {
+  UserRepository _userRepository;
+
+  CurrentUserProvider() {
+    _userRepository = UserRepository();
+  }
+
+  CurrentUserProvider.initWith(UserRepository userRepository) {
+    _userRepository = userRepository;
+  }
+
+  Future<User> getCurrentUser() {
+    return _userRepository.getCurrentUser();
+  }
+}

@@ -1,0 +1,60 @@
+import 'package:flutter/foundation.dart';
+import 'package:wallpost/_shared/constants/device_info.dart';
+import 'package:wallpost/_shared/constants/wp_account_number.dart';
+import 'package:wallpost/_shared/user_management/entities/user.dart';
+import 'package:wallpost/_shared/user_management/services/new_user_adder.dart';
+import 'package:wallpost/_shared/wpapi/wp_api.dart';
+import 'package:wallpost/authentication/constants/login_urls.dart';
+import 'package:wallpost/authentication/entities/credentials.dart';
+
+class Authenticator {
+  final DeviceInfoProvider _deviceInfo;
+  final NewUserAdder _newUserAdder;
+  final NetworkAdapter _networkAdapter;
+  bool isLoading = false;
+
+  Authenticator.initWith(
+    this._deviceInfo,
+    this._newUserAdder,
+    this._networkAdapter,
+  );
+
+  Authenticator()
+      : _deviceInfo = DeviceInfoProvider(),
+        _newUserAdder = NewUserAdder(),
+        _networkAdapter = WPAPI();
+
+  Future<User> login(Credentials credentials) async {
+    var url = LoginUrls.authUrl();
+    var apiRequest = APIRequest(url);
+    apiRequest.addParameters(credentials.toJson());
+    apiRequest.addParameters({
+      'accountno': WPAccountNumber.accountNumber,
+      'apptype': 'MOBILE',
+      'deviceuid': await _deviceInfo.getDeviceId(),
+      'environment': kReleaseMode ? 'Production' : 'Development',
+      'deviceos': await _deviceInfo.getDeviceOS(),
+      'devicemodel': await _deviceInfo.getDeviceModel(),
+      'appversion': await _deviceInfo.getAppVersion(),
+    });
+    isLoading = true;
+
+    var apiResponse = await _networkAdapter.post(apiRequest);
+    isLoading = false;
+    return _processResponse(apiResponse);
+  }
+
+  Future<User> _processResponse(APIResponse apiResponse) async {
+    if (apiResponse.data == null) throw InvalidResponseException();
+    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
+
+    var responseMap = apiResponse.data as Map<String, dynamic>;
+    try {
+      var user = User.fromJson(responseMap);
+      _newUserAdder.addUser(user);
+      return user;
+    } catch (e) {
+      throw InvalidResponseException();
+    }
+  }
+}

@@ -1,0 +1,20 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:wallpost/_shared/user_management/repositories/user_repository.dart';
+import 'package:wallpost/_shared/user_management/services/user_remover.dart';
+
+import '../../../_mocks/mock_user.dart';
+
+class MockUserRepository extends Mock implements UserRepository {}
+
+void main() {
+  var mockUser = MockUser();
+  var mockUserRepository = MockUserRepository();
+  var userRemover = UserRemover.initWith(mockUserRepository);
+
+  test('removing current user', () async {
+    userRemover.removeUser(mockUser);
+
+    expect(verify(mockUserRepository.removeUser(captureAny)).captured.single, mockUser);
+  });
+}
