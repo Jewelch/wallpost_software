@@ -13,10 +13,10 @@ void main() {
   var mockCurrentUserProvider = CurrentUserProvider.initWith(mockUserRepository);
 
   test('returns the current user from the user repository', () async {
-    when(mockUserRepository.getCurrentUser()).thenAnswer((_) => Future.value(mockUser));
+    when(mockUserRepository.getCurrentUser()).thenReturn(mockUser);
     when(mockUser.username).thenReturn('someUserName');
 
-    var currentUser = await mockCurrentUserProvider.getCurrentUser();
+    var currentUser = mockCurrentUserProvider.getCurrentUser();
 
     expect(currentUser.username, 'someUserName');
     verify(mockUserRepository.getCurrentUser()).called(1);

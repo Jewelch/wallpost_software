@@ -25,7 +25,7 @@ void main() {
 
   setUp(() {
     reset(mockUserRepository);
-    when(mockUserRepository.getCurrentUser()).thenAnswer((_) => Future.value(user));
+    when(mockUserRepository.getCurrentUser()).thenReturn(user);
   });
 
   test('api request is built correctly', () async {

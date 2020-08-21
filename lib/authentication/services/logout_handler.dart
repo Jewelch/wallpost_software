@@ -6,7 +6,7 @@ import 'package:wallpost/_shared/user_management/services/user_remover.dart';
 
 class LogoutHandler {
   static void logout(BuildContext context) async {
-    var user = await CurrentUserProvider().getCurrentUser();
+    var user = CurrentUserProvider().getCurrentUser();
     var userRemover = UserRemover();
     userRemover.removeUser(user);
 

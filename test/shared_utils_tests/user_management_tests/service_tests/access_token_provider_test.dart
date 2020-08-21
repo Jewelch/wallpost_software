@@ -33,7 +33,7 @@ void main() {
   });
 
   test('null is returned when user is not found locally', () async {
-    when(mockUserRepository.getCurrentUser()).thenAnswer((_) => Future.value(null));
+    when(mockUserRepository.getCurrentUser()).thenReturn(null);
 
     var accessToken = await accessTokenProvider.getToken();
 
@@ -43,7 +43,7 @@ void main() {
 
   test('local user session is active', () async {
     var user = User.fromJson(Mocks.loginResponse);
-    when(mockUserRepository.getCurrentUser()).thenAnswer((_) => Future.value(user));
+    when(mockUserRepository.getCurrentUser()).thenReturn(user);
 
     var accessToken = await accessTokenProvider.getToken();
 
@@ -54,7 +54,7 @@ void main() {
   group('refresh session', () {
     test('request is built correctly', () async {
       var user = User.fromJson(Mocks.userMapWithInactiveSession);
-      when(mockUserRepository.getCurrentUser()).thenAnswer((_) => Future.value(user));
+      when(mockUserRepository.getCurrentUser()).thenReturn(user);
       mockNetworkAdapter.fail(HTTPException(400));
 
       var accessToken = await accessTokenProvider.getToken();
@@ -68,7 +68,7 @@ void main() {
 
     test('returns null if refresh token API fails', () async {
       var user = User.fromJson(Mocks.userMapWithInactiveSession);
-      when(mockUserRepository.getCurrentUser()).thenAnswer((_) => Future.value(user));
+      when(mockUserRepository.getCurrentUser()).thenReturn(user);
       mockNetworkAdapter.fail(HTTPException(400));
 
       var accessToken = await accessTokenProvider.getToken();
@@ -79,7 +79,7 @@ void main() {
 
     test('returns null if refresh token API data is null', () async {
       var user = User.fromJson(Mocks.userMapWithInactiveSession);
-      when(mockUserRepository.getCurrentUser()).thenAnswer((_) => Future.value(user));
+      when(mockUserRepository.getCurrentUser()).thenReturn(user);
       mockNetworkAdapter.succeed(null);
 
       var accessToken = await accessTokenProvider.getToken();
@@ -90,7 +90,7 @@ void main() {
 
     test('returns null if refresh token API data is of the wrong format', () async {
       var user = User.fromJson(Mocks.userMapWithInactiveSession);
-      when(mockUserRepository.getCurrentUser()).thenAnswer((_) => Future.value(user));
+      when(mockUserRepository.getCurrentUser()).thenReturn(user);
       mockNetworkAdapter.succeed('wrong format');
 
       var accessToken = await accessTokenProvider.getToken();
@@ -101,7 +101,7 @@ void main() {
 
     test('returns null if authToken mapping fails', () async {
       var user = User.fromJson(Mocks.userMapWithInactiveSession);
-      when(mockUserRepository.getCurrentUser()).thenAnswer((_) => Future.value(user));
+      when(mockUserRepository.getCurrentUser()).thenReturn(user);
       mockNetworkAdapter.succeed(<String, dynamic>{});
 
       var accessToken = await accessTokenProvider.getToken();
@@ -112,7 +112,7 @@ void main() {
 
     test('successfully getting a new auth token from the API', () async {
       var user = User.fromJson(Mocks.userMapWithInactiveSession);
-      when(mockUserRepository.getCurrentUser()).thenAnswer((_) => Future.value(user));
+      when(mockUserRepository.getCurrentUser()).thenReturn(user);
       mockNetworkAdapter.succeed(Mocks.refreshSessionResponse);
 
       var accessToken = await accessTokenProvider.getToken();

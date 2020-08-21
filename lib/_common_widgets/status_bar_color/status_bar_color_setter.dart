@@ -4,9 +4,9 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 
 class StatusBarColorSetter {
-  static void setColorBasedOnLoginStatus() async {
+  static void setColorBasedOnLoginStatus() {
     try {
-      var user = await CurrentUserProvider().getCurrentUser();
+      var user = CurrentUserProvider().getCurrentUser();
       var isLoggedIn = user != null;
       var statusBarColor = isLoggedIn ? Colors.white : AppColors.defaultColor;
       var shoutSetTextColorToWhite = isLoggedIn ? false : true;
@@ -17,7 +17,7 @@ class StatusBarColorSetter {
     }
   }
 
-  static void setColorToAppColor() async {
+  static void setColorToAppColor() {
     try {
       var statusBarColor = AppColors.defaultColor;
       FlutterStatusbarcolor.setStatusBarColor(statusBarColor, animate: false);

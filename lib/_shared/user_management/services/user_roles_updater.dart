@@ -16,7 +16,7 @@ class UserRolesUpdater {
   UserRolesUpdater.initWith(this._userRepository, this._networkAdapter);
 
   Future<void> updateRoles() async {
-    var currentUser = await _userRepository.getCurrentUser();
+    var currentUser = _userRepository.getCurrentUser();
     GetUserRolesFilters filters = GetUserRolesFilters();
     filters.companyId = currentUser.companyId;
     filters.userId = currentUser.userId;
@@ -37,7 +37,7 @@ class UserRolesUpdater {
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
       var userRoles = UserRoles.fromJson(responseMap);
-      var user = await _userRepository.getCurrentUser();
+      var user = _userRepository.getCurrentUser();
       user.updateRoles(userRoles);
       _userRepository.saveNewCurrentUser(user);
       return null;

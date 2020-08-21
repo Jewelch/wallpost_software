@@ -33,16 +33,16 @@ class _MainScreenState extends State<MainScreen> {
     var _ = await Future.delayed(Duration(milliseconds: 2000));
 
     StatusBarColorSetter.setColorBasedOnLoginStatus();
-    if (await _isLoggedIn() == false) {
+    if (_isLoggedIn() == false) {
       _showLoginScreen();
     } else {
-      var currentUser = await CurrentUserProvider().getCurrentUser();
+      var currentUser = CurrentUserProvider().getCurrentUser();
       _showLandingScreenForUser(currentUser);
     }
   }
 
-  Future<bool> _isLoggedIn() async {
-    return await CurrentUserProvider().getCurrentUser() != null;
+  bool _isLoggedIn() {
+    return CurrentUserProvider().getCurrentUser() != null;
   }
 
   void _showLoginScreen() async {

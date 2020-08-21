@@ -12,7 +12,7 @@ class CurrentUserProvider {
     _userRepository = userRepository;
   }
 
-  Future<User> getCurrentUser() {
+  User getCurrentUser() {
     return _userRepository.getCurrentUser();
   }
 }

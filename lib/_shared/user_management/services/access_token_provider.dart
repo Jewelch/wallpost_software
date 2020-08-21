@@ -20,7 +20,7 @@ class AccessTokenProvider {
   AccessTokenProvider.initWith(this._userRepository, this._deviceInfoProvider, this._networkAdapter);
 
   Future<String> getToken() async {
-    var user = await _userRepository.getCurrentUser();
+    var user = _userRepository.getCurrentUser();
     if (user != null && user.session.isActive() == true) {
       return user.session.accessToken;
     } else if (user != null && user.session.isActive() == false) {

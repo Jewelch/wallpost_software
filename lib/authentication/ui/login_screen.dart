@@ -16,11 +16,25 @@ class LoginScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushNamed(context, RouteNames.forgotPassword);
                 },
-              )
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
+  int doSomething() {
+    var a = 123;
+    var b = 123;
+    var c = 123;
+    var d = 123;
+    var e = 123;
+
+    var f = a + b + c + d + e;
+
+    return f;
+  }
 }
+
+

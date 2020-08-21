@@ -17,7 +17,7 @@ class PasswordChanger {
   PasswordChanger.initWith(this._currentUserProvider, this._networkAdapter);
 
   Future<void> update(ChangePasswordForm changePasswordForm) async {
-    var user = await _currentUserProvider.getCurrentUser();
+    var user = _currentUserProvider.getCurrentUser();
     var url = PasswordManagementUrls.changePasswordUrl(user.companyId);
     var apiRequest = APIRequest(url);
     apiRequest.addParameters(changePasswordForm.toJson());

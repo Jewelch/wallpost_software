@@ -23,7 +23,7 @@ void main() {
 
   setUp(() {
     when(mockUser.companyId).thenReturn('someCompanyId');
-    when(mockUserProvider.getCurrentUser()).thenAnswer((_) => Future.value(mockUser));
+    when(mockUserProvider.getCurrentUser()).thenReturn(mockUser);
   });
 
   test('api request is built correctly', () async {
