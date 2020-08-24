@@ -35,7 +35,7 @@ class WPFileUploader {
       return null;
     }
 
-    APIRequest apiRequest = APIRequest('${BaseUrls.baseUrlV2}/fileupload/temp');
+    APIRequest apiRequest = APIRequest('${BaseUrls.baseUrlV2()}/fileupload/temp');
     apiRequest.addHeaders(await _buildWPHeaders());
     return _networkFileUploader.upload(file, apiRequest);
   }
