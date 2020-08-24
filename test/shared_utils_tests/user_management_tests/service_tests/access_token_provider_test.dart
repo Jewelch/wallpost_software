@@ -48,7 +48,7 @@ void main() {
     var accessToken = await accessTokenProvider.getToken();
 
     verify(mockUserRepository.getCurrentUser()).called(1);
-    expect(accessToken, 'active_token');
+    expect(accessToken, 'accessToken');
   });
 
   group('refresh session', () {
@@ -60,8 +60,8 @@ void main() {
       var accessToken = await accessTokenProvider.getToken();
 
       verify(mockUserRepository.getCurrentUser()).called(1);
-      expect(mockNetworkAdapter.apiRequest.parameters['username'], 'someUserName@test.com');
-      expect(mockNetworkAdapter.apiRequest.parameters['refresh_token'], 'ref_token');
+      expect(mockNetworkAdapter.apiRequest.parameters['username'], 'someUserName');
+      expect(mockNetworkAdapter.apiRequest.parameters['refresh_token'], 'refToken');
       expect(mockNetworkAdapter.apiRequest.parameters['deviceuid'], 'someDeviceId');
       expect(accessToken, null);
     });

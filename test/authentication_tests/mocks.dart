@@ -6,29 +6,14 @@ class Mocks {
     randomString(10),
     randomString(10),
   );
-  static Map<String, dynamic> successfulResponse = {
-    'user_id': 'someUserId',
-    'username': 'someUserName@test.com',
-    'company_id': 1,
-    'user_master_id': '3123324asdf',
-    'token': 'asdfa23423f',
-    'token_expiry': 1592481489,
-    'type': ['RETAILER', 'TRAVELLER'],
-    'user_master_ids': {'RETAILER': '123123erwe', 'TRAVELLER': '123wewed'},
-    'date_format': 'd-m-Y',
-    'date_separator': '-',
-    'time_zone': 'Asia/Qatar',
-    'js_date_format': 'DD-MM-YYYY',
-    'company_info': {
-      'name': 'Test Company',
-      'address': 'Test Streen',
-      'email': 'test@teset.com',
-      'phone_no': '9856985',
-      'currency': 29
-    },
-    'refresh_token': 'rasdfasdf234',
-    'isCroatiaCustomized': false,
-    'retailer': null,
-    'firstLogin': false
+  static Map<String, dynamic> loginResponse = {
+    "full_name": "Obaid Mohamed",
+    "profile_image":
+        "https:\/\/s3.amazonaws.com\/wallpostsoftware\/123123\/13\/DOC_7e25c32c-35e9-431f-b63e-3a7e7147992e.jpg",
+    "refresh_token": "refToken",
+    "token": "accessToken",
+    "token_expiry": 1598333906,
+    "user_id": "09TZ3NLA195FpWJ",
+    "username": "obaid"
   };
 }

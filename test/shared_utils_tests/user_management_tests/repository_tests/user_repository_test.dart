@@ -37,7 +37,7 @@ void main() {
       }),
     );
     when(mockSharedPrefs.getMap('currentUser')).thenAnswer(
-      (_) => Future.value({'username': 'someUserName@test.com'}),
+      (_) => Future.value({'username': 'someUserName'}),
     );
     userRepository = UserRepository.withSharedPrefs(mockSharedPrefs);
     //awaiting because the shared prefs takes get method is async and takes a few ms to load
@@ -45,7 +45,7 @@ void main() {
     //app starts and there is time before it is actually used.
     await Future.delayed(Duration(milliseconds: 200));
 
-    expect(userRepository.getCurrentUser().username, 'someUserName@test.com');
+    expect(userRepository.getCurrentUser().username, 'someUserName');
   });
 
   test('saving new current user, saves user in memory as well as locally', () async {

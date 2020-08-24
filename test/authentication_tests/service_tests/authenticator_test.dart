@@ -15,7 +15,7 @@ class MockNewUserAdder extends Mock implements NewUserAdder {}
 
 void main() {
   var credentials = Mocks.credentials;
-  Map<String, dynamic> successfulResponse = Mocks.successfulResponse;
+  Map<String, dynamic> successfulResponse = Mocks.loginResponse;
   var mockDeviceInfo = MockDeviceInfo();
   var mockNewUserAdder = MockNewUserAdder();
   var mockNetworkAdapter = MockNetworkAdapter();
