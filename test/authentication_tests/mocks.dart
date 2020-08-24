@@ -5,6 +5,7 @@ class Mocks {
   static var credentials = Credentials(
     randomString(10),
     randomString(10),
+    randomString(10),
   );
   static Map<String, dynamic> loginResponse = {
     "full_name": "Obaid Mohamed",

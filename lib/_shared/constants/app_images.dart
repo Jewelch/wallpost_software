@@ -1,29 +1,4 @@
 class AppImages {
-  static final String logo = "assets/images/logo.png";
-  static final String splashScreenLogo = "assets/images/splash-screen-logo.png";
-  static final String loginScreenBG = "assets/images/login_bg.png";
-  static final String backIcon = "assets/images/back.svg";
-  static final String userIcon = "assets/images/user.svg";
-  static final String maleIcon = "assets/images/male.svg";
-  static final String femaleIcon = "assets/images/female.svg";
-  static final String ownerClubIcon = "assets/images/owner_club_icon.svg";
-  static final String travellerClubIcon = "assets/images/traveller_club_icon.svg";
-  static final String storeIcon = "assets/images/store_icon.svg";
-  static final String emailIcon = "assets/images/email_icon.svg";
-  static final String searchIcon = "assets/images/search_icon.svg";
-  static final String lockIcon = "assets/images/lock_icon.svg";
   static final String eyeFilledIcon = "assets/images/eye_filled_icon.svg";
   static final String eyeEmptyIcon = "assets/images/eye_empty_icon.svg";
-  static final String geographyIcon = "assets/images/geography.svg";
-  static final String downArrowIcon = "assets/images/down_arrow.svg";
-  static final String filterIcon = "assets/images/filter.svg";
-  static final String qrCodeIcon = "assets/images/qr_code.svg";
-  static final String ushopIcon = "assets/images/ushop_icon.svg";
-  static final String ushopGreyIcon = "assets/images/ushop_icon_grey.svg";
-  static final String money = "assets/images/money.svg";
-  static final String userMaleIcon = "assets/images/user_male.svg";
-  static final String userFemaleIcon = "assets/images/user_female.svg";
-  static final String tollboothIcon = "assets/images/tollbooth.svg";
-  static final String tollboothGreenIcon = "assets/images/tollbooth_green.svg";
-  static final String checkmark = "assets/images/checkmark.svg";
 }

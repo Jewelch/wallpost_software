@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
-import 'package:wallpost/_shared/constants/wp_account_number.dart';
 import 'package:wallpost/_shared/user_management/services/new_user_adder.dart';
 import 'package:wallpost/authentication/constants/login_urls.dart';
 import 'package:wallpost/authentication/services/authenticator.dart';
@@ -41,7 +40,7 @@ void main() {
     var _ = await authenticator.login(credentials);
 
     expect(mockNetworkAdapter.apiRequest.url, LoginUrls.authUrl());
-    expect(mockNetworkAdapter.apiRequest.parameters['accountno'], WPAccountNumber.accountNumber);
+    expect(mockNetworkAdapter.apiRequest.parameters['accountno'], credentials.accountNumber);
     expect(mockNetworkAdapter.apiRequest.parameters['username'], credentials.username);
     expect(mockNetworkAdapter.apiRequest.parameters['password'], credentials.password);
     expect(mockNetworkAdapter.apiRequest.parameters.containsKey('apptype'), true);

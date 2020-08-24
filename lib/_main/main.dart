@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_routing/routes.dart';
-import 'package:wallpost/_shared/constants/string_constants.dart';
 import 'package:wallpost/_shared/start_up/repository_initializer.dart';
 
 void main() => runApp(WallPostApp());
@@ -19,7 +18,6 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: StringConstants.shovestClub,
       initialRoute: RouteNames.main,
       routes: Routes().buildRoutes(context),
       theme: ThemeData(fontFamily: 'PTSans'),
