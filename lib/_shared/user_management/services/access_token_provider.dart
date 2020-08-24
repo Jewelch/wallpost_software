@@ -32,7 +32,7 @@ class AccessTokenProvider {
   }
 
   Future<String> _refreshSessionForUser(User user) async {
-    var apiRequest = APIRequest('${BaseUrls.baseUrlV2}/auth/refresh');
+    var apiRequest = APIRequest('${BaseUrls.baseUrlV2()}/auth/refresh');
     var inactiveSession = user.session;
     apiRequest.addHeader('Authorization', inactiveSession.accessToken);
     apiRequest.addParameters({
