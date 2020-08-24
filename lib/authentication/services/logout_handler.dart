@@ -10,10 +10,10 @@ class LogoutHandler {
     var userRemover = UserRemover();
     userRemover.removeUser(user);
 
-    Navigator.of(context).push(_createRoute());
+    Navigator.of(context).push(_createMainScreenRoute());
   }
 
-  static Route _createRoute() {
+  static Route _createMainScreenRoute() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => MainScreen(),
       settings: RouteSettings(name: RouteNames.main),
