@@ -4,6 +4,6 @@ import 'get_user_roles_filters.dart';
 
 class UserManagementUrls {
   static String getUserRolesUrl(GetUserRolesFilters filters) {
-    return '${BaseUrls.BASE_URL_V2}/companies/${filters.companyId}/users/${filters.userId}';
+    return '${BaseUrls.baseUrlV2}/companies/${filters.companyId}/users/${filters.userId}';
   }
 }
