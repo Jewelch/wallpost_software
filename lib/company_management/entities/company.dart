@@ -31,7 +31,7 @@ class Company extends JSONInitializable {
       _actualSalesAmount = sift.readStringFromMap(jsonMap, 'actual_revenue_display');
       _budgetedSalesAmount = sift.readStringFromMap(jsonMap, 'budgeted_revenue_display');
       _achievedSalesPercent = sift.readNumberFromMap(jsonMap, 'overall_revenue');
-      _shouldShowRevenue = sift.readBooleanFromMap(jsonMap, 'show_revenue');
+      _shouldShowRevenue = sift.readNumberFromMap(jsonMap, 'show_revenue') == 0 ? false : true;
       _ytdPerformance = sift.readStringFromMap(jsonMap, 'ytd_performance');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Company response. Error message - ${e.errorMessage}');

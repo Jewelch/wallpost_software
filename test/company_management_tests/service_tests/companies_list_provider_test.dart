@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/company_management/constants/company_management_urls.dart';
-import 'package:wallpost/company_management/services/company_list_provider.dart';
+import 'package:wallpost/company_management/services/companies_list_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
@@ -8,13 +8,13 @@ import '../mocks.dart';
 void main() {
   var successfulResponse = Mocks.companiesListResponse;
   var mockNetworkAdapter = MockNetworkAdapter();
-  var companyListProvider = CompanyListProvider.initWith(mockNetworkAdapter);
+  var companyListProvider = CompaniesListProvider.initWith(mockNetworkAdapter);
 
   test('api request is built correctly', () async {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await companyListProvider.get();
+    var _ = await companyListProvider.getNext();
 
     expect(mockNetworkAdapter.apiRequest.url, CompanyManagementUrls.getCompaniesUrl('0', '15'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
@@ -24,7 +24,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await companyListProvider.get();
+      var _ = await companyListProvider.getNext();
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -35,7 +35,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await companyListProvider.get();
+      var _ = await companyListProvider.getNext();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -46,7 +46,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      var _ = await companyListProvider.get();
+      var _ = await companyListProvider.getNext();
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -57,7 +57,7 @@ void main() {
     mockNetworkAdapter.succeed([<String, dynamic>{}]);
 
     try {
-      var _ = await companyListProvider.get();
+      var _ = await companyListProvider.getNext();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -68,7 +68,7 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var company = await companyListProvider.get();
+      var company = await companyListProvider.getNext();
       expect(company, isNotNull);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
@@ -80,11 +80,11 @@ void main() {
     companyListProvider.reset();
     try {
       expect(companyListProvider.getCurrentPageNumber(), 0);
-      await companyListProvider.get();
+      await companyListProvider.getNext();
       expect(companyListProvider.getCurrentPageNumber(), 1);
-      await companyListProvider.get();
+      await companyListProvider.getNext();
       expect(companyListProvider.getCurrentPageNumber(), 2);
-      await companyListProvider.get();
+      await companyListProvider.getNext();
       expect(companyListProvider.getCurrentPageNumber(), 3);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');

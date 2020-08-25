@@ -2,7 +2,7 @@ import 'package:wallpost/_shared/wpapi/wp_api.dart';
 import 'package:wallpost/company_management/constants/company_management_urls.dart';
 import 'package:wallpost/company_management/entities/company.dart';
 
-class CompanyListProvider {
+class CompaniesListProvider {
   final NetworkAdapter _networkAdapter;
   final int _perPage = 15;
   int _pageNumber = 0;
@@ -10,7 +10,9 @@ class CompanyListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  CompanyListProvider.initWith(this._networkAdapter);
+  CompaniesListProvider.initWith(this._networkAdapter);
+
+  CompaniesListProvider() : _networkAdapter = WPAPI();
 
   void reset() {
     _pageNumber = 0;
@@ -19,7 +21,7 @@ class CompanyListProvider {
     isLoading = false;
   }
 
-  Future<List<Company>> get() async {
+  Future<List<Company>> getNext() async {
     var url = CompanyManagementUrls.getCompaniesUrl('$_pageNumber', '$_perPage');
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
@@ -30,12 +32,12 @@ class CompanyListProvider {
   }
 
   List<Company> _processResponse(APIResponse apiResponse) {
-    if (apiResponse.apiRequest.requestId != _sessionId) {
-      return []; //returning empty list if the response is from another session
-    }
+    //returning empty list if the response is from another session
+    if (apiResponse.apiRequest.requestId != _sessionId) return [];
 
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
+
+    if (apiResponse.data is! List<Map<String, Object>>) throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);

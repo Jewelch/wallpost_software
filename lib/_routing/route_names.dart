@@ -7,4 +7,7 @@ class RouteNames {
 
   //Password management
   static final String forgotPassword = "/forgot-password";
+
+  //Company listing
+  static final String companiesList = "/companies-list";
 }
