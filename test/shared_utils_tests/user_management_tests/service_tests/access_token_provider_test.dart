@@ -113,7 +113,7 @@ void main() {
     test('successfully getting a new auth token from the API', () async {
       var user = User.fromJson(Mocks.userMapWithInactiveSession);
       when(mockUserRepository.getCurrentUser()).thenReturn(user);
-      mockNetworkAdapter.succeed(Mocks.refreshSessionResponse);
+      mockNetworkAdapter.succeed({'status': 'success', 'data': Mocks.refreshSessionResponse});
 
       var accessToken = await accessTokenProvider.getToken();
 

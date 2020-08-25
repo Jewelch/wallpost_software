@@ -58,10 +58,13 @@ class AccessTokenProvider {
     var responseMap = apiResponse.data as Map<String, dynamic>;
     var sift = Sift();
     try {
-      var token = sift.readStringFromMap(responseMap, 'token');
-      var expirationTimeStamp = sift.readNumberFromMap(responseMap, 'token_expiry');
+      var dataMap = sift.readMapFromMap(responseMap, 'data');
+      var token = sift.readStringFromMap(dataMap, 'token');
+      var expirationTimeStamp = sift.readNumberFromMap(dataMap, 'token_expiry');
+
       user.updateAccessToken(token, expirationTimeStamp);
       _userRepository.updateUser(user);
+
       return user.session.accessToken;
     } catch (e) {
       return null;
