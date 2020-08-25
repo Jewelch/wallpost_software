@@ -16,7 +16,7 @@ class Mocks {
       "name": randomString(10),
       "notifications": randomBetween(1000, 5000),
       "overall_revenue": randomBetween(1000, 5000),
-      "show_revenue": true,
+      "show_revenue": 1,
       "ytd_performance": randomString(10),
     },
     {
@@ -33,7 +33,7 @@ class Mocks {
       "name": randomString(10),
       "notifications": randomBetween(1000, 5000),
       "overall_revenue": randomBetween(1000, 5000),
-      "show_revenue": true,
+      "show_revenue": 0,
       "ytd_performance": randomString(10),
     },
   ];
