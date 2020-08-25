@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:data_connection_checker/data_connection_checker.dart';
@@ -6,8 +7,9 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'entities/api_request.dart';
 import 'entities/api_response.dart';
+import 'exceptions/api_exception.dart';
 import 'exceptions/network_failure_exception.dart';
-import 'network_response_processor.dart';
+import 'exceptions/request_exception.dart';
 
 class NetworkFileUploader {
   Dio dio = new Dio();
@@ -24,37 +26,48 @@ class NetworkFileUploader {
   }
 
   Future<APIResponse> upload(File file, APIRequest apiRequest) async {
-    if (await _checkConnectionStatus()) {
-      try {
-        var filename = file.path.split('/').last;
-        var formData = FormData.fromMap({
-          "image": await MultipartFile.fromFile(file.path, filename: filename),
-        });
-        Response<String> response = await dio.request(
-          apiRequest.url,
-          data: formData,
-          options: Options(
-            method: 'POST',
-            headers: apiRequest.headers,
-          ),
-        );
-        var apiResponse = _processResponse(response, apiRequest);
-        return apiResponse;
-      } on DioError catch (error) {
-        var apiResponse = _processResponse(error.response, apiRequest);
-        return apiResponse;
-      }
-    } else {
-      throw NetworkFailureException();
+    if (await _isConnected()) throw NetworkFailureException();
+
+    try {
+      var filename = file.path.split('/').last;
+      var formData = FormData.fromMap({
+        "image": await MultipartFile.fromFile(file.path, filename: filename),
+      });
+      Response<String> response = await dio.request(
+        apiRequest.url,
+        data: formData,
+        options: Options(
+          method: 'POST',
+          headers: apiRequest.headers,
+          validateStatus: (status) => status == 200,
+        ),
+      );
+      return _processResponse(response, apiRequest);
+    } on DioError catch (error) {
+      throw _processError(error);
     }
   }
 
-  Future<bool> _checkConnectionStatus() {
+  Future<bool> _isConnected() {
     return DataConnectionChecker().hasConnection;
   }
 
   APIResponse _processResponse(Response response, APIRequest apiRequest) {
-    var responseData = NetworkResponseProcessor().processResponse(response);
-    return APIResponse(apiRequest, response.statusCode, responseData, {});
+    try {
+      var responseData = json.decode(response.data);
+      return APIResponse(apiRequest, response.statusCode, responseData, {});
+    } catch (e) {
+      throw WrongResponseFormatException();
+    }
+  }
+
+  APIException _processError(DioError error) {
+    if (error.response == null) {
+      //Something happened in setting up or sending the request that triggered an Error
+      return RequestException(error.message);
+    } else {
+      // The request was made and the server responded with a statusCode != 200
+      return HTTPException(error.response.statusCode);
+    }
   }
 }

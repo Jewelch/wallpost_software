@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:wallpost/_shared/network_adapter/exceptions/request_exception.dart';
 
 import 'network_adapter.dart';
-import 'network_response_processor.dart';
 
 class NetworkRequestExecutor implements NetworkAdapter {
   Dio dio = new Dio();
@@ -37,33 +37,44 @@ class NetworkRequestExecutor implements NetworkAdapter {
   }
 
   Future<APIResponse> executeRequest(APIRequest apiRequest, String method) async {
-    if (await _checkConnectionStatus()) {
-      try {
-        Response<String> response = await dio.request(
-          apiRequest.url,
-          options: Options(
-            method: method,
-            headers: apiRequest.headers,
-          ),
-          data: jsonEncode(apiRequest.parameters),
-        );
-        var apiResponse = _processResponse(response, apiRequest);
-        return apiResponse;
-      } on DioError catch (error) {
-        var apiResponse = _processResponse(error.response, apiRequest);
-        return apiResponse;
-      }
-    } else {
-      throw NetworkFailureException();
+    if (await _isConnected() == false) throw NetworkFailureException();
+
+    try {
+      Response<String> response = await dio.request(
+        apiRequest.url,
+        data: jsonEncode(apiRequest.parameters),
+        options: Options(
+          method: method,
+          headers: apiRequest.headers,
+          validateStatus: (status) => status == 200,
+        ),
+      );
+      return _processResponse(response, apiRequest);
+    } on DioError catch (error) {
+      throw _processError(error);
     }
   }
 
-  Future<bool> _checkConnectionStatus() {
+  Future<bool> _isConnected() {
     return DataConnectionChecker().hasConnection;
   }
 
   APIResponse _processResponse(Response response, APIRequest apiRequest) {
-    var responseData = NetworkResponseProcessor().processResponse(response);
-    return APIResponse(apiRequest, response.statusCode, responseData, {});
+    try {
+      var responseData = json.decode(response.data);
+      return APIResponse(apiRequest, response.statusCode, responseData, {});
+    } catch (e) {
+      throw WrongResponseFormatException();
+    }
+  }
+
+  APIException _processError(DioError error) {
+    if (error.response == null) {
+      //Something happened in setting up or sending the request that triggered an Error
+      return RequestException(error.message);
+    } else {
+      // The request was made and the server responded with a statusCode != 200
+      return HTTPException(error.response.statusCode);
+    }
   }
 }
