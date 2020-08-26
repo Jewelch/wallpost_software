@@ -68,27 +68,6 @@ void main() {
     expect(userRepository.getCurrentUser(), mockUser);
   });
 
-  test('updating user info, updates the user info, and stores it locally', () async {
-    when(mockUser.toJson()).thenReturn({'user': 'json'});
-    when(mockUser.username).thenReturn('someUserName');
-    userRepository.saveNewCurrentUser(mockUser);
-    when(mockUser.toJson()).thenReturn({'updated': 'data'});
-    reset(mockSharedPrefs);
-
-    userRepository.updateUser(mockUser);
-    var verificationResult = verify(mockSharedPrefs.saveMap(captureAny, captureAny));
-
-    verificationResult.called(2);
-    expect(verificationResult.captured[0], 'users');
-    expect(verificationResult.captured[1], {
-      'allUsers': [
-        {'updated': 'data'}
-      ]
-    });
-    expect(verificationResult.captured[2], 'currentUser');
-    expect(verificationResult.captured[3], {'username': 'someUserName'});
-  });
-
   test('saving a user with that already exists, replaces it', () async {
     var mockUser1 = MockUser();
     var mockUser2 = MockUser();
@@ -108,6 +87,27 @@ void main() {
       ]
     });
     expect(userRepository.getCurrentUser(), mockUser2);
+  });
+
+  test('updating user info, updates the user info, and stores it locally', () async {
+    when(mockUser.toJson()).thenReturn({'user': 'json'});
+    when(mockUser.username).thenReturn('someUserName');
+    userRepository.saveNewCurrentUser(mockUser);
+    when(mockUser.toJson()).thenReturn({'updated': 'data'});
+    reset(mockSharedPrefs);
+
+    userRepository.updateUser(mockUser);
+    var verificationResult = verify(mockSharedPrefs.saveMap(captureAny, captureAny));
+
+    verificationResult.called(2);
+    expect(verificationResult.captured[0], 'users');
+    expect(verificationResult.captured[1], {
+      'allUsers': [
+        {'updated': 'data'}
+      ]
+    });
+    expect(verificationResult.captured[2], 'currentUser');
+    expect(verificationResult.captured[3], {'username': 'someUserName'});
   });
 
   test('removing a user when only one user exists clears all the data', () async {
