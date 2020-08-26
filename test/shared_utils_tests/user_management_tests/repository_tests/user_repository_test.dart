@@ -39,7 +39,7 @@ void main() {
       (_) => Future.value({'username': 'someUserName'}),
     );
     userRepository = UserRepository.withSharedPrefs(mockSharedPrefs);
-    //awaiting because the shared prefs takes get method is async and takes a few ms to load
+    //awaiting because the shared prefs get method is async and takes a few ms to load
     //This will not be an issue in the actual app because the repo is initialized when the
     //app starts and there is time before it is actually used.
     await Future.delayed(Duration(milliseconds: 200));
