@@ -1,8 +1,9 @@
 import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
+import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
-class Company extends JSONInitializable {
+class Company extends JSONInitializable implements JSONConvertible {
   String _companyId;
   String _name;
   String _commercialName;
@@ -36,6 +37,26 @@ class Company extends JSONInitializable {
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Company response. Error message - ${e.errorMessage}');
     }
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> jsonMap = {
+      'actual_revenue_display': _actualSalesAmount,
+      'companyId': int.parse(_companyId),
+      'name': _name,
+      'commercial_name': _commercialName,
+      'currency': _currencyCode,
+      'hexString': _colorCode,
+      'alerts': _alertCount,
+      'approvals': _approvalCount,
+      'notifications': _notificationCount,
+      'budgeted_revenue_display': _budgetedSalesAmount,
+      'overall_revenue': _achievedSalesPercent,
+      'show_revenue': _shouldShowRevenue ? 1 : 0,
+      'ytd_performance': _ytdPerformance,
+    };
+    return jsonMap;
   }
 
   String get actualSalesAmount => _actualSalesAmount;
