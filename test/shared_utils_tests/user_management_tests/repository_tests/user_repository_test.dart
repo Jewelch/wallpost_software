@@ -1,12 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
-import 'package:wallpost/_shared/user_management/entities/user.dart';
 import 'package:wallpost/_shared/user_management/repositories/user_repository.dart';
 
+import '../../../_mocks/mock_user.dart';
 import '../mocks.dart';
-
-class MockUser extends Mock implements User {}
 
 class MockSharedPrefs extends Mock implements SecureSharedPrefs {}
 
