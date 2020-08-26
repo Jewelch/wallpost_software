@@ -30,6 +30,10 @@ class UserRepository {
     return _users[_currentUsername];
   }
 
+  List<User> getAllUsers() {
+    return _users.values.toList();
+  }
+
   void updateUser(User user) async {
     _users[user.username] = user;
     _saveUsersData();

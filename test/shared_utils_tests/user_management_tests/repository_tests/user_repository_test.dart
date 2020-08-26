@@ -26,6 +26,7 @@ void main() {
     expect(verificationResult.captured[0], 'users');
     expect(verificationResult.captured[1], 'currentUser');
     expect(userRepository.getCurrentUser(), isNull);
+    expect(userRepository.getAllUsers(), []);
   });
 
   test('reading user data on initialization when data is available', () async {
@@ -44,6 +45,8 @@ void main() {
     await Future.delayed(Duration(milliseconds: 200));
 
     expect(userRepository.getCurrentUser().username, 'someUserName');
+    expect(userRepository.getAllUsers().length, 1);
+    expect(userRepository.getAllUsers()[0].username, 'someUserName');
   });
 
   test('saving new current user, saves user in memory as well as locally', () async {
@@ -123,7 +126,7 @@ void main() {
     expect(userRepository.getCurrentUser(), null);
   });
 
-  test('removing a user when multiple users are present select the next user', () async {
+  test('removing a user when multiple users are present selects the next user', () async {
     var mockUser1 = MockUser();
     var mockUser2 = MockUser();
     when(mockUser1.username).thenReturn("username1");
