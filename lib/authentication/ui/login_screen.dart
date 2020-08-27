@@ -1,52 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/authentication/ui/textformfield.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+  double _height;
   @override
   Widget build(BuildContext context) {
+    _height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color(0xFF2c9fd5),
       body: Container(
-        padding: EdgeInsets.all(5.0),
+        height: double.infinity,
+        decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [
+                AppColors.loginGradiantFirstColor,
+                AppColors.loginGradiantSecoundColor
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp),
+        ),
+
+        //  margin: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10.0),
         child: SingleChildScrollView(
             child: Column(
           children: <Widget>[
-            logoIcon(),
+            loginIcon(),
             formUI(),
+            loginButton(),
+            forgetPassword()
           ],
         )),
       ),
     );
   }
 
-  Widget logoIcon() {
+  Widget loginIcon() {
     return Center(
       child: Container(
-        margin: EdgeInsets.fromLTRB(0, 70, 0, 50),
         child: Image.asset('assets/images/logo.png'),
         width: 120.0,
-        height: 120.0,
+        height: _height * 0.5,
       ),
     );
   }
 
   Widget formUI() {
     return Container(
-      margin: EdgeInsets.all(10),
       child: Form(
           child: Column(
-            key: _formKey,
+        key: _formKey,
         children: <Widget>[
           accountTextFormField(),
           SizedBox(
-            height: 40,
+            height: _height * 0.03,
           ),
           usernameTextFormField(),
-          SizedBox(height: 40,),
-          passwordTextFormField()
-          ],
+          SizedBox(
+            height: _height * 0.03,
+          ),
+          passwordTextFormField(),
+        ],
       )),
     );
   }
@@ -54,18 +72,54 @@ class LoginScreen extends StatelessWidget {
   Widget accountTextFormField() {
     return CustomTextField(
       hint: 'Account Number',
+      inputType: TextInputType.number,
     );
   }
-}
 
-Widget usernameTextFormField(){
-  return CustomTextField(
-    hint: 'User Name',
-  );
-}
+  Widget usernameTextFormField() {
+    return CustomTextField(
+      hint: 'User Name',
+      inputType: TextInputType.text,
+    );
+  }
 
-Widget passwordTextFormField(){
-  return CustomTextField(
-    hint: 'Password',
-  );
+  Widget passwordTextFormField() {
+    return CustomTextField(
+      hint: 'Password',
+      inputType: TextInputType.visiblePassword,
+    );
+  }
+
+  Widget loginButton() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(2.0, 20.0, 2.0, 20.0),
+      child: ButtonTheme(
+        minWidth: double.infinity,
+        child: RaisedButton(
+          child: Text(
+            'Log In',
+            style: TextStyle(color: Colors.white),
+          ),
+          padding: EdgeInsets.all(15.0),
+          color: AppColors.buttonColor,
+          onPressed: () {},
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget forgetPassword() {
+    return Container(
+      child: Text(
+        'Forgot your Password?',
+        style: TextStyle(
+            color: Color(0xFF4bafe1),
+            fontSize: 16.0,
+            fontWeight: FontWeight.normal),
+      ),
+    );
+  }
 }
