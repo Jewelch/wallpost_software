@@ -225,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget forgetPassword() {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushReplacementNamed(RouteNames.forgotPassword);
+        Navigator.of(context).pushNamed(RouteNames.forgotPassword);
       },
       child: Container(
         child: Text(
