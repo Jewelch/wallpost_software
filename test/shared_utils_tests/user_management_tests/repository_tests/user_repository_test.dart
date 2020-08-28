@@ -16,7 +16,7 @@ void main() {
   setUp(() {
     reset(mockUser);
     reset(mockSharedPrefs);
-    userRepository = UserRepository.withSharedPrefs(mockSharedPrefs);
+    userRepository = UserRepository.initWith(mockSharedPrefs);
   });
 
   test('reading user data on initialization when no data is available', () async {
@@ -38,7 +38,7 @@ void main() {
     when(mockSharedPrefs.getMap('currentUser')).thenAnswer(
       (_) => Future.value({'username': 'someUserName'}),
     );
-    userRepository = UserRepository.withSharedPrefs(mockSharedPrefs);
+    userRepository = UserRepository.initWith(mockSharedPrefs);
     //awaiting because the shared prefs get method is async and takes a few ms to load
     //This will not be an issue in the actual app because the repo is initialized when the
     //app starts and there is time before it is actually used.
