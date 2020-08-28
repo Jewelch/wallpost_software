@@ -20,8 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: new BoxDecoration(
           gradient: new LinearGradient(
               colors: [
-                AppColors.loginGradiantFirstColor,
-                AppColors.loginGradiantSecoundColor
+                AppColors.loginBackgroundGradiantColorOne,
+                AppColors.loginBackgroundGradiantColorTwo
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -84,9 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
         filled: true,
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-           borderSide: BorderSide(color: AppColors.defaultColor)
-        ),
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: AppColors.defaultColor)),
       ),
       validator: validateAccount,
     );
@@ -104,9 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
         filled: true,
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-           borderSide: BorderSide(color: AppColors.defaultColor)
-        ),
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: AppColors.defaultColor)),
       ),
       validator: validateUserName,
     );
@@ -117,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
       keyboardType: TextInputType.visiblePassword,
       autofocus: false,
       textAlign: TextAlign.center,
-      cursorColor:AppColors.defaultColor,
+      cursorColor: AppColors.defaultColor,
       decoration: InputDecoration(
         hintText: 'Password',
         fillColor: Colors.white,
@@ -125,8 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
-            borderSide: BorderSide(color: AppColors.defaultColor)
-            ),
+            borderSide: BorderSide(color: AppColors.defaultColor)),
       ),
       validator: validatePassword,
     );
@@ -188,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Text(
         'Forgot your Password?',
         style: TextStyle(
-            color: Color(0xFF4bafe1),
+            color: AppColors.loginForgetPaasswordTextColor,
             fontSize: 16.0,
             fontWeight: FontWeight.normal),
       ),
