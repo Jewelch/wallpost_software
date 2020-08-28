@@ -76,7 +76,7 @@ class CompanyRepository {
   }
 
   Map _readCompaniesFromMap(String username, Map companiesData) {
-    List<Map> companiesMapList = companiesData['companies'];
+    List companiesMapList = companiesData['companies'];
     String selectedCompanyId = companiesData['selectedCompanyId'];
 
     List<Company> companies = [];
