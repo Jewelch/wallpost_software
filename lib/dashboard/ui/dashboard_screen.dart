@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/dashboard/ui/employee_my_portal_screen.dart';
 import 'package:wallpost/dashboard/ui/requests_screen.dart';
+import 'package:wallpost/my_portal/ui/employee_my_portal_screen.dart';
+import 'package:wallpost/my_portal/ui/sales_my_portal_screen.dart';
 import 'package:wallpost/notifications/ui/notifications_screen.dart';
 
 import 'modules_screen.dart';
@@ -25,11 +26,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _initScreens() {
     var selectedCompany = SelectedCompanyProvider().getSelectCompanyForCurrentUser();
-//    if (selectedCompany.shouldShowRevenue) {
-//      _screens.add(SalesMyPortalScreen());
-//    } else {
-    _screens.add(EmployeeMyPortalScreen());
-//    }
+    if (selectedCompany.shouldShowRevenue) {
+      _screens.add(SalesMyPortalScreen());
+    } else {
+      _screens.add(EmployeeMyPortalScreen());
+    }
     _screens.add(ModulesScreen());
     _screens.add(RequestsScreen());
     _screens.add(NotificationsScreen());
