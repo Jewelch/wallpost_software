@@ -13,4 +13,7 @@ class RouteNames {
 
   //Company listing
   static final String companiesList = "/companies-list";
+
+  //Dashboard
+  static final String dashboard = "/dashboard";
 }
