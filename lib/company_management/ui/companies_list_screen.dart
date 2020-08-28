@@ -22,7 +22,7 @@ class CompaniesListScreen extends StatelessWidget {
                 color: Colors.red,
                 child: Text('Logout'),
                 onPressed: () {
-                  LogoutHandler.logout(context);
+                  LogoutHandler().logout(context);
                 },
               ),
             ],
