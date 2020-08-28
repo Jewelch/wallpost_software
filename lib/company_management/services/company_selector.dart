@@ -1,19 +1,22 @@
-import 'package:wallpost/_shared/user_management/entities/user.dart';
+import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 import 'package:wallpost/company_management/entities/company.dart';
 import 'package:wallpost/company_management/repositories/company_repository.dart';
 
 class CompanySelector {
-  CompanyRepository _companyRepository;
+  final CurrentUserProvider _currentUserProvider;
+  final CompanyRepository _companyRepository;
 
-  CompanySelector() {
-    _companyRepository = CompanyRepository();
-  }
+  CompanySelector()
+      : _currentUserProvider = CurrentUserProvider(),
+        _companyRepository = CompanyRepository();
 
-  CompanySelector.initWith(CompanyRepository companyRepository) {
-    _companyRepository = companyRepository;
-  }
+  CompanySelector.initWith(this._currentUserProvider, this._companyRepository);
 
-  void selectCompanyForUser(Company company, User user) {
-    _companyRepository.selectCompanyForUser(company, user);
+  void selectCompanyForCurrentUser(Company company) {
+    var currentUser = _currentUserProvider.getCurrentUser();
+
+    if (currentUser == null) return;
+
+    _companyRepository.selectCompanyForUser(company, currentUser);
   }
 }
