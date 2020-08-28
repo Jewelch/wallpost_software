@@ -3,13 +3,13 @@ import 'package:wallpost/authentication/ui/textformfield.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class LoginScreen extends StatelessWidget {
+  
   final _formKey = GlobalKey<FormState>();
   double _height;
   @override
   Widget build(BuildContext context) {
     _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Color(0xFF2c9fd5),
       body: Container(
         height: double.infinity,
         decoration: new BoxDecoration(
@@ -39,7 +39,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget loginIcon() {
+   Widget loginIcon() {
     return Center(
       child: Container(
         child: Image.asset('assets/images/logo.png'),
@@ -52,8 +52,8 @@ class LoginScreen extends StatelessWidget {
   Widget formUI() {
     return Container(
       child: Form(
+         key: _formKey,
           child: Column(
-        key: _formKey,
         children: <Widget>[
           accountTextFormField(),
           SizedBox(
@@ -102,7 +102,7 @@ class LoginScreen extends StatelessWidget {
           ),
           padding: EdgeInsets.all(15.0),
           color: AppColors.buttonColor,
-          onPressed: () {},
+          onPressed: gotoHome,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
@@ -110,7 +110,14 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+  
+  void gotoHome(){
+    if(_formKey.currentState.validate()){
+      _formKey.currentState.save();
+    }else{
 
+    }
+  }
   Widget forgetPassword() {
     return Container(
       child: Text(

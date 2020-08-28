@@ -22,6 +22,15 @@ class CustomTextField extends StatelessWidget {
          //   borderSide:new BorderSide(color: Colors.teal,width: 15.0)
          ),
       ),
+      validator: validateAccount,
     );
+  }
+
+   String validateAccount(value) {
+    if (value.isEmpty) {
+      return 'Please enter valied Account number';
+    } else {
+      return null ;
+    }
   }
 }
