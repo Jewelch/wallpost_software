@@ -1,10 +1,10 @@
+import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/constants/base_urls.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
 import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
 import 'package:wallpost/_shared/network_adapter/network_request_executor.dart';
 import 'package:wallpost/_shared/user_management/entities/user.dart';
 import 'package:wallpost/_shared/user_management/repositories/user_repository.dart';
-import 'package:sift/Sift.dart';
 
 class AccessTokenProvider {
   UserRepository _userRepository;
@@ -32,7 +32,7 @@ class AccessTokenProvider {
   }
 
   Future<String> _refreshSessionForUser(User user) async {
-    var apiRequest = APIRequest('${BaseUrls.BASE_URL_V2}/authorization/refresh');
+    var apiRequest = APIRequest('${BaseUrls.baseUrlV2()}/auth/refresh');
     var inactiveSession = user.session;
     apiRequest.addHeader('Authorization', inactiveSession.accessToken);
     apiRequest.addParameters({
@@ -58,10 +58,13 @@ class AccessTokenProvider {
     var responseMap = apiResponse.data as Map<String, dynamic>;
     var sift = Sift();
     try {
-      var token = sift.readStringFromMap(responseMap, 'token');
-      var expirationTimeStamp = sift.readNumberFromMap(responseMap, 'token_expiry');
+      var dataMap = sift.readMapFromMap(responseMap, 'data');
+      var token = sift.readStringFromMap(dataMap, 'token');
+      var expirationTimeStamp = sift.readNumberFromMap(dataMap, 'token_expiry');
+
       user.updateAccessToken(token, expirationTimeStamp);
       _userRepository.updateUser(user);
+
       return user.session.accessToken;
     } catch (e) {
       return null;

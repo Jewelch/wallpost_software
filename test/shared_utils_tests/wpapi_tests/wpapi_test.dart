@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_shared/constants/app_id.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
+import 'package:wallpost/_shared/network_adapter/exceptions/malformed_response_exception.dart';
 import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
 import 'package:wallpost/_shared/user_management/services/access_token_provider.dart';
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
@@ -13,6 +14,10 @@ class MockDeviceInfo extends Mock implements DeviceInfoProvider {}
 class MockAccessTokenProvider extends Mock implements AccessTokenProvider {}
 
 void main() {
+  var simpleWpResponse = {
+    "status": "success",
+    "data": {"some": "data"}
+  };
   var apiRequest = APIRequest('www.url.com');
   var mockDeviceInfo = MockDeviceInfo();
   var mockAccessTokenProvider = MockAccessTokenProvider();
@@ -29,7 +34,7 @@ void main() {
 
   group('test if the right network executor functions are called', () {
     test('get', () async {
-      mockNetworkAdapter.succeed(<String, dynamic>{});
+      mockNetworkAdapter.succeed(simpleWpResponse);
 
       var _ = await wpApi.get(apiRequest);
 
@@ -37,7 +42,7 @@ void main() {
     });
 
     test('put', () async {
-      mockNetworkAdapter.succeed(<String, dynamic>{});
+      mockNetworkAdapter.succeed(simpleWpResponse);
 
       var _ = await wpApi.put(apiRequest);
 
@@ -45,7 +50,7 @@ void main() {
     });
 
     test('post', () async {
-      mockNetworkAdapter.succeed(<String, dynamic>{});
+      mockNetworkAdapter.succeed(simpleWpResponse);
 
       var _ = await wpApi.post(apiRequest);
 
@@ -54,9 +59,9 @@ void main() {
   });
 
   group('test adding wp headers', () {
-    test('wp headers without authorization token', () async {
+    test('auth token is not added when it is not available locally', () async {
       when(mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value(null));
-      mockNetworkAdapter.succeed(<String, dynamic>{});
+      mockNetworkAdapter.succeed(simpleWpResponse);
 
       var _ = await wpApi.post(apiRequest);
 
@@ -67,9 +72,9 @@ void main() {
       expect(mockNetworkAdapter.apiRequest.headers.containsKey('Authorization'), false);
     });
 
-    test('wp headers with authorization token', () async {
+    test('auth token is added when it is available locally', () async {
       when(mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value('someAuthToken'));
-      mockNetworkAdapter.succeed(<String, dynamic>{});
+      mockNetworkAdapter.succeed(simpleWpResponse);
 
       var _ = await wpApi.post(apiRequest);
 
@@ -78,6 +83,104 @@ void main() {
       expect(mockNetworkAdapter.apiRequest.headers['X-WallPost-Device-ID'], 'someDeviceId');
       expect(mockNetworkAdapter.apiRequest.headers['X-WallPost-App-ID'], AppId.appId);
       expect(mockNetworkAdapter.apiRequest.headers['Authorization'], isNotNull);
+    });
+  });
+
+  group('test error processing', () {
+    test('throws WrongResponseFormatException when json decoding fails', () async {
+      mockNetworkAdapter.succeed('non-json string');
+
+      try {
+        var _ = await wpApi.post(apiRequest);
+        fail('expected to throw error, but did not');
+      } catch (error) {
+        expect(error is WrongResponseFormatException, true);
+      }
+    });
+
+    test('throws WrongResponseFormatException when response data is not a map', () async {
+      mockNetworkAdapter.succeed('not a map');
+
+      try {
+        var _ = await wpApi.post(apiRequest);
+        fail('expected to throw error, but did not');
+      } catch (error) {
+        expect(error is WrongResponseFormatException, true);
+      }
+    });
+
+    test('throws MalformedResponseException when the status key is missing', () async {
+      mockNetworkAdapter.succeed({"missing": "statusKey"});
+
+      try {
+        var _ = await wpApi.post(apiRequest);
+        fail('expected to throw error, but did not');
+      } catch (error) {
+        expect(error is MalformedResponseException, true);
+      }
+    });
+
+    test('throws MalformedResponseException when the data key is missing when status == success', () async {
+      mockNetworkAdapter.succeed({"status": "success", "missing": "dataKey"});
+
+      try {
+        var _ = await wpApi.post(apiRequest);
+        fail('expected to throw error, but did not');
+      } catch (error) {
+        expect(error is MalformedResponseException, true);
+      }
+    });
+
+    test('throws ServerSentException when server sends a custom error', () async {
+      mockNetworkAdapter.succeed({"status": "failure", "message": "task failed", "errorCode": 1004});
+
+      try {
+        var _ = await wpApi.post(apiRequest);
+        fail('expected to throw error, but did not');
+      } catch (error) {
+        expect(error is ServerSentException, true);
+        expect((error as ServerSentException).userReadableMessage, 'task failed');
+        expect((error as ServerSentException).errorCode, 1004);
+      }
+    });
+
+    test('converting empty response data list to List<Map<String, dynamic>>', () async {
+      mockNetworkAdapter.succeed({"status": "success", "data": []});
+
+      var response = await wpApi.post(apiRequest);
+
+      expect(response.data is List<Map<String, dynamic>>, true);
+      expect(response.data, []);
+    });
+
+    test('converting response data list with items of wrong format returns empty list', () async {
+      mockNetworkAdapter.succeed({
+        "status": "success",
+        "data": [1, 2, 3]
+      });
+
+      var response = await wpApi.post(apiRequest);
+
+      expect(response.data is List<Map<String, dynamic>>, true);
+      expect(response.data, []);
+    });
+
+    test('converting response data list with items of correct format', () async {
+      mockNetworkAdapter.succeed({
+        "status": "success",
+        "data": [
+          {"userId": 1},
+          {"userId": 2}
+        ]
+      });
+
+      var response = await wpApi.post(apiRequest);
+
+      expect(response.data is List<Map<String, dynamic>>, true);
+      expect(response.data, [
+        {'userId': 1},
+        {'userId': 2}
+      ]);
     });
   });
 }

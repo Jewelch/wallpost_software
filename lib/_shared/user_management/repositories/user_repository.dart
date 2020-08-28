@@ -10,12 +10,12 @@ class UserRepository {
 
   factory UserRepository() {
     if (_singleton == null) {
-      _singleton = UserRepository.withSharedPrefs(SecureSharedPrefs());
+      _singleton = UserRepository.initWith(SecureSharedPrefs());
     }
     return _singleton;
   }
 
-  UserRepository.withSharedPrefs(SecureSharedPrefs sharedPrefs) {
+  UserRepository.initWith(SecureSharedPrefs sharedPrefs) {
     _sharedPrefs = sharedPrefs;
     _readUserData();
   }
@@ -28,6 +28,10 @@ class UserRepository {
 
   User getCurrentUser() {
     return _users[_currentUsername];
+  }
+
+  List<User> getAllUsers() {
+    return _users.values.toList();
   }
 
   void updateUser(User user) async {

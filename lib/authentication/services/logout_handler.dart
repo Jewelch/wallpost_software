@@ -1,19 +1,31 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:wallpost/_main/main_screen.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_shared/user_management/services/user_remover.dart';
+import 'package:wallpost/company_management/services/company_remover.dart';
 
 class LogoutHandler {
-  static void logout(BuildContext context) async {
-    var user = CurrentUserProvider().getCurrentUser();
-    var userRemover = UserRemover();
-    userRemover.removeUser(user);
+  final CurrentUserProvider _currentUserProvider;
+  final UserRemover _userRemover;
+  final CompanyRemover _companyRemover;
 
-    Navigator.of(context).push(_createRoute());
+  LogoutHandler()
+      : this._currentUserProvider = CurrentUserProvider(),
+        this._userRemover = UserRemover(),
+        this._companyRemover = CompanyRemover();
+
+  LogoutHandler.initWith(this._currentUserProvider, this._userRemover, this._companyRemover);
+
+  void logout(BuildContext context) async {
+    var user = _currentUserProvider.getCurrentUser();
+    _userRemover.removeUser(user);
+    _companyRemover.removeCompaniesForUser(user);
+
+    if (context != null) Navigator.of(context).push(_createMainScreenRoute());
   }
 
-  static Route _createRoute() {
+  Route _createMainScreenRoute() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => MainScreen(),
       settings: RouteSettings(name: RouteNames.main),

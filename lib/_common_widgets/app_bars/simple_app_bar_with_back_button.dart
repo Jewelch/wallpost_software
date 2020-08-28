@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class SimpleAppBarWithBackButton extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final String backButtonTitle;
   final VoidCallback onBackButtonPress;
 
   @override
@@ -11,14 +11,12 @@ class SimpleAppBarWithBackButton extends StatelessWidget implements PreferredSiz
 
   SimpleAppBarWithBackButton({
     this.title,
-    this.backButtonTitle,
     this.onBackButtonPress,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      brightness: Brightness.light,
       backgroundColor: Colors.white,
       elevation: 0.0,
       automaticallyImplyLeading: false,
@@ -31,9 +29,20 @@ class SimpleAppBarWithBackButton extends StatelessWidget implements PreferredSiz
               Navigator.pop(context);
               onBackButtonPress();
             },
-            child: Text(
-              backButtonTitle,
-              style: TextStyle(color: AppColors.defaultColor, fontSize: 16),
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: AppColors.defaultColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/icons/back.svg',
+                  width: 16,
+                  height: 16,
+                ),
+              ),
             ),
           ),
           Expanded(
@@ -45,8 +54,8 @@ class SimpleAppBarWithBackButton extends StatelessWidget implements PreferredSiz
           ),
           //This container is added to center the title
           Container(
-            color: Colors.transparent,
-            child: Text(backButtonTitle, style: TextStyle(color: Colors.transparent, fontSize: 16)),
+            width: 30,
+            height: 30,
           ),
           // Your widgets here
         ],

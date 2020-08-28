@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/user_management/entities/user.dart';
 import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
+import 'package:wallpost/company_management/services/selected_company_provider.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key key}) : super(key: key);
@@ -36,8 +36,7 @@ class _MainScreenState extends State<MainScreen> {
     if (_isLoggedIn() == false) {
       _showLoginScreen();
     } else {
-      var currentUser = CurrentUserProvider().getCurrentUser();
-      _showLandingScreenForUser(currentUser);
+      _showLandingScreenForLoggedInUser();
     }
   }
 
@@ -49,8 +48,24 @@ class _MainScreenState extends State<MainScreen> {
     Navigator.pushNamedAndRemoveUntil(context, RouteNames.login, (_) => false);
   }
 
-  void _showLandingScreenForUser(User user) {
-    //TODO: Show landing screens
+  void _showLandingScreenForLoggedInUser() {
+    var selectedCompany = SelectedCompanyProvider().getSelectCompanyForCurrentUser();
+
+    if (selectedCompany == null) {
+      _showScreenAndClearStack(RouteNames.companiesList);
+    } else {
+      _showScreenAndClearStack(RouteNames.dashboard);
+    }
+//   TODO: when app opens
+//    1. reload companies
+//    cases
+//        a. nothing has changed, do nothing - can be found comparing old list with new
+//
+//        else
+//        b. companies added or removed or replaced -
+//            i. store the new data
+//            ii. check if the currently selected company has been removed - if yes- launch company selection screen and show alert
+//                'Looks like you do not have access to this company any more. Please select another company from the list.'
   }
 
   void _showScreenAndClearStack(String route, {Object arguments}) {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:wallpost/_shared/constants/app_id.dart';
+import 'package:wallpost/_shared/constants/base_urls.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
 import 'package:wallpost/_shared/network_adapter/entities/api_request.dart';
 import 'package:wallpost/_shared/network_adapter/entities/api_response.dart';
@@ -34,7 +35,7 @@ class WPFileUploader {
       return null;
     }
 
-    APIRequest apiRequest = APIRequest('http://core.api.wallpostsoftware.com/api/v2/fileupload/temp');
+    APIRequest apiRequest = APIRequest('${BaseUrls.baseUrlV2()}/fileupload/temp');
     apiRequest.addHeaders(await _buildWPHeaders());
     return _networkFileUploader.upload(file, apiRequest);
   }

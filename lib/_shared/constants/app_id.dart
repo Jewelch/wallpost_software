@@ -1,3 +1,3 @@
 class AppId {
-  static final String appId = 'shovest';
+  static final String appId = 'wallpost';
 }

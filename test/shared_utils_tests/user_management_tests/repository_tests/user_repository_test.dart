@@ -1,12 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
-import 'package:wallpost/_shared/user_management/entities/user.dart';
 import 'package:wallpost/_shared/user_management/repositories/user_repository.dart';
 
+import '../../../_mocks/mock_user.dart';
 import '../mocks.dart';
-
-class MockUser extends Mock implements User {}
 
 class MockSharedPrefs extends Mock implements SecureSharedPrefs {}
 
@@ -18,7 +16,7 @@ void main() {
   setUp(() {
     reset(mockUser);
     reset(mockSharedPrefs);
-    userRepository = UserRepository.withSharedPrefs(mockSharedPrefs);
+    userRepository = UserRepository.initWith(mockSharedPrefs);
   });
 
   test('reading user data on initialization when no data is available', () async {
@@ -28,6 +26,7 @@ void main() {
     expect(verificationResult.captured[0], 'users');
     expect(verificationResult.captured[1], 'currentUser');
     expect(userRepository.getCurrentUser(), isNull);
+    expect(userRepository.getAllUsers(), []);
   });
 
   test('reading user data on initialization when data is available', () async {
@@ -37,15 +36,17 @@ void main() {
       }),
     );
     when(mockSharedPrefs.getMap('currentUser')).thenAnswer(
-      (_) => Future.value({'username': 'someUserName@test.com'}),
+      (_) => Future.value({'username': 'someUserName'}),
     );
-    userRepository = UserRepository.withSharedPrefs(mockSharedPrefs);
-    //awaiting because the shared prefs takes get method is async and takes a few ms to load
+    userRepository = UserRepository.initWith(mockSharedPrefs);
+    //awaiting because the shared prefs get method is async and takes a few ms to load
     //This will not be an issue in the actual app because the repo is initialized when the
     //app starts and there is time before it is actually used.
-    await Future.delayed(Duration(milliseconds: 200));
+    await Future.delayed(Duration(milliseconds: 50));
 
-    expect(userRepository.getCurrentUser().username, 'someUserName@test.com');
+    expect(userRepository.getCurrentUser().username, 'someUserName');
+    expect(userRepository.getAllUsers().length, 1);
+    expect(userRepository.getAllUsers()[0].username, 'someUserName');
   });
 
   test('saving new current user, saves user in memory as well as locally', () async {
@@ -65,27 +66,6 @@ void main() {
     expect(verificationResult.captured[2], 'currentUser');
     expect(verificationResult.captured[3], {'username': 'someUserName'});
     expect(userRepository.getCurrentUser(), mockUser);
-  });
-
-  test('updating user info, updates the user info, and stores it locally', () async {
-    when(mockUser.toJson()).thenReturn({'user': 'json'});
-    when(mockUser.username).thenReturn('someUserName');
-    userRepository.saveNewCurrentUser(mockUser);
-    when(mockUser.toJson()).thenReturn({'updated': 'data'});
-    reset(mockSharedPrefs);
-
-    userRepository.updateUser(mockUser);
-    var verificationResult = verify(mockSharedPrefs.saveMap(captureAny, captureAny));
-
-    verificationResult.called(2);
-    expect(verificationResult.captured[0], 'users');
-    expect(verificationResult.captured[1], {
-      'allUsers': [
-        {'updated': 'data'}
-      ]
-    });
-    expect(verificationResult.captured[2], 'currentUser');
-    expect(verificationResult.captured[3], {'username': 'someUserName'});
   });
 
   test('saving a user with that already exists, replaces it', () async {
@@ -109,6 +89,27 @@ void main() {
     expect(userRepository.getCurrentUser(), mockUser2);
   });
 
+  test('updating user info, updates the user info, and stores it locally', () async {
+    when(mockUser.toJson()).thenReturn({'user': 'json'});
+    when(mockUser.username).thenReturn('someUserName');
+    userRepository.saveNewCurrentUser(mockUser);
+    when(mockUser.toJson()).thenReturn({'updated': 'data'});
+    reset(mockSharedPrefs);
+
+    userRepository.updateUser(mockUser);
+    var verificationResult = verify(mockSharedPrefs.saveMap(captureAny, captureAny));
+
+    verificationResult.called(2);
+    expect(verificationResult.captured[0], 'users');
+    expect(verificationResult.captured[1], {
+      'allUsers': [
+        {'updated': 'data'}
+      ]
+    });
+    expect(verificationResult.captured[2], 'currentUser');
+    expect(verificationResult.captured[3], {'username': 'someUserName'});
+  });
+
   test('removing a user when only one user exists clears all the data', () async {
     when(mockUser.username).thenReturn('someUserName');
     userRepository.saveNewCurrentUser(mockUser);
@@ -125,7 +126,7 @@ void main() {
     expect(userRepository.getCurrentUser(), null);
   });
 
-  test('removing a user when multiple users are present select the next user', () async {
+  test('removing a user when multiple users are present selects the next user', () async {
     var mockUser1 = MockUser();
     var mockUser2 = MockUser();
     when(mockUser1.username).thenReturn("username1");

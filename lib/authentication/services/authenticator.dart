@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
-import 'package:wallpost/_shared/constants/wp_account_number.dart';
 import 'package:wallpost/_shared/user_management/entities/user.dart';
 import 'package:wallpost/_shared/user_management/services/new_user_adder.dart';
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
@@ -29,7 +28,6 @@ class Authenticator {
     var apiRequest = APIRequest(url);
     apiRequest.addParameters(credentials.toJson());
     apiRequest.addParameters({
-      'accountno': WPAccountNumber.accountNumber,
       'apptype': 'MOBILE',
       'deviceuid': await _deviceInfo.getDeviceId(),
       'environment': kReleaseMode ? 'Production' : 'Development',
