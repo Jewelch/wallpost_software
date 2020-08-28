@@ -13,6 +13,6 @@ class CompanyRemover {
   }
 
   void removeCompaniesForUser(User user) {
-    return _companyRepository.removeCompaniesForUser(user);
+    _companyRepository.removeCompaniesForUser(user);
   }
 }

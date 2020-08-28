@@ -15,6 +15,9 @@ void main() {
   test('removing companies for a user', () async {
     companyRemover.removeCompaniesForUser(mockUser);
 
-    expect(verify(mockCompanyRepository.removeCompaniesForUser(captureAny)).captured.single, mockUser);
+    var verificationResult = verify(mockCompanyRepository.removeCompaniesForUser(captureAny));
+
+    verificationResult.called(1);
+    expect(verificationResult.captured.single, mockUser);
   });
 }
