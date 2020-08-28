@@ -1,28 +1,30 @@
+import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
 import 'package:wallpost/company_management/constants/company_management_urls.dart';
 import 'package:wallpost/company_management/entities/company.dart';
+import 'package:wallpost/company_management/repositories/company_repository.dart';
 
 class CompaniesListProvider {
+  final CurrentUserProvider _currentUserProvider;
+  final CompanyRepository _companyRepository;
   final NetworkAdapter _networkAdapter;
-  final int _perPage = 15;
-  int _pageNumber = 0;
-  bool _didReachListEnd = false;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  CompaniesListProvider.initWith(this._networkAdapter);
+  CompaniesListProvider.initWith(this._currentUserProvider, this._companyRepository, this._networkAdapter);
 
-  CompaniesListProvider() : _networkAdapter = WPAPI();
+  CompaniesListProvider()
+      : _currentUserProvider = CurrentUserProvider(),
+        _companyRepository = CompanyRepository(),
+        _networkAdapter = WPAPI();
 
   void reset() {
-    _pageNumber = 0;
-    _didReachListEnd = false;
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     isLoading = false;
   }
 
-  Future<List<Company>> getNext() async {
-    var url = CompanyManagementUrls.getCompaniesUrl('$_pageNumber', '$_perPage');
+  Future<List<Company>> get() async {
+    var url = CompanyManagementUrls.getCompaniesUrl();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
@@ -45,28 +47,16 @@ class CompaniesListProvider {
 
   List<Company> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var companyList = <Company>[];
+      var companies = <Company>[];
       for (var responseMap in responseMapList) {
         var company = Company.fromJson(responseMap);
-        companyList.add(company);
+        companies.add(company);
       }
-      _updatePaginationRelatedData(companyList.length);
-      return companyList;
+      var currentUser = _currentUserProvider.getCurrentUser();
+      _companyRepository.saveCompaniesForUser(companies, currentUser);
+      return companies;
     } catch (e) {
       throw InvalidResponseException();
     }
-  }
-
-  void _updatePaginationRelatedData(int noOfItemsReceived) {
-    if (noOfItemsReceived > 0) {
-      _pageNumber += 1;
-    }
-    if (noOfItemsReceived < _perPage) {
-      _didReachListEnd = true;
-    }
-  }
-
-  int getCurrentPageNumber() {
-    return _pageNumber;
   }
 }

@@ -1,22 +1,38 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:wallpost/company_management/constants/company_management_urls.dart';
+import 'package:wallpost/company_management/repositories/company_repository.dart';
 import 'package:wallpost/company_management/services/companies_list_provider.dart';
 
+import '../../_mocks/mock_current_user_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
+class MockCompanyRepository extends Mock implements CompanyRepository {}
+
 void main() {
   var successfulResponse = Mocks.companiesListResponse;
+  var mockCurrentUserProvider = MockCurrentUserProvider();
+  var mockCompanyRepository = MockCompanyRepository();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var companyListProvider = CompaniesListProvider.initWith(mockNetworkAdapter);
+  var companyListProvider = CompaniesListProvider.initWith(
+    mockCurrentUserProvider,
+    mockCompanyRepository,
+    mockNetworkAdapter,
+  );
+
+  setUp(() {
+    reset(mockCurrentUserProvider);
+    reset(mockCompanyRepository);
+  });
 
   test('api request is built correctly', () async {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await companyListProvider.getNext();
+    var _ = await companyListProvider.get();
 
-    expect(mockNetworkAdapter.apiRequest.url, CompanyManagementUrls.getCompaniesUrl('0', '15'));
+    expect(mockNetworkAdapter.apiRequest.url, CompanyManagementUrls.getCompaniesUrl());
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
   });
 
@@ -24,7 +40,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await companyListProvider.getNext();
+      var _ = await companyListProvider.get();
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -35,7 +51,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await companyListProvider.getNext();
+      var _ = await companyListProvider.get();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -46,7 +62,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      var _ = await companyListProvider.getNext();
+      var _ = await companyListProvider.get();
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -57,7 +73,7 @@ void main() {
     mockNetworkAdapter.succeed([<String, dynamic>{}]);
 
     try {
-      var _ = await companyListProvider.getNext();
+      var _ = await companyListProvider.get();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -68,24 +84,10 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var company = await companyListProvider.getNext();
+      var company = await companyListProvider.get();
+      verify(mockCurrentUserProvider.getCurrentUser()).called(1);
+      verify(mockCompanyRepository.saveCompaniesForUser(any, any)).called(1);
       expect(company, isNotNull);
-    } catch (e) {
-      fail('failed to complete successfully. exception thrown $e');
-    }
-  });
-
-  test('page number is updated after each call', () async {
-    mockNetworkAdapter.succeed(successfulResponse);
-    companyListProvider.reset();
-    try {
-      expect(companyListProvider.getCurrentPageNumber(), 0);
-      await companyListProvider.getNext();
-      expect(companyListProvider.getCurrentPageNumber(), 1);
-      await companyListProvider.getNext();
-      expect(companyListProvider.getCurrentPageNumber(), 2);
-      await companyListProvider.getNext();
-      expect(companyListProvider.getCurrentPageNumber(), 3);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
