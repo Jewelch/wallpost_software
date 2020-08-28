@@ -12,7 +12,7 @@ class AppColors {
   static final Color loginGradiantSecoundColor=_getColorFromHex(AppColors._loginSecoundColor);
 
 
-  static final String _defaultColor = "008cbf";
+  static final String _defaultColor = "#008cbf";
   static final String _whiteColor = "FFFFFF";
   static final String _buttonColor = "3590de";
   static final String _labelColor = "777777";

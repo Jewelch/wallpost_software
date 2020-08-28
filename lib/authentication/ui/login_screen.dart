@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/authentication/ui/textformfield.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-class LoginScreen extends StatelessWidget {
-  
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+
   double _height;
+
   @override
   Widget build(BuildContext context) {
     _height = MediaQuery.of(context).size.height;
@@ -23,8 +28,6 @@ class LoginScreen extends StatelessWidget {
               stops: [0.0, 1.0],
               tileMode: TileMode.clamp),
         ),
-
-        //  margin: EdgeInsets.all(10.0),
         padding: EdgeInsets.all(10.0),
         child: SingleChildScrollView(
             child: Column(
@@ -39,7 +42,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-   Widget loginIcon() {
+  Widget loginIcon() {
     return Center(
       child: Container(
         child: Image.asset('assets/images/logo.png'),
@@ -52,42 +55,105 @@ class LoginScreen extends StatelessWidget {
   Widget formUI() {
     return Container(
       child: Form(
-         key: _formKey,
+          key: _formKey,
           child: Column(
-        children: <Widget>[
-          accountTextFormField(),
-          SizedBox(
-            height: _height * 0.03,
-          ),
-          usernameTextFormField(),
-          SizedBox(
-            height: _height * 0.03,
-          ),
-          passwordTextFormField(),
-        ],
-      )),
+            children: <Widget>[
+              accountTextFormField(),
+              SizedBox(
+                height: _height * 0.03,
+              ),
+              usernameTextFormField(),
+              SizedBox(
+                height: _height * 0.03,
+              ),
+              passwordTextFormField(),
+            ],
+          )),
     );
   }
 
   Widget accountTextFormField() {
-    return CustomTextField(
-      hint: 'Account Number',
-      inputType: TextInputType.number,
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      autofocus: false,
+      textAlign: TextAlign.center,
+      cursorColor: Colors.blue[200],
+      decoration: InputDecoration(
+        hintText: 'Account Number',
+        fillColor: Colors.white,
+        filled: true,
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(32.0),
+          //   borderSide:new BorderSide(color: Colors.teal,width: 15.0)
+        ),
+      ),
+      validator: validateAccount,
     );
   }
 
   Widget usernameTextFormField() {
-    return CustomTextField(
-      hint: 'User Name',
-      inputType: TextInputType.text,
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      autofocus: false,
+      textAlign: TextAlign.center,
+      cursorColor: Colors.blue[200],
+      decoration: InputDecoration(
+        hintText: 'User Name',
+        fillColor: Colors.white,
+        filled: true,
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(32.0),
+          //   borderSide:new BorderSide(color: Colors.teal,width: 15.0)
+        ),
+      ),
+      validator: validateUserName,
     );
   }
 
   Widget passwordTextFormField() {
-    return CustomTextField(
-      hint: 'Password',
-      inputType: TextInputType.visiblePassword,
+    return TextFormField(
+      keyboardType: TextInputType.visiblePassword,
+      autofocus: false,
+      textAlign: TextAlign.center,
+      cursorColor: Colors.blue[200],
+      decoration: InputDecoration(
+        hintText: 'Password',
+        fillColor: Colors.white,
+        filled: true,
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(32.0),
+          //   borderSide:new BorderSide(color: Colors.teal,width: 15.0)
+        ),
+      ),
+      validator: validatePassword,
     );
+  }
+
+  String validateAccount(value) {
+    if (value.isEmpty) {
+      return 'Please enter valied Account number';
+    } else {
+      return null;
+    }
+  }
+
+  String validateUserName(value) {
+    if (value.isEmpty) {
+      return 'Please enter valied UserName';
+    } else {
+      return null;
+    }
+  }
+
+  String validatePassword(value) {
+    if (value.isEmpty) {
+      return 'Please enter your Password';
+    } else {
+      return null;
+    }
   }
 
   Widget loginButton() {
@@ -110,14 +176,13 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-  
-  void gotoHome(){
-    if(_formKey.currentState.validate()){
-      _formKey.currentState.save();
-    }else{
 
-    }
+  void gotoHome() {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+    } else {}
   }
+
   Widget forgetPassword() {
     return Container(
       child: Text(
