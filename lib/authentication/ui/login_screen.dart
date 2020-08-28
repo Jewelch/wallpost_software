@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -85,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
-            borderSide: BorderSide(color: AppColors.defaultColor)),
+            borderSide: BorderSide.none),
       ),
       validator: validateAccount,
     );
@@ -104,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
-            borderSide: BorderSide(color: AppColors.defaultColor)),
+            borderSide: BorderSide.none),
       ),
       validator: validateUserName,
     );
@@ -123,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
-            borderSide: BorderSide(color: AppColors.defaultColor)),
+            borderSide: BorderSide.none),
       ),
       validator: validatePassword,
     );
@@ -181,13 +182,18 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget forgetPassword() {
-    return Container(
-      child: Text(
-        'Forgot your Password?',
-        style: TextStyle(
-            color: AppColors.loginForgetPaasswordTextColor,
-            fontSize: 16.0,
-            fontWeight: FontWeight.normal),
+    return GestureDetector(
+      onTap: (){
+        Navigator.of(context).pushReplacementNamed(RouteNames.forgotPassword);
+      },
+      child: Container(
+        child: Text(
+          'Forgot your Password?',
+          style: TextStyle(
+              color: AppColors.loginForgetPaasswordTextColor,
+              fontSize: 16.0,
+              fontWeight: FontWeight.normal),
+        ),
       ),
     );
   }

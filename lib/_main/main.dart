@@ -20,7 +20,7 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: StringConstants.shovestClub,
-      initialRoute: RouteNames.forgotPassword,
+      initialRoute: RouteNames.login,
       routes: Routes().buildRoutes(context),
       theme: ThemeData(fontFamily: 'PTSans'),
     );
