@@ -5,6 +5,8 @@ import 'package:wallpost/authentication/ui/login_screen.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/company_management/ui/companies_list_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_screen.dart';
+import 'package:wallpost/password_management/ui/change_password_screen.dart';
+import 'package:wallpost/settings/ui/settings.dart';
 
 class Routes {
   Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
@@ -17,12 +19,16 @@ class Routes {
 
       //Password management
       RouteNames.forgotPassword: (BuildContext context) => ForgotPasswordScreen(),
+      RouteNames.changePassword: (BuildContext context) => ChangePasswordScreen(),
 
       //Companies list
       RouteNames.companiesList: (BuildContext context) => CompaniesListScreen(),
 
       //Companies list
       RouteNames.dashboard: (BuildContext context) => DashboardScreen(),
+
+      //settings
+      RouteNames.settings: (BuildContext context) => Settings(),
     };
   }
 }

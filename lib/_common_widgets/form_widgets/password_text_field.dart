@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:wallpost/_shared/constants/app_images.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class PasswordTextField extends StatefulWidget {
-  final String iconName;
+  // final String iconName;
   final String label;
   final String placeholder;
   final Color tintColor;
@@ -15,10 +14,10 @@ class PasswordTextField extends StatefulWidget {
   final isObscured;
 
   PasswordTextField({
-    this.iconName,
+    //this.iconName,
     this.label = '',
     this.placeholder = '',
-    this.tintColor,
+    this.tintColor = Colors.grey,
     this.textInputType = TextInputType.text,
     this.validator,
     this.controller,
@@ -45,42 +44,33 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     return TextFormField(
       controller: widget.controller,
       obscureText: _isObscured,
+      autofocus: true,
       decoration: InputDecoration(
-        hintText: widget.placeholder,
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: widget.tintColor),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: widget.tintColor),
-        ),
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(color: widget.tintColor),
-        ),
-        helperText: ' ',
-        prefixIcon: Padding(
-          padding: EdgeInsets.all(12),
-          child: SvgPicture.asset(
-            widget.iconName,
-            width: 14,
-            height: 14,
-            color: widget.tintColor,
+          hintText: widget.placeholder,
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: widget.tintColor),
           ),
-        ),
-        suffixIcon: IconButton(
-          padding: EdgeInsets.all(0),
-          iconSize: 20,
-          icon: SvgPicture.asset(
-            _isObscured ? AppImages.eyeEmptyIcon : AppImages.eyeFilledIcon,
-            width: 24,
-            height: 24,
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: widget.tintColor),
           ),
-          onPressed: () {
-            setState(() {
-              _isObscured = !_isObscured;
-            });
-          },
-        ),
-      ),
+          border: UnderlineInputBorder(
+            borderSide: BorderSide(color: widget.tintColor),
+          ),
+          labelText: widget.label,
+          labelStyle:
+              TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          helperText: ' ',
+          suffixIcon: IconButton(
+            icon: Icon(
+              _isObscured ? Icons.visibility : Icons.visibility_off,
+              color: AppColors.defaultColor,
+            ),
+            onPressed: () {
+              setState(() {
+                _isObscured = !_isObscured;
+              });
+            },
+          )),
       validator: widget.validator,
     );
   }

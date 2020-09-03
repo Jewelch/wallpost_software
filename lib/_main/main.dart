@@ -18,7 +18,7 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: RouteNames.main,
+      initialRoute: RouteNames.settings,
       routes: Routes().buildRoutes(context),
       theme: ThemeData(fontFamily: 'PTSans'),
     );
