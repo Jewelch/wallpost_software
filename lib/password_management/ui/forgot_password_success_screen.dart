@@ -40,16 +40,17 @@ class ForgotPasswordSuccessScreen extends StatelessWidget {
               width: double.infinity,
               margin: EdgeInsets.only(bottom: 10, left: 20, right: 20, top: 10),
               child: FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(RouteNames.login);
-                },
                 child: Text(' Go Back to Login'),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    side: BorderSide(color: AppColors.ForgetPaasswordSuccessButtonColor)),
                 color: AppColors.ForgetPaasswordSuccessButtonColor,
                 textColor: Colors.white,
                 padding: EdgeInsets.all(15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  side: BorderSide(color: AppColors.ForgetPaasswordSuccessButtonColor),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(RouteNames.login);
+                },
               ),
             ),
           ],
