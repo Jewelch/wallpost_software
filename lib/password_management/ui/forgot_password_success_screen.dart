@@ -17,10 +17,7 @@ class ForgotPasswordSuccessScreen extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                  border: Border.all(
-                    color: AppColors.ForgetPaasswordSuccessButtonColor,
-                    width: 3,
-                  ),
+                  border: Border.all(color: AppColors.ForgetPaasswordSuccessButtonColor, width: 3),
                   borderRadius: BorderRadius.circular(50)),
               child: Container(
                 margin: EdgeInsets.all(10),
@@ -34,30 +31,27 @@ class ForgotPasswordSuccessScreen extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(bottom: 30, left: 10, right: 10, top: 30),
               child: Text(
-                'We have sent a password reset link to your email addresses. Please Check your email account and click the password reset link',
-                style: TextStyle(
-                    color: AppColors.ForgetPaasswordSuccessLabelColor,
-                    fontSize: 15),
+                'We have sent a password reset link to your email addresses. Please check your email account and click the password reset link to reset your password.',
+                style: TextStyle(color: AppColors.ForgetPaasswordSuccessLabelColor, fontSize: 15),
                 textAlign: TextAlign.center,
               ),
             ),
             Container(
               width: double.infinity,
               margin: EdgeInsets.only(bottom: 10, left: 20, right: 20, top: 10),
-              child: RaisedButton(
+              child: FlatButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(RouteNames.login);
                 },
-                child: Text(' Go to the login page'),
+                child: Text(' Go Back to Login'),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    side: BorderSide(
-                        color: AppColors.ForgetPaasswordSuccessButtonColor)),
+                    side: BorderSide(color: AppColors.ForgetPaasswordSuccessButtonColor)),
                 color: AppColors.ForgetPaasswordSuccessButtonColor,
                 textColor: Colors.white,
                 padding: EdgeInsets.all(15),
               ),
-            )
+            ),
           ],
         ),
       ),
