@@ -13,13 +13,13 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SimpleAppBar(
-        title: 'Settings',
-        addBackButton: true,
-        onBackButtonPress: () {
-          //todo: add back button press action
-        },
-      ),
+//      appBar: SimpleAppBar(
+//        title: 'Settings',
+//        addBackButton: true,
+//        onBackButtonPress: () {
+//          //todo: add back button press action
+//        },
+//      ),
       body: Container(
         decoration: BoxDecoration(
             border: Border(
