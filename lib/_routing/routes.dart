@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_main/main_screen.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/authentication/ui/login_screen.dart';
-import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/company_management/ui/companies_list_screen.dart';
-import 'package:wallpost/password_management/ui/forgot_password_screen.dart';
+import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/password_management/ui/change_password_screen.dart';
+import 'package:wallpost/password_management/ui/forgot_password_screen.dart';
+import 'package:wallpost/password_management/ui/forgot_password_success_screen.dart';
 import 'package:wallpost/settings/ui/settings.dart';
 
 class Routes {
@@ -19,7 +20,11 @@ class Routes {
 
       //Password management
       RouteNames.forgotPassword: (BuildContext context) => ForgotPasswordScreen(),
+
       RouteNames.changePassword: (BuildContext context) => ChangePasswordScreen(),
+
+      RouteNames.forgotPasswordSuccess: (BuildContext context) => ForgotPasswordSuccessScreen(),
+
 
       //Companies list
       RouteNames.companiesList: (BuildContext context) => CompaniesListScreen(),
