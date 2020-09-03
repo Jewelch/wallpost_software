@@ -8,10 +8,11 @@ class StatusBarColorSetter {
     try {
       var user = CurrentUserProvider().getCurrentUser();
       var isLoggedIn = user != null;
-      var statusBarColor = isLoggedIn ? Colors.white : AppColors.defaultColor;
-      var shoutSetTextColorToWhite = isLoggedIn ? false : true;
-      FlutterStatusbarcolor.setStatusBarColor(statusBarColor, animate: false);
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(shoutSetTextColorToWhite);
+      if (isLoggedIn) {
+        setColorToWhite();
+      } else {
+        setColorToAppColor();
+      }
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -22,6 +23,16 @@ class StatusBarColorSetter {
       var statusBarColor = AppColors.defaultColor;
       FlutterStatusbarcolor.setStatusBarColor(statusBarColor, animate: false);
       FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static void setColorToWhite() {
+    try {
+      var statusBarColor = Colors.white;
+      FlutterStatusbarcolor.setStatusBarColor(statusBarColor, animate: false);
+      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     } catch (e) {
       debugPrint(e.toString());
     }
