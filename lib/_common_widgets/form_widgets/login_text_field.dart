@@ -30,7 +30,13 @@ class LoginTextField extends StatelessWidget {
       ),
       child: TextFormField(
         textAlign: TextAlign.center,
+        obscureText: obscureText,
         keyboardType: keyboardType,
+        controller: controller,
+        validator: validator,
+        textInputAction: textInputAction,
+        onFieldSubmitted: onFieldSubmitted,
+        onSaved: onSaved,
         decoration: InputDecoration(
           fillColor: Colors.white,
           filled: true,
@@ -50,8 +56,7 @@ class LoginTextField extends StatelessWidget {
             ),
           ),
         ),
-        validator: validator,
-        onSaved: onSaved,
+
       ),
     );
   }
