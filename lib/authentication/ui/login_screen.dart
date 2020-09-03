@@ -102,12 +102,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 hint: 'Account Number',
                 controller: _accountNumberTextController,
                 validator: validateAccount,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
               ),
               SizedBox(height: 16),
               buildTextFormField(
                 hint: 'Username',
                 controller: _usernameTextController,
                 validator: validateUserName,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
               ),
               SizedBox(height: 16),
               buildTextFormField(
@@ -115,6 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: true,
                 controller: _passwordTextController,
                 validator: validatePassword,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) => _performLogin(),
               ),
             ],
           ),
@@ -128,6 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
     bool obscureText = false,
     TextEditingController controller,
     FormFieldValidator validator,
+    TextInputAction textInputAction,
+    ValueChanged<String> onFieldSubmitted,
   }) {
     return TextFormField(
       keyboardType: TextInputType.visiblePassword,
@@ -144,6 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0), borderSide: BorderSide.none),
       ),
+      textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted,
     );
   }
 
@@ -195,6 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _performLogin() async {
     if (_formKey.currentState.validate() == false) return;
 
+    FocusScope.of(context).unfocus();
     _loader.show('Logging In...');
     var authenticator = Authenticator();
     var accountNumber = _accountNumberTextController.text;
