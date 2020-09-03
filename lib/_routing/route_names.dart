@@ -15,7 +15,6 @@ class RouteNames {
 
   static final String forgotPasswordSuccess = "/forgot-password-success";
 
-
   //Company listing
   static final String companiesList = "/companies-list";
 
@@ -24,6 +23,4 @@ class RouteNames {
 
   //settings
   static final String settings = "/settings";
-
-  
 }

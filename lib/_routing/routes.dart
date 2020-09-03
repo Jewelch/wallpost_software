@@ -25,14 +25,13 @@ class Routes {
 
       RouteNames.forgotPasswordSuccess: (BuildContext context) => ForgotPasswordSuccessScreen(),
 
-
       //Companies list
       RouteNames.companiesList: (BuildContext context) => CompaniesListScreen(),
 
       //Companies list
       RouteNames.dashboard: (BuildContext context) => DashboardScreen(),
 
-      //settings
+      //Settings
       RouteNames.settings: (BuildContext context) => Settings(),
     };
   }

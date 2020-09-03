@@ -30,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   _showLandingScreen() async {
-    var _ = await Future.delayed(Duration(milliseconds: 2000));
+    var _ = await Future.delayed(Duration(milliseconds: 1000));
 
     StatusBarColorSetter.setColorBasedOnLoginStatus();
     if (_isLoggedIn() == false) {

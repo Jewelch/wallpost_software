@@ -58,7 +58,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           ),
           labelText: widget.label,
           labelStyle:
-              TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           helperText: ' ',
           suffixIcon: IconButton(
             icon: Icon(

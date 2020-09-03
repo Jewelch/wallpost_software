@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_with_back_button.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
+import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
@@ -27,94 +30,66 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    StatusBarColorSetter.setColorToWhite();
     return Scaffold(
-        appBar: SimpleAppBarWithBackButton(
-          title: 'Forget Password',
-          onBackButtonPress: null,
+      appBar: SimpleAppBar(
+        title: 'Password Recovery',
+        leading: RoundedIconButton(
+          iconName: 'assets/icons/back.svg',
+          onPressed: () => Navigator.pop(context),
         ),
-        body: Container(
-          color: Colors.white,
-          width: double.infinity,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin:
-                  EdgeInsets.only(bottom: 10, left: 20, right: 20, top: 10),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: 'Account Number',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                        borderSide:
-                        BorderSide(color: AppColors.defaultColor, width: 1),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                        borderSide:
-                        BorderSide(color: AppColors.defaultColor, width: 2),
-                      ),
-                    ),
-                    validator: (value) =>
-                    value.length < 1 ? 'Please enter account number' : null,
-                    onSaved: (value) => _accountNumber = value,
+      ),
+      body: Container(
+        margin: EdgeInsets.only(bottom: 60),
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        color: Colors.white,
+        width: double.infinity,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LoginTextField(
+                hint: 'Account Number',
+                keyboardType: TextInputType.number,
+                validator: (value) => value.length < 1 ? 'Please enter an account number' : null,
+                onSaved: (value) => _accountNumber = value,
+              ),
+              SizedBox(height: 20),
+              LoginTextField(
+                hint: 'Email',
+                keyboardType: TextInputType.visiblePassword,
+                validator: (value) => value.length < 1 ? 'Please enter your email address' : null,
+                onSaved: (value) => _email = value,
+              ),
+              SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                height: 50,
+                child: FlatButton(
+                  padding: EdgeInsets.all(0),
+                  color: AppColors.defaultColor,
+                  textColor: Colors.white,
+                  onPressed: _submit,
+                  child: Text('Continue'),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    side: BorderSide(color: AppColors.defaultColor),
                   ),
                 ),
-                Container(
-                  margin:
-                  EdgeInsets.only(bottom: 10, left: 20, right: 20, top: 10),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      hintText: 'Email',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                        borderSide:
-                        BorderSide(color: AppColors.defaultColor, width: 1),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                        borderSide:
-                        BorderSide(color: AppColors.defaultColor, width: 2),
-                      ),
-                    ),
-                    validator: (value) =>
-                    !value.contains('@')
-                        ? 'Please enter valid email'
-                        : null,
-                    onSaved: (value) => _email = value,
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  margin:
-                  EdgeInsets.only(bottom: 10, left: 20, right: 20, top: 10),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                          side: BorderSide(color: AppColors.defaultColor)),
-                      color: AppColors.defaultColor,
-                      textColor: Colors.white,
-                      padding: EdgeInsets.all(15),
-                      onPressed: _submit,
-                      child: Text('Continue')),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   void _submit() async {
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
-      _loader.show('Submitting..');
+      _loader.show('Resetting your password...');
       var _passwordResetter = PasswordResetter();
       var resetPasswordForm = ResetPasswordForm(_accountNumber, _email);
       print(_accountNumber);
@@ -123,13 +98,13 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
         Navigator.pushNamedAndRemoveUntil(
           context,
           RouteNames.forgotPasswordSuccess,
-              (_) => false,
+          (_) => false,
         );
       } on APIException catch (error) {
         _loader.hide();
         Alert.showSimpleAlert(
           context,
-          title: 'Reset passwrod Failed',
+          title: 'Reset Password Failed',
           message: error.userReadableMessage,
           buttonTitle: 'Okay',
         );

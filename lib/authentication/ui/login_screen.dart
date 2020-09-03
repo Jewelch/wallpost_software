@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
+import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_routing/route_names.dart';
@@ -27,15 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _loader = Loader(context);
     KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        setState(() {
-          if (visible) {
-            _showLogo = false;
-          } else {
-            _showLogo = true;
-          }
-        });
-      },
+      onChange: (bool visible) => setState(() => _showLogo = visible ? false : true),
     );
   }
 
@@ -98,51 +91,33 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              buildTextFormField(
+              LoginTextField(
                 hint: 'Account Number',
                 controller: _accountNumberTextController,
                 validator: validateAccount,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
               ),
               SizedBox(height: 16),
-              buildTextFormField(
+              LoginTextField(
                 hint: 'Username',
                 controller: _usernameTextController,
                 validator: validateUserName,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
               ),
               SizedBox(height: 16),
-              buildTextFormField(
+              LoginTextField(
                 hint: 'Password',
                 obscureText: true,
                 controller: _passwordTextController,
                 validator: validatePassword,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) => _performLogin(),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  TextFormField buildTextFormField({
-    String hint,
-    bool obscureText = false,
-    TextEditingController controller,
-    FormFieldValidator validator,
-  }) {
-    return TextFormField(
-      keyboardType: TextInputType.visiblePassword,
-      autofocus: false,
-      textAlign: TextAlign.center,
-      cursorColor: AppColors.defaultColor,
-      obscureText: obscureText,
-      controller: controller,
-      validator: validator,
-      decoration: InputDecoration(
-        hintText: hint,
-        fillColor: Colors.white,
-        filled: true,
-        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0), borderSide: BorderSide.none),
       ),
     );
   }
@@ -173,13 +148,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget loginButton() {
     return Container(
+      height: 50,
       margin: EdgeInsets.fromLTRB(2.0, 20.0, 2.0, 20.0),
       child: ButtonTheme(
         minWidth: double.infinity,
-        child: RaisedButton(
+        child: FlatButton(
           child: Text(
             'Log In',
-            style: TextStyle(color: AppColors.white),
+            style: TextStyle(
+              color: AppColors.white,
+              fontSize: 16,
+            ),
           ),
           padding: EdgeInsets.all(15.0),
           color: AppColors.buttonColor,
@@ -195,6 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _performLogin() async {
     if (_formKey.currentState.validate() == false) return;
 
+    FocusScope.of(context).unfocus();
     _loader.show('Logging In...');
     var authenticator = Authenticator();
     var accountNumber = _accountNumberTextController.text;
