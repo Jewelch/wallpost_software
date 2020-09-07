@@ -1,45 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/password_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
-import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_routing/route_names.dart';
+import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
 }
 
-/*
-1. Move content up with keyboard
-2. Remove unused variables/attributes/widgets
-3. Check and see if the app bar action button width change for Android
- */
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   var _showLogo = true;
   var _currentPasswordTextController = TextEditingController();
   var _newPasswordTextController = TextEditingController();
   var _confirmPasswordTextController = TextEditingController();
-  Loader _loader;
 
   @override
   void initState() {
     super.initState();
-    _loader = Loader(context);
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        setState(() {
-          if (visible) {
-            _showLogo = false;
-          } else {
-            _showLogo = true;
-          }
-        });
-      },
-    );
   }
 
   @override
@@ -56,16 +37,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           actions: [
             RoundedIconButton(
               iconName: 'assets/icons/check.svg',
-              onPressed: () => Navigator.pop(context),
+              onPressed: _performChangePassword,
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.all(10),
-            width: double.infinity,
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          padding: EdgeInsets.all(10.0),
+          child: SingleChildScrollView(
             child: Column(
-              children: <Widget>[profilePicandName(), description(), formUI(), forgetPassword()],
+              children: <Widget>[
+                profileImageandName(),
+                descriptionText(),
+                formUI(),
+                forgetPasswordText()
+              ],
             ),
           ),
         ),
@@ -73,28 +60,34 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  Widget profilePicandName() {
-    return Container(
-      height: 180,
+  Widget profileImageandName() {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 100),
+      curve: Curves.easeInOut,
+      height: _showLogo ? 180 : 0,
       child: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: AssetImage('assets/images/person.jpg'),
-          ),
-          Text(
-            'John Peter',
-            style: TextStyle(fontSize: 16),
-          ),
-        ]),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(
+                    CurrentUserProvider().getCurrentUser().profileImageUrl),
+              ),
+              Text(
+                CurrentUserProvider().getCurrentUser().fullName,
+                style: TextStyle(fontSize: 16),
+              ),
+            ]),
       ),
     );
   }
 
-  Widget description() {
+  Widget descriptionText() {
     return Container(
       child: Text(
-          'You need to type in your current password to make sure its not someone else trying to access your data'),
+          'You need to type in your current password to make sure its not someone else trying to access your data',
+          style: TextStyle(fontSize: 14, color: Colors.grey)),
     );
   }
 
@@ -116,6 +109,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   return null;
                 },
               ),
+              SizedBox(height: 10),
               PasswordTextField(
                 label: "New Password",
                 placeholder: "munavir@123",
@@ -127,6 +121,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   return null;
                 },
               ),
+              SizedBox(height: 10),
               PasswordTextField(
                 label: "Confirm New Password",
                 placeholder: "munavir@123",
@@ -138,6 +133,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   return null;
                 },
               ),
+              SizedBox(height: 10),
             ],
           ),
         ),
@@ -145,11 +141,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  Widget forgetPassword() {
+  Widget forgetPasswordText() {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed(RouteNames.forgotPassword);
-      },
       child: Container(
         width: double.infinity,
         child: Text(
@@ -161,6 +154,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ),
         ),
       ),
+      onTap: () {
+        Navigator.of(context).pushNamed(RouteNames.forgotPassword);
+      },
     );
   }
 
