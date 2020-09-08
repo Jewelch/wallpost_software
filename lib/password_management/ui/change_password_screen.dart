@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/password_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
@@ -17,10 +19,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   var _currentPasswordTextController = TextEditingController();
   var _newPasswordTextController = TextEditingController();
   var _confirmPasswordTextController = TextEditingController();
+  Loader _loader;
 
   @override
   void initState() {
     super.initState();
+    _loader = Loader(context);
+    KeyboardVisibilityNotification().addNewListener(
+      onChange: (bool visible) => setState(() => _showLogo = visible ? false : true),
+    );
   }
 
   @override
