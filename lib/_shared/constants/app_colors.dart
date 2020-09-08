@@ -21,7 +21,8 @@ class AppColors {
   static final Color ForgetPaasswordSuccessLabelColor =
   _getColorFromHex(AppColors._darkGreyColor);
 
-
+  static final Color logoutRedColor =
+  _getColorFromHex(AppColors._logoutRedColor);
   static final String _defaultColor = "#008cbf";
   static final String _whiteColor = "FFFFFF";
   static final String _buttonColor = "3590de";
@@ -35,6 +36,8 @@ class AppColors {
   static final String _loginBackgroundGradiantColorOne = "4bafe1";
   static final String _loginBackgroundGradiantColorTwo = "2771ba";
   static final String _loginForgetPaasswordTextColor = '4bafe1';
+  static final String _logoutRedColor = '#db544e';
+
 
   static Color _getColorFromHex(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll('#', '');
