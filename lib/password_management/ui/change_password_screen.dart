@@ -7,6 +7,7 @@ import 'package:wallpost/_common_widgets/form_widgets/password_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   @override
@@ -16,18 +17,20 @@ class ChangePasswordScreen extends StatefulWidget {
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   var _showLogo = true;
+  Loader _loader;
   var _currentPasswordTextController = TextEditingController();
   var _newPasswordTextController = TextEditingController();
   var _confirmPasswordTextController = TextEditingController();
-  Loader _loader;
-
+ 
   @override
   void initState() {
     super.initState();
     _loader = Loader(context);
     KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) => setState(() => _showLogo = visible ? false : true),
+      onChange: (bool visible) =>
+          setState(() => _showLogo = visible ? false : true),
     );
+    
   }
 
   @override
@@ -51,7 +54,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         body: Container(
           height: double.infinity,
           width: double.infinity,
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.symmetric(horizontal: 12),
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
@@ -76,10 +79,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(
-                    CurrentUserProvider().getCurrentUser().profileImageUrl),
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.defaultColor, width: 1),
+                  borderRadius: BorderRadius.circular(50),
+                  image: DecorationImage(
+                      image: NetworkImage(CurrentUserProvider()
+                          .getCurrentUser()
+                          .profileImageUrl),
+                      fit: BoxFit.fill),
+                ),
               ),
               Text(
                 CurrentUserProvider().getCurrentUser().fullName,
@@ -169,5 +180,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   void _performChangePassword() async {
     if (_formKey.currentState.validate() == false) return;
+    _loader.show('Change Password...');
   }
 }
