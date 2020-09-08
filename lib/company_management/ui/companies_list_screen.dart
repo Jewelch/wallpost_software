@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/authentication/services/logout_handler.dart';
 import 'package:wallpost/company_management/entities/company.dart';
@@ -22,6 +24,14 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: SimpleAppBar(
+        title: 'Group Dashboard',
+        leading: RoundedIconButton(
+          iconName: 'assets/icons/menu.svg',
+          iconSize: 12,
+          onPressed: () => {   Navigator.pushReplacementNamed(context, RouteNames.leftMenu)},
+        ),
+      ),
       body: SafeArea(
         child: Container(
           child: Column(
@@ -62,6 +72,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   void _selectCompanyAtIndex(int index) {
     var selectedCompany = _companies[index];
     CompanySelector().selectCompanyForCurrentUser(selectedCompany);
-    Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, RouteNames.dashboard, (route) => false);
   }
 }

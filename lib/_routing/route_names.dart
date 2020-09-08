@@ -23,4 +23,8 @@ class RouteNames {
 
   //settings
   static final String settings = "/settings";
+
+  //Dashboard
+  static final String leftMenu = "/left-menu";
+
 }

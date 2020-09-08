@@ -4,6 +4,7 @@ import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/authentication/ui/login_screen.dart';
 import 'package:wallpost/company_management/ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
+import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
 import 'package:wallpost/password_management/ui/change_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_success_screen.dart';
@@ -33,6 +34,12 @@ class Routes {
 
       //Settings
       RouteNames.settings: (BuildContext context) => Settings(),
+
+
+      // Dashboard
+      RouteNames.leftMenu: (BuildContext context) => LeftMenu(),
+
+
     };
   }
 }
