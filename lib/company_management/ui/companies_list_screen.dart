@@ -29,7 +29,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         leading: RoundedIconButton(
           iconName: 'assets/icons/menu.svg',
           iconSize: 12,
-          onPressed: () => {   Navigator.pushReplacementNamed(context, RouteNames.leftMenu)},
+          onPressed: () => {   Navigator.of(context).pushNamed(RouteNames.leftMenu)},
         ),
       ),
       body: SafeArea(

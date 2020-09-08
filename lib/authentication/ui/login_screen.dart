@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
       var _ = await authenticator.login(credentials);
       Navigator.pushNamedAndRemoveUntil(
         context,
-        RouteNames.changePassword,
+        RouteNames.main,
         (_) => false,
         arguments: _passwordTextController.text,
       );

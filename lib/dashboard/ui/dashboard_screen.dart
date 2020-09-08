@@ -47,7 +47,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         leading: RoundedIconButton(
           iconName: 'assets/icons/menu.svg',
           iconSize: 12,
-          onPressed: () => {   Navigator.pushReplacementNamed(context, RouteNames.leftMenu)},
+          onPressed: () => { Navigator.of(context).pushNamed(RouteNames.leftMenu)},
         ),
       ),
       body: _screens[_currentIndex],
