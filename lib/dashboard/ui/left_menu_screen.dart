@@ -5,6 +5,7 @@ import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
+import 'package:wallpost/authentication/services/logout_handler.dart';
 
 class LeftMenu extends StatelessWidget {
   @override
@@ -111,25 +112,30 @@ class LeftMenu extends StatelessWidget {
               ],
             ),
             SizedBox(height: 40,),
-            Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.logoutRedColor, width: 2),
-                borderRadius: BorderRadius.circular(50),
-              ),
+            GestureDetector(
+              child: Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.logoutRedColor, width: 2),
+                  borderRadius: BorderRadius.circular(50),
+                ),
 
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/logout_icon.svg',
-                    width: 25,
-                    height: 25,
-                  ),
-                  Text('Logout', style: TextStyle(fontSize: 10)),
-                ],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/logout_icon.svg',
+                      width: 25,
+                      height: 25,
+                    ),
+                    Text('Logout', style: TextStyle(fontSize: 10)),
+                  ],
+                ),
               ),
+              onTap: ()=>{
+              LogoutHandler().logout(context),
+            },
             ),
           ],
         ),
