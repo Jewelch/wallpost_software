@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
       var _ = await authenticator.login(credentials);
       Navigator.pushNamedAndRemoveUntil(
         context,
-        RouteNames.main,
+        RouteNames.changePassword,
         (_) => false,
         arguments: _passwordTextController.text,
       );
@@ -204,9 +204,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget forgetPassword() {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed(RouteNames.forgotPassword);
-      },
       child: Container(
         child: Text(
           'Forgot your Password?',
@@ -217,6 +214,9 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+      onTap: () {
+        Navigator.of(context).pushNamed(RouteNames.forgotPassword);
+      },
     );
   }
 }

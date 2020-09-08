@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_routing/route_names.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -13,20 +14,14 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: SimpleAppBar(
-//        title: 'Settings',
-//        addBackButton: true,
-//        onBackButtonPress: () {
-//          //todo: add back button press action
-//        },
-//      ),
+      appBar: SimpleAppBar(
+        title: 'Settings',
+        leading: RoundedIconButton(
+          iconName: 'assets/icons/back.svg',
+          onPressed: () => {Navigator.pop(context)},
+        ),
+      ),
       body: Container(
-        decoration: BoxDecoration(
-            border: Border(
-                top: BorderSide(
-          width: 0.5,
-          color: Colors.grey,
-        ))),
         child: ListView(
           children: ListTile.divideTiles(context: context, tiles: [
             ListTile(
@@ -46,7 +41,8 @@ class _SettingsState extends State<Settings> {
             ),
             ListTile(
               title: Text('Change Password'),
-              onTap: () => {Navigator.of(context).pushNamed(RouteNames.changePassword)},
+              onTap: () =>
+                  {Navigator.of(context).pushNamed(RouteNames.changePassword)},
             ),
           ]).toList(),
         ),
