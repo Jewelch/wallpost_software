@@ -21,6 +21,9 @@ class AppColors {
   static final Color ForgetPaasswordSuccessLabelColor =
   _getColorFromHex(AppColors._darkGreyColor);
 
+  static final Color groupDashboardSearchViewColor =
+  _getColorFromHex(AppColors._mediumGreyColor);
+
   static final Color logoutRedColor =
   _getColorFromHex(AppColors._logoutRedColor);
   static final String _defaultColor = "#008cbf";
@@ -30,6 +33,8 @@ class AppColors {
   static final String _blackColor = "222222";
   static final String _placeholderColor = "AAAAAA";
   static final String _greyColor = "EBEBEB";
+  static final String _mediumGreyColor = "#dedede";
+
   static final String _darkGreyColor = "#a3a3a3";
 
   static final String _lightGreenColor = "#2bba68";
