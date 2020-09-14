@@ -15,7 +15,7 @@ class CompaniesListScreen extends StatefulWidget {
 
 class _CompaniesListScreenState extends State<CompaniesListScreen> {
   List<Company> _companies = [];
-  List<Company> _filterList=[];
+  List<Company> _filterList = [];
 
   var _searchTextController = TextEditingController();
   bool _showClearButton = false;
@@ -26,11 +26,11 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     _getCompanies();
 
     _searchTextController.addListener(() {
-        setState(() {
-          _query = _searchTextController.text;
+      setState(() {
+        _query = _searchTextController.text;
 
-          _performSearch();
-        });
+        _performSearch();
+      });
     });
     super.initState();
   }
@@ -106,11 +106,12 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
       ),
     );
   }
+
   Widget _getClearButton() {
     if (_searchTextController.text.isEmpty) {
       return IconButton(
-          onPressed: () => _searchTextController.clear(),
-          icon: Icon(Icons.search),
+        onPressed: () => _searchTextController.clear(),
+        icon: Icon(Icons.search),
       );
     }
 
@@ -119,19 +120,19 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
       icon: Icon(Icons.clear),
     );
   }
-void _performSearch() {
-  _filterList = new List<Company>();
-  for (int i = 0; i < _companies.length; i++) {
-    var item = _companies[i];
 
-    if (item.name.toLowerCase().contains(_query.toLowerCase())) {
-      setState(() {
-        _filterList.add(item);
-      });
+  void _performSearch() {
+    _filterList = new List<Company>();
+    for (int i = 0; i < _companies.length; i++) {
+      var item = _companies[i];
+
+      if (item.name.toLowerCase().contains(_query.toLowerCase())) {
+        setState(() {
+          _filterList.add(item);
+        });
+      }
     }
   }
-
-}
 
   void _selectCompanyAtIndex(int index) {
     var selectedCompany = _companies[index];
