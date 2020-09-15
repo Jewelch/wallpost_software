@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_management/entities/company.dart';
 import 'package:wallpost/company_management/services/companies_list_provider.dart';
 import 'package:wallpost/company_management/services/company_selector.dart';
+import 'package:wallpost/company_management/ui/company_list_card_with_revenue.dart';
 import 'package:wallpost/company_management/ui/company_list_card_without_revenue.dart';
 
 class CompaniesListScreen extends StatefulWidget {
@@ -18,13 +20,13 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   List<Company> _filterList = [];
 
   var _searchTextController = TextEditingController();
-  bool _showClearButton = false;
   String _query = "";
 
   @override
   void initState() {
-    _getCompanies();
+    super.initState();
 
+    _getCompanies();
     _searchTextController.addListener(() {
       setState(() {
         _query = _searchTextController.text;
@@ -32,7 +34,6 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         _performSearch();
       });
     });
-    super.initState();
   }
 
   @override
@@ -62,11 +63,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                   child: ListView.builder(
                     itemCount: _filterList.length,
                     itemBuilder: (context, index) {
-                      return CompanyListCardWithOutRevenue(
-                          company: _filterList[index],
-                          onPressed: () => {
-                                _selectCompanyAtIndex(index),
-                              });
+                      return _getCompanyCard(index);
                     },
                   ),
                 ),
@@ -139,5 +136,22 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     CompanySelector().selectCompanyForCurrentUser(selectedCompany);
     Navigator.pushNamedAndRemoveUntil(
         context, RouteNames.dashboard, (route) => false);
+  }
+
+  Widget _getCompanyCard(int index) {
+    if(_filterList[index].shouldShowRevenue)
+      return CompanyListCardWithRevenue(company: _filterList[index],onPressed: ()=>{
+        _selectCompanyAtIndex(index),
+
+
+      },);
+    else
+     return CompanyListCardWithOutRevenue(
+        company: _filterList[index],
+        onPressed: () => {
+          _selectCompanyAtIndex(index),
+
+        },
+      );
   }
 }

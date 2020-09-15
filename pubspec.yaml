@@ -30,6 +30,8 @@ dependencies:
   flag: ^3.0.0-pre
   flutter_statusbarcolor: ^0.2.3
   country_icons: ^1.1.1
+  percent_indicator: ^2.1.6
+
 
 dev_dependencies:
   flutter_test:
