@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
-import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
 import 'package:wallpost/company_management/entities/company.dart';
 import 'package:wallpost/company_management/services/companies_list_provider.dart';
 import 'package:wallpost/company_management/services/company_selector.dart';
@@ -21,6 +22,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
 
   var _searchTextController = TextEditingController();
   String _query = "";
+  bool _waiting = true;
 
   @override
   void initState() {
@@ -56,19 +58,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
               color: AppColors.greyColor,
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            child: Column(
-              children: [
-                _createSearchView(),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: _filterList.length,
-                    itemBuilder: (context, index) {
-                      return _getCompanyCard(index);
-                    },
-                  ),
-                ),
-              ],
-            ),
+            child: _createListWidget(),
           ),
         ),
       ),
@@ -76,11 +66,23 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   }
 
   void _getCompanies() async {
-    var companies = await CompaniesListProvider().get();
-    setState(() {
-      _companies.addAll(companies);
-      _filterList.addAll(companies);
-    });
+    try {
+      var companies = await CompaniesListProvider().get();
+
+      setState(() {
+        _waiting=false;
+        _companies.addAll(companies);
+        _filterList.addAll(companies);
+      });
+    } on APIException catch (error) {
+      Alert.showSimpleAlert(context,
+          title: 'Loading  Failed',
+          message: error.userReadableMessage,
+          buttonTitle: 'Okay');
+      setState(() {
+        _waiting=false;
+      });
+    }
   }
 
   Widget _createSearchView() {
@@ -139,19 +141,66 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   }
 
   Widget _getCompanyCard(int index) {
-    if(_filterList[index].shouldShowRevenue)
-      return CompanyListCardWithRevenue(company: _filterList[index],onPressed: ()=>{
-        _selectCompanyAtIndex(index),
-
-
-      },);
-    else
-     return CompanyListCardWithOutRevenue(
+    if (_filterList[index].shouldShowRevenue)
+      return CompanyListCardWithRevenue(
         company: _filterList[index],
         onPressed: () => {
           _selectCompanyAtIndex(index),
-
         },
       );
+    else
+      return CompanyListCardWithOutRevenue(
+        company: _filterList[index],
+        onPressed: () => {
+          _selectCompanyAtIndex(index),
+        },
+      );
+  }
+
+  Widget _createListWidget() {
+    if (_companies.isNotEmpty)
+      return Column(
+        children: [
+          _createSearchView(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _filterList.length,
+              itemBuilder: (context, index) {
+                return _getCompanyCard(index);
+              },
+            ),
+          ),
+        ],
+      );
+    else if (!_waiting) {
+      return Container(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Failed to load',
+                style: (TextStyle(color: AppColors.labelColor, fontSize: 16)),
+              ),
+              FlatButton(
+                child: Text('Retry'),
+                onPressed: () => {
+                  setState(() {
+                    _waiting = true;
+                  }),
+                  _getCompanies()
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
   }
 }
