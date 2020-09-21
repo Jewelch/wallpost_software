@@ -30,18 +30,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void _initScreens() {
     var selectedCompany =
         SelectedCompanyProvider().getSelectCompanyForCurrentUser();
-    // if (selectedCompany.shouldShowRevenue) {
-    //   _screens.add(SalesMyPortalScreen());
-    // } else {
-    //   _screens.add(EmployeeMyPortalScreen());
-    // }
-
-    if (!selectedCompany.shouldShowRevenue) {
+    if (selectedCompany.shouldShowRevenue) {
       _screens.add(SalesMyPortalScreen());
     } else {
       _screens.add(EmployeeMyPortalScreen());
     }
-    
+
     _screens.add(ModulesScreen());
     _screens.add(RequestsScreen());
     _screens.add(NotificationsScreen());
