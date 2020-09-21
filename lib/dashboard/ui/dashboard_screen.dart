@@ -28,12 +28,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _initScreens() {
-    var selectedCompany = SelectedCompanyProvider().getSelectCompanyForCurrentUser();
-    if (selectedCompany.shouldShowRevenue) {
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectCompanyForCurrentUser();
+    // if (selectedCompany.shouldShowRevenue) {
+    //   _screens.add(SalesMyPortalScreen());
+    // } else {
+    //   _screens.add(EmployeeMyPortalScreen());
+    // }
+
+    if (!selectedCompany.shouldShowRevenue) {
       _screens.add(SalesMyPortalScreen());
     } else {
       _screens.add(EmployeeMyPortalScreen());
     }
+    
     _screens.add(ModulesScreen());
     _screens.add(RequestsScreen());
     _screens.add(NotificationsScreen());
@@ -47,7 +55,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         leading: RoundedIconButton(
           iconName: 'assets/icons/menu.svg',
           iconSize: 12,
-          onPressed: () => { Navigator.of(context).pushNamed(RouteNames.leftMenu)},
+          onPressed: () =>
+              {Navigator.of(context).pushNamed(RouteNames.leftMenu)},
         ),
       ),
       body: _screens[_currentIndex],
@@ -67,46 +76,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            NavBarItem(
-              iconName: 'assets/icons/bottom_nav_my_portal_icon.svg',
-              title: 'My Portal',
-              isSelected: _currentIndex == 0,
-              onPressed: () {
-                setState(() {
-                  _currentIndex = 0;
-                });
-              },
+            Flexible(
+              child: NavBarItem(
+                iconName: 'assets/icons/bottom_nav_my_portal_icon.svg',
+                title: 'My Portal',
+                isSelected: _currentIndex == 0,
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = 0;
+                  });
+                },
+              ),
             ),
-            NavBarItem(
-              iconName: 'assets/icons/bottom_nav_modules_icon.svg',
-              title: 'Modules',
-              isSelected: _currentIndex == 1,
-              onPressed: () {
-                setState(() {
-                  _currentIndex = 1;
-                });
-              },
+            Flexible(
+              child: NavBarItem(
+                iconName: 'assets/icons/bottom_nav_modules_icon.svg',
+                title: 'Modules',
+                isSelected: _currentIndex == 1,
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = 1;
+                  });
+                },
+              ),
             ),
             SizedBox(width: 32),
-            NavBarItem(
-              iconName: 'assets/icons/bottom_nav_requests_icon.svg',
-              title: 'Requests',
-              isSelected: _currentIndex == 2,
-              onPressed: () {
-                setState(() {
-                  _currentIndex = 2;
-                });
-              },
+            Flexible(
+              child: NavBarItem(
+                iconName: 'assets/icons/bottom_nav_requests_icon.svg',
+                title: 'Requests',
+                isSelected: _currentIndex == 2,
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = 2;
+                  });
+                },
+              ),
             ),
-            NavBarItem(
-              iconName: 'assets/icons/bottom_nav_notifications_icon.svg',
-              title: 'Notifications',
-              isSelected: _currentIndex == 3,
-              onPressed: () {
-                setState(() {
-                  _currentIndex = 3;
-                });
-              },
+            Flexible(
+              child: NavBarItem(
+                iconName: 'assets/icons/bottom_nav_notifications_icon.svg',
+                title: 'Notifications',
+                isSelected: _currentIndex == 3,
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = 3;
+                  });
+                },
+              ),
             ),
           ],
         ),
