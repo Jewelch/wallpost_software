@@ -46,12 +46,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             iconName: 'assets/icons/back.svg',
             onPressed: () => Navigator.pop(context),
           ),
-          actions: [
-            RoundedIconButton(
-              iconName: 'assets/icons/check.svg',
-              onPressed: _changePassword,
-            ),
-          ],
+          trailing: RoundedIconButton(
+            iconName: 'assets/icons/check.svg',
+            onPressed: _changePassword,
+          ),
+          showDivider: true,
         ),
         body: Container(
           height: double.infinity,
