@@ -15,7 +15,7 @@ class LeftMenuScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
-        title: getTitle(),
+        title: _getTitle(),
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
           onPressed: () => Navigator.pop(context),
@@ -46,86 +46,72 @@ class LeftMenuScreen extends StatelessWidget {
             ),
             SizedBox(height: 80),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  child: Container(
-                    width: 70,
-                    height: 70,
-                    margin: EdgeInsets.only(left: 50),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.defaultColor, width: 2),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/settings_icon.svg',
-                          width: 25,
-                          height: 25,
-                        ),
-                        Text('Settings', style: TextStyle(fontSize: 10)),
-                      ],
-                    ),
-                  ),
-                  onTap: () => {Navigator.of(context).pushNamed(RouteNames.settings)},
+                _buildLeftMenuButton(
+                  title: 'Settings',
+                  imageName: 'assets/icons/settings_icon.svg',
+                  borderColor: AppColors.defaultColor,
+                  onPressed: () => Navigator.of(context).pushNamed(RouteNames.settings),
                 ),
-                Spacer(),
-                Container(
-                  width: 70,
-                  height: 70,
-                  margin: EdgeInsets.only(right: 50),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.defaultColor, width: 2),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/info_icon.svg',
-                        width: 25,
-                        height: 25,
-                      ),
-                      Text('About', style: TextStyle(fontSize: 10)),
-                    ],
-                  ),
+                SizedBox(width: 40),
+                _buildLeftMenuButton(
+                  title: 'Logout',
+                  imageName: 'assets/icons/logout_icon.svg',
+                  imageSize: 22,
+                  borderColor: AppColors.logoutRedColor,
+                  onPressed: () => LogoutHandler().logout(context),
                 ),
+                SizedBox(height: 40),
               ],
             ),
-            SizedBox(height: 40),
-            GestureDetector(
-              child: Container(
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.logoutRedColor, width: 2),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/logout_icon.svg',
-                      width: 25,
-                      height: 25,
-                    ),
-                    Text('Logout', style: TextStyle(fontSize: 10)),
-                  ],
-                ),
-              ),
-              onTap: () => LogoutHandler().logout(context),
-            ),
+            SizedBox(height: 120),
           ],
         ),
       ),
     );
   }
 
-  getTitle() {
+  String _getTitle() {
     if (SelectedCompanyProvider().getSelectCompanyForCurrentUser() == null)
       return '';
     else
       return SelectedCompanyProvider().getSelectCompanyForCurrentUser().name;
+  }
+
+  Widget _buildLeftMenuButton({
+    String title,
+    String imageName,
+    double imageSize = 24,
+    Color borderColor,
+    VoidCallback onPressed,
+  }) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(100),
+      child: Container(
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          border: Border.all(color: borderColor, width: 2),
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: FlatButton(
+          padding: EdgeInsets.all(0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                imageName,
+                width: imageSize,
+                height: imageSize,
+              ),
+              SizedBox(height: 4),
+              Text(title, style: TextStyle(fontSize: 10)),
+            ],
+          ),
+          onPressed: onPressed,
+        ),
+      ),
+    );
   }
 }
