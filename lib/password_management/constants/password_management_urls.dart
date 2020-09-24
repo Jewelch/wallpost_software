@@ -5,7 +5,7 @@ class PasswordManagementUrls {
     return '${BaseUrls.baseUrlV2()}/resetPassword?';
   }
 
-  static String changePasswordUrl(String companyId) {
-    return '${BaseUrls.baseUrlV2()}/companies/$companyId/users/password?';
+  static String changePasswordUrl() {
+    return '${BaseUrls.baseUrlV2()}/changePassword?';
   }
 }
