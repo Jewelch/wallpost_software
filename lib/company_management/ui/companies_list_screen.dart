@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
@@ -10,6 +11,7 @@ import 'package:wallpost/company_management/services/companies_list_provider.dar
 import 'package:wallpost/company_management/services/company_selector.dart';
 import 'package:wallpost/company_management/ui/company_list_card_with_revenue.dart';
 import 'package:wallpost/company_management/ui/company_list_card_without_revenue.dart';
+import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
 
 class CompaniesListScreen extends StatefulWidget {
   @override
@@ -17,22 +19,20 @@ class CompaniesListScreen extends StatefulWidget {
 }
 
 class _CompaniesListScreenState extends State<CompaniesListScreen> {
+  CompaniesListProvider _companiesListProvider = CompaniesListProvider();
   List<Company> _companies = [];
   List<Company> _filterList = [];
 
   var _searchTextController = TextEditingController();
   String _query = "";
-  bool _waiting = true;
 
   @override
   void initState() {
     super.initState();
-
     _getCompanies();
     _searchTextController.addListener(() {
       setState(() {
         _query = _searchTextController.text;
-
         _performSearch();
       });
     });
@@ -41,13 +41,13 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: 'Group Dashboard',
         leading: RoundedIconButton(
           iconName: 'assets/icons/menu.svg',
           iconSize: 12,
-          onPressed: () =>
-              {Navigator.of(context).pushNamed(RouteNames.leftMenu)},
+          onPressed: () => ScreenPresenter.present(LeftMenuScreen(), context, slideDirection: SlideDirection.fromLeft),
         ),
       ),
       body: SafeArea(
@@ -65,26 +65,6 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     );
   }
 
-  void _getCompanies() async {
-    try {
-      var companies = await CompaniesListProvider().get();
-
-      setState(() {
-        _waiting=false;
-        _companies.addAll(companies);
-        _filterList.addAll(companies);
-      });
-    } on APIException catch (error) {
-      Alert.showSimpleAlert(context,
-          title: 'Loading  Failed',
-          message: error.userReadableMessage,
-          buttonTitle: 'Okay');
-      setState(() {
-        _waiting=false;
-      });
-    }
-  }
-
   Widget _createSearchView() {
     return Container(
       padding: EdgeInsets.only(left: 10),
@@ -97,7 +77,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
       ),
       child: TextField(
         decoration: InputDecoration(
-          hintText: 'Search..',
+          hintText: 'Search By Company Name',
           suffixIcon: _getClearButton(),
           border: InputBorder.none,
         ),
@@ -120,24 +100,44 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     );
   }
 
-  void _performSearch() {
-    _filterList = new List<Company>();
-    for (int i = 0; i < _companies.length; i++) {
-      var item = _companies[i];
-
-      if (item.name.toLowerCase().contains(_query.toLowerCase())) {
-        setState(() {
-          _filterList.add(item);
-        });
-      }
+  Widget _createListWidget() {
+    if (_companies.isNotEmpty)
+      return Column(
+        children: [
+          _createSearchView(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _filterList.length,
+              itemBuilder: (context, index) {
+                return _getCompanyCard(index);
+              },
+            ),
+          ),
+        ],
+      );
+    else if (_companiesListProvider.isLoading == false) {
+      return Container(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Failed to load companies',
+                style: (TextStyle(color: AppColors.labelColor, fontSize: 16)),
+              ),
+              FlatButton(
+                child: Text('Tap Here To Retry'),
+                onPressed: () => {setState(() {}), _getCompanies()},
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        child: Center(child: CircularProgressIndicator()),
+      );
     }
-  }
-
-  void _selectCompanyAtIndex(int index) {
-    var selectedCompany = _companies[index];
-    CompanySelector().selectCompanyForCurrentUser(selectedCompany);
-    Navigator.pushNamedAndRemoveUntil(
-        context, RouteNames.dashboard, (route) => false);
   }
 
   Widget _getCompanyCard(int index) {
@@ -157,50 +157,36 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
       );
   }
 
-  Widget _createListWidget() {
-    if (_companies.isNotEmpty)
-      return Column(
-        children: [
-          _createSearchView(),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _filterList.length,
-              itemBuilder: (context, index) {
-                return _getCompanyCard(index);
-              },
-            ),
-          ),
-        ],
-      );
-    else if (!_waiting) {
-      return Container(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Failed to load',
-                style: (TextStyle(color: AppColors.labelColor, fontSize: 16)),
-              ),
-              FlatButton(
-                child: Text('Retry'),
-                onPressed: () => {
-                  setState(() {
-                    _waiting = true;
-                  }),
-                  _getCompanies()
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return Container(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+  void _selectCompanyAtIndex(int index) {
+    var selectedCompany = _companies[index];
+    CompanySelector().selectCompanyForCurrentUser(selectedCompany);
+    Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
+  }
+
+  void _getCompanies() async {
+    try {
+      var companies = await _companiesListProvider.get();
+      setState(() {
+        _companies.addAll(companies);
+        _filterList.addAll(companies);
+      });
+    } on APIException catch (error) {
+      Alert.showSimpleAlert(context,
+          title: 'Failed To Load Companies', message: error.userReadableMessage, buttonTitle: 'Okay');
+      setState(() {});
+    }
+  }
+
+  void _performSearch() {
+    _filterList = new List<Company>();
+    for (int i = 0; i < _companies.length; i++) {
+      var item = _companies[i];
+
+      if (item.name.toLowerCase().contains(_query.toLowerCase())) {
+        setState(() {
+          _filterList.add(item);
+        });
+      }
     }
   }
 }
