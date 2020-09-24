@@ -1,7 +1,7 @@
 import 'package:wallpost/_shared/constants/base_urls.dart';
 
 class PasswordManagementUrls {
-  static String passwordResetterUrl() {
+  static String resetPasswordUrl() {
     return '${BaseUrls.baseUrlV2()}/resetPassword?';
   }
 
