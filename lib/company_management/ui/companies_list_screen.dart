@@ -22,20 +22,13 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   CompaniesListProvider _companiesListProvider = CompaniesListProvider();
   List<Company> _companies = [];
   List<Company> _filterList = [];
-
   var _searchTextController = TextEditingController();
-  String _query = "";
 
   @override
   void initState() {
     super.initState();
     _getCompanies();
-    _searchTextController.addListener(() {
-      setState(() {
-        _query = _searchTextController.text;
-        _performSearch();
-      });
-    });
+    _searchTextController.addListener(() => _performSearch());
   }
 
   @override
@@ -127,7 +120,10 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
               ),
               FlatButton(
                 child: Text('Tap Here To Retry'),
-                onPressed: () => {setState(() {}), _getCompanies()},
+                onPressed: () {
+                  setState(() {});
+                  _getCompanies();
+                },
               ),
             ],
           ),
@@ -158,7 +154,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   }
 
   void _selectCompanyAtIndex(int index) {
-    var selectedCompany = _companies[index];
+    var selectedCompany = _filterList[index];
     CompanySelector().selectCompanyForCurrentUser(selectedCompany);
     Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
   }
@@ -181,12 +177,10 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     _filterList = new List<Company>();
     for (int i = 0; i < _companies.length; i++) {
       var item = _companies[i];
-
-      if (item.name.toLowerCase().contains(_query.toLowerCase())) {
-        setState(() {
-          _filterList.add(item);
-        });
+      if (item.name.toLowerCase().contains(_searchTextController.text.toLowerCase())) {
+        _filterList.add(item);
       }
     }
+    setState(() {});
   }
 }
