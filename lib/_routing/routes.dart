@@ -7,7 +7,7 @@ import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/password_management/ui/change_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_success_screen.dart';
-import 'package:wallpost/settings/ui/settings.dart';
+import 'package:wallpost/settings/ui/settings_screen.dart';
 
 class Routes {
   Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
@@ -25,7 +25,7 @@ class Routes {
       RouteNames.dashboard: (BuildContext context) => DashboardScreen(),
 
       //Settings
-      RouteNames.settings: (BuildContext context) => Settings(),
+      RouteNames.settings: (BuildContext context) => SettingsScreen(),
 
       //Password management
       RouteNames.forgotPassword: (BuildContext context) => ForgotPasswordScreen(),
