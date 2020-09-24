@@ -61,6 +61,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               children: <Widget>[
                 profileImageAndNameWidget(),
                 descriptionText(),
+                SizedBox(height: 12),
                 formUI(),
               ],
             ),
