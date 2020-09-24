@@ -6,19 +6,19 @@ import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 import 'package:wallpost/authentication/services/logout_handler.dart';
-import 'package:wallpost/company_management/entities/company.dart';
-import 'package:wallpost/company_management/services/company_selector.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 
-class LeftMenu extends StatelessWidget {
+//TODO: Add loader when profile picture loads or add a placeholder image
+class LeftMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: getTitle(),
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
-          onPressed: () => {Navigator.pop(context)},
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Container(
@@ -33,10 +33,7 @@ class LeftMenu extends StatelessWidget {
                   border: Border.all(color: AppColors.defaultColor, width: 1),
                   borderRadius: BorderRadius.circular(50),
                   image: DecorationImage(
-                      image: NetworkImage(CurrentUserProvider()
-                          .getCurrentUser()
-                          .profileImageUrl),
-                      fit: BoxFit.fill),
+                      image: NetworkImage(CurrentUserProvider().getCurrentUser().profileImageUrl), fit: BoxFit.fill),
                 ),
               ),
             ),
@@ -44,27 +41,11 @@ class LeftMenu extends StatelessWidget {
             Center(
               child: Text(
                 CurrentUserProvider().getCurrentUser().fullName,
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+                style: TextStyle(fontSize: 18),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 80),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Line Manager:  ',
-                    style: TextStyle(color: AppColors.labelColor)),
-                Text(
-                  'John Peter',
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 80,
-            ),
-            Row(
-
               children: [
                 GestureDetector(
                   child: Container(
@@ -87,9 +68,7 @@ class LeftMenu extends StatelessWidget {
                       ],
                     ),
                   ),
-                  onTap: ()=>{
-                  Navigator.of(context).pushNamed(RouteNames.settings)
-                  },
+                  onTap: () => {Navigator.of(context).pushNamed(RouteNames.settings)},
                 ),
                 Spacer(),
                 Container(
@@ -114,7 +93,7 @@ class LeftMenu extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 40,),
+            SizedBox(height: 40),
             GestureDetector(
               child: Container(
                 width: 70,
@@ -123,7 +102,6 @@ class LeftMenu extends StatelessWidget {
                   border: Border.all(color: AppColors.logoutRedColor, width: 2),
                   borderRadius: BorderRadius.circular(50),
                 ),
-
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -136,9 +114,7 @@ class LeftMenu extends StatelessWidget {
                   ],
                 ),
               ),
-              onTap: ()=>{
-              LogoutHandler().logout(context),
-            },
+              onTap: () => LogoutHandler().logout(context),
             ),
           ],
         ),
@@ -147,7 +123,9 @@ class LeftMenu extends StatelessWidget {
   }
 
   getTitle() {
-    if(SelectedCompanyProvider().getSelectCompanyForCurrentUser()==null) return '';
-    else return SelectedCompanyProvider().getSelectCompanyForCurrentUser().name;
+    if (SelectedCompanyProvider().getSelectCompanyForCurrentUser() == null)
+      return '';
+    else
+      return SelectedCompanyProvider().getSelectCompanyForCurrentUser().name;
   }
 }
