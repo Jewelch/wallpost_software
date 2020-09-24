@@ -9,7 +9,7 @@ class Loader {
     _progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
   }
 
-  void show(String message) async {
+  Future<void> show(String message) async {
     if (_progressDialog.isShowing()) {
       return;
     }
@@ -29,7 +29,7 @@ class Loader {
     await _progressDialog.show();
   }
 
-  void hide() async {
+  Future<void> hide() async {
     await _progressDialog.hide();
   }
 }
