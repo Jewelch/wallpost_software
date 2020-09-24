@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget leading;
-  final List<Widget> actions;
-  final PreferredSizeWidget bottom;
+  final Widget trailing;
+  final bool showDivider;
 
   @override
   final Size preferredSize;
@@ -12,9 +12,9 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   SimpleAppBar({
     this.title,
     this.leading,
-    this.actions,
-    this.bottom,
-  }) : preferredSize = Size.fromHeight(56 + (bottom != null ? bottom.preferredSize.height : 0.0));
+    this.trailing,
+    this.showDivider = false,
+  }) : preferredSize = Size.fromHeight(56);
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +26,31 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0.0,
       automaticallyImplyLeading: false,
       // Don't show the leading button
-      title: Text(
-        title,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.black),
+      title: Column(
+        children: [
+          Row(
+            children: [
+              SizedBox(width: 12),
+              if (leading != null) this.leading,
+              if (leading != null) SizedBox(width: 8),
+              Expanded(
+                child: Container(
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ),
+              ),
+              if (trailing != null) SizedBox(width: 8),
+              if (trailing != null) this.trailing,
+              SizedBox(width: 12),
+            ],
+          ),
+          if (showDivider) SizedBox(height: 8),
+          if (showDivider) Divider(height: 1),
+        ],
       ),
-      leading: leading,
-      actions: actions,
-      bottom: bottom,
     );
   }
 }
