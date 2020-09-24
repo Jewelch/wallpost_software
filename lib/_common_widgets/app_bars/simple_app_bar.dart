@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'app_bar_divider.dart';
+
 class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget leading;
@@ -24,15 +26,16 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
       brightness: Brightness.light,
       backgroundColor: Colors.white,
       elevation: 0.0,
+      bottom: showDivider ? AppBarDivider() : null,
+      // Don't show the default leading button
       automaticallyImplyLeading: false,
-      // Don't show the leading button
       title: Column(
         children: [
           Row(
             children: [
               SizedBox(width: 12),
-              if (leading != null) this.leading,
-              if (leading != null) SizedBox(width: 8),
+              this.leading ?? SizedBox(width: 32),
+              SizedBox(width: 8),
               Expanded(
                 child: Container(
                   child: Text(
@@ -42,13 +45,11 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               ),
-              if (trailing != null) SizedBox(width: 8),
-              if (trailing != null) this.trailing,
+              SizedBox(width: 8),
+              this.trailing ?? SizedBox(width: 32),
               SizedBox(width: 12),
             ],
           ),
-          if (showDivider) SizedBox(height: 8),
-          if (showDivider) Divider(height: 1),
         ],
       ),
     );
