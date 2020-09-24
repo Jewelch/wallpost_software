@@ -32,9 +32,13 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       title: Row(
         children: [
-          this.leading ?? SizedBox(width: 12),
+          SizedBox(width: 12),
+          if (leading != null) leading,
+          if (leading != null) SizedBox(width: 8),
           Expanded(child: _makeCenterTitleView()),
-          this.trailing ?? SizedBox(width: 12),
+          if (trailing != null) SizedBox(width: 8),
+          if (trailing != null) trailing,
+          SizedBox(width: 12),
         ],
       ),
     );
@@ -44,7 +48,7 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(100),
       child: Container(
-        height: 36,
+        height: 32,
         width: double.infinity,
         color: AppColors.defaultColor,
         child: Row(
