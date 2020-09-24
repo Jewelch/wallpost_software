@@ -6,13 +6,16 @@ import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 import 'package:wallpost/authentication/services/logout_handler.dart';
+import 'package:wallpost/company_management/entities/company.dart';
+import 'package:wallpost/company_management/services/company_selector.dart';
+import 'package:wallpost/company_management/services/selected_company_provider.dart';
 
 class LeftMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SimpleAppBar(
-        title: "SM",
+        title: getTitle(),
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
           onPressed: () => {Navigator.pop(context)},
@@ -141,5 +144,10 @@ class LeftMenu extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  getTitle() {
+    if(SelectedCompanyProvider().getSelectCompanyForCurrentUser()==null) return '';
+    else return SelectedCompanyProvider().getSelectCompanyForCurrentUser().name;
   }
 }
