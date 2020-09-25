@@ -64,7 +64,6 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
                       Text(
                         'Approvals Data',
                         textAlign: TextAlign.center,
-                        
                       ),
                     ],
                   ),

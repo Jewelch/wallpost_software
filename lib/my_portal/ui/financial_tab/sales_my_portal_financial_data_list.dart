@@ -11,7 +11,7 @@ class SalesMyPortalFinancialDataList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top :3),
+      margin: EdgeInsets.only(top :5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
