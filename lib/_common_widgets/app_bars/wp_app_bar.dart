@@ -8,6 +8,7 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget trailing;
   final bool showCompanySwitchButton;
   final int companySwitchBadgeCount;
+  final VoidCallback onCompanySwitchButtonPressed;
 
   @override
   final Size preferredSize;
@@ -18,6 +19,7 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.trailing,
     this.showCompanySwitchButton = false,
     this.companySwitchBadgeCount = 0,
+    this.onCompanySwitchButtonPressed,
   }) : preferredSize = Size.fromHeight(56);
 
   @override
@@ -84,7 +86,7 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
                 width: 20,
                 height: 20,
               ),
-              onPressed: () {},
+              onPressed: () => onCompanySwitchButtonPressed(),
             ),
           ),
           if (companySwitchBadgeCount > 0)
@@ -99,17 +101,19 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _makeBadge() {
-    return Container(
-      width: 16,
-      height: 16,
-      decoration: BoxDecoration(
-        color: AppColors.badgeColor,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Center(
-        child: Text(
-          '${companySwitchBadgeCount < 99 ? companySwitchBadgeCount : '99+'}',
-          style: TextStyle(color: Colors.white, fontSize: companySwitchBadgeCount < 99 ? 10 : 8),
+    return IgnorePointer(
+      child: Container(
+        width: 16,
+        height: 16,
+        decoration: BoxDecoration(
+          color: AppColors.badgeColor,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Center(
+          child: Text(
+            '${companySwitchBadgeCount < 99 ? companySwitchBadgeCount : '99+'}',
+            style: TextStyle(color: Colors.white, fontSize: companySwitchBadgeCount < 99 ? 10 : 8),
+          ),
         ),
       ),
     );
