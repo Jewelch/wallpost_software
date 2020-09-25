@@ -3,34 +3,34 @@ import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 class EmployeePerformance extends JSONInitializable {
-  String _overallYearlyPerformancePercentage;
+  int _overallYearlyPerformancePercent;
   String _bestPerformanceMonth;
-  String _bestPerformancePercentage;
+  int _bestPerformancePercent;
   String _leastPerformanceMonth;
-  String _leastPerformancePercent;
+  int _leastPerformancePercent;
 
   EmployeePerformance.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var leastMap = sift.readMapFromMap(jsonMap, 'least');
       var bestMap = sift.readMapFromMap(jsonMap, 'best');
-      _overallYearlyPerformancePercentage = sift.readStringFromMap(jsonMap, 'ytd_performance');
+      _overallYearlyPerformancePercent = int.parse(sift.readStringFromMap(jsonMap, 'ytd_performance'));
       _bestPerformanceMonth = sift.readStringFromMap(bestMap, 'month');
-      _bestPerformancePercentage = sift.readStringFromMap(bestMap, 'score');
+      _bestPerformancePercent = int.parse(sift.readStringFromMap(bestMap, 'score'));
       _leastPerformanceMonth = sift.readStringFromMap(leastMap, 'month');
-      _leastPerformancePercent = sift.readStringFromMap(leastMap, 'score');
+      _leastPerformancePercent = int.parse(sift.readStringFromMap(leastMap, 'score'));
     } on SiftException catch (e) {
       throw MappingException('Failed to cast EmployeePerformance response. Error message - ${e.errorMessage}');
     }
   }
 
-  String get overallYearlyPerformancePercentage => _overallYearlyPerformancePercentage;
+  int get overallYearlyPerformancePercent => _overallYearlyPerformancePercent;
 
   String get bestPerformanceMonth => _bestPerformanceMonth;
 
-  String get bestPerformancePercentage => _bestPerformancePercentage;
+  int get bestPerformancePercent => _bestPerformancePercent;
 
   String get leastPerformanceMonth => _leastPerformanceMonth;
 
-  String get leastPerformancePercent => _leastPerformancePercent;
+  int get leastPerformancePercent => _leastPerformancePercent;
 }

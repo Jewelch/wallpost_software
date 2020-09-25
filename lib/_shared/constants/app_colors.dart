@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  //TODO: Refactor with the team
   static final Color defaultColor = _getColorFromHex(AppColors._defaultColor);
   static final Color defaultColorDark = _getColorFromHex(AppColors._defaultColorDark);
   static final Color badgeColor = _getColorFromHex(AppColors._badgeColor);
@@ -24,6 +25,11 @@ class AppColors {
   static final Color groupDashboardSearchViewColor = _getColorFromHex(AppColors._mediumGreyColor);
 
   static final Color logoutRedColor = _getColorFromHex(AppColors._logoutRedColor);
+
+  static final Color goodPerformanceColor = _getColorFromHex('#2bba68');
+  static final Color averagePerformanceColor = _getColorFromHex('#f0ad4e');
+  static final Color badPerformanceColor = _getColorFromHex('#db544e');
+
   static final String _defaultColor = "#008cbf";
   static final String _defaultColorDark = "#0376a0";
   static final String _badgeColor = "#db544e";
