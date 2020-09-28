@@ -2,22 +2,22 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
 import 'package:wallpost/password_management/constants/password_management_urls.dart';
-import 'package:wallpost/password_management/entities/reset_password_form.dart';
+import 'package:wallpost/password_management/entities/change_password_form.dart';
 
-class PasswordResetter {
+class PasswordChanger {
   final NetworkAdapter _networkAdapter;
   bool isLoading = false;
   String _sessionId;
 
-  PasswordResetter() : _networkAdapter = WPAPI();
+  PasswordChanger() : _networkAdapter = WPAPI();
 
-  PasswordResetter.initWith(this._networkAdapter);
+  PasswordChanger.initWith(this._networkAdapter);
 
-  Future<void> resetPassword(ResetPasswordForm resetPasswordForm) async {
-    var url = PasswordManagementUrls.resetPasswordUrl();
+  Future<void> changePassword(ChangePasswordForm changePasswordForm) async {
+    var url = PasswordManagementUrls.changePasswordUrl();
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
-    apiRequest.addParameters(resetPasswordForm.toJson());
+    apiRequest.addParameters(changePasswordForm.toJson());
     isLoading = true;
 
     try {

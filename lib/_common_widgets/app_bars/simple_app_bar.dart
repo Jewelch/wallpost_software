@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'app_bar_divider.dart';
+
 class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget leading;
-  final List<Widget> actions;
-  final PreferredSizeWidget bottom;
+  final Widget trailing;
+  final bool showDivider;
 
   @override
   final Size preferredSize;
@@ -12,9 +14,9 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   SimpleAppBar({
     this.title,
     this.leading,
-    this.actions,
-    this.bottom,
-  }) : preferredSize = Size.fromHeight(56 + (bottom != null ? bottom.preferredSize.height : 0.0));
+    this.trailing,
+    this.showDivider = false,
+  }) : preferredSize = Size.fromHeight(56);
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +26,32 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
       brightness: Brightness.light,
       backgroundColor: Colors.white,
       elevation: 0.0,
+      bottom: showDivider ? AppBarDivider() : null,
+      // Don't show the default leading button
       automaticallyImplyLeading: false,
-      // Don't show the leading button
-      title: Text(
-        title,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.black),
+      title: Column(
+        children: [
+          Row(
+            children: [
+              SizedBox(width: 12),
+              this.leading ?? SizedBox(width: 32),
+              SizedBox(width: 8),
+              Expanded(
+                child: Container(
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ),
+              ),
+              SizedBox(width: 8),
+              this.trailing ?? SizedBox(width: 32),
+              SizedBox(width: 12),
+            ],
+          ),
+        ],
       ),
-      leading: leading,
-      actions: actions,
-      bottom: bottom,
     );
   }
 }

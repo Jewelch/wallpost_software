@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Alert {
-  static void showSimpleAlert(BuildContext context, {String title, String message, String buttonTitle, VoidCallback onPressed}) {
+  static void showSimpleAlert(
+    BuildContext context, {
+    String title,
+    String message,
+    String buttonTitle,
+    VoidCallback onPressed,
+  }) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -14,7 +20,7 @@ class Alert {
             child: new Text(buttonTitle),
             onPressed: () {
               Navigator.of(context).pop();
-              if(onPressed != null) onPressed();
+              if (onPressed != null) onPressed();
             },
           ),
         ],

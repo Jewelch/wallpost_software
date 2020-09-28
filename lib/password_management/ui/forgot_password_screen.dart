@@ -92,7 +92,6 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
       _loader.show('Resetting your password...');
       var _passwordResetter = PasswordResetter();
       var resetPasswordForm = ResetPasswordForm(_accountNumber, _email);
-      print(_accountNumber);
       try {
         var _ = await _passwordResetter.resetPassword(resetPasswordForm);
         Navigator.pushNamedAndRemoveUntil(

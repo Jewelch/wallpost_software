@@ -2,39 +2,31 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static final Color defaultColor = _getColorFromHex(AppColors._defaultColor);
+  static final Color defaultColorDark = _getColorFromHex(AppColors._defaultColorDark);
+  static final Color badgeColor = _getColorFromHex(AppColors._badgeColor);
   static final Color white = _getColorFromHex(AppColors._whiteColor);
   static final Color buttonColor = _getColorFromHex(AppColors._buttonColor);
   static final Color labelColor = _getColorFromHex(AppColors._labelColor);
   static final Color blackColor = _getColorFromHex(AppColors._blackColor);
   static final Color greyColor = _getColorFromHex(AppColors._greyColor);
-  static final Color placeholderColor =
-      _getColorFromHex(AppColors._placeholderColor);
-  static final Color loginBackgroundGradiantColorOne =
-      _getColorFromHex(AppColors._loginBackgroundGradiantColorOne);
-  static final Color loginBackgroundGradiantColorTwo =
-      _getColorFromHex(AppColors._loginBackgroundGradiantColorTwo);
-  static final Color loginForgetPaasswordTextColor =
-      _getColorFromHex(AppColors._loginForgetPaasswordTextColor);
+  static final Color placeholderColor = _getColorFromHex(AppColors._placeholderColor);
+  static final Color loginBackgroundGradiantColorOne = _getColorFromHex(AppColors._loginBackgroundGradiantColorOne);
+  static final Color loginBackgroundGradiantColorTwo = _getColorFromHex(AppColors._loginBackgroundGradiantColorTwo);
+  static final Color loginForgetPaasswordTextColor = _getColorFromHex(AppColors._loginForgetPaasswordTextColor);
 
-  static final Color chartLineColor =
-      _getColorFromHex(AppColors._chartLineColor);
-  static final Color chartAxisTextColor =
-      _getColorFromHex(AppColors._chartAxisTextColor);
-  static final Color chartHorizontalLineColor =
-      _getColorFromHex(AppColors._chartHorizontalLineColor);
-     
+  static final Color chartLineColor = _getColorFromHex(AppColors._chartLineColor);
+  static final Color chartAxisTextColor = _getColorFromHex(AppColors._chartAxisTextColor);
+  static final Color chartHorizontalLineColor = _getColorFromHex(AppColors._chartHorizontalLineColor);
 
-  static final Color ForgetPaasswordSuccessButtonColor =
-      _getColorFromHex(AppColors._lightGreenColor);
-  static final Color ForgetPaasswordSuccessLabelColor =
-      _getColorFromHex(AppColors._darkGreyColor);
+  static final Color ForgetPaasswordSuccessButtonColor = _getColorFromHex(AppColors._lightGreenColor);
+  static final Color ForgetPaasswordSuccessLabelColor = _getColorFromHex(AppColors._darkGreyColor);
 
-  static final Color groupDashboardSearchViewColor =
-  _getColorFromHex(AppColors._mediumGreyColor);
+  static final Color groupDashboardSearchViewColor = _getColorFromHex(AppColors._mediumGreyColor);
 
-  static final Color logoutRedColor =
-      _getColorFromHex(AppColors._logoutRedColor);
+  static final Color logoutRedColor = _getColorFromHex(AppColors._logoutRedColor);
   static final String _defaultColor = "#008cbf";
+  static final String _defaultColorDark = "#0376a0";
+  static final String _badgeColor = "#db544e";
   static final String _whiteColor = "FFFFFF";
   static final String _buttonColor = "3590de";
   static final String _labelColor = "777777";

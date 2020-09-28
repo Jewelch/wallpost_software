@@ -3,17 +3,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class RoundedIconButton extends StatelessWidget {
+  final double buttonSize;
   final String iconName;
   final double iconSize;
   final VoidCallback onPressed;
 
-  RoundedIconButton({this.iconName, this.iconSize = 19, this.onPressed});
+  RoundedIconButton({this.buttonSize = 32, this.iconName, this.iconSize = 16, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 56,
-      padding: EdgeInsets.all(10),
+      width: buttonSize,
+      height: buttonSize,
       child: FlatButton(
         color: AppColors.defaultColor,
         padding: EdgeInsets.all(0),
@@ -27,6 +28,5 @@ class RoundedIconButton extends StatelessWidget {
         onPressed: onPressed,
       ),
     );
-    ;
   }
 }

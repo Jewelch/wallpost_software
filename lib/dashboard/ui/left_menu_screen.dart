@@ -6,16 +6,19 @@ import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 import 'package:wallpost/authentication/services/logout_handler.dart';
+import 'package:wallpost/company_management/services/selected_company_provider.dart';
 
-class LeftMenu extends StatelessWidget {
+//TODO: Add loader when profile picture loads or add a placeholder image
+class LeftMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: SimpleAppBar(
-        title: "SM",
+        title: _getTitle(),
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
-          onPressed: () => {Navigator.pop(context)},
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Container(
@@ -30,10 +33,7 @@ class LeftMenu extends StatelessWidget {
                   border: Border.all(color: AppColors.defaultColor, width: 1),
                   borderRadius: BorderRadius.circular(50),
                   image: DecorationImage(
-                      image: NetworkImage(CurrentUserProvider()
-                          .getCurrentUser()
-                          .profileImageUrl),
-                      fit: BoxFit.fill),
+                      image: NetworkImage(CurrentUserProvider().getCurrentUser().profileImageUrl), fit: BoxFit.fill),
                 ),
               ),
             ),
@@ -41,103 +41,75 @@ class LeftMenu extends StatelessWidget {
             Center(
               child: Text(
                 CurrentUserProvider().getCurrentUser().fullName,
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+                style: TextStyle(fontSize: 18),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 80),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Line Manager:  ',
-                    style: TextStyle(color: AppColors.labelColor)),
-                Text(
-                  'John Peter',
+                _buildLeftMenuButton(
+                  title: 'Settings',
+                  imageName: 'assets/icons/settings_icon.svg',
+                  borderColor: AppColors.defaultColor,
+                  onPressed: () => Navigator.of(context).pushNamed(RouteNames.settings),
                 ),
+                SizedBox(width: 40),
+                _buildLeftMenuButton(
+                  title: 'Logout',
+                  imageName: 'assets/icons/logout_icon.svg',
+                  imageSize: 22,
+                  borderColor: AppColors.logoutRedColor,
+                  onPressed: () => LogoutHandler().logout(context),
+                ),
+                SizedBox(height: 40),
               ],
             ),
-            SizedBox(
-              height: 80,
-            ),
-            Row(
-
-              children: [
-                GestureDetector(
-                  child: Container(
-                    width: 70,
-                    height: 70,
-                    margin: EdgeInsets.only(left: 50),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.defaultColor, width: 2),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/settings_icon.svg',
-                          width: 25,
-                          height: 25,
-                        ),
-                        Text('Settings', style: TextStyle(fontSize: 10)),
-                      ],
-                    ),
-                  ),
-                  onTap: ()=>{
-                  Navigator.of(context).pushNamed(RouteNames.settings)
-                  },
-                ),
-                Spacer(),
-                Container(
-                  width: 70,
-                  height: 70,
-                  margin: EdgeInsets.only(right: 50),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.defaultColor, width: 2),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/info_icon.svg',
-                        width: 25,
-                        height: 25,
-                      ),
-                      Text('About', style: TextStyle(fontSize: 10)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 40,),
-            GestureDetector(
-              child: Container(
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.logoutRedColor, width: 2),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/logout_icon.svg',
-                      width: 25,
-                      height: 25,
-                    ),
-                    Text('Logout', style: TextStyle(fontSize: 10)),
-                  ],
-                ),
-              ),
-              onTap: ()=>{
-              LogoutHandler().logout(context),
-            },
-            ),
+            SizedBox(height: 120),
           ],
+        ),
+      ),
+    );
+  }
+
+  String _getTitle() {
+    if (SelectedCompanyProvider().getSelectCompanyForCurrentUser() == null)
+      return '';
+    else
+      return SelectedCompanyProvider().getSelectCompanyForCurrentUser().name;
+  }
+
+  Widget _buildLeftMenuButton({
+    String title,
+    String imageName,
+    double imageSize = 24,
+    Color borderColor,
+    VoidCallback onPressed,
+  }) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(100),
+      child: Container(
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          border: Border.all(color: borderColor, width: 2),
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: FlatButton(
+          padding: EdgeInsets.all(0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                imageName,
+                width: imageSize,
+                height: imageSize,
+              ),
+              SizedBox(height: 4),
+              Text(title, style: TextStyle(fontSize: 10)),
+            ],
+          ),
+          onPressed: onPressed,
         ),
       ),
     );

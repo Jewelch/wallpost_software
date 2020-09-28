@@ -3,19 +3,13 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_management/entities/company.dart';
 
 class CompanyListCardWithOutRevenue extends StatelessWidget {
-  Company company;
-  VoidCallback onPressed;
+  final Company company;
+  final VoidCallback onPressed;
 
   CompanyListCardWithOutRevenue({this.company, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: nonRevenueCard,
-    );
-  }
-
-  Widget get nonRevenueCard {
     return GestureDetector(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
