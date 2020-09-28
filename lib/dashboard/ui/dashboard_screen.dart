@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
 import 'package:wallpost/dashboard/ui/requests_screen.dart';
 import 'package:wallpost/my_portal/ui/employee_my_portal_screen.dart';
 import 'package:wallpost/my_portal/ui/sales_my_portal_screen.dart';
@@ -44,26 +40,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectCompanyForCurrentUser().name,
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/menu.svg',
-          iconSize: 12,
-          onPressed: () => ScreenPresenter.present(
-            LeftMenuScreen(),
-            context,
-            slideDirection: SlideDirection.fromLeft,
-          ),
-        ),
-        trailing: RoundedIconButton(
-          iconName: 'assets/icons/filters_icon.svg',
-          onPressed: () => {
-            //TODO: Go to filters screen
-          },
-        ),
-        showCompanySwitchButton: true,
-        companySwitchBadgeCount: 5,
-      ),
       body: _screens[_currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(

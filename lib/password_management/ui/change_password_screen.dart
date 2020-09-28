@@ -157,7 +157,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   void _changePassword() async {
     if (_formKey.currentState.validate() == false) return;
 
-    _loader.show('Changing your password...');
+    await _loader.show('Changing your password...');
     try {
       var changePasswordForm = ChangePasswordForm(_currentPasswordTextController.text, _newPasswordTextController.text);
       var _ = await PasswordChanger().changePassword(changePasswordForm);
