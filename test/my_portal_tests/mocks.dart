@@ -58,13 +58,13 @@ class Mocks {
   static Map<String, dynamic> employeePerformanceResponse = {
     "best": {
       "month": randomString(10),
-      "score": randomString(10),
+      "score": '70',
     },
     "least": {
       "month": randomString(10),
-      "score": randomString(10),
+      "score": '90',
     },
-    "performance": true,
-    "ytd_performance": randomString(10),
+    "performance": randomBetween(1000, 5000),
+    "ytd_performance": '89',
   };
 }
