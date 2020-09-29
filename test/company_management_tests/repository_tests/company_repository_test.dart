@@ -164,6 +164,48 @@ void main() {
     expect(companyRepository.getSelectedCompanyForUser(mockUser), null);
   });
 
+  test(
+      'saving companies for a user that already exists, auto selects previously selected company if it exists in the new list',
+      () async {
+    var mockCompany1 = MockCompany();
+    var mockCompany2 = MockCompany();
+    var someOtherCompany = MockCompany();
+    when(mockUser.username).thenReturn('someUserName');
+    when(mockCompany1.companyId).thenReturn('1');
+    when(mockCompany2.companyId).thenReturn('2');
+    when(someOtherCompany.companyId).thenReturn('nonExistentCompany');
+    when(mockCompany1.toJson()).thenReturn({'company': '1'});
+    when(mockCompany2.toJson()).thenReturn({'company': '2'});
+    companyRepository.saveCompaniesForUser([mockCompany1, mockCompany2], mockUser);
+    companyRepository.selectCompanyForUser(mockCompany2, mockUser);
+    reset(mockSharedPrefs);
+
+    companyRepository.saveCompaniesForUser([mockCompany1, mockCompany2], mockUser);
+
+    expect(companyRepository.getSelectedCompanyForUser(mockUser).name, mockCompany2.name);
+  });
+
+  test(
+      'saving companies for a user that already exists, removes previously selected company if it does not exist in the new list',
+      () async {
+    var mockCompany1 = MockCompany();
+    var mockCompany2 = MockCompany();
+    var someOtherCompany = MockCompany();
+    when(mockUser.username).thenReturn('someUserName');
+    when(mockCompany1.companyId).thenReturn('1');
+    when(mockCompany2.companyId).thenReturn('2');
+    when(someOtherCompany.companyId).thenReturn('nonExistentCompany');
+    when(mockCompany1.toJson()).thenReturn({'company': '1'});
+    when(mockCompany2.toJson()).thenReturn({'company': '2'});
+    companyRepository.saveCompaniesForUser([mockCompany1, mockCompany2], mockUser);
+    companyRepository.selectCompanyForUser(mockCompany2, mockUser);
+    reset(mockSharedPrefs);
+
+    companyRepository.saveCompaniesForUser([mockCompany1], mockUser);
+
+    expect(companyRepository.getSelectedCompanyForUser(mockUser), null);
+  });
+
   test('removing companies for a user', () async {
     var mockUser2 = MockUser();
     var mockCompany1 = MockCompany();
