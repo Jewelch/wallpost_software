@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/my_portal/constants/my_portal_urls.dart';
-import 'package:wallpost/my_portal/services/employee_performance_provider.dart';
+import 'package:wallpost/my_portal/services/pending_actions_count_provider.dart';
 
 import '../../_mocks/MockCompany.dart';
 import '../../_mocks/MockCompanyProvider.dart';
@@ -9,11 +9,11 @@ import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
-  Map<String, dynamic> successfulResponse = Mocks.employeePerformanceResponse;
+  Map<String, dynamic> successfulResponse = Mocks.pendingActionsCountResponse;
   var mockCompany = MockCompany();
   var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var employeePerformanceProvider = EmployeePerformanceProvider.initWith(mockCompanyProvider, mockNetworkAdapter);
+  var pendingActionsCountProvider = PendingActionsCountProvider.initWith(mockCompanyProvider, mockNetworkAdapter);
 
   setUpAll(() {
     when(mockCompany.companyId).thenReturn('someCompanyId');
@@ -24,9 +24,9 @@ void main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await employeePerformanceProvider.getPerformance(2019);
+    var _ = await pendingActionsCountProvider.getCount();
 
-    expect(mockNetworkAdapter.apiRequest.url, MyPortalUrls.employeePerformanceUrl('someCompanyId', '2019'));
+    expect(mockNetworkAdapter.apiRequest.url, MyPortalUrls.pendingActionsCountUrl('someCompanyId'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -35,7 +35,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await employeePerformanceProvider.getPerformance(2019);
+      var _ = await pendingActionsCountProvider.getCount();
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -46,13 +46,13 @@ void main() {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
-    employeePerformanceProvider.getPerformance(2019).then((_) {
+    pendingActionsCountProvider.getCount().then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
     mockNetworkAdapter.succeed(successfulResponse);
-    employeePerformanceProvider.getPerformance(2019).then((_) {
+    pendingActionsCountProvider.getCount().then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -64,7 +64,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await employeePerformanceProvider.getPerformance(2019);
+      var _ = await pendingActionsCountProvider.getCount();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -75,7 +75,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      var _ = await employeePerformanceProvider.getPerformance(2019);
+      var _ = await pendingActionsCountProvider.getCount();
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -86,7 +86,7 @@ void main() {
     mockNetworkAdapter.succeed(<String, dynamic>{});
 
     try {
-      var _ = await employeePerformanceProvider.getPerformance(2019);
+      var _ = await pendingActionsCountProvider.getCount();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -97,8 +97,8 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var employeePerformance = await employeePerformanceProvider.getPerformance(2019);
-      expect(employeePerformance, isNotNull);
+      var pendingActionsCount = await pendingActionsCountProvider.getCount();
+      expect(pendingActionsCount, isNotNull);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
@@ -107,27 +107,27 @@ void main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    employeePerformanceProvider.getPerformance(2019);
+    pendingActionsCountProvider.getCount();
 
-    expect(employeePerformanceProvider.isLoading, true);
+    expect(pendingActionsCountProvider.isLoading, true);
   });
 
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await employeePerformanceProvider.getPerformance(2019);
+    var _ = await pendingActionsCountProvider.getCount();
 
-    expect(employeePerformanceProvider.isLoading, false);
+    expect(pendingActionsCountProvider.isLoading, false);
   });
 
   test('test loading flag is reset after failure', () async {
     mockNetworkAdapter.fail(InvalidResponseException());
 
     try {
-      var _ = await employeePerformanceProvider.getPerformance(2019);
+      var _ = await pendingActionsCountProvider.getCount();
       fail('failed to throw exception');
     } catch (_) {
-      expect(employeePerformanceProvider.isLoading, false);
+      expect(pendingActionsCountProvider.isLoading, false);
     }
   });
 }
