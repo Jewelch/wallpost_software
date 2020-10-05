@@ -84,12 +84,38 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
                   ],
                 ),
               ),
-              _buildYearlyPerformanceBarGraphs(
-                  targetedSale:
-                      _salesPerformance.currentYearPerformance.targetedSales,
-                  actualSale:
-                      _salesPerformance.currentYearPerformance.actualSales,
-                  showPercentageIndicator: false)
+              Container(
+          padding: EdgeInsets.symmetric(horizontal: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Budgted',
+                style: TextStyle(fontSize: 12),
+              ),
+              Text(
+                'Actual',
+                style: TextStyle(fontSize: 12),
+              )
+            ],
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                '${_salesPerformance.currentYearPerformance.targetedSales}',
+                style: TextStyle(fontSize: 16),
+              ),
+              Text(
+                '${_salesPerformance.currentYearPerformance.actualSales}',
+                style: TextStyle(fontSize: 16),
+              )
+            ],
+          ),
+        ),
             ],
           ),
         ),
@@ -104,7 +130,7 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
                       _salesPerformance.lastYearPerformance.targetedSales,
                   actualSale: _salesPerformance.lastYearPerformance.actualSales,
                   year: _salesPerformance.lastYearPerformance.year,
-                  showPercentageIndicator: true),
+                  ),
               SizedBox(height: 12),
               _buildYearlyPerformanceBarGraphs(
                   performancePercentage: _salesPerformance
@@ -114,7 +140,7 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
                   actualSale:
                       _salesPerformance.twoYearsBackPerformance.actualSales,
                   year: _salesPerformance.twoYearsBackPerformance.year,
-                  showPercentageIndicator: true),
+                  ),
             ],
           ),
         ),
@@ -127,7 +153,7 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
       String targetedSale,
       String actualSale,
       int year,
-      bool showPercentageIndicator}) {
+      }) {
     return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
@@ -165,20 +191,18 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
         SizedBox(
           height: 4,
         ),
-        showPercentageIndicator
-            ? LinearPercentIndicator(
+         LinearPercentIndicator(
                 animation: true,
                 lineHeight: 4.0,
                 animationDuration: 1000,
                 percent: getPercentage(performancePercentage),
                 linearStrokeCap: LinearStrokeCap.roundAll,
                 progressColor: _getColorForPerformance(performancePercentage))
-            : SizedBox(height: 0),
+            ,
         SizedBox(
           height: 4,
         ),
-        showPercentageIndicator
-            ? Container(
+         Container(
                 padding: EdgeInsets.symmetric(horizontal: 6),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,7 +221,7 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
                   ],
                 ),
               )
-            : SizedBox(height: 0),
+           ,
       ]),
     );
   }
