@@ -6,13 +6,13 @@ import 'package:wallpost/my_portal/entities/sales_performance.dart';
 import 'package:wallpost/my_portal/services/my_portal_performance_level_calculator.dart';
 import 'package:wallpost/my_portal/services/sales_performance_provider.dart';
 
-class SalesPerormanceGraphView extends StatefulWidget {
+class SalesPerformanceGraphView extends StatefulWidget {
   @override
-  _SalesMyPortalPerormanceState createState() =>
-      _SalesMyPortalPerormanceState();
+  _SalesMyPortalPerformanceState createState() =>
+      _SalesMyPortalPerformanceState();
 }
 
-class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
+class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
   SalesPerformance _salesPerformance;
   bool showError = false;
 
