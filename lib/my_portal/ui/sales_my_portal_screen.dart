@@ -62,6 +62,7 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
                     style: TextStyle(color: Colors.grey, fontSize: 12)),
                 SizedBox(height: 8),
                 SalesPerormanceGraphView(),
+                SizedBox(height: 8),
                 Divider(
                   height: 4,
                 ),

@@ -84,38 +84,32 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
                   ],
                 ),
               ),
-              Container(
-          padding: EdgeInsets.symmetric(horizontal: 6),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'Budgted',
-                style: TextStyle(fontSize: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Budgted',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  Text(
+                    'Actual',
+                    style: TextStyle(fontSize: 12),
+                  )
+                ],
               ),
-              Text(
-                'Actual',
-                style: TextStyle(fontSize: 12),
-              )
-            ],
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 6),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                '${_salesPerformance.currentYearPerformance.targetedSales}',
-                style: TextStyle(fontSize: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    '${_salesPerformance.currentYearPerformance.targetedSales}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    '${_salesPerformance.currentYearPerformance.actualSales}',
+                    style: TextStyle(fontSize: 16),
+                  )
+                ],
               ),
-              Text(
-                '${_salesPerformance.currentYearPerformance.actualSales}',
-                style: TextStyle(fontSize: 16),
-              )
-            ],
-          ),
-        ),
             ],
           ),
         ),
@@ -124,23 +118,23 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
           child: Column(
             children: <Widget>[
               _buildYearlyPerformanceBarGraphs(
-                  performancePercentage: _salesPerformance
-                      .lastYearPerformance.performancePercentage,
-                  targetedSale:
-                      _salesPerformance.lastYearPerformance.targetedSales,
-                  actualSale: _salesPerformance.lastYearPerformance.actualSales,
-                  year: _salesPerformance.lastYearPerformance.year,
-                  ),
+                performancePercentage:
+                    _salesPerformance.lastYearPerformance.performancePercentage,
+                targetedSale:
+                    _salesPerformance.lastYearPerformance.targetedSales,
+                actualSale: _salesPerformance.lastYearPerformance.actualSales,
+                year: _salesPerformance.lastYearPerformance.year,
+              ),
               SizedBox(height: 12),
               _buildYearlyPerformanceBarGraphs(
-                  performancePercentage: _salesPerformance
-                      .twoYearsBackPerformance.performancePercentage,
-                  targetedSale:
-                      _salesPerformance.twoYearsBackPerformance.targetedSales,
-                  actualSale:
-                      _salesPerformance.twoYearsBackPerformance.actualSales,
-                  year: _salesPerformance.twoYearsBackPerformance.year,
-                  ),
+                performancePercentage: _salesPerformance
+                    .twoYearsBackPerformance.performancePercentage,
+                targetedSale:
+                    _salesPerformance.twoYearsBackPerformance.targetedSales,
+                actualSale:
+                    _salesPerformance.twoYearsBackPerformance.actualSales,
+                year: _salesPerformance.twoYearsBackPerformance.year,
+              ),
             ],
           ),
         ),
@@ -148,12 +142,12 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
     );
   }
 
-  Widget _buildYearlyPerformanceBarGraphs(
-      {int performancePercentage,
-      String targetedSale,
-      String actualSale,
-      int year,
-      }) {
+  Widget _buildYearlyPerformanceBarGraphs({
+    int performancePercentage,
+    String targetedSale,
+    String actualSale,
+    int year,
+  }) {
     return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
@@ -191,37 +185,34 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
         SizedBox(
           height: 4,
         ),
-         LinearPercentIndicator(
-                animation: true,
-                lineHeight: 4.0,
-                animationDuration: 1000,
-                percent: getPercentage(performancePercentage),
-                linearStrokeCap: LinearStrokeCap.roundAll,
-                progressColor: _getColorForPerformance(performancePercentage))
-            ,
+        LinearPercentIndicator(
+            animation: true,
+            lineHeight: 4.0,
+            animationDuration: 1000,
+            percent: getPercentage(performancePercentage),
+            linearStrokeCap: LinearStrokeCap.roundAll,
+            progressColor: _getColorForPerformance(performancePercentage)),
         SizedBox(
           height: 4,
         ),
-         Container(
-                padding: EdgeInsets.symmetric(horizontal: 6),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('$year',
-                        style: TextStyle(
-                            color:
-                                _getColorForPerformance(performancePercentage),
-                            fontSize: 12)),
-                    Text(
-                      '$performancePercentage%',
-                      style: TextStyle(
-                          color: _getColorForPerformance(performancePercentage),
-                          fontSize: 12),
-                    )
-                  ],
-                ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text('$year',
+                  style: TextStyle(
+                      color: _getColorForPerformance(performancePercentage),
+                      fontSize: 12)),
+              Text(
+                '$performancePercentage%',
+                style: TextStyle(
+                    color: _getColorForPerformance(performancePercentage),
+                    fontSize: 12),
               )
-           ,
+            ],
+          ),
+        ),
       ]),
     );
   }
