@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/my_portal/ui/performance/sales_my_portal_performance.dart';
-import 'package:wallpost/my_portal/ui/financial_tab/sales_my_portal_financial_screen.dart';
+import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/company_management/ui/companies_list_screen.dart';
+import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
+import 'package:wallpost/my_portal/ui/performance/sale_performance_graph_view.dart';
+import 'package:wallpost/my_portal/ui/financials/sales_financials_graph_view.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class SalesMyPortalScreen extends StatefulWidget {
@@ -20,51 +26,70 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: WPAppBar(
+        title: SelectedCompanyProvider().getSelectCompanyForCurrentUser().name,
+        leading: RoundedIconButton(
+          iconName: 'assets/icons/menu.svg',
+          iconSize: 12,
+          onPressed: () => ScreenPresenter.present(
+            LeftMenuScreen(),
+            context,
+            slideDirection: SlideDirection.fromLeft,
+          ),
+        ),
+        trailing: RoundedIconButton(
+          iconName: 'assets/icons/filters_icon.svg',
+          onPressed: () => {
+            //TODO: Go to filters screen
+          },
+        ),
+        showCompanySwitchButton: true,
+        companySwitchBadgeCount: 10,
+        onCompanySwitchButtonPressed: () {
+          ScreenPresenter.present(CompaniesListScreen(), context,
+              slideDirection: SlideDirection.fromLeft);
+        },
+      ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.symmetric(horizontal: 12),
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Text('Sales Performance',
-                        style: TextStyle(color: AppColors.labelColor))),
-                SalesMyPortalPerormance(),
+                Text('Sales Performance',
+                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+                SizedBox(height: 8),
+                SalesPerormanceGraphView(),
+                SizedBox(height: 8),
                 Divider(
-                  height: 5,
+                  height: 4,
                 ),
-                Container(
-                  child: TabBar(
-                    controller: _tabController,
-                    labelColor: AppColors.defaultColor,
-                    unselectedLabelColor: Colors.black,
-                    indicatorColor: AppColors.defaultColor,
-                    indicatorWeight: 3,
-                    tabs: [
-                      Tab(
-                        text: 'Financials',
-                      ),
-                      Tab(
-                        text: 'Approvals 12',
-                      ),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.0),
-                      border: Border(
-                          bottom: BorderSide(color: Colors.grey, width: 0.8))),
+                TabBar(
+                  controller: _tabController,
+                  labelColor: AppColors.defaultColor,
+                  unselectedLabelColor: Colors.black,
+                  indicatorColor: AppColors.defaultColor,
+                  indicatorWeight: 3,
+                  tabs: [
+                    Tab(
+                      text: 'Financials',
+                    ),
+                    Tab(
+                      text: 'Approvals 12',
+                    ),
+                  ],
                 ),
                 Container(
                   height: 350,
                   child: TabBarView(
                     controller: _tabController,
                     children: <Widget>[
-                      SalesMyPortalFinancialScreen(),
+                      SalesFinancialsGraphView(),
                       Text(
                         'Approvals Data',
                         textAlign: TextAlign.center,
-                        
                       ),
                     ],
                   ),
