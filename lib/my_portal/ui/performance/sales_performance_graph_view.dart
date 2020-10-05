@@ -8,8 +8,7 @@ import 'package:wallpost/my_portal/services/sales_performance_provider.dart';
 
 class SalesPerformanceGraphView extends StatefulWidget {
   @override
-  _SalesMyPortalPerformanceState createState() =>
-      _SalesMyPortalPerformanceState();
+  _SalesMyPortalPerformanceState createState() => _SalesMyPortalPerformanceState();
 }
 
 class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
@@ -29,15 +28,10 @@ class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
     });
 
     try {
-      var performance =
-          await SalesPerformanceProvider().getPerformance(DateTime.now().year);
-      setState(() {
-        _salesPerformance = performance;
-      });
+      var performance = await SalesPerformanceProvider().getPerformance(DateTime.now().year);
+      setState(() => _salesPerformance = performance);
     } on APIException catch (_) {
-      setState(() {
-        showError = true;
-      });
+      setState(() => showError = true);
     }
   }
 
@@ -60,11 +54,9 @@ class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
                 radius: 120.0,
                 lineWidth: 4.0,
                 animation: true,
-                percent: getPercentage(_salesPerformance
-                    .currentYearPerformance.performancePercentage),
+                percent: getPercentage(_salesPerformance.currentYearPerformance.performancePercentage),
                 circularStrokeCap: CircularStrokeCap.round,
-                progressColor: _getColorForPerformance(_salesPerformance
-                    .currentYearPerformance.performancePercentage),
+                progressColor: _getColorForPerformance(_salesPerformance.currentYearPerformance.performancePercentage),
                 center: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -73,13 +65,12 @@ class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
                       style: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 24.0,
-                          color: _getColorForPerformance(_salesPerformance
-                              .currentYearPerformance.performancePercentage)),
+                          color:
+                              _getColorForPerformance(_salesPerformance.currentYearPerformance.performancePercentage)),
                     ),
                     Text(
                       "YTD ${_salesPerformance.currentYearPerformance.year}",
-                      style: TextStyle(
-                          fontWeight: FontWeight.normal, fontSize: 16.0),
+                      style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16.0),
                     ),
                   ],
                 ),
@@ -87,14 +78,8 @@ class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    'Budgted',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  Text(
-                    'Actual',
-                    style: TextStyle(fontSize: 12),
-                  )
+                  Text('Budgeted', style: TextStyle(fontSize: 12)),
+                  Text('Actual', style: TextStyle(fontSize: 12))
                 ],
               ),
               Row(
@@ -102,11 +87,11 @@ class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
                 children: <Widget>[
                   Text(
                     '${_salesPerformance.currentYearPerformance.targetedSales}',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 14),
                   ),
                   Text(
                     '${_salesPerformance.currentYearPerformance.actualSales}',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 14),
                   )
                 ],
               ),
@@ -118,21 +103,16 @@ class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
           child: Column(
             children: <Widget>[
               _buildYearlyPerformanceBarGraphs(
-                performancePercentage:
-                    _salesPerformance.lastYearPerformance.performancePercentage,
-                targetedSale:
-                    _salesPerformance.lastYearPerformance.targetedSales,
+                performancePercentage: _salesPerformance.lastYearPerformance.performancePercentage,
+                targetedSale: _salesPerformance.lastYearPerformance.targetedSales,
                 actualSale: _salesPerformance.lastYearPerformance.actualSales,
                 year: _salesPerformance.lastYearPerformance.year,
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 20),
               _buildYearlyPerformanceBarGraphs(
-                performancePercentage: _salesPerformance
-                    .twoYearsBackPerformance.performancePercentage,
-                targetedSale:
-                    _salesPerformance.twoYearsBackPerformance.targetedSales,
-                actualSale:
-                    _salesPerformance.twoYearsBackPerformance.actualSales,
+                performancePercentage: _salesPerformance.twoYearsBackPerformance.performancePercentage,
+                targetedSale: _salesPerformance.twoYearsBackPerformance.targetedSales,
+                actualSale: _salesPerformance.twoYearsBackPerformance.actualSales,
                 year: _salesPerformance.twoYearsBackPerformance.year,
               ),
             ],
@@ -149,71 +129,59 @@ class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
     int year,
   }) {
     return Container(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 6),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'Budgted',
-                style: TextStyle(fontSize: 12),
-              ),
-              Text(
-                'Actual',
-                style: TextStyle(fontSize: 12),
-              )
-            ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Budgeted', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                Text('Actual', style: TextStyle(fontSize: 12, color: Colors.grey))
+              ],
+            ),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 6),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                '$targetedSale',
-                style: TextStyle(fontSize: 16),
-              ),
-              Text(
-                '$actualSale',
-                style: TextStyle(fontSize: 16),
-              )
-            ],
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('$targetedSale', style: TextStyle(fontSize: 14)),
+                Text('$actualSale', style: TextStyle(fontSize: 14))
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        LinearPercentIndicator(
-            animation: true,
-            lineHeight: 4.0,
-            animationDuration: 1000,
-            percent: getPercentage(performancePercentage),
-            linearStrokeCap: LinearStrokeCap.roundAll,
-            progressColor: _getColorForPerformance(performancePercentage)),
-        SizedBox(
-          height: 4,
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 6),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text('$year',
+          SizedBox(height: 4),
+          LinearPercentIndicator(
+              animation: true,
+              lineHeight: 4.0,
+              animationDuration: 1000,
+              percent: getPercentage(performancePercentage),
+              linearStrokeCap: LinearStrokeCap.roundAll,
+              progressColor: _getColorForPerformance(performancePercentage)),
+          SizedBox(height: 4),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  '$year',
                   style: TextStyle(
-                      color: _getColorForPerformance(performancePercentage),
-                      fontSize: 12)),
-              Text(
-                '$performancePercentage%',
-                style: TextStyle(
                     color: _getColorForPerformance(performancePercentage),
-                    fontSize: 12),
-              )
-            ],
+                    fontSize: 12,
+                  ),
+                ),
+                Text(
+                  '$performancePercentage%',
+                  style: TextStyle(color: _getColorForPerformance(performancePercentage), fontSize: 12),
+                )
+              ],
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 

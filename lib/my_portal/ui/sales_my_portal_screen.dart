@@ -5,7 +5,7 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/company_management/ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
-import 'package:wallpost/my_portal/ui/performance/sale_performance_graph_view.dart';
+import 'package:wallpost/my_portal/ui/performance/sales_performance_graph_view.dart';
 import 'package:wallpost/my_portal/ui/financials/sales_financials_graph_view.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
