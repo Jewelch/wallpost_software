@@ -78,8 +78,8 @@ class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text('Budgeted', style: TextStyle(fontSize: 12)),
-                  Text('Actual', style: TextStyle(fontSize: 12))
+                  Text('Budgeted', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  Text('Actual', style: TextStyle(fontSize: 12, color: Colors.grey))
                 ],
               ),
               Row(
