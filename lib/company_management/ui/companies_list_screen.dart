@@ -9,6 +9,7 @@ import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
 import 'package:wallpost/company_management/entities/company.dart';
 import 'package:wallpost/company_management/services/companies_list_provider.dart';
 import 'package:wallpost/company_management/services/company_selector.dart';
+import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/company_management/ui/company_list_card_with_revenue.dart';
 import 'package:wallpost/company_management/ui/company_list_card_without_revenue.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
@@ -40,22 +41,46 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         leading: RoundedIconButton(
           iconName: 'assets/icons/menu.svg',
           iconSize: 12,
-          onPressed: () => ScreenPresenter.present(LeftMenuScreen(), context, slideDirection: SlideDirection.fromLeft),
+          onPressed: () =>
+              ScreenPresenter.present(LeftMenuScreen(), context,
+                  slideDirection: SlideDirection.fromLeft),
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.greyColor,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+        child: Column(
+          children: [
+            if (SelectedCompanyProvider().getSelectCompanyForCurrentUser() !=
+                null)
+              _getSelectedCompanyView(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.greyColor,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: _createListWidget(),
+                ),
+              ),
             ),
-            child: _createListWidget(),
-          ),
+          ],
         ),
       ),
     );
+  }
+
+  Widget _getSelectedCompanyView() {
+    if (SelectedCompanyProvider()
+        .getSelectCompanyForCurrentUser()
+        .shouldShowRevenue)
+      return CompanyListCardWithRevenue(
+          company: SelectedCompanyProvider().getSelectCompanyForCurrentUser(),
+          onPressed: null);
+    else
+      return CompanyListCardWithOutRevenue(
+          company: SelectedCompanyProvider().getSelectCompanyForCurrentUser(),
+          onPressed: null);
   }
 
   Widget _createSearchView() {
@@ -140,14 +165,16 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     if (_filterList[index].shouldShowRevenue)
       return CompanyListCardWithRevenue(
         company: _filterList[index],
-        onPressed: () => {
+        onPressed: () =>
+        {
           _selectCompanyAtIndex(index),
         },
       );
     else
       return CompanyListCardWithOutRevenue(
         company: _filterList[index],
-        onPressed: () => {
+        onPressed: () =>
+        {
           _selectCompanyAtIndex(index),
         },
       );
@@ -156,7 +183,8 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   void _selectCompanyAtIndex(int index) {
     var selectedCompany = _filterList[index];
     CompanySelector().selectCompanyForCurrentUser(selectedCompany);
-    Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, RouteNames.dashboard, (route) => false);
   }
 
   void _getCompanies() async {
@@ -168,7 +196,9 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
       });
     } on APIException catch (error) {
       Alert.showSimpleAlert(context,
-          title: 'Failed To Load Companies', message: error.userReadableMessage, buttonTitle: 'Okay');
+          title: 'Failed To Load Companies',
+          message: error.userReadableMessage,
+          buttonTitle: 'Okay');
       setState(() {});
     }
   }
@@ -177,10 +207,13 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     _filterList = new List<Company>();
     for (int i = 0; i < _companies.length; i++) {
       var item = _companies[i];
-      if (item.name.toLowerCase().contains(_searchTextController.text.toLowerCase())) {
+      if (item.name
+          .toLowerCase()
+          .contains(_searchTextController.text.toLowerCase())) {
         _filterList.add(item);
       }
     }
     setState(() {});
   }
 }
+
