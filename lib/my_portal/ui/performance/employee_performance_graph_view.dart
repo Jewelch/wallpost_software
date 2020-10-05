@@ -14,11 +14,12 @@ class EmployeePerformanceGraphView extends StatefulWidget {
 
 class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphView> {
   EmployeePerformance _employeePerformance;
-  bool showError;
+  bool showError=false;
 
   @override
   void initState() {
     super.initState();
+      _getEmployeePerformance();
   }
 
   void _getEmployeePerformance() async {
@@ -63,13 +64,13 @@ class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphV
                   '${_employeePerformance.overallYearlyPerformancePercent}',
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 25.0,
+                    fontSize: 24.0,
                     color: _getColorForPerformance(_employeePerformance.overallYearlyPerformancePercent),
                   ),
                 ),
                 Text(
                   "YTD 2018",
-                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15.0),
+                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16.0),
                 ),
               ],
             ),

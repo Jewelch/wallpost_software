@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-class SalesMyPortalFinancialDataList extends StatelessWidget {
+class SalesFinancialsDataView extends StatelessWidget {
+  final String financeDataName;
+  final String financeDataValue;
 
-  final String dataName;
-  final int dataValue;
-
-  SalesMyPortalFinancialDataList({this.dataName, this.dataValue});
+  SalesFinancialsDataView({this.financeDataName, this.financeDataValue});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top :5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(dataName),
+          Text(financeDataName),
           RichText(
               text: TextSpan(children: [
             TextSpan(
-                text: dataValue.toString(),
+                text: financeDataValue,
                 style: TextStyle(
                   color: AppColors.defaultColor,
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 )),
             TextSpan(
                 text: ' QAR',
-                style: TextStyle(color: Colors.black, fontSize: 10))
+                style: TextStyle(color: Colors.black, fontSize: 12))
           ])),
         ],
       ),

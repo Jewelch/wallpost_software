@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:wallpost/my_portal/ui/financial_tab/sales_my_portal_financial_data_list.dart';
+import 'package:wallpost/my_portal/ui/financials/sales_financials_data_view.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-class SalesMyPortalFinancialScreen extends StatefulWidget {
+class SalesFinancialsGraphView extends StatefulWidget {
   @override
-  _SalesMyPortalFinancialScreenState createState() =>
-      _SalesMyPortalFinancialScreenState();
+  _SalesFinancialsGraphViewState createState() =>
+      _SalesFinancialsGraphViewState();
 }
 
-class _SalesMyPortalFinancialScreenState
-    extends State<SalesMyPortalFinancialScreen> {
+class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
   bool isShowingMainData;
   final List<int> showIndexes = const [4];
   final List<FlSpot> allSpots = [
@@ -35,9 +34,9 @@ class _SalesMyPortalFinancialScreenState
         spots: allSpots,
         isCurved: true,
         curveSmoothness: 0,
-        colors: [AppColors.chartLineColor],
-        barWidth: 1,
+         barWidth: 1,
         isStrokeCapRound: false,
+        colors: [AppColors.chartLineColor],
         dotData: FlDotData(
           show: false,
         ),
@@ -48,8 +47,8 @@ class _SalesMyPortalFinancialScreenState
             AppColors.chartLineColor.withOpacity(0.0),
           ],
           gradientColorStops: [0.5, 1],
-          gradientFrom:  Offset(0, 0),
-          gradientTo:  Offset(0, 1),
+          gradientFrom: Offset(0, 0),
+          gradientTo: Offset(0, 1),
         ),
       ),
     ];
@@ -57,14 +56,11 @@ class _SalesMyPortalFinancialScreenState
     final LineChartBarData tooltipsOnBar = lineBarsData[0];
 
     return Container(
-      padding: EdgeInsets.only(top: 5),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(
           height: 40,
-          child: Text(
-            'Sales Revenue',
-            style: TextStyle(color: AppColors.labelColor),
-          ),
+          child: Text('Sales Performance',
+              style: TextStyle(color: Colors.grey, fontSize: 12)),
         ),
         SizedBox(
           width: double.infinity,
@@ -112,12 +108,12 @@ class _SalesMyPortalFinancialScreenState
               ),
             ),
             gridData: FlGridData(
-                show: true, drawHorizontalLine: true,
-                 horizontalInterval: 25,
-                 getDrawingHorizontalLine: (value) => FlLine(
-                   color: AppColors.chartHorizontalLineColor,
-                 strokeWidth: 1
-                 ),),
+              show: true,
+              drawHorizontalLine: true,
+              horizontalInterval: 25,
+              getDrawingHorizontalLine: (value) => FlLine(
+                  color: AppColors.chartHorizontalLineColor, strokeWidth: 1),
+            ),
             titlesData: FlTitlesData(
               bottomTitles: SideTitles(
                 showTitles: true,
@@ -174,7 +170,7 @@ class _SalesMyPortalFinancialScreenState
             ),
             borderData: FlBorderData(
                 show: true,
-                border:  Border(
+                border: Border(
                   bottom: BorderSide(
                     color: AppColors.chartHorizontalLineColor,
                   ),
@@ -195,14 +191,18 @@ class _SalesMyPortalFinancialScreenState
             lineBarsData: lineBarsData,
           )),
         ),
-        SalesMyPortalFinancialDataList(
-            dataName: 'Targeted Revenue', dataValue: 10000),
-        SalesMyPortalFinancialDataList(
-            dataName: 'Actual Revenue', dataValue: 9000),
-        SalesMyPortalFinancialDataList(
-            dataName: 'Bank & Cash', dataValue: 1535645),
-        SalesMyPortalFinancialDataList(
-            dataName: 'Profit & Loss', dataValue: 2000000000),
+        SalesFinancialsDataView(
+            financeDataName: 'Targeted Revenue', financeDataValue: '10,000'),
+        SizedBox(height: 4),
+        SalesFinancialsDataView(
+            financeDataName: 'Actual Revenue', financeDataValue: '9,000'),
+        SizedBox(height: 4),
+        SalesFinancialsDataView(
+            financeDataName: 'Bank & Cash', financeDataValue: '1,535,645'),
+        SizedBox(height: 4),
+        SalesFinancialsDataView(
+            financeDataName: 'Profit & Loss',
+            financeDataValue: '2,000,000,000'),
       ]),
     );
   }
