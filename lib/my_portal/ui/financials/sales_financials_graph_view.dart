@@ -34,7 +34,7 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
         spots: allSpots,
         isCurved: true,
         curveSmoothness: 0,
-         barWidth: 1,
+        barWidth: 1,
         isStrokeCapRound: false,
         colors: [AppColors.chartLineColor],
         dotData: FlDotData(
@@ -56,10 +56,11 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
     final LineChartBarData tooltipsOnBar = lineBarsData[0];
 
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 6),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(
-          height: 40,
-          child: Text('Sales Performance',
+          height: 36,
+          child: Text('Sales Revenue',
               style: TextStyle(color: Colors.grey, fontSize: 12)),
         ),
         SizedBox(

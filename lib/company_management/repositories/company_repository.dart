@@ -23,10 +23,21 @@ class CompanyRepository {
   void saveCompaniesForUser(List<Company> companies, User user) {
     _userCompanies[user.username] = {
       'companies': companies,
-      'selectedCompanyId': null,
+      'selectedCompanyId': _getRetainedSelectedCompanyId(companies, user),
     };
 
     _saveCompaniesData();
+  }
+
+  String _getRetainedSelectedCompanyId(List<Company> newCompanies, User user) {
+    var selectedCompany = getSelectedCompanyForUser(user);
+    if (selectedCompany == null) return null;
+
+    if (newCompanies.where((element) => element.companyId == selectedCompany.companyId).length > 0) {
+      return selectedCompany.companyId;
+    } else {
+      return null;
+    }
   }
 
   List<Company> getCompaniesForUser(User user) {

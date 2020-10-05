@@ -15,7 +15,6 @@ class SalesPerormanceGraphView extends StatefulWidget {
 class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
   SalesPerformance _salesPerformance;
   bool showError = false;
-  double _performance = 0.75;
 
   @override
   void initState() {
@@ -24,7 +23,6 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
   }
 
   void _getSalesPerformance() async {
-
     setState(() {
       showError = false;
       _salesPerformance = null;
@@ -45,9 +43,6 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
 
   @override
   Widget build(BuildContext context) {
-    print("performance////" + _salesPerformance.toString());
-   // print("...currentyear../////////////////" +
-    //    _salesPerformance.lastYearPerformance.actualSales);
     if (_salesPerformance != null) {
       return _buildSalesPerformanceGraphs();
     } else {
@@ -65,28 +60,36 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
                 radius: 120.0,
                 lineWidth: 4.0,
                 animation: true,
-                percent: _performance,
+                percent: getPercentage(_salesPerformance
+                    .currentYearPerformance.performancePercentage),
                 circularStrokeCap: CircularStrokeCap.round,
-                progressColor: _getColorForPerformance(75),
+                progressColor: _getColorForPerformance(_salesPerformance
+                    .currentYearPerformance.performancePercentage),
                 center: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      '75%',
+                      '${_salesPerformance.currentYearPerformance.performancePercentage}%',
                       style: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 24.0,
-                          color: _getColorForPerformance(75)),
+                          color: _getColorForPerformance(_salesPerformance
+                              .currentYearPerformance.performancePercentage)),
                     ),
                     Text(
-                      "YTD 2018",
+                      "YTD ${_salesPerformance.currentYearPerformance.year}",
                       style: TextStyle(
                           fontWeight: FontWeight.normal, fontSize: 16.0),
                     ),
                   ],
                 ),
               ),
-              _buildYearlyPerformanceBarGraphs(performancePercentage: 0)
+              _buildYearlyPerformanceBarGraphs(
+                  targetedSale:
+                      _salesPerformance.currentYearPerformance.targetedSales,
+                  actualSale:
+                      _salesPerformance.currentYearPerformance.actualSales,
+                  showPercentageIndicator: false)
             ],
           ),
         ),
@@ -94,9 +97,24 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
         Expanded(
           child: Column(
             children: <Widget>[
-              _buildYearlyPerformanceBarGraphs(performancePercentage: 80),
+              _buildYearlyPerformanceBarGraphs(
+                  performancePercentage: _salesPerformance
+                      .lastYearPerformance.performancePercentage,
+                  targetedSale:
+                      _salesPerformance.lastYearPerformance.targetedSales,
+                  actualSale: _salesPerformance.lastYearPerformance.actualSales,
+                  year: _salesPerformance.lastYearPerformance.year,
+                  showPercentageIndicator: true),
               SizedBox(height: 12),
-              _buildYearlyPerformanceBarGraphs(performancePercentage: 45),
+              _buildYearlyPerformanceBarGraphs(
+                  performancePercentage: _salesPerformance
+                      .twoYearsBackPerformance.performancePercentage,
+                  targetedSale:
+                      _salesPerformance.twoYearsBackPerformance.targetedSales,
+                  actualSale:
+                      _salesPerformance.twoYearsBackPerformance.actualSales,
+                  year: _salesPerformance.twoYearsBackPerformance.year,
+                  showPercentageIndicator: true),
             ],
           ),
         ),
@@ -104,7 +122,12 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
     );
   }
 
-  Widget _buildYearlyPerformanceBarGraphs({int performancePercentage}) {
+  Widget _buildYearlyPerformanceBarGraphs(
+      {int performancePercentage,
+      String targetedSale,
+      String actualSale,
+      int year,
+      bool showPercentageIndicator}) {
     return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
@@ -113,7 +136,7 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Budgeted',
+                'Budgted',
                 style: TextStyle(fontSize: 12),
               ),
               Text(
@@ -129,11 +152,11 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                '3.85M',
+                '$targetedSale',
                 style: TextStyle(fontSize: 16),
               ),
               Text(
-                '1.49M',
+                '$actualSale',
                 style: TextStyle(fontSize: 16),
               )
             ],
@@ -142,25 +165,25 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
         SizedBox(
           height: 4,
         ),
-        performancePercentage > 0
+        showPercentageIndicator
             ? LinearPercentIndicator(
                 animation: true,
                 lineHeight: 4.0,
                 animationDuration: 1000,
-                percent: performancePercentage / 100,
+                percent: getPercentage(performancePercentage),
                 linearStrokeCap: LinearStrokeCap.roundAll,
                 progressColor: _getColorForPerformance(performancePercentage))
             : SizedBox(height: 0),
         SizedBox(
           height: 4,
         ),
-        performancePercentage > 0
+        showPercentageIndicator
             ? Container(
                 padding: EdgeInsets.symmetric(horizontal: 6),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('2018',
+                    Text('$year',
                         style: TextStyle(
                             color:
                                 _getColorForPerformance(performancePercentage),
@@ -226,4 +249,12 @@ class _SalesMyPortalPerormanceState extends State<SalesPerormanceGraphView> {
     );
   }
 
+  double getPercentage(performPercentage) {
+    if (performPercentage < 1)
+      return 0;
+    else if (performPercentage > 100)
+      return 1;
+    else
+      return performPercentage / 100;
+  }
 }
