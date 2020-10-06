@@ -27,5 +27,7 @@ class PendingActionsCount extends JSONInitializable {
 
   num get handoverApprovalsCount => _handoverApprovalsCount;
 
-  num get totalPendingActions => _taskApprovalsCount + _leaveApprovalsCount + _handoverApprovalsCount;
+  num get totalPendingApprovals => _taskApprovalsCount + _leaveApprovalsCount + _handoverApprovalsCount;
+
+  num get totalNotifications => _totalNotifications;
 }

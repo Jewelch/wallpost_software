@@ -10,7 +10,7 @@ void main() {
     expect(pendingActionsCount.taskApprovalsCount, 10);
     expect(pendingActionsCount.leaveApprovalsCount, 31);
     expect(pendingActionsCount.handoverApprovalsCount, 5);
-    expect(pendingActionsCount.totalPendingActions, 46);
-
+    expect(pendingActionsCount.totalPendingApprovals, 46);
+    expect(pendingActionsCount.totalNotifications, 242);
   });
 }

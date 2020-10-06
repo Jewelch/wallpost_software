@@ -114,7 +114,7 @@ class Mocks {
       randomString(10),
       randomString(10),
     ],
-    "notifications": randomBetween(1000, 5000),
+    "notifications": 242,
     "total_alerts": randomBetween(1000, 5000),
     "total_approvals": randomBetween(1000, 5000),
     "total_approvals_mob": randomBetween(1000, 5000),
