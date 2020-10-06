@@ -4,6 +4,7 @@ import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart
 
 class EmployeeDetails extends JSONInitializable {
   String _employeeId;
+  num _employeeIdV1;
   String _employeeName;
   String _employeeEmail;
   String _designation;
@@ -23,6 +24,7 @@ class EmployeeDetails extends JSONInitializable {
       var departmentRankMap = sift.readMapFromMap(jsonMap, 'department_rank');
       var companyInfoMap = sift.readMapFromMap(jsonMap, 'company_info');
       _employeeId = sift.readStringFromMap(employeeMap, 'employment_id');
+      _employeeIdV1 = sift.readNumberFromMap(employeeMap, 'employment_id_v1');
       _employeeName = sift.readStringFromMap(employeeMap, 'name');
       _employeeEmail = sift.readStringFromMap(employeeMap, 'email_id_office');
       _designation = sift.readStringFromMap(employeeMap, 'designation');
@@ -42,6 +44,8 @@ class EmployeeDetails extends JSONInitializable {
   }
 
   String get employeeId => _employeeId;
+
+  num get employeeIdV1 => _employeeIdV1;
 
   String get employeeName => _employeeName;
 
