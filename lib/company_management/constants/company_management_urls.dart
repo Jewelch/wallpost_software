@@ -4,4 +4,8 @@ class CompanyManagementUrls {
   static String getCompaniesUrl() {
     return '${BaseUrls.hrUrlV2()}/performance/groupdashboard';
   }
+
+  static String getEmployeeDetailsUrl(String companyId) {
+    return '${BaseUrls.hrUrlV2()}/companies/$companyId';
+  }
 }
