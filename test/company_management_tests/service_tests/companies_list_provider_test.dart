@@ -84,10 +84,10 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var company = await companyListProvider.get();
+      var companies = await companyListProvider.get();
       verify(mockCurrentUserProvider.getCurrentUser()).called(1);
       verify(mockCompanyRepository.saveCompaniesForUser(any, any)).called(1);
-      expect(company, isNotNull);
+      expect(companies, isNotEmpty);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
