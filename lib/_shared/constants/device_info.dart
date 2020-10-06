@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 import 'package:package_info/package_info.dart';
+import 'package:uuid/uuid.dart';
+import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
 
 class DeviceInfoProvider {
   Future<String> getDeviceOS() async {
@@ -44,6 +46,15 @@ class DeviceInfoProvider {
   }
 
   Future<String> getDeviceId() async {
-    return 'deviceId';//TODO: get from local store
+    var sharedPrefs = SecureSharedPrefs();
+    var deviceIdMap = await sharedPrefs.getMap('deviceIdMap');
+
+    if (deviceIdMap == null) {
+      var deviceId = Uuid().v1();
+      sharedPrefs.saveMap('deviceIdMap', {'deviceId': deviceId});
+      return deviceId;
+    } else {
+      return deviceIdMap['deviceId'];
+    }
   }
 }
