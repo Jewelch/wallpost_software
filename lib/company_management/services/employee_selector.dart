@@ -13,7 +13,7 @@ class EmployeeSelector {
   EmployeeSelector.initWith(this._selectedCompanyProvider, this._employeeRepository);
 
   void selectEmployeeForSelectedCompany(Employee employee) {
-    var selectedCompany = _selectedCompanyProvider.getSelectCompanyForCurrentUser();
+    var selectedCompany = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
 
     if (selectedCompany == null) return;
 

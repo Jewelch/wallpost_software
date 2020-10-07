@@ -19,23 +19,23 @@ void main() {
   setUpAll(() {});
 
   test('returns null if there is no selected company', () async {
-    when(mockCompanyProvider.getSelectCompanyForCurrentUser()).thenReturn(null);
+    when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(null);
 
     var employee = selectedEmployeeProvider.getEmployeeForSelectedCompany();
 
     expect(employee, null);
-    verify(mockCompanyProvider.getSelectCompanyForCurrentUser()).called(1);
+    verify(mockCompanyProvider.getSelectedCompanyForCurrentUser()).called(1);
     verifyNever(mockEmployeeRepository.getEmployeeForCompany(any)).called(0);
   });
 
   test('getting the employee for the selected company', () async {
-    when(mockCompanyProvider.getSelectCompanyForCurrentUser()).thenReturn(mockCompany);
+    when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
     when(mockEmployeeRepository.getEmployeeForCompany(any)).thenReturn(mockEmployee);
 
     var employee = selectedEmployeeProvider.getEmployeeForSelectedCompany();
 
     expect(employee, mockEmployee);
-    verify(mockCompanyProvider.getSelectCompanyForCurrentUser()).called(1);
+    verify(mockCompanyProvider.getSelectedCompanyForCurrentUser()).called(1);
     var verificationResult = verify(mockEmployeeRepository.getEmployeeForCompany(captureAny));
     verificationResult.called(1);
     expect(verificationResult.captured[0], mockCompany);

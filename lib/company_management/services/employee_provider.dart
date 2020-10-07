@@ -14,7 +14,7 @@ class EmployeeProvider {
   EmployeeProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
   Future<Employee> get() async {
-    var company = _selectedCompanyProvider.getSelectCompanyForCurrentUser();
+    var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
     var url = CompanyManagementUrls.getEmployeeUrl(company.companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);

@@ -21,7 +21,7 @@ void main() {
   test('returns null if there is no current user', () async {
     when(mockCurrentUserProvider.getCurrentUser()).thenReturn(null);
 
-    var selectedCompany = selectedCompanyProvider.getSelectCompanyForCurrentUser();
+    var selectedCompany = selectedCompanyProvider.getSelectedCompanyForCurrentUser();
 
     expect(selectedCompany, null);
     verify(mockCurrentUserProvider.getCurrentUser()).called(1);
@@ -32,7 +32,7 @@ void main() {
     when(mockCurrentUserProvider.getCurrentUser()).thenReturn(mockUser);
     when(mockCompanyRepository.getSelectedCompanyForUser(any)).thenReturn(mockCompany);
 
-    var selectedCompany = selectedCompanyProvider.getSelectCompanyForCurrentUser();
+    var selectedCompany = selectedCompanyProvider.getSelectedCompanyForCurrentUser();
 
     expect(selectedCompany, mockCompany);
     verify(mockCurrentUserProvider.getCurrentUser()).called(1);

@@ -19,20 +19,20 @@ void main() {
   setUpAll(() {});
 
   test('selecting an employee does nothing when selected company is not available', () async {
-    when(mockCompanyProvider.getSelectCompanyForCurrentUser()).thenReturn(null);
+    when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(null);
 
     employeeSelector.selectEmployeeForSelectedCompany(mockEmployee);
 
-    verify(mockCompanyProvider.getSelectCompanyForCurrentUser()).called(1);
+    verify(mockCompanyProvider.getSelectedCompanyForCurrentUser()).called(1);
     verifyNever(mockEmployeeRepository.saveEmployeeForCompany(any, any)).called(0);
   });
 
   test('selecting an employee when the selected company is available is available', () async {
-    when(mockCompanyProvider.getSelectCompanyForCurrentUser()).thenReturn(mockCompany);
+    when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
 
     employeeSelector.selectEmployeeForSelectedCompany(mockEmployee);
 
-    verify(mockCompanyProvider.getSelectCompanyForCurrentUser()).called(1);
+    verify(mockCompanyProvider.getSelectedCompanyForCurrentUser()).called(1);
     var verificationResult = verify(mockEmployeeRepository.saveEmployeeForCompany(captureAny, captureAny));
     verificationResult.called(1);
     expect(verificationResult.captured[0], mockEmployee);

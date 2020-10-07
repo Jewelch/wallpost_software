@@ -73,10 +73,10 @@ class LeftMenuScreen extends StatelessWidget {
   }
 
   String _getTitle() {
-    if (SelectedCompanyProvider().getSelectCompanyForCurrentUser() == null)
+    if (SelectedCompanyProvider().getSelectedCompanyForCurrentUser() == null)
       return '';
     else
-      return SelectedCompanyProvider().getSelectCompanyForCurrentUser().name;
+      return SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name;
   }
 
   Widget _buildLeftMenuButton({

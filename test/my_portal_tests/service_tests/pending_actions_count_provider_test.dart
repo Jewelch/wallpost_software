@@ -17,7 +17,7 @@ void main() {
 
   setUpAll(() {
     when(mockCompany.companyId).thenReturn('someCompanyId');
-    when(mockCompanyProvider.getSelectCompanyForCurrentUser()).thenReturn(mockCompany);
+    when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
   });
 
   test('api request is built and executed correctly', () async {

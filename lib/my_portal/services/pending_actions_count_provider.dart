@@ -18,7 +18,7 @@ class PendingActionsCountProvider {
   PendingActionsCountProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
   Future<PendingActionsCount> getCount() async {
-    var company = _selectedCompanyProvider.getSelectCompanyForCurrentUser();
+    var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
     var url = MyPortalUrls.pendingActionsCountUrl(company.companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);

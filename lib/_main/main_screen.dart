@@ -49,7 +49,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _showLandingScreenForLoggedInUser() {
-    var selectedCompany = SelectedCompanyProvider().getSelectCompanyForCurrentUser();
+    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
 
     if (selectedCompany == null) {
       _showScreenAndClearStack(RouteNames.companiesList);

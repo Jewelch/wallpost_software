@@ -12,7 +12,7 @@ class SelectedCompanyProvider {
 
   SelectedCompanyProvider.initWith(this._currentUserProvider, this._companyRepository);
 
-  Company getSelectCompanyForCurrentUser() {
+  Company getSelectedCompanyForCurrentUser() {
     var currentUser = _currentUserProvider.getCurrentUser();
 
     if (currentUser == null) return null;
