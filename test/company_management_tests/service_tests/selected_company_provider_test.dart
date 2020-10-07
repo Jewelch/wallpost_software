@@ -25,7 +25,7 @@ void main() {
 
     expect(selectedCompany, null);
     verify(mockCurrentUserProvider.getCurrentUser()).called(1);
-    verifyNever(mockCurrentUserProvider.getCurrentUser());
+    verifyNever(mockCompanyRepository.getSelectedCompanyForUser(any));
   });
 
   test('getting selected company for current user', () async {
