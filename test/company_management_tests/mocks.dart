@@ -38,7 +38,7 @@ class Mocks {
     },
   ];
 
-  static Map<String, dynamic> companyDetailsResponse = {
+  static Map<String, dynamic> employeeResponse = {
     "absolute_upload_path": randomString(10),
     "account_no": randomBetween(1000, 5000),
     "commercial_name": randomString(10),

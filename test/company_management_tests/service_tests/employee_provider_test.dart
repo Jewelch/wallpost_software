@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/company_management/constants/company_management_urls.dart';
-import 'package:wallpost/company_management/services/employee_details_provider.dart';
+import 'package:wallpost/company_management/services/employee_provider.dart';
 
 import '../../_mocks/MockCompany.dart';
 import '../../_mocks/MockCompanyProvider.dart';
@@ -9,11 +9,11 @@ import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
-  Map<String, dynamic> successfulResponse = Mocks.companyDetailsResponse;
+  Map<String, dynamic> successfulResponse = Mocks.employeeResponse;
   var mockCompany = MockCompany();
   var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var employeeDetailsProvider = EmployeeDetailsProvider.initWith(mockCompanyProvider, mockNetworkAdapter);
+  var employeeProvider = EmployeeProvider.initWith(mockCompanyProvider, mockNetworkAdapter);
 
   setUpAll(() {
     when(mockCompany.companyId).thenReturn('someCompanyId');
@@ -24,9 +24,9 @@ void main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await employeeDetailsProvider.getDetails();
+    var _ = await employeeProvider.get();
 
-    expect(mockNetworkAdapter.apiRequest.url, CompanyManagementUrls.getEmployeeDetailsUrl('someCompanyId'));
+    expect(mockNetworkAdapter.apiRequest.url, CompanyManagementUrls.getEmployeeUrl('someCompanyId'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -35,7 +35,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await employeeDetailsProvider.getDetails();
+      var _ = await employeeProvider.get();
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -46,13 +46,13 @@ void main() {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
-    employeeDetailsProvider.getDetails().then((_) {
+    employeeProvider.get().then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
     mockNetworkAdapter.succeed(successfulResponse);
-    employeeDetailsProvider.getDetails().then((_) {
+    employeeProvider.get().then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -64,7 +64,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await employeeDetailsProvider.getDetails();
+      var _ = await employeeProvider.get();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -75,7 +75,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      var _ = await employeeDetailsProvider.getDetails();
+      var _ = await employeeProvider.get();
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -86,7 +86,7 @@ void main() {
     mockNetworkAdapter.succeed(<String, dynamic>{});
 
     try {
-      var _ = await employeeDetailsProvider.getDetails();
+      var _ = await employeeProvider.get();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -97,8 +97,8 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var employeeDetails = await employeeDetailsProvider.getDetails();
-      expect(employeeDetails, isNotNull);
+      var employee = await employeeProvider.get();
+      expect(employee, isNotNull);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
@@ -107,27 +107,27 @@ void main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    employeeDetailsProvider.getDetails();
+    employeeProvider.get();
 
-    expect(employeeDetailsProvider.isLoading, true);
+    expect(employeeProvider.isLoading, true);
   });
 
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await employeeDetailsProvider.getDetails();
+    var _ = await employeeProvider.get();
 
-    expect(employeeDetailsProvider.isLoading, false);
+    expect(employeeProvider.isLoading, false);
   });
 
   test('test loading flag is reset after failure', () async {
     mockNetworkAdapter.fail(InvalidResponseException());
 
     try {
-      var _ = await employeeDetailsProvider.getDetails();
+      var _ = await employeeProvider.get();
       fail('failed to throw exception');
     } catch (_) {
-      expect(employeeDetailsProvider.isLoading, false);
+      expect(employeeProvider.isLoading, false);
     }
   });
 }

@@ -2,7 +2,7 @@ import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
-class EmployeeDetails extends JSONInitializable {
+class Employee extends JSONInitializable {
   String _employeeId;
   num _employeeIdV1;
   String _employeeName;
@@ -17,7 +17,7 @@ class EmployeeDetails extends JSONInitializable {
   String _fileUploadPath;
   String _isTrial;
 
-  EmployeeDetails.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  Employee.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var employeeMap = sift.readMapFromMap(jsonMap, 'employee');
@@ -39,7 +39,7 @@ class EmployeeDetails extends JSONInitializable {
       _fileUploadPath = sift.readStringFromMap(jsonMap, 'absolute_upload_path');
       _isTrial = sift.readStringFromMap(companyInfoMap, 'is_trial');
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast EmployeeDetails response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast Employee response. Error message - ${e.errorMessage}');
     }
   }
 
