@@ -64,7 +64,7 @@ class ImagePicker {
         Navigator.pop(context, imageFile);
       }
     } catch (e) {
-      //TODO Show alert
+      //ignore: usually, error is not thrown
     }
   }
 }

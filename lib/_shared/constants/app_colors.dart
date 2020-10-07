@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  //TODO: Refactor with the team
   static final Color defaultColor = _getColorFromHex(AppColors._defaultColor);
   static final Color defaultColorDark = _getColorFromHex(AppColors._defaultColorDark);
   static final Color badgeColor = _getColorFromHex(AppColors._badgeColor);

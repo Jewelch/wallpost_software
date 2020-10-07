@@ -22,7 +22,7 @@ void main() {
     companySelector.selectCompanyForCurrentUser(mockCompany);
 
     verify(mockCurrentUserProvider.getCurrentUser()).called(1);
-    verifyNever(mockCompanyRepository.getSelectedCompanyForUser(any)).called(0);
+    verifyNever(mockCompanyRepository.selectCompanyForUser(any, any)).called(0);
   });
 
   test('selecting company when current user is available', () async {

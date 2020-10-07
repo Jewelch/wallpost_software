@@ -25,7 +25,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _initScreens() {
-    var selectedCompany = SelectedCompanyProvider().getSelectCompanyForCurrentUser();
+    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     if (selectedCompany.shouldShowRevenue) {
       _screens.add(SalesMyPortalScreen());
     } else {

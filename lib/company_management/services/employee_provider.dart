@@ -1,25 +1,21 @@
 import 'dart:async';
 
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
+import 'package:wallpost/company_management/constants/company_management_urls.dart';
+import 'package:wallpost/company_management/entities/employee.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/my_portal/constants/my_portal_urls.dart';
-import 'package:wallpost/my_portal/entities/sales_performance.dart';
 
-class SalesPerformanceProvider {
+class EmployeeProvider {
   final SelectedCompanyProvider _selectedCompanyProvider;
   final NetworkAdapter _networkAdapter;
   bool isLoading = false;
   String _sessionId;
 
-  SalesPerformanceProvider()
-      : _selectedCompanyProvider = SelectedCompanyProvider(),
-        _networkAdapter = WPAPI();
+  EmployeeProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
-  SalesPerformanceProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
-
-  Future<SalesPerformance> getPerformance(int year) async {
+  Future<Employee> get() async {
     var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
-    var url = MyPortalUrls.salesPerformanceUrl(company.companyId, '$year');
+    var url = CompanyManagementUrls.getEmployeeUrl(company.companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
@@ -34,16 +30,16 @@ class SalesPerformanceProvider {
     }
   }
 
-  Future<SalesPerformance> _processResponse(APIResponse apiResponse) async {
+  Future<Employee> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<SalesPerformance>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<Employee>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
-      var salesPerformance = SalesPerformance.fromJson(responseMap);
-      return salesPerformance;
+      var employee = Employee.fromJson(responseMap);
+      return employee;
     } catch (e) {
       throw InvalidResponseException();
     }

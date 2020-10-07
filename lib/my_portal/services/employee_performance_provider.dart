@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/my_portal/constants/performance_urls.dart';
+import 'package:wallpost/my_portal/constants/my_portal_urls.dart';
 import 'package:wallpost/my_portal/entities/employee_performance.dart';
 
 class EmployeePerformanceProvider {
@@ -18,8 +18,8 @@ class EmployeePerformanceProvider {
   EmployeePerformanceProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
   Future<EmployeePerformance> getPerformance(int year) async {
-    var company = _selectedCompanyProvider.getSelectCompanyForCurrentUser();
-    var url = PerformanceUrls.employeePerformanceUrl(company.companyId, '$year');
+    var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
+    var url = MyPortalUrls.employeePerformanceUrl(company.companyId, '$year');
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:wallpost/my_portal/constants/performance_urls.dart';
+import 'package:wallpost/my_portal/constants/my_portal_urls.dart';
 import 'package:wallpost/my_portal/services/sales_performance_provider.dart';
 
 import '../../_mocks/MockCompany.dart';
@@ -17,7 +17,7 @@ void main() {
 
   setUpAll(() {
     when(mockCompany.companyId).thenReturn('someCompanyId');
-    when(mockCompanyProvider.getSelectCompanyForCurrentUser()).thenReturn(mockCompany);
+    when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
   });
 
   test('api request is built and executed correctly', () async {
@@ -26,7 +26,7 @@ void main() {
 
     var _ = await salesPerformanceProvider.getPerformance(2019);
 
-    expect(mockNetworkAdapter.apiRequest.url, PerformanceUrls.salesPerformanceUrl('someCompanyId', '2019'));
+    expect(mockNetworkAdapter.apiRequest.url, MyPortalUrls.salesPerformanceUrl('someCompanyId', '2019'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
