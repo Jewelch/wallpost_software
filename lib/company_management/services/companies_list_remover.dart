@@ -1,14 +1,14 @@
 import 'package:wallpost/_shared/user_management/entities/user.dart';
 import 'package:wallpost/company_management/repositories/company_repository.dart';
 
-class CompanyRemover {
+class CompaniesListRemover {
   CompanyRepository _companyRepository;
 
-  CompanyRemover() {
+  CompaniesListRemover() {
     _companyRepository = CompanyRepository();
   }
 
-  CompanyRemover.initWith(CompanyRepository companyRepository) {
+  CompaniesListRemover.initWith(CompanyRepository companyRepository) {
     _companyRepository = companyRepository;
   }
 
