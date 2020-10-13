@@ -27,8 +27,8 @@ void main() {
     when(mockCompany.toJson()).thenReturn({'company': 'json'});
     when(mockEmployee.toJson()).thenReturn({'employee': 'json'});
 
-    when(mockCompanyListItem1.companyId).thenReturn('1');
-    when(mockCompanyListItem2.companyId).thenReturn('2');
+    when(mockCompanyListItem1.id).thenReturn('1');
+    when(mockCompanyListItem2.id).thenReturn('2');
     when(mockCompany.id).thenReturn('1');
     when(mockEmployee.companyId).thenReturn('1');
   });

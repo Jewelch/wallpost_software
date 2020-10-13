@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 class CompanyListItem extends JSONInitializable implements JSONConvertible {
-  String _companyId;
+  String _id;
   String _name;
   String _currencyCode;
   num _approvalCount;
@@ -17,7 +17,7 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
   CompanyListItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
-      _companyId = '${sift.readNumberFromMap(jsonMap, 'companyId')}';
+      _id = '${sift.readNumberFromMap(jsonMap, 'companyId')}';
       _name = sift.readStringFromMap(jsonMap, 'name');
       _currencyCode = sift.readStringFromMap(jsonMap, 'currency');
       _approvalCount = sift.readNumberFromMap(jsonMap, 'approvals');
@@ -35,7 +35,7 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> jsonMap = {
       'actual_revenue_display': _actualSalesAmount,
-      'companyId': int.parse(_companyId),
+      'companyId': int.parse(_id),
       'name': _name,
       'currency': _currencyCode,
       'approvals': _approvalCount,
@@ -47,7 +47,7 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
     return jsonMap;
   }
 
-  String get companyId => _companyId;
+  String get id => _id;
 
   String get name => _name;
 

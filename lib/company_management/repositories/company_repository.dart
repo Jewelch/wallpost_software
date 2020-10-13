@@ -93,7 +93,7 @@ class CompanyRepository {
   }
 
   bool _doesListContainCompanyWithId(List<CompanyListItem> companies, String companyId) {
-    var filteredCompanies = companies.where((company) => company.companyId == companyId);
+    var filteredCompanies = companies.where((company) => company.id == companyId);
     return filteredCompanies.length > 0;
   }
 

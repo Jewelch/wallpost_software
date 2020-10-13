@@ -153,8 +153,10 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
 
   void _selectCompanyAtIndex(int index) {
     var selectedCompany = _filterList[index];
-    CompanySelector().selectCompanyForCurrentUser(selectedCompany);
-    Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
+
+    //TODO:  Get company and employee details
+//    CompanySelector().selectCompanyForCurrentUser(selectedCompany);
+//    Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
   }
 
   void _getCompanies() async {
