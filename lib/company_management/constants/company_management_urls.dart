@@ -6,6 +6,6 @@ class CompanyManagementUrls {
   }
 
   static String getCompanyDetailsUrl(String companyId) {
-    return '${BaseUrls.hrUrlV2()}/companies/$companyId';
+    return '${BaseUrls.baseUrlV2()}/companies/$companyId';
   }
 }
