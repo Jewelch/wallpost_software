@@ -7,18 +7,36 @@ class SalesPerformance extends JSONInitializable {
   YearlySalesPerformance _currentYearPerformance;
   YearlySalesPerformance _lastYearPerformance;
   YearlySalesPerformance _twoYearsBackPerformance;
+  List<double> _monthlyperformancePercentage = [
+    50,
+    60,
+    30,
+    40,
+    60,
+    60,
+    50,
+    60,
+    30,
+    40,
+    60,
+    60
+  ];
 
-  SalesPerformance.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  SalesPerformance.fromJson(Map<String, dynamic> jsonMap)
+      : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var selectedYearMap = sift.readMapFromMap(jsonMap, 'selectedYear');
       var oneYearBackMap = sift.readMapFromMap(jsonMap, 'oneYearback');
       var twoYearBackMap = sift.readMapFromMap(jsonMap, 'twoYearback');
-      _currentYearPerformance = YearlySalesPerformance.fromJson(selectedYearMap);
+      _currentYearPerformance =
+          YearlySalesPerformance.fromJson(selectedYearMap);
       _lastYearPerformance = YearlySalesPerformance.fromJson(oneYearBackMap);
-      _twoYearsBackPerformance = YearlySalesPerformance.fromJson(twoYearBackMap);
+      _twoYearsBackPerformance =
+          YearlySalesPerformance.fromJson(twoYearBackMap);
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast SalesPerformance response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast SalesPerformance response. Error message - ${e.errorMessage}');
     }
   }
 
@@ -26,5 +44,8 @@ class SalesPerformance extends JSONInitializable {
 
   YearlySalesPerformance get lastYearPerformance => _lastYearPerformance;
 
-  YearlySalesPerformance get twoYearsBackPerformance => _twoYearsBackPerformance;
+  YearlySalesPerformance get twoYearsBackPerformance =>
+      _twoYearsBackPerformance;
+
+  List<double> get monthlyPerformancePercentage => _monthlyperformancePercentage;
 }
