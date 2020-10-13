@@ -7,7 +7,7 @@ import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/password_management/entities/reset_password_form.dart';
 import 'package:wallpost/password_management/services/password_resetter.dart';
 
@@ -99,7 +99,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
           RouteNames.forgotPasswordSuccess,
           (_) => false,
         );
-      } on APIException catch (error) {
+      } on WPException catch (error) {
         _loader.hide();
         Alert.showSimpleAlert(
           context,

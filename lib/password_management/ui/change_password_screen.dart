@@ -7,7 +7,7 @@ import 'package:wallpost/_common_widgets/form_widgets/password_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 import 'package:wallpost/password_management/entities/change_password_form.dart';
 import 'package:wallpost/password_management/services/password_changer.dart';
@@ -171,7 +171,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           Navigator.pop(context);
         },
       );
-    } on APIException catch (e) {
+    } on WPException catch (e) {
       await _loader.hide();
       Alert.showSimpleAlert(
         context,

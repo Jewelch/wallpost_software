@@ -4,9 +4,10 @@ import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/company_management/entities/company_list_item.dart';
 import 'package:wallpost/company_management/services/companies_list_provider.dart';
+import 'package:wallpost/company_management/services/company_details_provider.dart';
 import 'package:wallpost/company_management/ui/company_list_card_with_revenue.dart';
 import 'package:wallpost/company_management/ui/company_list_card_without_revenue.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
@@ -166,7 +167,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         _companies.addAll(companies);
         _filterList.addAll(companies);
       });
-    } on APIException catch (error) {
+    } on WPException catch (error) {
       Alert.showSimpleAlert(context,
           title: 'Failed To Load Companies', message: error.userReadableMessage, buttonTitle: 'Okay');
       setState(() {});

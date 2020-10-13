@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/my_portal/entities/sales_performance.dart';
 import 'package:wallpost/my_portal/services/my_portal_performance_level_calculator.dart';
 import 'package:wallpost/my_portal/services/sales_performance_provider.dart';
@@ -30,7 +30,7 @@ class _SalesMyPortalPerformanceState extends State<SalesPerformanceGraphView> {
     try {
       var performance = await SalesPerformanceProvider().getPerformance(DateTime.now().year);
       setState(() => _salesPerformance = performance);
-    } on APIException catch (_) {
+    } on WPException catch (_) {
       setState(() => showError = true);
     }
   }

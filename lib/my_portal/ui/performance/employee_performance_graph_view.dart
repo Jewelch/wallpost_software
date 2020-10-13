@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/my_portal/entities/employee_performance.dart';
 import 'package:wallpost/my_portal/services/employee_performance_provider.dart';
 import 'package:wallpost/my_portal/services/my_portal_performance_level_calculator.dart';
@@ -21,7 +21,7 @@ class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphV
   void initState() {
     _getEmployeePerformance();
     super.initState();
-      _getEmployeePerformance();
+    _getEmployeePerformance();
   }
 
   void _getEmployeePerformance() async {
@@ -33,7 +33,7 @@ class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphV
     try {
       var performance = await EmployeePerformanceProvider().getPerformance(DateTime.now().year);
       setState(() => _employeePerformance = performance);
-    } on APIException catch (_) {
+    } on WPException catch (_) {
       setState(() => showError = true);
     }
   }

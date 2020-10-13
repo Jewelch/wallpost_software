@@ -6,7 +6,7 @@ import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dism
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/authentication/entities/credentials.dart';
 import 'package:wallpost/authentication/services/authenticator.dart';
 
@@ -191,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
         (_) => false,
         arguments: _passwordTextController.text,
       );
-    } on APIException catch (error) {
+    } on WPException catch (error) {
       _loader.hide();
       Alert.showSimpleAlert(
         context,
