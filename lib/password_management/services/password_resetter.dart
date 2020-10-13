@@ -21,16 +21,12 @@ class PasswordResetter {
     isLoading = true;
 
     try {
-      var apiResponse = await _networkAdapter.post(apiRequest);
+      var _ = await _networkAdapter.post(apiRequest);
       isLoading = false;
-      return _processResponse(apiResponse);
+      return null;
     } on APIException catch (exception) {
       isLoading = false;
       throw exception;
     }
-  }
-
-  Future<void> _processResponse(APIResponse apiResponse) async {
-    return null;
   }
 }
