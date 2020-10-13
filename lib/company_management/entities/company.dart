@@ -62,6 +62,7 @@ class Company extends JSONInitializable implements JSONConvertible {
       'short_name': _shortName,
       'commercial_name': _commercialName,
       'company_logo': _logoUrl,
+      'show_revenue': _shouldShowRevenue ? 1 : 0,
       'packages': _packages,
       'absolute_upload_path': _fileUploadPath,
     };
