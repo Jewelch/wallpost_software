@@ -5,7 +5,16 @@ class MapComparer {
     if (subsetCandidate.isEmpty) return false;
 
     return subsetCandidate.entries.every((entry) {
-      return DeepCollectionEquality().equals(entry.value, map[entry.key]);
+      if (entry.value is Map) {
+        return MapComparer.isMapSubsetOfAnotherMap(entry.value, map[entry.key]);
+      } else if (entry.value is List) {
+        return ListEquality().equals(entry.value, map[entry.key]);
+      } else {
+        return entry.value == map[entry.key];
+      }
+
+//      we used DeepCollectionEquality earlier but it failed in some cases
+//      DeepCollectionEquality().equals(entry.value, map[entry.key])
     });
   }
 }

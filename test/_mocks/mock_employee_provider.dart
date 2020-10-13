@@ -1,4 +1,4 @@
 import 'package:mockito/mockito.dart';
-import 'package:wallpost/company_management/services/employee_provider.dart';
+import 'package:wallpost/company_management/services/selected_employee_provider.dart';
 
-class MockEmployeeProvider extends Mock implements EmployeeProvider {}
+class MockEmployeeProvider extends Mock implements SelectedEmployeeProvider {}

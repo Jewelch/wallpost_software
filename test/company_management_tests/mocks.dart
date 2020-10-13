@@ -38,7 +38,7 @@ class Mocks {
     },
   ];
 
-  static Map<String, dynamic> employeeResponse = {
+  static Map<String, dynamic> companyDetailsResponse = {
     "absolute_upload_path": randomString(10),
     "account_no": randomBetween(1000, 5000),
     "commercial_name": randomString(10),
@@ -61,7 +61,7 @@ class Mocks {
       "external_account_settings": true,
       "fullName": randomString(10),
       "has_signature": true,
-      "is_trial": randomString(10),
+      "is_trial": 'true',
       "js_date_format": randomString(10),
       "manage_wallpost": true,
       "packages": {
@@ -131,6 +131,7 @@ class Mocks {
       randomString(10),
     ],
     "payroll_wps_supported": true,
+    "show_revenue": 0,
     "short_name": randomString(10),
   };
 }

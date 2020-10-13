@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/company_management/ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
-import 'package:wallpost/my_portal/ui/performance/sales_performance_graph_view.dart';
 import 'package:wallpost/my_portal/ui/financials/sales_financials_graph_view.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/my_portal/ui/performance/sales_performance_graph_view.dart';
 
 class SalesMyPortalScreen extends StatefulWidget {
   @override
   _SalesMyPortalScreenState createState() => _SalesMyPortalScreenState();
 }
 
-class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
-    with SingleTickerProviderStateMixin {
+class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTickerProviderStateMixin {
   TabController _tabController;
+
   @override
   void initState() {
     super.initState();
@@ -28,7 +28,7 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().shortName,
         leading: RoundedIconButton(
           iconName: 'assets/icons/menu.svg',
           iconSize: 12,
@@ -47,8 +47,7 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
         showCompanySwitchButton: true,
         companySwitchBadgeCount: 10,
         onCompanySwitchButtonPressed: () {
-          ScreenPresenter.present(CompaniesListScreen(), context,
-              slideDirection: SlideDirection.fromLeft);
+          ScreenPresenter.present(CompaniesListScreen(), context, slideDirection: SlideDirection.fromLeft);
         },
       ),
       body: SafeArea(
@@ -58,8 +57,7 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Sales Performance',
-                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+                Text('Sales Performance', style: TextStyle(color: Colors.grey, fontSize: 12)),
                 SizedBox(height: 8),
                 SalesPerformanceGraphView(),
                 SizedBox(height: 8),

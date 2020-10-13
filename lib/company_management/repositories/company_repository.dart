@@ -1,6 +1,8 @@
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
 import 'package:wallpost/_shared/user_management/entities/user.dart';
 import 'package:wallpost/company_management/entities/company.dart';
+import 'package:wallpost/company_management/entities/company_list_item.dart';
+import 'package:wallpost/company_management/entities/employee.dart';
 
 class CompanyRepository {
   SecureSharedPrefs _sharedPrefs;
@@ -20,52 +22,62 @@ class CompanyRepository {
     _readCompaniesData();
   }
 
-  void saveCompaniesForUser(List<Company> companies, User user) {
+  //MARK: Functions to save companies for a user
+
+  void saveCompaniesForUser(List<CompanyListItem> companies, User user) {
     _userCompanies[user.username] = {
       'companies': companies,
-      'selectedCompanyId': _getRetainedSelectedCompanyId(companies, user),
+      'selectedCompany': _shouldRetainCompanySelection(user, companies) ? getSelectedCompanyForUser(user) : null,
+      'selectedEmployee': _shouldRetainEmployeeSelection(user, companies) ? getSelectedEmployeeForUser(user) : null,
     };
 
     _saveCompaniesData();
   }
 
-  String _getRetainedSelectedCompanyId(List<Company> newCompanies, User user) {
+  bool _shouldRetainCompanySelection(User user, List<CompanyListItem> newCompanies) {
     var selectedCompany = getSelectedCompanyForUser(user);
-    if (selectedCompany == null) return null;
-
-    if (newCompanies.where((element) => element.companyId == selectedCompany.companyId).length > 0) {
-      return selectedCompany.companyId;
-    } else {
-      return null;
-    }
+    if (selectedCompany == null) return false;
+    return _doesListContainCompanyWithId(newCompanies, selectedCompany.id);
   }
 
-  List<Company> getCompaniesForUser(User user) {
-    if (!_userCompanies.containsKey(user.username)) return [];
+  bool _shouldRetainEmployeeSelection(User user, List<CompanyListItem> newCompanies) {
+    var selectedEmployee = getSelectedEmployeeForUser(user);
+    if (selectedEmployee == null) return false;
+    return _doesListContainCompanyWithId(newCompanies, selectedEmployee.companyId);
+  }
+
+  //MARK: Function to get companies list for a user
+
+  List<CompanyListItem> getCompaniesForUser(User user) {
+    if (_isCompaniesDataAvailableForUser(user) == false) return [];
 
     return _userCompanies[user.username]['companies'];
   }
 
-  void selectCompanyForUser(Company company, User user) {
-    if (!_userCompanies.containsKey(user.username)) return;
+  //MARK: Functions to set and get selected company and employee
 
-    List<Company> companies = _userCompanies[user.username]['companies'];
-    if (companies.where((element) => element.companyId == company.companyId).length == 0) return;
+  void selectCompanyAndEmployeeForUser(Company company, Employee employee, User user) {
+    if (_isCompaniesDataAvailableForUser(user) == false) return;
 
-    _userCompanies[user.username]['selectedCompanyId'] = company.companyId;
+    List<CompanyListItem> companies = _userCompanies[user.username]['companies'];
+    if (_doesListContainCompanyWithId(companies, company.id) == false) return;
+    if (_doesListContainCompanyWithId(companies, employee.companyId) == false) return;
+
+    _userCompanies[user.username]['selectedCompany'] = company;
+    _userCompanies[user.username]['selectedEmployee'] = employee;
     _saveCompaniesData();
   }
 
   Company getSelectedCompanyForUser(User user) {
-    if (!_userCompanies.containsKey(user.username)) return null;
+    if (_isCompaniesDataAvailableForUser(user) == false) return null;
 
-    var selectedCompanyId = _userCompanies[user.username]['selectedCompanyId'];
-    if (selectedCompanyId == null) {
-      return null;
-    } else {
-      List<Company> companies = _userCompanies[user.username]['companies'];
-      return companies.firstWhere((element) => element.companyId == selectedCompanyId);
-    }
+    return _userCompanies[user.username]['selectedCompany'];
+  }
+
+  Employee getSelectedEmployeeForUser(User user) {
+    if (_isCompaniesDataAvailableForUser(user) == false) return null;
+
+    return _userCompanies[user.username]['selectedEmployee'];
   }
 
   void removeCompaniesForUser(User user) {
@@ -73,6 +85,19 @@ class CompanyRepository {
 
     _saveCompaniesData();
   }
+
+  //MARK: Util functions
+
+  bool _isCompaniesDataAvailableForUser(User user) {
+    return _userCompanies.containsKey(user.username);
+  }
+
+  bool _doesListContainCompanyWithId(List<CompanyListItem> companies, String companyId) {
+    var filteredCompanies = companies.where((company) => company.companyId == companyId);
+    return filteredCompanies.length > 0;
+  }
+
+  //MARK: Function to read user companies data from the storage
 
   void _readCompaniesData() async {
     var allUsersCompaniesMap = await _sharedPrefs.getMap('allUsersCompanies');
@@ -87,17 +112,24 @@ class CompanyRepository {
   }
 
   Map _readCompaniesFromMap(String username, Map companiesData) {
-    List companiesMapList = companiesData['companies'];
-    String selectedCompanyId = companiesData['selectedCompanyId'];
+    List companyListItemsMapList = companiesData['companies'];
+    List<CompanyListItem> companyListItems = [];
+    companyListItemsMapList.forEach((map) => companyListItems.add(CompanyListItem.fromJson(map)));
 
-    List<Company> companies = [];
-    for (Map companyMap in companiesMapList) {
-      var company = Company.fromJson(companyMap);
-      companies.add(company);
-    }
+    Map selectedCompanyMap = companiesData['selectedCompany'];
+    var selectedCompany = selectedCompanyMap == null ? null : Company.fromJson(selectedCompanyMap);
 
-    return {'companies': companies, 'selectedCompanyId': selectedCompanyId};
+    Map selectedEmployeeMap = companiesData['selectedEmployee'];
+    var selectedEmployee = selectedEmployeeMap == null ? null : Employee.fromJson(selectedCompanyMap);
+
+    return {
+      'companies': companyListItems,
+      'selectedCompany': selectedCompany,
+      'selectedEmployee': selectedEmployee,
+    };
   }
+
+  //MARK: Functions to save user companies data to the storage
 
   void _saveCompaniesData() {
     Map allUsersCompaniesMap = {};
@@ -111,13 +143,20 @@ class CompanyRepository {
   }
 
   Map _convertCompaniesToMap(Map userCompaniesMap) {
-    List<Company> userCompanies = userCompaniesMap['companies'];
-    String selectedCompanyId = userCompaniesMap['selectedCompanyId'];
-    List<Map> companiesMap = [];
-    for (Company company in userCompanies) {
-      companiesMap.add(company.toJson());
-    }
+    List<CompanyListItem> companyListItems = userCompaniesMap['companies'];
+    List<Map> companyListItemsMapList = [];
+    companyListItems.forEach((companyListItem) => companyListItemsMapList.add(companyListItem.toJson()));
 
-    return {'companies': companiesMap, 'selectedCompanyId': selectedCompanyId};
+    Company selectedCompany = userCompaniesMap['selectedCompany'];
+    Map selectedCompanyMap = selectedCompany == null ? null : selectedCompany.toJson();
+
+    Employee selectedEmployee = userCompaniesMap['selectedEmployee'];
+    Map selectedEmployeeMap = selectedEmployee == null ? null : selectedEmployee.toJson();
+
+    return {
+      'companies': companyListItemsMapList,
+      'selectedCompany': selectedCompanyMap,
+      'selectedEmployee': selectedEmployeeMap,
+    };
   }
 }
