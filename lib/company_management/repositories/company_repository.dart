@@ -140,7 +140,6 @@ class CompanyRepository {
       allUsersCompaniesMap[username] = _convertCompaniesToMap(userCompaniesMap);
     }
     _sharedPrefs.saveMap('allUsersCompanies', allUsersCompaniesMap);
-    print('asdf');
   }
 
   Map _convertCompaniesToMap(Map userCompaniesMap) {
