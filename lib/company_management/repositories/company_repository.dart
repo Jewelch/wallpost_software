@@ -120,7 +120,7 @@ class CompanyRepository {
     var selectedCompany = selectedCompanyMap == null ? null : Company.fromJson(selectedCompanyMap);
 
     Map selectedEmployeeMap = companiesData['selectedEmployee'];
-    var selectedEmployee = selectedEmployeeMap == null ? null : Employee.fromJson(selectedCompanyMap);
+    var selectedEmployee = selectedEmployeeMap == null ? null : Employee.fromJson(selectedEmployeeMap);
 
     return {
       'companies': companyListItems,
@@ -140,6 +140,7 @@ class CompanyRepository {
       allUsersCompaniesMap[username] = _convertCompaniesToMap(userCompaniesMap);
     }
     _sharedPrefs.saveMap('allUsersCompanies', allUsersCompaniesMap);
+    print('asdf');
   }
 
   Map _convertCompaniesToMap(Map userCompaniesMap) {
