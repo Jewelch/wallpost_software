@@ -24,10 +24,10 @@ class Employee extends JSONInitializable implements JSONConvertible {
       _employeeName = sift.readStringFromMap(employeeMap, 'name');
       _employeeEmail = sift.readStringFromMap(employeeMap, 'email_id_office');
       _designation = sift.readStringFromMap(employeeMap, 'designation');
-      _lineManager = sift.readStringFromMap(employeeMap, 'line_manager');
-      var rank = sift.readNumberFromMap(departmentRankMap, 'rank');
-      var rankOutOf = sift.readNumberFromMap(departmentRankMap, 'out_of');
-      _departmentRank = '$rank/$rankOutOf';
+      _lineManager = sift.readStringFromMapWithDefaultValue(employeeMap, 'line_manager', null);
+      var rank = sift.readNumberFromMapWithDefaultValue(departmentRankMap, 'rank', null);
+      var rankOutOf = sift.readNumberFromMapWithDefaultValue(departmentRankMap, 'out_of', null);
+      _departmentRank = (rank == null || rankOutOf == null) ? '' : '$rank/$rankOutOf';
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Employee response. Error message - ${e.errorMessage}');
     }
