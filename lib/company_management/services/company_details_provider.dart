@@ -16,6 +16,11 @@ class CompanyDetailsProvider {
 
   CompanyDetailsProvider.initWith(this._currentUserProvider, this._companyRepository, this._networkAdapter);
 
+  CompanyDetailsProvider()
+      : _currentUserProvider = CurrentUserProvider(),
+        _companyRepository = CompanyRepository(),
+        _networkAdapter = WPAPI();
+
   Future<void> getCompanyDetails(String companyId) async {
     var url = CompanyManagementUrls.getCompanyDetailsUrl(companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
