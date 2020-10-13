@@ -18,8 +18,8 @@ class YearlySalesPerformance extends JSONInitializable {
       _performancePercentage = sift.readNumberFromMap(jsonMap, 'percentage');
       _actualSales = sift.readStringFromMap(jsonMap, 'actual');
       _targetedSales = sift.readStringFromMap(jsonMap, 'target');
-      _actualMonthlySales = sift.readNumberListFromMap(jsonMap, 'actualChart');
-      _targetedMonthlySales = sift.readNumberListFromMap(jsonMap, 'targetChart');
+      _actualMonthlySales = sift.readNumberListFromMapWithDefaultValue(jsonMap, 'actualChart', []);
+      _targetedMonthlySales = sift.readNumberListFromMapWithDefaultValue(jsonMap, 'targetChart', []);
       _show = sift.readBooleanFromMap(jsonMap, 'show');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast YearlySalesPerformance response. Error message - ${e.errorMessage}');
