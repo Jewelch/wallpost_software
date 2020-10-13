@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/company_management/entities/company_list_item.dart';
@@ -22,12 +24,14 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   List<CompanyListItem> _companies = [];
   List<CompanyListItem> _filterList = [];
   var _searchTextController = TextEditingController();
+  Loader loader;
 
   @override
   void initState() {
     super.initState();
     _getCompanies();
     _searchTextController.addListener(() => _performSearch());
+    loader = Loader(context);
   }
 
   @override
@@ -152,14 +156,6 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
       );
   }
 
-  void _selectCompanyAtIndex(int index) {
-    var selectedCompany = _filterList[index];
-
-    //TODO:  Get company and employee details
-//    CompanySelector().selectCompanyForCurrentUser(selectedCompany);
-//    Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
-  }
-
   void _getCompanies() async {
     try {
       var companies = await _companiesListProvider.get();
@@ -168,8 +164,12 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         _filterList.addAll(companies);
       });
     } on WPException catch (error) {
-      Alert.showSimpleAlert(context,
-          title: 'Failed To Load Companies', message: error.userReadableMessage, buttonTitle: 'Okay');
+      Alert.showSimpleAlert(
+        context,
+        title: 'Failed To Load Companies',
+        message: error.userReadableMessage,
+        buttonTitle: 'Okay',
+      );
       setState(() {});
     }
   }
@@ -183,5 +183,23 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
       }
     }
     setState(() {});
+  }
+
+  void _selectCompanyAtIndex(int index) async {
+    var selectedCompany = _filterList[index];
+    await loader.show('');
+    try {
+      var _ = await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
+      await loader.hide();
+      Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
+    } on WPException catch (e) {
+      await loader.hide();
+      Alert.showSimpleAlert(
+        context,
+        title: 'Failed To Load Company Details',
+        message: e.userReadableMessage,
+        buttonTitle: 'Okay',
+      );
+    }
   }
 }
