@@ -22,7 +22,7 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   PendingActionsCount _pendingActionsCount;
-  bool showError = false;
+  num _totalpendingApprovalsCount = 0;
 
   @override
   void initState() {
@@ -34,31 +34,22 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
   void _getPendingActionCount() async {
     setState(() {
       _pendingActionsCount = null;
-      showError = false;
     });
 
     try {
       var allCounts = await PendingActionsCountProvider().getCount();
       setState(() {
         _pendingActionsCount = allCounts;
+        _totalpendingApprovalsCount =
+            _pendingActionsCount.totalPendingApprovals;
       });
     } on APIException catch (_) {
-      setState(() {
-        showError = true;
-      });
+      setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_pendingActionsCount != null) {
-      return _buildSalesMyportalScreen();
-    } else {
-      return showError ? _buildErrorAndRetryView() : _buildProgressIndicator();
-    }
-  }
-
-  Widget _buildSalesMyportalScreen() {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
@@ -123,8 +114,7 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
                               text: 'Approvals ',
                               style: TextStyle(color: Colors.black)),
                           TextSpan(
-                              text:
-                                  '${_pendingActionsCount.taskApprovalsCount}',
+                              text: '$_totalpendingApprovalsCount',
                               style: TextStyle(
                                   color: AppColors.defaultColor,
                                   fontWeight: FontWeight.bold))
@@ -146,44 +136,6 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProgressIndicator() {
-    return Center(
-      child: Container(
-        height: 150,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(width: 30, height: 30, child: CircularProgressIndicator()),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorAndRetryView() {
-    return Container(
-      height: 150,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FlatButton(
-              child: Text(
-                'Failed to performance\nTap Here To Retry',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
-              ),
-              onPressed: () {
-                setState(() {});
-                _getPendingActionCount();
-              },
-            ),
-          ],
         ),
       ),
     );

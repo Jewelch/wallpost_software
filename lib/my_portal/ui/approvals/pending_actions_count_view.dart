@@ -27,9 +27,9 @@ class _PendingActionsCountViewState extends State<PendingActionsCountView> {
     });
 
     try {
-      var allCounts = await PendingActionsCountProvider().getCount();
+      var counts = await PendingActionsCountProvider().getCount();
       setState(() {
-        _pendingActionsCount = allCounts;
+        _pendingActionsCount = counts;
       });
     } on APIException catch (_) {
       setState(() {
@@ -72,7 +72,7 @@ class _PendingActionsCountViewState extends State<PendingActionsCountView> {
           Text(approvalName),
           approvalCount > 0
               ? Container(
-                  width: 30,
+                  width: 32,
                   height: 20,
                   child: Center(
                       child: Text(
