@@ -12,8 +12,20 @@ class MockNetworkAdapter implements NetworkAdapter {
   var didCallGet = false;
   var didCallPut = false;
   var didCallPost = false;
+  int noOfTimesGetIsCalled = 0;
+  int noOfTimesPostIsCalled = 0;
+  int noOfTimesPutIsCalled = 0;
 
   APIRequest get apiRequest => _apiRequest;
+
+  void reset() {
+    didCallGet = false;
+    didCallPut = false;
+    didCallPost = false;
+    noOfTimesGetIsCalled = 0;
+    noOfTimesPostIsCalled = 0;
+    noOfTimesPutIsCalled = 0;
+  }
 
   void succeed(dynamic data, {int afterDelayInMilliSeconds = 0}) {
     _shouldSucceed = true;
@@ -29,18 +41,21 @@ class MockNetworkAdapter implements NetworkAdapter {
   @override
   Future<APIResponse> get(APIRequest apiRequest) {
     didCallGet = true;
-    return _processRequest(apiRequest);
-  }
-
-  @override
-  Future<APIResponse> put(APIRequest apiRequest) {
-    didCallPut = true;
+    noOfTimesGetIsCalled++;
     return _processRequest(apiRequest);
   }
 
   @override
   Future<APIResponse> post(APIRequest apiRequest) {
     didCallPost = true;
+    noOfTimesPostIsCalled++;
+    return _processRequest(apiRequest);
+  }
+
+  @override
+  Future<APIResponse> put(APIRequest apiRequest) {
+    didCallPut = true;
+    noOfTimesPutIsCalled++;
     return _processRequest(apiRequest);
   }
 
