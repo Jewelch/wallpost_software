@@ -189,4 +189,8 @@ class Mocks {
       "work_status": randomString(10),
     },
   ];
+
+  static Map<String, dynamic> punchInFromAppPermissionResponse = {
+    "punch_in_allowed": true,
+  };
 }
