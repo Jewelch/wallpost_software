@@ -18,4 +18,10 @@ class AttendanceUrls {
     url += '&flow_type=${isPunchingIn ? 'IN' : 'OUT'}';
     return url;
   }
+
+  static String punchInUrl(String companyId, String employeeId, bool isLocationValid) {
+    var url = '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/punch_in';
+    if (isLocationValid == false) url += '?punchin_invalid_location=Y';
+    return url;
+  }
 }
