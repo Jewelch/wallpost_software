@@ -12,4 +12,10 @@ class AttendanceUrls {
   static String punchInNowPermissionProviderUrl(String companyId, String employeeId) {
     return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/inoutrules/is_allowed_punchin?';
   }
+
+  static String attendanceLocationValidationUrl(String companyId, String employeeId, bool isPunchingIn) {
+    var url = '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/location/validate?';
+    url += '&flow_type=${isPunchingIn ? 'IN' : 'OUT'}';
+    return url;
+  }
 }
