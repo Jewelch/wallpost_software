@@ -34,7 +34,7 @@ class Session extends JSONInitializable implements JSONConvertible {
   }
 
   bool isActive() {
-    return _expirationTimeStamp >= DateTime.now().millisecondsSinceEpoch;
+    return _expirationTimeStamp >= DateTime.now().millisecondsSinceEpoch / 1000;
   }
 
   String get accessToken => _accessToken;
