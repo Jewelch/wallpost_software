@@ -53,7 +53,7 @@ class Mocks {
                 "longitude": randomString(10),
               },
               "duration": true,
-              "interval_id": randomString(10),
+              "interval_id": 'someBreakId',
             },
             {
               "actual_break_in": '2020-06-22 13:00:00',

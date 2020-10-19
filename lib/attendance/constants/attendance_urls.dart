@@ -25,9 +25,18 @@ class AttendanceUrls {
     return url;
   }
 
-  static String punchOutUrl(String companyId, String employeeId, bool isLocationValid) {
-    var url = '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/punch_out';
+  static String punchOutUrl(String companyId, String employeeId, String attendanceId, bool isLocationValid) {
+    var url = '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/$attendanceId/punch_out';
     if (isLocationValid == false) url += '?punchout_invalid_location=Y';
     return url;
+  }
+
+  static String breakStartUrl(String companyId, String employeeId, String attendanceDetailsId) {
+    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/$attendanceDetailsId/break_in';
+  }
+
+  static String breakEndUrl(String companyId, String employeeId, String attendanceDetailsId, String intervalId) {
+    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/$attendanceDetailsId'
+        '/break_out/$intervalId';
   }
 }

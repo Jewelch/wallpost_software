@@ -91,12 +91,7 @@ void main() {
 
     try {
       var attendanceDetails = await attendanceDetailsProvider.getDetails();
-      expect(attendanceDetails.attendanceId, isNotNull);
-      expect(attendanceDetails.attendanceDetailsId, isNotNull);
-      expect(attendanceDetails.punchInTimeString, isNotEmpty);
-      expect(attendanceDetails.punchOutTimeString, isNotEmpty);
-      expect(attendanceDetails.activeBreakStartTimeString, isNotEmpty);
-      expect(attendanceDetails.activeBreakEndTimeString, isEmpty);
+      expect(attendanceDetails, isNotNull);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
