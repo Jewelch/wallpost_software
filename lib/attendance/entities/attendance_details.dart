@@ -57,10 +57,10 @@ class AttendanceDetails {
     return _convertTimeToString(activeBreak.startTime);
   }
 
-  String get activeBreakEndTimeString {
+  String get activeBreakId {
     var activeBreak = _getActiveBreak();
     if (activeBreak == null) return null;
-    return _convertTimeToString(activeBreak.endTime);
+    return activeBreak.id;
   }
 
   bool get isPunchedIn {

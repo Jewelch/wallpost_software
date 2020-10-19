@@ -12,7 +12,12 @@ void main() {
     expect(attendanceDetails.punchInTimeString, '08:00 AM');
     expect(attendanceDetails.punchOutTimeString, '05:00 PM');
     expect(attendanceDetails.activeBreakStartTimeString, '01:00 PM');
-    expect(attendanceDetails.activeBreakEndTimeString, isEmpty);
+  });
+
+  test('getting active break id', () async {
+    var attendanceDetails = AttendanceDetails.fromJson(Mocks.punchedInAttendanceWithActiveBreakResponse);
+
+    expect(attendanceDetails.activeBreakId, 'someBreakId');
   });
 
   test('different stages of attendance', () async {
