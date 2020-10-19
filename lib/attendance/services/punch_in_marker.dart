@@ -18,6 +18,8 @@ class PunchInMarker {
         _networkAdapter = WPAPI();
 
   Future<void> punchIn(AttendanceLocation location, {bool isLocationValid}) async {
+    if (isLoading) return;
+
     var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
     var url = AttendanceUrls.punchInUrl(employee.companyId, employee.v1Id, isLocationValid);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
