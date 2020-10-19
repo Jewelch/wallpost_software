@@ -24,4 +24,10 @@ class AttendanceUrls {
     if (isLocationValid == false) url += '?punchin_invalid_location=Y';
     return url;
   }
+
+  static String punchOutUrl(String companyId, String employeeId, bool isLocationValid) {
+    var url = '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/punch_out';
+    if (isLocationValid == false) url += '?punchout_invalid_location=Y';
+    return url;
+  }
 }

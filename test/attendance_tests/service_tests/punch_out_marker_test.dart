@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/attendance/constants/attendance_urls.dart';
 import 'package:wallpost/attendance/entities/attendance_location.dart';
-import 'package:wallpost/attendance/services/punch_in_marker.dart';
+import 'package:wallpost/attendance/services/punch_out_marker.dart';
 
 import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_employee_provider.dart';
@@ -16,7 +16,7 @@ void main() {
   var mockEmployee = MockEmployee();
   var mockEmployeeProvider = MockEmployeeProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var punchInMarker = PunchInMarker.initWith(mockEmployeeProvider, mockNetworkAdapter);
+  var punchOutMarker = PunchOutMarker.initWith(mockEmployeeProvider, mockNetworkAdapter);
 
   setUpAll(() {
     when(mockLocation.toJson()).thenReturn({'location': 'info'});
@@ -30,9 +30,9 @@ void main() {
     requestParams.addAll(mockLocation.toJson());
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await punchInMarker.punchIn(mockLocation, isLocationValid: true);
+    var _ = await punchOutMarker.punchOut(mockLocation, isLocationValid: true);
 
-    expect(mockNetworkAdapter.apiRequest.url, AttendanceUrls.punchInUrl('someCompanyId', 'v1EmpId', true));
+    expect(mockNetworkAdapter.apiRequest.url, AttendanceUrls.punchOutUrl('someCompanyId', 'v1EmpId', true));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallPost, true);
   });
@@ -41,7 +41,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await punchInMarker.punchIn(mockLocation, isLocationValid: true);
+      var _ = await punchOutMarker.punchOut(mockLocation, isLocationValid: true);
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -52,7 +52,7 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var _ = await punchInMarker.punchIn(mockLocation, isLocationValid: true);
+      var _ = await punchOutMarker.punchOut(mockLocation, isLocationValid: true);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
@@ -61,27 +61,27 @@ void main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    punchInMarker.punchIn(mockLocation, isLocationValid: true);
+    punchOutMarker.punchOut(mockLocation, isLocationValid: true);
 
-    expect(punchInMarker.isLoading, true);
+    expect(punchOutMarker.isLoading, true);
   });
 
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await punchInMarker.punchIn(mockLocation, isLocationValid: true);
+    var _ = await punchOutMarker.punchOut(mockLocation, isLocationValid: true);
 
-    expect(punchInMarker.isLoading, false);
+    expect(punchOutMarker.isLoading, false);
   });
 
   test('test loading flag is reset after failure', () async {
     mockNetworkAdapter.fail(InvalidResponseException());
 
     try {
-      var _ = await punchInMarker.punchIn(mockLocation, isLocationValid: true);
+      var _ = await punchOutMarker.punchOut(mockLocation, isLocationValid: true);
       fail('failed to throw exception');
     } catch (_) {
-      expect(punchInMarker.isLoading, false);
+      expect(punchOutMarker.isLoading, false);
     }
   });
 }
