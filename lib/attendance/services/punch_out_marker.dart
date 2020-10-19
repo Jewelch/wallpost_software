@@ -23,6 +23,8 @@ class PunchOutMarker {
     AttendanceLocation location, {
     bool isLocationValid,
   }) async {
+    if (isLoading) return;
+
     var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
     var url =
         AttendanceUrls.punchOutUrl(employee.companyId, employee.v1Id, attendanceDetails.attendanceId, isLocationValid);
@@ -32,7 +34,7 @@ class PunchOutMarker {
     isLoading = true;
 
     try {
-      var _ = await _networkAdapter.post(apiRequest);
+      var _ = await _networkAdapter.put(apiRequest);
       isLoading = false;
       return;
     } on APIException catch (exception) {

@@ -30,6 +30,10 @@ void main() {
     when(mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
   });
 
+  setUp(() {
+    mockNetworkAdapter.reset();
+  });
+
   test('api request is built and executed correctly', () async {
     Map<String, dynamic> requestParams = {};
     requestParams.addAll(mockLocation.toJson());
@@ -40,7 +44,7 @@ void main() {
     expect(mockNetworkAdapter.apiRequest.url,
         AttendanceUrls.punchOutUrl('someCompanyId', 'v1EmpId', 'someAttendanceId', true));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
-    expect(mockNetworkAdapter.didCallPost, true);
+    expect(mockNetworkAdapter.didCallPut, true);
   });
 
   test('throws exception when network adapter fails', () async {
@@ -52,6 +56,16 @@ void main() {
     } catch (e) {
       expect(e is NetworkFailureException, true);
     }
+  });
+
+  test('does nothing when a subsequent call is made and the service is running', () async {
+    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
+
+    punchOutMarker.punchOut(mockAttendanceDetails, mockLocation, isLocationValid: true);
+    punchOutMarker.punchOut(mockAttendanceDetails, mockLocation, isLocationValid: true);
+
+    await Future.delayed(Duration(milliseconds: 100));
+    expect(mockNetworkAdapter.noOfTimesPutIsCalled, 1);
   });
 
   test('success', () async {
