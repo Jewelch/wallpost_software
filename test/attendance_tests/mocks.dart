@@ -193,4 +193,9 @@ class Mocks {
   static Map<String, dynamic> punchInFromAppPermissionResponse = {
     "punch_in_allowed": true,
   };
+
+  static Map<String, dynamic> punchInNowPermissionResponse = {
+    "remaining_in_min": randomBetween(1000, 5000),
+    "status": true,
+  };
 }

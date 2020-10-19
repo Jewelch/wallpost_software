@@ -8,4 +8,8 @@ class AttendanceUrls {
   static String punchInFromAppPermissionProviderUrl(String companyId, String employeeId) {
     return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/punchInAllowedFromApp?';
   }
+
+  static String punchInNowPermissionProviderUrl(String companyId, String employeeId) {
+    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/inoutrules/is_allowed_punchin?';
+  }
 }
