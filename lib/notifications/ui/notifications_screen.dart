@@ -24,3 +24,8 @@ class NotificationsScreen extends StatelessWidget {
     );
   }
 }
+
+
+//1. unread notification count api for total and module wise notification count
+//    2. module wise notification list api
+//3. mark all notifications as read API
