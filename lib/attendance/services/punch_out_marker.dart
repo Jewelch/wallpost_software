@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
 import 'package:wallpost/attendance/constants/attendance_urls.dart';
+import 'package:wallpost/attendance/entities/attendance_details.dart';
 import 'package:wallpost/attendance/entities/attendance_location.dart';
 import 'package:wallpost/company_management/services/selected_employee_provider.dart';
 
@@ -17,9 +18,14 @@ class PunchOutMarker {
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
         _networkAdapter = WPAPI();
 
-  Future<void> punchOut(AttendanceLocation location, {bool isLocationValid}) async {
+  Future<void> punchOut(
+    AttendanceDetails attendanceDetails,
+    AttendanceLocation location, {
+    bool isLocationValid,
+  }) async {
     var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-    var url = AttendanceUrls.punchOutUrl(employee.companyId, employee.v1Id, isLocationValid);
+    var url =
+        AttendanceUrls.punchOutUrl(employee.companyId, employee.v1Id, attendanceDetails.attendanceId, isLocationValid);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameters(location.toJson());
