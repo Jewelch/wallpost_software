@@ -23,6 +23,11 @@ class AppColors {
 
   static final Color groupDashboardSearchViewColor = _getColorFromHex(AppColors._mediumGreyColor);
 
+  static final Color attendanceLabelColor = _getColorFromHex(AppColors._darkGreyColor);
+  static final Color attendanceLocationTextColor = _getColorFromHex(AppColors._defaultColor);
+
+
+
   static final Color logoutRedColor = _getColorFromHex(AppColors._logoutRedColor);
 
   static final Color goodPerformanceColor = _getColorFromHex('#2bba68');

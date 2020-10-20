@@ -6,6 +6,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/company_management/ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
+import 'package:wallpost/my_portal/ui/attendance/attendance_base_view.dart';
 import 'package:wallpost/my_portal/ui/performance/employee_performance_graph_view.dart';
 
 class EmployeeMyPortalScreen extends StatefulWidget {
@@ -90,14 +91,12 @@ class _EmployeeMyPortalScreenState extends State<EmployeeMyPortalScreen> with Si
                     border: Border(bottom: BorderSide(color: Colors.grey, width: 0.8))),
               ),
               Container(
-                height: 80.0,
+                height: 300,
                 child: TabBarView(
                   controller: _tabController,
                   children: <Widget>[
-                    Text(
-                      'Attendance Data',
-                      textAlign: TextAlign.center,
-                    ),
+                    AttendanceBaseView()
+                    ,
                     Text(
                       'Approvals Data',
                       textAlign: TextAlign.center,

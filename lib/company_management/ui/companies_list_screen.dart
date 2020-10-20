@@ -49,7 +49,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            if (SelectedCompanyProvider().getSelectCompanyForCurrentUser() !=
+            if (SelectedCompanyProvider().getSelectedCompanyForCurrentUser() !=
                 null)
               _getSelectedCompanyView(),
             Expanded(
@@ -72,14 +72,14 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
 
   Widget _getSelectedCompanyView() {
     if (SelectedCompanyProvider()
-        .getSelectCompanyForCurrentUser()
+        .getSelectedCompanyForCurrentUser()
         .shouldShowRevenue)
       return CompanyListCardWithRevenue(
-          company: SelectedCompanyProvider().getSelectCompanyForCurrentUser(),
+          company: SelectedCompanyProvider().getSelectedCompanyForCurrentUser(),
           onPressed: null);
     else
       return CompanyListCardWithOutRevenue(
-          company: SelectedCompanyProvider().getSelectCompanyForCurrentUser(),
+          company: SelectedCompanyProvider().getSelectedCompanyForCurrentUser(),
           onPressed: null);
   }
 
