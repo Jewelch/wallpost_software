@@ -19,7 +19,7 @@ class EmployeePerformanceProvider {
 
   Future<EmployeePerformance> getPerformance(int year) async {
     var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
-    var url = MyPortalUrls.employeePerformanceUrl(company.companyId, '$year');
+    var url = MyPortalUrls.employeePerformanceUrl(company.id, '$year');
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;

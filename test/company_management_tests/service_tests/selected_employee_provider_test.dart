@@ -1,43 +1,39 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:wallpost/company_management/repositories/employee_repository.dart';
 import 'package:wallpost/company_management/services/selected_employee_provider.dart';
 
-import '../../_mocks/MockCompany.dart';
-import '../../_mocks/MockCompanyProvider.dart';
+import '../../_mocks/mock_current_user_provider.dart';
 import '../../_mocks/mock_employee.dart';
-
-class MockEmployeeRepository extends Mock implements EmployeeRepository {}
+import '../../_mocks/mock_user.dart';
+import 'companies_list_provider_test.dart';
 
 void main() {
-  var mockCompany = MockCompany();
+  var mockUser = MockUser();
+  var mockCurrentUserProvider = MockCurrentUserProvider();
   var mockEmployee = MockEmployee();
-  var mockCompanyProvider = MockCompanyProvider();
-  var mockEmployeeRepository = MockEmployeeRepository();
-  var selectedEmployeeProvider = SelectedEmployeeProvider.initWith(mockCompanyProvider, mockEmployeeRepository);
+  var mockCompanyRepository = MockCompanyRepository();
+  var selectedEmployeeProvider = SelectedEmployeeProvider.initWith(mockCurrentUserProvider, mockCompanyRepository);
 
-  setUpAll(() {});
+  test('returns null if there is no current user', () async {
+    when(mockCurrentUserProvider.getCurrentUser()).thenReturn(null);
 
-  test('returns null if there is no selected company', () async {
-    when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(null);
+    var selectedEmployee = selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
 
-    var employee = selectedEmployeeProvider.getEmployeeForSelectedCompany();
-
-    expect(employee, null);
-    verify(mockCompanyProvider.getSelectedCompanyForCurrentUser()).called(1);
-    verifyNever(mockEmployeeRepository.getEmployeeForCompany(any)).called(0);
+    expect(selectedEmployee, null);
+    verify(mockCurrentUserProvider.getCurrentUser()).called(1);
+    verifyNever(mockCompanyRepository.getSelectedCompanyForUser(any));
   });
 
-  test('getting the employee for the selected company', () async {
-    when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
-    when(mockEmployeeRepository.getEmployeeForCompany(any)).thenReturn(mockEmployee);
+  test('getting selected employee for current user', () async {
+    when(mockCurrentUserProvider.getCurrentUser()).thenReturn(mockUser);
+    when(mockCompanyRepository.getSelectedEmployeeForUser(any)).thenReturn(mockEmployee);
 
-    var employee = selectedEmployeeProvider.getEmployeeForSelectedCompany();
+    var selectedEmployee = selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
 
-    expect(employee, mockEmployee);
-    verify(mockCompanyProvider.getSelectedCompanyForCurrentUser()).called(1);
-    var verificationResult = verify(mockEmployeeRepository.getEmployeeForCompany(captureAny));
+    expect(selectedEmployee, mockEmployee);
+    verify(mockCurrentUserProvider.getCurrentUser()).called(1);
+    var verificationResult = verify(mockCompanyRepository.getSelectedEmployeeForUser(captureAny));
     verificationResult.called(1);
-    expect(verificationResult.captured[0], mockCompany);
+    expect(verificationResult.captured[0], mockUser);
   });
 }

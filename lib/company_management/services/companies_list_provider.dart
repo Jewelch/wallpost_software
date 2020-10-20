@@ -1,7 +1,7 @@
 import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
 import 'package:wallpost/company_management/constants/company_management_urls.dart';
-import 'package:wallpost/company_management/entities/company.dart';
+import 'package:wallpost/company_management/entities/company_list_item.dart';
 import 'package:wallpost/company_management/repositories/company_repository.dart';
 
 class CompaniesListProvider {
@@ -23,7 +23,7 @@ class CompaniesListProvider {
     isLoading = false;
   }
 
-  Future<List<Company>> get() async {
+  Future<List<CompanyListItem>> get() async {
     var url = CompanyManagementUrls.getCompaniesUrl();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
@@ -33,7 +33,7 @@ class CompaniesListProvider {
     return _processResponse(apiResponse);
   }
 
-  List<Company> _processResponse(APIResponse apiResponse) {
+  List<CompanyListItem> _processResponse(APIResponse apiResponse) {
     //returning empty list if the response is from another session
     if (apiResponse.apiRequest.requestId != _sessionId) return [];
 
@@ -45,12 +45,12 @@ class CompaniesListProvider {
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<Company> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<CompanyListItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var companies = <Company>[];
+      var companies = <CompanyListItem>[];
       for (var responseMap in responseMapList) {
-        var company = Company.fromJson(responseMap);
-        companies.add(company);
+        var companyListItem = CompanyListItem.fromJson(responseMap);
+        companies.add(companyListItem);
       }
       var currentUser = _currentUserProvider.getCurrentUser();
       _companyRepository.saveCompaniesForUser(companies, currentUser);

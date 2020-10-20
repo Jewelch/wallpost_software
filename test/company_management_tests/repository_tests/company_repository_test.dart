@@ -1,35 +1,167 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:wallpost/company_management/entities/company.dart';
+import 'package:wallpost/company_management/entities/company_list_item.dart';
 import 'package:wallpost/company_management/repositories/company_repository.dart';
 
+import '../../_mocks/mock_company.dart';
+import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_user.dart';
 import '../../shared_utils_tests/user_management_tests/repository_tests/user_repository_test.dart';
 import '../mocks.dart';
 
-class MockCompany extends Mock implements Company {}
+class MockCompanyListItem extends Mock implements CompanyListItem {}
 
 void main() {
   var mockUser = MockUser();
+  var mockCompanyListItem1 = MockCompanyListItem();
+  var mockCompanyListItem2 = MockCompanyListItem();
   var mockCompany = MockCompany();
+  var mockEmployee = MockEmployee();
   var mockSharedPrefs = MockSharedPrefs();
   CompanyRepository companyRepository;
 
+  setUpAll(() {
+    when(mockUser.username).thenReturn('someUserName');
+    when(mockCompanyListItem1.toJson()).thenReturn({'companyListItemOne': 'json'});
+    when(mockCompanyListItem2.toJson()).thenReturn({'companyListItemTwo': 'json'});
+    when(mockCompany.toJson()).thenReturn({'company': 'json'});
+    when(mockEmployee.toJson()).thenReturn({'employee': 'json'});
+
+    when(mockCompanyListItem1.id).thenReturn('1');
+    when(mockCompanyListItem2.id).thenReturn('2');
+    when(mockCompany.id).thenReturn('1');
+    when(mockEmployee.companyId).thenReturn('1');
+  });
+
   setUp(() {
-    reset(mockUser);
     reset(mockSharedPrefs);
     companyRepository = CompanyRepository.withSharedPrefs(mockSharedPrefs);
   });
 
-  test('reading companies data on initialization when no data is available', () async {
-    var verificationResult = verify(mockSharedPrefs.getMap(captureAny));
+  test('saving companies for a user', () async {
+    companyRepository.saveCompaniesForUser([mockCompanyListItem1, mockCompanyListItem2], mockUser);
 
-    verificationResult.called(1);
-    expect(verificationResult.captured[0], 'allUsersCompanies');
+    expect(companyRepository.getCompaniesForUser(mockUser).length, 2);
+    expect(companyRepository.getSelectedCompanyForUser(mockUser), null);
+    expect(companyRepository.getSelectedEmployeeForUser(mockUser), null);
+    verify(mockSharedPrefs.saveMap(captureAny, captureAny)).called(1);
   });
 
-  test('reading companies data on initialization when data is available', () async {
-    var selectedCompanyId = '${Mocks.companiesListResponse[0]['companyId']}';
+  test('saving companies for a user that already exists, replaces the companies for that user', () async {
+    companyRepository.saveCompaniesForUser([mockCompanyListItem1], mockUser);
+
+    reset(mockSharedPrefs);
+    companyRepository.saveCompaniesForUser([mockCompanyListItem2], mockUser);
+
+    expect(companyRepository.getCompaniesForUser(mockUser)[0], mockCompanyListItem2);
+    verify(mockSharedPrefs.saveMap(captureAny, captureAny)).called(1);
+  });
+
+  test('selecting a company and employee for a user that does not exist does nothing', () async {
+    reset(mockSharedPrefs);
+    companyRepository.selectCompanyAndEmployeeForUser(mockCompany, mockEmployee, mockUser);
+
+    verifyNever(mockSharedPrefs.saveMap(any, any));
+    expect(companyRepository.getCompaniesForUser(mockUser), []);
+  });
+
+  test('selecting a company for a user', () async {
+    companyRepository.saveCompaniesForUser([mockCompanyListItem1, mockCompanyListItem2], mockUser);
+
+    reset(mockSharedPrefs);
+    companyRepository.selectCompanyAndEmployeeForUser(mockCompany, mockEmployee, mockUser);
+
+    expect(companyRepository.getSelectedCompanyForUser(mockUser), mockCompany);
+    expect(companyRepository.getSelectedEmployeeForUser(mockUser), mockEmployee);
+    verify(mockSharedPrefs.saveMap(captureAny, captureAny)).called(1);
+  });
+
+  test('selecting a company that does not exist does nothing', () async {
+    companyRepository.saveCompaniesForUser([mockCompanyListItem1], mockUser);
+    var someOtherCompany = MockCompany();
+    when(someOtherCompany.id).thenReturn('someOtherCompanyId');
+
+    reset(mockSharedPrefs);
+    companyRepository.selectCompanyAndEmployeeForUser(someOtherCompany, mockEmployee, mockUser);
+
+    verifyNever(mockSharedPrefs.saveMap(any, any));
+    expect(companyRepository.getCompaniesForUser(mockUser), [mockCompanyListItem1]);
+    expect(companyRepository.getSelectedCompanyForUser(mockUser), null);
+    expect(companyRepository.getSelectedEmployeeForUser(mockUser), null);
+  });
+
+  test('selecting an employee with a company id that does not exist does nothing', () async {
+    companyRepository.saveCompaniesForUser([mockCompanyListItem1], mockUser);
+    var employeeFromAnotherCompany = MockEmployee();
+    when(employeeFromAnotherCompany.companyId).thenReturn('someOtherCompanyId');
+
+    reset(mockSharedPrefs);
+    companyRepository.selectCompanyAndEmployeeForUser(mockCompany, employeeFromAnotherCompany, mockUser);
+
+    verifyNever(mockSharedPrefs.saveMap(any, any));
+    expect(companyRepository.getCompaniesForUser(mockUser), [mockCompanyListItem1]);
+    expect(companyRepository.getSelectedCompanyForUser(mockUser), null);
+    expect(companyRepository.getSelectedEmployeeForUser(mockUser), null);
+  });
+
+  test(
+      'saving companies for an existing user, auto selects previously selected'
+      ' company and employee if it exists in the new list', () async {
+    companyRepository.saveCompaniesForUser([mockCompanyListItem1, mockCompanyListItem2], mockUser);
+    companyRepository.selectCompanyAndEmployeeForUser(mockCompany, mockEmployee, mockUser);
+    reset(mockSharedPrefs);
+
+    companyRepository.saveCompaniesForUser([mockCompanyListItem1, mockCompanyListItem2], mockUser);
+
+    expect(companyRepository.getSelectedCompanyForUser(mockUser), mockCompany);
+    expect(companyRepository.getSelectedEmployeeForUser(mockUser), mockEmployee);
+  });
+
+  test(
+      'saving companies for a user that already exists, removes previously selected '
+      'company and employee if it does not exist in the new list', () async {
+    companyRepository.saveCompaniesForUser([mockCompanyListItem1], mockUser);
+    companyRepository.selectCompanyAndEmployeeForUser(mockCompany, mockEmployee, mockUser);
+    reset(mockSharedPrefs);
+
+    companyRepository.saveCompaniesForUser([mockCompanyListItem2], mockUser);
+
+    expect(companyRepository.getSelectedCompanyForUser(mockUser), null);
+    expect(companyRepository.getSelectedEmployeeForUser(mockUser), null);
+  });
+
+  test('removing companies for a user', () async {
+    companyRepository.saveCompaniesForUser([mockCompanyListItem1, mockCompanyListItem2], mockUser);
+    companyRepository.selectCompanyAndEmployeeForUser(mockCompany, mockEmployee, mockUser);
+
+    reset(mockSharedPrefs);
+    companyRepository.removeCompaniesForUser(mockUser);
+
+    expect(companyRepository.getCompaniesForUser(mockUser), []);
+    expect(companyRepository.getSelectedCompanyForUser(mockUser), null);
+    expect(companyRepository.getSelectedEmployeeForUser(mockUser), null);
+  });
+
+  test('data is mapped correctly when storing', () async {
+    companyRepository.saveCompaniesForUser([mockCompanyListItem1, mockCompanyListItem2], mockUser);
+    reset(mockSharedPrefs);
+    companyRepository.selectCompanyAndEmployeeForUser(mockCompany, mockEmployee, mockUser);
+    var verificationResult = verify(mockSharedPrefs.saveMap(captureAny, captureAny));
+
+    expect(verificationResult.captured[0], 'allUsersCompanies');
+    expect(verificationResult.captured[1], {
+      'someUserName': {
+        'companies': [
+          {'companyListItemOne': 'json'},
+          {'companyListItemTwo': 'json'}
+        ],
+        'selectedCompany': {'company': 'json'},
+        'selectedEmployee': {'employee': 'json'},
+      },
+    });
+  });
+
+  test('data is mapped correctly while reading from the storage', () async {
     var user1 = MockUser();
     var user2 = MockUser();
     var userWhoseCompaniesAreNotStored = MockUser();
@@ -37,8 +169,16 @@ void main() {
     when(user2.username).thenReturn('username2');
     when(mockSharedPrefs.getMap('allUsersCompanies')).thenAnswer(
       (_) => Future.value({
-        'username1': {'companies': Mocks.companiesListResponse, 'selectedCompanyId': null},
-        'username2': {'companies': Mocks.companiesListResponse, 'selectedCompanyId': selectedCompanyId},
+        'username1': {
+          'companies': Mocks.companiesListResponse,
+          'selectedCompany': null,
+          'selectedEmployee': null,
+        },
+        'username2': {
+          'companies': Mocks.companiesListResponse,
+          'selectedCompany': Mocks.companyDetailsResponse,
+          'selectedEmployee': Mocks.companyDetailsResponse,
+        },
       }),
     );
 
@@ -48,179 +188,18 @@ void main() {
     //app starts and there is time before it is actually used.
     await Future.delayed(Duration(milliseconds: 50));
 
-    expect(companyRepository.getCompaniesForUser(user1).length, 2);
-    expect(companyRepository.getSelectedCompanyForUser(user1), null);
-    expect(companyRepository.getCompaniesForUser(user2).length, 2);
-    expect(companyRepository.getSelectedCompanyForUser(user2).companyId, selectedCompanyId);
     expect(companyRepository.getCompaniesForUser(userWhoseCompaniesAreNotStored).length, 0);
     expect(companyRepository.getSelectedCompanyForUser(userWhoseCompaniesAreNotStored), null);
-  });
+    expect(companyRepository.getSelectedEmployeeForUser(userWhoseCompaniesAreNotStored), null);
 
-  test('saving companies for a user, saves the companies in memory as well as locally', () async {
-    when(mockUser.username).thenReturn('someUserName');
-    when(mockCompany.toJson()).thenReturn({'company': 'json'});
+    expect(companyRepository.getCompaniesForUser(user1).length, 2);
+    expect(companyRepository.getSelectedCompanyForUser(user1), null);
+    expect(companyRepository.getSelectedEmployeeForUser(user1), null);
 
-    companyRepository.saveCompaniesForUser([mockCompany], mockUser);
-    var verificationResult = verify(mockSharedPrefs.saveMap(captureAny, captureAny));
-
-    verificationResult.called(1);
-    expect(verificationResult.captured[0], 'allUsersCompanies');
-    expect(verificationResult.captured[1], {
-      'someUserName': {
-        'companies': [
-          {'company': 'json'}
-        ],
-        'selectedCompanyId': null,
-      },
-    });
-    expect(companyRepository.getCompaniesForUser(mockUser).length, 1);
-    expect(companyRepository.getSelectedCompanyForUser(mockUser), null);
-  });
-
-  test('saving companies for a user that already exists, replaces the companies for that user', () async {
-    when(mockUser.username).thenReturn('someUserName');
-    when(mockCompany.toJson()).thenReturn({'company': 'json'});
-    companyRepository.saveCompaniesForUser([mockCompany], mockUser);
-
-    reset(mockSharedPrefs);
-    var anotherCompany = MockCompany();
-    when(anotherCompany.toJson()).thenReturn({'different': 'company'});
-    companyRepository.saveCompaniesForUser([anotherCompany], mockUser);
-    var verificationResult = verify(mockSharedPrefs.saveMap(captureAny, captureAny));
-
-    expect(verificationResult.captured[1], {
-      'someUserName': {
-        'companies': [
-          {'different': 'company'}
-        ],
-        'selectedCompanyId': null,
-      },
-    });
-    expect(companyRepository.getCompaniesForUser(mockUser)[0], anotherCompany);
-  });
-
-  test('selecting a company, saves the data in memory as well as locally', () async {
-    var mockCompany1 = MockCompany();
-    var mockCompany2 = MockCompany();
-    when(mockUser.username).thenReturn('someUserName');
-    when(mockCompany1.companyId).thenReturn('1');
-    when(mockCompany2.companyId).thenReturn('2');
-    when(mockCompany1.toJson()).thenReturn({'company': '1'});
-    when(mockCompany2.toJson()).thenReturn({'company': '2'});
-    companyRepository.saveCompaniesForUser([mockCompany1, mockCompany2], mockUser);
-
-    reset(mockSharedPrefs);
-    companyRepository.selectCompanyForUser(mockCompany2, mockUser);
-    var verificationResult = verify(mockSharedPrefs.saveMap(captureAny, captureAny));
-
-    expect(verificationResult.captured[1], {
-      'someUserName': {
-        'companies': [
-          {'company': '1'},
-          {'company': '2'}
-        ],
-        'selectedCompanyId': '2',
-      },
-    });
-    expect(companyRepository.getSelectedCompanyForUser(mockUser), mockCompany2);
-  });
-
-  test('selecting a company for a user that does not exist does nothing', () async {
-    var someOtherUser = MockUser();
-    var mockCompany1 = MockCompany();
-    var mockCompany2 = MockCompany();
-    when(mockUser.username).thenReturn('someUserName');
-    when(someOtherUser.username).thenReturn('nonExistentUser');
-    when(mockCompany1.companyId).thenReturn('1');
-    when(mockCompany2.companyId).thenReturn('2');
-    when(mockCompany1.toJson()).thenReturn({'company': '1'});
-    when(mockCompany2.toJson()).thenReturn({'company': '2'});
-    companyRepository.saveCompaniesForUser([mockCompany1, mockCompany2], mockUser);
-
-    reset(mockSharedPrefs);
-    companyRepository.selectCompanyForUser(mockCompany2, someOtherUser);
-
-    verifyNever(mockSharedPrefs.saveMap(any, any));
-    expect(companyRepository.getCompaniesForUser(someOtherUser), []);
-  });
-
-  test('selecting a company that does not exist does nothing', () async {
-    var mockCompany1 = MockCompany();
-    var mockCompany2 = MockCompany();
-    var someOtherCompany = MockCompany();
-    when(mockUser.username).thenReturn('someUserName');
-    when(mockCompany1.companyId).thenReturn('1');
-    when(mockCompany2.companyId).thenReturn('2');
-    when(someOtherCompany.companyId).thenReturn('nonExistentCompany');
-    when(mockCompany1.toJson()).thenReturn({'company': '1'});
-    when(mockCompany2.toJson()).thenReturn({'company': '2'});
-    companyRepository.saveCompaniesForUser([mockCompany1, mockCompany2], mockUser);
-
-    reset(mockSharedPrefs);
-    companyRepository.selectCompanyForUser(someOtherCompany, mockUser);
-
-    verifyNever(mockSharedPrefs.saveMap(any, any));
-    expect(companyRepository.getCompaniesForUser(mockUser), [mockCompany1, mockCompany2]);
-    expect(companyRepository.getSelectedCompanyForUser(mockUser), null);
-  });
-
-  test(
-      'saving companies for a user that already exists, auto selects previously selected company if it exists in the new list',
-      () async {
-    var mockCompany1 = MockCompany();
-    var mockCompany2 = MockCompany();
-    var someOtherCompany = MockCompany();
-    when(mockUser.username).thenReturn('someUserName');
-    when(mockCompany1.companyId).thenReturn('1');
-    when(mockCompany2.companyId).thenReturn('2');
-    when(someOtherCompany.companyId).thenReturn('nonExistentCompany');
-    when(mockCompany1.toJson()).thenReturn({'company': '1'});
-    when(mockCompany2.toJson()).thenReturn({'company': '2'});
-    companyRepository.saveCompaniesForUser([mockCompany1, mockCompany2], mockUser);
-    companyRepository.selectCompanyForUser(mockCompany2, mockUser);
-    reset(mockSharedPrefs);
-
-    companyRepository.saveCompaniesForUser([mockCompany1, mockCompany2], mockUser);
-
-    expect(companyRepository.getSelectedCompanyForUser(mockUser).name, mockCompany2.name);
-  });
-
-  test(
-      'saving companies for a user that already exists, removes previously selected company if it does not exist in the new list',
-      () async {
-    var mockCompany1 = MockCompany();
-    var mockCompany2 = MockCompany();
-    var someOtherCompany = MockCompany();
-    when(mockUser.username).thenReturn('someUserName');
-    when(mockCompany1.companyId).thenReturn('1');
-    when(mockCompany2.companyId).thenReturn('2');
-    when(someOtherCompany.companyId).thenReturn('nonExistentCompany');
-    when(mockCompany1.toJson()).thenReturn({'company': '1'});
-    when(mockCompany2.toJson()).thenReturn({'company': '2'});
-    companyRepository.saveCompaniesForUser([mockCompany1, mockCompany2], mockUser);
-    companyRepository.selectCompanyForUser(mockCompany2, mockUser);
-    reset(mockSharedPrefs);
-
-    companyRepository.saveCompaniesForUser([mockCompany1], mockUser);
-
-    expect(companyRepository.getSelectedCompanyForUser(mockUser), null);
-  });
-
-  test('removing companies for a user', () async {
-    var mockUser2 = MockUser();
-    var mockCompany1 = MockCompany();
-    var mockCompany2 = MockCompany();
-    when(mockUser.username).thenReturn('user1');
-    when(mockUser2.username).thenReturn('user2');
-    when(mockCompany1.toJson()).thenReturn({'company': '1'});
-    when(mockCompany2.toJson()).thenReturn({'company': '2'});
-    companyRepository.saveCompaniesForUser([mockCompany1], mockUser);
-    companyRepository.saveCompaniesForUser([mockCompany2], mockUser2);
-
-    reset(mockSharedPrefs);
-    companyRepository.removeCompaniesForUser(mockUser2);
-
-    expect(companyRepository.getCompaniesForUser(mockUser), [mockCompany1]);
-    expect(companyRepository.getCompaniesForUser(mockUser2), []);
+    expect(companyRepository.getCompaniesForUser(user2).length, 2);
+    var selectedCompanyId = '${Mocks.companyDetailsResponse['company_id']}';
+    var selectedEmployeeId = '${Mocks.companyDetailsResponse['employee']['employment_id_v1']}';
+    expect(companyRepository.getSelectedCompanyForUser(user2).id, selectedCompanyId);
+    expect(companyRepository.getSelectedEmployeeForUser(user2).v1Id, selectedEmployeeId);
   });
 }

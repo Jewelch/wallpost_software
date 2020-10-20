@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/company_management/entities/company.dart';
+import 'package:wallpost/company_management/entities/company_list_item.dart';
 
 class CompanyListCardWithOutRevenue extends StatelessWidget {
-  final Company company;
+  final CompanyListItem company;
   final VoidCallback onPressed;
 
   CompanyListCardWithOutRevenue({this.company, this.onPressed});

@@ -1,22 +1,22 @@
+import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
 import 'package:wallpost/company_management/entities/employee.dart';
-import 'package:wallpost/company_management/repositories/employee_repository.dart';
-import 'package:wallpost/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/company_management/repositories/company_repository.dart';
 
 class SelectedEmployeeProvider {
-  final SelectedCompanyProvider _selectedCompanyProvider;
-  final EmployeeRepository _employeeRepository;
+  final CurrentUserProvider _currentUserProvider;
+  final CompanyRepository _companyRepository;
 
   SelectedEmployeeProvider()
-      : _selectedCompanyProvider = SelectedCompanyProvider(),
-        _employeeRepository = EmployeeRepository();
+      : _currentUserProvider = CurrentUserProvider(),
+        _companyRepository = CompanyRepository();
 
-  SelectedEmployeeProvider.initWith(this._selectedCompanyProvider, this._employeeRepository);
+  SelectedEmployeeProvider.initWith(this._currentUserProvider, this._companyRepository);
 
-  Employee getEmployeeForSelectedCompany() {
-    var selectedCompany = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
+  Employee getSelectedEmployeeForCurrentUser() {
+    var currentUser = _currentUserProvider.getCurrentUser();
 
-    if (selectedCompany == null) return null;
+    if (currentUser == null) return null;
 
-    return _employeeRepository.getEmployeeForCompany(selectedCompany);
+    return _companyRepository.getSelectedEmployeeForUser(currentUser);
   }
 }

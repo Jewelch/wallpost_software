@@ -6,12 +6,12 @@ import '../mocks.dart';
 
 void main() {
   test('json initialization', () async {
-    expect(Company.fromJson(Mocks.companiesListResponse[0]), isNotNull);
+    expect(Company.fromJson(Mocks.companyDetailsResponse), isNotNull);
   });
 
   test('json conversion', () async {
-    var company = Company.fromJson(Mocks.companiesListResponse[0]);
+    var company = Company.fromJson(Mocks.companyDetailsResponse);
 
-    expect(MapComparer.isMapSubsetOfAnotherMap(company.toJson(), Mocks.companiesListResponse[0]), true);
+    expect(MapComparer.isMapSubsetOfAnotherMap(company.toJson(), Mocks.companyDetailsResponse), true);
   });
 }

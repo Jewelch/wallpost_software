@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/company_management/entities/company.dart';
+import 'package:wallpost/company_management/entities/company_list_item.dart';
 
 class CompanyListCardWithRevenue extends StatelessWidget {
-  final Company company;
+  final CompanyListItem company;
   final VoidCallback onPressed;
 
   CompanyListCardWithRevenue({this.company, this.onPressed});

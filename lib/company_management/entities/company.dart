@@ -4,28 +4,41 @@ import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 class Company extends JSONInitializable implements JSONConvertible {
-  String _companyId;
+  String _id;
+  String _accountNumber;
   String _name;
-  String _currencyCode;
-  num _approvalCount;
-  num _alertCount;
-  num _notificationCount;
-  String _actualSalesAmount;
-  num _achievedSalesPercent;
+  String _shortName;
+  String _commercialName;
+  String _logoUrl;
+  String _dateFormat;
+  String _currency;
   bool _shouldShowRevenue;
+  List<String> _packages;
+  bool _showTimeSheet;
+  String _timezone;
+  num _allowedPunchInRadiusInMeters;
+  bool _isTrial;
+  String _fileUploadPath;
 
   Company.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
-      _companyId = '${sift.readNumberFromMap(jsonMap, 'companyId')}';
-      _name = sift.readStringFromMap(jsonMap, 'name');
-      _currencyCode = sift.readStringFromMap(jsonMap, 'currency');
-      _approvalCount = sift.readNumberFromMap(jsonMap, 'approvals');
-      _alertCount = sift.readNumberFromMap(jsonMap, 'alerts');
-      _notificationCount = sift.readNumberFromMap(jsonMap, 'notifications');
-      _actualSalesAmount = sift.readStringFromMap(jsonMap, 'actual_revenue_display');
-      _achievedSalesPercent = sift.readNumberFromMap(jsonMap, 'overall_revenue');
+      var companyInfoMap = sift.readMapFromMap(jsonMap, 'company_info');
+      _id = '${sift.readNumberFromMap(jsonMap, 'company_id')}';
+      _accountNumber = '${sift.readNumberFromMap(jsonMap, 'account_no')}';
+      _name = sift.readStringFromMap(jsonMap, 'company_name');
+      _shortName = sift.readStringFromMap(jsonMap, 'short_name');
+      _commercialName = sift.readStringFromMap(jsonMap, 'commercial_name');
+      _logoUrl = sift.readStringFromMap(jsonMap, 'company_logo');
+      _dateFormat = sift.readStringFromMap(companyInfoMap, 'js_date_format');
+      _currency = sift.readStringFromMap(companyInfoMap, 'currency');
       _shouldShowRevenue = sift.readNumberFromMap(jsonMap, 'show_revenue') == 0 ? false : true;
+      _packages = sift.readStringListFromMap(jsonMap, 'packages');
+      _showTimeSheet = sift.readBooleanFromMap(companyInfoMap, 'show_timesheet_icon');
+      _timezone = sift.readStringFromMap(companyInfoMap, 'time_zone');
+      _allowedPunchInRadiusInMeters = sift.readNumberFromMap(companyInfoMap, 'allowed_radius');
+      _isTrial = sift.readStringFromMap(companyInfoMap, 'is_trial') == 'true';
+      _fileUploadPath = sift.readStringFromMap(jsonMap, 'absolute_upload_path');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Company response. Error message - ${e.errorMessage}');
     }
@@ -33,35 +46,35 @@ class Company extends JSONInitializable implements JSONConvertible {
 
   @override
   Map<String, dynamic> toJson() {
+    Map companyInfoMap = {};
+    companyInfoMap['js_date_format'] = _dateFormat;
+    companyInfoMap['currency'] = _currency;
+    companyInfoMap['show_timesheet_icon'] = _showTimeSheet;
+    companyInfoMap['time_zone'] = _timezone;
+    companyInfoMap['allowed_radius'] = _allowedPunchInRadiusInMeters;
+    companyInfoMap['is_trial'] = _isTrial ? 'true' : 'false';
+
     Map<String, dynamic> jsonMap = {
-      'actual_revenue_display': _actualSalesAmount,
-      'companyId': int.parse(_companyId),
-      'name': _name,
-      'currency': _currencyCode,
-      'approvals': _approvalCount,
-      'alerts': _alertCount,
-      'notifications': _notificationCount,
-      'overall_revenue': _achievedSalesPercent,
+      'company_info': companyInfoMap,
+      'company_id': int.parse(_id),
+      'account_no': int.parse(_accountNumber),
+      'company_name': _name,
+      'short_name': _shortName,
+      'commercial_name': _commercialName,
+      'company_logo': _logoUrl,
       'show_revenue': _shouldShowRevenue ? 1 : 0,
+      'packages': _packages,
+      'absolute_upload_path': _fileUploadPath,
     };
     return jsonMap;
   }
 
-  String get companyId => _companyId;
+  String get id => _id;
+
 
   String get name => _name;
 
-  String get currencyCode => _currencyCode;
-
-  num get approvalCount => _approvalCount;
-
-  num get alertCount => _alertCount;
-
-  num get notificationCount => _notificationCount;
-
-  String get actualSalesAmount => _actualSalesAmount;
-
-  num get achievedSalesPercent => _achievedSalesPercent;
+  String get shortName => _shortName;
 
   bool get shouldShowRevenue => _shouldShowRevenue;
 }

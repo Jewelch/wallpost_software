@@ -3,8 +3,8 @@ import 'package:mockito/mockito.dart';
 import 'package:wallpost/my_portal/constants/my_portal_urls.dart';
 import 'package:wallpost/my_portal/services/sales_performance_provider.dart';
 
-import '../../_mocks/MockCompany.dart';
-import '../../_mocks/MockCompanyProvider.dart';
+import '../../_mocks/mock_company.dart';
+import '../../_mocks/mock_company_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
@@ -16,7 +16,7 @@ void main() {
   var salesPerformanceProvider = SalesPerformanceProvider.initWith(mockCompanyProvider, mockNetworkAdapter);
 
   setUpAll(() {
-    when(mockCompany.companyId).thenReturn('someCompanyId');
+    when(mockCompany.id).thenReturn('someCompanyId');
     when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
   });
 
