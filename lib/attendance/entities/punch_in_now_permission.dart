@@ -18,7 +18,10 @@ class PunchInNowPermission extends JSONInitializable {
 
   bool get canPunchInNow => _canPunchInNow;
 
-  String get timeTillPunchIn {
+  num get secondsTillPunchIn => _secondsTillPunchIn;
+
+
+/*String get timeTillPunchIn {
     int aMinuteInSeconds = 60;
     int anHourInSeconds = 3600;
     int aDayInSeconds = 86400;
@@ -48,5 +51,5 @@ class PunchInNowPermission extends JSONInitializable {
 
       return '$hourPart$minPart$secPart';
     }
-  }
+  }*/
 }
