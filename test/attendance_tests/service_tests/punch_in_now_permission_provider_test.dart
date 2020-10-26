@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/attendance/constants/attendance_urls.dart';
-import 'package:wallpost/attendance/services/punch_in_now_permmission_provider.dart';
+import 'package:wallpost/attendance/services/punch_in_now_permission_provider.dart';
 
 import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_employee_provider.dart';
