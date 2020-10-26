@@ -3,7 +3,6 @@ import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 class UnreadNotificationsCount extends JSONInitializable {
-  num _totalUnreadNotifications;
   num _unreadTaskNotificationsCount;
   num _unreadMyPortalNotificationsCount;
 
@@ -11,7 +10,6 @@ class UnreadNotificationsCount extends JSONInitializable {
     var sift = Sift();
     try {
       var modulesMap = sift.readMapFromMap(jsonMap, 'modules');
-      _totalUnreadNotifications = sift.readNumberFromMap(jsonMap, 'total_count');
       _unreadTaskNotificationsCount = sift.readNumberFromMap(modulesMap, 'TASK');
       _unreadMyPortalNotificationsCount = sift.readNumberFromMap(modulesMap, 'MYPORTAL');
     } on SiftException catch (e) {
@@ -19,9 +17,5 @@ class UnreadNotificationsCount extends JSONInitializable {
     }
   }
 
-  num get totalUnreadNotifications => _totalUnreadNotifications;
-
-  num get unreadTaskNotificationsCount => _unreadTaskNotificationsCount;
-
-  num get unreadMyPortalNotificationsCount => _unreadMyPortalNotificationsCount;
+  num get totalUnreadNotifications => _unreadTaskNotificationsCount + _unreadMyPortalNotificationsCount;
 }
