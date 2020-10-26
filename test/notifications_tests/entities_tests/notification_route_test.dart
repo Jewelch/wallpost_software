@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallpost/notifications/entities/notification_route.dart';
+import 'package:wallpost/notifications/entities/notification.dart';
 
 void main() {
   test('if routes are identified correctly', () async {

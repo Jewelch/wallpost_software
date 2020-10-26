@@ -1,7 +1,6 @@
 import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
-import 'package:wallpost/notifications/entities/notification_route.dart';
 
 abstract class Notification extends JSONInitializable {
   String _notificationId;
@@ -49,4 +48,26 @@ abstract class Notification extends JSONInitializable {
   bool get isRead => _isRead;
 
   DateTime get createdAt => _createdAt;
+}
+
+class NotificationRoute {
+  final String route;
+
+  NotificationRoute(this.route);
+
+  bool isATaskNotification() {
+    return route.toLowerCase().contains('task');
+  }
+
+  bool isALeaveNotification() {
+    return route.toLowerCase().contains('leave');
+  }
+
+  bool isAHandoverNotification() {
+    return route.toLowerCase().contains('handover');
+  }
+
+  bool isAnExpenseRequestNotification() {
+    return route.toLowerCase().contains('expense');
+  }
 }
