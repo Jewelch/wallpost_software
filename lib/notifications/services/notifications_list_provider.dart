@@ -18,13 +18,8 @@ class NotificationsListProvider {
 
   NotificationsListProvider.initWith(this._moduleId, this._selectedCompanyProvider, this._networkAdapter);
 
-  NotificationsListProvider.forTaskModule()
+  NotificationsListProvider()
       : _moduleId = '1',
-        this._selectedCompanyProvider = SelectedCompanyProvider(),
-        this._networkAdapter = WPAPI();
-
-  NotificationsListProvider.forMyPortal()
-      : _moduleId = '2',
         this._selectedCompanyProvider = SelectedCompanyProvider(),
         this._networkAdapter = WPAPI();
 
