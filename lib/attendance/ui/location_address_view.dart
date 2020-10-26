@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/my_portal/ui/attendance/utils/location_provider_util.dart';
+import 'package:wallpost/attendance/services/location_provider.dart';
 class LocationAddressView extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
