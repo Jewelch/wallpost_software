@@ -18,7 +18,8 @@ class SalesMyPortalScreen extends StatefulWidget {
   _SalesMyPortalScreenState createState() => _SalesMyPortalScreenState();
 }
 
-class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTickerProviderStateMixin {
+class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
   PendingActionsCount _pendingActionsCount;
   num _totalpendingApprovalsCount = 0;
@@ -26,7 +27,7 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTi
   @override
   void initState() {
     super.initState();
-    _getPendingActionCount();
+    // _getPendingActionCount();
     _tabController = new TabController(length: 2, vsync: this);
   }
 
@@ -39,7 +40,8 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTi
       var allCounts = await PendingActionsCountProvider().getCount();
       setState(() {
         _pendingActionsCount = allCounts;
-        _totalpendingApprovalsCount = _pendingActionsCount.totalPendingApprovals;
+        _totalpendingApprovalsCount =
+            _pendingActionsCount.totalPendingApprovals;
       });
     } on APIException catch (_) {
       setState(() {});
@@ -51,7 +53,8 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTi
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title:
+            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
           iconName: 'assets/icons/menu.svg',
           iconSize: 12,
@@ -70,7 +73,8 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTi
         showCompanySwitchButton: true,
         companySwitchBadgeCount: 10,
         onCompanySwitchButtonPressed: () {
-          ScreenPresenter.present(CompaniesListScreen(), context, slideDirection: SlideDirection.fromLeft);
+          ScreenPresenter.present(CompaniesListScreen(), context,
+              slideDirection: SlideDirection.fromLeft);
         },
       ),
       body: SafeArea(
@@ -80,7 +84,8 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTi
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Sales Performance', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                Text('Sales Performance',
+                    style: TextStyle(color: Colors.grey, fontSize: 12)),
                 SizedBox(height: 8),
                 SalesPerformanceGraphView(),
                 SizedBox(height: 12),
@@ -88,7 +93,10 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTi
                   height: 4,
                 ),
                 Container(
-                  decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[100], width: 2))),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom:
+                              BorderSide(color: Colors.grey[100], width: 2))),
                   child: TabBar(
                     controller: _tabController,
                     labelColor: Colors.black,
@@ -102,10 +110,14 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTi
                       Tab(
                         child: RichText(
                             text: TextSpan(children: [
-                          TextSpan(text: 'Approvals ', style: TextStyle(color: Colors.black)),
+                          TextSpan(
+                              text: 'Approvals ',
+                              style: TextStyle(color: Colors.black)),
                           TextSpan(
                               text: '$_totalpendingApprovalsCount',
-                              style: TextStyle(color: AppColors.defaultColor, fontWeight: FontWeight.bold))
+                              style: TextStyle(
+                                  color: AppColors.defaultColor,
+                                  fontWeight: FontWeight.bold))
                         ])),
                       ),
                     ],
