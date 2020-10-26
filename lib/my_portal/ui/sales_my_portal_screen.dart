@@ -77,6 +77,7 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTi
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12),
           child: SingleChildScrollView(
+            physics: new ClampingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
