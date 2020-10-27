@@ -71,10 +71,11 @@ class Company extends JSONInitializable implements JSONConvertible {
 
   String get id => _id;
 
-
   String get name => _name;
 
   String get shortName => _shortName;
 
   bool get shouldShowRevenue => _shouldShowRevenue;
+
+  String get currency => _currency;
 }

@@ -3,10 +3,10 @@ import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/ui/attendance_base_view.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/company_management/ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
-import 'package:wallpost/my_portal/ui/attendance/attendance_base_view.dart';
 import 'package:wallpost/my_portal/ui/performance/employee_performance_graph_view.dart';
 
 class EmployeeMyPortalScreen extends StatefulWidget {
@@ -95,8 +95,7 @@ class _EmployeeMyPortalScreenState extends State<EmployeeMyPortalScreen> with Si
                 child: TabBarView(
                   controller: _tabController,
                   children: <Widget>[
-                    AttendanceBaseView()
-                    ,
+                    AttendanceBaseView(),
                     Text(
                       'Approvals Data',
                       textAlign: TextAlign.center,
