@@ -2,7 +2,7 @@ import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
-class TaskAssignee extends JSONInitializable {
+class TaskEmployee extends JSONInitializable {
   num _v1Id;
   String _v2Id;
   String _userId;
@@ -10,7 +10,7 @@ class TaskAssignee extends JSONInitializable {
   String _profileImageUrl;
   String _emailId;
 
-  TaskAssignee.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  TaskEmployee.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var employmentDetailsMap = sift.readMapFromMap(jsonMap, 'employment_details');
@@ -21,6 +21,7 @@ class TaskAssignee extends JSONInitializable {
       _profileImageUrl = sift.readStringFromMap(jsonMap, 'profile_image');
       _emailId = sift.readStringFromMap(jsonMap, 'email_id_office');
     } on SiftException catch (e) {
+      print(e.errorMessage);
       throw MappingException('Failed to cast TaskAssignee response. Error message - ${e.errorMessage}');
     }
   }
