@@ -6,4 +6,8 @@ class TaskUrls {
     if (year != null) url += '&year=$year';
     return url;
   }
+
+  static String taskCategoriesUrl(String companyId, String pageNumber, String itemsPerPage) {
+    return '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/categories?&page=$pageNumber&per_page=$itemsPerPage';
+  }
 }

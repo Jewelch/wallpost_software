@@ -25,4 +25,17 @@ class Mocks {
     "repeating": randomBetween(1000, 5000),
     "up_comming_dues": randomBetween(1000, 5000),
   };
+
+  static List<Map<String, dynamic>> taskCategoriesListResponse = [
+    {
+      "category_id": randomString(10),
+      "description": randomString(10),
+      "name": randomString(10),
+    },
+    {
+      "category_id": randomString(10),
+      "description": randomString(10),
+      "name": randomString(10),
+    },
+  ];
 }
