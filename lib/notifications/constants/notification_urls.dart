@@ -12,4 +12,8 @@ class NotificationUrls {
   static String markAllNotificationsAsReadUrl(String companyId) {
     return '${BaseUrls.baseUrlV2()}/company/$companyId/notifications/markasread?';
   }
+
+  static String markSingleNotificationsAsReadUrl(String notificationId) {
+    return '${BaseUrls.baseUrlV2()}/notifications/$notificationId?';
+  }
 }
