@@ -20,18 +20,14 @@ class BaseUrls {
   static const String _ENVIRONMENT = _STAGING;
 
   static String baseUrlV2() {
-    return BaseUrls.generateUrl(
-      subDomain: _CORE,
-      environment: _ENVIRONMENT,
-      version: _VERSION_2_PATH,
-    );
+    return BaseUrls.generateUrl(subDomain: _CORE, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
   }
 
   static String hrUrlV2() {
-    return BaseUrls.generateUrl(
-      subDomain: _HR_SUB_DOMAIN,
-      environment: _ENVIRONMENT,
-      version: _VERSION_2_PATH,
-    );
+    return BaseUrls.generateUrl(subDomain: _HR_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
+  }
+
+  static String taskUrlV2() {
+    return BaseUrls.generateUrl(subDomain: _TASK_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
   }
 }
