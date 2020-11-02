@@ -38,4 +38,19 @@ class Mocks {
       "name": randomString(10),
     },
   ];
+
+  static List<Map<String, dynamic>> departmentsListResponse = [
+    {
+      "delete_status": randomString(10),
+      "description": randomString(10),
+      "id": randomBetween(1000, 5000),
+      "name": randomString(10),
+    },
+    {
+      "delete_status": randomString(10),
+      "description": randomString(10),
+      "id": randomBetween(1000, 5000),
+      "name": randomString(10),
+    },
+  ];
 }
