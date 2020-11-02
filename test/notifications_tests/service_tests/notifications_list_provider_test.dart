@@ -13,11 +13,7 @@ void main() {
   var mockCompany = MockCompany();
   var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var notificationListProvider = NotificationsListProvider.initWith(
-    'someModuleId',
-    mockCompanyProvider,
-    mockNetworkAdapter,
-  );
+  var notificationListProvider = NotificationsListProvider.initWith(mockCompanyProvider, mockNetworkAdapter);
 
   setUp(() {
     when(mockCompany.id).thenReturn('selectedCompanyId');
@@ -31,7 +27,7 @@ void main() {
     var _ = await notificationListProvider.getNext();
 
     expect(mockNetworkAdapter.apiRequest.url,
-        NotificationUrls.notificationsListUrl('selectedCompanyId', 'someModuleId', '1', '15'));
+        NotificationUrls.notificationsListUrl('selectedCompanyId', 'someModuleId', '15'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });

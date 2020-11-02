@@ -7,7 +7,6 @@ import 'package:wallpost/notifications/entities/notification.dart';
 import 'package:wallpost/notifications/services/notification_factory.dart';
 
 class NotificationsListProvider {
-  String _moduleId;
   final SelectedCompanyProvider _selectedCompanyProvider;
   final NetworkAdapter _networkAdapter;
   final int _perPage = 15;
@@ -16,11 +15,10 @@ class NotificationsListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  NotificationsListProvider.initWith(this._moduleId, this._selectedCompanyProvider, this._networkAdapter);
+  NotificationsListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
   NotificationsListProvider()
-      : _moduleId = '1',
-        this._selectedCompanyProvider = SelectedCompanyProvider(),
+      : this._selectedCompanyProvider = SelectedCompanyProvider(),
         this._networkAdapter = WPAPI();
 
   void reset() {
@@ -32,7 +30,7 @@ class NotificationsListProvider {
 
   Future<List<Notification>> getNext() async {
     var selectedCompany = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
-    var url = NotificationUrls.notificationsListUrl(selectedCompany.id, _moduleId, '$_pageNumber', '$_perPage');
+    var url = NotificationUrls.notificationsListUrl(selectedCompany.id, '$_pageNumber', '$_perPage');
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
