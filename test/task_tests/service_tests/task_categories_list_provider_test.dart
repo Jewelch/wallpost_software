@@ -29,7 +29,7 @@ void main() {
 
     var _ = await taskCategoriesListProvider.getNext();
 
-    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.taskCategoriesUrl('someCompanyId', '1', '15'));
+    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.taskCategoriesUrl('someCompanyId', 1, 15));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });

@@ -30,7 +30,7 @@ class TaskCategoriesListProvider {
 
   Future<List<TaskCategory>> getNext() async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = TaskUrls.taskCategoriesUrl(companyId, '$_pageNumber', '$_perPage');
+    var url = TaskUrls.taskCategoriesUrl(companyId, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 

@@ -7,7 +7,7 @@ class TaskUrls {
     return url;
   }
 
-  static String taskCategoriesUrl(String companyId, String pageNumber, String itemsPerPage) {
+  static String taskCategoriesUrl(String companyId, int pageNumber, int itemsPerPage) {
     return '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/categories?&page=$pageNumber&per_page=$itemsPerPage';
   }
 }
