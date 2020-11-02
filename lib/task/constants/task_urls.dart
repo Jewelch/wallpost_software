@@ -14,4 +14,8 @@ class TaskUrls {
   static String departmentsUrl(String companyId, int pageNumber, int itemsPerPage) {
     return '${BaseUrls.taskUrlV2()}/companies/$companyId/departments?&page=$pageNumber&per_page=$itemsPerPage';
   }
+
+  static String assigneesUrl(String companyId, int pageNumber, int itemsPerPage) {
+    return '${BaseUrls.taskUrlV2()}/companies/$companyId/employees?&page=$pageNumber&per_page=$itemsPerPage';
+  }
 }
