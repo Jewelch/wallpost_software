@@ -190,6 +190,49 @@ class Mocks {
     },
   ];
 
+  static List<Map<String, dynamic>> attendanceReportResponse = [
+    {
+      "Absents": 12,
+      "actualMinutesWorked": randomBetween(1000, 5000),
+      "Breaks": true,
+      "DeductableAnnualLeavesCount": true,
+      "DeductableNextPayrollAnnualLeavesCount": true,
+      "DeductablePrevPayrollAnnualLeavesCount": true,
+      "EarlyLeave": 43,
+      "emp_id": randomBetween(1000, 5000),
+      "emp_name": randomString(10),
+      "employeeGenericShiftDurationInMinutes": randomBetween(1000, 5000),
+      "employeeWorkingDuration": randomBetween(1000, 5000),
+      "extraMinutesWorked": randomBetween(1000, 5000),
+      "extraMinutesWorkedDistribution": {
+        "night": true,
+        "weekday": true,
+        "weekend": true,
+      },
+      "GranularAbsent": true,
+      "GranularAbsentTime": true,
+      "Halfdays": true,
+      "Holidays": true,
+      "Late": 20,
+      "Leaves": 123,
+      "ot_minutes": true,
+      "PenaltyBreakup": {
+        "Absents": true,
+        "EarlyAbsents": true,
+        "HalfdayAbsents": true,
+        "LateAbsents": true,
+        "PunchInGranularAbsent": true,
+        "PunchInGranularAbsentTime": true,
+        "PunchOutGranularAbsent": true,
+        "PunchOutGranularAbsentTime": true,
+        "UnpaidLeaves": true,
+      },
+      "PenaltyDays": true,
+      "Presents": 2103,
+      "WorkingDays": randomBetween(1000, 5000),
+    },
+  ];
+
   static Map<String, dynamic> punchInFromAppPermissionResponse = {
     "punch_in_allowed": true,
   };
