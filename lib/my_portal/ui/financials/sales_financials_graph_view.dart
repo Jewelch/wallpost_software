@@ -7,7 +7,8 @@ import 'package:wallpost/my_portal/services/sales_performance_provider.dart';
 
 class SalesFinancialsGraphView extends StatefulWidget {
   @override
-  _SalesFinancialsGraphViewState createState() => _SalesFinancialsGraphViewState();
+  _SalesFinancialsGraphViewState createState() =>
+      _SalesFinancialsGraphViewState();
 }
 
 //TODO: Add year filter
@@ -29,7 +30,8 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
     });
 
     try {
-      var performance = await SalesPerformanceProvider().getPerformance(_selectedYear);
+      var performance =
+          await SalesPerformanceProvider().getPerformance(_selectedYear);
       setState(() => _salesPerformance = performance);
     } on APIException catch (_) {
       setState(() => showError = true);
@@ -46,9 +48,12 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
   }
 
   Widget _buildSalesFinancialsGraphView() {
-    final List<double> yValues =
-        _salesPerformance.currentYearPerformance.actualMonthlySales.map((i) => i.toDouble()).toList();
+    final List<double> yValues = _salesPerformance
+        .currentYearPerformance.actualMonthlySales
+        .map((i) => i.toDouble())
+        .toList();
     final int yValuesLength = yValues.length;
+    print('yvaluew..' + yValues.toString());
     final List<int> showIndexes = [yValuesLength - 1];
     List<FlSpot> allSpots = yValues.asMap().entries.map((e) {
       return FlSpot((e.key.toDouble() * 2), e.value);
@@ -87,7 +92,8 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
         children: [
           SizedBox(
             height: 36,
-            child: Text('Monthly Sales', style: TextStyle(color: Colors.grey, fontSize: 1)),
+            child: Text('Monthly Sales',
+                style: TextStyle(color: Colors.grey, fontSize: 1)),
           ),
           Container(
             width: double.infinity,
@@ -102,18 +108,23 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
                 lineBarsData: lineBarsData,
                 showingTooltipIndicators: showIndexes.map((index) {
                   return ShowingTooltipIndicators(index, [
-                    LineBarSpot(tooltipsOnBar, lineBarsData.indexOf(tooltipsOnBar), tooltipsOnBar.spots[index]),
+                    LineBarSpot(
+                        tooltipsOnBar,
+                        lineBarsData.indexOf(tooltipsOnBar),
+                        tooltipsOnBar.spots[index]),
                   ]);
                 }).toList(),
                 lineTouchData: LineTouchData(
                   enabled: false,
-                  getTouchedSpotIndicator: (LineChartBarData barData, List<int> spotIndexes) {
+                  getTouchedSpotIndicator:
+                      (LineChartBarData barData, List<int> spotIndexes) {
                     return spotIndexes.map((index) {
                       return TouchedSpotIndicatorData(
                         FlLine(color: Colors.transparent),
                         FlDotData(
                           show: true,
-                          getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
+                          getDotPainter: (spot, percent, barData, index) =>
+                              FlDotCirclePainter(
                             radius: 4,
                             color: AppColors.chartLineColor,
                             strokeWidth: 0,
@@ -142,8 +153,9 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
                   show: true,
                   drawHorizontalLine: true,
                   horizontalInterval: 25,
-                  getDrawingHorizontalLine: (value) =>
-                      FlLine(color: AppColors.chartHorizontalLineColor, strokeWidth: 1),
+                  getDrawingHorizontalLine: (value) => FlLine(
+                      color: AppColors.chartHorizontalLineColor,
+                      strokeWidth: 1),
                 ),
                 titlesData: FlTitlesData(
                   bottomTitles: SideTitles(
@@ -174,10 +186,12 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
                 borderData: FlBorderData(
                     show: true,
                     border: Border(
-                      bottom: BorderSide(color: AppColors.chartHorizontalLineColor),
+                      bottom:
+                          BorderSide(color: AppColors.chartHorizontalLineColor),
                       left: BorderSide(color: Colors.transparent),
                       right: BorderSide(color: Colors.transparent),
-                      top: BorderSide(color: AppColors.chartHorizontalLineColor),
+                      top:
+                          BorderSide(color: AppColors.chartHorizontalLineColor),
                     )),
               ),
             ),
