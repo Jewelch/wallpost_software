@@ -81,6 +81,12 @@ class _ExpenserequestNotificationsListTileState
   }
 
   String convertToDate(String date) {
+    //TODO: Munavir - use company date format everywhere
+//    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+//    var dateFormat = selectedCompany.dateFormat;
+
+
+
     final DateFormat dateTimeFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
     final DateFormat dateFormater = DateFormat('dd.MM.yyyy');
     final DateTime displayDate = dateTimeFormater.parse(date);
