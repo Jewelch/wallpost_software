@@ -27,7 +27,7 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
   @override
   void initState() {
     super.initState();
-    // _getPendingActionCount();
+    _getPendingActionCount();
     _tabController = new TabController(length: 2, vsync: this);
   }
 
@@ -81,6 +81,7 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12),
           child: SingleChildScrollView(
+            physics: new ClampingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -3,6 +3,7 @@ import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/ui/attendance_base_view.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/company_management/ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
@@ -90,14 +91,11 @@ class _EmployeeMyPortalScreenState extends State<EmployeeMyPortalScreen> with Si
                     border: Border(bottom: BorderSide(color: Colors.grey, width: 0.8))),
               ),
               Container(
-                height: 80.0,
+                height: 300,
                 child: TabBarView(
                   controller: _tabController,
                   children: <Widget>[
-                    Text(
-                      'Attendance Data',
-                      textAlign: TextAlign.center,
-                    ),
+                    AttendanceBaseView(),
                     Text(
                       'Approvals Data',
                       textAlign: TextAlign.center,

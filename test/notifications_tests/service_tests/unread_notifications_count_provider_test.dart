@@ -1,37 +1,35 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:wallpost/attendance/constants/attendance_urls.dart';
-import 'package:wallpost/attendance/services/punch_in_now_permission_provider.dart';
+import 'package:wallpost/notifications/constants/notification_urls.dart';
+import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';
 
-import '../../_mocks/mock_employee.dart';
-import '../../_mocks/mock_employee_provider.dart';
+import '../../_mocks/mock_company.dart';
+import '../../_mocks/mock_company_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
-  Map<String, dynamic> successfulResponse = Mocks.punchInNowPermissionResponse;
-  var mockEmployee = MockEmployee();
-  var mockEmployeeProvider = MockEmployeeProvider();
+  Map<String, dynamic> successfulResponse = Mocks.unreadNotificationsCount;
+  var mockCompany = MockCompany();
+  var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var punchInNowPermissionProvider = PunchInNowPermissionProvider.initWith(
-    mockEmployeeProvider,
+  var unreadNotificationsCountProvider = UnreadNotificationsCountProvider.initWith(
+    mockCompanyProvider,
     mockNetworkAdapter,
   );
 
-  setUpAll(() {
-    when(mockEmployee.companyId).thenReturn('someCompanyId');
-    when(mockEmployee.v1Id).thenReturn('v1EmpId');
-    when(mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
+  setUp(() {
+    when(mockCompany.id).thenReturn('selectedCompanyId');
+    when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
   });
 
   test('api request is built and executed correctly', () async {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await punchInNowPermissionProvider.canPunchInNow();
+    var _ = await unreadNotificationsCountProvider.getCount();
 
-    expect(
-        mockNetworkAdapter.apiRequest.url, AttendanceUrls.punchInNowPermissionProviderUrl('someCompanyId', 'v1EmpId'));
+    expect(mockNetworkAdapter.apiRequest.url, NotificationUrls.unreadNotificationsCountUrl());
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -40,7 +38,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await punchInNowPermissionProvider.canPunchInNow();
+      var _ = await unreadNotificationsCountProvider.getCount();
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -51,13 +49,13 @@ void main() {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
-    punchInNowPermissionProvider.canPunchInNow().then((_) {
+    unreadNotificationsCountProvider.getCount().then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
     mockNetworkAdapter.succeed(successfulResponse);
-    punchInNowPermissionProvider.canPunchInNow().then((_) {
+    unreadNotificationsCountProvider.getCount().then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -69,7 +67,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await punchInNowPermissionProvider.canPunchInNow();
+      var _ = await unreadNotificationsCountProvider.getCount();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -80,10 +78,22 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      var _ = await punchInNowPermissionProvider.canPunchInNow();
+      var _ = await unreadNotificationsCountProvider.getCount();
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
+    }
+  });
+
+  test('throws InvalidResponseException if fails to read company counts map', () async {
+    when(mockCompany.id).thenReturn('companyIdForWhichCountIsNotPresent');
+    mockNetworkAdapter.succeed(<String, dynamic>{});
+
+    try {
+      var _ = await unreadNotificationsCountProvider.getCount();
+      fail('failed to throw InvalidResponseException');
+    } catch (e) {
+      expect(e is InvalidResponseException, true);
     }
   });
 
@@ -91,7 +101,7 @@ void main() {
     mockNetworkAdapter.succeed(<String, dynamic>{});
 
     try {
-      var _ = await punchInNowPermissionProvider.canPunchInNow();
+      var _ = await unreadNotificationsCountProvider.getCount();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -102,8 +112,8 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var punchInNowPermission = await punchInNowPermissionProvider.canPunchInNow();
-      expect(punchInNowPermission, isNotNull);
+      var unreadNotificationCount = await unreadNotificationsCountProvider.getCount();
+      expect(unreadNotificationCount, isNotNull);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
@@ -112,27 +122,27 @@ void main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    punchInNowPermissionProvider.canPunchInNow();
+    unreadNotificationsCountProvider.getCount();
 
-    expect(punchInNowPermissionProvider.isLoading, true);
+    expect(unreadNotificationsCountProvider.isLoading, true);
   });
 
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await punchInNowPermissionProvider.canPunchInNow();
+    var _ = await unreadNotificationsCountProvider.getCount();
 
-    expect(punchInNowPermissionProvider.isLoading, false);
+    expect(unreadNotificationsCountProvider.isLoading, false);
   });
 
   test('test loading flag is reset after failure', () async {
     mockNetworkAdapter.fail(InvalidResponseException());
 
     try {
-      var _ = await punchInNowPermissionProvider.canPunchInNow();
+      var _ = await unreadNotificationsCountProvider.getCount();
       fail('failed to throw exception');
     } catch (_) {
-      expect(punchInNowPermissionProvider.isLoading, false);
+      expect(unreadNotificationsCountProvider.isLoading, false);
     }
   });
 }

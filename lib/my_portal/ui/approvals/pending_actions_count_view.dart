@@ -16,7 +16,7 @@ class _PendingActionsCountViewState extends State<PendingActionsCountView> {
 
   @override
   void initState() {
-    // _getPendingActionCount();
+    _getPendingActionCount();
     super.initState();
   }
 

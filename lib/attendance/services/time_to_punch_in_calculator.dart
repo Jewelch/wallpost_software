@@ -1,32 +1,10 @@
-import 'package:sift/Sift.dart';
-import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
-import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
-
-class PunchInNowPermission extends JSONInitializable {
-  bool _canPunchInNow;
-  num _secondsTillPunchIn;
-
-  PunchInNowPermission.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
-    var sift = Sift();
-    try {
-      _canPunchInNow = sift.readBooleanFromMap(jsonMap, 'status');
-      _secondsTillPunchIn = sift.readNumberFromMapWithDefaultValue(jsonMap, 'remaining_in_min', 0);
-    } on SiftException catch (e) {
-      throw MappingException('Failed to cast PunchInNowPermission response. Error message - ${e.errorMessage}');
-    }
-  }
-
-  bool get canPunchInNow => _canPunchInNow;
-
-  num get secondsTillPunchIn => _secondsTillPunchIn;
-
-
-/*String get timeTillPunchIn {
+class TimeToPunchInCalculator {
+  static String timeTillPunchIn(int durationInSeconds) {
     int aMinuteInSeconds = 60;
     int anHourInSeconds = 3600;
     int aDayInSeconds = 86400;
 
-    int remainingDuration = _secondsTillPunchIn;
+    int remainingDuration = durationInSeconds;
 
     int elapsedDays = remainingDuration ~/ aDayInSeconds;
     remainingDuration = remainingDuration % aDayInSeconds;
@@ -51,5 +29,5 @@ class PunchInNowPermission extends JSONInitializable {
 
       return '$hourPart$minPart$secPart';
     }
-  }*/
+  }
 }
