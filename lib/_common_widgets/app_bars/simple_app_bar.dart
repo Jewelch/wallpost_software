@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'app_bar_divider.dart';
 
 class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {

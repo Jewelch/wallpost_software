@@ -5,6 +5,11 @@ class AttendanceUrls {
     return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance';
   }
 
+  static String attendanceReportUrl(String companyId, String employeeId, String startDate, String endDate) {
+    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/reportsCountHR?'
+        '&scope=MY&date_from=$startDate&date_to=$endDate';
+  }
+
   static String punchInFromAppPermissionProviderUrl(String companyId, String employeeId) {
     return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/punchInAllowedFromApp?';
   }
