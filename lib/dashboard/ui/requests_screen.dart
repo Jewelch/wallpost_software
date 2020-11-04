@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/authentication/services/logout_handler.dart';
 
 class RequestsScreen extends StatelessWidget {
@@ -15,6 +16,13 @@ class RequestsScreen extends StatelessWidget {
                 child: Text('Logout'),
                 onPressed: () {
                   LogoutHandler().logout(context);
+                },
+              ),
+              FlatButton(
+                color: Colors.red,
+                child: Text('Go To Tasks'),
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteNames.task);
                 },
               ),
             ],
