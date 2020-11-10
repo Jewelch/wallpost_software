@@ -30,7 +30,6 @@ class TaskListItem extends JSONInitializable {
       _status = sift.readStringFromMap(statusMap, 'display_name');
       _isEscalated = sift.readNumberFromMap(jsonMap, 'is_escalated') == 1;
     } on SiftException catch (e) {
-      print(e.errorMessage);
       throw MappingException('Failed to cast TaskListItem response. Error message - ${e.errorMessage}');
     }
   }

@@ -21,7 +21,6 @@ class TaskEmployee extends JSONInitializable {
       _profileImageUrl = sift.readStringFromMap(jsonMap, 'profile_image');
       _emailId = sift.readStringFromMap(jsonMap, 'email_id_office');
     } on SiftException catch (e) {
-      print(e.errorMessage);
       throw MappingException('Failed to cast TaskAssignee response. Error message - ${e.errorMessage}');
     }
   }
