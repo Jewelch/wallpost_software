@@ -23,11 +23,11 @@ class _HandoverNotificationsListTileState
         size: 36,
       ),
       title: Text(
-        'Titile',
+        widget.notification.title,
         style: TextStyle(color: AppColors.defaultColor),
       ),
       subtitle: Text(
-        'body',
+        widget.notification.message,
       ),
       trailing: Icon(Icons.arrow_forward_ios_outlined),
     ));

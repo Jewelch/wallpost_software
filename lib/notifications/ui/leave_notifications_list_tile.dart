@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/notifications/entities/leave_notification.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/notifications/services/single_notification_reader.dart';
 
 class LeaveNotificationsListTile extends StatefulWidget {
   final LeaveNotification notification;
@@ -13,7 +16,12 @@ class LeaveNotificationsListTile extends StatefulWidget {
       _LeaveNotificationsListTileState();
 }
 
-class _LeaveNotificationsListTileState extends State<LeaveNotificationsListTile> {
+class _LeaveNotificationsListTileState
+    extends State<LeaveNotificationsListTile> {
+  SingleNotificationReader _singleNotificationReader =
+      SingleNotificationReader();
+  bool selected = false;
+  bool showError = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,7 +30,11 @@ class _LeaveNotificationsListTileState extends State<LeaveNotificationsListTile>
       leading: Icon(Icons.account_circle_sharp, size: 36),
       title: Text(
         widget.notification.title,
-        style: TextStyle(color: AppColors.defaultColor),
+        style: widget.notification.isRead || selected
+            ? TextStyle(
+                color: AppColors.defaultColor, fontWeight: FontWeight.normal)
+            : TextStyle(
+                color: AppColors.defaultColor, fontWeight: FontWeight.bold),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,6 +55,32 @@ class _LeaveNotificationsListTileState extends State<LeaveNotificationsListTile>
             )
           ]),
           SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              RichText(
+                text: TextSpan(children: [
+                  TextSpan(
+                      text: 'From : ',
+                      style: TextStyle(color: Colors.black, fontSize: 12)),
+                  TextSpan(
+                      text: _convertToDateFormat(widget.notification.leaveFrom),
+                      style: TextStyle(color: Colors.grey, fontSize: 12))
+                ]),
+              ),
+              RichText(
+                text: TextSpan(children: [
+                  TextSpan(
+                      text: 'To : ',
+                      style: TextStyle(color: Colors.black, fontSize: 12)),
+                  TextSpan(
+                      text: _convertToDateFormat(widget.notification.leaveTo),
+                      style: TextStyle(color: Colors.grey, fontSize: 12))
+                ]),
+              )
+            ],
+          ),
+          SizedBox(height: 4),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12),
@@ -60,50 +98,39 @@ class _LeaveNotificationsListTileState extends State<LeaveNotificationsListTile>
                     text: 'Request On : ',
                     style: TextStyle(color: Colors.black, fontSize: 12)),
                 TextSpan(
-                    text:
-                        convertToDate(widget.notification.createdAt.toString()),
+                    text: _convertToDateFormat(widget.notification.createdAt),
                     style: TextStyle(color: Colors.grey, fontSize: 12))
               ]),
             )
           ]),
-          SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              RichText(
-                text: TextSpan(children: [
-                  TextSpan(
-                      text: 'From : ',
-                      style: TextStyle(color: Colors.black, fontSize: 12)),
-                  TextSpan(
-                      text: convertToDate(
-                          widget.notification.leaveFrom.toString()),
-                      style: TextStyle(color: Colors.grey, fontSize: 12))
-                ]),
-              ),
-              RichText(
-                text: TextSpan(children: [
-                  TextSpan(
-                      text: 'To : ',
-                      style: TextStyle(color: Colors.black, fontSize: 12)),
-                  TextSpan(
-                      text:
-                          convertToDate(widget.notification.leaveTo.toString()),
-                      style: TextStyle(color: Colors.grey, fontSize: 12))
-                ]),
-              )
-            ],
-          )
         ],
       ),
+      onTap: () {
+        setState(() {
+          selected = !selected;
+          _readSingleNotification(widget.notification);
+        });
+      },
     ));
   }
 
-  String convertToDate(String date) {
-    final DateFormat dateTimeFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
-    final DateFormat dateFormater = DateFormat('dd.MM.yyyy');
-    final DateTime displayDate = dateTimeFormater.parse(date);
-    final String formattedDate = dateFormater.format(displayDate);
-    return formattedDate;
+  String _convertToDateFormat(DateTime date) {
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
+    final String formatted = formatter.format(date);
+    return formatted;
+  }
+
+  void _readSingleNotification(notification) async {
+    setState(() {
+      showError = false;
+    });
+
+    try {
+      _singleNotificationReader.markAsRead(notification);
+    } on WPException catch (_) {
+      setState(() => showError = true);
+    }
   }
 }

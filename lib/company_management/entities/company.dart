@@ -32,15 +32,19 @@ class Company extends JSONInitializable implements JSONConvertible {
       _logoUrl = sift.readStringFromMap(jsonMap, 'company_logo');
       _dateFormat = sift.readStringFromMap(companyInfoMap, 'js_date_format');
       _currency = sift.readStringFromMap(companyInfoMap, 'currency');
-      _shouldShowRevenue = sift.readNumberFromMap(jsonMap, 'show_revenue') == 0 ? false : true;
+      _shouldShowRevenue =
+          sift.readNumberFromMap(jsonMap, 'show_revenue') == 0 ? false : true;
       _packages = sift.readStringListFromMap(jsonMap, 'packages');
-      _showTimeSheet = sift.readBooleanFromMap(companyInfoMap, 'show_timesheet_icon');
+      _showTimeSheet =
+          sift.readBooleanFromMap(companyInfoMap, 'show_timesheet_icon');
       _timezone = sift.readStringFromMap(companyInfoMap, 'time_zone');
-      _allowedPunchInRadiusInMeters = sift.readNumberFromMap(companyInfoMap, 'allowed_radius');
+      _allowedPunchInRadiusInMeters =
+          sift.readNumberFromMap(companyInfoMap, 'allowed_radius');
       _isTrial = sift.readStringFromMap(companyInfoMap, 'is_trial') == 'true';
       _fileUploadPath = sift.readStringFromMap(jsonMap, 'absolute_upload_path');
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast Company response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast Company response. Error message - ${e.errorMessage}');
     }
   }
 
@@ -79,5 +83,6 @@ class Company extends JSONInitializable implements JSONConvertible {
 
   String get currency => _currency;
 
-  String get dateFormat => _dateFormat;
+  String get dateFormat =>
+      _dateFormat.replaceAll('D', 'd').replaceAll('Y', 'y');
 }

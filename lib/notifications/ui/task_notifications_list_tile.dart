@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/notifications/entities/task_notification.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/notifications/services/single_notification_reader.dart';
 
 class TaskNotificationsListTile extends StatefulWidget {
   final TaskNotification notification;
@@ -13,6 +16,19 @@ class TaskNotificationsListTile extends StatefulWidget {
 }
 
 class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
+  SingleNotificationReader _singleNotificationReader =
+      SingleNotificationReader();
+  bool selected = false;
+  bool showError = false;
+  int tappedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    tappedIndex = 0;
+    print("is read....." + widget.notification.isRead.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,7 +40,11 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
       ),
       title: Text(
         widget.notification.taskName,
-        style: TextStyle(color: AppColors.defaultColor),
+        style: widget.notification.isRead
+            ? TextStyle(
+                color: AppColors.defaultColor, fontWeight: FontWeight.normal)
+            : TextStyle(
+                color: AppColors.defaultColor, fontWeight: FontWeight.bold),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +52,7 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
           Row(children: [
             Text('Created On : ',
                 style: TextStyle(color: Colors.black, fontSize: 12)),
-            Text(convertToDate(widget.notification.createdAt.toString()),
+            Text(_convertToDateFormat(widget.notification.createdAt),
                 style: TextStyle(color: Colors.black, fontSize: 12))
           ]),
           Text(widget.notification.status,
@@ -43,14 +63,32 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
         ],
       ),
       trailing: Icon(Icons.arrow_forward_ios_outlined),
+      onTap: () {
+        setState(() {
+          selected = !selected;
+          _readSingleNotification(widget.notification);
+        });
+      },
     ));
   }
 
-  String convertToDate(String date) {
-    final DateFormat dateTimeFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
-    final DateFormat dateFormater = DateFormat('dd.MM.yyyy');
-    final DateTime displayDate = dateTimeFormater.parse(date);
-    final String formattedDate = dateFormater.format(displayDate);
-    return formattedDate;
+  String _convertToDateFormat(DateTime date) {
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
+    final String formatted = formatter.format(date);
+    return formatted;
+  }
+
+  void _readSingleNotification(notification) async {
+    setState(() {
+      showError = false;
+    });
+
+    try {
+      _singleNotificationReader.markAsRead(notification);
+    } on WPException catch (_) {
+      setState(() => showError = true);
+    }
   }
 }
