@@ -19,11 +19,10 @@ class TaskNotification extends Notification {
       throw MappingException('Failed to cast TaskNotification response. Error message - ${e.errorMessage}');
     }
   }
+
   String get taskName => _taskName;
 
   String get status => _status;
 
   String get createdBy => _createdBy;
-
-
 }

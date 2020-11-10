@@ -15,8 +15,8 @@ class LeaveNotification extends Notification {
       var resourceInfoMap = sift.readMapFromMap(jsonMap, 'resourse_info');
       _applicantName = sift.readStringFromMap(resourceInfoMap, 'applicant');
       _leaveType = sift.readStringFromMap(resourceInfoMap, 'leaveTypeName');
-      _leaveFrom = sift.readDateFromMap(jsonMap, 'leaveFrom', 'yyyy-MM-dd');
-      _leaveTo = sift.readDateFromMap(jsonMap, 'leaveTo', 'yyyy-MM-dd');
+      _leaveFrom = sift.readDateFromMap(resourceInfoMap, 'leaveFrom', 'yyyy-MM-dd');
+      _leaveTo = sift.readDateFromMap(resourceInfoMap, 'leaveTo', 'yyyy-MM-dd');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast LeaveNotification response. Error message - ${e.errorMessage}');
     }
