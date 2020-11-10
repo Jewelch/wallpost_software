@@ -126,7 +126,6 @@ void main() {
       await tasksListProvider.getNext(filters);
       expect(tasksListProvider.getCurrentPageNumber(), 4);
     } catch (e) {
-      print(e);
       fail('failed to complete successfully. exception thrown $e');
     }
   });
