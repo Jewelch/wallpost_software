@@ -10,7 +10,6 @@ import '../mocks.dart';
 
 void main() {
   List<Map<String, dynamic>> successfulResponse = Mocks.taskAssigneesListResponse;
-
   var mockCompany = MockCompany();
   var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
