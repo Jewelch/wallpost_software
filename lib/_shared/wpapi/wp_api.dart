@@ -3,6 +3,7 @@ import 'package:wallpost/_shared/constants/device_info.dart';
 import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
 import 'package:wallpost/_shared/network_adapter/network_request_executor.dart';
 import 'package:wallpost/_shared/user_management/services/access_token_provider.dart';
+import 'package:wallpost/_shared/wpapi/nonce_generator.dart';
 import 'package:wallpost/_shared/wpapi/wpapi_response_processor.dart';
 
 export 'package:wallpost/_shared/network_adapter/network_adapter.dart';
@@ -41,11 +42,28 @@ class WPAPI implements NetworkAdapter {
     return _processResponse(apiResponse, apiRequest);
   }
 
+  @override
+  Future<APIResponse> postWithNonce(APIRequest apiRequest) async {
+    var wpHeaders = await _buildWPHeaders();
+    var nonce = await NonceGenerator().generate(wpHeaders);
+    apiRequest.addHeaders(wpHeaders);
+    apiRequest.addHeader('X-Wp-Nonce', nonce.value);
+    var apiResponse = await _networkAdapter.post(apiRequest);
+    return _processResponse(apiResponse, apiRequest);
+  }
+
+  @override
+  Future<APIResponse> delete(APIRequest apiRequest) async {
+    apiRequest.addHeaders(await _buildWPHeaders());
+    var apiResponse = await _networkAdapter.delete(apiRequest);
+    return _processResponse(apiResponse, apiRequest);
+  }
+
   Future<Map<String, String>> _buildWPHeaders() async {
     var headers = Map<String, String>();
     headers['Content-Type'] = 'application/json';
-    headers['X-WallPost-Device-ID'] = await _deviceInfo.getDeviceId();
-    headers['X-WallPost-App-ID'] = AppId.appId;
+    headers['X-shovest_club-Device-ID'] = await _deviceInfo.getDeviceId();
+    headers['X-shovest_club-App-ID'] = AppId.appId;
 
     var authToken = await _accessTokenProvider.getToken();
     if (authToken != null) {
