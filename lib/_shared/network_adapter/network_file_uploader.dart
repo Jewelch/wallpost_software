@@ -26,7 +26,7 @@ class NetworkFileUploader {
   }
 
   Future<APIResponse> upload(File file, APIRequest apiRequest) async {
-    if (await _isConnected()) throw NetworkFailureException();
+    if (await _isConnected() == false) throw NetworkFailureException();
 
     try {
       var filename = file.path.split('/').last;
