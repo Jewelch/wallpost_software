@@ -20,6 +20,10 @@ class TaskUrls {
     return '${BaseUrls.taskUrlV2()}/companies/$companyId/employees?&page=$pageNumber&per_page=$itemsPerPage';
   }
 
+  static String subordinatesUrl(String companyId, int pageNumber, int itemsPerPage) {
+    return '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/getSubOrdinates?&page=$pageNumber&per_page=$itemsPerPage';
+  }
+
   static String tasksListUrl(
     String companyId,
     TasksListFilters filters,

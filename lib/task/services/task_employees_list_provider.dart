@@ -14,12 +14,19 @@ class TaskEmployeesListProvider {
   bool _didReachListEnd = false;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
+  bool _shouldGetAllEmployees;
 
-  TaskEmployeesListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
+  TaskEmployeesListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter, this._shouldGetAllEmployees);
 
-  TaskEmployeesListProvider()
+  TaskEmployeesListProvider.allEmployeesProvider()
       : _selectedCompanyProvider = SelectedCompanyProvider(),
-        _networkAdapter = WPAPI();
+        _networkAdapter = WPAPI(),
+        _shouldGetAllEmployees = true;
+
+  TaskEmployeesListProvider.subordinatesProvider()
+      : _selectedCompanyProvider = SelectedCompanyProvider(),
+        _networkAdapter = WPAPI(),
+        _shouldGetAllEmployees = false;
 
   void reset() {
     _pageNumber = 1;
@@ -30,7 +37,12 @@ class TaskEmployeesListProvider {
 
   Future<List<TaskEmployee>> getNext() async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = TaskUrls.assigneesUrl(companyId, _pageNumber, _perPage);
+    String url;
+    if (_shouldGetAllEmployees) {
+      url = TaskUrls.assigneesUrl(companyId, _pageNumber, _perPage);
+    } else {
+      url = TaskUrls.subordinatesUrl(companyId, _pageNumber, _perPage);
+    }
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 

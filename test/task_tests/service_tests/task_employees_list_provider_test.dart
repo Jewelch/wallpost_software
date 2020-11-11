@@ -13,14 +13,23 @@ void main() {
   var mockCompany = MockCompany();
   var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var taskAssigneesListProvider = TaskEmployeesListProvider.initWith(
-    mockCompanyProvider,
-    mockNetworkAdapter,
-  );
+  var taskAssigneesListProvider = TaskEmployeesListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, true);
 
   setUpAll(() {
     when(mockCompany.id).thenReturn('someCompanyId');
     when(mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
+  });
+
+  test('correct url is selected depending on whether the provider should get all employees or not', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var taskAssigneesListProvider = TaskEmployeesListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, true);
+    await taskAssigneesListProvider.getNext();
+    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.assigneesUrl('someCompanyId', 1, 15));
+
+    taskAssigneesListProvider = TaskEmployeesListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, false);
+    await taskAssigneesListProvider.getNext();
+    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.subordinatesUrl('someCompanyId', 1, 15));
   });
 
   test('api request is built and executed correctly', () async {
