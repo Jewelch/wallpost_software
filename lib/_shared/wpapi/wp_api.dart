@@ -62,8 +62,8 @@ class WPAPI implements NetworkAdapter {
   Future<Map<String, String>> _buildWPHeaders() async {
     var headers = Map<String, String>();
     headers['Content-Type'] = 'application/json';
-    headers['X-shovest_club-Device-ID'] = await _deviceInfo.getDeviceId();
-    headers['X-shovest_club-App-ID'] = AppId.appId;
+    headers['X-WallPost-Device-ID'] = await _deviceInfo.getDeviceId();
+    headers['X-WallPost-App-ID'] = AppId.appId;
 
     var authToken = await _accessTokenProvider.getToken();
     if (authToken != null) {
