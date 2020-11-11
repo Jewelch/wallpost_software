@@ -42,4 +42,8 @@ class TaskUrls {
   static String getTimeZonesUrl(String companyId) {
     return '${BaseUrls.hrUrlV2()}/companies/$companyId/timezones/getTimezones?';
   }
+
+  static String createTaskUrl(String companyId) {
+    return '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks?';
+  }
 }
