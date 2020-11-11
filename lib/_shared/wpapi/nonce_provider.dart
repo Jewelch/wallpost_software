@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
 import 'package:wallpost/_shared/network_adapter/network_request_executor.dart';
-import 'package:sift/Sift.dart';
 
 class Nonce extends JSONInitializable {
   String _value;
@@ -21,14 +21,16 @@ class Nonce extends JSONInitializable {
   String get value => _value;
 }
 
-class NonceGenerator {
+class NonceProvider {
   final NetworkAdapter _networkAdapter;
   bool isLoading = false;
   String _sessionId;
 
-  NonceGenerator() : _networkAdapter = NetworkRequestExecutor();
+  NonceProvider.initWith(this._networkAdapter);
 
-  Future<Nonce> generate(Map<String, String> headers) async {
+  NonceProvider() : _networkAdapter = NetworkRequestExecutor();
+
+  Future<Nonce> getNonce(Map<String, String> headers) async {
     var url = 'https://core.api.wallpostsoftware.com/api/v2/nonce/gen';
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
