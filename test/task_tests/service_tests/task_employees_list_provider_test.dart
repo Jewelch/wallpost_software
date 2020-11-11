@@ -25,20 +25,20 @@ void main() {
 
     var taskAssigneesListProvider = TaskEmployeesListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, true);
     await taskAssigneesListProvider.getNext();
-    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.assigneesUrl('someCompanyId', 1, 15));
+    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.assigneesUrl('someCompanyId', 1, 15, null));
 
     taskAssigneesListProvider = TaskEmployeesListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, false);
     await taskAssigneesListProvider.getNext();
-    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.subordinatesUrl('someCompanyId', 1, 15));
+    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.subordinatesUrl('someCompanyId', 1, 15, null));
   });
 
   test('api request is built and executed correctly', () async {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await taskAssigneesListProvider.getNext();
+    var _ = await taskAssigneesListProvider.getNext(searchText: 'someSearchText');
 
-    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.assigneesUrl('someCompanyId', 1, 15));
+    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.assigneesUrl('someCompanyId', 1, 15, 'someSearchText'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });

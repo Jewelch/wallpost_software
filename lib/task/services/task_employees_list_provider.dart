@@ -35,13 +35,13 @@ class TaskEmployeesListProvider {
     isLoading = false;
   }
 
-  Future<List<TaskEmployee>> getNext() async {
+  Future<List<TaskEmployee>> getNext({String searchText}) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     String url;
     if (_shouldGetAllEmployees) {
-      url = TaskUrls.assigneesUrl(companyId, _pageNumber, _perPage);
+      url = TaskUrls.assigneesUrl(companyId, _pageNumber, _perPage, searchText);
     } else {
-      url = TaskUrls.subordinatesUrl(companyId, _pageNumber, _perPage);
+      url = TaskUrls.subordinatesUrl(companyId, _pageNumber, _perPage, searchText);
     }
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
