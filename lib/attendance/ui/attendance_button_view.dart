@@ -19,7 +19,7 @@ class AttendanceButtonView extends StatelessWidget {
           Container(
             height: 140,
             width: 140,
-            decoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
+            decoration: BoxDecoration( color: Colors.grey, shape: BoxShape.circle),
           ),
           Container(
             margin: const EdgeInsets.only(bottom: 5),
