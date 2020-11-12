@@ -78,4 +78,6 @@ class Company extends JSONInitializable implements JSONConvertible {
   bool get shouldShowRevenue => _shouldShowRevenue;
 
   String get currency => _currency;
+
+  String get dateFormat => _dateFormat;
 }

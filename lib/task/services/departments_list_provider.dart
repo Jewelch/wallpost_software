@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/notifications/constants/notification_urls.dart';
-import 'package:wallpost/notifications/entities/notification.dart';
-import 'package:wallpost/notifications/services/mockresponse.dart';
-import 'package:wallpost/notifications/services/notification_factory.dart';
+import 'package:wallpost/task/constants/task_urls.dart';
+import 'package:wallpost/task/entities/department.dart';
 
-class NotificationsListProvider {
+class DepartmentsListProvider {
   final SelectedCompanyProvider _selectedCompanyProvider;
   final NetworkAdapter _networkAdapter;
   final int _perPage = 15;
@@ -16,11 +14,11 @@ class NotificationsListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  NotificationsListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
+  DepartmentsListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
-  NotificationsListProvider()
-      : this._selectedCompanyProvider = SelectedCompanyProvider(),
-        this._networkAdapter = WPAPI();
+  DepartmentsListProvider()
+      : _selectedCompanyProvider = SelectedCompanyProvider(),
+        _networkAdapter = WPAPI();
 
   void reset() {
     _pageNumber = 1;
@@ -29,9 +27,9 @@ class NotificationsListProvider {
     isLoading = false;
   }
 
-  Future<List<Notification>> getNext() async {
-    var selectedCompany = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
-    var url = NotificationUrls.notificationsListUrl(selectedCompany.id, _pageNumber, _perPage);
+  Future<List<Department>> getNext() async {
+    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
+    var url = TaskUrls.departmentsUrl(companyId, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
@@ -45,9 +43,9 @@ class NotificationsListProvider {
     }
   }
 
-  Future<List<Notification>> _processResponse(APIResponse apiResponse) async {
+  Future<List<Department>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<Notification>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<Department>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
@@ -55,18 +53,15 @@ class NotificationsListProvider {
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<Notification> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
-    List<Map<String, dynamic>> mockResponse =
-        _pageNumber == 1 ? MockResponse.pageOneResponse : MockResponse.pageTwoResponse;
-
+  List<Department> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var notificationList = <Notification>[];
-      for (var responseMap in mockResponse) {
-        var notification = NotificationFactory.createNotification(responseMap);
-        notificationList.add(notification);
+      var departmentList = <Department>[];
+      for (var responseMap in responseMapList) {
+        var department = Department.fromJson(responseMap);
+        departmentList.add(department);
       }
-      _updatePaginationRelatedData(notificationList.length);
-      return notificationList;
+      _updatePaginationRelatedData(departmentList.length);
+      return departmentList;
     } catch (e) {
       throw InvalidResponseException();
     }
@@ -84,6 +79,4 @@ class NotificationsListProvider {
   int getCurrentPageNumber() {
     return _pageNumber;
   }
-
-  bool get didReachListEnd => _didReachListEnd;
 }
