@@ -44,9 +44,21 @@ class YearlySalesPerformance extends JSONInitializable {
 
   String get targetedSales => _targetedSales;
 
-  List<num> get actualMonthlySales => _actualMonthlySales;
+  List<num> get monthlySalesPercentages {
+    List<num> percentages = [];
 
-  List<num> get targetedMonthlySales => _targetedMonthlySales;
+    for (int i = 0; i < _actualMonthlySales.length; i++) {
+      num actualMonthlySale = _actualMonthlySales[i];
+      num targetedMonthlySale = 0;
+      if (_targetedMonthlySales.length > i) targetedMonthlySale = _targetedMonthlySales[i];
+
+      var percentage = actualMonthlySale;
+      if (targetedMonthlySale != 0) percentage = actualMonthlySale / targetedMonthlySale * 100;
+      percentages.add(percentage.toInt());
+    }
+
+    return percentages;
+  }
 
   bool get show => _show;
 }
