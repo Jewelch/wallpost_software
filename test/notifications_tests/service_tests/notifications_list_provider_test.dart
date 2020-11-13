@@ -27,7 +27,7 @@ void main() {
     var _ = await notificationListProvider.getNext();
 
     expect(mockNetworkAdapter.apiRequest.url,
-        NotificationUrls.notificationsListUrl('REMOVE MODULE ID FROM URL', 1, 15));
+        NotificationUrls.notificationsListUrl('selectedCompanyId', 1, 15));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });

@@ -18,15 +18,10 @@ class TaskNotificationsListTile extends StatefulWidget {
 class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
   SingleNotificationReader _singleNotificationReader =
       SingleNotificationReader();
-  bool selected = false;
-  bool showError = false;
-  int tappedIndex;
 
   @override
   void initState() {
     super.initState();
-    tappedIndex = 0;
-    print("is read....." + widget.notification.isRead.toString());
   }
 
   @override
@@ -53,7 +48,7 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
             Text('Created On : ',
                 style: TextStyle(color: Colors.black, fontSize: 12)),
             Text(_convertToDateFormat(widget.notification.createdAt),
-                style: TextStyle(color: Colors.black, fontSize: 12))
+                style: TextStyle(color: Colors.grey, fontSize: 12))
           ]),
           Text(widget.notification.status,
               style: TextStyle(
@@ -65,7 +60,7 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
       trailing: Icon(Icons.arrow_forward_ios_outlined),
       onTap: () {
         setState(() {
-          selected = !selected;
+          widget.notification.isRead = true;
           _readSingleNotification(widget.notification);
         });
       },
@@ -81,14 +76,10 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
   }
 
   void _readSingleNotification(notification) async {
-    setState(() {
-      showError = false;
-    });
-
     try {
       _singleNotificationReader.markAsRead(notification);
     } on WPException catch (_) {
-      setState(() => showError = true);
+      setState(() => {});
     }
   }
 }

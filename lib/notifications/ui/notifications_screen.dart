@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -40,15 +41,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   void _getNotificationList() async {
     setState(() {
       showError = false;
-      // _notificationList = [];
     });
 
     try {
       var notificationData = await _notificationsListProvider.getNext();
       setState(() {
         _notificationList.addAll(notificationData);
-
-        print("notification daataaa,,," + notificationData.toString());
         isLoading = false;
       });
     } on WPException catch (_) {
@@ -58,10 +56,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   void _getUnreadNotificatiionsCount() async {
     try {
-      var unraedNotifications =
+      var unraedNotificationsCount =
           await _unreadNotificationsCountProvider.getCount();
       setState(() {
-        _unreadNoticationsCount = unraedNotifications.totalUnreadNotifications;
+        _unreadNoticationsCount =
+            unraedNotificationsCount.totalUnreadNotifications;
       });
     } on WPException catch (_) {}
   }
@@ -90,7 +89,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  _readAllNotification();
+                  _showReadAllConfirmationAlert();
                 },
                 child: Text(
                   'Read all',
@@ -99,28 +98,29 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               )
             ]),
             SizedBox(height: 4),
-            // Expanded(
-            //     child: NotificationListener<ScrollNotification>(
-            //   // ignore: missing_return
-            //   onNotification: (ScrollNotification scrollinfo) {
-            //     if (scrollinfo.metrics.pixels ==
-            //         scrollinfo.metrics.maxScrollExtent) {
-            //       _getNotificationList();
-            //       setState(() {
-            //         isLoading = true;
-            //       });
-            //     }
-            //   },
-            //   child: _buildNotificationListWidget(),
-            // )),
-            // Container(
-            //   height: isLoading ? 50.0 : 0,
-            //   color: Colors.transparent,
-            //   child: Center(
-            //     child: new CircularProgressIndicator(),
-            //   ),
-            // ),
-            Expanded(child: _buildNotificationListWidget())
+            Expanded(
+                child: NotificationListener<ScrollNotification>(
+              // ignore: missing_return
+              onNotification: (ScrollNotification scrollinfo) {
+                if (scrollinfo.metrics.pixels ==
+                    scrollinfo.metrics.maxScrollExtent) {
+                  _notificationsListProvider.getCurrentPageNumber();
+                  _getNotificationList();
+                  setState(() {
+                    isLoading = true;
+                  });
+                }
+              },
+              child: _buildNotificationListWidget(),
+            )),
+            Container(
+              height: isLoading ? 50.0 : 0,
+              color: Colors.transparent,
+              child: Center(
+                child: new CircularProgressIndicator(),
+              ),
+            ),
+            //Expanded(child: _buildNotificationListWidget())
           ]),
         ),
       ),
@@ -134,21 +134,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             itemCount: _notificationList.length,
             separatorBuilder: (context, i) => const Divider(),
             itemBuilder: (context, index) {
-              for (var i = 0; i < _notificationList.length; i++) {
-                print("notificatlist..........????" +
-                    _notificationList[i].toString());
-                if (_notificationList[i].isATaskNotification) {
-                  return TaskNotificationsListTile(_notificationList[i]);
-                } else if (_notificationList[i].isALeaveNotification) {
-                  return LeaveNotificationsListTile(_notificationList[i]);
-                } else if (_notificationList[i].isAHandoverNotification) {
-                  return HandoverNotificationsListTile(_notificationList[i]);
-                } else {
-                  return ExpenserequestNotificationsListTile(
-                      _notificationList[i]);
-                }
+              if (_notificationList[index].isATaskNotification) {
+                return TaskNotificationsListTile(_notificationList[index]);
+              } else if (_notificationList[index].isALeaveNotification) {
+                return LeaveNotificationsListTile(_notificationList[index]);
+              } else if (_notificationList[index].isAHandoverNotification) {
+                return HandoverNotificationsListTile(_notificationList[index]);
+              } else {
+                return ExpenserequestNotificationsListTile(
+                    _notificationList[index]);
               }
-              return null;
             }),
       );
     else {
@@ -156,19 +151,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
+  void _showReadAllConfirmationAlert() {
+    Alert.showSimpleAlertWithButtons(context,
+        title: 'Read All Notification',
+        message: 'Are you sure you want to read all?',
+        buttonOneTitle: 'No',
+        buttonTwoTitle: 'Yes',
+        buttonTwoOnPressed: () => {_readAllNotification()});
+  }
+
   void _readAllNotification() async {
     setState(() {
-      showError = false;
+      _notificationList = [];
     });
 
     try {
       _allNotificationsReader.markAllAsRead();
       setState(() {
-        // _getNotificationList();
+        _getNotificationList();
         _getUnreadNotificatiionsCount();
       });
     } on WPException catch (_) {
-      setState(() => showError = true);
+      setState(() => {});
     }
   }
 

@@ -20,8 +20,7 @@ class _LeaveNotificationsListTileState
     extends State<LeaveNotificationsListTile> {
   SingleNotificationReader _singleNotificationReader =
       SingleNotificationReader();
-  bool selected = false;
-  bool showError = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,7 +29,7 @@ class _LeaveNotificationsListTileState
       leading: Icon(Icons.account_circle_sharp, size: 36),
       title: Text(
         widget.notification.title,
-        style: widget.notification.isRead || selected
+        style: widget.notification.isRead
             ? TextStyle(
                 color: AppColors.defaultColor, fontWeight: FontWeight.normal)
             : TextStyle(
@@ -107,7 +106,7 @@ class _LeaveNotificationsListTileState
       ),
       onTap: () {
         setState(() {
-          selected = !selected;
+          widget.notification.isRead = true;
           _readSingleNotification(widget.notification);
         });
       },
@@ -123,14 +122,10 @@ class _LeaveNotificationsListTileState
   }
 
   void _readSingleNotification(notification) async {
-    setState(() {
-      showError = false;
-    });
-
     try {
       _singleNotificationReader.markAsRead(notification);
     } on WPException catch (_) {
-      setState(() => showError = true);
+      setState(() => {});
     }
   }
 }

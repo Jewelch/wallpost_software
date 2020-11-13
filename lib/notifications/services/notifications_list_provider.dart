@@ -4,6 +4,7 @@ import 'package:wallpost/_shared/wpapi/wp_api.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/notifications/constants/notification_urls.dart';
 import 'package:wallpost/notifications/entities/notification.dart';
+import 'package:wallpost/notifications/services/mockresponse.dart';
 import 'package:wallpost/notifications/services/notification_factory.dart';
 
 class NotificationsListProvider {
@@ -55,9 +56,12 @@ class NotificationsListProvider {
   }
 
   List<Notification> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+    List<Map<String, dynamic>> mockResponse =
+        _pageNumber == 1 ? MockResponse.pageOneResponse : MockResponse.pageTwoResponse;
+
     try {
       var notificationList = <Notification>[];
-      for (var responseMap in responseMapList) {
+      for (var responseMap in mockResponse) {
         var notification = NotificationFactory.createNotification(responseMap);
         notificationList.add(notification);
       }

@@ -11,7 +11,8 @@ abstract class Notification extends JSONInitializable {
   bool _isRead;
   DateTime _createdAt;
 
-  Notification.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  Notification.fromJson(Map<String, dynamic> jsonMap)
+      : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var dataMap = sift.readMapFromMap(jsonMap, 'data');
@@ -21,9 +22,11 @@ abstract class Notification extends JSONInitializable {
       _message = sift.readStringFromMap(dataMap, 'body');
       _route = NotificationRoute(sift.readStringFromMap(dataMap, 'route'));
       _isRead = sift.readStringFromMap(jsonMap, 'seen') == '1';
-      _createdAt = sift.readDateFromMap(jsonMap, 'created_at', 'yyyy-MM-dd HH:mm:ss');
+      _createdAt =
+          sift.readDateFromMap(jsonMap, 'created_at', 'yyyy-MM-dd HH:mm:ss');
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast Notification response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast Notification response. Error message - ${e.errorMessage}');
     }
   }
 
@@ -33,7 +36,8 @@ abstract class Notification extends JSONInitializable {
 
   bool get isAHandoverNotification => _route.isAHandoverNotification();
 
-  bool get isAnExpenseRequestNotification => _route.isAnExpenseRequestNotification();
+  bool get isAnExpenseRequestNotification =>
+      _route.isAnExpenseRequestNotification();
 
   String get notificationId => _notificationId;
 
@@ -46,6 +50,10 @@ abstract class Notification extends JSONInitializable {
   NotificationRoute get route => _route;
 
   bool get isRead => _isRead;
+
+  set isRead(bool value) {
+    _isRead = value;
+  }
 
   DateTime get createdAt => _createdAt;
 }

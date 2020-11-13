@@ -298,4 +298,10 @@ class Mocks {
       "updated_at": randomString(10),
     },
   ];
+
+  static List<String> taskTimeZonesResponse = [
+    randomString(10),
+    randomString(10),
+    randomString(10),
+  ];
 }

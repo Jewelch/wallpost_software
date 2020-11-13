@@ -38,4 +38,8 @@ class TaskUrls {
     url += '&per_page=$itemsPerPage';
     return url;
   }
+
+  static String getTimeZonesUrl(String companyId) {
+    return '${BaseUrls.hrUrlV2()}/companies/$companyId/timezones/getTimezones?';
+  }
 }

@@ -7,7 +7,7 @@ class NotificationUrls {
 
   static String notificationsListUrl(
       String companyId, int pageNumber, int itemsPerPage) {
-    return '${BaseUrls.baseUrlV2()}/notifications/companies/$companyId/modules/1?&page=$pageNumber&per_page=$itemsPerPage';
+    return '${BaseUrls.baseUrlV2()}/notifications/companies/$companyId?&page=$pageNumber&per_page=$itemsPerPage';
   }
 
   static String markAllNotificationsAsReadUrl(String companyId) {

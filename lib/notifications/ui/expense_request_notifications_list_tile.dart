@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/notifications/entities/expense_request_notification.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/notifications/services/single_notification_reader.dart';
 
 class ExpenserequestNotificationsListTile extends StatefulWidget {
   final ExpenseRequestNotification notification;
@@ -15,6 +17,8 @@ class ExpenserequestNotificationsListTile extends StatefulWidget {
 
 class _ExpenserequestNotificationsListTileState
     extends State<ExpenserequestNotificationsListTile> {
+  SingleNotificationReader _singleNotificationReader =
+      SingleNotificationReader();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +33,12 @@ class _ExpenserequestNotificationsListTileState
         children: [
           Text(
             widget.notification.title,
-            style: TextStyle(color: AppColors.defaultColor),
+            style: widget.notification.isRead
+                ? TextStyle(
+                    color: AppColors.defaultColor,
+                    fontWeight: FontWeight.normal)
+                : TextStyle(
+                    color: AppColors.defaultColor, fontWeight: FontWeight.bold),
           ),
           RichText(
             text: TextSpan(children: [
@@ -71,26 +80,32 @@ class _ExpenserequestNotificationsListTileState
                   text: 'Request On : ',
                   style: TextStyle(color: Colors.black, fontSize: 12)),
               TextSpan(
-                  text: convertToDate(widget.notification.createdAt.toString()),
+                  text: _convertToDateFormat(widget.notification.createdAt),
                   style: TextStyle(color: Colors.grey, fontSize: 12))
             ]),
           )
         ],
       ),
+      onTap: () => {
+        widget.notification.isRead = true,
+        _readSingleNotification(widget.notification)
+      },
     ));
   }
 
-  String convertToDate(String date) {
-    //TODO: Munavir - use company date format everywhere
-//    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
-//    var dateFormat = selectedCompany.dateFormat;
+  String _convertToDateFormat(DateTime date) {
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
+    final String formatted = formatter.format(date);
+    return formatted;
+  }
 
-
-
-    final DateFormat dateTimeFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
-    final DateFormat dateFormater = DateFormat('dd.MM.yyyy');
-    final DateTime displayDate = dateTimeFormater.parse(date);
-    final String formattedDate = dateFormater.format(displayDate);
-    return formattedDate;
+  void _readSingleNotification(notification) async {
+    try {
+      _singleNotificationReader.markAsRead(notification);
+    } on WPException catch (_) {
+      setState(() => {});
+    }
   }
 }
