@@ -9,7 +9,7 @@ import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
-  List<String> successfulResponse = Mocks.taskTimeZonesResponse;
+  Map<String, dynamic> successfulResponse = Mocks.taskTimeZonesResponse;
   var mockCompany = MockCompany();
   var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();

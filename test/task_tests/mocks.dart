@@ -299,11 +299,11 @@ class Mocks {
     },
   ];
 
-  static List<String> taskTimeZonesResponse = [
+  static Map<String, dynamic> taskTimeZonesResponse = {'timezones':[
     randomString(10),
     randomString(10),
     randomString(10),
-  ];
+  ]};
 
   static Map<String, dynamic> createTaskResponse = {
     "alloted_asset": randomString(10),
