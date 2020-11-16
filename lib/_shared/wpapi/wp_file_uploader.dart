@@ -7,8 +7,10 @@ import 'package:wallpost/_shared/constants/base_urls.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
 import 'package:wallpost/_shared/network_adapter/entities/api_request.dart';
 import 'package:wallpost/_shared/network_adapter/entities/api_response.dart';
+import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
 import 'package:wallpost/_shared/network_adapter/network_file_uploader.dart';
 import 'package:wallpost/_shared/user_management/services/access_token_provider.dart';
+import 'package:wallpost/_shared/wpapi/wpapi_response_processor.dart';
 
 class WPFileUploader {
   DeviceInfoProvider _deviceInfo;
@@ -30,19 +32,17 @@ class WPFileUploader {
         maxWidth: 90));
   }
 
-  Future<APIResponse> uploadFile(File file) async {
-    if (file == null) {
-      return null;
-    }
+  Future<APIResponse> upload(List<File> files, {Function(double) onUploadProgress}) async {
+    if (files == null || files.isEmpty) throw RequestException('no files attached');
 
     APIRequest apiRequest = APIRequest('${BaseUrls.baseUrlV2()}/fileupload/temp');
     apiRequest.addHeaders(await _buildWPHeaders());
-    return _networkFileUploader.upload(file, apiRequest);
+    var apiResponse = await _networkFileUploader.upload(files, apiRequest, onUploadProgress: onUploadProgress);
+    return _processResponse(apiResponse, apiRequest);
   }
 
   Future<Map<String, String>> _buildWPHeaders() async {
     var headers = Map<String, String>();
-    headers['Content-Type'] = 'application/json';
     headers['X-WallPost-Device-ID'] = await _deviceInfo.getDeviceId();
     headers['X-WallPost-App-ID'] = AppId.appId;
 
@@ -51,5 +51,10 @@ class WPFileUploader {
       headers['Authorization'] = authToken;
     }
     return headers;
+  }
+
+  APIResponse _processResponse(APIResponse response, APIRequest apiRequest) {
+    var responseData = WPAPIResponseProcessor().processResponse(response);
+    return APIResponse(apiRequest, response.statusCode, responseData, {});
   }
 }
