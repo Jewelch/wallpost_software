@@ -10,5 +10,9 @@ abstract class NetworkAdapter {
 
   Future<APIResponse> post(APIRequest apiRequest);
 
+  Future<APIResponse> postWithNonce(APIRequest apiRequest);
+
   Future<APIResponse> put(APIRequest apiRequest);
+
+  Future<APIResponse> delete(APIRequest apiRequest);
 }

@@ -32,8 +32,18 @@ class NetworkRequestExecutor implements NetworkAdapter {
   }
 
   @override
+  Future<APIResponse> postWithNonce(APIRequest apiRequest) async {
+    return executeRequest(apiRequest, 'POST');
+  }
+
+  @override
   Future<APIResponse> put(APIRequest apiRequest) async {
     return executeRequest(apiRequest, 'PUT');
+  }
+
+  @override
+  Future<APIResponse> delete(APIRequest apiRequest) async {
+    return executeRequest(apiRequest, 'DELETE');
   }
 
   Future<APIResponse> executeRequest(APIRequest apiRequest, String method) async {

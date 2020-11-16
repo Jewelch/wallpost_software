@@ -16,8 +16,17 @@ class TaskUrls {
     return '${BaseUrls.taskUrlV2()}/companies/$companyId/departments?&page=$pageNumber&per_page=$itemsPerPage';
   }
 
-  static String assigneesUrl(String companyId, int pageNumber, int itemsPerPage) {
-    return '${BaseUrls.taskUrlV2()}/companies/$companyId/employees?&page=$pageNumber&per_page=$itemsPerPage';
+  static String assigneesUrl(String companyId, int pageNumber, int itemsPerPage, String searchText) {
+    var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/employees?&page=$pageNumber&per_page=$itemsPerPage';
+    if (searchText != null) url += '&search=$searchText';
+    return url;
+  }
+
+  static String subordinatesUrl(String companyId, int pageNumber, int itemsPerPage, String searchText) {
+    var url =
+        '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/getSubOrdinates?&page=$pageNumber&per_page=$itemsPerPage';
+    if (searchText != null) url += '&search=$searchText';
+    return url;
   }
 
   static String tasksListUrl(
@@ -41,5 +50,9 @@ class TaskUrls {
 
   static String getTimeZonesUrl(String companyId) {
     return '${BaseUrls.hrUrlV2()}/companies/$companyId/timezones/getTimezones?';
+  }
+
+  static String createTaskUrl(String companyId) {
+    return '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks?';
   }
 }

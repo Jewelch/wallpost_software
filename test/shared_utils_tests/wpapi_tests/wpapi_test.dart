@@ -5,6 +5,7 @@ import 'package:wallpost/_shared/constants/device_info.dart';
 import 'package:wallpost/_shared/network_adapter/exceptions/malformed_response_exception.dart';
 import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
 import 'package:wallpost/_shared/user_management/services/access_token_provider.dart';
+import 'package:wallpost/_shared/wpapi/nonce_provider.dart';
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
@@ -12,6 +13,10 @@ import '../../_mocks/mock_network_adapter.dart';
 class MockDeviceInfo extends Mock implements DeviceInfoProvider {}
 
 class MockAccessTokenProvider extends Mock implements AccessTokenProvider {}
+
+class MockNonce extends Mock implements Nonce {}
+
+class MockNonceProvider extends Mock implements NonceProvider {}
 
 void main() {
   var simpleWpResponse = {
@@ -21,11 +26,20 @@ void main() {
   var apiRequest = APIRequest('www.url.com');
   var mockDeviceInfo = MockDeviceInfo();
   var mockAccessTokenProvider = MockAccessTokenProvider();
+  var mockNonce = MockNonce();
+  var mockNonceProvider = MockNonceProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var wpApi = WPAPI.initWith(mockDeviceInfo, mockAccessTokenProvider, mockNetworkAdapter);
+  var wpApi = WPAPI.initWith(
+    mockDeviceInfo,
+    mockAccessTokenProvider,
+    mockNonceProvider,
+    mockNetworkAdapter,
+  );
 
   setUpAll(() {
     when(mockDeviceInfo.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));
+    when(mockNonce.value).thenReturn('randomNonce');
+    when(mockNonceProvider.getNonce(any)).thenAnswer((_) => Future.value(mockNonce));
   });
 
   setUp(() {
@@ -56,6 +70,14 @@ void main() {
 
       expect(mockNetworkAdapter.didCallPost, true);
     });
+
+    test('delete', () async {
+      mockNetworkAdapter.succeed(simpleWpResponse);
+
+      var _ = await wpApi.delete(apiRequest);
+
+      expect(mockNetworkAdapter.didCallDelete, true);
+    });
   });
 
   group('test adding wp headers', () {
@@ -83,6 +105,16 @@ void main() {
       expect(mockNetworkAdapter.apiRequest.headers['X-WallPost-Device-ID'], 'someDeviceId');
       expect(mockNetworkAdapter.apiRequest.headers['X-WallPost-App-ID'], AppId.appId);
       expect(mockNetworkAdapter.apiRequest.headers['Authorization'], isNotNull);
+    });
+
+    test('nonce is added when nonce functions are called', () async {
+      when(mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value('someAuthToken'));
+      mockNetworkAdapter.succeed(simpleWpResponse);
+
+      var _ = await wpApi.postWithNonce(apiRequest);
+
+      expect(mockNetworkAdapter.didCallPost, true);
+      expect(mockNetworkAdapter.apiRequest.headers['X-Wp-Nonce'], 'randomNonce');
     });
   });
 

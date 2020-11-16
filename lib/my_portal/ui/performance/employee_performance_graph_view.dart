@@ -9,10 +9,12 @@ import 'package:wallpost/my_portal/services/my_portal_performance_level_calculat
 
 class EmployeePerformanceGraphView extends StatefulWidget {
   @override
-  _EmployeePerformanceGraphViewState createState() => _EmployeePerformanceGraphViewState();
+  _EmployeePerformanceGraphViewState createState() =>
+      _EmployeePerformanceGraphViewState();
 }
 
-class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphView> {
+class _EmployeePerformanceGraphViewState
+    extends State<EmployeePerformanceGraphView> {
   EmployeePerformance _employeePerformance;
 
   bool showError = false;
@@ -31,7 +33,8 @@ class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphV
     });
 
     try {
-      var performance = await EmployeePerformanceProvider().getPerformance(DateTime.now().year);
+      var performance = await EmployeePerformanceProvider()
+          .getPerformance(DateTime.now().year);
       setState(() => _employeePerformance = performance);
     } on WPException catch (_) {
       setState(() => showError = true);
@@ -58,21 +61,24 @@ class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphV
             animation: true,
             percent: _employeePerformance.overallYearlyPerformancePercent / 100,
             circularStrokeCap: CircularStrokeCap.round,
-            progressColor: _getColorForPerformance(_employeePerformance.overallYearlyPerformancePercent),
+            progressColor: _getColorForPerformance(
+                _employeePerformance.overallYearlyPerformancePercent),
             center: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  '${_employeePerformance.overallYearlyPerformancePercent}',
+                  '${_employeePerformance.overallYearlyPerformancePercent}%',
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 24.0,
-                    color: _getColorForPerformance(_employeePerformance.overallYearlyPerformancePercent),
+                    color: _getColorForPerformance(
+                        _employeePerformance.overallYearlyPerformancePercent),
                   ),
                 ),
                 Text(
-                  "YTD 2018",
-                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16.0),
+                  'YTD ${DateTime.now().year}',
+                  style:
+                      TextStyle(fontWeight: FontWeight.normal, fontSize: 16.0),
                 ),
               ],
             ),
@@ -83,21 +89,26 @@ class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphV
           child: Column(
             children: <Widget>[
               _buildMonthlyPerformanceBarGraph(
-                performancePercentage: _employeePerformance.overallYearlyPerformancePercent,
+                performancePercentage:
+                    _employeePerformance.overallYearlyPerformancePercent,
                 label: '',
                 timePeriod: DateFormat('MMM yyyy').format(DateTime.now()),
               ),
               SizedBox(height: 12),
               _buildMonthlyPerformanceBarGraph(
-                performancePercentage: _employeePerformance.bestPerformancePercent,
+                performancePercentage:
+                    _employeePerformance.bestPerformancePercent,
                 label: 'Best Score',
-                timePeriod: '${_employeePerformance.bestPerformanceMonth} ${DateFormat('yyyy').format(DateTime.now())}',
+                timePeriod:
+                    '${_employeePerformance.bestPerformanceMonth} ${DateFormat('yyyy').format(DateTime.now())}',
               ),
               SizedBox(height: 16),
               _buildMonthlyPerformanceBarGraph(
-                performancePercentage: _employeePerformance.leastPerformancePercent,
+                performancePercentage:
+                    _employeePerformance.leastPerformancePercent,
                 label: 'Least Score',
-                timePeriod: '${_employeePerformance.bestPerformanceMonth} ${DateFormat('yyyy').format(DateTime.now())}',
+                timePeriod:
+                    '${_employeePerformance.bestPerformanceMonth} ${DateFormat('yyyy').format(DateTime.now())}',
               ),
             ],
           ),
@@ -106,7 +117,8 @@ class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphV
     );
   }
 
-  Widget _buildMonthlyPerformanceBarGraph({int performancePercentage, String label, String timePeriod}) {
+  Widget _buildMonthlyPerformanceBarGraph(
+      {int performancePercentage, String label, String timePeriod}) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +128,9 @@ class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphV
             child: Text(
               '$performancePercentage%',
               textAlign: TextAlign.left,
-              style: TextStyle(color: _getColorForPerformance(performancePercentage), fontSize: 16),
+              style: TextStyle(
+                  color: _getColorForPerformance(performancePercentage),
+                  fontSize: 16),
             ),
           ),
           LinearPercentIndicator(
@@ -136,7 +150,9 @@ class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphV
                 Text(label, style: TextStyle(fontSize: 12)),
                 Text(
                   timePeriod,
-                  style: TextStyle(color: _getColorForPerformance(performancePercentage), fontSize: 12),
+                  style: TextStyle(
+                      color: _getColorForPerformance(performancePercentage),
+                      fontSize: 12),
                 )
               ],
             ),

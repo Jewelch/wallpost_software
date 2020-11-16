@@ -110,9 +110,9 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
     /*  return AttendanceButtonView(
         name: 'Loading', color: Colors.grey, onPressed: null,);*/
     if (attendanceDetail.isPunchedIn)
-      return AttendanceButtonView(name: 'Punch\nOut', color: Colors.red, onPressed: () => {_doPunchOut()});
+      return AttendanceButtonView(name: 'Punch\nOut', color: Colors.red, onPressed: () => {_showPunchPotConfirmationAlert()});
     else
-      return AttendanceButtonView(name: 'Punch\nIn', color: Colors.green, onPressed: () => {_doPunchIn()});
+      return AttendanceButtonView(name: 'Punch\nIn', color: Colors.green, onPressed: () => {/*_doPunchIn()*/});
   }
 
   Widget _buildAttendanceSummaryTitleView() {
@@ -275,6 +275,19 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
       setState(() {});
     }
   }
+  _showPunchPotConfirmationAlert() {
+    Alert.showSimpleAlertWithButtons(
+      context,
+      title: 'Punch Out',
+      message: 'Are you sure you want to punch out?',
+      buttonOneTitle: 'No',
+      buttonTwoTitle: 'Yes',
+      buttonTwoOnPressed: ()=>{
+        print('onPressed------------------')
+        //_doPunchOut
+      }
+    );
+  }
 
   void _doPunchOut() async {
     await _loader.show('Punch Out..');
@@ -301,4 +314,6 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
     Position position = await LocationProvider().getLocation();
     return AttendanceLocation(position.latitude, position.longitude);
   }
+
+
 }

@@ -49,7 +49,7 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
 
   Widget _buildSalesFinancialsGraphView() {
     final List<double> yValues = _salesPerformance
-        .currentYearPerformance.actualMonthlySales
+        .currentYearPerformance.monthlySalesPercentages
         .map((i) => i.toDouble())
         .toList();
     final int yValuesLength = yValues.length;

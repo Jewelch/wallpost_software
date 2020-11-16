@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:intl/intl.dart';
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
 import 'package:wallpost/attendance/constants/attendance_urls.dart';
 import 'package:wallpost/attendance/entities/attendance_report.dart';
@@ -22,8 +22,8 @@ class AttendanceReportProvider {
     var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
     var companyId = employee.companyId;
     var employeeId = employee.v1Id;
-    var startDate = DateFormat('yyyy-MM-dd').format(_getFirstDayOfCurrentMonth());
-    var endDate = DateFormat('yyyy-MM-dd').format(_getLastDayOfCurrentMonth());
+    var startDate = _getFirstDayOfCurrentMonth().yyyyMMddString();
+    var endDate = _getLastDayOfCurrentMonth().yyyyMMddString();
 
     var url = AttendanceUrls.attendanceReportUrl(companyId, employeeId, startDate, endDate);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();

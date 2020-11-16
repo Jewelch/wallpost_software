@@ -98,29 +98,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               )
             ]),
             SizedBox(height: 4),
-            Expanded(
-                child: NotificationListener<ScrollNotification>(
-              // ignore: missing_return
-              onNotification: (ScrollNotification scrollinfo) {
-                if (scrollinfo.metrics.pixels ==
-                    scrollinfo.metrics.maxScrollExtent) {
-                  _notificationsListProvider.getCurrentPageNumber();
-                  _getNotificationList();
-                  setState(() {
-                    isLoading = true;
-                  });
-                }
-              },
-              child: _buildNotificationListWidget(),
-            )),
-            Container(
-              height: isLoading ? 50.0 : 0,
-              color: Colors.transparent,
-              child: Center(
-                child: new CircularProgressIndicator(),
-              ),
-            ),
-            //Expanded(child: _buildNotificationListWidget())
+            Expanded(child: _buildNotificationListWidget())
           ]),
         ),
       ),
