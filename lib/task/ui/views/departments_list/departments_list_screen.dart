@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/task/ui/presenters/departments_list_presenter.dart';
 
 class DepartmentsListScreen extends StatefulWidget {
@@ -33,9 +34,14 @@ class _DepartmentsListScreenState extends State<DepartmentsListScreen> implement
     return Scaffold(
       body: Column(
         children: [
+          SearchBar(
+            hint: 'Search by department name',
+            onSearchTextChanged: (searchText) {
+              //TODO: filter by search text
+            },
+          ),
           Expanded(
             child: RefreshIndicator(
-
               onRefresh: () {
                 _presenter.reset();
                 _presenter.loadNextListOfDepartments();
