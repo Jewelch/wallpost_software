@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
@@ -7,11 +8,11 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/notifications/services/all_notifications_reader.dart';
+import 'package:wallpost/notifications/services/notifications_list_provider.dart';
 import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';
 import 'package:wallpost/notifications/ui/expense_request_notifications_list_tile.dart';
 import 'package:wallpost/notifications/ui/handover_notifications_list_tile.dart';
 import 'package:wallpost/notifications/ui/leave_notifications_list_tile.dart';
-import 'package:wallpost/notifications/services/notifications_list_provider.dart';
 import 'package:wallpost/notifications/ui/task_notifications_list_tile.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -20,10 +21,8 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  NotificationsListProvider _notificationsListProvider =
-      NotificationsListProvider();
-  UnreadNotificationsCountProvider _unreadNotificationsCountProvider =
-      UnreadNotificationsCountProvider();
+  NotificationsListProvider _notificationsListProvider = NotificationsListProvider();
+  UnreadNotificationsCountProvider _unreadNotificationsCountProvider = UnreadNotificationsCountProvider();
   AllNotificationsReader _allNotificationsReader = AllNotificationsReader();
 
   List _notificationList = [];
@@ -56,11 +55,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   void _getUnreadNotificatiionsCount() async {
     try {
-      var unraedNotificationsCount =
-          await _unreadNotificationsCountProvider.getCount();
+      var unraedNotificationsCount = await _unreadNotificationsCountProvider.getCount();
       setState(() {
-        _unreadNoticationsCount =
-            unraedNotificationsCount.totalUnreadNotifications;
+        _unreadNoticationsCount = unraedNotificationsCount.totalUnreadNotifications;
       });
     } on WPException catch (_) {}
   }
@@ -69,8 +66,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WPAppBar(
-        title:
-            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
           iconSize: 12,
@@ -80,8 +76,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Text(
                 'Notifications ' + '($_unreadNoticationsCount)',
@@ -119,8 +114,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               } else if (_notificationList[index].isAHandoverNotification) {
                 return HandoverNotificationsListTile(_notificationList[index]);
               } else {
-                return ExpenserequestNotificationsListTile(
-                    _notificationList[index]);
+                return ExpenseRequestNotificationsListTile(_notificationList[index]);
               }
             }),
       );

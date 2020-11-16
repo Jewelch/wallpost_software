@@ -6,17 +6,17 @@ import 'package:wallpost/notifications/entities/expense_request_notification.dar
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/notifications/services/single_notification_reader.dart';
 
-class ExpenserequestNotificationsListTile extends StatefulWidget {
+class ExpenseRequestNotificationsListTile extends StatefulWidget {
   final ExpenseRequestNotification notification;
-  ExpenserequestNotificationsListTile(this.notification);
+  ExpenseRequestNotificationsListTile(this.notification);
 
   @override
-  _ExpenserequestNotificationsListTileState createState() =>
-      _ExpenserequestNotificationsListTileState();
+  _ExpenseRequestNotificationsListTileState createState() =>
+      _ExpenseRequestNotificationsListTileState();
 }
 
-class _ExpenserequestNotificationsListTileState
-    extends State<ExpenserequestNotificationsListTile> {
+class _ExpenseRequestNotificationsListTileState
+    extends State<ExpenseRequestNotificationsListTile> {
   SingleNotificationReader _singleNotificationReader =
       SingleNotificationReader();
   @override
