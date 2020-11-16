@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/filter_app_bar.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/constants/app_years.dart';
 
 class TaskFilterScreen extends StatefulWidget {
   @override
@@ -37,33 +38,14 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> {
           physics: new ClampingScrollPhysics(),
           child: Column(
             children: [
-              _buildFilterSection('Years',
-                  ['2017', '2018', '2019', '2020', '2021'], _selectedYear),
+              _buildFilterSection('Years', AppYears.years().map((y) => '$y').toList(), _selectedYear),
               _buildFilterSection(
                   'Department',
-                  [
-                    'Product Research and Development',
-                    'Finance',
-                    'HR',
-                    'Development',
-                    'IT',
-                    'more..'
-                  ],
+                  ['Product Research and Development', 'Finance', 'HR', 'Development', 'IT', 'more..'],
                   _selectedDepartment),
-              _buildFilterSection(
-                  'Category',
-                  [
-                    'UX/UI',
-                    'Design',
-                    'Transportation',
-                    'Catering',
-                    'PHP',
-                    'Mobile',
-                    'more..'
-                  ],
-                  _selectedCategory),
-              _buildFilterSection(
-                  'Employee', ['Jaseel Kiliyan', 'jaseel'], _selectedEmployee),
+              _buildFilterSection('Category',
+                  ['UX/UI', 'Design', 'Transportation', 'Catering', 'PHP', 'Mobile', 'more..'], _selectedCategory),
+              _buildFilterSection('Employee', ['Jaseel Kiliyan', 'jaseel'], _selectedEmployee),
             ],
           ),
         ),
@@ -71,17 +53,14 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> {
     );
   }
 
-  Column _buildFilterSection(
-      String _sectionName, List<String> _allButtons, int _selectedPosition) {
+  Column _buildFilterSection(String _sectionName, List<String> _allButtons, int _selectedPosition) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
             alignment: AlignmentDirectional.topStart,
-            margin: EdgeInsets.only(
-                left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
-            child: Text(_sectionName,
-                style: TextStyle(color: Colors.black, fontSize: 14))),
+            margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+            child: Text(_sectionName, style: TextStyle(color: Colors.black, fontSize: 14))),
         Container(
           margin: EdgeInsets.only(left: 20.0, right: 20.0),
           child: Wrap(
@@ -90,9 +69,7 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> {
                 return RaisedButton(
                   onPressed: () {},
                   child: Text(_allButtons[index]),
-                  textColor: index == _selectedPosition
-                      ? AppColors.defaultColor
-                      : AppColors.blackColor,
+                  textColor: index == _selectedPosition ? AppColors.defaultColor : AppColors.blackColor,
                   shape: RoundedRectangleBorder(
                       side: BorderSide(
                           color: index == _selectedPosition

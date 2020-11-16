@@ -2,24 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/company_management/ui/companies_list_screen.dart';
-import 'package:wallpost/requests/ui/task_list_card.dart';
+import 'package:wallpost/task/ui/task_list_card.dart';
 
 class TaskScreen extends StatefulWidget {
   @override
   _TaskScreen createState() => _TaskScreen();
 }
 
-class _TaskScreen extends State<TaskScreen>
-    with SingleTickerProviderStateMixin {
+class _TaskScreen extends State<TaskScreen> with SingleTickerProviderStateMixin {
   TabController _tabController;
-  TextEditingController _listFilterTextFieldController =
-      new TextEditingController();
+  TextEditingController _listFilterTextFieldController = new TextEditingController();
   bool _listFilterVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -31,23 +28,16 @@ class _TaskScreen extends State<TaskScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title:
-            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
-            iconName: 'assets/icons/back.svg',
-            iconSize: 12,
-            onPressed: () => Navigator.pop(context)),
+          iconName: 'assets/icons/back.svg',
+          iconSize: 12,
+          onPressed: () => Navigator.pop(context),
+        ),
         trailing: RoundedIconButton(
           iconName: 'assets/icons/filters_icon.svg',
-          onPressed: () =>
-              {Navigator.pushNamed(context, RouteNames.taskFilter)},
+          onPressed: () => Navigator.pushNamed(context, RouteNames.taskFilter),
         ),
-        showCompanySwitchButton: true,
-        companySwitchBadgeCount: 10,
-        onCompanySwitchButtonPressed: () {
-          ScreenPresenter.present(CompaniesListScreen(), context,
-              slideDirection: SlideDirection.fromLeft);
-        },
       ),
       body: SafeArea(
         child: Container(
@@ -79,27 +69,19 @@ class _TaskScreen extends State<TaskScreen>
               ? Expanded(
                   child: TextField(
                     controller: _listFilterTextFieldController,
-                    onSubmitted: (text) =>
-                        print(_listFilterTextFieldController.text),
+                    onSubmitted: (text) => print(_listFilterTextFieldController.text),
                     style: TextStyle(color: Colors.black, fontSize: 20.0),
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter a search term'),
+                    decoration: InputDecoration(border: InputBorder.none, hintText: 'Enter a search term'),
                   ),
                 )
-              : Text('Task Requests',
-                  style: TextStyle(color: Colors.black, fontSize: 20)),
+              : Text('Task Requests', style: TextStyle(color: Colors.black, fontSize: 16)),
           IconButton(
               icon: _listFilterVisible
-                  ? SvgPicture.asset('assets/icons/delete_icon.svg',
-                      width: 42, height: 23)
-                  : SvgPicture.asset('assets/icons/search_icon.svg',
-                      width: 42, height: 23),
+                  ? SvgPicture.asset('assets/icons/delete_icon.svg', width: 42, height: 23)
+                  : SvgPicture.asset('assets/icons/search_icon.svg', width: 42, height: 23),
               onPressed: () {
                 setState(() {
-                  _listFilterVisible
-                      ? _listFilterVisible = false
-                      : _listFilterVisible = true;
+                  _listFilterVisible ? _listFilterVisible = false : _listFilterVisible = true;
                 });
               }),
         ],
@@ -214,19 +196,14 @@ class TabWidget extends StatelessWidget {
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text: '$_totalCount',
-                      style: TextStyle(
-                          color: AppColors.defaultColor, fontSize: 22))
+                  TextSpan(text: '$_totalCount', style: TextStyle(color: AppColors.defaultColor, fontSize: 22))
                 ],
               ),
             ),
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text: _tabName,
-                      style: TextStyle(color: Colors.black, fontSize: 12)),
+                  TextSpan(text: _tabName, style: TextStyle(color: Colors.black, fontSize: 12)),
                 ],
               ),
             ),

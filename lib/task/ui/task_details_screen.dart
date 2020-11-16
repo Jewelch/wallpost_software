@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/requests/ui/task_comment_card.dart';
+import 'package:wallpost/task/ui/task_comment_card.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   @override
