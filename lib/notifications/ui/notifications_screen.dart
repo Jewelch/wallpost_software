@@ -28,36 +28,34 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   List _notificationList = [];
   bool showError = false;
   bool isLoading = false;
-  num _unreadNoticationsCount = 0;
+  num _unreadNotificationsCount = 0;
 
   @override
   void initState() {
-    super.initState();
     _getNotificationList();
-    _getUnreadNotificatiionsCount();
+    _getUnreadNotificationsCount();
+    super.initState();
   }
 
   void _getNotificationList() async {
-    setState(() {
-      showError = false;
-    });
+    setStateIfMounted(() => showError = false);
 
     try {
       var notificationData = await _notificationsListProvider.getNext();
-      setState(() {
+      setStateIfMounted(() {
         _notificationList.addAll(notificationData);
         isLoading = false;
       });
     } on WPException catch (_) {
-      setState(() => showError = true);
+      setStateIfMounted(() => showError = true);
     }
   }
 
-  void _getUnreadNotificatiionsCount() async {
+  void _getUnreadNotificationsCount() async {
     try {
-      var unraedNotificationsCount = await _unreadNotificationsCountProvider.getCount();
-      setState(() {
-        _unreadNoticationsCount = unraedNotificationsCount.totalUnreadNotifications;
+      var unreadNotificationsCount = await _unreadNotificationsCountProvider.getCount();
+      setStateIfMounted(() {
+        _unreadNotificationsCount = unreadNotificationsCount.totalUnreadNotifications;
       });
     } on WPException catch (_) {}
   }
@@ -65,6 +63,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: WPAppBar(
         title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
@@ -75,26 +74,38 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(
-                'Notifications ' + '($_unreadNoticationsCount)',
-                style: TextStyle(fontSize: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Notifications ' + '($_unreadNotificationsCount)',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    width: 50,
+                    child: FlatButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => _showReadAllConfirmationAlert(),
+                      child: Text(
+                        'Read All',
+                        style: TextStyle(color: AppColors.defaultColor),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                ],
               ),
-              GestureDetector(
-                onTap: () {
-                  _showReadAllConfirmationAlert();
-                },
-                child: Text(
-                  'Read all',
-                  style: TextStyle(color: AppColors.defaultColor),
-                ),
-              )
-            ]),
-            SizedBox(height: 4),
-            Expanded(child: _buildNotificationListWidget())
-          ]),
+              SizedBox(width: 8),
+              Divider(height: 1),
+              Expanded(child: _buildNotificationListWidget())
+            ],
+          ),
         ),
       ),
     );
@@ -103,6 +114,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget _buildNotificationListWidget() {
     if (_notificationList.length > 0)
       return Container(
+        padding: EdgeInsets.symmetric(horizontal: 12),
         child: ListView.separated(
             itemCount: _notificationList.length,
             separatorBuilder: (context, i) => const Divider(),
@@ -125,26 +137,24 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   void _showReadAllConfirmationAlert() {
     Alert.showSimpleAlertWithButtons(context,
-        title: 'Read All Notification',
-        message: 'Are you sure you want to read all?',
+        title: 'Read All Notifications',
+        message: 'Are you sure you want to mark all notifications as read?',
         buttonOneTitle: 'No',
         buttonTwoTitle: 'Yes',
         buttonTwoOnPressed: () => {_readAllNotification()});
   }
 
   void _readAllNotification() async {
-    setState(() {
-      _notificationList = [];
-    });
+    setStateIfMounted(() => _notificationList = []);
 
     try {
-      _allNotificationsReader.markAllAsRead();
-      setState(() {
+      await _allNotificationsReader.markAllAsRead();
+      setStateIfMounted(() {
         _getNotificationList();
-        _getUnreadNotificatiionsCount();
+        _getUnreadNotificationsCount();
       });
     } on WPException catch (_) {
-      setState(() => {});
+      setStateIfMounted(() => {});
     }
   }
 
@@ -176,7 +186,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 style: TextStyle(fontSize: 14),
               ),
               onPressed: () {
-                setState(() {});
+                setStateIfMounted(() {});
                 _getNotificationList();
               },
             ),
@@ -185,4 +195,23 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       ),
     );
   }
+
+  void setStateIfMounted(VoidCallback callback) {
+    if (this.mounted == false) return;
+
+    setState(() => callback());
+  }
 }
+
+//TODO:
+/*
+1. Add pull down to refresh
+
+2. Add scroll down to load more
+
+3. Show error.
+   Case 1 - When loading fails when there is nothing in the list.
+   Case 2 - When loading fails when trying to load more items.
+
+4. Copy spacing and styles from expense request approval tile to all other tiles
+ */
