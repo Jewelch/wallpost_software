@@ -12,7 +12,7 @@ class ExpenseRequestNotification extends Notification {
     try {
       var resourceInfoMap = sift.readMapFromMap(jsonMap, 'resourse_info');
       _applicantName = sift.readStringFromMap(resourceInfoMap, 'applicant');
-      _amount = sift.readStringFromMap(resourceInfoMap, 'leaveTypeName');
+      _amount = sift.readStringFromMap(resourceInfoMap, 'amount');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast ExpenseRequestNotification response. Error message - ${e.errorMessage}');
     }
