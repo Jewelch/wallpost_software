@@ -79,4 +79,6 @@ class DepartmentsListProvider {
   int getCurrentPageNumber() {
     return _pageNumber;
   }
+
+  bool get didReachListEnd => _didReachListEnd;
 }
