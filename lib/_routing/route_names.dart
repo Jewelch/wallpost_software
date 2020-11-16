@@ -14,6 +14,15 @@ class RouteNames {
   //settings
   static final String settings = "/settings";
 
+  //task
+  static final String task = "/task";
+
+  //task Filter
+  static final String taskFilter = "/task-filter";
+
+  //task Details
+  static final String taskDetails = "/task-details";
+
   //Password management
   static final String forgotPassword = "/forgot-password";
 
