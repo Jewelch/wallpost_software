@@ -34,6 +34,12 @@ class AppColors {
   static final Color groupDashboardSearchViewColor =
       _getColorFromHex(AppColors._mediumGreyColor);
 
+  static final Color filtersTextGreyColor =
+      _getColorFromHex(AppColors._filtersGreyColor);
+
+  static final Color filtersBackgroundGreyColor =
+      _getColorFromHex(AppColors._filtersBackgroundGreyColor);
+
   static final Color attendanceLabelColor =
       _getColorFromHex(AppColors._darkGreyColor);
   static final Color attendanceLocationTextColor =
@@ -58,6 +64,8 @@ class AppColors {
   static final String _placeholderColor = "AAAAAA";
   static final String _greyColor = "EBEBEB";
   static final String _mediumGreyColor = "#dedede";
+  static final String _filtersGreyColor = "#9aa6b2";
+  static final String _filtersBackgroundGreyColor = "#eeeeee";
 
   static final String _darkGreyColor = "#a3a3a3";
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/company_management/ui/companies_list_screen.dart';
@@ -37,10 +39,8 @@ class _TaskScreen extends State<TaskScreen>
             onPressed: () => Navigator.pop(context)),
         trailing: RoundedIconButton(
           iconName: 'assets/icons/filters_icon.svg',
-          onPressed: () => {
-            //todo
-            // Navigator.pushNamed(context, RouteNames.filters)
-          },
+          onPressed: () =>
+              {Navigator.pushNamed(context, RouteNames.taskFilter)},
         ),
         showCompanySwitchButton: true,
         companySwitchBadgeCount: 10,
@@ -91,8 +91,10 @@ class _TaskScreen extends State<TaskScreen>
                   style: TextStyle(color: Colors.black, fontSize: 20)),
           IconButton(
               icon: _listFilterVisible
-                  ? Image.asset('assets/icons/delete_icon.png')
-                  : Image.asset('assets/icons/search_icon.png'),
+                  ? SvgPicture.asset('assets/icons/delete_icon.svg',
+                      width: 42, height: 23)
+                  : SvgPicture.asset('assets/icons/search_icon.svg',
+                      width: 42, height: 23),
               onPressed: () {
                 setState(() {
                   _listFilterVisible
@@ -170,7 +172,7 @@ class _TaskScreen extends State<TaskScreen>
 
   Widget _getTaskCard(int index) {
     return TaskListCard(
-      onPressed: () => {},
+      onPressed: () => {Navigator.pushNamed(context, RouteNames.taskDetails)},
     );
   }
 
