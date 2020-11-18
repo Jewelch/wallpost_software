@@ -28,9 +28,9 @@ class TaskCategoriesListProvider {
     isLoading = false;
   }
 
-  Future<List<TaskCategory>> getNext() async {
+  Future<List<TaskCategory>> getNext({String searchText}) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = TaskUrls.taskCategoriesUrl(companyId, _pageNumber, _perPage);
+    var url = TaskUrls.taskCategoriesUrl(companyId, _pageNumber, _perPage, searchText);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 

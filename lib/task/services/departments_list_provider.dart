@@ -27,9 +27,9 @@ class DepartmentsListProvider {
     isLoading = false;
   }
 
-  Future<List<Department>> getNext() async {
+  Future<List<Department>> getNext({String searchText}) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = TaskUrls.departmentsUrl(companyId, _pageNumber, _perPage);
+    var url = TaskUrls.departmentsUrl(companyId, _pageNumber, _perPage, searchText);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 

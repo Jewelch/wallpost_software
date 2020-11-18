@@ -27,9 +27,9 @@ void main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await departmentsListProvider.getNext();
+    var _ = await departmentsListProvider.getNext(searchText: 'someDept');
 
-    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.departmentsUrl('someCompanyId', 1, 15));
+    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.departmentsUrl('someCompanyId', 1, 15, 'someDept'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
