@@ -37,9 +37,18 @@ class Authenticator {
     });
     isLoading = true;
 
-    var apiResponse = await _networkAdapter.post(apiRequest);
-    isLoading = false;
-    return _processResponse(apiResponse);
+    try {
+      var apiResponse = await _networkAdapter.post(apiRequest);
+      isLoading = false;
+      return _processResponse(apiResponse);
+    } on APIException catch (exception) {
+      isLoading = false;
+      if (exception is HTTPException && exception.httpCode == 401) {
+        throw ServerSentException('Invalid username or password', 401);
+      } else {
+        throw exception;
+      }
+    }
   }
 
   Future<User> _processResponse(APIResponse apiResponse) async {
