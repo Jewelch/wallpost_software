@@ -20,7 +20,7 @@ class SingleNotificationReader {
     isLoading = true;
 
     try {
-      await _networkAdapter.post(apiRequest);
+      await _networkAdapter.postWithNonce(apiRequest);
       isLoading = false;
       return null;
     } on APIException catch (exception) {

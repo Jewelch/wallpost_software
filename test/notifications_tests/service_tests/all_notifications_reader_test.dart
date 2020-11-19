@@ -37,7 +37,7 @@ void main() {
 
     expect(mockNetworkAdapter.apiRequest.url, NotificationUrls.markAllNotificationsAsReadUrl('someCompanyId'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
-    expect(mockNetworkAdapter.didCallPost, true);
+    expect(mockNetworkAdapter.didCallPostWithNonce, true);
   });
 
   test('throws exception when network adapter fails', () async {
