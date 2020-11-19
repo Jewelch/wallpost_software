@@ -5,7 +5,7 @@ import 'package:wallpost/company_management/services/selected_company_provider.d
 import 'package:wallpost/dashboard/ui/requests_screen.dart';
 import 'package:wallpost/my_portal/ui/employee_my_portal_screen.dart';
 import 'package:wallpost/my_portal/ui/sales_my_portal_screen.dart';
-import 'package:wallpost/notifications/ui/notifications_screen.dart';
+import 'package:wallpost/notifications/ui/views/notifications_screen.dart';
 
 import 'modules_screen.dart';
 
@@ -25,7 +25,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _initScreens() {
-    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     if (selectedCompany.shouldShowRevenue) {
       _screens.add(SalesMyPortalScreen());
     } else {

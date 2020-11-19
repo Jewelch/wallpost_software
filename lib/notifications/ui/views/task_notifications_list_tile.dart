@@ -12,35 +12,41 @@ class TaskNotificationsListTile extends StatefulWidget {
   TaskNotificationsListTile(this.notification);
 
   @override
-  _TaskNotificationsListTileState createState() => _TaskNotificationsListTileState();
+  _TaskNotificationsListTileState createState() =>
+      _TaskNotificationsListTileState();
 }
 
 class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
-  SingleNotificationReader _singleNotificationReader = SingleNotificationReader();
+  SingleNotificationReader _singleNotificationReader =
+      SingleNotificationReader();
 
   @override
   Widget build(BuildContext context) {
     return Container(
         child: ListTile(
-      contentPadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.only(top: 4),
       leading: Icon(Icons.account_circle_sharp, size: 36),
       title: Text(
         widget.notification.taskName,
         style: TextStyle(
           color: AppColors.defaultColor,
-          fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
+          fontWeight:
+              widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
         ),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 8),
           Row(
             children: [
-              Text('Created On : ', style: TextStyle(color: Colors.black, fontSize: 12)),
+              Text('Created On : ',
+                  style: TextStyle(color: Colors.black, fontSize: 12)),
               Text(_convertToDateFormat(widget.notification.createdAt),
                   style: TextStyle(color: Colors.grey, fontSize: 12))
             ],
           ),
+          SizedBox(height: 8),
           Text(
             widget.notification.status,
             style: TextStyle(
@@ -50,7 +56,8 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
           ),
         ],
       ),
-      trailing: Icon(Icons.arrow_forward_ios_outlined),
+      trailing:
+          Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14),
       onTap: () {
         setState(() {
           widget.notification.isRead = true;
@@ -61,7 +68,8 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;

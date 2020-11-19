@@ -15,7 +15,8 @@ class NotificationsListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  NotificationsListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
+  NotificationsListProvider.initWith(
+      this._selectedCompanyProvider, this._networkAdapter);
 
   NotificationsListProvider()
       : this._selectedCompanyProvider = SelectedCompanyProvider(),
@@ -29,8 +30,10 @@ class NotificationsListProvider {
   }
 
   Future<List<Notification>> getNext() async {
-    var selectedCompany = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
-    var url = NotificationUrls.notificationsListUrl(selectedCompany.id, _pageNumber, _perPage);
+    var selectedCompany =
+        _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
+    var url = NotificationUrls.notificationsListUrl(
+        selectedCompany.id, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
@@ -46,15 +49,18 @@ class NotificationsListProvider {
 
   Future<List<Notification>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<Notification>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId)
+      return Completer<List<Notification>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>)
+      throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<Notification> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<Notification> _readItemsFromResponse(
+      List<Map<String, dynamic>> responseMapList) {
     try {
       var notificationList = <Notification>[];
       for (var responseMap in responseMapList) {
