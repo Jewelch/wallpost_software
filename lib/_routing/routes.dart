@@ -7,9 +7,6 @@ import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/password_management/ui/change_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_success_screen.dart';
-// import 'package:wallpost/requests/ui/task_details_screen.dart';
-// import 'package:wallpost/requests/ui/task_filter_screen.dart';
-// import 'package:wallpost/requests/ui/task_screen.dart';
 import 'package:wallpost/settings/ui/settings_screen.dart';
 import 'package:wallpost/task/ui/task_details_screen.dart';
 import 'package:wallpost/task/ui/task_filter_screen.dart';
@@ -43,14 +40,11 @@ class Routes {
       RouteNames.taskDetails: (BuildContext context) => TaskDetailsScreen(),
 
       //Password management
-      RouteNames.forgotPassword: (BuildContext context) =>
-          ForgotPasswordScreen(),
+      RouteNames.forgotPassword: (BuildContext context) => ForgotPasswordScreen(),
 
-      RouteNames.changePassword: (BuildContext context) =>
-          ChangePasswordScreen(),
+      RouteNames.changePassword: (BuildContext context) => ChangePasswordScreen(),
 
-      RouteNames.forgotPasswordSuccess: (BuildContext context) =>
-          ForgotPasswordSuccessScreen(),
+      RouteNames.forgotPasswordSuccess: (BuildContext context) => ForgotPasswordSuccessScreen(),
     };
   }
 }
