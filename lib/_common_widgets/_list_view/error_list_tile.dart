@@ -8,7 +8,22 @@ class ErrorListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(message),
+      height: 150,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FlatButton(
+              child: Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14),
+              ),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

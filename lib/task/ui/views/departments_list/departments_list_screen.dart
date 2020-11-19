@@ -7,7 +7,8 @@ class DepartmentsListScreen extends StatefulWidget {
   _DepartmentsListScreenState createState() => _DepartmentsListScreenState();
 }
 
-class _DepartmentsListScreenState extends State<DepartmentsListScreen> implements DepartmentsListView {
+class _DepartmentsListScreenState extends State<DepartmentsListScreen>
+    implements DepartmentsListView {
   var _searchBarController = TextEditingController();
   ScrollController _scrollController;
   DepartmentsListPresenter _presenter;
@@ -23,7 +24,8 @@ class _DepartmentsListScreenState extends State<DepartmentsListScreen> implement
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfDepartments();
       }
     });

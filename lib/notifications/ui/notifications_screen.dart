@@ -8,56 +8,53 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/notifications/services/all_notifications_reader.dart';
-import 'package:wallpost/notifications/services/notifications_list_provider.dart';
 import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';
-import 'package:wallpost/notifications/ui/expense_request_notifications_list_tile.dart';
-import 'package:wallpost/notifications/ui/handover_notifications_list_tile.dart';
-import 'package:wallpost/notifications/ui/leave_notifications_list_tile.dart';
-import 'package:wallpost/notifications/ui/task_notifications_list_tile.dart';
+import 'package:wallpost/notifications/ui/presenters/notifications_list_presenter.dart';
 
 class NotificationsScreen extends StatefulWidget {
   @override
   _NotificationsScreenState createState() => _NotificationsScreenState();
 }
 
-class _NotificationsScreenState extends State<NotificationsScreen> {
-  NotificationsListProvider _notificationsListProvider = NotificationsListProvider();
-  UnreadNotificationsCountProvider _unreadNotificationsCountProvider = UnreadNotificationsCountProvider();
+class _NotificationsScreenState extends State<NotificationsScreen>
+    implements NotificationsListView {
+  UnreadNotificationsCountProvider _unreadNotificationsCountProvider =
+      UnreadNotificationsCountProvider();
   AllNotificationsReader _allNotificationsReader = AllNotificationsReader();
-
-  List _notificationList = [];
-  bool showError = false;
-  bool isLoading = false;
+  NotificationsListPresenter _presenter;
+  ScrollController _scrollController;
   num _unreadNotificationsCount = 0;
 
   @override
   void initState() {
-    _getNotificationList();
+    _scrollController = ScrollController();
+    _presenter = NotificationsListPresenter(this);
+    _presenter.loadNextListOfNotifications();
+    _setupScrollDownToLoadMoreItems();
     _getUnreadNotificationsCount();
     super.initState();
   }
 
-  void _getNotificationList() async {
-    setStateIfMounted(() => showError = false);
-
-    try {
-      var notificationData = await _notificationsListProvider.getNext();
-      setStateIfMounted(() {
-        _notificationList.addAll(notificationData);
-        isLoading = false;
-      });
-    } on WPException catch (_) {
-      setStateIfMounted(() => showError = true);
-    }
+  void _setupScrollDownToLoadMoreItems() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _presenter.loadNextListOfNotifications();
+      }
+    });
   }
 
   void _getUnreadNotificationsCount() async {
     try {
-      var unreadNotificationsCount = await _unreadNotificationsCountProvider.getCount();
+      var unreadNotificationsCount =
+          await _unreadNotificationsCountProvider.getCount();
       setStateIfMounted(() {
-        _unreadNotificationsCount = unreadNotificationsCount.totalUnreadNotifications;
+        _unreadNotificationsCount =
+            unreadNotificationsCount.totalUnreadNotifications;
       });
-    } on WPException catch (_) {}
+    } on WPException catch (_) {
+      setStateIfMounted(() => {});
+    }
   }
 
   @override
@@ -65,7 +62,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title:
+            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
           iconSize: 12,
@@ -112,27 +110,27 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Widget _buildNotificationListWidget() {
-    if (_notificationList.length > 0)
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 12),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12),
+      child: RefreshIndicator(
+        onRefresh: _getRefreshList,
         child: ListView.separated(
-            itemCount: _notificationList.length,
-            separatorBuilder: (context, i) => const Divider(),
-            itemBuilder: (context, index) {
-              if (_notificationList[index].isATaskNotification) {
-                return TaskNotificationsListTile(_notificationList[index]);
-              } else if (_notificationList[index].isALeaveNotification) {
-                return LeaveNotificationsListTile(_notificationList[index]);
-              } else if (_notificationList[index].isAHandoverNotification) {
-                return HandoverNotificationsListTile(_notificationList[index]);
-              } else {
-                return ExpenseRequestNotificationsListTile(_notificationList[index]);
-              }
-            }),
-      );
-    else {
-      return showError ? _buildErrorAndRetryView() : _buildProgressIndicator();
-    }
+          controller: _scrollController,
+          itemCount: _presenter.getNumberOfItems(),
+          separatorBuilder: (context, i) => const Divider(),
+          itemBuilder: (context, index) {
+            return _presenter.getViewAtIndex(index);
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _getRefreshList() async {
+    setState(() {
+      _presenter.reset();
+      _presenter.loadNextListOfNotifications();
+    });
   }
 
   void _showReadAllConfirmationAlert() {
@@ -145,73 +143,30 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   void _readAllNotification() async {
-    setStateIfMounted(() => _notificationList = []);
-
     try {
       await _allNotificationsReader.markAllAsRead();
       setStateIfMounted(() {
-        _getNotificationList();
+        _presenter.reset();
+        _presenter.loadNextListOfNotifications();
         _getUnreadNotificationsCount();
       });
-    } on WPException catch (_) {
-      setStateIfMounted(() => {});
+    } on WPException catch (error) {
+      Alert.showSimpleAlert(
+        context,
+        title: 'Failed to read all notifications',
+        message: error.userReadableMessage,
+        buttonTitle: 'Okay',
+      );
     }
-  }
-
-  Widget _buildProgressIndicator() {
-    return Center(
-      child: Container(
-        height: 150,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(width: 30, height: 30, child: CircularProgressIndicator()),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorAndRetryView() {
-    return Container(
-      height: 150,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FlatButton(
-              child: Text(
-                'Failed to performance\nTap Here To Retry',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
-              ),
-              onPressed: () {
-                setStateIfMounted(() {});
-                _getNotificationList();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   void setStateIfMounted(VoidCallback callback) {
     if (this.mounted == false) return;
-
     setState(() => callback());
   }
+
+  @override
+  void reloadData() {
+    if (this.mounted) setState(() {});
+  }
 }
-
-//TODO:
-/*
-1. Add pull down to refresh
-
-2. Add scroll down to load more
-
-3. Show error.
-   Case 1 - When loading fails when there is nothing in the list.
-   Case 2 - When loading fails when trying to load more items.
-
-4. Copy spacing and styles from expense request approval tile to all other tiles
- */
