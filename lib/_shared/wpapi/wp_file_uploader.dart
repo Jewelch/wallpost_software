@@ -10,17 +10,20 @@ import 'package:wallpost/_shared/network_adapter/entities/api_response.dart';
 import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
 import 'package:wallpost/_shared/network_adapter/network_file_uploader.dart';
 import 'package:wallpost/_shared/user_management/services/access_token_provider.dart';
+import 'package:wallpost/_shared/wpapi/nonce_provider.dart';
 import 'package:wallpost/_shared/wpapi/wpapi_response_processor.dart';
 
 class WPFileUploader {
   DeviceInfoProvider _deviceInfo;
   AccessTokenProvider _accessTokenProvider;
+  NonceProvider _nonceProvider;
   NetworkFileUploader _networkFileUploader;
   Dio dio = new Dio();
 
   WPFileUploader() {
     this._deviceInfo = DeviceInfoProvider();
     this._accessTokenProvider = AccessTokenProvider();
+    this._nonceProvider = NonceProvider();
     this._networkFileUploader = NetworkFileUploader();
     dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
@@ -50,6 +53,7 @@ class WPFileUploader {
     if (authToken != null) {
       headers['Authorization'] = authToken;
     }
+    headers['X-Wp-Nonce'] = (await _nonceProvider.getNonce(headers)).value;
     return headers;
   }
 
