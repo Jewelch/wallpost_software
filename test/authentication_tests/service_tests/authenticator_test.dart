@@ -62,6 +62,18 @@ void main() {
     }
   });
 
+  test('convert 401 HTTP exception to a server sent exception', () async {
+    mockNetworkAdapter.fail(HTTPException(401));
+
+    try {
+      var _ = await authenticator.login(credentials);
+      fail('failed to throw the network adapter failure exception');
+    } catch (e) {
+      expect(e is ServerSentException, true);
+      expect((e as ServerSentException).userReadableMessage, 'Invalid username or password');
+    }
+  });
+
   test('throws InvalidResponseException when response is null', () async {
     mockNetworkAdapter.succeed(null);
 
