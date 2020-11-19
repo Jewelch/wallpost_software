@@ -12,6 +12,7 @@ class MockNetworkAdapter implements NetworkAdapter {
   var didCallGet = false;
   var didCallPut = false;
   var didCallPost = false;
+  var didCallPostWithNonce = false;
   var didCallDelete = false;
   int noOfTimesGetIsCalled = 0;
   int noOfTimesPostIsCalled = 0;
@@ -55,7 +56,7 @@ class MockNetworkAdapter implements NetworkAdapter {
 
   @override
   Future<APIResponse> postWithNonce(APIRequest apiRequest) {
-    didCallPost = true;
+    didCallPostWithNonce = true;
     noOfTimesPostIsCalled++;
     return _processRequest(apiRequest);
   }

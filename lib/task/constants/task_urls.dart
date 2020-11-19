@@ -8,12 +8,12 @@ class TaskUrls {
     return url;
   }
 
-  static String taskCategoriesUrl(String companyId, int pageNumber, int itemsPerPage) {
-    return '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/categories?&page=$pageNumber&per_page=$itemsPerPage';
+  static String taskCategoriesUrl(String companyId, int pageNumber, int itemsPerPage, String searchText) {
+    return '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/categories?&page=$pageNumber&per_page=$itemsPerPage&search=$searchText';
   }
 
-  static String departmentsUrl(String companyId, int pageNumber, int itemsPerPage) {
-    return '${BaseUrls.taskUrlV2()}/companies/$companyId/departments?&page=$pageNumber&per_page=$itemsPerPage';
+  static String departmentsUrl(String companyId, int pageNumber, int itemsPerPage, String searchText) {
+    return '${BaseUrls.taskUrlV2()}/companies/$companyId/departments?&page=$pageNumber&per_page=$itemsPerPage&search=$searchText';
   }
 
   static String assigneesUrl(String companyId, int pageNumber, int itemsPerPage, String searchText) {

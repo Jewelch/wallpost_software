@@ -3,10 +3,10 @@ import 'package:wallpost/_common_widgets/_list_view/error_list_tile.dart';
 import 'package:wallpost/_common_widgets/_list_view/loader_list_tile.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/notifications/services/notifications_list_provider.dart';
-import 'package:wallpost/notifications/ui/expense_request_notifications_list_tile.dart';
-import 'package:wallpost/notifications/ui/handover_notifications_list_tile.dart';
-import 'package:wallpost/notifications/ui/leave_notifications_list_tile.dart';
-import 'package:wallpost/notifications/ui/task_notifications_list_tile.dart';
+import 'package:wallpost/notifications/ui/views/expense_request_notifications_list_tile.dart';
+import 'package:wallpost/notifications/ui/views/handover_notifications_list_tile.dart';
+import 'package:wallpost/notifications/ui/views/leave_notifications_list_tile.dart';
+import 'package:wallpost/notifications/ui/views/task_notifications_list_tile.dart';
 
 abstract class NotificationsListView {
   void reloadData();
@@ -15,7 +15,7 @@ abstract class NotificationsListView {
 class NotificationsListPresenter {
   final NotificationsListView view;
   final NotificationsListProvider provider;
-  List notification = [];
+  List notifications = [];
   String _errorMessage;
 
   NotificationsListPresenter(this.view)
@@ -28,7 +28,7 @@ class NotificationsListPresenter {
     _resetErrors();
     try {
       var notificationsList = await provider.getNext();
-      notification.addAll(notificationsList);
+      notifications.addAll(notificationsList);
       view.reloadData();
     } on WPException catch (e) {
       _errorMessage = e.userReadableMessage;
@@ -37,14 +37,14 @@ class NotificationsListPresenter {
   }
 
   int getNumberOfItems() {
-    if (_hasErrors()) return notification.length + 1;
+    if (_hasErrors()) return notifications.length + 1;
 
-    if (notification.isEmpty) return 1;
+    if (notifications.isEmpty) return 1;
 
     if (provider.didReachListEnd) {
-      return notification.length;
+      return notifications.length;
     } else {
-      return notification.length + 1;
+      return notifications.length + 1;
     }
   }
 
@@ -52,17 +52,17 @@ class NotificationsListPresenter {
     if (_shouldShowErrorAtIndex(index))
       return ErrorListTile('$_errorMessage\nTap here to reload.');
 
-    if (notification.isEmpty) return _buildViewWhenThereAreNoResults();
+    if (notifications.isEmpty) return _buildViewWhenThereAreNoResults();
 
-    if (index < notification.length) {
-      if (notification[index].isATaskNotification) {
-        return TaskNotificationsListTile(notification[index]);
-      } else if (notification[index].isALeaveNotification) {
-        return LeaveNotificationsListTile(notification[index]);
-      } else if (notification[index].isAHandoverNotification) {
-        return HandoverNotificationsListTile(notification[index]);
+    if (index < notifications.length) {
+      if (notifications[index].isATaskNotification) {
+        return TaskNotificationsListTile(notifications[index]);
+      } else if (notifications[index].isALeaveNotification) {
+        return LeaveNotificationsListTile(notifications[index]);
+      } else if (notifications[index].isAHandoverNotification) {
+        return HandoverNotificationsListTile(notifications[index]);
       } else {
-        return ExpenseRequestNotificationsListTile(notification[index]);
+        return ExpenseRequestNotificationsListTile(notifications[index]);
       }
     } else {
       return LoaderListTile();
@@ -70,7 +70,7 @@ class NotificationsListPresenter {
   }
 
   bool _shouldShowErrorAtIndex(int index) {
-    return _hasErrors() && index == notification.length;
+    return _hasErrors() && index == notifications.length;
   }
 
   Widget _buildViewWhenThereAreNoResults() {
@@ -87,7 +87,7 @@ class NotificationsListPresenter {
   void reset() {
     provider.reset();
     _resetErrors();
-    notification.clear();
+    notifications.clear();
     view.reloadData();
   }
 
