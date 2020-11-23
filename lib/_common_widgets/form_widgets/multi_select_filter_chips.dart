@@ -1,29 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-class MultiSelectFilterChipsController {
-  _MultiSelectFilterChipsState _state;
-
-  void addState(_MultiSelectFilterChipsState state) {
-    _state = state;
-  }
-
-  List<int> getSelectedIndices() {
-    assert(_isAttached, 'State not attached');
-    return _state._selectedIndices;
-  }
-
-  void dispose() {
-    _state = null;
-  }
-
-  bool get _isAttached => _state != null;
-}
-
 class MultiSelectFilterChips extends StatefulWidget {
-  final _MultiSelectFilterChipsState _state;
-
   final List<String> titles;
+  final List<int> selectedIndices;
   final bool allowMultipleSelection;
   final Function(int) onItemSelected;
   final Function(int) onItemDeselected;
@@ -34,7 +14,7 @@ class MultiSelectFilterChips extends StatefulWidget {
 
   MultiSelectFilterChips({
     this.titles,
-    List<int> selectedIndices,
+    this.selectedIndices,
     this.allowMultipleSelection = false,
     this.onItemSelected,
     this.onItemDeselected,
@@ -42,23 +22,24 @@ class MultiSelectFilterChips extends StatefulWidget {
     this.trailingButtonTitle,
     this.onTrailingButtonPressed,
     this.controller,
-  }) : this._state = _MultiSelectFilterChipsState(selectedIndices) {
+  }) {
     assert(
       !(allowMultipleSelection == false && selectedIndices.length > 1),
-      'Multiple selected  indices passed when multiple selection is NOT ALLOWED',
+      'Multiple selected indices passed when multiple selection is NOT ALLOWED',
     );
-
-    if (controller != null) controller.addState(_state);
   }
 
   @override
-  _MultiSelectFilterChipsState createState() => _state;
+  _MultiSelectFilterChipsState createState() => _MultiSelectFilterChipsState(selectedIndices, controller: controller);
 }
 
 class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
   List<int> _selectedIndices;
+  final MultiSelectFilterChipsController controller;
 
-  _MultiSelectFilterChipsState(this._selectedIndices);
+  _MultiSelectFilterChipsState(this._selectedIndices, {this.controller}) {
+    if (controller != null) controller.addState(this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +100,6 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
       if (widget.allowMultipleSelection == false) _selectedIndices.clear();
       _selectedIndices.add(index);
     });
-    print(_selectedIndices);
     if (widget.onItemSelected != null) widget.onItemSelected(index);
   }
 
@@ -133,4 +113,21 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
   bool _isSelected(int index) {
     return _selectedIndices.contains(index);
   }
+}
+
+class MultiSelectFilterChipsController {
+  _MultiSelectFilterChipsState _state;
+
+  void addState(_MultiSelectFilterChipsState state) {
+    _state = state;
+  }
+
+  List<int> getSelectedIndices() {
+    assert(_isAttached, 'State not attached');
+    return _state._selectedIndices;
+  }
+
+  void dispose() => _state = null;
+
+  bool get _isAttached => _state != null;
 }
