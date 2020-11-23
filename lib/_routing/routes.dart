@@ -11,6 +11,8 @@ import 'package:wallpost/settings/ui/settings_screen.dart';
 import 'package:wallpost/task/ui/task_details_screen.dart';
 import 'package:wallpost/task/ui/task_filter_screen.dart';
 import 'package:wallpost/task/ui/task_screen.dart';
+import 'package:wallpost/task/ui/views/categories_list/categories_list_screen.dart';
+import 'package:wallpost/task/ui/views/departments_list/departments_list_screen.dart';
 
 class Routes {
   Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
@@ -39,12 +41,23 @@ class Routes {
       //task Details
       RouteNames.taskDetails: (BuildContext context) => TaskDetailsScreen(),
 
+      //filter Departments List Screen
+      RouteNames.departmentsListScreen: (BuildContext context) =>
+          DepartmentsListScreen(),
+
+      //filter Task Category List Screen
+      RouteNames.taskCategoryListScreen: (BuildContext context) =>
+          CategoriesListScreen(),
+
       //Password management
-      RouteNames.forgotPassword: (BuildContext context) => ForgotPasswordScreen(),
+      RouteNames.forgotPassword: (BuildContext context) =>
+          ForgotPasswordScreen(),
 
-      RouteNames.changePassword: (BuildContext context) => ChangePasswordScreen(),
+      RouteNames.changePassword: (BuildContext context) =>
+          ChangePasswordScreen(),
 
-      RouteNames.forgotPasswordSuccess: (BuildContext context) => ForgotPasswordSuccessScreen(),
+      RouteNames.forgotPasswordSuccess: (BuildContext context) =>
+          ForgotPasswordSuccessScreen(),
     };
   }
 }

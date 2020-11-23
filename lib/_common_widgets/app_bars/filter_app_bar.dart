@@ -6,6 +6,7 @@ class FilterAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onBackPressed;
   final VoidCallback onResetFiltersPressed;
   final VoidCallback onDoFilterPressed;
+  final String screenTitle;
 
   @override
   final Size preferredSize;
@@ -14,6 +15,7 @@ class FilterAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onBackPressed,
     this.onResetFiltersPressed,
     this.onDoFilterPressed,
+    this.screenTitle,
   }) : preferredSize = Size.fromHeight(56);
 
   @override
@@ -33,10 +35,10 @@ class FilterAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: IconButton(
                   icon: SvgPicture.asset('assets/icons/delete_icon.svg',
                       width: 42, height: 23),
-                  onPressed: () => {onBackPressed(), print('back')},
+                  onPressed: () => {onBackPressed()},
                 ),
               ),
-              Expanded(child: _makeCenterTitleView()),
+              Expanded(child: _makeCenterTitleView(screenTitle)),
               SizedBox(
                 child: IconButton(
                   icon: SvgPicture.asset('assets/icons/reset_icon.svg',
@@ -66,7 +68,7 @@ class FilterAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget _makeCenterTitleView() {
+  Widget _makeCenterTitleView(String _screenTitle) {
     return Container(
       height: 32,
       width: double.infinity,
@@ -76,7 +78,7 @@ class FilterAppBar extends StatelessWidget implements PreferredSizeWidget {
           Expanded(
             child: Container(
               child: Center(
-                child: Text('Filter',
+                child: Text(_screenTitle,
                     style: TextStyle(color: Colors.black, fontSize: 18)),
               ),
             ),

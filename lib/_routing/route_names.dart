@@ -23,6 +23,12 @@ class RouteNames {
   //task Details
   static final String taskDetails = "/task-details";
 
+  //task Departments List
+  static final String departmentsListScreen = "/departments-list-screen";
+
+  //task Category List
+  static final String taskCategoryListScreen = "/task-category-list-screen";
+
   //Password management
   static final String forgotPassword = "/forgot-password";
 

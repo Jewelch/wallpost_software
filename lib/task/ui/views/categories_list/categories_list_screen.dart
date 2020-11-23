@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/filter_app_bar.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
-import 'package:wallpost/task/ui/presenters/departments_list_presenter.dart';
+import 'package:wallpost/task/ui/presenters/categories_list_presenter.dart';
 
-class DepartmentsListScreen extends StatefulWidget {
+class CategoriesListScreen extends StatefulWidget {
   @override
-  _DepartmentsListScreenState createState() => _DepartmentsListScreenState();
+  _CategoriesListScreenState createState() => _CategoriesListScreenState();
 }
 
-class _DepartmentsListScreenState extends State<DepartmentsListScreen>
-    implements DepartmentsListView {
+class _CategoriesListScreenState extends State<CategoriesListScreen>
+    implements CategoriesListView {
   var _searchBarController = TextEditingController();
   ScrollController _scrollController;
-  DepartmentsListPresenter _presenter;
+  CategoriesListPresenter _presenter;
 
   @override
   void initState() {
     _scrollController = ScrollController();
-    _presenter = DepartmentsListPresenter(this);
-    _presenter.loadNextListOfDepartments();
+    _presenter = CategoriesListPresenter(this);
+    _presenter.loadNextListOfCategories();
     _setupScrollDownToLoadMoreItems();
     super.initState();
   }
@@ -27,7 +27,7 @@ class _DepartmentsListScreenState extends State<DepartmentsListScreen>
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        _presenter.loadNextListOfDepartments();
+        _presenter.loadNextListOfCategories();
       }
     });
   }
@@ -44,14 +44,13 @@ class _DepartmentsListScreenState extends State<DepartmentsListScreen>
         onDoFilterPressed: () {
           Navigator.pop(context);
         },
-        screenTitle: 'Select Department',
+        screenTitle: 'Select Category',
       ),
       body: Column(
         children: [
           SearchBar(
-            hint: 'Search by department name',
+            hint: 'Search by category name',
             onSearchTextChanged: (searchText) {
-              _presenter.performFilter(searchText);
               //TODO: filter by search text
             },
           ),
@@ -59,7 +58,7 @@ class _DepartmentsListScreenState extends State<DepartmentsListScreen>
             child: RefreshIndicator(
               onRefresh: () {
                 _presenter.reset();
-                _presenter.loadNextListOfDepartments();
+                _presenter.loadNextListOfCategories();
                 return null;
               },
               child: ListView.builder(
