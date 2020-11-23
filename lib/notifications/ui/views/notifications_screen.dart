@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
 import 'package:wallpost/notifications/services/all_notifications_reader.dart';
 import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';
 import 'package:wallpost/notifications/ui/presenters/notifications_list_presenter.dart';
@@ -60,9 +62,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
       appBar: WPAppBar(
         title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
-          iconName: 'assets/icons/back.svg',
+          iconName: 'assets/icons/menu.svg',
           iconSize: 12,
-          onPressed: () => Navigator.pushNamed(context, RouteNames.main),
+          onPressed: () => ScreenPresenter.present(
+            LeftMenuScreen(),
+            context,
+            slideDirection: SlideDirection.fromLeft,
+          ),
         ),
       ),
       body: SafeArea(
