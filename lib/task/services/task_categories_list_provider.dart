@@ -15,8 +15,7 @@ class TaskCategoriesListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  TaskCategoriesListProvider.initWith(
-      this._selectedCompanyProvider, this._networkAdapter);
+  TaskCategoriesListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
   TaskCategoriesListProvider()
       : _selectedCompanyProvider = SelectedCompanyProvider(),
@@ -29,10 +28,9 @@ class TaskCategoriesListProvider {
     isLoading = false;
   }
 
-  Future<List<TaskCategory>> getNext() async {
-    var companyId =
-        _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = TaskUrls.taskCategoriesUrl(companyId, _pageNumber, _perPage);
+  Future<List<TaskCategory>> getNext({String searchText}) async {
+    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
+    var url = TaskUrls.taskCategoriesUrl(companyId, _pageNumber, _perPage, searchText);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
@@ -48,18 +46,15 @@ class TaskCategoriesListProvider {
 
   Future<List<TaskCategory>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId)
-      return Completer<List<TaskCategory>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<TaskCategory>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! List<Map<String, dynamic>>)
-      throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<TaskCategory> _readItemsFromResponse(
-      List<Map<String, dynamic>> responseMapList) {
+  List<TaskCategory> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
       var taskCategoryList = <TaskCategory>[];
       for (var responseMap in responseMapList) {
