@@ -8,8 +8,7 @@ class CategoriesListScreen extends StatefulWidget {
   _CategoriesListScreenState createState() => _CategoriesListScreenState();
 }
 
-class _CategoriesListScreenState extends State<CategoriesListScreen>
-    implements CategoriesListView {
+class _CategoriesListScreenState extends State<CategoriesListScreen> implements CategoriesListView {
   var _searchBarController = TextEditingController();
   ScrollController _scrollController;
   CategoriesListPresenter _presenter;
@@ -25,8 +24,7 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfCategories();
       }
     });
