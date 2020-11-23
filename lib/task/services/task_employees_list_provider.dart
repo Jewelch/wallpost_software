@@ -16,7 +16,12 @@ class TaskEmployeesListProvider {
   bool isLoading = false;
   bool _shouldGetAllEmployees;
 
-  TaskEmployeesListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter, this._shouldGetAllEmployees);
+  TaskEmployeesListProvider.initWith(this._selectedCompanyProvider,
+      this._networkAdapter, this._shouldGetAllEmployees);
+
+  TaskEmployeesListProvider()
+      : _selectedCompanyProvider = SelectedCompanyProvider(),
+        _networkAdapter = WPAPI();
 
   TaskEmployeesListProvider.allEmployeesProvider()
       : _selectedCompanyProvider = SelectedCompanyProvider(),
@@ -36,12 +41,14 @@ class TaskEmployeesListProvider {
   }
 
   Future<List<TaskEmployee>> getNext({String searchText}) async {
-    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
+    var companyId =
+        _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     String url;
     if (_shouldGetAllEmployees) {
       url = TaskUrls.assigneesUrl(companyId, _pageNumber, _perPage, searchText);
     } else {
-      url = TaskUrls.subordinatesUrl(companyId, _pageNumber, _perPage, searchText);
+      url = TaskUrls.subordinatesUrl(
+          companyId, _pageNumber, _perPage, searchText);
     }
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
@@ -58,15 +65,18 @@ class TaskEmployeesListProvider {
 
   Future<List<TaskEmployee>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<TaskEmployee>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId)
+      return Completer<List<TaskEmployee>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>)
+      throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<TaskEmployee> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<TaskEmployee> _readItemsFromResponse(
+      List<Map<String, dynamic>> responseMapList) {
     try {
       var taskEmployeeList = <TaskEmployee>[];
       for (var responseMap in responseMapList) {
@@ -92,4 +102,6 @@ class TaskEmployeesListProvider {
   int getCurrentPageNumber() {
     return _pageNumber;
   }
+
+  bool get didReachListEnd => _didReachListEnd;
 }
