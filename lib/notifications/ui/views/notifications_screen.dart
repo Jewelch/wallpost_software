@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
@@ -67,7 +68,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
           iconSize: 12,
-          onPressed: () => {},
+          onPressed: () => Navigator.pushNamed(context, RouteNames.main),
         ),
       ),
       body: SafeArea(

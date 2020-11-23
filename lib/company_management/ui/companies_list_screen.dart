@@ -43,7 +43,8 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         leading: RoundedIconButton(
           iconName: 'assets/icons/menu.svg',
           iconSize: 12,
-          onPressed: () => ScreenPresenter.present(LeftMenuScreen(), context, slideDirection: SlideDirection.fromLeft),
+          onPressed: () => ScreenPresenter.present(LeftMenuScreen(), context,
+              slideDirection: SlideDirection.fromLeft),
         ),
       ),
       body: SafeArea(
@@ -178,7 +179,9 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     _filterList = new List<CompanyListItem>();
     for (int i = 0; i < _companies.length; i++) {
       var item = _companies[i];
-      if (item.name.toLowerCase().contains(_searchTextController.text.toLowerCase())) {
+      if (item.name
+          .toLowerCase()
+          .contains(_searchTextController.text.toLowerCase())) {
         _filterList.add(item);
       }
     }
@@ -189,9 +192,11 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     var selectedCompany = _filterList[index];
     await loader.show('');
     try {
-      var _ = await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
+      var _ =
+          await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
       await loader.hide();
-      Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, RouteNames.dashboard, (route) => false);
     } on WPException catch (e) {
       await loader.hide();
       Alert.showSimpleAlert(

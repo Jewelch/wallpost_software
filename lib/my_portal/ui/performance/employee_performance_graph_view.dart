@@ -27,27 +27,23 @@ class _EmployeePerformanceGraphViewState
   }
 
   void _getEmployeePerformance() async {
-    setState(() {
-      showError = false;
-      _employeePerformance = null;
-    });
+    setStateIfMounted(() => _employeePerformance = null);
 
     try {
       var performance = await EmployeePerformanceProvider()
           .getPerformance(DateTime.now().year);
-      setState(() => _employeePerformance = performance);
+      setStateIfMounted(() => _employeePerformance = performance);
     } on WPException catch (_) {
-      setState(() => showError = true);
+      setStateIfMounted(() => showError = true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_employeePerformance != null) {
+    if (_employeePerformance != null)
       return _buildEmployeePerformanceGraphs();
-    } else {
+    else
       return showError ? _buildErrorAndRetryView() : _buildProgressIndicator();
-    }
   }
 
   Widget _buildEmployeePerformanceGraphs() {
@@ -171,6 +167,11 @@ class _EmployeePerformanceGraphViewState
     } else {
       return AppColors.badPerformanceColor;
     }
+  }
+
+  void setStateIfMounted(VoidCallback callback) {
+    if (this.mounted == false) return;
+    setState(() => callback());
   }
 
   Widget _buildProgressIndicator() {

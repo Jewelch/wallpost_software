@@ -21,18 +21,15 @@ class _PendingActionsCountViewState extends State<PendingActionsCountView> {
   }
 
   void _getPendingActionCount() async {
-    setState(() {
-      _pendingActionsCount = null;
-      showError = false;
-    });
+    setStateIfMounted(() => showError = false);
 
     try {
       var counts = await PendingActionsCountProvider().getCount();
-      setState(() {
+      setStateIfMounted(() {
         _pendingActionsCount = counts;
       });
     } on APIException catch (_) {
-      setState(() {
+      setStateIfMounted(() {
         showError = true;
       });
     }
@@ -88,6 +85,11 @@ class _PendingActionsCountViewState extends State<PendingActionsCountView> {
         ],
       ),
     );
+  }
+
+  void setStateIfMounted(VoidCallback callback) {
+    if (this.mounted == false) return;
+    setState(() => callback());
   }
 
   Widget _buildProgressIndicator() {
