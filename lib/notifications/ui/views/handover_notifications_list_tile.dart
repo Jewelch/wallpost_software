@@ -12,14 +12,11 @@ class HandoverNotificationsListTile extends StatefulWidget {
   HandoverNotificationsListTile(this.notification);
 
   @override
-  _HandoverNotificationsListTileState createState() =>
-      _HandoverNotificationsListTileState();
+  _HandoverNotificationsListTileState createState() => _HandoverNotificationsListTileState();
 }
 
-class _HandoverNotificationsListTileState
-    extends State<HandoverNotificationsListTile> {
-  SingleNotificationReader _singleNotificationReader =
-      SingleNotificationReader();
+class _HandoverNotificationsListTileState extends State<HandoverNotificationsListTile> {
+  SingleNotificationReader _singleNotificationReader = SingleNotificationReader();
   bool showError = false;
 
   @override
@@ -41,9 +38,7 @@ class _HandoverNotificationsListTileState
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text: 'Date: ',
-                      style: TextStyle(color: Colors.black, fontSize: 12)),
+                  TextSpan(text: 'Date: ', style: TextStyle(color: Colors.black, fontSize: 12)),
                   TextSpan(
                       text: _convertToDateFormat(widget.notification.createdAt),
                       style: TextStyle(color: Colors.grey, fontSize: 12))
@@ -52,16 +47,14 @@ class _HandoverNotificationsListTileState
             )
           ],
         ),
-        trailing: Icon(Icons.arrow_forward_ios_outlined,
-            color: Colors.grey, size: 14),
+        trailing: Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14),
         onTap: () => _readSingleNotification(widget.notification),
       ),
     );
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany =
-        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;
