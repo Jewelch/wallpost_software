@@ -9,18 +9,23 @@ class EmployeePerformance extends JSONInitializable {
   String _leastPerformanceMonth;
   int _leastPerformancePercent;
 
-  EmployeePerformance.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  EmployeePerformance.fromJson(Map<String, dynamic> jsonMap)
+      : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var leastMap = sift.readMapFromMap(jsonMap, 'least');
       var bestMap = sift.readMapFromMap(jsonMap, 'best');
-      _overallYearlyPerformancePercent = int.parse(sift.readStringFromMap(jsonMap, 'ytd_performance'));
+      _overallYearlyPerformancePercent =
+          int.parse(sift.readStringFromMap(jsonMap, 'ytd_performance'));
       _bestPerformanceMonth = sift.readStringFromMap(bestMap, 'month');
-      _bestPerformancePercent = int.parse(sift.readStringFromMap(bestMap, 'score'));
+      _bestPerformancePercent =
+          int.parse(sift.readStringFromMap(bestMap, 'score'));
       _leastPerformanceMonth = sift.readStringFromMap(leastMap, 'month');
-      _leastPerformancePercent = int.parse(sift.readStringFromMap(leastMap, 'score'));
+      _leastPerformancePercent =
+          int.parse(sift.readStringFromMap(leastMap, 'score'));
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast EmployeePerformance response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast EmployeePerformance response. Error message - ${e.errorMessage}');
     }
   }
 
