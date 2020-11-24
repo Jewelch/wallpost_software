@@ -14,7 +14,8 @@ class EmployeePerformance extends JSONInitializable {
     try {
       var leastMap = sift.readMapFromMap(jsonMap, 'least');
       var bestMap = sift.readMapFromMap(jsonMap, 'best');
-      _overallYearlyPerformancePercent = int.parse(sift.readStringFromMap(jsonMap, 'ytd_performance'));
+      _overallYearlyPerformancePercent =
+          int.parse(sift.readStringFromMapWithDefaultValue(jsonMap, 'ytd_performance', '0'));
       _bestPerformanceMonth = sift.readStringFromMap(bestMap, 'month');
       _bestPerformancePercent = int.parse(sift.readStringFromMap(bestMap, 'score'));
       _leastPerformanceMonth = sift.readStringFromMap(leastMap, 'month');
