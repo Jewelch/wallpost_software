@@ -21,7 +21,7 @@ class PasswordChanger {
     isLoading = true;
 
     try {
-      var _ = await _networkAdapter.post(apiRequest);
+      var _ = await _networkAdapter.postWithNonce(apiRequest);
       isLoading = false;
       return null;
     } on APIException catch (exception) {
