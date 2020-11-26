@@ -53,7 +53,6 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
         .map((i) => i.toDouble())
         .toList();
     final int yValuesLength = yValues.length;
-    print('yvaluew..' + yValues.toString());
     final List<int> showIndexes = [yValuesLength - 1];
     List<FlSpot> allSpots = yValues.asMap().entries.map((e) {
       return FlSpot((e.key.toDouble() * 2), e.value);
@@ -136,13 +135,13 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
                   },
                   touchTooltipData: LineTouchTooltipData(
                     tooltipBgColor: AppColors.chartLineColor,
-                    tooltipPadding: EdgeInsets.all(8),
+                    tooltipPadding: EdgeInsets.all(4),
                     tooltipBottomMargin: 12,
                     tooltipRoundedRadius: 40,
                     getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
                       return lineBarsSpot.map((lineBarSpot) {
                         return LineTooltipItem(
-                          '${lineBarSpot.y.toInt()}% YTD $_selectedYear',
+                          '${lineBarSpot.y.toInt()}% \nYTD $_selectedYear',
                           TextStyle(fontSize: 8, color: Colors.white),
                         );
                       }).toList();
