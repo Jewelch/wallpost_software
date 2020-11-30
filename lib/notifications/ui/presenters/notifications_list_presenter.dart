@@ -53,7 +53,7 @@ class NotificationsListPresenter {
   Widget getViewAtIndex(int index) {
     if (_shouldShowErrorAtIndex(index))
       return ErrorListTile(
-        '$_errorMessage Tap here to reload.',
+        '$_errorMessage \nTap here to reload.',
         onTap: () {
           loadNextListOfNotifications();
           view.reloadData();
@@ -86,6 +86,7 @@ class NotificationsListPresenter {
       return ErrorListTile(
         'There are no notifications to show. \nTap here to reload.',
         onTap: () {
+          reset();
           loadNextListOfNotifications();
           view.reloadData();
         },
@@ -94,8 +95,6 @@ class NotificationsListPresenter {
       return LoaderListTile();
     }
   }
-
-  //MARK: Util functions
 
   void reset() {
     provider.reset();
