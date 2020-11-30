@@ -9,11 +9,15 @@ class TaskUrls {
   }
 
   static String taskCategoriesUrl(String companyId, int pageNumber, int itemsPerPage, String searchText) {
-    return '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/categories?&page=$pageNumber&per_page=$itemsPerPage&search=$searchText';
+    var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/categories?&page=$pageNumber&per_page=$itemsPerPage';
+    if (searchText != null && searchText.isNotEmpty) url += '&search=$searchText';
+    return url;
   }
 
   static String departmentsUrl(String companyId, int pageNumber, int itemsPerPage, String searchText) {
-    return '${BaseUrls.taskUrlV2()}/companies/$companyId/departments?&page=$pageNumber&per_page=$itemsPerPage&search=$searchText';
+    var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/departments?&page=$pageNumber&per_page=$itemsPerPage';
+    if (searchText != null && searchText.isNotEmpty) url += '&search=$searchText';
+    return url;
   }
 
   static String assigneesUrl(String companyId, int pageNumber, int itemsPerPage, String searchText) {
