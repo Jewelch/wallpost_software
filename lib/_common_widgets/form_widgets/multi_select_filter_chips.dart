@@ -30,11 +30,13 @@ class MultiSelectFilterChips extends StatefulWidget {
   }
 
   @override
-  _MultiSelectFilterChipsState createState() => _MultiSelectFilterChipsState(selectedIndices, controller: controller);
+  _MultiSelectFilterChipsState createState() =>
+      _MultiSelectFilterChipsState(selectedIndices, controller: controller);
 }
 
 class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
   List<int> _selectedIndices;
+
   final MultiSelectFilterChipsController controller;
 
   _MultiSelectFilterChipsState(this._selectedIndices, {this.controller}) {
@@ -50,7 +52,9 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
         (index) {
           return RaisedButton(
             child: _getTitleForItemAtIndex(index),
-            textColor: _isSelected(index) ? AppColors.defaultColor : AppColors.filtersTextGreyColor,
+            textColor: _isSelected(index)
+                ? AppColors.defaultColor
+                : AppColors.filtersTextGreyColor,
             shape: _borderForItemAtIndex(index),
             color: AppColors.filtersBackgroundGreyColor,
             onPressed: _getActionForItemAtIndex(index),
@@ -81,7 +85,9 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
     return RoundedRectangleBorder(
       borderRadius: new BorderRadius.circular(5.0),
       side: BorderSide(
-        color: _isSelected(index) ? AppColors.defaultColor : AppColors.filtersBackgroundGreyColor,
+        color: _isSelected(index)
+            ? AppColors.defaultColor
+            : AppColors.filtersBackgroundGreyColor,
         width: .5,
       ),
     );
@@ -91,7 +97,9 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
     if (index == widget.titles.length && widget.showTrailingButton) {
       return () => widget.onTrailingButtonPressed();
     } else {
-      return () => _isSelected(index) ? _deselectItemAtIndex(index) : _selectItemAtIndex(index);
+      return () => _isSelected(index)
+          ? _deselectItemAtIndex(index)
+          : _selectItemAtIndex(index);
     }
   }
 

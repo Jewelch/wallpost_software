@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/filter_app_bar.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
+import 'package:wallpost/task/entities/department.dart';
 import 'package:wallpost/task/ui/presenters/departments_list_presenter.dart';
 
 class DepartmentsListScreen extends StatefulWidget {
@@ -9,7 +10,7 @@ class DepartmentsListScreen extends StatefulWidget {
 }
 
 class _DepartmentsListScreenState extends State<DepartmentsListScreen>
-    implements DepartmentsListView {
+    implements DepartmentsListView, SelectedDepartmentsListView {
   var _searchBarController = TextEditingController();
   ScrollController _scrollController;
   DepartmentsListPresenter _presenter;
@@ -17,7 +18,7 @@ class _DepartmentsListScreenState extends State<DepartmentsListScreen>
   @override
   void initState() {
     _scrollController = ScrollController();
-    _presenter = DepartmentsListPresenter(this);
+    _presenter = DepartmentsListPresenter(this, this);
     _presenter.loadNextListOfDepartments();
     _setupScrollDownToLoadMoreItems();
     super.initState();
@@ -40,9 +41,13 @@ class _DepartmentsListScreenState extends State<DepartmentsListScreen>
           print('back');
           Navigator.pop(context);
         },
-        onResetFiltersPressed: () {},
+        onResetFiltersPressed: () {
+          _presenter.resetFilter();
+        },
         onDoFilterPressed: () {
-          Navigator.pop(context);
+          List<Department> SelectedFilterDepartments =
+              _presenter.selectedDepartments;
+          Navigator.pop(context, SelectedFilterDepartments);
         },
         screenTitle: 'Select Department',
       ),
@@ -52,8 +57,11 @@ class _DepartmentsListScreenState extends State<DepartmentsListScreen>
             hint: 'Search by department name',
             onSearchTextChanged: (searchText) {
               _presenter.performFilter(searchText);
-              //TODO: filter by search text
             },
+          ),
+          _presenter.getSelectedFilterSection(),
+          Divider(
+            height: 1,
           ),
           Expanded(
             child: RefreshIndicator(

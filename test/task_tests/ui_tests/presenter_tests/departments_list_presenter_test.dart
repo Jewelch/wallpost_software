@@ -11,17 +11,22 @@ import '../../../_mocks/mock_network_adapter.dart';
 
 class MockDepartmentsListView extends Mock implements DepartmentsListView {}
 
-class MockDepartmentsListProvider extends Mock implements DepartmentsListProvider {}
+class MockSelectedDepartmentsListView extends Mock
+    implements SelectedDepartmentsListView {}
+
+class MockDepartmentsListProvider extends Mock
+    implements DepartmentsListProvider {}
 
 class MockDepartment extends Mock implements Department {}
 
 void main() {
   var view = MockDepartmentsListView();
+  var selectedView = MockSelectedDepartmentsListView();
   var provider = MockDepartmentsListProvider();
   DepartmentsListPresenter presenter;
 
   setUp(() {
-    presenter = DepartmentsListPresenter.initWith(view, provider);
+    presenter = DepartmentsListPresenter.initWith(view, selectedView, provider);
     reset(view);
     reset(provider);
     when(provider.isLoading).thenReturn(false);
@@ -47,7 +52,9 @@ void main() {
           'There are no departments to show. Tap here to reload.');
     });
 
-    test('successfully gets the first list of departments with more data available', () async {
+    test(
+        'successfully gets the first list of departments with more data available',
+        () async {
       var dept1 = MockDepartment();
       var dept2 = MockDepartment();
       when(provider.getNext()).thenAnswer((_) => Future.value([dept1, dept2]));
@@ -57,9 +64,11 @@ void main() {
       verify(view.reloadData()).called(1);
       expect(presenter.getNumberOfItems(), 3);
       expect(presenter.getViewAtIndex(0) is DepartmentListTile, true);
-      expect((presenter.getViewAtIndex(0) as DepartmentListTile).department, dept1);
+      expect((presenter.getViewAtIndex(0) as DepartmentListTile).department,
+          dept1);
       expect(presenter.getViewAtIndex(1) is DepartmentListTile, true);
-      expect((presenter.getViewAtIndex(1) as DepartmentListTile).department, dept2);
+      expect((presenter.getViewAtIndex(1) as DepartmentListTile).department,
+          dept2);
       expect(presenter.getViewAtIndex(2) is LoaderListTile, true);
     });
 
@@ -80,7 +89,8 @@ void main() {
       when(provider.getNext()).thenThrow(InvalidResponseException());
       await presenter.loadNextListOfDepartments();
 
-      when(provider.getNext()).thenAnswer((_) => Future.value([MockDepartment(), MockDepartment()]));
+      when(provider.getNext()).thenAnswer(
+          (_) => Future.value([MockDepartment(), MockDepartment()]));
       await presenter.loadNextListOfDepartments();
 
       expect(presenter.getNumberOfItems(), 3);
@@ -89,7 +99,8 @@ void main() {
       expect(presenter.getViewAtIndex(2) is LoaderListTile, true);
     });
 
-    test('shows a loader at the end of the list when more data is available', () async {
+    test('shows a loader at the end of the list when more data is available',
+        () async {
       var dept1 = MockDepartment();
       var dept2 = MockDepartment();
       when(provider.getNext()).thenAnswer((_) => Future.value([dept1, dept2]));
@@ -99,7 +110,9 @@ void main() {
       expect(presenter.getViewAtIndex(2) is LoaderListTile, true);
     });
 
-    test('does not show a loader at the end of the list when more data is not available', () async {
+    test(
+        'does not show a loader at the end of the list when more data is not available',
+        () async {
       var dept1 = MockDepartment();
       var dept2 = MockDepartment();
       when(provider.getNext()).thenAnswer((_) => Future.value([dept1, dept2]));
@@ -113,7 +126,8 @@ void main() {
       expect(presenter.getViewAtIndex(1) is DepartmentListTile, true);
     });
 
-    test('shows error at the end of the list when failed to load more data', () async {
+    test('shows error at the end of the list when failed to load more data',
+        () async {
       var dept1 = MockDepartment();
       var dept2 = MockDepartment();
       when(provider.getNext()).thenAnswer((_) => Future.value([dept1, dept2]));
@@ -129,7 +143,9 @@ void main() {
       expect(presenter.getViewAtIndex(2) is ErrorListTile, true);
     });
 
-    test('getting the next list of items when the provider is loading does nothing', () async {
+    test(
+        'getting the next list of items when the provider is loading does nothing',
+        () async {
       when(provider.isLoading).thenReturn(true);
 
       await presenter.loadNextListOfDepartments();
@@ -138,7 +154,9 @@ void main() {
       verifyNever(view.reloadData());
     });
 
-    test('getting the next list of items when there are no more forms does nothing', () async {
+    test(
+        'getting the next list of items when there are no more forms does nothing',
+        () async {
       when(provider.isLoading).thenReturn(false);
       when(provider.didReachListEnd).thenReturn(true);
 

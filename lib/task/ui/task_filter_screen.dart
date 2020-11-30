@@ -3,6 +3,7 @@ import 'package:wallpost/_common_widgets/app_bars/filter_app_bar.dart';
 import 'package:wallpost/_common_widgets/form_widgets/multi_select_filter_chips.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_years.dart';
+import 'package:wallpost/task/entities/department.dart';
 import 'package:wallpost/task/ui/presenters/task_filter_presenter.dart';
 
 class TaskFilterScreen extends StatefulWidget {
@@ -12,9 +13,11 @@ class TaskFilterScreen extends StatefulWidget {
 
 //TODO: Yahya - Manage selections
 
-class _TaskFilterScreenState extends State<TaskFilterScreen> implements DepartmentsWrapView {
+class _TaskFilterScreenState extends State<TaskFilterScreen>
+    implements DepartmentsWrapView {
   TaskFilterPresenter _presenter;
-
+  List<Department> filteredDepartments;
+  bool isFromDepartmentFilter = false;
 //  int _selectedYear = -1;
 //  int _selectedDepartment = 2;
 //  List<bool> _defaultSelectedDepartments;
@@ -29,7 +32,9 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
   @override
   void initState() {
     _presenter = TaskFilterPresenter(this);
-    _presenter.loadDepartments();
+    isFromDepartmentFilter
+        ? _presenter.loadFilteredDepartments(filteredDepartments)
+        : _presenter.loadDepartments();
     _presenter.loadCategories();
     _presenter.loadEmployees();
     super.initState();
@@ -51,7 +56,7 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
           });
         },
         onDoFilterPressed: () {
-          Navigator.pop(context);
+          Navigator.pop(context, filteredDepartments);
         },
         screenTitle: 'Filters',
       ),
@@ -61,13 +66,24 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: _buildYearSection()),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: _buildYearSection()),
               Divider(height: 1),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: _buildDepartmentSection()),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child:
+                      isFromDepartmentFilter && filteredDepartments.length > 0
+                          ? _buildFilteredDepartmentSection()
+                          : _buildDepartmentSection()),
               Divider(height: 1),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: _buildCategoriesSection()),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: _buildCategoriesSection()),
               Divider(height: 1),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: _buildEmployeesSection()),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: _buildEmployeesSection()),
             ],
           ),
         ),
@@ -96,7 +112,8 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
   Column _buildDepartmentSection() {
     var departmentTitles = _presenter.departments.map((e) => e.name).toList();
     if (departmentTitles.isNotEmpty) {
-      departmentTitles = departmentTitles.sublist(0, departmentTitles.length > 8 ? 8 : departmentTitles.length);
+      departmentTitles = departmentTitles.sublist(
+          0, departmentTitles.length > 8 ? 8 : departmentTitles.length);
     }
 
     return Column(
@@ -107,16 +124,18 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
         Text('Department', style: TextStyle(color: Colors.black, fontSize: 14)),
         SizedBox(height: 8),
         _presenter.isLoadingDepartments()
-            ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
+            ? Center(
+                child: SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()))
             : MultiSelectFilterChips(
                 titles: departmentTitles,
-                selectedIndices: [2, 6],
+                selectedIndices: [],
                 allowMultipleSelection: true,
                 controller: _departmentsFilterController,
                 showTrailingButton: true,
                 trailingButtonTitle: 'More',
                 onTrailingButtonPressed: () {
-                  Navigator.pushNamed(context, RouteNames.departmentsListScreen);
+                  goToDepartmentsFilter();
                 },
                 onItemSelected: (index) {
                   //use the index and store the dept entity in a list
@@ -129,10 +148,48 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
     );
   }
 
+  Column _buildFilteredDepartmentSection() {
+    var departmentTitles = filteredDepartments.map((e) => e.name).toList();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(height: 12),
+        Text('Department', style: TextStyle(color: Colors.black, fontSize: 14)),
+        SizedBox(height: 8),
+        MultiSelectFilterChips(
+          titles: departmentTitles,
+          selectedIndices: [],
+          allowMultipleSelection: true,
+          controller: _departmentsFilterController,
+          showTrailingButton: true,
+          trailingButtonTitle: 'More',
+          onTrailingButtonPressed: () {
+            goToDepartmentsFilter();
+          },
+          onItemSelected: (index) {
+            //use the index and store the dept entity in a list
+            //or
+            print(_departmentsFilterController.getSelectedIndices());
+          },
+        ),
+        SizedBox(height: 12),
+      ],
+    );
+  }
+
+  void goToDepartmentsFilter() async {
+    final selectedDepartments =
+        await Navigator.pushNamed(context, RouteNames.departmentsListScreen);
+
+    refreshSelectedDepartments(selectedDepartments);
+  }
+
   Column _buildCategoriesSection() {
     var categoryTitles = _presenter.categories.map((e) => e.name).toList();
     if (categoryTitles.isNotEmpty) {
-      categoryTitles = categoryTitles.sublist(0, categoryTitles.length > 8 ? 8 : categoryTitles.length);
+      categoryTitles = categoryTitles.sublist(
+          0, categoryTitles.length > 8 ? 8 : categoryTitles.length);
     }
 
     return Column(
@@ -143,7 +200,9 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
         Text('Category', style: TextStyle(color: Colors.black, fontSize: 14)),
         SizedBox(height: 8),
         _presenter.isLoadingCategories()
-            ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
+            ? Center(
+                child: SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()))
             : MultiSelectFilterChips(
                 titles: categoryTitles,
                 selectedIndices: [],
@@ -151,7 +210,8 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
                 showTrailingButton: true,
                 trailingButtonTitle: 'More',
                 onTrailingButtonPressed: () {
-                  Navigator.pushNamed(context, RouteNames.taskCategoryListScreen);
+                  Navigator.pushNamed(
+                      context, RouteNames.taskCategoryListScreen);
                 },
               ),
         SizedBox(height: 12),
@@ -162,7 +222,8 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
   Column _buildEmployeesSection() {
     var employeeTitles = _presenter.employees.map((e) => e.fullName).toList();
     if (employeeTitles.isNotEmpty) {
-      employeeTitles = employeeTitles.sublist(0, employeeTitles.length > 8 ? 8 : employeeTitles.length);
+      employeeTitles = employeeTitles.sublist(
+          0, employeeTitles.length > 8 ? 8 : employeeTitles.length);
     }
 
     return Column(
@@ -173,15 +234,18 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
         Text('Employee', style: TextStyle(color: Colors.black, fontSize: 14)),
         SizedBox(height: 8),
         _presenter.isLoadingEmployees()
-            ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
+            ? Center(
+                child: SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()))
             : MultiSelectFilterChips(
                 titles: employeeTitles,
-                selectedIndices: [2, 6],
+                selectedIndices: [],
                 allowMultipleSelection: true,
                 showTrailingButton: true,
                 trailingButtonTitle: 'More',
                 onTrailingButtonPressed: () {
-                  Navigator.pushNamed(context, RouteNames.departmentsListScreen);
+                  Navigator.pushNamed(
+                      context, RouteNames.departmentsListScreen);
                 },
               ),
         SizedBox(height: 12),
@@ -192,5 +256,10 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
   @override
   void reloadData() {
     if (this.mounted) setState(() {});
+  }
+
+  void refreshSelectedDepartments(List<Department> selectedDepartments) {
+    filteredDepartments = selectedDepartments;
+    _presenter.loadFilteredDepartments(filteredDepartments);
   }
 }

@@ -22,10 +22,12 @@ class TaskFilterPresenter {
   TaskFilterPresenter(this.view)
       : departmentsListProvider = DepartmentsListProvider(),
         categoriesListProvider = TaskCategoriesListProvider(),
-        employeesListProvider = TaskEmployeesListProvider.subordinatesProvider();
+        employeesListProvider =
+            TaskEmployeesListProvider.subordinatesProvider();
 
   Future<void> loadDepartments() async {
-    if (departmentsListProvider.isLoading || departmentsListProvider.didReachListEnd) return null;
+    if (departmentsListProvider.isLoading ||
+        departmentsListProvider.didReachListEnd) return null;
 
     try {
       var departmentsList = await departmentsListProvider.getNext();
@@ -38,8 +40,15 @@ class TaskFilterPresenter {
     }
   }
 
+  void loadFilteredDepartments(List<Department> departmentsList) {
+    departments.clear();
+    departments.addAll(departmentsList);
+    view.reloadData();
+  }
+
   Future<void> loadCategories() async {
-    if (categoriesListProvider.isLoading || categoriesListProvider.didReachListEnd) return null;
+    if (categoriesListProvider.isLoading ||
+        categoriesListProvider.didReachListEnd) return null;
 
     try {
       var categoriesList = await categoriesListProvider.getNext();
@@ -52,7 +61,8 @@ class TaskFilterPresenter {
   }
 
   Future<void> loadEmployees() async {
-    if (employeesListProvider.isLoading || employeesListProvider.didReachListEnd) return null;
+    if (employeesListProvider.isLoading ||
+        employeesListProvider.didReachListEnd) return null;
 
     try {
       var employeesList = await employeesListProvider.getNext();
