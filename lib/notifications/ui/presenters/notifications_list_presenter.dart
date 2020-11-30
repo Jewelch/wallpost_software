@@ -18,7 +18,8 @@ class NotificationsListPresenter {
   List notifications = [];
   String _errorMessage;
 
-  NotificationsListPresenter(this.view) : provider = NotificationsListProvider();
+  NotificationsListPresenter(this.view)
+      : provider = NotificationsListProvider();
 
   NotificationsListPresenter.initWith(this.view, this.provider);
 
@@ -52,7 +53,7 @@ class NotificationsListPresenter {
   Widget getViewAtIndex(int index) {
     if (_shouldShowErrorAtIndex(index))
       return ErrorListTile(
-        '$_errorMessage Tap here to reload.',
+        '$_errorMessage \nTap here to reload.',
         onTap: () {
           loadNextListOfNotifications();
           view.reloadData();
@@ -82,13 +83,18 @@ class NotificationsListPresenter {
 
   Widget _buildViewWhenThereAreNoResults() {
     if (provider.didReachListEnd) {
-      return ErrorListTile('There are no notifications to show. Tap here to reload.');
+      return ErrorListTile(
+        'There are no notifications to show. \nTap here to reload.',
+        onTap: () {
+          reset();
+          loadNextListOfNotifications();
+          view.reloadData();
+        },
+      );
     } else {
       return LoaderListTile();
     }
   }
-
-  //MARK: Util functions
 
   void reset() {
     provider.reset();

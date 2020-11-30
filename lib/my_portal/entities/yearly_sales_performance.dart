@@ -61,6 +61,8 @@ class YearlySalesPerformance extends JSONInitializable {
       if (targetedMonthlySale != 0)
         percentage = actualMonthlySale / targetedMonthlySale * 100;
 
+      if (percentage > 100) percentage = 100;
+
       percentages.add(percentage.toInt());
     }
 

@@ -110,16 +110,19 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
                       ),
                       Tab(
                         child: RichText(
-                            text: TextSpan(children: [
-                          TextSpan(
-                              text: 'Approvals ',
-                              style: TextStyle(color: Colors.black)),
-                          TextSpan(
-                              text: '$_totalpendingApprovalsCount',
-                              style: TextStyle(
-                                  color: AppColors.defaultColor,
-                                  fontWeight: FontWeight.bold))
-                        ])),
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                  text: 'Approvals ',
+                                  style: TextStyle(color: Colors.black)),
+                              TextSpan(
+                                  text: '$_totalpendingApprovalsCount',
+                                  style: TextStyle(
+                                      color: AppColors.defaultColor,
+                                      fontWeight: FontWeight.bold))
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -129,7 +132,9 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen>
                   child: TabBarView(
                     controller: _tabController,
                     children: <Widget>[
-                      SalesFinancialsGraphView(),
+                      Container(
+                          margin: EdgeInsets.symmetric(horizontal: 12),
+                          child: SalesFinancialsGraphView()),
                       PendingActionsCountView(),
                     ],
                   ),

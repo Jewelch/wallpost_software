@@ -16,7 +16,6 @@ class EmployeePerformanceGraphView extends StatefulWidget {
 class _EmployeePerformanceGraphViewState
     extends State<EmployeePerformanceGraphView> {
   EmployeePerformance _employeePerformance;
-
   bool showError = false;
 
   @override
