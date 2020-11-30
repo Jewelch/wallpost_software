@@ -8,8 +8,8 @@ import '../../_mocks/mock_network_adapter.dart';
 
 void main() {
   var changePasswordForm = ChangePasswordForm(
-    randomString(10),
-    randomString(10),
+    oldPassword: randomString(10),
+    newPassword: randomString(10),
   );
   Map<String, dynamic> successfulResponse = {};
   var mockNetworkAdapter = MockNetworkAdapter();
