@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:sift/Sift.dart';
+import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
 import 'package:wallpost/_shared/wpapi/wp_api.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
