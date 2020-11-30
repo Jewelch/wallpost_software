@@ -30,8 +30,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     super.initState();
     _loader = Loader(context);
     KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) =>
-          setState(() => _showLogo = visible ? false : true),
+      onChange: (bool visible) => setState(() => _showLogo = visible ? false : true),
     );
   }
 
@@ -78,27 +77,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       curve: Curves.easeInOut,
       height: _showLogo ? 180 : 0,
       child: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.defaultColor, width: 1),
-                  borderRadius: BorderRadius.circular(50),
-                  image: DecorationImage(
-                      image: NetworkImage(CurrentUserProvider()
-                          .getCurrentUser()
-                          .profileImageUrl),
-                      fit: BoxFit.fill),
-                ),
-              ),
-              Text(
-                CurrentUserProvider().getCurrentUser().fullName,
-                style: TextStyle(fontSize: 16),
-              ),
-            ]),
+        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.defaultColor, width: 1),
+              borderRadius: BorderRadius.circular(50),
+              image: DecorationImage(
+                  image: NetworkImage(CurrentUserProvider().getCurrentUser().profileImageUrl), fit: BoxFit.fill),
+            ),
+          ),
+          Text(
+            CurrentUserProvider().getCurrentUser().fullName,
+            style: TextStyle(fontSize: 16),
+          ),
+        ]),
       ),
     );
   }
@@ -166,7 +160,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     await _loader.show('Changing your password...');
     try {
       var changePasswordForm = ChangePasswordForm(
-          _currentPasswordTextController.text, _newPasswordTextController.text);
+        oldPassword: _currentPasswordTextController.text,
+        newPassword: _newPasswordTextController.text,
+      );
       var _ = await PasswordChanger().changePassword(changePasswordForm);
       await _loader.hide();
       Alert.showSimpleAlert(

@@ -1,13 +1,13 @@
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 
 class ChangePasswordForm implements JSONConvertible {
-  final String newPassword;
   final String oldPassword;
+  final String newPassword;
 
-  ChangePasswordForm(
-    this.newPassword,
+  ChangePasswordForm({
     this.oldPassword,
-  );
+    this.newPassword,
+  });
 
   @override
   Map<String, dynamic> toJson() {
