@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'app_bar_divider.dart';
 
 class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget leading;
+  final double leadingSpace;
   final Widget trailing;
+  final double trailingSpace;
   final bool showDivider;
 
   @override
@@ -13,7 +16,9 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   SimpleAppBar({
     this.title,
     this.leading,
+    this.leadingSpace = 12,
     this.trailing,
+    this.trailingSpace = 12,
     this.showDivider = false,
   }) : preferredSize = Size.fromHeight(56);
 
@@ -32,7 +37,7 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Row(
             children: [
-              SizedBox(width: 12),
+              SizedBox(width: leadingSpace),
               this.leading ?? SizedBox(width: 32),
               SizedBox(width: 8),
               Expanded(
@@ -46,7 +51,7 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               SizedBox(width: 8),
               this.trailing ?? SizedBox(width: 32),
-              SizedBox(width: 12),
+              SizedBox(width: trailingSpace),
             ],
           ),
         ],

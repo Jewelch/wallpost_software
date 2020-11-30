@@ -3,12 +3,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class RoundedIconButton extends StatelessWidget {
-  final double buttonSize;
   final String iconName;
   final double iconSize;
+  final Color iconColor;
+  final double buttonSize;
+  final Color color;
   final VoidCallback onPressed;
 
-  RoundedIconButton({this.buttonSize = 32, this.iconName, this.iconSize = 16, this.onPressed});
+  RoundedIconButton(
+      {this.iconName,
+      this.iconSize = 16,
+      this.iconColor = Colors.white,
+      this.buttonSize = 32,
+      this.color,
+      this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +24,14 @@ class RoundedIconButton extends StatelessWidget {
       width: buttonSize,
       height: buttonSize,
       child: FlatButton(
-        color: AppColors.defaultColor,
+        color: color ?? AppColors.defaultColor,
         padding: EdgeInsets.all(0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
         child: SvgPicture.asset(
           iconName,
           width: iconSize,
           height: iconSize,
-          color: Colors.white,
+          color: iconColor,
         ),
         onPressed: onPressed,
       ),
