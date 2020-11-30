@@ -4,12 +4,12 @@ import 'package:wallpost/_shared/constants/app_images.dart';
 
 class SearchBar extends StatelessWidget {
   final String hint;
-  final TextEditingController searchTextFieldController;
+  final TextEditingController controller;
   final ValueChanged<String> onSearchTextChanged;
 
   SearchBar({
     this.hint,
-    this.searchTextFieldController,
+    this.controller,
     this.onSearchTextChanged,
   });
 
@@ -34,22 +34,19 @@ class SearchBar extends StatelessWidget {
           SizedBox(width: 8),
           Expanded(
             child: TextField(
-              controller: searchTextFieldController,
+              controller: controller,
               maxLines: 1,
               textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
                 hintText: hint,
                 border: InputBorder.none,
-                suffixIcon: IconButton(
+                suffixIcon: controller.text.isEmpty ? null : IconButton(
                   onPressed: () {
-                    if (searchTextFieldController.text.isEmpty) return;
-                    searchTextFieldController.clear();
+                    if (controller.text.isEmpty) return;
+                    controller.clear();
                     onSearchTextChanged('');
                   },
-                  icon: Icon(
-                    Icons.clear,
-                    size: 18,
-                  ),
+                  icon: Icon(Icons.clear, size: 18),
                   color: Colors.grey,
                 ),
               ),
