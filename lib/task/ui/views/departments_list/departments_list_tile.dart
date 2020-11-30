@@ -7,23 +7,31 @@ class DepartmentListTile extends StatelessWidget {
   final Department department;
   final VoidCallback onDepartmentListTileTap;
 
-  DepartmentListTile(this.isSelected, this.department,
-      {this.onDepartmentListTileTap});
+  DepartmentListTile(
+    this.isSelected,
+    this.department, {
+    this.onDepartmentListTileTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      height: 60,
-      child: Container(
-        alignment: AlignmentDirectional.centerStart,
-        child: Text(department.name,
-            style: TextStyle(
-              color: isSelected ? AppColors.defaultColor : AppColors.blackColor,
-            )),
-      ),
-      onPressed: () {
-        if (onDepartmentListTileTap != null) onDepartmentListTileTap();
-      },
+    return Column(
+      children: [
+        FlatButton(
+          height: 50,
+          child: Container(
+            alignment: AlignmentDirectional.centerStart,
+            child: Text(department.name,
+                style: TextStyle(
+                  color: isSelected ? AppColors.defaultColor : AppColors.blackColor,
+                )),
+          ),
+          onPressed: () {
+            if (onDepartmentListTileTap != null) onDepartmentListTileTap();
+          },
+        ),
+        Divider(height: 1),
+      ],
     );
   }
 }
