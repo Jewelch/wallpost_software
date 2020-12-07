@@ -35,4 +35,7 @@ class RouteNames {
   static final String changePassword = "/change-password";
 
   static final String forgotPasswordSuccess = "/forgot-password-success";
+
+  //leave
+  static final String leave = "/leave";
 }

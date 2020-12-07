@@ -25,6 +25,13 @@ class RequestsScreen extends StatelessWidget {
                   Navigator.pushNamed(context, RouteNames.task);
                 },
               ),
+              FlatButton(
+                color: Colors.red,
+                child: Text('Go To Leave'),
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteNames.leave);
+                },
+              ),
             ],
           ),
         ),

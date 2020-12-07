@@ -4,6 +4,7 @@ import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/authentication/ui/login_screen.dart';
 import 'package:wallpost/company_management/ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
+import 'package:wallpost/leave/ui/leave_screen.dart';
 import 'package:wallpost/password_management/ui/change_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_success_screen.dart';
@@ -58,6 +59,9 @@ class Routes {
 
       RouteNames.forgotPasswordSuccess: (BuildContext context) =>
           ForgotPasswordSuccessScreen(),
+
+      //leave
+      RouteNames.leave: (BuildContext context) => LeaveScreen(),
     };
   }
 }
