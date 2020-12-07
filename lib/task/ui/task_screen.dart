@@ -5,6 +5,7 @@ import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/task/entities/task_list_filters.dart';
 import 'package:wallpost/task/ui/task_list_card.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -12,11 +13,10 @@ class TaskScreen extends StatefulWidget {
   _TaskScreen createState() => _TaskScreen();
 }
 
-class _TaskScreen extends State<TaskScreen>
-    with SingleTickerProviderStateMixin {
+class _TaskScreen extends State<TaskScreen> with SingleTickerProviderStateMixin {
   TabController _tabController;
-  TextEditingController _listFilterTextFieldController =
-      new TextEditingController();
+  TextEditingController _listFilterTextFieldController = new TextEditingController();
+  TasksListFilters _filters = TasksListFilters();
   bool _listFilterVisible = false;
 
   @override
@@ -30,8 +30,7 @@ class _TaskScreen extends State<TaskScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title:
-            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
           iconSize: 12,
@@ -72,27 +71,19 @@ class _TaskScreen extends State<TaskScreen>
               ? Expanded(
                   child: TextField(
                     controller: _listFilterTextFieldController,
-                    onSubmitted: (text) =>
-                        print(_listFilterTextFieldController.text),
+                    onSubmitted: (text) => print(_listFilterTextFieldController.text),
                     style: TextStyle(color: Colors.black, fontSize: 20.0),
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter a search term'),
+                    decoration: InputDecoration(border: InputBorder.none, hintText: 'Enter a search term'),
                   ),
                 )
-              : Text('Task Requests',
-                  style: TextStyle(color: Colors.black, fontSize: 16)),
+              : Text('Task Requests', style: TextStyle(color: Colors.black, fontSize: 16)),
           IconButton(
               icon: _listFilterVisible
-                  ? SvgPicture.asset('assets/icons/delete_icon.svg',
-                      width: 42, height: 23)
-                  : SvgPicture.asset('assets/icons/search_icon.svg',
-                      width: 42, height: 23),
+                  ? SvgPicture.asset('assets/icons/delete_icon.svg', width: 42, height: 23)
+                  : SvgPicture.asset('assets/icons/search_icon.svg', width: 42, height: 23),
               onPressed: () {
                 setState(() {
-                  _listFilterVisible
-                      ? _listFilterVisible = false
-                      : _listFilterVisible = true;
+                  _listFilterVisible ? _listFilterVisible = false : _listFilterVisible = true;
                 });
               }),
         ],
@@ -164,7 +155,8 @@ class _TaskScreen extends State<TaskScreen>
   }
 
   void goToTaskFilter() async {
-    var isChanged = await Navigator.pushNamed(context, RouteNames.taskFilter);
+    await Navigator.pushNamed(context, RouteNames.taskFilter, arguments: _filters);
+    print(_filters.year);
   }
 
   Widget _getTaskCard(int index) {
@@ -211,19 +203,14 @@ class TabWidget extends StatelessWidget {
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text: '$_totalCount',
-                      style: TextStyle(
-                          color: AppColors.defaultColor, fontSize: 22))
+                  TextSpan(text: '$_totalCount', style: TextStyle(color: AppColors.defaultColor, fontSize: 22))
                 ],
               ),
             ),
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text: _tabName,
-                      style: TextStyle(color: Colors.black, fontSize: 12)),
+                  TextSpan(text: _tabName, style: TextStyle(color: Colors.black, fontSize: 12)),
                 ],
               ),
             ),
