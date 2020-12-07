@@ -132,9 +132,7 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
   }
 
   Column _buildYearSection() {
-
     var selectedYearIndex = AppYears.years().indexOf(_filters.year);
-print(selectedYearIndex);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,12 +143,11 @@ print(selectedYearIndex);
         SizedBox(height: 8),
         MultiSelectFilterChips(
           titles: AppYears.years().map((e) => '$e').toList(),
-          selectedIndices: [1],
+          selectedIndices: [selectedYearIndex],
           controller: _yearsFilterController,
           allowMultipleSelection: false,
           onItemSelected: (selectedIndex) => _filters.year = AppYears.years()[selectedIndex],
-          onItemDeselected: (_)  {
-            print('des!');
+          onItemDeselected: (_) {
             setState(() => _filters.resetDateFilter());
           },
         ),
