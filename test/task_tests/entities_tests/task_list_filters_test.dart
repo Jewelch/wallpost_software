@@ -8,7 +8,7 @@ void main() {
     expect(filters.scope, TasksListFilters.MY_SCOPE);
     expect(filters.status, TasksListFilters.OVERDUE);
     expect(filters.searchText, null);
-    expect(filters.year, null);
+    expect(filters.year, DateTime.now().year);
     expect(filters.assignees, isEmpty);
     expect(filters.departments, isEmpty);
     expect(filters.categories, isEmpty);
@@ -56,9 +56,18 @@ void main() {
     expect(filters.scope, TasksListFilters.MY_SCOPE);
     expect(filters.status, TasksListFilters.OVERDUE);
     expect(filters.searchText, null);
-    expect(filters.year, null);
+    expect(filters.year, DateTime.now().year);
     expect(filters.assignees, isEmpty);
     expect(filters.departments, isEmpty);
     expect(filters.categories, isEmpty);
+  });
+
+  test('resetting date filter', () async {
+    var filters = TasksListFilters();
+    filters.year = 2018;
+
+    filters.resetDateFilter();
+
+    expect(filters.year, DateTime.now().year);
   });
 }

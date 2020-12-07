@@ -16,9 +16,9 @@ class TasksListFilters {
   String _scope = MY_SCOPE;
   String _status = OVERDUE;
   String _searchText;
-  int year;
+  int year = DateTime.now().year;
   List<TaskEmployee> assignees = [];
-  List<Department> _departments = [];
+  List<Department> departments = [];
   List<TaskCategory> categories = [];
 
   void showMyTasks() => _scope = MY_SCOPE;
@@ -41,17 +41,15 @@ class TasksListFilters {
     _scope = MY_SCOPE;
     _status = OVERDUE;
     _searchText = null;
-    year = null;
+    resetDateFilter();
     assignees = [];
-    _departments = [];
+    departments = [];
     categories = [];
   }
 
-  set departments(List<Department> departments) {
-    _departments = departments;
+  void resetDateFilter() {
+    year = DateTime.now().year;
   }
-
-  List<Department> get departments => _departments;
 
   String get scope => _scope;
 
