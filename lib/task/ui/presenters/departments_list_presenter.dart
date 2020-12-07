@@ -103,7 +103,8 @@ class DepartmentsListPresenter {
       _departments[index],
       onDepartmentListTileTap: () {
         if (isDepartmentSelected(_departments[index])) {
-          _selectedDepartments.removeWhere((selectedDepartment) => selectedDepartment.name == _departments[index].name);
+          _selectedDepartments.removeWhere((selectedDepartment) =>
+              selectedDepartment.name == _departments[index].name);
           _view.onDepartmentRemoved();
         } else {
           _selectedDepartments.add(_departments[index]);
@@ -114,6 +115,10 @@ class DepartmentsListPresenter {
   }
 
   //MARK: Functions to get selected department count and views
+
+  List<Department> getSelectedDepartmentsList() {
+    return _selectedDepartments;
+  }
 
   int getNumberOfSelectedDepartments() {
     return _selectedDepartments.length;
@@ -126,7 +131,8 @@ class DepartmentsListPresenter {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
-        side: BorderSide(color: AppColors.filtersBackgroundGreyColor, width: .5),
+        side:
+            BorderSide(color: AppColors.filtersBackgroundGreyColor, width: .5),
       ),
       child: Row(
         children: [
@@ -136,7 +142,8 @@ class DepartmentsListPresenter {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: SvgPicture.asset('assets/icons/delete_icon.svg', width: 15, height: 15),
+            child: SvgPicture.asset('assets/icons/delete_icon.svg',
+                width: 15, height: 15),
           ),
         ],
       ),

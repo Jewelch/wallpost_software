@@ -5,7 +5,6 @@ import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/task/entities/department.dart';
 import 'package:wallpost/task/ui/task_list_card.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -165,10 +164,7 @@ class _TaskScreen extends State<TaskScreen>
   }
 
   void goToTaskFilter() async {
-    final selectedDepartments =
-        await Navigator.pushNamed(context, RouteNames.taskFilter);
-
-    refreshWithSelectedFilters(selectedDepartments);
+    var isChanged = await Navigator.pushNamed(context, RouteNames.taskFilter);
   }
 
   Widget _getTaskCard(int index) {
@@ -190,10 +186,6 @@ class _TaskScreen extends State<TaskScreen>
         ),
       ],
     );
-  }
-
-  void refreshWithSelectedFilters(List<Department> selectedDepartments) {
-    //todo call list api with selected filters
   }
 }
 

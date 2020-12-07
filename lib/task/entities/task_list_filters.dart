@@ -18,7 +18,7 @@ class TasksListFilters {
   String _searchText;
   int year;
   List<TaskEmployee> assignees = [];
-  List<Department> departments = [];
+  List<Department> _departments = [];
   List<TaskCategory> categories = [];
 
   void showMyTasks() => _scope = MY_SCOPE;
@@ -43,9 +43,15 @@ class TasksListFilters {
     _searchText = null;
     year = null;
     assignees = [];
-    departments = [];
+    _departments = [];
     categories = [];
   }
+
+  set departments(List<Department> departments) {
+    _departments = departments;
+  }
+
+  List<Department> get departments => _departments;
 
   String get scope => _scope;
 

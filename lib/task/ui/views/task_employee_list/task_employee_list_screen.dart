@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/app_bars/filter_app_bar.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/task/ui/presenters/task_employees_list_presenter.dart';
 
 class EmployeeListScreen extends StatefulWidget {
@@ -9,25 +11,25 @@ class EmployeeListScreen extends StatefulWidget {
 }
 
 class _EmployeeListScreenState extends State<EmployeeListScreen>
-    implements EmployeeListView {
+    implements EmployeesListView {
   var _searchBarController = TextEditingController();
-  ScrollController _scrollController;
-  EmployeeListPresenter _presenter;
+  ScrollController _employeesListScrollController = ScrollController();
+  ScrollController _selectedEmployeesListScrollController = ScrollController();
+  EmployeesListPresenter _presenter;
 
   @override
   void initState() {
-    _scrollController = ScrollController();
-    _presenter = EmployeeListPresenter(this);
-    _presenter.loadNextListOfEmployee();
+    _presenter = EmployeesListPresenter(this);
+    _presenter.loadNextListOfEmployees(_searchBarController.text);
     _setupScrollDownToLoadMoreItems();
     super.initState();
   }
 
   void _setupScrollDownToLoadMoreItems() {
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        _presenter.loadNextListOfEmployee();
+    _employeesListScrollController.addListener(() {
+      if (_employeesListScrollController.position.pixels ==
+          _employeesListScrollController.position.maxScrollExtent) {
+        _presenter.loadNextListOfEmployees(_searchBarController.text);
       }
     });
   }
@@ -35,37 +37,72 @@ class _EmployeeListScreenState extends State<EmployeeListScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: FilterAppBar(
-        onBackPressed: () {
-          print('back');
-          Navigator.pop(context);
-        },
-        onResetFiltersPressed: () {},
-        onDoFilterPressed: () {
-          Navigator.pop(context);
-        },
-        screenTitle: 'Select Category',
+      backgroundColor: Colors.white,
+      appBar: SimpleAppBar(
+        title: 'Select Employee',
+        leadingSpace: 0,
+        trailingSpace: 12,
+        leading: RoundedIconButton(
+          iconName: 'assets/icons/back.svg',
+          iconSize: 20,
+          iconColor: AppColors.defaultColor,
+          color: Colors.white,
+          onPressed: () => Navigator.pop(context),
+        ),
+        trailing: RoundedIconButton(
+          iconName: 'assets/icons/check.svg',
+          iconSize: 20,
+          iconColor: AppColors.defaultColor,
+          color: Colors.white,
+          onPressed: () =>
+              Navigator.pop(context, _presenter.getSelectedEmployeesList()),
+        ),
       ),
       body: Column(
         children: [
+          SizedBox(height: 8),
           SearchBar(
-            hint: 'Search by category name',
+            hint: 'Search by employee name',
+            controller: _searchBarController,
             onSearchTextChanged: (searchText) {
-              //TODO: filter by search text
+              _presenter.reset();
+              _presenter.loadNextListOfEmployees(searchText);
             },
           ),
+          SizedBox(height: 8),
+          SizedBox(
+            height: _presenter.getNumberOfSelectedEmployees() == 0 ? 0 : 32,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              controller: _selectedEmployeesListScrollController,
+              children: List.generate(
+                _presenter.getNumberOfSelectedEmployees(),
+                (index) {
+                  var edgeInsets = EdgeInsets.only(left: 12);
+                  if (index == _presenter.getNumberOfSelectedEmployees() - 1)
+                    edgeInsets = edgeInsets.copyWith(right: 12);
+
+                  return Padding(
+                    padding: edgeInsets,
+                    child: _presenter.getSelectedEmployeeViewForIndex(index),
+                  );
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () {
                 _presenter.reset();
-                _presenter.loadNextListOfEmployee();
-                return null;
+                _presenter.loadNextListOfEmployees(_searchBarController.text);
+                return Future.value(null);
               },
               child: ListView.builder(
-                controller: _scrollController,
-                itemCount: _presenter.getNumberOfItems(),
+                controller: _employeesListScrollController,
+                itemCount: _presenter.getNumberOfEmployees(),
                 itemBuilder: (context, index) {
-                  return _presenter.getViewAtIndex(index);
+                  return _presenter.getEmployeeViewForIndex(index);
                 },
               ),
             ),
@@ -77,6 +114,23 @@ class _EmployeeListScreenState extends State<EmployeeListScreen>
 
   @override
   void reloadData() {
+    if (this.mounted) setState(() {});
+  }
+
+  @override
+  void onEmployeeAdded() {
+    if (this.mounted) setState(() {});
+
+    Future.delayed(Duration(milliseconds: 200)).then((value) {
+      _selectedEmployeesListScrollController.animateTo(
+          _selectedEmployeesListScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut);
+    });
+  }
+
+  @override
+  void onEmployeeRemoved() {
     if (this.mounted) setState(() {});
   }
 }

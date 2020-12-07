@@ -29,6 +29,9 @@ class RouteNames {
   //task Category List
   static final String taskCategoryListScreen = "/task-category-list-screen";
 
+  //task Employee List
+  static final String taskEmployeeListScreen = "/task-employee-list-screen";
+
   //Password management
   static final String forgotPassword = "/forgot-password";
 

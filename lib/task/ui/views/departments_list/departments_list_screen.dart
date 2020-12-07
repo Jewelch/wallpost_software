@@ -10,10 +10,12 @@ class DepartmentsListScreen extends StatefulWidget {
   _DepartmentsListScreenState createState() => _DepartmentsListScreenState();
 }
 
-class _DepartmentsListScreenState extends State<DepartmentsListScreen> implements DepartmentsListView {
+class _DepartmentsListScreenState extends State<DepartmentsListScreen>
+    implements DepartmentsListView {
   var _searchBarController = TextEditingController();
   ScrollController _departmentsListScrollController = ScrollController();
-  ScrollController _selectedDepartmentsListScrollController = ScrollController();
+  ScrollController _selectedDepartmentsListScrollController =
+      ScrollController();
   DepartmentsListPresenter _presenter;
 
   @override
@@ -53,7 +55,8 @@ class _DepartmentsListScreenState extends State<DepartmentsListScreen> implement
           iconSize: 20,
           iconColor: AppColors.defaultColor,
           color: Colors.white,
-          onPressed: () => Navigator.pop(context),
+          onPressed: () =>
+              Navigator.pop(context, _presenter.getSelectedDepartmentsList()),
         ),
       ),
       body: Column(

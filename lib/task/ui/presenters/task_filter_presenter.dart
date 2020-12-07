@@ -60,6 +60,12 @@ class TaskFilterPresenter {
     }
   }
 
+  void loadFilteredCategories(List<TaskCategory> categoriesList) {
+    categories.clear();
+    categories.addAll(categoriesList);
+    view.reloadData();
+  }
+
   Future<void> loadEmployees() async {
     if (employeesListProvider.isLoading ||
         employeesListProvider.didReachListEnd) return null;
@@ -72,6 +78,12 @@ class TaskFilterPresenter {
       //fail silently as this is not a critical error
       view.reloadData();
     }
+  }
+
+  void loadFilteredEmployees(List<TaskEmployee> employeesList) {
+    employees.clear();
+    employees.addAll(employeesList);
+    view.reloadData();
   }
 
   //MARK: Util functions

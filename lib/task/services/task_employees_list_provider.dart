@@ -14,7 +14,7 @@ class TaskEmployeesListProvider {
   bool _didReachListEnd = false;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
-  bool _shouldGetAllEmployees;
+  bool _shouldGetAllEmployees = true;
 
   TaskEmployeesListProvider.initWith(this._selectedCompanyProvider,
       this._networkAdapter, this._shouldGetAllEmployees);
