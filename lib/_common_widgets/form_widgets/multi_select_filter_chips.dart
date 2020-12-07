@@ -32,8 +32,7 @@ class MultiSelectFilterChips extends StatefulWidget {
   }
 
   @override
-  _MultiSelectFilterChipsState createState() =>
-      _MultiSelectFilterChipsState(selectedIndices, controller: controller);
+  _MultiSelectFilterChipsState createState() => _MultiSelectFilterChipsState(selectedIndices, controller: controller);
 }
 
 class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
@@ -46,6 +45,13 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
   }
 
   @override
+  void didUpdateWidget(covariant MultiSelectFilterChips oldWidget) {
+    _selectedIndices.clear();
+    _selectedIndices.addAll(widget.selectedIndices);
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 10.0,
@@ -54,11 +60,9 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
         (index) {
           return RaisedButton(
             child: _getTitleForItemAtIndex(index),
-            textColor: _isSelected(index)
-                ? AppColors.defaultColor
-                : AppColors.filtersTextGreyColor,
+            textColor: _isSelected(index) ? AppColors.defaultColor : AppColors.filtersTextGreyColor,
             shape: _borderForItemAtIndex(index),
-            color: AppColors.filtersBackgroundGreyColor,
+            color: _isSelected(index) ? Colors.white : AppColors.filtersBackgroundGreyColor,
             onPressed: _getActionForItemAtIndex(index),
             elevation: 0,
           );
@@ -87,9 +91,7 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
     return RoundedRectangleBorder(
       borderRadius: new BorderRadius.circular(5.0),
       side: BorderSide(
-        color: _isSelected(index)
-            ? AppColors.defaultColor
-            : AppColors.filtersBackgroundGreyColor,
+        color: _isSelected(index) ? AppColors.defaultColor : AppColors.filtersBackgroundGreyColor,
         width: .5,
       ),
     );
@@ -99,9 +101,7 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
     if (index == widget.titles.length && widget.showTrailingButton) {
       return () => widget.onTrailingButtonPressed();
     } else {
-      return () => _isSelected(index)
-          ? _deselectItemAtIndex(index)
-          : _selectItemAtIndex(index);
+      return () => _isSelected(index) ? _deselectItemAtIndex(index) : _selectItemAtIndex(index);
     }
   }
 
@@ -121,7 +121,7 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
   //MARK: Util functions
 
   bool _isSelected(int index) {
-    //check not trailing button , and if is from filter all chips should be selected
+    //return false if the item is the trailing button
     if (widget.showTrailingButton && (widget.titles.length == index)) {
       return false;
     } else {
