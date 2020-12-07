@@ -21,15 +21,10 @@ class _LeaveListTileState extends State<LeaveListTile> {
                 color: Colors.grey,
               ),
               Text('2', style: TextStyle(color: Colors.grey, fontSize: 12)),
-              Text(
-                'Days',
-                style: TextStyle(fontSize: 14),
-              )
+              Text('Days', style: TextStyle(fontSize: 14))
             ],
           ),
-          SizedBox(
-            width: 12,
-          ),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,57 +42,40 @@ class _LeaveListTileState extends State<LeaveListTile> {
                     RichText(
                       text: TextSpan(
                         children: [
-                          TextSpan(
-                              text: 'Start : ',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 12)),
-                          TextSpan(
-                              text: '01.01.2020',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12))
+                          TextSpan(text: 'Start : ', style: TextStyle(color: Colors.black, fontSize: 12)),
+                          TextSpan(text: '01.01.2020', style: TextStyle(color: Colors.grey, fontSize: 12))
                         ],
                       ),
                     ),
                     RichText(
                       text: TextSpan(
                         children: [
-                          TextSpan(
-                              text: 'End : ',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 12)),
-                          TextSpan(
-                              text: '01.01.2020',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12))
+                          TextSpan(text: 'End : ', style: TextStyle(color: Colors.black, fontSize: 12)),
+                          TextSpan(text: '01.01.2020', style: TextStyle(color: Colors.grey, fontSize: 12))
                         ],
                       ),
                     ),
-                    Icon(Icons.arrow_forward_ios_outlined,
-                        color: Colors.grey, size: 14),
+                    Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14),
                   ],
                 ),
                 SizedBox(height: 8),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColors.defaultColor),
-                        child: Text(
-                          'Casual',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
-                      ),
-                      Text(
-                        'Approved',
-                        style: TextStyle(
-                          color: Colors.orange,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ])
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColors.defaultColor),
+                    child: Text(
+                      'Casual',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  ),
+                  Text(
+                    'Approved',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontSize: 12,
+                    ),
+                  ),
+                ])
               ],
             ),
           )
