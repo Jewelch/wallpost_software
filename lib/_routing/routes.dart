@@ -13,6 +13,7 @@ import 'package:wallpost/task/ui/task_filter_screen.dart';
 import 'package:wallpost/task/ui/task_screen.dart';
 import 'package:wallpost/task/ui/views/categories_list/categories_list_screen.dart';
 import 'package:wallpost/task/ui/views/departments_list/departments_list_screen.dart';
+import 'package:wallpost/task/ui/views/task_employee_list/task_employee_list_screen.dart';
 
 class Routes {
   Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
@@ -48,6 +49,10 @@ class Routes {
       //filter Task Category List Screen
       RouteNames.taskCategoryListScreen: (BuildContext context) =>
           CategoriesListScreen(),
+
+      //filter Task Employee List Screen
+      RouteNames.taskEmployeeListScreen: (BuildContext context) =>
+          EmployeeListScreen(),
 
       //Password management
       RouteNames.forgotPassword: (BuildContext context) =>

@@ -4,6 +4,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 class MultiSelectFilterChips extends StatefulWidget {
   final List<String> titles;
   final List<int> selectedIndices;
+  final bool allIndexesSelected;
   final bool allowMultipleSelection;
   final Function(int) onItemSelected;
   final Function(int) onItemDeselected;
@@ -15,6 +16,7 @@ class MultiSelectFilterChips extends StatefulWidget {
   MultiSelectFilterChips({
     this.titles,
     this.selectedIndices,
+    this.allIndexesSelected = false,
     this.allowMultipleSelection = false,
     this.onItemSelected,
     this.onItemDeselected,
@@ -119,7 +121,12 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
   //MARK: Util functions
 
   bool _isSelected(int index) {
-    return _selectedIndices.contains(index);
+    //check not trailing button , and if is from filter all chips should be selected
+    if (widget.showTrailingButton && (widget.titles.length == index)) {
+      return false;
+    } else {
+      return _selectedIndices.contains(index) || widget.allIndexesSelected;
+    }
   }
 }
 

@@ -1,97 +1,172 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/_list_view/error_list_tile.dart';
 import 'package:wallpost/_common_widgets/_list_view/loader_list_tile.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/task/entities/department.dart';
 import 'package:wallpost/task/entities/task_category.dart';
 import 'package:wallpost/task/services/task_categories_list_provider.dart';
 import 'package:wallpost/task/ui/views/categories_list/categories_list_tile.dart';
 
 abstract class CategoriesListView {
   void reloadData();
+
+  void onCategoryAdded();
+
+  void onCategoryRemoved();
 }
 
 class CategoriesListPresenter {
-  final CategoriesListView view;
-  final TaskCategoriesListProvider provider;
-  List<TaskCategory> categories = [];
+  final CategoriesListView _view;
+  final TaskCategoriesListProvider _provider;
+  List<TaskCategory> _categories = [];
+  List<TaskCategory> _selectedCategories = [];
   String _errorMessage;
+  String _searchText;
 
-  CategoriesListPresenter(this.view) : provider = TaskCategoriesListProvider();
+  CategoriesListPresenter(this._view)
+      : _provider = TaskCategoriesListProvider();
 
-  CategoriesListPresenter.initWith(this.view, this.provider);
+  Future<void> loadNextListOfCategories(String searchText) async {
+    if (_provider.isLoading || _provider.didReachListEnd) return null;
 
-  Future<void> loadNextListOfCategories() async {
-    if (provider.isLoading || provider.didReachListEnd) return null;
-
+    _searchText = searchText;
     _resetErrors();
+
     try {
-      var categoriesList = await provider.getNext();
-      categories.addAll(categoriesList);
-      view.reloadData();
+      var categoriesList = await _provider.getNext(searchText: _searchText);
+      _categories.addAll(categoriesList);
+      _view.reloadData();
     } on WPException catch (e) {
       _errorMessage = e.userReadableMessage;
-      view.reloadData();
+      _view.reloadData();
     }
   }
 
-  Future<List<Department>> getListOfDepartments() async {
-    if (provider.isLoading || provider.didReachListEnd) return null;
+  //MARK: Functions to get category list count and views
 
-    _resetErrors();
-    try {
-      var categoriesList = await provider.getNext();
-      view.reloadData();
-    } on WPException catch (e) {
-      _errorMessage = e.userReadableMessage;
-    }
-  }
+  int getNumberOfCategories() {
+    if (_hasErrors()) return _categories.length + 1;
 
-  int getNumberOfItems() {
-    if (_hasErrors()) return categories.length + 1;
+    if (_categories.isEmpty) return 1;
 
-    if (categories.isEmpty) return 1;
-
-    if (provider.didReachListEnd) {
-      return categories.length;
+    if (_provider.didReachListEnd) {
+      return _categories.length;
     } else {
-      return categories.length + 1;
+      return _categories.length + 1;
     }
   }
 
-  Widget getViewAtIndex(int index) {
-    if (_shouldShowErrorAtIndex(index))
-      return ErrorListTile('$_errorMessage\nTap here to reload.');
+  Widget getCategoryViewForIndex(int index) {
+    if (_shouldShowErrorAtIndex(index)) return _buildErrorView(_errorMessage);
 
-    if (categories.isEmpty) return _buildViewWhenThereAreNoResults();
+    if (_categories.isEmpty) return _buildViewWhenThereAreNoResults();
 
-    if (index < categories.length) {
-      return CategoryListTile(categories[index]);
+    if (index < _categories.length) {
+      return _buildCategoryViewForIndex(index);
     } else {
       return LoaderListTile();
     }
   }
 
   bool _shouldShowErrorAtIndex(int index) {
-    return _hasErrors() && index == categories.length;
+    return _hasErrors() && index == _categories.length;
+  }
+
+  Widget _buildErrorView(String errorMessage) {
+    return ErrorListTile(
+      '$errorMessage Tap here to reload.',
+      onTap: () {
+        loadNextListOfCategories(_searchText);
+        _view.reloadData();
+      },
+    );
   }
 
   Widget _buildViewWhenThereAreNoResults() {
-    if (provider.didReachListEnd) {
+    if (_provider.didReachListEnd) {
       return ErrorListTile(
-          'There are no categories to show. Tap here to reload.');
+        'There are no categories to show. Tap here to reload.',
+        onTap: () {
+          _provider.reset();
+          loadNextListOfCategories(_searchText);
+          _view.reloadData();
+        },
+      );
     } else {
       return LoaderListTile();
     }
   }
 
+  Widget _buildCategoryViewForIndex(int index) {
+    return CategoryListTile(
+      isCategorySelected(_categories[index]),
+      _categories[index],
+      onCategoryListTileTap: () {
+        if (isCategorySelected(_categories[index])) {
+          _selectedCategories.removeWhere((selectedCategory) =>
+              selectedCategory.name == _categories[index].name);
+          _view.onCategoryRemoved();
+        } else {
+          _selectedCategories.add(_categories[index]);
+          _view.onCategoryAdded();
+        }
+      },
+    );
+  }
+
+  //MARK: Functions to get selected category count and views
+
+  List<TaskCategory> getSelectedCategoriesList() {
+    return _selectedCategories;
+  }
+
+  int getNumberOfSelectedCategories() {
+    return _selectedCategories.length;
+  }
+
+  Widget getSelectedCategoryViewForIndex(int index) {
+    return RaisedButton(
+      textColor: AppColors.filtersTextGreyColor,
+      color: AppColors.filtersBackgroundGreyColor,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+        side:
+            BorderSide(color: AppColors.filtersBackgroundGreyColor, width: .5),
+      ),
+      child: Row(
+        children: [
+          Text(
+            _selectedCategories[index].name,
+            style: TextStyle(color: Colors.black),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: SvgPicture.asset('assets/icons/delete_icon.svg',
+                width: 15, height: 15),
+          ),
+        ],
+      ),
+      onPressed: () {
+        _selectedCategories.removeAt(index);
+        _view.onCategoryRemoved();
+      },
+    );
+  }
+
   //MARK: Util functions
 
   void reset() {
-    provider.reset();
+    _categories.clear();
+    _provider.reset();
     _resetErrors();
-    categories.clear();
-    view.reloadData();
+    _view.reloadData();
+  }
+
+  void resetFilter() {
+    _selectedCategories.clear();
+    _view.reloadData();
   }
 
   void _resetErrors() {
@@ -100,5 +175,13 @@ class CategoriesListPresenter {
 
   bool _hasErrors() {
     return _errorMessage != null;
+  }
+
+  bool isCategorySelected(TaskCategory category) {
+    for (TaskCategory selectedCategory in _selectedCategories) {
+      if (selectedCategory.name == category.name) return true;
+    }
+
+    return false;
   }
 }
