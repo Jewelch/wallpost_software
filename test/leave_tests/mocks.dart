@@ -24,7 +24,7 @@ class Mocks {
       "departure_date": randomString(10),
       "departure_time": randomString(10),
       "destination": randomString(10),
-      "employee": {
+      "employee_detail": {
         "active": randomString(10),
         "code": randomString(10),
         "company": randomBetween(1000, 5000),
