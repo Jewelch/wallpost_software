@@ -97,4 +97,50 @@ class Mocks {
       "way_type": randomString(10),
     },
   ];
+
+  static Map<String, dynamic> leaveTypesResponse = {
+    "airportDetails": randomString(10),
+    "exitPermit": true,
+    "joining_date": randomString(10),
+    "leaveTicket": true,
+    "leaveTypes": [
+      {
+        "code": randomString(10),
+        "id": randomBetween(1000, 5000),
+        "leaveType": randomBetween(1000, 5000),
+        "min_period": randomBetween(1000, 5000),
+        "name": randomString(10),
+        "pay_items": randomString(10),
+        "requires_certificate": "1",
+      },
+      {
+        "code": randomString(10),
+        "id": randomBetween(1000, 5000),
+        "leaveType": randomBetween(1000, 5000),
+        "min_period": randomBetween(1000, 5000),
+        "name": randomString(10),
+        "pay_items": randomString(10),
+        "requires_certificate": "0",
+      },
+      {
+        "code": randomString(10),
+        "id": randomBetween(1000, 5000),
+        "leaveType": randomBetween(1000, 5000),
+        "min_period": randomBetween(1000, 5000),
+        "name": randomString(10),
+        "pay_items": randomString(10),
+        "requires_certificate": "1",
+      },
+      {
+        "code": randomString(10),
+        "id": randomBetween(1000, 5000),
+        "leaveType": randomBetween(1000, 5000),
+        "min_period": randomBetween(1000, 5000),
+        "name": randomString(10),
+        "pay_items": randomString(10),
+        "requires_certificate": "1",
+      },
+    ],
+    "ticketDetails": {},
+  };
 }

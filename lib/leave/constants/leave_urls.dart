@@ -5,5 +5,8 @@ class LeaveUrls {
     return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/leaverequests?'
         '&pageNumber=$pageNumber&itemsPerPage=$itemsPerPage';
   }
-}
 
+  static String leaveTypesUrl(String companyId, String employeeId) {
+    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/leavetypes';
+  }
+}
