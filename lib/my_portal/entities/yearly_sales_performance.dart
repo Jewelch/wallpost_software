@@ -11,22 +11,18 @@ class YearlySalesPerformance extends JSONInitializable {
   List<num> _targetedMonthlySales;
   bool _show;
 
-  YearlySalesPerformance.fromJson(Map<String, dynamic> jsonMap)
-      : super.fromJson(jsonMap) {
+  YearlySalesPerformance.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       _year = _readYearFromResponse(jsonMap);
       _performancePercentage = sift.readNumberFromMap(jsonMap, 'percentage');
       _actualSales = sift.readStringFromMap(jsonMap, 'actual');
       _targetedSales = sift.readStringFromMap(jsonMap, 'target');
-      _actualMonthlySales = sift
-          .readNumberListFromMapWithDefaultValue(jsonMap, 'actualChart', []);
-      _targetedMonthlySales = sift
-          .readNumberListFromMapWithDefaultValue(jsonMap, 'targetChart', []);
+      _actualMonthlySales = sift.readNumberListFromMapWithDefaultValue(jsonMap, 'actualChart', []);
+      _targetedMonthlySales = sift.readNumberListFromMapWithDefaultValue(jsonMap, 'targetChart', []);
       _show = sift.readBooleanFromMap(jsonMap, 'show');
     } on SiftException catch (e) {
-      throw MappingException(
-          'Failed to cast YearlySalesPerformance response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast YearlySalesPerformance response. Error message - ${e.errorMessage}');
     }
   }
 
@@ -54,14 +50,10 @@ class YearlySalesPerformance extends JSONInitializable {
     for (int i = 0; i < _actualMonthlySales.length; i++) {
       num actualMonthlySale = _actualMonthlySales[i];
       num targetedMonthlySale = 0;
-      if (_targetedMonthlySales.length > i)
-        targetedMonthlySale = _targetedMonthlySales[i];
+      if (_targetedMonthlySales.length > i) targetedMonthlySale = _targetedMonthlySales[i];
 
       var percentage = actualMonthlySale;
-      if (targetedMonthlySale != 0)
-        percentage = actualMonthlySale / targetedMonthlySale * 100;
-
-      if (percentage > 100) percentage = 100;
+      if (targetedMonthlySale != 0) percentage = actualMonthlySale / targetedMonthlySale * 100;
 
       percentages.add(percentage.toInt());
     }
