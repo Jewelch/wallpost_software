@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
-import 'package:wallpost/_shared/user_management/entities/user.dart';
-import 'package:wallpost/_shared/user_management/repositories/user_repository.dart';
-import 'package:wallpost/_shared/user_management/services/access_token_provider.dart';
+import 'package:wallpost/_wp_core/user_management/entities/user.dart';
+import 'package:wallpost/_wp_core/user_management/repositories/user_repository.dart';
+import 'package:wallpost/_wp_core/user_management/services/access_token_provider.dart';
 
 import '../../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';

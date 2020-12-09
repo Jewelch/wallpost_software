@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallpost/_shared/user_management/entities/user.dart';
+import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 
 import '../../../_test_utils/map_comparer.dart';
 import '../mocks.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:wallpost/company_management/entities/company.dart';
-import 'package:wallpost/company_management/repositories/company_repository.dart';
-import 'package:wallpost/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/company_management/entities/company.dart';
+import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 
 import '../../_mocks/mock_current_user_provider.dart';
 import '../../_mocks/mock_user.dart';

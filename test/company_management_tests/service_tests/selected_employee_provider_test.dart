@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:wallpost/company_management/services/selected_employee_provider.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
 
 import '../../_mocks/mock_current_user_provider.dart';
 import '../../_mocks/mock_employee.dart';

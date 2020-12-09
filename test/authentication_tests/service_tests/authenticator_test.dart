@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
-import 'package:wallpost/_shared/user_management/services/new_user_adder.dart';
+import 'package:wallpost/_wp_core/user_management/services/new_user_adder.dart';
 import 'package:wallpost/authentication/constants/login_urls.dart';
 import 'package:wallpost/authentication/services/authenticator.dart';
 
@@ -18,11 +18,7 @@ void main() {
   var mockDeviceInfo = MockDeviceInfo();
   var mockNewUserAdder = MockNewUserAdder();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var authenticator = Authenticator.initWith(
-    mockDeviceInfo,
-    mockNewUserAdder,
-    mockNetworkAdapter,
-  );
+  var authenticator = Authenticator.initWith(mockDeviceInfo, mockNewUserAdder, mockNetworkAdapter);
 
   setUpAll(() {
     when(mockDeviceInfo.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));

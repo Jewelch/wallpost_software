@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_routing/routes.dart';
-import 'package:wallpost/_shared/start_up/repository_initializer.dart';
+import 'package:wallpost/_wp_core/start_up/repository_initializer.dart';
+import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 
 void main() => runApp(WallPostApp());
 
@@ -38,7 +39,9 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
 
   @override
   didChangeAppLifecycleState(AppLifecycleState state) {
-    StatusBarColorSetter.setColorBasedOnLoginStatus();
+    var user = CurrentUserProvider().getCurrentUser();
+    var isLoggedIn = user != null;
+    StatusBarColorSetter.setColorBasedOnLoginStatus(isLoggedIn);
     super.didChangeAppLifecycleState(state);
   }
 }
