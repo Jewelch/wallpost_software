@@ -29,7 +29,7 @@ class RequestsScreen extends StatelessWidget {
                 color: Colors.red,
                 child: Text('Go To Leave'),
                 onPressed: () {
-                  Navigator.pushNamed(context, RouteNames.leave);
+                  Navigator.pushNamed(context, RouteNames.leaveList);
                 },
               ),
             ],

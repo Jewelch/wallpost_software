@@ -20,9 +20,8 @@ class _EmployeePerformanceGraphViewState
 
   @override
   void initState() {
-    _getEmployeePerformance();
     super.initState();
-    _getEmployeePerformance();
+    // _getEmployeePerformance();
   }
 
   void _getEmployeePerformance() async {
