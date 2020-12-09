@@ -27,6 +27,10 @@ class BaseUrls {
     return BaseUrls.generateUrl(subDomain: _HR_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
   }
 
+  static String hrUrlV3() {
+    return BaseUrls.generateUrl(subDomain: _HR_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_3_PATH);
+  }
+
   static String taskUrlV2() {
     return BaseUrls.generateUrl(subDomain: _TASK_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
   }

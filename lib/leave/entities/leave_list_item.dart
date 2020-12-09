@@ -20,7 +20,7 @@ class LeaveListItem extends JSONInitializable {
     var sift = Sift();
     try {
       var leaveTypeMap = sift.readMapFromMap(jsonMap, 'leave_type');
-      var employeeMap = sift.readMapFromMap(jsonMap, 'employee');
+      var employeeMap = sift.readMapFromMap(jsonMap, 'employee_detail');
       _leaveId = '${sift.readNumberFromMap(jsonMap, 'id')}';
       _applicantName = sift.readStringFromMap(employeeMap, 'fullName');
       _applicantProfileImageUrl = sift.readStringFromMap(employeeMap, 'profile_image');
