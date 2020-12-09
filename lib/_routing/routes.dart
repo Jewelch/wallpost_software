@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_main/main_screen.dart';
 import 'package:wallpost/_routing/route_names.dart';
-import 'package:wallpost/authentication/ui/login_screen.dart';
+import 'package:wallpost/login/ui/login_screen.dart';
 import 'package:wallpost/company_list//ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/leave/ui/leave_list_filter_screen.dart';

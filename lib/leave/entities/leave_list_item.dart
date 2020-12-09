@@ -12,6 +12,9 @@ class LeaveListItem extends JSONInitializable {
   num _totalLeaveDays;
   String _leaveType;
   LeaveStatus _status;
+  String _approvalComment;
+  String _rejectionReason;
+  String _cancellationReason;
 
   LeaveListItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
@@ -27,6 +30,9 @@ class LeaveListItem extends JSONInitializable {
       _leaveType = sift.readStringFromMap(leaveTypeMap, 'name');
       var status = sift.readNumberFromMap(jsonMap, 'status');
       _status = _readLeaveStatus(status);
+      _approvalComment = sift.readStringFromMapWithDefaultValue(jsonMap, 'approval_comments', null);
+      _rejectionReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'rejected_reason', null);
+      _cancellationReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'cancel_reason', null);
     } on SiftException catch (e) {
       throw MappingException('Failed to cast LeaveListItem response. Error message - ${e.errorMessage}');
     }
@@ -59,4 +65,10 @@ class LeaveListItem extends JSONInitializable {
   String get leaveType => _leaveType;
 
   LeaveStatus get status => _status;
+
+  String get approvalComment => _approvalComment;
+
+  String get rejectionReason => _rejectionReason;
+
+  String get cancellationReason => _cancellationReason;
 }

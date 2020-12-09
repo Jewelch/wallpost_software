@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
 
-import '../../_mocks/mock_current_user_provider.dart';
-import '../../_mocks/mock_employee.dart';
-import '../../_mocks/mock_user.dart';
+import '../../../_mocks/mock_current_user_provider.dart';
+import '../../../_mocks/mock_employee.dart';
+import '../../../_mocks/mock_user.dart';
 import 'companies_list_provider_test.dart';
 
 void main() {

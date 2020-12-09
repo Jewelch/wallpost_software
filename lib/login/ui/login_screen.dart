@@ -7,8 +7,8 @@ import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/authentication/entities/credentials.dart';
-import 'package:wallpost/authentication/services/authenticator.dart';
+import 'package:wallpost/_wp_core/user_management/entities/credentials.dart';
+import 'package:wallpost/_wp_core/user_management/services/authenticator.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

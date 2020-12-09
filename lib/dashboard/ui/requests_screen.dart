@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_routing/route_names.dart';
-import 'package:wallpost/authentication/services/logout_handler.dart';
+import 'package:wallpost/_wp_core/user_management/services/logout_handler.dart';
 
 class RequestsScreen extends StatelessWidget {
   @override

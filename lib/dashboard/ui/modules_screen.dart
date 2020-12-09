@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/authentication/services/logout_handler.dart';
+import 'package:wallpost/_wp_core/user_management/services/logout_handler.dart';
 
 class ModulesScreen extends StatelessWidget {
   @override
