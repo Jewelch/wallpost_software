@@ -1,5 +1,5 @@
 import 'package:random_string/random_string.dart';
-import 'package:wallpost/authentication/entities/credentials.dart';
+import 'package:wallpost/_wp_core/user_management/entities/credentials.dart';
 
 class Mocks {
   static var credentials = Credentials(

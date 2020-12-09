@@ -3,8 +3,8 @@ import 'package:wallpost/_shared/constants/device_info.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/_wp_core/user_management/services/new_user_adder.dart';
 import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
-import 'package:wallpost/authentication/constants/login_urls.dart';
-import 'package:wallpost/authentication/entities/credentials.dart';
+import 'package:wallpost/_wp_core/user_management/constants/login_urls.dart';
+import 'package:wallpost/_wp_core/user_management/entities/credentials.dart';
 
 class Authenticator {
   final DeviceInfoProvider _deviceInfo;

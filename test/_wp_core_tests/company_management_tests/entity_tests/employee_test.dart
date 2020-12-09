@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_wp_core/company_management/entities/employee.dart';
 
-import '../../_test_utils/map_comparer.dart';
+import '../../../_test_utils/map_comparer.dart';
 import '../mocks.dart';
 
 void main() {

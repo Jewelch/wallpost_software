@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
+import 'package:wallpost/_wp_core/user_management/constants/login_urls.dart';
+import 'package:wallpost/_wp_core/user_management/services/authenticator.dart';
 import 'package:wallpost/_wp_core/user_management/services/new_user_adder.dart';
-import 'package:wallpost/authentication/constants/login_urls.dart';
-import 'package:wallpost/authentication/services/authenticator.dart';
 
-import '../../_mocks/mock_network_adapter.dart';
+import '../../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 class MockDeviceInfo extends Mock implements DeviceInfoProvider {}

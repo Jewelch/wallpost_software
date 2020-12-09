@@ -4,8 +4,8 @@ import 'package:wallpost/_wp_core/company_management/constants/company_managemen
 import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
 import 'package:wallpost/_wp_core/company_management/services/companies_list_provider.dart';
 
-import '../../_mocks/mock_current_user_provider.dart';
-import '../../_mocks/mock_network_adapter.dart';
+import '../../../_mocks/mock_current_user_provider.dart';
+import '../../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 class MockCompanyRepository extends Mock implements CompanyRepository {}
