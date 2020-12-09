@@ -16,6 +16,10 @@ class LeaveListProvider {
 
   LeaveListProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
 
+  LeaveListProvider()
+      : _selectedEmployeeProvider = SelectedEmployeeProvider(),
+        _networkAdapter = WPAPI();
+
   void reset() {
     _pageNumber = 0;
     _didReachListEnd = false;
