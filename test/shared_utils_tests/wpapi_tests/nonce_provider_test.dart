@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallpost/_shared/wpapi/nonce_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/nonce_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 

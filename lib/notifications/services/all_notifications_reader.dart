@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/user_management/services/current_user_provider.dart';
-import 'package:wallpost/_shared/wpapi/wp_api.dart';
-import 'package:wallpost/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/notifications/constants/notification_urls.dart';
 
 class AllNotificationsReader {

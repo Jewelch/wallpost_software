@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
-import 'package:wallpost/_shared/user_management/entities/user.dart';
-import 'package:wallpost/_shared/user_management/services/new_user_adder.dart';
-import 'package:wallpost/_shared/wpapi/wp_api.dart';
+import 'package:wallpost/_wp_core/user_management/entities/user.dart';
+import 'package:wallpost/_wp_core/user_management/services/new_user_adder.dart';
+import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
 import 'package:wallpost/authentication/constants/login_urls.dart';
 import 'package:wallpost/authentication/entities/credentials.dart';
 

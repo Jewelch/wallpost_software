@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/wpapi/wp_api.dart';
-import 'package:wallpost/company_management/services/selected_employee_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
 import 'package:wallpost/leave/constants/leave_urls.dart';
 import 'package:wallpost/leave/entities/leave_list_item.dart';
 
@@ -10,7 +10,7 @@ class LeaveListProvider {
   final NetworkAdapter _networkAdapter;
   final int _perPage = 15;
   int _pageNumber = 0;
-  bool _didReachListEnd = false;
+  bool _didReachListEnd = false; // ignore: unused_field
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 

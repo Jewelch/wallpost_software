@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:wallpost/company_management/repositories/company_repository.dart';
-import 'package:wallpost/company_management/services/user_companies_remover.dart';
+import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
+import 'package:wallpost/_wp_core/company_management/services/user_companies_remover.dart';
 
 import '../../_mocks/mock_user.dart';
 

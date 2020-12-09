@@ -4,9 +4,9 @@ import 'package:wallpost/_shared/constants/app_id.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
 import 'package:wallpost/_shared/network_adapter/exceptions/malformed_response_exception.dart';
 import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
-import 'package:wallpost/_shared/user_management/services/access_token_provider.dart';
-import 'package:wallpost/_shared/wpapi/nonce_provider.dart';
-import 'package:wallpost/_shared/wpapi/wp_api.dart';
+import 'package:wallpost/_wp_core/user_management/services/access_token_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/nonce_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 

@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
-import 'package:wallpost/_shared/wpapi/wp_api.dart';
+import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
 import 'package:wallpost/attendance/constants/attendance_urls.dart';
 import 'package:wallpost/attendance/entities/attendance_report.dart';
-import 'package:wallpost/company_management/services/selected_employee_provider.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
 
 class AttendanceReportProvider {
   final SelectedEmployeeProvider _selectedEmployeeProvider;

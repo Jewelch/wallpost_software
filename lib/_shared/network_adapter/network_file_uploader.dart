@@ -15,7 +15,6 @@ class NetworkFileUploader {
   Future<APIResponse> upload(List<File> files, APIRequest apiRequest, {Function(double) onUploadProgress}) async {
     if (await _isConnected() == false) throw NetworkFailureException();
 
-
     final url = apiRequest.url;
     final request = MultipartRequest(
       'POST',
@@ -27,7 +26,7 @@ class NetworkFileUploader {
     request.headers.addAll(apiRequest.headers);
     request.fields['file_rename'] = 'true';
 
-    for(File file in files) {
+    for (File file in files) {
       var filename = file.path.split('/').last;
       request.files.add(
         await http.MultipartFile.fromPath(filename, file.path, contentType: getMimeTypeFromFileName(filename)),

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/wpapi/wp_api.dart';
-import 'package:wallpost/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/task/constants/task_urls.dart';
 import 'package:wallpost/task/entities/task_list_filters.dart';
 import 'package:wallpost/task/entities/task_list_item.dart';
@@ -11,7 +11,7 @@ class TasksListProvider {
   final NetworkAdapter _networkAdapter;
   final int _perPage = 15;
   int _pageNumber = 1;
-  bool _didReachListEnd = false;
+  bool _didReachListEnd = false; // ignore: unused_field
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
