@@ -4,7 +4,7 @@ import 'package:wallpost/task/entities/task_list_filters.dart';
 class TaskUrls {
   static String taskListCountUrl(String companyId, int year) {
     var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/reports/counts';
-    if (year != null) url += '&year=$year';
+    if (year != null) url += '?year=$year';
     return url;
   }
 
