@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
 import 'package:wallpost/task/constants/task_urls.dart';
 import 'package:wallpost/task/entities/task_count.dart';
 
@@ -11,14 +11,16 @@ class TaskCountProvider {
   bool isLoading = false;
   String _sessionId;
 
-  TaskCountProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
+  TaskCountProvider.initWith(
+      this._selectedCompanyProvider, this._networkAdapter);
 
   TaskCountProvider()
       : _selectedCompanyProvider = SelectedCompanyProvider(),
         _networkAdapter = WPAPI();
 
   Future<TaskCount> getCount({int year}) async {
-    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
+    var companyId =
+        _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     var url = TaskUrls.taskListCountUrl(companyId, year);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
@@ -36,9 +38,11 @@ class TaskCountProvider {
 
   Future<TaskCount> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<TaskCount>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId)
+      return Completer<TaskCount>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
+    if (apiResponse.data is! Map<String, dynamic>)
+      throw WrongResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_main/main_screen.dart';
 import 'package:wallpost/_routing/route_names.dart';
-import 'package:wallpost/login/ui/login_screen.dart';
 import 'package:wallpost/company_list//ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/leave/ui/leave_list_screen.dart';
+import 'package:wallpost/login/ui/login_screen.dart';
 import 'package:wallpost/password_management/ui/change_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_success_screen.dart';
 import 'package:wallpost/settings/ui/settings_screen.dart';
-import 'package:wallpost/task/ui/task_details_screen.dart';
 import 'package:wallpost/task/ui/task_filter_screen.dart';
-import 'package:wallpost/task/ui/task_screen.dart';
 import 'package:wallpost/task/ui/views/categories_list/categories_list_screen.dart';
 import 'package:wallpost/task/ui/views/departments_list/departments_list_screen.dart';
+import 'package:wallpost/task/ui/views/task_details/task_details_screen.dart';
 import 'package:wallpost/task/ui/views/task_employee_list/task_employee_list_screen.dart';
+import 'package:wallpost/task/ui/views/task_list/task_screen.dart';
 
 class Routes {
   Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
@@ -44,20 +44,26 @@ class Routes {
       RouteNames.taskDetails: (BuildContext context) => TaskDetailsScreen(),
 
       //filter Departments List Screen
-      RouteNames.departmentsListScreen: (BuildContext context) => DepartmentsListScreen(),
+      RouteNames.departmentsListScreen: (BuildContext context) =>
+          DepartmentsListScreen(),
 
       //filter Task Category List Screen
-      RouteNames.taskCategoryListScreen: (BuildContext context) => CategoriesListScreen(),
+      RouteNames.taskCategoryListScreen: (BuildContext context) =>
+          CategoriesListScreen(),
 
       //filter Task Employee List Screen
-      RouteNames.taskEmployeeListScreen: (BuildContext context) => EmployeeListScreen(),
+      RouteNames.taskEmployeeListScreen: (BuildContext context) =>
+          EmployeeListScreen(),
 
       //Password management
-      RouteNames.forgotPassword: (BuildContext context) => ForgotPasswordScreen(),
+      RouteNames.forgotPassword: (BuildContext context) =>
+          ForgotPasswordScreen(),
 
-      RouteNames.changePassword: (BuildContext context) => ChangePasswordScreen(),
+      RouteNames.changePassword: (BuildContext context) =>
+          ChangePasswordScreen(),
 
-      RouteNames.forgotPasswordSuccess: (BuildContext context) => ForgotPasswordSuccessScreen(),
+      RouteNames.forgotPasswordSuccess: (BuildContext context) =>
+          ForgotPasswordSuccessScreen(),
 
       //leave
       RouteNames.leave: (BuildContext context) => LeaveListScreen(),

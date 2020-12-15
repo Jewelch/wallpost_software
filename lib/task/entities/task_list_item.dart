@@ -13,8 +13,10 @@ class TaskListItem extends JSONInitializable {
   DateTime _endTime;
   String _status;
   bool _isEscalated;
+  int _progressPercentage;
 
-  TaskListItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  TaskListItem.fromJson(Map<String, dynamic> jsonMap)
+      : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var statusMap = sift.readMapFromMap(jsonMap, 'status');
@@ -23,18 +25,23 @@ class TaskListItem extends JSONInitializable {
       _id = sift.readNumberFromMap(jsonMap, 'id');
       _name = sift.readStringFromMap(jsonMap, 'name');
       _assignees = _readTaskAssigneeFromMapList(assigneesMapList);
-      _startDate = sift.readDateFromMap(scheduleMap, 'start_date', 'yyyy-MM-dd');
+      _startDate =
+          sift.readDateFromMap(scheduleMap, 'start_date', 'yyyy-MM-dd');
       _startTime = sift.readDateFromMap(scheduleMap, 'start_time', 'HH:mm:ss');
       _endDate = sift.readDateFromMap(scheduleMap, 'end_date', 'yyyy-MM-dd');
       _endTime = sift.readDateFromMap(scheduleMap, 'end_time', 'HH:mm:ss');
       _status = sift.readStringFromMap(statusMap, 'display_name');
       _isEscalated = sift.readNumberFromMap(jsonMap, 'is_escalated') == 1;
+      _progressPercentage =
+          sift.readNumberFromMap(jsonMap, 'progress_percentage');
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast TaskListItem response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast TaskListItem response. Error message - ${e.errorMessage}');
     }
   }
 
-  List<TaskEmployee> _readTaskAssigneeFromMapList(List<Map<String, dynamic>> jsonMapList) {
+  List<TaskEmployee> _readTaskAssigneeFromMapList(
+      List<Map<String, dynamic>> jsonMapList) {
     var items = <TaskEmployee>[];
     for (var jsonMap in jsonMapList) {
       var employeeMap = Sift().readMapFromMap(jsonMap, 'employee');
@@ -61,4 +68,6 @@ class TaskListItem extends JSONInitializable {
   String get status => _status;
 
   bool get isEscalated => _isEscalated;
+
+  int get progressPercentage => _progressPercentage;
 }
