@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/task/ui/task_comment_card.dart';
+import 'package:wallpost/task/ui/views/task_details/task_comment_tile.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   @override
@@ -297,7 +297,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
   }
 
   Widget _getCommentsCard(int index) {
-    return TaskCommentCard(
+    return TaskCommentTile(
       onPressed: () => {},
     );
   }
