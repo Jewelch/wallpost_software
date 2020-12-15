@@ -9,14 +9,12 @@ import 'package:wallpost/_wp_core/company_management/services/selected_company_p
 import 'package:wallpost/task/entities/task_list_filters.dart';
 import 'package:wallpost/task/ui/presenters/task_list_presenter.dart';
 
-class TaskScreen extends StatefulWidget {
+class TaskListScreen extends StatefulWidget {
   @override
   _TaskScreen createState() => _TaskScreen();
 }
 
-//remove me
-class _TaskScreen extends State<TaskScreen>
-    with SingleTickerProviderStateMixin, TaskListView {
+class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMixin, TaskListView {
   var _searchBarController = TextEditingController();
   TabController _tabController;
   TaskListPresenter _presenter;
@@ -40,8 +38,7 @@ class _TaskScreen extends State<TaskScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title:
-            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
           iconSize: 12,
@@ -90,19 +87,14 @@ class _TaskScreen extends State<TaskScreen>
                     },
                   ),
                 )
-              : Text('Task Requests',
-                  style: TextStyle(color: Colors.black, fontSize: 16)),
+              : Text('Task Requests', style: TextStyle(color: Colors.black, fontSize: 16)),
           IconButton(
               icon: _listFilterVisible
-                  ? SvgPicture.asset('assets/icons/delete_icon.svg',
-                      width: 42, height: 23)
-                  : SvgPicture.asset('assets/icons/search_icon.svg',
-                      width: 42, height: 23),
+                  ? SvgPicture.asset('assets/icons/delete_icon.svg', width: 42, height: 23)
+                  : SvgPicture.asset('assets/icons/search_icon.svg', width: 42, height: 23),
               onPressed: () {
                 setState(() {
-                  _listFilterVisible
-                      ? _listFilterVisible = false
-                      : _listFilterVisible = true;
+                  _listFilterVisible ? _listFilterVisible = false : _listFilterVisible = true;
                 });
               }),
         ],
@@ -186,8 +178,7 @@ class _TaskScreen extends State<TaskScreen>
 
   void goToTaskFilter() async {
     _filters.reset();
-    await Navigator.pushNamed(context, RouteNames.taskFilter,
-        arguments: _filters);
+    await Navigator.pushNamed(context, RouteNames.taskFilter, arguments: _filters);
     _selectedTab = _tabController.index;
     _presenter.reset();
     _presenter.loadNextListOfTasks(_selectedTab, _filters);
@@ -195,8 +186,7 @@ class _TaskScreen extends State<TaskScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _tasksListScrollController.addListener(() {
-      if (_tasksListScrollController.position.pixels ==
-          _tasksListScrollController.position.maxScrollExtent) {
+      if (_tasksListScrollController.position.pixels == _tasksListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfTasks(_selectedTab, _filters);
       }
     });
@@ -240,19 +230,14 @@ class TabWidget extends StatelessWidget {
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text: '$_totalCount',
-                      style: TextStyle(
-                          color: AppColors.defaultColor, fontSize: 22))
+                  TextSpan(text: '$_totalCount', style: TextStyle(color: AppColors.defaultColor, fontSize: 22))
                 ],
               ),
             ),
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text: _tabName,
-                      style: TextStyle(color: Colors.black, fontSize: 12)),
+                  TextSpan(text: _tabName, style: TextStyle(color: Colors.black, fontSize: 12)),
                 ],
               ),
             ),

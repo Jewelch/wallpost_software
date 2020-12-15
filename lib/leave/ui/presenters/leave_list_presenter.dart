@@ -4,7 +4,7 @@ import 'package:wallpost/_common_widgets/_list_view/loader_list_tile.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/leave/entities/leave_list_item.dart';
 import 'package:wallpost/leave/services/leave_list_provider.dart';
-import 'package:wallpost/leave/ui/views/leave_list_tile.dart';
+import 'package:wallpost/leave/ui/views/leave_list/leave_list_tile.dart';
 
 abstract class LeaveListView {
   void reloadData();

@@ -10,12 +10,12 @@ import 'package:wallpost/task/entities/task_employee.dart';
 import 'package:wallpost/task/entities/task_list_filters.dart';
 import 'package:wallpost/task/ui/presenters/task_filter_presenter.dart';
 
-class TaskFilterScreen extends StatefulWidget {
+class TaskListFilterScreen extends StatefulWidget {
   @override
-  _TaskFilterScreenState createState() => _TaskFilterScreenState();
+  _TaskListFilterScreenState createState() => _TaskListFilterScreenState();
 }
 
-class _TaskFilterScreenState extends State<TaskFilterScreen> implements DepartmentsWrapView {
+class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements DepartmentsWrapView {
   TaskFilterPresenter _presenter;
   List<Department> filteredDepartments;
   bool isFromDepartmentFilter = false;
