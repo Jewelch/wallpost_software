@@ -44,4 +44,7 @@ class RouteNames {
 
   //leave list filter
   static final String leaveListFilter = "/leave-list-filter";
+
+  //leave Employee List
+  static final String leaveEmployeeListScreen = "/leave-employee-list-screen";
 }

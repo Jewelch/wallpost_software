@@ -4,17 +4,38 @@ import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/leave/ui/leave_list_tile.dart';
+import 'package:wallpost/leave/ui/presenters/leave_list_presenter.dart';
 
 class LeaveListScreen extends StatefulWidget {
   @override
   _LeaveListScreenState createState() => _LeaveListScreenState();
 }
 
-class _LeaveListScreenState extends State<LeaveListScreen> {
+class _LeaveListScreenState extends State<LeaveListScreen>
+    implements LeaveListView {
   TextEditingController _listFilterTextFieldController =
       new TextEditingController();
+  LeaveListPresenter _presenter;
+  ScrollController _scrollController;
   bool _listFilterVisible = false;
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    _presenter = LeaveListPresenter(this);
+    _presenter.loadNextListOfLeave();
+    _setupScrollDownToLoadMoreItems();
+    super.initState();
+  }
+
+  void _setupScrollDownToLoadMoreItems() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _presenter.loadNextListOfLeave();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +62,7 @@ class _LeaveListScreenState extends State<LeaveListScreen> {
             children: [
               _headerFilterTextFieldWidget(),
               Divider(height: 4),
-              _filterListWidget()
+              Expanded(child: _filterListWidget())
             ],
           ),
         ),
@@ -87,17 +108,22 @@ class _LeaveListScreenState extends State<LeaveListScreen> {
     );
   }
 
-  Container _filterListWidget() {
+  Widget _filterListWidget() {
     return Container(
-      child: Expanded(
-        child: ListView.separated(
-          itemCount: 3,
-          separatorBuilder: (context, i) => const Divider(),
-          itemBuilder: (context, i) {
-            return LeaveListTile();
-          },
-        ),
+      padding: EdgeInsets.symmetric(horizontal: 12),
+      child: ListView.separated(
+        controller: _scrollController,
+        itemCount: _presenter.getNumberOfItems(),
+        separatorBuilder: (context, i) => const Divider(),
+        itemBuilder: (BuildContext context, index) {
+          return _presenter.getViewAtIndex(index);
+        },
       ),
     );
+  }
+
+  @override
+  void reloadData() {
+    if (this.mounted) setState(() {});
   }
 }
