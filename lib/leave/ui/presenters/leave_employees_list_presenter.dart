@@ -103,8 +103,7 @@ class EmployeesListPresenter {
       _employees[index],
       onEmployeeListTileTap: () {
         if (isEmployeeSelected(_employees[index])) {
-          _selectedEmployees.removeWhere((selectedEmployee) =>
-              selectedEmployee.fullName == _employees[index].fullName);
+          _selectedEmployees.removeWhere((selectedEmployee) => selectedEmployee.fullName == _employees[index].fullName);
           _view.onEmployeeRemoved();
         } else {
           _selectedEmployees.add(_employees[index]);
@@ -131,8 +130,7 @@ class EmployeesListPresenter {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
-        side:
-            BorderSide(color: AppColors.filtersBackgroundGreyColor, width: .5),
+        side: BorderSide(color: AppColors.filtersBackgroundGreyColor, width: .5),
       ),
       child: Row(
         children: [
@@ -142,8 +140,7 @@ class EmployeesListPresenter {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: SvgPicture.asset('assets/icons/delete_icon.svg',
-                width: 15, height: 15),
+            child: SvgPicture.asset('assets/icons/close_icon.svg', width: 15, height: 15),
           ),
         ],
       ),

@@ -81,7 +81,7 @@ class _TaskFilterScreenState extends State<TaskFilterScreen> implements Departme
             children: [
               SizedBox(
                 child: IconButton(
-                  icon: SvgPicture.asset('assets/icons/delete_icon.svg', width: 42, height: 23),
+                  icon: SvgPicture.asset('assets/icons/close_icon.svg', width: 42, height: 23),
                   onPressed: () => {Navigator.pop(context)},
                 ),
               ),

@@ -143,7 +143,7 @@ class CategoriesListPresenter {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: SvgPicture.asset('assets/icons/delete_icon.svg',
+            child: SvgPicture.asset('assets/icons/close_icon.svg',
                 width: 15, height: 15),
           ),
         ],

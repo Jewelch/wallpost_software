@@ -11,10 +11,8 @@ class LeaveListScreen extends StatefulWidget {
   _LeaveListScreenState createState() => _LeaveListScreenState();
 }
 
-class _LeaveListScreenState extends State<LeaveListScreen>
-    implements LeaveListView {
-  TextEditingController _listFilterTextFieldController =
-      new TextEditingController();
+class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListView {
+  TextEditingController _listFilterTextFieldController = new TextEditingController();
   LeaveListPresenter _presenter;
   ScrollController _scrollController;
   bool _listFilterVisible = false;
@@ -30,8 +28,7 @@ class _LeaveListScreenState extends State<LeaveListScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfLeave();
       }
     });
@@ -42,35 +39,30 @@ class _LeaveListScreenState extends State<LeaveListScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title:
-            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
-          iconSize: 12,
+          iconSize: 15,
           onPressed: () => Navigator.pop(context),
         ),
         trailing: RoundedIconButton(
           iconName: 'assets/icons/filters_icon.svg',
-          onPressed: () =>
-              {Navigator.pushNamed(context, RouteNames.leaveListFilter)},
+          iconSize: 15,
+          onPressed: () => Navigator.pushNamed(context, RouteNames.leaveListFilter),
         ),
       ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12),
           child: Column(
-            children: [
-              _headerFilterTextFieldWidget(),
-              Divider(height: 4),
-              Expanded(child: _filterListWidget())
-            ],
+            children: [_headerFilterTextFieldWidget(), Divider(height: 4), Expanded(child: _filterListWidget())],
           ),
         ),
       ),
     );
   }
 
-  SizedBox _headerFilterTextFieldWidget() {
+  Widget _headerFilterTextFieldWidget() {
     return SizedBox(
       height: 40,
       child: Row(
@@ -80,27 +72,19 @@ class _LeaveListScreenState extends State<LeaveListScreen>
               ? Expanded(
                   child: TextField(
                     controller: _listFilterTextFieldController,
-                    onSubmitted: (text) =>
-                        print(_listFilterTextFieldController.text),
-                    style: TextStyle(color: Colors.black, fontSize: 20.0),
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter a search term'),
+                    onSubmitted: (text) => print(_listFilterTextFieldController.text),
+                    style: TextStyle(color: Colors.black),
+                    decoration: InputDecoration(border: InputBorder.none, hintText: 'Enter a search term'),
                   ),
                 )
-              : Text('Leave Requests',
-                  style: TextStyle(color: Colors.black, fontSize: 16)),
+              : Text('Leave Requests', style: TextStyle(color: Colors.black, fontSize: 16)),
           IconButton(
               icon: _listFilterVisible
-                  ? SvgPicture.asset('assets/icons/delete_icon.svg',
-                      width: 42, height: 23)
-                  : SvgPicture.asset('assets/icons/search_icon.svg',
-                      width: 42, height: 23),
+                  ? SvgPicture.asset('assets/icons/close_icon.svg', width: 42, height: 23)
+                  : SvgPicture.asset('assets/icons/search_icon.svg', width: 42, height: 23),
               onPressed: () {
                 setState(() {
-                  _listFilterVisible
-                      ? _listFilterVisible = false
-                      : _listFilterVisible = true;
+                  _listFilterVisible ? _listFilterVisible = false : _listFilterVisible = true;
                 });
               }),
         ],

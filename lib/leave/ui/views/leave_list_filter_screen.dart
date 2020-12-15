@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/multi_select_filter_chips.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -12,8 +13,7 @@ class LeaveListFilterScreen extends StatefulWidget {
   _LeaveListFilterScreenState createState() => _LeaveListFilterScreenState();
 }
 
-class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
-    implements LeaveListView {
+class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implements LeaveListView {
   LeaveListFilterPresenter _presenter;
   List<LeaveType> leaveTypes;
   bool isFilteredLeaveType = false;
@@ -35,82 +35,41 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        titleSpacing: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        automaticallyImplyLeading: false,
-        title: Column(
+      appBar: SimpleAppBar(
+        title: 'Filters',
+        leadingSpace: 0,
+        trailingSpace: 0,
+        leading: RoundedIconButton(
+          iconName: 'assets/icons/close_icon.svg',
+          iconColor: AppColors.defaultColor,
+          color: Colors.transparent,
+          onPressed: () => Navigator.pop(context),
+        ),
+        trailing: Row(
           children: [
-            Row(
-              children: [
-                SizedBox(
-                  child: IconButton(
-                    icon: SvgPicture.asset('assets/icons/delete_icon.svg',
-                        width: 42, height: 23),
-                    onPressed: () => {Navigator.pop(context)},
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    height: 32,
-                    width: double.infinity,
-                    child: Row(
-                      children: [
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Container(
-                            child: Center(
-                              child: Text('Filters',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 18)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  child: IconButton(
-                    icon: SvgPicture.asset('assets/icons/reset_icon.svg',
-                        width: 42, height: 23),
-                    onPressed: () => {},
-                  ),
-                ),
-                SizedBox(
-                  child: IconButton(
-                    icon: SvgPicture.asset(
-                      'assets/icons/check.svg',
-                      width: 42,
-                      height: 23,
-                      color: AppColors.defaultColor,
-                    ),
-                    onPressed: () => {_updateAllSelectedFilters()},
-                  ),
-                ),
-              ],
+            RoundedIconButton(
+              iconName: 'assets/icons/reset_icon.svg',
+              iconColor: AppColors.defaultColor,
+              color: Colors.transparent,
+              onPressed: () => {},
             ),
-            Divider(
-              height: 4,
-              color: AppColors.blackColor,
+            SizedBox(width: 8),
+            RoundedIconButton(
+              iconName: 'assets/icons/check.svg',
+              iconColor: AppColors.defaultColor,
+              color: Colors.transparent,
+              onPressed: () => _updateAllSelectedFilters(),
             ),
           ],
         ),
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildCategoryList(),
-            Divider(),
-            _buildLeaveTypeList(),
-            Divider(),
-            _buildEmployeeList()
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [_buildCategoryList(), Divider(), _buildLeaveTypeList(), Divider(), _buildEmployeeList()],
+          ),
         ),
       ),
     );
@@ -155,9 +114,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
         Text('Leave Type', style: TextStyle(color: Colors.black, fontSize: 14)),
         SizedBox(height: 8),
         _presenter.isLoadingLeaveTypes()
-            ? Center(
-                child: SizedBox(
-                    width: 30, height: 30, child: CircularProgressIndicator()))
+            ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
             : MultiSelectFilterChips(
                 titles: leaveTypeTitles,
                 selectedIndices: [],
@@ -178,8 +135,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
         ? filteredEmployees.map((e) => e.fullName).toList()
         : _presenter.employees.map((e) => e.fullName).toList();
     if (employeeTitles.isNotEmpty && !isFromEmployeeFilter) {
-      employeeTitles = employeeTitles.sublist(
-          0, employeeTitles.length > 8 ? 8 : employeeTitles.length);
+      employeeTitles = employeeTitles.sublist(0, employeeTitles.length > 8 ? 8 : employeeTitles.length);
     }
 
     return Column(
@@ -190,9 +146,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
         Text('Employee', style: TextStyle(color: Colors.black, fontSize: 14)),
         SizedBox(height: 8),
         _presenter.isLoadingEmployees()
-            ? Center(
-                child: SizedBox(
-                    width: 30, height: 30, child: CircularProgressIndicator()))
+            ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
             : MultiSelectFilterChips(
                 titles: employeeTitles,
                 selectedIndices: [],
@@ -211,8 +165,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
   }
 
   void goToEmployeesFilter() async {
-    final selectedEmployees =
-        await Navigator.pushNamed(context, RouteNames.leaveEmployeeListScreen);
+    final selectedEmployees = await Navigator.pushNamed(context, RouteNames.leaveEmployeeListScreen);
 
     filteredEmployees = selectedEmployees;
     isFromEmployeeFilter = true;

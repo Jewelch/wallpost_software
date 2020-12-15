@@ -33,29 +33,13 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
       bottom: showDivider ? AppBarDivider() : null,
       // Don't show the default leading button
       automaticallyImplyLeading: false,
-      title: Column(
-        children: [
-          Row(
-            children: [
-              SizedBox(width: leadingSpace),
-              this.leading ?? SizedBox(width: 32),
-              SizedBox(width: 8),
-              Expanded(
-                child: Container(
-                  child: Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ),
-              ),
-              SizedBox(width: 8),
-              this.trailing ?? SizedBox(width: 32),
-              SizedBox(width: trailingSpace),
-            ],
-          ),
-        ],
+      title: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.black, fontSize: 16),
       ),
+      leading: leading,
+      actions: [trailing],
     );
   }
 }

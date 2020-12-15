@@ -10,8 +10,7 @@ class LeaveEmployeeListScreen extends StatefulWidget {
   _EmployeeListScreenState createState() => _EmployeeListScreenState();
 }
 
-class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
-    implements EmployeesListView {
+class _EmployeeListScreenState extends State<LeaveEmployeeListScreen> implements EmployeesListView {
   var _searchBarController = TextEditingController();
   ScrollController _employeesListScrollController = ScrollController();
   ScrollController _selectedEmployeesListScrollController = ScrollController();
@@ -27,8 +26,7 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _employeesListScrollController.addListener(() {
-      if (_employeesListScrollController.position.pixels ==
-          _employeesListScrollController.position.maxScrollExtent) {
+      if (_employeesListScrollController.position.pixels == _employeesListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfEmployees(_searchBarController.text);
       }
     });
@@ -54,8 +52,7 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
           iconSize: 20,
           iconColor: AppColors.defaultColor,
           color: Colors.white,
-          onPressed: () =>
-              Navigator.pop(context, _presenter.getSelectedEmployeesList()),
+          onPressed: () => Navigator.pop(context, _presenter.getSelectedEmployeesList()),
         ),
       ),
       body: Column(
@@ -122,10 +119,8 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
     if (this.mounted) setState(() {});
 
     Future.delayed(Duration(milliseconds: 200)).then((value) {
-      _selectedEmployeesListScrollController.animateTo(
-          _selectedEmployeesListScrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeOut);
+      _selectedEmployeesListScrollController.animateTo(_selectedEmployeesListScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     });
   }
 

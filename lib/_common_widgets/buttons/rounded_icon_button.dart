@@ -12,11 +12,11 @@ class RoundedIconButton extends StatelessWidget {
 
   RoundedIconButton(
       {this.iconName,
-      this.iconSize = 16,
-      this.iconColor = Colors.white,
-      this.buttonSize = 32,
-      this.color,
-      this.onPressed});
+        this.iconSize = 20,
+        this.iconColor = Colors.white,
+        this.buttonSize = 44,
+        this.color,
+        this.onPressed});
 
   @override
   Widget build(BuildContext context) {

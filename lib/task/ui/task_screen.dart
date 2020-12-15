@@ -79,7 +79,7 @@ class _TaskScreen extends State<TaskScreen> with SingleTickerProviderStateMixin 
               : Text('Task Requests', style: TextStyle(color: Colors.black, fontSize: 16)),
           IconButton(
               icon: _listFilterVisible
-                  ? SvgPicture.asset('assets/icons/delete_icon.svg', width: 42, height: 23)
+                  ? SvgPicture.asset('assets/icons/close_icon.svg', width: 42, height: 23)
                   : SvgPicture.asset('assets/icons/search_icon.svg', width: 42, height: 23),
               onPressed: () {
                 setState(() {
