@@ -18,7 +18,8 @@ class LeaveListFilterPresenter {
 
   LeaveListFilterPresenter(this.view)
       : leaveTypesProvider = LeaveTypesProvider(),
-        employeesListProvider = LeaveEmployeesListProvider.subordinatesProvider();
+        employeesListProvider =
+            LeaveEmployeesListProvider.subordinatesProvider();
 
   Future<void> loadLeaveType() async {
     if (leaveTypesProvider.isLoading) return null;
@@ -34,7 +35,8 @@ class LeaveListFilterPresenter {
   }
 
   Future<void> loadEmployees() async {
-    if (employeesListProvider.isLoading || employeesListProvider.didReachListEnd) return null;
+    if (employeesListProvider.isLoading ||
+        employeesListProvider.didReachListEnd) return null;
 
     try {
       var employeesList = await employeesListProvider.getNext();

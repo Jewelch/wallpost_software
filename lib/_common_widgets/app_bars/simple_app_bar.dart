@@ -9,6 +9,7 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget trailing;
   final double trailingSpace;
   final bool showDivider;
+  final bool showTrailing;
 
   @override
   final Size preferredSize;
@@ -20,6 +21,7 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.trailing,
     this.trailingSpace = 12,
     this.showDivider = false,
+    this.showTrailing = false,
   }) : preferredSize = Size.fromHeight(56);
 
   @override
@@ -39,7 +41,7 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(color: Colors.black, fontSize: 16),
       ),
       leading: leading,
-      actions: [trailing],
+      actions: showTrailing ? [trailing] : [],
     );
   }
 }
