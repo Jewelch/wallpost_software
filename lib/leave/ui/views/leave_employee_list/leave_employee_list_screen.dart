@@ -51,13 +51,15 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
           onPressed: () =>
               Navigator.pushNamed(context, RouteNames.leaveListFilter),
         ),
+        showTrailing: true,
         trailing: RoundedIconButton(
           iconName: 'assets/icons/check.svg',
           iconSize: 20,
           iconColor: AppColors.defaultColor,
           color: Colors.white,
           onPressed: () =>
-              Navigator.pop(context, _presenter.getSelectedEmployeesList()),
+              //  Navigator.pop(context, _presenter.getSelectedEmployeesList()),
+              Navigator.pop(context, false),
         ),
       ),
       body: Column(
