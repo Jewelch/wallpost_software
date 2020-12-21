@@ -10,8 +10,7 @@ class LeaveListScreen extends StatefulWidget {
   _LeaveListScreenState createState() => _LeaveListScreenState();
 }
 
-class _LeaveListScreenState extends State<LeaveListScreen>
-    implements LeaveListView {
+class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListView {
   LeaveListPresenter _presenter;
   ScrollController _scrollController;
 
@@ -26,8 +25,7 @@ class _LeaveListScreenState extends State<LeaveListScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfLeave();
       }
     });
@@ -38,8 +36,7 @@ class _LeaveListScreenState extends State<LeaveListScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title:
-            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
           iconSize: 15,
@@ -48,8 +45,7 @@ class _LeaveListScreenState extends State<LeaveListScreen>
         trailing: RoundedIconButton(
           iconName: 'assets/icons/filters_icon.svg',
           iconSize: 15,
-          onPressed: () =>
-              Navigator.pushNamed(context, RouteNames.leaveListFilter),
+          onPressed: () => Navigator.pushNamed(context, RouteNames.leaveListFilter),
         ),
       ),
       body: SafeArea(
@@ -58,8 +54,7 @@ class _LeaveListScreenState extends State<LeaveListScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Leave Requests',
-                  style: TextStyle(color: Colors.black, fontSize: 16)),
+              Text('Leave Requests', style: TextStyle(color: Colors.black, fontSize: 16)),
               SizedBox(height: 4),
               Divider(),
               Expanded(child: _filterListWidget())
