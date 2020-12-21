@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/_list_view/error_list_tile.dart';
 import 'package:wallpost/_common_widgets/_list_view/loader_list_tile.dart';
+import 'package:wallpost/_common_widgets/chips/filter_chip.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/task/entities/task_category.dart';
@@ -24,8 +25,7 @@ class CategoriesListPresenter {
   String _errorMessage;
   String _searchText;
 
-  CategoriesListPresenter(this._view)
-      : _provider = TaskCategoriesListProvider();
+  CategoriesListPresenter(this._view) : _provider = TaskCategoriesListProvider();
 
   Future<void> loadNextListOfCategories(String searchText) async {
     if (_provider.isLoading || _provider.didReachListEnd) return null;
@@ -104,8 +104,7 @@ class CategoriesListPresenter {
       _categories[index],
       onCategoryListTileTap: () {
         if (isCategorySelected(_categories[index])) {
-          _selectedCategories.removeWhere((selectedCategory) =>
-              selectedCategory.name == _categories[index].name);
+          _selectedCategories.removeWhere((selectedCategory) => selectedCategory.name == _categories[index].name);
           _view.onCategoryRemoved();
         } else {
           _selectedCategories.add(_categories[index]);
@@ -126,27 +125,15 @@ class CategoriesListPresenter {
   }
 
   Widget getSelectedCategoryViewForIndex(int index) {
-    return RaisedButton(
-      textColor: AppColors.filtersTextGreyColor,
-      color: AppColors.filtersBackgroundGreyColor,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-        side:
-            BorderSide(color: AppColors.filtersBackgroundGreyColor, width: .5),
-      ),
-      child: Row(
-        children: [
-          Text(
-            _selectedCategories[index].name,
-            style: TextStyle(color: Colors.black),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: SvgPicture.asset('assets/icons/close_icon.svg',
-                width: 15, height: 15),
-          ),
-        ],
+    return CustomChip(
+      title: Text(_selectedCategories[index].name),
+      backgroundColor: AppColors.primaryContrastColor,
+      shape: CustomChipShape.capsule,
+      icon: SvgPicture.asset(
+        'assets/icons/close_icon.svg',
+        width: 12,
+        height: 12,
+        color: Colors.black,
       ),
       onPressed: () {
         _selectedCategories.removeAt(index);

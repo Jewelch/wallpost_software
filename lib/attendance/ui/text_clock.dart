@@ -22,7 +22,7 @@ class _TextClockState extends State<TextClock>{
 
   @override
   Widget build(BuildContext context) {
-    return Text(_currentTime(),style: TextStyle(color: AppColors.white, fontSize: 13),);
+    return Text(_currentTime(),style: TextStyle(color: Colors.white, fontSize: 13),);
   }
 
 

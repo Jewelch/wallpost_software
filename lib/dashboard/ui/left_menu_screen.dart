@@ -4,9 +4,9 @@ import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/user_management/services/logout_handler.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 
 //TODO: Add loader when profile picture loads or add a placeholder image
 class LeftMenuScreen extends StatelessWidget {
@@ -59,7 +59,7 @@ class LeftMenuScreen extends StatelessWidget {
                   title: 'Logout',
                   imageName: 'assets/icons/logout_icon.svg',
                   imageSize: 22,
-                  borderColor: AppColors.logoutRedColor,
+                  borderColor: AppColors.criticalButtonColor,
                   onPressed: () => LogoutHandler().logout(context),
                 ),
                 SizedBox(height: 40),

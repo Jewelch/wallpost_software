@@ -25,7 +25,7 @@ class CategoryListTile extends StatelessWidget {
                 style: TextStyle(
                   color: isSelected
                       ? AppColors.defaultColor
-                      : AppColors.blackColor,
+                      : Colors.black,
                 )),
           ),
           onPressed: () {

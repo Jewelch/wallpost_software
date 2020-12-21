@@ -124,7 +124,7 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
           ),
           Divider(
             height: 4,
-            color: AppColors.blackColor,
+            color: Colors.black,
           ),
         ],
       ),

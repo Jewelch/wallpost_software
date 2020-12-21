@@ -46,7 +46,7 @@ class DisableAttendanceButtonWithTimer extends StatelessWidget {
               Container(
                 width: 50,
                 height: 1,
-                color: AppColors.greyColor,
+                color: Colors.grey,
               ),
               SizedBox(
                 height: 5,

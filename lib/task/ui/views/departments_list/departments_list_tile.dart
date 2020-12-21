@@ -23,7 +23,7 @@ class DepartmentListTile extends StatelessWidget {
             alignment: AlignmentDirectional.centerStart,
             child: Text(department.name,
                 style: TextStyle(
-                  color: isSelected ? AppColors.defaultColor : AppColors.blackColor,
+                  color: isSelected ? AppColors.defaultColor : Colors.black,
                 )),
           ),
           onPressed: () {

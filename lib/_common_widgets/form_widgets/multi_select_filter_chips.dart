@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/chips/filter_chip.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class MultiSelectFilterChips extends StatefulWidget {
@@ -55,16 +57,19 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 10.0,
+      runSpacing: 8,
       children: List.generate(
         _getNumberOfItems(),
         (index) {
-          return RaisedButton(
-            child: _getTitleForItemAtIndex(index),
-            textColor: _isSelected(index) ? AppColors.defaultColor : AppColors.filtersTextGreyColor,
-            shape: _borderForItemAtIndex(index),
-            color: _isSelected(index) ? Colors.white : AppColors.filtersBackgroundGreyColor,
+          return CustomChip(
+            title: Text(_isItemAtIndexTheTrailingButton(index) ? widget.trailingButtonTitle : widget.titles[index],
+                style: _isSelected(index)
+                    ? TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor)
+                    : TextStyles.subTitleTextStyle),
+            shape: CustomChipShape.roundedRectangle,
+            backgroundColor: _isSelected(index) ? Colors.white : AppColors.primaryContrastColor,
+            borderColor: _isSelected(index) ? AppColors.defaultColor : AppColors.primaryContrastColor,
             onPressed: _getActionForItemAtIndex(index),
-            elevation: 0,
           );
         },
       ),
@@ -75,30 +80,8 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
     return widget.titles.length + (widget.showTrailingButton ? 1 : 0);
   }
 
-  Widget _getTitleForItemAtIndex(int index) {
-    String title;
-
-    if (index == widget.titles.length && widget.showTrailingButton) {
-      title = widget.trailingButtonTitle;
-    } else {
-      title = widget.titles[index];
-    }
-
-    return Text(title);
-  }
-
-  ShapeBorder _borderForItemAtIndex(int index) {
-    return RoundedRectangleBorder(
-      borderRadius: new BorderRadius.circular(5.0),
-      side: BorderSide(
-        color: _isSelected(index) ? AppColors.defaultColor : AppColors.filtersBackgroundGreyColor,
-        width: .5,
-      ),
-    );
-  }
-
   VoidCallback _getActionForItemAtIndex(int index) {
-    if (index == widget.titles.length && widget.showTrailingButton) {
+    if (_isItemAtIndexTheTrailingButton(index)) {
       return () => widget.onTrailingButtonPressed();
     } else {
       return () => _isSelected(index) ? _deselectItemAtIndex(index) : _selectItemAtIndex(index);
@@ -127,6 +110,10 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
     } else {
       return _selectedIndices.contains(index) || widget.allIndexesSelected;
     }
+  }
+
+  bool _isItemAtIndexTheTrailingButton(int index) {
+    return index == widget.titles.length && widget.showTrailingButton;
   }
 }
 

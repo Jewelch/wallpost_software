@@ -52,7 +52,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
           padding: const EdgeInsets.all(12.0),
           child: Container(
             decoration: BoxDecoration(
-              color: AppColors.greyColor,
+              color: Colors.grey,
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: _createListWidget(),
@@ -66,7 +66,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     return Container(
       padding: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-        color: AppColors.groupDashboardSearchViewColor,
+        color: Colors.grey,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(10),
           topRight: Radius.circular(10),

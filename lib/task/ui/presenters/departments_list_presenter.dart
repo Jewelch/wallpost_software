@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/_list_view/error_list_tile.dart';
 import 'package:wallpost/_common_widgets/_list_view/loader_list_tile.dart';
+import 'package:wallpost/_common_widgets/chips/filter_chip.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/task/entities/department.dart';
@@ -103,8 +104,7 @@ class DepartmentsListPresenter {
       _departments[index],
       onDepartmentListTileTap: () {
         if (isDepartmentSelected(_departments[index])) {
-          _selectedDepartments.removeWhere((selectedDepartment) =>
-              selectedDepartment.name == _departments[index].name);
+          _selectedDepartments.removeWhere((selectedDepartment) => selectedDepartment.name == _departments[index].name);
           _view.onDepartmentRemoved();
         } else {
           _selectedDepartments.add(_departments[index]);
@@ -125,27 +125,15 @@ class DepartmentsListPresenter {
   }
 
   Widget getSelectedDepartmentViewForIndex(int index) {
-    return RaisedButton(
-      textColor: AppColors.filtersTextGreyColor,
-      color: AppColors.filtersBackgroundGreyColor,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-        side:
-            BorderSide(color: AppColors.filtersBackgroundGreyColor, width: .5),
-      ),
-      child: Row(
-        children: [
-          Text(
-            _selectedDepartments[index].name,
-            style: TextStyle(color: Colors.black),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: SvgPicture.asset('assets/icons/close_icon.svg',
-                width: 15, height: 15),
-          ),
-        ],
+    return CustomChip(
+      title: Text(_selectedDepartments[index].name),
+      backgroundColor: AppColors.primaryContrastColor,
+      shape: CustomChipShape.capsule,
+      icon: SvgPicture.asset(
+        'assets/icons/close_icon.svg',
+        width: 12,
+        height: 12,
+        color: Colors.black,
       ),
       onPressed: () {
         _selectedDepartments.removeAt(index);

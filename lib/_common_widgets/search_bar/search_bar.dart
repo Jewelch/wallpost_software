@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/constants/app_images.dart';
 
 class SearchBar extends StatelessWidget {
@@ -20,7 +21,7 @@ class SearchBar extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Color.fromRGBO(235, 235, 235, 1.0),
+        color: AppColors.primaryContrastColor,
       ),
       width: double.infinity,
       child: Row(
