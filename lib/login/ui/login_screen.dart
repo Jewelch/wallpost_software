@@ -4,6 +4,7 @@ import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
@@ -33,7 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _loader = Loader(context);
     KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) => setState(() => _showLogo = visible ? false : true),
+      onChange: (bool visible) =>
+          setState(() => _showLogo = visible ? false : true),
     );
   }
 
@@ -160,10 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: FlatButton(
           child: Text(
             'Log In',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            ),
+            style: TextStyles.buttonTextStyle,
           ),
           padding: EdgeInsets.all(15.0),
           color: AppColors.actionButtonColor,
@@ -212,11 +211,8 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Container(
         child: Text(
           'Forgot your Password?',
-          style: TextStyle(
-            color: AppColors.labelColor,
-            fontSize: 16.0,
-            fontWeight: FontWeight.normal,
-          ),
+          style: TextStyles.buttonTextStyle.copyWith(
+              fontWeight: FontWeight.normal, color: AppColors.defaultColor),
         ),
       ),
       onTap: () {

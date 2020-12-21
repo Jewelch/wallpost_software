@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -90,8 +91,7 @@ class _TaskScreen extends State<TaskListScreen>
                     },
                   ),
                 )
-              : Text('Task Requests',
-                  style: TextStyle(color: Colors.black, fontSize: 16)),
+              : Text('Task Requests', style: TextStyles.titleTextStyle),
           IconButton(
               icon: _listFilterVisible
                   ? SvgPicture.asset('assets/icons/close_icon.svg',

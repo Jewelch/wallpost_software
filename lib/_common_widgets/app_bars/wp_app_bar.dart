@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -39,7 +40,8 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
           if (leading != null) SizedBox(width: 8),
           Expanded(child: _makeCenterTitleView()),
           if (trailing != null) SizedBox(width: 8),
-          if (trailing != null) SizedBox(width: 32, height: 32, child: trailing),
+          if (trailing != null)
+            SizedBox(width: 32, height: 32, child: trailing),
           SizedBox(width: 12),
         ],
       ),
@@ -59,7 +61,9 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
             Expanded(
               child: Container(
                 child: Center(
-                  child: Text(title, style: TextStyle(color: Colors.white, fontSize: 16)),
+                  child: Text(title,
+                      style: TextStyles.titleTextStyle
+                          .copyWith(color: Colors.white)),
                 ),
               ),
             ),
@@ -79,7 +83,8 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Positioned.fill(
             child: FlatButton(
-              padding: EdgeInsets.only(right: companySwitchBadgeCount == 0 ? 0 : 6),
+              padding:
+                  EdgeInsets.only(right: companySwitchBadgeCount == 0 ? 0 : 6),
               child: SvgPicture.asset(
                 'assets/icons/switch_company_icon.svg',
                 color: Colors.white,
@@ -112,7 +117,9 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Center(
           child: Text(
             '${companySwitchBadgeCount < 99 ? companySwitchBadgeCount : '99+'}',
-            style: TextStyle(color: Colors.white, fontSize: companySwitchBadgeCount < 99 ? 10 : 8),
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: companySwitchBadgeCount < 99 ? 10 : 8),
           ),
         ),
       ),

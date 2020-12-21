@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpost/_common_widgets/form_widgets/multi_select_filter_chips.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/constants/app_years.dart';
@@ -95,7 +96,7 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
                       Expanded(
                         child: Container(
                           child: Center(
-                            child: Text('Filters', style: TextStyle(color: Colors.black, fontSize: 18)),
+                            child: Text('Filters', style: TextStyles.titleTextStyle),
                           ),
                         ),
                       ),

@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance/entities/attendance_details.dart';
 import 'package:wallpost/attendance/entities/attendance_location.dart';
@@ -193,7 +194,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
               child: Text(
                 'Failed to load attendance\nTap Here To Retry',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
+                style: TextStyles.failureMessageTextStyle,
               ),
               onPressed: () {
                 setState(() {

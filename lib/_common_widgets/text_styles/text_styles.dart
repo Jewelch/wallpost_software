@@ -8,12 +8,27 @@ class TextStyles {
       );
 
   static get titleTextStyle => TextStyle(
-        fontSize: 16,
+        fontSize: 18,
+        color: Colors.black,
+      );
+
+  static get listButtonTextStyle => TextStyle(
+        fontSize: 18,
         color: Colors.black,
       );
 
   static get subTitleTextStyle => TextStyle(
         fontSize: 14,
         color: AppColors.getColorFromHex('#9aa6b2'),
+      );
+
+  static get failureMessageTextStyle => TextStyle(
+        fontSize: 16,
+        color: AppColors.labelColor,
+      );
+
+  static get buttonTextStyle => TextStyle(
+        fontSize: 16,
+        color: Colors.white,
       );
 }
