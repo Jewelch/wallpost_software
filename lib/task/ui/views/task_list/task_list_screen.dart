@@ -14,7 +14,8 @@ class TaskListScreen extends StatefulWidget {
   _TaskScreen createState() => _TaskScreen();
 }
 
-class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMixin, TaskListView {
+class _TaskScreen extends State<TaskListScreen>
+    with SingleTickerProviderStateMixin, TaskListView {
   var _searchBarController = TextEditingController();
   TabController _tabController;
   TaskListPresenter _presenter;
@@ -38,7 +39,8 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title:
+            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
           iconSize: 12,
@@ -83,18 +85,24 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
                     onSearchTextChanged: (searchText) {
                       _presenter.reset();
                       _filters.searchText = searchText;
-                      _presenter.loadNextListOfTasks(_selectedTab, _filters);
+                      _presenter.loadNextListOfTasks(
+                          _tabController.index, _filters);
                     },
                   ),
                 )
-              : Text('Task Requests', style: TextStyle(color: Colors.black, fontSize: 16)),
+              : Text('Task Requests',
+                  style: TextStyle(color: Colors.black, fontSize: 16)),
           IconButton(
               icon: _listFilterVisible
-                  ? SvgPicture.asset('assets/icons/delete_icon.svg', width: 42, height: 23)
-                  : SvgPicture.asset('assets/icons/search_icon.svg', width: 42, height: 23),
+                  ? SvgPicture.asset('assets/icons/close_icon.svg',
+                      width: 42, height: 23)
+                  : SvgPicture.asset('assets/icons/search_icon.svg',
+                      width: 42, height: 23),
               onPressed: () {
                 setState(() {
-                  _listFilterVisible ? _listFilterVisible = false : _listFilterVisible = true;
+                  _listFilterVisible
+                      ? _listFilterVisible = false
+                      : _listFilterVisible = true;
                 });
               }),
         ],
@@ -164,12 +172,19 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
     return Column(
       children: [
         Expanded(
-          child: ListView.builder(
-            controller: _tasksListScrollController,
-            itemCount: _presenter.getNumberOfTask(),
-            itemBuilder: (context, index) {
-              return _presenter.getTaskViewForIndex(index);
+          child: RefreshIndicator(
+            onRefresh: () {
+              _presenter.reset();
+              _presenter.loadNextListOfTasks(_tabController.index, _filters);
+              return Future.value(null);
             },
+            child: ListView.builder(
+              controller: _tasksListScrollController,
+              itemCount: _presenter.getNumberOfTask(),
+              itemBuilder: (context, index) {
+                return _presenter.getTaskViewForIndex(index);
+              },
+            ),
           ),
         ),
       ],
@@ -178,7 +193,8 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
 
   void goToTaskFilter() async {
     _filters.reset();
-    await Navigator.pushNamed(context, RouteNames.taskFilter, arguments: _filters);
+    await Navigator.pushNamed(context, RouteNames.taskFilter,
+        arguments: _filters);
     _selectedTab = _tabController.index;
     _presenter.reset();
     _presenter.loadNextListOfTasks(_selectedTab, _filters);
@@ -186,7 +202,8 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
 
   void _setupScrollDownToLoadMoreItems() {
     _tasksListScrollController.addListener(() {
-      if (_tasksListScrollController.position.pixels == _tasksListScrollController.position.maxScrollExtent) {
+      if (_tasksListScrollController.position.pixels ==
+          _tasksListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfTasks(_selectedTab, _filters);
       }
     });
@@ -230,14 +247,19 @@ class TabWidget extends StatelessWidget {
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(text: '$_totalCount', style: TextStyle(color: AppColors.defaultColor, fontSize: 22))
+                  TextSpan(
+                      text: '$_totalCount',
+                      style: TextStyle(
+                          color: AppColors.defaultColor, fontSize: 22))
                 ],
               ),
             ),
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(text: _tabName, style: TextStyle(color: Colors.black, fontSize: 12)),
+                  TextSpan(
+                      text: _tabName,
+                      style: TextStyle(color: Colors.black, fontSize: 12)),
                 ],
               ),
             ),
