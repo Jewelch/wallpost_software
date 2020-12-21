@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallpost/_common_widgets/CustomSwitch.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 
-class RequestsScreen extends StatelessWidget {
+class RequestsScreen extends StatefulWidget {
   @override
+  _RequestsScreenState createState() => _RequestsScreenState();
+}
+
+class _RequestsScreenState extends State<RequestsScreen> {
+  @override
+  bool _enable = false;
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -32,6 +40,15 @@ class RequestsScreen extends StatelessWidget {
                     children: [
                       Text('Requests',
                           style: TextStyle(color: Colors.black, fontSize: 18)),
+                      Spacer(),
+                      CustomSwitch(
+                        value: _enable,
+                        onChanged: (bool val) {
+                          setState(() {
+                            _enable = val;
+                          });
+                        },
+                      ),
                     ],
                   ),
                 ),
