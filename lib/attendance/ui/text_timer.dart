@@ -36,7 +36,7 @@ class TextTimerState extends State<TextTimer> {
       title,
       textAlign: TextAlign.center,
       style: TextStyle(
-        color: AppColors.white,
+        color: Colors.white,
         fontSize: 13,
       ),
     );

@@ -12,11 +12,11 @@ class RoundedIconButton extends StatelessWidget {
 
   RoundedIconButton(
       {this.iconName,
-        this.iconSize = 20,
-        this.iconColor = Colors.white,
-        this.buttonSize = 44,
-        this.color,
-        this.onPressed});
+      this.iconSize = 20,
+      this.iconColor = Colors.white,
+      this.buttonSize = 44,
+      this.color,
+      this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,8 @@ class RoundedIconButton extends StatelessWidget {
       child: FlatButton(
         color: color ?? AppColors.defaultColor,
         padding: EdgeInsets.all(0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
         child: SvgPicture.asset(
           iconName,
           width: iconSize,

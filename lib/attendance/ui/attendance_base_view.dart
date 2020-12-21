@@ -3,7 +3,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance/entities/attendance_details.dart';
 import 'package:wallpost/attendance/entities/attendance_location.dart';
@@ -26,12 +25,9 @@ class AttendanceBaseView extends StatefulWidget {
 }
 
 class _AttendanceBaseViewState extends State<AttendanceBaseView> {
-  AttendanceDetailsProvider _attendanceDetailsProvider =
-      AttendanceDetailsProvider();
-  PunchInFromAppPermissionProvider _punchInFromAppPermissionProvider =
-      PunchInFromAppPermissionProvider();
-  PunchInNowPermissionProvider _punchInNowPermissionProvider =
-      PunchInNowPermissionProvider();
+  AttendanceDetailsProvider _attendanceDetailsProvider = AttendanceDetailsProvider();
+  PunchInFromAppPermissionProvider _punchInFromAppPermissionProvider = PunchInFromAppPermissionProvider();
+  PunchInNowPermissionProvider _punchInNowPermissionProvider = PunchInNowPermissionProvider();
   PunchInFromAppPermission _punchInFromAppPermission;
   PunchInNowPermission _punchInNowPermission;
   AttendanceDetails attendanceDetail;
@@ -48,8 +44,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
   Widget build(BuildContext context) {
     if (_attendanceDetailsProvider.isLoading ||
         _punchInFromAppPermissionProvider.isLoading ||
-        _punchInNowPermissionProvider.isLoading)
-      return Container(child: _buildProgressIndicator());
+        _punchInNowPermissionProvider.isLoading) return Container(child: _buildProgressIndicator());
     if (attendanceDetail == null)
       return _buildErrorAndRetryView();
     else
@@ -71,9 +66,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
                 Column(
                   children: [
                     Text('Punch In'),
-                    Text(attendanceDetail.punchInTimeString.isEmpty
-                        ? '...'
-                        : attendanceDetail.punchInTimeString),
+                    Text(attendanceDetail.punchInTimeString.isEmpty ? '...' : attendanceDetail.punchInTimeString),
                   ],
                 ),
                 Spacer(),
@@ -82,9 +75,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
                 Column(
                   children: [
                     Text('Punch Out'),
-                    Text(attendanceDetail.punchOutTimeString.isEmpty
-                        ? '...'
-                        : attendanceDetail.punchOutTimeString),
+                    Text(attendanceDetail.punchOutTimeString.isEmpty ? '...' : attendanceDetail.punchOutTimeString),
                   ],
                 ),
               ],
@@ -119,14 +110,14 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
         name: 'Loading', color: Colors.grey, onPressed: null,);*/
     if (attendanceDetail.isPunchedIn)
       return AttendanceButtonView(
-          name: 'Punch\nOut',
-          color: Colors.red,
-          onPressed: () => {_showPunchPotConfirmationAlert()});
+          name: 'Punch\nOut', color: Colors.red, onPressed: () => {_showPunchPotConfirmationAlert()});
     else
       return AttendanceButtonView(
           name: 'Punch\nIn',
           color: Colors.green,
-          onPressed: () => {/*_doPunchIn()*/});
+          onPressed: () => {
+                /*_doPunchIn()*/
+              });
   }
 
   Widget _buildAttendanceSummaryTitleView() {
@@ -146,8 +137,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
               SizedBox(
                 height: 2,
               ),
-              Text('Late Punch In',
-                  style: TextStyle(color: AppColors.attendanceLabelColor)),
+              Text('Late Punch In', style: TextStyle(color: Colors.purple)),
             ],
           ),
         ),
@@ -158,8 +148,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
               SizedBox(
                 height: 2,
               ),
-              Text('Early Punch out',
-                  style: TextStyle(color: AppColors.attendanceLabelColor)),
+              Text('Early Punch out', style: TextStyle(color: Colors.purple)),
             ],
           ),
         ),
@@ -172,7 +161,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
               ),
               Text(
                 'Absence',
-                style: TextStyle(color: AppColors.attendanceLabelColor),
+                style: TextStyle(color: Colors.purple),
               ),
             ],
           ),
@@ -241,8 +230,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
 
   void _getPunchInFromAppPermission() async {
     try {
-      _punchInFromAppPermission =
-          await _punchInFromAppPermissionProvider.canPunchInFromApp();
+      _punchInFromAppPermission = await _punchInFromAppPermissionProvider.canPunchInFromApp();
 
       if (!_punchInFromAppPermission.isAllowed) setState(() {});
     } on WPException catch (error) {
@@ -258,8 +246,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
 
   void _getPunchInNowPermission() async {
     try {
-      _punchInNowPermission =
-          await _punchInNowPermissionProvider.canPunchInNow();
+      _punchInNowPermission = await _punchInNowPermissionProvider.canPunchInNow();
 
       setState(() {});
     } on WPException catch (error) {
@@ -278,8 +265,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
 
     AttendanceLocation _attendanceLocation = await _getLocation();
     try {
-      var _ = await PunchInMarker()
-          .punchIn(_attendanceLocation, isLocationValid: true);
+      var _ = await PunchInMarker().punchIn(_attendanceLocation, isLocationValid: true);
       await _loader.hide();
 
       setState(() {});
@@ -312,9 +298,7 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
 
     AttendanceLocation _attendanceLocation = await _getLocation();
     try {
-      var _ = await PunchOutMarker().punchOut(
-          attendanceDetail, _attendanceLocation,
-          isLocationValid: false);
+      var _ = await PunchOutMarker().punchOut(attendanceDetail, _attendanceLocation, isLocationValid: false);
       await _loader.hide();
 
       setState(() {});

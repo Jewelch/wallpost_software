@@ -35,6 +35,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: 'Filters',
         leadingSpace: 0,
@@ -45,13 +46,14 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
           color: Colors.transparent,
           onPressed: () => Navigator.pop(context),
         ),
+        showTrailing: true,
         trailing: Row(
           children: [
             RoundedIconButton(
               iconName: 'assets/icons/reset_icon.svg',
               iconColor: AppColors.defaultColor,
               color: Colors.transparent,
-              onPressed: () => {},
+              onPressed: () => _resetData(),
             ),
             SizedBox(width: 8),
             RoundedIconButton(
@@ -175,6 +177,15 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
   void _updateAllSelectedFilters() {
     //use after selection
     //move to parent page
+  }
+
+  void _resetData() {
+    if (this.mounted) setState(() {});
+  }
+
+  void setStateIfMounted(VoidCallback callback) {
+    if (this.mounted == false) return;
+    setState(() => callback());
   }
 
   @override

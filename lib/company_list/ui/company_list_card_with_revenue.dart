@@ -41,7 +41,7 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                     Container(
                       width: 1,
                       height: 60,
-                      color: AppColors.greyColor,
+                      color: Colors.grey,
                       margin: EdgeInsets.only(left: 10, right: 10),
                     ),
                     Expanded(
@@ -67,21 +67,17 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                             'Actual',
                             style: TextStyle(color: AppColors.labelColor, fontSize: 9),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           LinearPercentIndicator(
                             percent: getPercentage(),
                             lineHeight: 14,
                             progressColor: getProgressColor(),
                             center: Text(
                               company.achievedSalesPercent.toString() + "%",
-                              style: new TextStyle(fontSize: 12.0, color: AppColors.white),
+                              style: new TextStyle(fontSize: 12.0, color: Colors.white),
                             ),
                           ),
-                          SizedBox(
-                            height: 5,
-                          ),
+                          SizedBox(height: 5),
                           Text(
                             'Overall Sales Achievement',
                             style: TextStyle(color: AppColors.labelColor, fontSize: 9),
@@ -118,3 +114,4 @@ class CompanyListCardWithRevenue extends StatelessWidget {
       return company.achievedSalesPercent / 100;
   }
 }
+//TODO: Review performance classes

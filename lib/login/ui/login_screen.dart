@@ -23,6 +23,11 @@ class _LoginScreenState extends State<LoginScreen> {
   var _passwordTextController = TextEditingController();
   Loader _loader;
 
+//  static final Color loginBackgroundGradiantColorOne = _getColorFromHex(AppColors._loginBackgroundGradiantColorOne);
+//  static final Color loginBackgroundGradiantColorTwo = _getColorFromHex(AppColors._loginBackgroundGradiantColorTwo);
+//  //  static final String _loginBackgroundGradiantColorOne =
+////  static final String _loginBackgroundGradiantColorTwo =
+
   @override
   void initState() {
     super.initState();
@@ -43,8 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
             decoration: new BoxDecoration(
               gradient: new LinearGradient(
                   colors: [
-                    AppColors.loginBackgroundGradiantColorOne,
-                    AppColors.loginBackgroundGradiantColorTwo,
+                    AppColors.getColorFromHex('#4bafe1'),
+                    AppColors.getColorFromHex('#2771ba'),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -156,12 +161,12 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Text(
             'Log In',
             style: TextStyle(
-              color: AppColors.white,
+              color: Colors.white,
               fontSize: 16,
             ),
           ),
           padding: EdgeInsets.all(15.0),
-          color: AppColors.buttonColor,
+          color: AppColors.actionButtonColor,
           onPressed: _performLogin,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
@@ -208,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Text(
           'Forgot your Password?',
           style: TextStyle(
-            color: AppColors.loginForgetPaasswordTextColor,
+            color: AppColors.labelColor,
             fontSize: 16.0,
             fontWeight: FontWeight.normal,
           ),

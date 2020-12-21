@@ -19,7 +19,7 @@ class AttendanceButtonView extends StatelessWidget {
           Container(
             height: 140,
             width: 140,
-            decoration: BoxDecoration( color: Colors.grey, shape: BoxShape.circle),
+            decoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
           ),
           Container(
             margin: const EdgeInsets.only(bottom: 5),
@@ -47,7 +47,7 @@ class AttendanceButtonView extends StatelessWidget {
                 Container(
                   width: 50,
                   height: 1,
-                  color: AppColors.greyColor,
+                  color: Colors.grey,
                 ),
                 SizedBox(
                   height: 5,
@@ -55,7 +55,7 @@ class AttendanceButtonView extends StatelessWidget {
                 Text(
                   name,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: AppColors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ],
             ),

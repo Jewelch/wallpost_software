@@ -48,7 +48,7 @@ class TaskCommentTile extends StatelessWidget {
                           child: Text(
                             'Basheer Thathamaparambath',
                             style: TextStyle(
-                                color: AppColors.blackColor, fontSize: 16),
+                                color: Colors.black, fontSize: 16),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
@@ -83,7 +83,7 @@ class TaskCommentTile extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(height: 1.0, color: AppColors.greyColor),
+            Divider(height: 1.0, color: Colors.grey),
           ],
         ),
       ),

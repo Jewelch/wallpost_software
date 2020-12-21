@@ -23,7 +23,7 @@ class EmployeeListTile extends StatelessWidget {
             alignment: AlignmentDirectional.centerStart,
             child: Text(employee.fullName,
                 style: TextStyle(
-                  color: isSelected ? AppColors.defaultColor : AppColors.blackColor,
+                  color: isSelected ? AppColors.defaultColor : Colors.black,
                 )),
           ),
           onPressed: () {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_routing/route_names.dart';
@@ -12,10 +11,8 @@ class LeaveListScreen extends StatefulWidget {
 }
 
 class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListView {
-  TextEditingController _listFilterTextFieldController = new TextEditingController();
   LeaveListPresenter _presenter;
   ScrollController _scrollController;
-  bool _listFilterVisible = false;
 
   @override
   void initState() {
@@ -55,39 +52,15 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12),
           child: Column(
-            children: [_headerFilterTextFieldWidget(), Divider(height: 4), Expanded(child: _filterListWidget())],
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Leave Requests', style: TextStyle(color: Colors.black, fontSize: 16)),
+              SizedBox(height: 4),
+              Divider(),
+              Expanded(child: _filterListWidget())
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _headerFilterTextFieldWidget() {
-    return SizedBox(
-      height: 40,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _listFilterVisible
-              ? Expanded(
-                  child: TextField(
-                    controller: _listFilterTextFieldController,
-                    onSubmitted: (text) => print(_listFilterTextFieldController.text),
-                    style: TextStyle(color: Colors.black),
-                    decoration: InputDecoration(border: InputBorder.none, hintText: 'Enter a search term'),
-                  ),
-                )
-              : Text('Leave Requests', style: TextStyle(color: Colors.black, fontSize: 16)),
-          IconButton(
-              icon: _listFilterVisible
-                  ? SvgPicture.asset('assets/icons/close_icon.svg', width: 42, height: 23)
-                  : SvgPicture.asset('assets/icons/search_icon.svg', width: 42, height: 23),
-              onPressed: () {
-                setState(() {
-                  _listFilterVisible ? _listFilterVisible = false : _listFilterVisible = true;
-                });
-              }),
-        ],
       ),
     );
   }
@@ -95,15 +68,25 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
   Widget _filterListWidget() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12),
-      child: ListView.separated(
-        controller: _scrollController,
-        itemCount: _presenter.getNumberOfItems(),
-        separatorBuilder: (context, i) => const Divider(),
-        itemBuilder: (BuildContext context, index) {
-          return _presenter.getViewAtIndex(index);
-        },
+      child: RefreshIndicator(
+        onRefresh: _getRefreshList,
+        child: ListView.separated(
+          controller: _scrollController,
+          itemCount: _presenter.getNumberOfItems(),
+          separatorBuilder: (context, i) => const Divider(),
+          itemBuilder: (BuildContext context, index) {
+            return _presenter.getViewAtIndex(index);
+          },
+        ),
       ),
     );
+  }
+
+  Future<void> _getRefreshList() async {
+    setState(() {
+      _presenter.reset();
+      _presenter.loadNextListOfLeave();
+    });
   }
 
   @override

@@ -25,7 +25,7 @@ class EmployeeListTile extends StatelessWidget {
                 style: TextStyle(
                   color: isSelected
                       ? AppColors.defaultColor
-                      : AppColors.blackColor,
+                      : Colors.black,
                 )),
           ),
           onPressed: () {

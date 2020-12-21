@@ -45,7 +45,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             */
             ListTile(
               title: Text('Change Password'),
-              onTap: () => {Navigator.of(context).pushNamed(RouteNames.changePassword)},
+              onTap: () =>
+                  {Navigator.of(context).pushNamed(RouteNames.changePassword)},
             ),
           ],
         ),

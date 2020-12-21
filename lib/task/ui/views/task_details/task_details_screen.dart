@@ -8,9 +8,9 @@ class TaskDetailsScreen extends StatefulWidget {
   _TaskDetailsScreen createState() => _TaskDetailsScreen();
 }
 
-class _TaskDetailsScreen extends State<TaskDetailsScreen>
-    with SingleTickerProviderStateMixin {
+class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProviderStateMixin {
   TabController _tabController;
+
   @override
   void initState() {
     super.initState();
@@ -32,15 +32,12 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
         title: Column(
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 10.0),
+              padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 10.0),
               child: Row(
                 children: [
                   SizedBox(
                     child: RoundedIconButton(
-                        iconName: 'assets/icons/back.svg',
-                        iconSize: 12,
-                        onPressed: () => Navigator.pop(context)),
+                        iconName: 'assets/icons/back.svg', iconSize: 12, onPressed: () => Navigator.pop(context)),
                   ),
                   Expanded(
                     child: Container(
@@ -51,9 +48,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
                           SizedBox(width: 8),
                           Expanded(
                             child: Container(
-                              child: Text('Task Details',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 18)),
+                              child: Text('Task Details', style: TextStyle(color: Colors.black, fontSize: 18)),
                             ),
                           ),
                         ],
@@ -62,16 +57,14 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
                   ),
                   SizedBox(
                     child: RoundedIconButton(
-                        iconName: 'assets/icons/check.svg',
-                        iconSize: 12,
-                        onPressed: () => Navigator.pop(context)),
+                        iconName: 'assets/icons/check.svg', iconSize: 12, onPressed: () => Navigator.pop(context)),
                   ),
                 ],
               ),
             ),
             Divider(
               height: 4,
-              color: AppColors.blackColor,
+              color: Colors.black,
             ),
           ],
         ),
@@ -95,13 +88,10 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            border: Border.all(
-                                color: AppColors.defaultColor, width: 0),
+                            border: Border.all(color: AppColors.defaultColor, width: 0),
                             borderRadius: BorderRadius.circular(50),
                             image: DecorationImage(
-                                image: AssetImage(
-                                    'assets/icons/user_image_placeholder.png'),
-                                fit: BoxFit.fill),
+                                image: AssetImage('assets/icons/user_image_placeholder.png'), fit: BoxFit.fill),
                           ),
                         ),
                         Padding(
@@ -112,135 +102,99 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
                     ),
                   ),
                   Expanded(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(
-                                top: 11.0, left: 10.0, right: 10.0),
-                            child: Text(
-                              'WallPost App Android and IOS Main Navigation Structure',
-                              style: TextStyle(
-                                  color: AppColors.defaultColor, fontSize: 16),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: false,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 3.0, left: 10.0, right: 10.0),
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: [
-                                  Text('Assigned to :',
-                                      style: TextStyle(
-                                          color: AppColors.blackColor,
-                                          fontSize: 14)),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text('Jaseel Kiliyanthodi',
-                                        style: TextStyle(
-                                            color: AppColors.labelColor,
-                                            fontSize: 14)),
-                                  ),
-                                ],
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Container(
+                        padding: EdgeInsets.only(top: 11.0, left: 10.0, right: 10.0),
+                        child: Text(
+                          'WallPost App Android and IOS Main Navigation Structure',
+                          style: TextStyle(color: AppColors.defaultColor, fontSize: 16),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              Text('Assigned to :', style: TextStyle(color: Colors.black, fontSize: 14)),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text('Jaseel Kiliyanthodi',
+                                    style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
                               ),
-                            ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 3.0, left: 10.0, right: 10.0),
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: [
-                                  Text('Status :',
-                                      style: TextStyle(
-                                          color: AppColors.blackColor,
-                                          fontSize: 14)),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text('In Progress',
-                                        style: TextStyle(
-                                            color: AppColors.statusRedColor,
-                                            fontSize: 14)),
-                                  ),
-                                ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              Text('Status :', style: TextStyle(color: Colors.black, fontSize: 14)),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text('In Progress',
+                                    style: TextStyle(color: Colors.purple, fontSize: 14)),
                               ),
-                            ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 3.0, left: 8.0, right: 10.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  child: Expanded(
-                                    child: Row(
-                                      children: [
-                                        Text('Created By : ',
-                                            style: TextStyle(
-                                                color: AppColors.blackColor,
-                                                fontSize: 14)),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: Text('Muhammed Nadeem',
-                                              style: TextStyle(
-                                                  color: AppColors.labelColor,
-                                                  fontSize: 14)),
-                                        ),
-                                      ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3.0, left: 8.0, right: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Expanded(
+                                child: Row(
+                                  children: [
+                                    Text('Created By : ', style: TextStyle(color: Colors.black, fontSize: 14)),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Text('Muhammed Nadeem',
+                                          style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      Text('On :',
-                                          style: TextStyle(
-                                              color: AppColors.blackColor,
-                                              fontSize: 14)),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 8.0),
-                                        child: Text('21.02.2018',
-                                            style: TextStyle(
-                                                color: AppColors.labelColor,
-                                                fontSize: 14)),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 3.0, left: 10.0, right: 10.0),
-                            child: Container(
-                              alignment: Alignment.centerLeft,
+                            Container(
                               child: Row(
                                 children: [
-                                  Text('Code :',
-                                      style: TextStyle(
-                                          color: AppColors.blackColor,
-                                          fontSize: 14)),
+                                  Text('On :', style: TextStyle(color: Colors.black, fontSize: 14)),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text('CCO',
-                                        style: TextStyle(
-                                            color: AppColors.labelColor,
-                                            fontSize: 14)),
+                                    child:
+                                        Text('21.02.2018', style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
                                   ),
                                 ],
                               ),
                             ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              Text('Code :', style: TextStyle(color: Colors.black, fontSize: 14)),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text('CCO', style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
+                              ),
+                            ],
                           ),
-                        ]),
+                        ),
+                      ),
+                    ]),
                   ),
                 ],
               ),
@@ -286,11 +240,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
       child: Expanded(
         child: TabBarView(
           controller: _tabController,
-          children: <Widget>[
-            _createDetailsWidget(),
-            _createCommentsWidget(),
-            _createCommentsWidget()
-          ],
+          children: <Widget>[_createDetailsWidget(), _createCommentsWidget(), _createCommentsWidget()],
         ),
       ),
     );
@@ -318,47 +268,45 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
           child: Column(children: [
             Padding(
               padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      child: RaisedButton.icon(
-                        onPressed: () {
-                          print('Button Clicked.');
-                        },
-                        label: Text(
-                          'Add comment',
-                          style: TextStyle(color: AppColors.defaultColor),
-                        ),
-                        icon: Icon(
-                          Icons.add,
-                          color: AppColors.defaultColor,
-                        ),
-                        textColor: Colors.white,
-                        color: Colors.white,
-                        elevation: 0.0,
-                      ),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Container(
+                  child: RaisedButton.icon(
+                    onPressed: () {
+                      print('Button Clicked.');
+                    },
+                    label: Text(
+                      'Add comment',
+                      style: TextStyle(color: AppColors.defaultColor),
                     ),
-                    Container(
-                      child: RaisedButton.icon(
-                        onPressed: () {
-                          print('Button Clicked.');
-                        },
-                        label: Text(
-                          'Send',
-                          style: TextStyle(color: AppColors.defaultColor),
-                        ),
-                        icon: ImageIcon(
-                          AssetImage('assets/icons/send_icon.svg'),
-                          size: 30,
-                          color: AppColors.defaultColor,
-                        ),
-                        textColor: Colors.white,
-                        color: Colors.white,
-                        elevation: 0.0,
-                      ),
+                    icon: Icon(
+                      Icons.add,
+                      color: AppColors.defaultColor,
                     ),
-                  ]),
+                    textColor: Colors.white,
+                    color: Colors.white,
+                    elevation: 0.0,
+                  ),
+                ),
+                Container(
+                  child: RaisedButton.icon(
+                    onPressed: () {
+                      print('Button Clicked.');
+                    },
+                    label: Text(
+                      'Send',
+                      style: TextStyle(color: AppColors.defaultColor),
+                    ),
+                    icon: ImageIcon(
+                      AssetImage('assets/icons/send_icon.svg'),
+                      size: 30,
+                      color: AppColors.defaultColor,
+                    ),
+                    textColor: Colors.white,
+                    color: Colors.white,
+                    elevation: 0.0,
+                  ),
+                ),
+              ]),
             ),
             SizedBox(
               height: 53.0,
@@ -376,7 +324,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
                       borderSide: BorderSide(
-                        color: AppColors.filtersTextGreyColor,
+                        color: Colors.red,
                         width: 1,
                       ),
                     ),
@@ -394,8 +342,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
     return Column(
       children: [
         Expanded(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             DetailsRowWidget('Start :', '21.02.2018'),
             DetailsRowWidget('End :', '21.02.2018'),
             DetailsRowWidget('Category :', 'Business Development'),
@@ -429,14 +376,10 @@ class DetailsRowWidget extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            Expanded(
-                child: Text(_rowTitle,
-                    style:
-                        TextStyle(color: AppColors.blackColor, fontSize: 14))),
+            Expanded(child: Text(_rowTitle, style: TextStyle(color: Colors.black, fontSize: 14))),
             Expanded(
               flex: 2,
-              child: Text(_rowValue,
-                  style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
+              child: Text(_rowValue, style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
             ),
           ],
         ),
@@ -461,9 +404,7 @@ class TabWidget extends StatelessWidget {
         child: RichText(
           text: TextSpan(
             children: [
-              TextSpan(
-                  text: _tabName,
-                  style: TextStyle(color: Colors.black, fontSize: 12)),
+              TextSpan(text: _tabName, style: TextStyle(color: Colors.black, fontSize: 12)),
             ],
           ),
         ),
