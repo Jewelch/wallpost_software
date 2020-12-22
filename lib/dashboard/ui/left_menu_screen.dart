@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
@@ -9,16 +9,16 @@ import 'package:wallpost/_wp_core/company_management/services/selected_company_p
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/user_management/services/logout_handler.dart';
 
-//TODO: Add loader when profile picture loads or add a placeholder image
 class LeftMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: SimpleAppBar(
+      appBar: WPAppBar(
         title: _getTitle(),
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
+          iconSize: 12,
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -31,13 +31,22 @@ class LeftMenuScreen extends StatelessWidget {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.defaultColor, width: 1),
+                    border: Border.all(color: AppColors.defaultColor, width: 1),
+                    borderRadius: BorderRadius.circular(50)),
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(50),
-                  image: DecorationImage(
-                      image: NetworkImage(CurrentUserProvider()
-                          .getCurrentUser()
-                          .profileImageUrl),
-                      fit: BoxFit.fill),
+                  child: AspectRatio(
+                    aspectRatio: 1 / 1,
+                    child: ClipOval(
+                      child: FadeInImage.assetNetwork(
+                          fit: BoxFit.cover,
+                          placeholder:
+                              "assets/icons/user_image_placeholder.png",
+                          image: CurrentUserProvider()
+                              .getCurrentUser()
+                              .profileImageUrl),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -113,7 +122,9 @@ class LeftMenuScreen extends StatelessWidget {
                 height: imageSize,
               ),
               SizedBox(height: 4),
-              Text(title, style: TextStyle(fontSize: 10)),
+              Text(title,
+                  style: TextStyles.subTitleTextStyle
+                      .copyWith(fontSize: 10.0, color: borderColor)),
             ],
           ),
           onPressed: onPressed,
