@@ -4,6 +4,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 class LoginTextField extends StatelessWidget {
   final String hint;
   final bool obscureText;
+  final Color errorColor;
   final TextInputType keyboardType;
   final TextEditingController controller;
   final FormFieldValidator validator;
@@ -14,6 +15,7 @@ class LoginTextField extends StatelessWidget {
   LoginTextField({
     this.hint,
     this.obscureText = false,
+    this.errorColor = AppColors.failureColor,
     this.keyboardType = TextInputType.text,
     this.controller,
     this.validator,
@@ -25,9 +27,7 @@ class LoginTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-      ),
+      decoration: BoxDecoration(color: Colors.transparent),
       child: TextFormField(
         textAlign: TextAlign.center,
         obscureText: obscureText,
@@ -48,6 +48,13 @@ class LoginTextField extends StatelessWidget {
               width: 1,
             ),
           ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(100.0)),
+            borderSide: BorderSide(
+              color: errorColor,
+              width: 1,
+            ),
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(100.0)),
             borderSide: BorderSide(
@@ -55,8 +62,8 @@ class LoginTextField extends StatelessWidget {
               width: 1,
             ),
           ),
+          errorStyle: TextStyle(fontSize: 14, color: errorColor),
         ),
-
       ),
     );
   }

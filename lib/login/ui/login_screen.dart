@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
-import 'package:wallpost/_common_widgets/loader/loader.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
@@ -22,20 +21,13 @@ class _LoginScreenState extends State<LoginScreen> {
   var _accountNumberTextController = TextEditingController();
   var _usernameTextController = TextEditingController();
   var _passwordTextController = TextEditingController();
-  Loader _loader;
-
-//  static final Color loginBackgroundGradiantColorOne = _getColorFromHex(AppColors._loginBackgroundGradiantColorOne);
-//  static final Color loginBackgroundGradiantColorTwo = _getColorFromHex(AppColors._loginBackgroundGradiantColorTwo);
-//  //  static final String _loginBackgroundGradiantColorOne =
-////  static final String _loginBackgroundGradiantColorTwo =
+  var _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _loader = Loader(context);
     KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) =>
-          setState(() => _showLogo = visible ? false : true),
+      onChange: (bool visible) => setState(() => _showLogo = visible ? false : true),
     );
   }
 
@@ -46,7 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
         resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Container(
-            height: double.infinity,
             decoration: new BoxDecoration(
               gradient: new LinearGradient(
                   colors: [
@@ -61,10 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: EdgeInsets.all(10.0),
             child: Column(
               children: <Widget>[
-                Flexible(child: loginIcon()),
-                formUI(),
-                loginButton(),
-                forgetPassword(),
+                loginIcon(),
+                Expanded(child: formUI()),
               ],
             ),
           ),
@@ -73,14 +62,15 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+//TODO: Fix this- Obaid
   Widget loginIcon() {
     return AnimatedContainer(
       duration: Duration(milliseconds: 100),
       curve: Curves.easeInOut,
       width: double.infinity,
-      height: _showLogo ? 300 : 0,
       child: Center(
-        child: SizedBox(
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: _showLogo ? 40 : 0),
           height: _showLogo ? 120 : 0,
           width: 120,
           child: Image.asset('assets/images/logo.png'),
@@ -90,8 +80,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget formUI() {
-    return Container(
-      padding: EdgeInsets.only(top: _showLogo ? 0 : 40),
+    return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
+//      padding: EdgeInsets.only(top: _showLogo ? 0 : 40),
       child: Form(
         key: _formKey,
         child: Center(
@@ -122,6 +113,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _performLogin(),
               ),
+              SizedBox(height: 16),
+              loginButton(),
+              SizedBox(height: 16),
+              forgetPassword(),
+              SizedBox(height: 16),
             ],
           ),
         ),
@@ -154,24 +150,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget loginButton() {
-    return Container(
-      height: 50,
-      margin: EdgeInsets.fromLTRB(2.0, 20.0, 2.0, 20.0),
-      child: ButtonTheme(
-        minWidth: double.infinity,
-        child: FlatButton(
-          child: Text(
-            'Log In',
-            style: TextStyles.buttonTextStyle,
-          ),
-          padding: EdgeInsets.all(15.0),
-          color: AppColors.actionButtonColor,
-          onPressed: _performLogin,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-        ),
-      ),
+    return RoundedRectangleActionButton(
+      title: 'Login',
+      borderColor: Colors.grey.withOpacity(0.3),
+      onPressed: () {
+        setState(() {
+          _performLogin();
+        });
+      },
+      showLoader: _isLoading,
     );
   }
 
@@ -179,16 +166,15 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState.validate() == false) return;
 
     FocusScope.of(context).unfocus();
-    _loader.show('Logging In...');
-    var authenticator = Authenticator();
+
     var accountNumber = _accountNumberTextController.text;
     var username = _usernameTextController.text;
     var password = _passwordTextController.text;
     var credentials = Credentials(accountNumber, username, password);
 
     try {
-      _loader.hide();
-      var _ = await authenticator.login(credentials);
+      setState(() => _isLoading = true);
+      var _ = await Authenticator().login(credentials);
       Navigator.pushNamedAndRemoveUntil(
         context,
         RouteNames.main,
@@ -196,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
         arguments: _passwordTextController.text,
       );
     } on WPException catch (error) {
-      _loader.hide();
+      setState(() => _isLoading = false);
       Alert.showSimpleAlert(
         context,
         title: 'Login Failed',
@@ -207,16 +193,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget forgetPassword() {
-    return GestureDetector(
-      child: Container(
-        child: Text(
-          'Forgot your Password?',
-          style: TextStyles.buttonTextStyle.copyWith(
-              fontWeight: FontWeight.normal, color: AppColors.defaultColor),
-        ),
-      ),
-      onTap: () {
-        Navigator.of(context).pushNamed(RouteNames.forgotPassword);
+    return RoundedRectangleActionButton(
+      title: 'Forgot your password?',
+      color: Colors.transparent,
+      onPressed: () {
+        setState(() {
+          Navigator.of(context).pushNamed(RouteNames.forgotPassword);
+        });
       },
     );
   }

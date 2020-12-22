@@ -26,8 +26,7 @@ class RoundedIconButton extends StatelessWidget {
       child: FlatButton(
         color: color ?? AppColors.defaultColor,
         padding: EdgeInsets.all(0),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
         child: SvgPicture.asset(
           iconName,
           width: iconSize,
