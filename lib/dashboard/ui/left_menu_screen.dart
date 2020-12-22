@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
@@ -17,8 +18,8 @@ class LeftMenuScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: _getTitle(),
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/back.svg',
+        trailing: RoundedIconButton(
+          iconName: 'assets/icons/close_menu_icon.svg',
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -33,11 +34,20 @@ class LeftMenuScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.defaultColor, width: 1),
                   borderRadius: BorderRadius.circular(50),
-                  image: DecorationImage(
-                      image: NetworkImage(CurrentUserProvider()
-                          .getCurrentUser()
-                          .profileImageUrl),
-                      fit: BoxFit.fill),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
+                    imageUrl: CurrentUserProvider().getCurrentUser().profileImageUrl,
+                    placeholder: (context, url) => Image.asset(
+                      'assets/icons/user_image_placeholder.png',
+                      width: 48,
+                      height: 48,
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
                 ),
               ),
             ),
@@ -56,8 +66,7 @@ class LeftMenuScreen extends StatelessWidget {
                   title: 'Settings',
                   imageName: 'assets/icons/settings_icon.svg',
                   borderColor: AppColors.defaultColor,
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed(RouteNames.settings),
+                  onPressed: () => Navigator.of(context).pushNamed(RouteNames.settings),
                 ),
                 SizedBox(width: 40),
                 _buildLeftMenuButton(
@@ -81,9 +90,7 @@ class LeftMenuScreen extends StatelessWidget {
     if (SelectedCompanyProvider().getSelectedCompanyForCurrentUser() == null)
       return '';
     else
-      return SelectedCompanyProvider()
-          .getSelectedCompanyForCurrentUser()
-          .shortName;
+      return SelectedCompanyProvider().getSelectedCompanyForCurrentUser().shortName;
   }
 
   Widget _buildLeftMenuButton({

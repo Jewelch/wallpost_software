@@ -46,7 +46,6 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
           color: Colors.transparent,
           onPressed: () => Navigator.pop(context),
         ),
-        showTrailing: true,
         trailing: Row(
           children: [
             RoundedIconButton(

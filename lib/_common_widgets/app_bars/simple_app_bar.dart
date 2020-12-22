@@ -10,11 +10,10 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget trailing;
   final double trailingSpace;
   final bool showDivider;
-  final bool showTrailing;
 
   @override
   final Size preferredSize;
-//TODO Obaid - fix leading size issue
+
   SimpleAppBar({
     this.title,
     this.leading,
@@ -22,7 +21,6 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.trailing,
     this.trailingSpace = 12,
     this.showDivider = false,
-    this.showTrailing = false,
   }) : preferredSize = Size.fromHeight(56);
 
   @override
@@ -41,8 +39,21 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
         textAlign: TextAlign.center,
         style: TextStyles.titleTextStyle,
       ),
-      leading: leading,
-      actions: showTrailing ? [trailing] : [],
+      leading: _constraintWidgetToSize(leading),
+      actions: trailing != null ? [_constraintWidgetToSize(trailing)] : [],
+    );
+  }
+
+  Widget _constraintWidgetToSize(Widget widget) {
+    return Container(
+      padding: EdgeInsets.only(right: trailingSpace),
+      child: Center(
+        child: SizedBox(
+          width: 32,
+          height: 32,
+          child: widget,
+        ),
+      ),
     );
   }
 }

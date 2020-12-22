@@ -6,6 +6,7 @@ import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
 import 'package:wallpost/_wp_core/company_management/services/companies_list_provider.dart';
@@ -43,8 +44,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         leading: RoundedIconButton(
           iconName: 'assets/icons/menu.svg',
           iconSize: 12,
-          onPressed: () => ScreenPresenter.present(LeftMenuScreen(), context,
-              slideDirection: SlideDirection.fromLeft),
+          onPressed: () => ScreenPresenter.present(LeftMenuScreen(), context, slideDirection: SlideDirection.fromLeft),
         ),
       ),
       body: SafeArea(
@@ -52,7 +52,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
           padding: const EdgeInsets.all(12.0),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: AppColors.primaryContrastColor,
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: _createListWidget(),
@@ -66,7 +66,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     return Container(
       padding: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-        color: Colors.grey,
+        color: AppColors.primaryContrastColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(10),
           topRight: Radius.circular(10),
@@ -179,9 +179,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     _filterList = new List<CompanyListItem>();
     for (int i = 0; i < _companies.length; i++) {
       var item = _companies[i];
-      if (item.name
-          .toLowerCase()
-          .contains(_searchTextController.text.toLowerCase())) {
+      if (item.name.toLowerCase().contains(_searchTextController.text.toLowerCase())) {
         _filterList.add(item);
       }
     }
@@ -192,11 +190,9 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     var selectedCompany = _filterList[index];
     await loader.show('');
     try {
-      var _ =
-          await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
+      var _ = await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
       await loader.hide();
-      Navigator.pushNamedAndRemoveUntil(
-          context, RouteNames.dashboard, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
     } on WPException catch (e) {
       await loader.hide();
       Alert.showSimpleAlert(
