@@ -14,7 +14,7 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   final Size preferredSize;
-
+//TODO Obaid - fix leading size issue
   SimpleAppBar({
     this.title,
     this.leading,

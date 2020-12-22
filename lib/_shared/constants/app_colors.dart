@@ -18,8 +18,8 @@ class AppColors {
   static final Color chartGridLineColor = getColorFromHex('#f0f0f0');
 
   //Success and failure colors
-  static final Color successColor = getColorFromHex('#2bba68');
-  static final Color failureColor = getColorFromHex('#2bba68');
+  static const Color successColor = Color.fromRGBO(43, 186, 104, 1.0);
+  static const Color failureColor = Color.fromRGBO(212, 28, 28, 1.0);
 
   //Contrast background color for views like search bar, chips, etc
   static final Color primaryContrastColor = Color.fromRGBO(240, 240, 240, 1.0);
