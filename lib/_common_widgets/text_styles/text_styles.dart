@@ -17,14 +17,14 @@ class TextStyles {
         color: Colors.black,
       );
 
-  static get subTitleTextStyle => TextStyle(
-        fontSize: 14,
-        color: AppColors.getColorFromHex('#9aa6b2'),
-      );
-
   static get failureMessageTextStyle => TextStyle(
         fontSize: 16,
         color: AppColors.labelColor,
+      );
+
+  static get subTitleTextStyle => TextStyle(
+        fontSize: 14,
+        color: AppColors.getColorFromHex('#9aa6b2'),
       );
 
   static get buttonTextStyle => TextStyle(
