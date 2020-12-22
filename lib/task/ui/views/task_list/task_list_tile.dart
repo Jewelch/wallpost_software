@@ -163,7 +163,7 @@ class TaskListTile extends StatelessWidget {
                                             shape: BoxShape.rectangle,
                                             borderRadius:
                                                 BorderRadius.circular(40),
-                                            color: Colors.purple),
+                                            color: AppColors.failureColor),
                                       )
                                     : Container(),
                               ],
