@@ -1,0 +1,8 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="visible" preserveAspectRatio="none" viewBox="-26.543999999999983 0 632 632" width="22" height="22"><g><g xmlns:default="http://www.w3.org/2000/svg">
+	<path d="M302.6,52.6V26.3h65.8V0H210.5v26.3h65.8v26.3c-71,2.6-134.2,31.6-181.5,76.3L71,105.2L100,76.3l-18.4-21L2.6,134.2   L21,152.6l31.6-28.9l23.7,23.7C28.9,197.3,0,265.7,0,342c0,160.5,128.9,289.4,289.4,289.4S578.8,502.5,578.8,342   C578.8,186.8,455.1,60.5,302.6,52.6z M289.4,605.1C144.7,605.1,26.3,486.7,26.3,342S144.7,78.9,289.4,78.9S552.5,197.3,552.5,342   S434.1,605.1,289.4,605.1z" style="fill: rgb(0, 140, 191);" vector-effect="non-scaling-stroke"/>
+	<rect x="356.1" y="150.4" transform="matrix(0.7071 0.7071 -0.7071 0.7071 293.5321 -184.3176)" width="26.3" height="223.6" style="fill: rgb(0, 140, 191);" vector-effect="non-scaling-stroke"/>
+	<circle cx="289.4" cy="131.5" r="21" style="fill: rgb(0, 140, 191);" vector-effect="non-scaling-stroke"/>
+	<circle cx="289.4" cy="552.5" r="21" style="fill: rgb(0, 140, 191);" vector-effect="non-scaling-stroke"/>
+	<circle cx="78.9" cy="342" r="21" style="fill: rgb(0, 140, 191);" vector-effect="non-scaling-stroke"/>
+	<circle cx="499.9" cy="342" r="21" style="fill: rgb(0, 140, 191);" vector-effect="non-scaling-stroke"/>
+</g></g></svg>

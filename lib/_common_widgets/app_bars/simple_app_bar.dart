@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
 import 'app_bar_divider.dart';
 
@@ -38,7 +39,7 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.black, fontSize: 16),
+        style: TextStyles.titleTextStyle,
       ),
       leading: leading,
       actions: showTrailing ? [trailing] : [],

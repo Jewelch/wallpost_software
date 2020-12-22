@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/task/ui/views/task_details/task_comment_tile.dart';
 
@@ -48,7 +49,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
                           SizedBox(width: 8),
                           Expanded(
                             child: Container(
-                              child: Text('Task Details', style: TextStyle(color: Colors.black, fontSize: 18)),
+                              child: Text('Task Details', style: TextStyles.titleTextStyle),
                             ),
                           ),
                         ],

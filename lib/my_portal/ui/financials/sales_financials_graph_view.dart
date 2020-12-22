@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
 import 'package:wallpost/my_portal/entities/sales_performance.dart';
@@ -241,7 +242,7 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
               child: Text(
                 'Failed to load performance\nTap Here To Retry',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
+                style: TextStyles.failureMessageTextStyle,
               ),
               onPressed: () {
                 setState(() {});

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -33,7 +34,10 @@ class LeftMenuScreen extends StatelessWidget {
                   border: Border.all(color: AppColors.defaultColor, width: 1),
                   borderRadius: BorderRadius.circular(50),
                   image: DecorationImage(
-                      image: NetworkImage(CurrentUserProvider().getCurrentUser().profileImageUrl), fit: BoxFit.fill),
+                      image: NetworkImage(CurrentUserProvider()
+                          .getCurrentUser()
+                          .profileImageUrl),
+                      fit: BoxFit.fill),
                 ),
               ),
             ),
@@ -41,7 +45,7 @@ class LeftMenuScreen extends StatelessWidget {
             Center(
               child: Text(
                 CurrentUserProvider().getCurrentUser().fullName,
-                style: TextStyle(fontSize: 18),
+                style: TextStyles.titleTextStyle,
               ),
             ),
             SizedBox(height: 80),
@@ -52,7 +56,8 @@ class LeftMenuScreen extends StatelessWidget {
                   title: 'Settings',
                   imageName: 'assets/icons/settings_icon.svg',
                   borderColor: AppColors.defaultColor,
-                  onPressed: () => Navigator.of(context).pushNamed(RouteNames.settings),
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(RouteNames.settings),
                 ),
                 SizedBox(width: 40),
                 _buildLeftMenuButton(
@@ -76,7 +81,9 @@ class LeftMenuScreen extends StatelessWidget {
     if (SelectedCompanyProvider().getSelectedCompanyForCurrentUser() == null)
       return '';
     else
-      return SelectedCompanyProvider().getSelectedCompanyForCurrentUser().shortName;
+      return SelectedCompanyProvider()
+          .getSelectedCompanyForCurrentUser()
+          .shortName;
   }
 
   Widget _buildLeftMenuButton({

@@ -52,14 +52,16 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
               LoginTextField(
                 hint: 'Account Number',
                 keyboardType: TextInputType.number,
-                validator: (value) => value.length < 1 ? 'Please enter an account number' : null,
+                validator: (value) =>
+                    value.length < 1 ? 'Please enter an account number' : null,
                 onSaved: (value) => _accountNumber = value,
               ),
               SizedBox(height: 20),
               LoginTextField(
                 hint: 'Email',
                 keyboardType: TextInputType.visiblePassword,
-                validator: (value) => value.length < 1 ? 'Please enter your email address' : null,
+                validator: (value) =>
+                    value.length < 1 ? 'Please enter your email address' : null,
                 onSaved: (value) => _email = value,
               ),
               SizedBox(height: 20),

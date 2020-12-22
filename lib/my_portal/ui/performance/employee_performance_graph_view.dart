@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/my_portal/entities/employee_performance.dart';
@@ -195,7 +196,7 @@ class _EmployeePerformanceGraphViewState
               child: Text(
                 'Failed to performance\nTap Here To Retry',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
+                style: TextStyles.failureMessageTextStyle,
               ),
               onPressed: () {
                 setState(() {});

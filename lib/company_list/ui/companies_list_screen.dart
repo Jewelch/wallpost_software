@@ -4,8 +4,8 @@ import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
 import 'package:wallpost/_wp_core/company_management/services/companies_list_provider.dart';
@@ -120,7 +120,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
             children: [
               Text(
                 'Failed to load companies',
-                style: (TextStyle(color: AppColors.labelColor, fontSize: 16)),
+                style: TextStyles.failureMessageTextStyle,
               ),
               FlatButton(
                 child: Text('Tap Here To Retry'),
