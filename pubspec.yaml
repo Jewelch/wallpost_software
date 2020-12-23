@@ -33,6 +33,7 @@ dependencies:
   geolocator: ^6.1.0
   geocoding: ^1.0.4
   mime_type: ^0.3.2
+  cached_network_image: ^2.5.0
 
 
 dev_dependencies:

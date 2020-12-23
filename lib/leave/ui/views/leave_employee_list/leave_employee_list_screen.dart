@@ -51,7 +51,6 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
           onPressed: () =>
               Navigator.pushNamed(context, RouteNames.leaveListFilter),
         ),
-        showTrailing: true,
         trailing: RoundedIconButton(
           iconName: 'assets/icons/check.svg',
           iconSize: 20,
