@@ -11,7 +11,8 @@ class CompaniesListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  CompaniesListProvider.initWith(this._currentUserProvider, this._companyRepository, this._networkAdapter);
+  CompaniesListProvider.initWith(
+      this._currentUserProvider, this._companyRepository, this._networkAdapter);
 
   CompaniesListProvider()
       : _currentUserProvider = CurrentUserProvider(),
@@ -39,13 +40,15 @@ class CompaniesListProvider {
 
     if (apiResponse.data == null) throw InvalidResponseException();
 
-    if (apiResponse.data is! List<Map<String, Object>>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, Object>>)
+      throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<CompanyListItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<CompanyListItem> _readItemsFromResponse(
+      List<Map<String, dynamic>> responseMapList) {
     try {
       var companies = <CompanyListItem>[];
       for (var responseMap in responseMapList) {

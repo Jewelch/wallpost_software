@@ -97,7 +97,7 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
                         style: TextStyle(color: AppColors.defaultColor),
                       ),
                       Text(
-                        widget.leaveListItem.status.toStringValue(),
+                        widget.leaveListItem.status.toString(),
                         style: TextStyle(
                           color: Colors.orange,
                           fontSize: 12,

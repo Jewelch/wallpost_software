@@ -6,6 +6,7 @@ import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
 import 'package:wallpost/_wp_core/company_management/services/companies_list_provider.dart';
@@ -48,25 +49,46 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: _createListWidget(),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
+          child: Column(children: [
+            _createSearchView(),
+            Expanded(child: _createListWidget()),
+          ]),
         ),
       ),
     );
+  }
+
+  Widget _createListWidget() {
+    if (_companies.isNotEmpty)
+      return Container(
+        padding: EdgeInsets.only(top: 8, bottom: 8),
+        child: ListView.builder(
+          itemCount: _filterList.length,
+          itemBuilder: (context, index) {
+            return _getCompanyCard(index);
+          },
+        ),
+      );
+    else if (_companiesListProvider.isLoading == false) {
+      return _buildErrorAndRetryView();
+    } else {
+      return Container(
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
   }
 
   Widget _createSearchView() {
     return Container(
       padding: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-        color: Colors.grey,
+        color: AppColors.primaryContrastColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(10),
           topRight: Radius.circular(10),
@@ -83,6 +105,30 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     );
   }
 
+  Widget _buildErrorAndRetryView() {
+    return Container(
+      height: 150,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FlatButton(
+              child: Text(
+                'Failed to load companies\nTap Here To Retry',
+                textAlign: TextAlign.center,
+                style: TextStyles.failureMessageTextStyle,
+              ),
+              onPressed: () {
+                setState(() {});
+                _getCompanies();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _getClearButton() {
     if (_searchTextController.text.isEmpty) {
       return IconButton(
@@ -95,49 +141,6 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
       onPressed: () => _searchTextController.clear(),
       icon: Icon(Icons.clear),
     );
-  }
-
-  Widget _createListWidget() {
-    if (_companies.isNotEmpty)
-      return Column(
-        children: [
-          _createSearchView(),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _filterList.length,
-              itemBuilder: (context, index) {
-                return _getCompanyCard(index);
-              },
-            ),
-          ),
-        ],
-      );
-    else if (_companiesListProvider.isLoading == false) {
-      return Container(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Failed to load companies',
-                style: TextStyles.failureMessageTextStyle,
-              ),
-              FlatButton(
-                child: Text('Tap Here To Retry'),
-                onPressed: () {
-                  setState(() {});
-                  _getCompanies();
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return Container(
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
   }
 
   Widget _getCompanyCard(int index) {

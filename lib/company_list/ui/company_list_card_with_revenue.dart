@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
+import 'package:wallpost/my_portal/services/my_portal_performance_level_calculator.dart';
 
 class CompanyListCardWithRevenue extends StatelessWidget {
   final CompanyListItem company;
@@ -13,37 +15,31 @@ class CompanyListCardWithRevenue extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 8),
         child: Card(
-          child: Column(
-            children: [
-              Container(
-                child: Text(company.name, style: TextStyle(fontSize: 16)),
-                alignment: Alignment.topLeft,
-                padding: EdgeInsets.only(left: 12, right: 12, top: 12),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
-                child: Row(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(company.name, style: TextStyles.boldTitleTextStyle),
+                Row(
                   children: [
                     Expanded(
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Approvals'),
-                          Spacer(),
+                          Text('Approvals',
+                              style: TextStyles.subTitleTextStyle),
                           Text(
                             company.approvalCount.toString(),
-                            style: TextStyle(color: AppColors.defaultColor),
+                            style: TextStyles.subTitleTextStyle
+                                .copyWith(color: AppColors.defaultColor),
                           ),
                         ],
                       ),
                     ),
-                    Container(
-                      width: 1,
-                      height: 60,
-                      color: Colors.grey,
-                      margin: EdgeInsets.only(left: 10, right: 10),
-                    ),
+                    Container(height: 60, child: VerticalDivider()),
                     Expanded(
                       child: Column(
                         children: [
@@ -52,43 +48,43 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                             children: [
                               Text(
                                 company.actualSalesAmount,
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                style: TextStyles.titleTextStyle,
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 2, right: 2),
-                                child: Text(
-                                  company.currencyCode,
-                                  style: TextStyle(color: AppColors.labelColor),
-                                ),
+                              SizedBox(width: 4),
+                              Text(
+                                company.currencyCode,
+                                style: TextStyles.currencyTextStyle,
                               ),
                             ],
                           ),
+                          SizedBox(height: 4),
                           Text(
-                            'Actual',
-                            style: TextStyle(color: AppColors.labelColor, fontSize: 9),
+                            'Actual Revenue',
+                            style: TextStyles.smallSubTitleTextStyle,
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 4),
                           LinearPercentIndicator(
-                            percent: getPercentage(),
                             lineHeight: 14,
-                            progressColor: getProgressColor(),
+                            percent: company.achievedSalesPercent / 100,
+                            progressColor: _getColorForPerformance(
+                                company.achievedSalesPercent.toInt()),
                             center: Text(
                               company.achievedSalesPercent.toString() + "%",
-                              style: new TextStyle(fontSize: 12.0, color: Colors.white),
+                              style: TextStyles.progressBarTextStyle,
                             ),
                           ),
-                          SizedBox(height: 5),
+                          SizedBox(height: 4),
                           Text(
                             'Overall Sales Achievement',
-                            style: TextStyle(color: AppColors.labelColor, fontSize: 9),
+                            style: TextStyles.smallSubTitleTextStyle,
                           ),
                         ],
                       ),
                     )
                   ],
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -96,22 +92,15 @@ class CompanyListCardWithRevenue extends StatelessWidget {
     );
   }
 
-  Color getProgressColor() {
-    if (company.achievedSalesPercent < 70)
-      return Colors.red;
-    else if (company.achievedSalesPercent < 80)
-      return Colors.orange;
-    else
-      return Colors.green;
-  }
-
-  double getPercentage() {
-    if (company.achievedSalesPercent < 1)
-      return 0;
-    else if (company.achievedSalesPercent > 100)
-      return 1;
-    else
-      return company.achievedSalesPercent / 100;
+  Color _getColorForPerformance(int performance) {
+    var performanceLevelCalculator = MyPortalPerformanceLevelCalculator();
+    if (performanceLevelCalculator.isPerformanceGood(performance)) {
+      return AppColors.goodPerformanceColor;
+    } else if (performanceLevelCalculator.isPerformanceAverage(performance)) {
+      return AppColors.averagePerformanceColor;
+    } else {
+      return AppColors.badPerformanceColor;
+    }
   }
 }
 //TODO: Review performance classes

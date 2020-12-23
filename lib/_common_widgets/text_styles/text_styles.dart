@@ -12,6 +12,9 @@ class TextStyles {
         color: Colors.black,
       );
 
+  static get boldTitleTextStyle =>
+      TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold);
+
   static get listButtonTextStyle => TextStyle(
         fontSize: 18,
         color: Colors.black,
@@ -27,8 +30,23 @@ class TextStyles {
         color: AppColors.getColorFromHex('#9aa6b2'),
       );
 
+  static get smallSubTitleTextStyle => TextStyle(
+        fontSize: 10,
+        color: AppColors.getColorFromHex('#777777'),
+      );
+
   static get buttonTextStyle => TextStyle(
         fontSize: 16,
+        color: Colors.white,
+      );
+
+  static get currencyTextStyle => TextStyle(
+        fontSize: 12,
+        color: AppColors.getColorFromHex('#777777'),
+      );
+
+  static get progressBarTextStyle => TextStyle(
+        fontSize: 12,
         color: Colors.white,
       );
 }
