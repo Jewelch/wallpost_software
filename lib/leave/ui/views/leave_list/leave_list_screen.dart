@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/leave/ui/presenters/leave_list_presenter.dart';
@@ -10,7 +11,8 @@ class LeaveListScreen extends StatefulWidget {
   _LeaveListScreenState createState() => _LeaveListScreenState();
 }
 
-class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListView {
+class _LeaveListScreenState extends State<LeaveListScreen>
+    implements LeaveListView {
   LeaveListPresenter _presenter;
   ScrollController _scrollController;
 
@@ -25,7 +27,8 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfLeave();
       }
     });
@@ -36,7 +39,8 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title:
+            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: RoundedIconButton(
           iconName: 'assets/icons/back.svg',
           iconSize: 15,
@@ -45,7 +49,8 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
         trailing: RoundedIconButton(
           iconName: 'assets/icons/filters_icon.svg',
           iconSize: 15,
-          onPressed: () => Navigator.pushNamed(context, RouteNames.leaveListFilter),
+          onPressed: () =>
+              Navigator.pushNamed(context, RouteNames.leaveListFilter),
         ),
       ),
       body: SafeArea(
@@ -54,7 +59,7 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Leave Requests', style: TextStyle(color: Colors.black, fontSize: 16)),
+              Text('Leave Requests', style: TextStyles.titleTextStyle),
               SizedBox(height: 4),
               Divider(),
               Expanded(child: _filterListWidget())

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/leave/entities/leave_list_item.dart';
@@ -25,7 +26,8 @@ class _LeaveListTileState extends State<LeaveListTile> {
           Navigator.push(
             context,
             new MaterialPageRoute(
-              builder: (__) => new LeaveListDetailsScreen(leaveListItem: widget.leaveListItem),
+              builder: (__) => new LeaveListDetailsScreen(
+                  leaveListItem: widget.leaveListItem),
             ),
           );
         },
@@ -35,13 +37,17 @@ class _LeaveListTileState extends State<LeaveListTile> {
               children: <Widget>[
                 CircleAvatar(
                   radius: 20.0,
-                  backgroundImage: NetworkImage(widget.leaveListItem.applicantProfileImageUrl),
+                  backgroundImage: NetworkImage(
+                      widget.leaveListItem.applicantProfileImageUrl),
                   backgroundColor: Colors.transparent,
                 ),
-                SizedBox(height: 4),
                 Text(widget.leaveListItem.totalLeaveDays.toString(),
-                    style: TextStyle(color: Colors.grey, fontSize: 12)),
-                Text('Days', style: TextStyle(fontSize: 14))
+                    style: TextStyles.listSubTitleTextStyle),
+                Text(
+                  'Days',
+                  style: TextStyles.listSubTitleTextStyle
+                      .copyWith(color: Colors.black),
+                )
               ],
             ),
             SizedBox(width: 12),
@@ -51,7 +57,8 @@ class _LeaveListTileState extends State<LeaveListTile> {
                 children: [
                   Text(
                     widget.leaveListItem.applicantName,
-                    style: TextStyle(color: AppColors.defaultColor),
+                    style: TextStyles.subTitleTextStyle
+                        .copyWith(color: AppColors.defaultColor),
                   ),
                   SizedBox(height: 8),
                   Row(
@@ -60,44 +67,57 @@ class _LeaveListTileState extends State<LeaveListTile> {
                       RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(text: 'Start : ', style: TextStyle(color: Colors.black, fontSize: 12)),
                             TextSpan(
-                                text: _convertToDateFormat(widget.leaveListItem.leaveFrom),
-                                style: TextStyle(color: Colors.grey, fontSize: 12))
+                                text: 'Start : ',
+                                style: TextStyles.listSubTitleTextStyle
+                                    .copyWith(color: Colors.black)),
+                            TextSpan(
+                                text: _convertToDateFormat(
+                                    widget.leaveListItem.leaveFrom),
+                                style: TextStyles.listSubTitleTextStyle)
                           ],
                         ),
                       ),
                       RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(text: 'End : ', style: TextStyle(color: Colors.black, fontSize: 12)),
                             TextSpan(
-                                text: _convertToDateFormat(widget.leaveListItem.leaveTo),
-                                style: TextStyle(color: Colors.grey, fontSize: 12))
+                              text: 'End : ',
+                              style: TextStyles.listSubTitleTextStyle
+                                  .copyWith(color: Colors.black),
+                            ),
+                            TextSpan(
+                                text: _convertToDateFormat(
+                                    widget.leaveListItem.leaveTo),
+                                style: TextStyles.listSubTitleTextStyle)
                           ],
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14),
+                      Icon(Icons.arrow_forward_ios_outlined,
+                          color: Colors.grey, size: 14),
                     ],
                   ),
-                  SizedBox(height: 8),
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColors.defaultColor),
-                      child: Text(
-                        widget.leaveListItem.leaveType,
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                    ),
-                    Text(
-                      widget.leaveListItem.status.stringValue(),
-                      style: TextStyle(
-                        color: Colors.orange,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ])
+                  SizedBox(height: 12),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.defaultColor),
+                          child: Text(
+                            widget.leaveListItem.leaveType,
+                            style: TextStyles.smallSubTitleTextStyle
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          widget.leaveListItem.status.stringValue(),
+                          style: TextStyles.smallSubTitleTextStyle
+                              .copyWith(color: Colors.orange),
+                        ),
+                      ])
                 ],
               ),
             )
@@ -108,7 +128,8 @@ class _LeaveListTileState extends State<LeaveListTile> {
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;
