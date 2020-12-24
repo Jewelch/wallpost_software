@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/CustomSwitch.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -21,13 +20,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title:
-            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/back.svg',
-          iconSize: 12,
-          onPressed: () => {},
-        ),
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
       ),
       body: SafeArea(
         child: Container(
@@ -57,14 +50,12 @@ class _RequestsScreenState extends State<RequestsScreen> {
                 ),
               ),
               Divider(),
-              buildRequestsButton('Task', 'tasks_icon.svg',
-                  () => {Navigator.pushNamed(context, RouteNames.task)}),
-              buildRequestsButton('Leave', 'leave_icon.svg',
-                  () => {Navigator.pushNamed(context, RouteNames.leaveList)}),
+              buildRequestsButton('Task', 'tasks_icon.svg', () => {Navigator.pushNamed(context, RouteNames.task)}),
+              buildRequestsButton(
+                  'Leave', 'leave_icon.svg', () => {Navigator.pushNamed(context, RouteNames.leaveList)}),
               buildRequestsButton('Expense', 'expense_icon.svg', () => {}),
               buildRequestsButton('Overtime', 'overtime_icon.svg', () => {}),
-              buildRequestsButton(
-                  'Attendance Adjustment', 'attendance_icon.svg', () => {}),
+              buildRequestsButton('Attendance Adjustment', 'attendance_icon.svg', () => {}),
             ],
           ),
         ),
@@ -72,8 +63,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
     );
   }
 
-  Widget buildRequestsButton(
-      String buttonTitle, String buttonIcon, VoidCallback _onTap) {
+  Widget buildRequestsButton(String buttonTitle, String buttonIcon, VoidCallback _onTap) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: _onTap,
@@ -86,13 +76,12 @@ class _RequestsScreenState extends State<RequestsScreen> {
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: SizedBox(
                   width: 30,
-                  child: SvgPicture.asset('assets/icons/$buttonIcon',
-                      width: 30, height: 30),
+                  child: SvgPicture.asset('assets/icons/$buttonIcon', width: 30, height: 30),
                 ),
               ),
               Text(
                 buttonTitle,
-                style: TextStyles.listButtonTextStyle,
+                style: TextStyles.largeTitleTextStyle,
               ),
               Spacer(),
               Padding(
