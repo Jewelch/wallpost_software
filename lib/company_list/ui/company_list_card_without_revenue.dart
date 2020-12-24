@@ -25,7 +25,7 @@ class CompanyListCardWithOutRevenue extends StatelessWidget {
               children: [
                 Text(
                   company.name,
-                  style: TextStyles.boldTitleTextStyle,
+                  style: TextStyles.titleTextStyle.copyWith(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16),
                 Row(

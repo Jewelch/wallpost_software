@@ -25,7 +25,7 @@ class CompanyListCardWithRevenue extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(company.name, style: TextStyles.boldTitleTextStyle),
+                Text(company.name, style: TextStyles.titleTextStyle.copyWith(fontWeight: FontWeight.bold)),
                 Row(
                   children: [
                     Expanded(
