@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
@@ -15,14 +16,7 @@ class LeftMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: WPAppBar(
-        title: _getTitle(),
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/back.svg',
-          iconSize: 12,
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      appBar: _buildAppBar(context),
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -86,11 +80,27 @@ class LeftMenuScreen extends StatelessWidget {
     );
   }
 
-  String _getTitle() {
-    if (SelectedCompanyProvider().getSelectedCompanyForCurrentUser() == null)
-      return '';
-    else
-      return SelectedCompanyProvider().getSelectedCompanyForCurrentUser().shortName;
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    if (selectedCompany == null) {
+      return SimpleAppBar(
+        title: '',
+        leading: RoundedIconButton(
+          iconName: 'assets/icons/back.svg',
+          iconSize: 12,
+          onPressed: () => Navigator.pop(context),
+        ),
+      );
+    } else {
+      return WPAppBar(
+        title: selectedCompany.shortName,
+        leading: RoundedIconButton(
+          iconName: 'assets/icons/back.svg',
+          iconSize: 12,
+          onPressed: () => Navigator.pop(context),
+        ),
+      );
+    }
   }
 
   Widget _buildLeftMenuButton({
@@ -120,9 +130,7 @@ class LeftMenuScreen extends StatelessWidget {
                 height: imageSize,
               ),
               SizedBox(height: 4),
-              Text(title,
-                  style: TextStyles.subTitleTextStyle
-                      .copyWith(fontSize: 10.0, color: borderColor)),
+              Text(title, style: TextStyles.subTitleTextStyle.copyWith(fontSize: 12.0, color: borderColor)),
             ],
           ),
           onPressed: onPressed,
