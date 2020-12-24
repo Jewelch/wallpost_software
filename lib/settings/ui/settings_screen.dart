@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -44,7 +46,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             */
             ListTile(
-              title: Text('Change Password'),
+              title: Text('Change Password',
+                  style: TextStyles.listButtonTextStyle
+                      .copyWith(color: AppColors.labelColor)),
               onTap: () =>
                   {Navigator.of(context).pushNamed(RouteNames.changePassword)},
             ),

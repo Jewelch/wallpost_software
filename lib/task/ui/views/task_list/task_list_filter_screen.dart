@@ -16,7 +16,8 @@ class TaskListFilterScreen extends StatefulWidget {
   _TaskListFilterScreenState createState() => _TaskListFilterScreenState();
 }
 
-class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements DepartmentsWrapView {
+class _TaskListFilterScreenState extends State<TaskListFilterScreen>
+    implements DepartmentsWrapView {
   TaskFilterPresenter _presenter;
   List<Department> filteredDepartments;
   bool isFromDepartmentFilter = false;
@@ -35,10 +36,19 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
   @override
   void initState() {
     _presenter = TaskFilterPresenter(this);
-    isFromDepartmentFilter ? _presenter.loadFilteredDepartments(filteredDepartments) : _presenter.loadDepartments();
+    isFromDepartmentFilter
+        ? _presenter.loadFilteredDepartments(filteredDepartments)
+        : _presenter.loadDepartments();
     _presenter.loadCategories();
     _presenter.loadEmployees();
     super.initState();
+  }
+
+  _resetFilters() {
+    _filters.resetDateFilter();
+    _presenter.loadDepartments();
+    _presenter.loadCategories();
+    _presenter.loadEmployees();
   }
 
   @override
@@ -54,13 +64,21 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: _buildYearSection()),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: _buildYearSection()),
               Divider(height: 1),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: _buildDepartmentSection()),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: _buildDepartmentSection()),
               Divider(height: 1),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: _buildCategoriesSection()),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: _buildCategoriesSection()),
               Divider(height: 1),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: _buildEmployeesSection()),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: _buildEmployeesSection()),
             ],
           ),
         ),
@@ -82,7 +100,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
             children: [
               SizedBox(
                 child: IconButton(
-                  icon: SvgPicture.asset('assets/icons/close_icon.svg', width: 42, height: 23),
+                  icon: SvgPicture.asset('assets/icons/close_icon.svg',
+                      width: 42, height: 23),
                   onPressed: () => {Navigator.pop(context)},
                 ),
               ),
@@ -96,7 +115,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
                       Expanded(
                         child: Container(
                           child: Center(
-                            child: Text('Filters', style: TextStyles.titleTextStyle),
+                            child: Text('Filters',
+                                style: TextStyles.titleTextStyle),
                           ),
                         ),
                       ),
@@ -106,8 +126,9 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
               ),
               SizedBox(
                 child: IconButton(
-                  icon: SvgPicture.asset('assets/icons/reset_icon.svg', width: 42, height: 23),
-                  onPressed: () => {},
+                  icon: SvgPicture.asset('assets/icons/reset_icon.svg',
+                      width: 42, height: 23),
+                  onPressed: () => {setState(() => _resetFilters())},
                 ),
               ),
               SizedBox(
@@ -118,7 +139,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
                     height: 23,
                     color: AppColors.defaultColor,
                   ),
-                  onPressed: () => {_updateAllSelectedFilters(), Navigator.pop(context)},
+                  onPressed: () =>
+                      {_updateAllSelectedFilters(), Navigator.pop(context)},
                 ),
               ),
             ],
@@ -140,14 +162,16 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Year', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Year',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         MultiSelectFilterChips(
           titles: AppYears.years().map((e) => '$e').toList(),
           selectedIndices: [selectedYearIndex],
           controller: _yearsFilterController,
           allowMultipleSelection: false,
-          onItemSelected: (selectedIndex) => _filters.year = AppYears.years()[selectedIndex],
+          onItemSelected: (selectedIndex) =>
+              _filters.year = AppYears.years()[selectedIndex],
           onItemDeselected: (_) {
             setState(() => _filters.resetDateFilter());
           },
@@ -162,7 +186,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
         ? filteredDepartments.map((e) => e.name).toList()
         : _presenter.departments.map((e) => e.name).toList();
     if (departmentTitles.isNotEmpty && !isFromDepartmentFilter) {
-      departmentTitles = departmentTitles.sublist(0, departmentTitles.length > 8 ? 8 : departmentTitles.length);
+      departmentTitles = departmentTitles.sublist(
+          0, departmentTitles.length > 8 ? 8 : departmentTitles.length);
     }
 
     return Column(
@@ -170,10 +195,13 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Department', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Department',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         _presenter.isLoadingDepartments()
-            ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
+            ? Center(
+                child: SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()))
             : MultiSelectFilterChips(
                 titles: departmentTitles,
                 selectedIndices: [],
@@ -197,7 +225,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
   }
 
   void goToDepartmentsFilter() async {
-    final selectedDepartments = await Navigator.pushNamed(context, RouteNames.departmentsListScreen);
+    final selectedDepartments =
+        await Navigator.pushNamed(context, RouteNames.departmentsListScreen);
 
     filteredDepartments = selectedDepartments;
     isFromDepartmentFilter = true;
@@ -209,7 +238,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
         ? filteredCategories.map((e) => e.name).toList()
         : _presenter.categories.map((e) => e.name).toList();
     if (categoryTitles.isNotEmpty && !isFromCategoryFilter) {
-      categoryTitles = categoryTitles.sublist(0, categoryTitles.length > 8 ? 8 : categoryTitles.length);
+      categoryTitles = categoryTitles.sublist(
+          0, categoryTitles.length > 8 ? 8 : categoryTitles.length);
     }
 
     return Column(
@@ -217,10 +247,13 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Category', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Category',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         _presenter.isLoadingCategories()
-            ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
+            ? Center(
+                child: SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()))
             : MultiSelectFilterChips(
                 titles: categoryTitles,
                 selectedIndices: [],
@@ -239,7 +272,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
   }
 
   void goToCategoriesFilter() async {
-    final selectedCategories = await Navigator.pushNamed(context, RouteNames.taskCategoryListScreen);
+    final selectedCategories =
+        await Navigator.pushNamed(context, RouteNames.taskCategoryListScreen);
 
     filteredCategories = selectedCategories;
     isFromCategoryFilter = true;
@@ -251,7 +285,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
         ? filteredEmployees.map((e) => e.fullName).toList()
         : _presenter.employees.map((e) => e.fullName).toList();
     if (employeeTitles.isNotEmpty && !isFromEmployeeFilter) {
-      employeeTitles = employeeTitles.sublist(0, employeeTitles.length > 8 ? 8 : employeeTitles.length);
+      employeeTitles = employeeTitles.sublist(
+          0, employeeTitles.length > 8 ? 8 : employeeTitles.length);
     }
 
     return Column(
@@ -259,10 +294,13 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Employee', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Employee',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         _presenter.isLoadingEmployees()
-            ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
+            ? Center(
+                child: SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()))
             : MultiSelectFilterChips(
                 titles: employeeTitles,
                 selectedIndices: [],
@@ -281,7 +319,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
   }
 
   void goToEmployeesFilter() async {
-    final selectedEmployees = await Navigator.pushNamed(context, RouteNames.taskEmployeeListScreen);
+    final selectedEmployees =
+        await Navigator.pushNamed(context, RouteNames.taskEmployeeListScreen);
 
     filteredEmployees = selectedEmployees;
     isFromEmployeeFilter = true;
@@ -296,38 +335,49 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen> implements 
   void _updateAllSelectedFilters() {
     TasksListFilters _tasksListFilter = TasksListFilters();
 
-    _tasksListFilter.year = AppYears.years()[_yearsFilterController.getSelectedIndices()[0]];
+    _tasksListFilter.year =
+        AppYears.years()[_yearsFilterController.getSelectedIndices()[0]];
 
-    _tasksListFilter.departments.addAll(isFromDepartmentFilter ? filteredDepartments : _getSelectedDepartments());
+    _tasksListFilter.departments.addAll(isFromDepartmentFilter
+        ? filteredDepartments
+        : _getSelectedDepartments());
 
-    _tasksListFilter.categories.addAll(isFromCategoryFilter ? filteredCategories : _getSelectedCategories());
+    _tasksListFilter.categories.addAll(
+        isFromCategoryFilter ? filteredCategories : _getSelectedCategories());
 
-    _tasksListFilter.assignees.addAll(isFromEmployeeFilter ? filteredEmployees : _getSelectedEmployees());
+    _tasksListFilter.assignees.addAll(
+        isFromEmployeeFilter ? filteredEmployees : _getSelectedEmployees());
   }
 
   List<Department> _getSelectedDepartments() {
     List<Department> _selectedDepartments = List<Department>();
-    List<int> _selectedDepartmentIndexes = _departmentsFilterController.getSelectedIndices();
+    List<int> _selectedDepartmentIndexes =
+        _departmentsFilterController.getSelectedIndices();
     for (var i = 0; i < _selectedDepartmentIndexes.length; i++) {
-      _selectedDepartments.add(_presenter.departments[_selectedDepartmentIndexes[i]]);
+      _selectedDepartments
+          .add(_presenter.departments[_selectedDepartmentIndexes[i]]);
     }
     return _selectedDepartments;
   }
 
   List<TaskCategory> _getSelectedCategories() {
     List<TaskCategory> _selectedCategories = List<TaskCategory>();
-    List<int> _selectedCategoriesIndexes = _categoriesFilterController.getSelectedIndices();
+    List<int> _selectedCategoriesIndexes =
+        _categoriesFilterController.getSelectedIndices();
     for (var i = 0; i < _selectedCategoriesIndexes.length; i++) {
-      _selectedCategories.add(_presenter.categories[_selectedCategoriesIndexes[i]]);
+      _selectedCategories
+          .add(_presenter.categories[_selectedCategoriesIndexes[i]]);
     }
     return _selectedCategories;
   }
 
   List<TaskEmployee> _getSelectedEmployees() {
     List<TaskEmployee> _selectedEmployees = List<TaskEmployee>();
-    List<int> _selectedEmployeesIndexes = _employeesFilterController.getSelectedIndices();
+    List<int> _selectedEmployeesIndexes =
+        _employeesFilterController.getSelectedIndices();
     for (var i = 0; i < _selectedEmployeesIndexes.length; i++) {
-      _selectedEmployees.add(_presenter.employees[_selectedEmployeesIndexes[i]]);
+      _selectedEmployees
+          .add(_presenter.employees[_selectedEmployeesIndexes[i]]);
     }
     return _selectedEmployees;
   }

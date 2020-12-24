@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
 class PasswordTextField extends StatefulWidget {
   final String label;
@@ -63,11 +64,10 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
             borderSide: BorderSide(color: widget.tintColor),
           ),
           labelText: widget.label,
-          labelStyle: TextStyle(
-              fontWeight: FontWeight.normal, fontSize: 17, color: Colors.black),
+          labelStyle: TextStyles.titleTextStyle,
           suffixIcon: IconButton(
             icon: Icon(
-              _isObscured ? Icons.visibility : Icons.visibility_off,
+              _isObscured ? Icons.visibility_off : Icons.visibility,
               color: Colors.grey,
             ),
             onPressed: () {
