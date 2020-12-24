@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -83,13 +84,11 @@ class _EmployeeMyPortalScreenState extends State<EmployeeMyPortalScreen> with Si
                 SizedBox(height: 8),
                 Text(
                   'Performance',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
+                  style: TextStyles.subTitleTextStyle,
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 16),
                 EmployeePerformanceGraphView(),
+                SizedBox(height: 20),
                 Container(
                   child: TabBar(
                     controller: _tabController,
@@ -99,15 +98,23 @@ class _EmployeeMyPortalScreenState extends State<EmployeeMyPortalScreen> with Si
                     indicatorWeight: 3,
                     tabs: [
                       Tab(
-                        text: 'Attendance',
+                        child: Text(
+                          'Attendance',
+                          style: TextStyles.titleTextStyle,
+                        ),
                       ),
                       Tab(
-                        child: RichText(
-                            text: TextSpan(children: [
-                          TextSpan(text: 'Approvals ', style: TextStyle(color: Colors.black)),
-                          TextSpan(
-                              text: '$_totalpendingApprovalsCount', style: TextStyle(color: AppColors.defaultColor))
-                        ])),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Approvals ', style: TextStyles.titleTextStyle),
+                            Text(
+                              '$_totalpendingApprovalsCount',
+                              style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColor),
+                            )
+                          ],
+                        ),
                       ),
                     ],
                   ),

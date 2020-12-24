@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -81,13 +82,10 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTi
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Sales Performance', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                SizedBox(height: 8),
+                Text('Sales Performance', style: TextStyles.subTitleTextStyle),
+                SizedBox(height: 16),
                 SalesPerformanceGraphView(),
-                SizedBox(height: 12),
-                Divider(
-                  height: 4,
-                ),
+                SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[100], width: 2))),
                   child: TabBar(
@@ -98,18 +96,22 @@ class _SalesMyPortalScreenState extends State<SalesMyPortalScreen> with SingleTi
                     indicatorWeight: 3,
                     tabs: [
                       Tab(
-                        text: 'Financials',
+                        child: Text(
+                          'Financials',
+                          style: TextStyles.titleTextStyle,
+                        ),
                       ),
                       Tab(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(text: 'Approvals ', style: TextStyle(color: Colors.black)),
-                              TextSpan(
-                                  text: '$_totalpendingApprovalsCount',
-                                  style: TextStyle(color: AppColors.defaultColor, fontWeight: FontWeight.bold))
-                            ],
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Approvals ', style: TextStyles.titleTextStyle),
+                            Text(
+                              '$_totalpendingApprovalsCount',
+                              style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColor),
+                            )
+                          ],
                         ),
                       ),
                     ],

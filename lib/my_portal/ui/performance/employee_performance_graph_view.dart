@@ -10,12 +10,10 @@ import 'package:wallpost/my_portal/services/my_portal_performance_level_calculat
 
 class EmployeePerformanceGraphView extends StatefulWidget {
   @override
-  _EmployeePerformanceGraphViewState createState() =>
-      _EmployeePerformanceGraphViewState();
+  _EmployeePerformanceGraphViewState createState() => _EmployeePerformanceGraphViewState();
 }
 
-class _EmployeePerformanceGraphViewState
-    extends State<EmployeePerformanceGraphView> {
+class _EmployeePerformanceGraphViewState extends State<EmployeePerformanceGraphView> {
   EmployeePerformance _employeePerformance;
   bool showError = false;
 
@@ -29,8 +27,7 @@ class _EmployeePerformanceGraphViewState
     setStateIfMounted(() => _employeePerformance = null);
 
     try {
-      var performance = await EmployeePerformanceProvider()
-          .getPerformance(DateTime.now().year);
+      var performance = await EmployeePerformanceProvider().getPerformance(DateTime.now().year);
       setStateIfMounted(() => _employeePerformance = performance);
     } on WPException catch (_) {
       setStateIfMounted(() => showError = true);
@@ -56,24 +53,20 @@ class _EmployeePerformanceGraphViewState
             animation: true,
             percent: _employeePerformance.overallYearlyPerformancePercent / 100,
             circularStrokeCap: CircularStrokeCap.round,
-            progressColor: _getColorForPerformance(
-                _employeePerformance.overallYearlyPerformancePercent),
+            progressColor: _getColorForPerformance(_employeePerformance.overallYearlyPerformancePercent),
             center: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
                   '${_employeePerformance.overallYearlyPerformancePercent}%',
                   style: TextStyle(
-                    fontWeight: FontWeight.normal,
                     fontSize: 24.0,
-                    color: _getColorForPerformance(
-                        _employeePerformance.overallYearlyPerformancePercent),
+                    color: _getColorForPerformance(_employeePerformance.overallYearlyPerformancePercent),
                   ),
                 ),
                 Text(
                   'YTD ${DateTime.now().year}',
-                  style:
-                      TextStyle(fontWeight: FontWeight.normal, fontSize: 16.0),
+                  style: TextStyles.titleTextStyle,
                 ),
               ],
             ),
@@ -84,26 +77,21 @@ class _EmployeePerformanceGraphViewState
           child: Column(
             children: <Widget>[
               _buildMonthlyPerformanceBarGraph(
-                performancePercentage:
-                    _employeePerformance.overallYearlyPerformancePercent,
+                performancePercentage: _employeePerformance.overallYearlyPerformancePercent,
                 label: '',
                 timePeriod: DateFormat('MMM yyyy').format(DateTime.now()),
               ),
               SizedBox(height: 12),
               _buildMonthlyPerformanceBarGraph(
-                performancePercentage:
-                    _employeePerformance.bestPerformancePercent,
+                performancePercentage: _employeePerformance.bestPerformancePercent,
                 label: 'Best Score',
-                timePeriod:
-                    '${_employeePerformance.bestPerformanceMonth} ${DateFormat('yyyy').format(DateTime.now())}',
+                timePeriod: '${_employeePerformance.bestPerformanceMonth} ${DateFormat('yyyy').format(DateTime.now())}',
               ),
               SizedBox(height: 16),
               _buildMonthlyPerformanceBarGraph(
-                performancePercentage:
-                    _employeePerformance.leastPerformancePercent,
+                performancePercentage: _employeePerformance.leastPerformancePercent,
                 label: 'Least Score',
-                timePeriod:
-                    '${_employeePerformance.bestPerformanceMonth} ${DateFormat('yyyy').format(DateTime.now())}',
+                timePeriod: '${_employeePerformance.bestPerformanceMonth} ${DateFormat('yyyy').format(DateTime.now())}',
               ),
             ],
           ),
@@ -112,8 +100,7 @@ class _EmployeePerformanceGraphViewState
     );
   }
 
-  Widget _buildMonthlyPerformanceBarGraph(
-      {int performancePercentage, String label, String timePeriod}) {
+  Widget _buildMonthlyPerformanceBarGraph({int performancePercentage, String label, String timePeriod}) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,9 +110,7 @@ class _EmployeePerformanceGraphViewState
             child: Text(
               '$performancePercentage%',
               textAlign: TextAlign.left,
-              style: TextStyle(
-                  color: _getColorForPerformance(performancePercentage),
-                  fontSize: 16),
+              style: TextStyles.titleTextStyle.copyWith(color: _getColorForPerformance(performancePercentage)),
             ),
           ),
           LinearPercentIndicator(
@@ -142,12 +127,10 @@ class _EmployeePerformanceGraphViewState
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(label, style: TextStyle(fontSize: 12)),
+                Text(label, style: TextStyles.labelTextStyle),
                 Text(
                   timePeriod,
-                  style: TextStyle(
-                      color: _getColorForPerformance(performancePercentage),
-                      fontSize: 12),
+                  style: TextStyles.labelTextStyle.copyWith(color: _getColorForPerformance(performancePercentage)),
                 )
               ],
             ),
@@ -194,12 +177,14 @@ class _EmployeePerformanceGraphViewState
           children: [
             FlatButton(
               child: Text(
-                'Failed to performance\nTap Here To Retry',
+                'Failed to load performance\nTap Here To Retry',
                 textAlign: TextAlign.center,
                 style: TextStyles.failureMessageTextStyle,
               ),
               onPressed: () {
-                setState(() {});
+                setState(() {
+                  showError = false;
+                });
                 _getEmployeePerformance();
               },
             ),
