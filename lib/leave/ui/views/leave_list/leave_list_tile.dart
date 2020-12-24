@@ -55,11 +55,8 @@ class _LeaveListTileState extends State<LeaveListTile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.leaveListItem.applicantName,
-                    style: TextStyles.subTitleTextStyle
-                        .copyWith(color: AppColors.defaultColor),
-                  ),
+                  Text(widget.leaveListItem.applicantName,
+                      style: TextStyles.listTitleTextStyle),
                   SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

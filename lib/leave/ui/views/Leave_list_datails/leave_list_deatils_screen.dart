@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 
@@ -15,11 +16,7 @@ class LeaveListDetailsScreen extends StatefulWidget {
 }
 
 class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +41,7 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Leave Requests',
-                style: TextStyle(color: Colors.black, fontSize: 16)),
+            Text('Leave Requests', style: TextStyles.titleTextStyle),
             SizedBox(height: 4),
             Divider(),
             _leaveDetailsView(),
@@ -75,11 +71,12 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
               SizedBox(height: 4),
               Text(
                 widget.leaveListItem.totalLeaveDays.toString(),
-                style: TextStyle(color: Colors.grey, fontSize: 12),
+                style: TextStyles.listSubTitleTextStyle,
               ),
               Text(
                 'Days',
-                style: TextStyle(fontSize: 14),
+                style: TextStyles.listSubTitleTextStyle
+                    .copyWith(color: Colors.black),
               )
             ],
           ),
@@ -92,16 +89,12 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        widget.leaveListItem.applicantName,
-                        style: TextStyle(color: AppColors.defaultColor),
-                      ),
+                      Text(widget.leaveListItem.applicantName,
+                          style: TextStyles.listTitleTextStyle),
                       Text(
                         widget.leaveListItem.status.toString(),
-                        style: TextStyle(
-                          color: Colors.orange,
-                          fontSize: 12,
-                        ),
+                        style: TextStyles.listSubTitleTextStyle
+                            .copyWith(color: Colors.green),
                       ),
                     ]),
                 SizedBox(height: 12),
@@ -112,13 +105,13 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                              text: 'Contact on Leave : ',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 12)),
+                            text: 'Contact on Leave : ',
+                            style: TextStyles.listSubTitleTextStyle
+                                .copyWith(color: Colors.black),
+                          ),
                           TextSpan(
                               text: '+974 30821038',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12))
+                              style: TextStyles.listSubTitleTextStyle)
                         ],
                       ),
                     ),
@@ -132,13 +125,13 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                                text: 'Email : ',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 12)),
+                              text: 'Email : ',
+                              style: TextStyles.listSubTitleTextStyle
+                                  .copyWith(color: Colors.black),
+                            ),
                             TextSpan(
                                 text: 'jaseelkt09@gmail.com',
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 12))
+                                style: TextStyles.listSubTitleTextStyle)
                           ],
                         ),
                       ),
@@ -149,7 +142,8 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
                             color: AppColors.defaultColor),
                         child: Text(
                           widget.leaveListItem.leaveType,
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                          style: TextStyles.smallSubTitleTextStyle
+                              .copyWith(color: Colors.white),
                         ),
                       ),
                     ])
@@ -167,13 +161,18 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
         Row(
           children: [
             Expanded(
-              child: Text('Start :', textAlign: TextAlign.left),
+              child: Text(
+                'Start :',
+                textAlign: TextAlign.left,
+                style: TextStyles.listSubTitleTextStyle
+                    .copyWith(color: Colors.black),
+              ),
             ),
             Expanded(
               child: Text(
                 _convertToDateFormat(widget.leaveListItem.leaveFrom),
                 textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyles.listSubTitleTextStyle,
               ),
             ),
           ],
@@ -182,13 +181,16 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
         Row(
           children: [
             Expanded(
-              child: Text('End :', textAlign: TextAlign.left),
+              child: Text('End :',
+                  textAlign: TextAlign.left,
+                  style: TextStyles.listSubTitleTextStyle
+                      .copyWith(color: Colors.black)),
             ),
             Expanded(
               child: Text(
                 _convertToDateFormat(widget.leaveListItem.leaveTo),
                 textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyles.listSubTitleTextStyle,
               ),
             ),
           ],
@@ -202,14 +204,13 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Paid  : ',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
+                      text: 'Paid : ',
+                      style: TextStyles.listSubTitleTextStyle
+                          .copyWith(color: Colors.black),
                     ),
                     TextSpan(
                       text: '0 Days',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyles.listSubTitleTextStyle,
                     )
                   ],
                 ),
@@ -221,14 +222,13 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Unpaid   : ',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
+                      text: 'Unpaid : ',
+                      style: TextStyles.listSubTitleTextStyle
+                          .copyWith(color: Colors.black),
                     ),
                     TextSpan(
                       text: '1 Days',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyles.listSubTitleTextStyle,
                     )
                   ],
                 ),
@@ -240,13 +240,18 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
         Row(
           children: [
             Expanded(
-              child: Text('Exit Permit Required :', textAlign: TextAlign.left),
+              child: Text(
+                'Exit Permit Required :',
+                textAlign: TextAlign.left,
+                style: TextStyles.listSubTitleTextStyle
+                    .copyWith(color: Colors.black),
+              ),
             ),
             Expanded(
               child: Text(
                 'Yes',
                 textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyles.listSubTitleTextStyle,
               ),
             ),
           ],
@@ -255,13 +260,18 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
         Row(
           children: [
             Expanded(
-              child: Text('Departure flight :', textAlign: TextAlign.left),
+              child: Text(
+                'Departure flight :',
+                textAlign: TextAlign.left,
+                style: TextStyles.listSubTitleTextStyle
+                    .copyWith(color: Colors.black),
+              ),
             ),
             Expanded(
               child: Text(
                 'Not applicable',
                 textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyles.listSubTitleTextStyle,
               ),
             ),
           ],
@@ -270,13 +280,18 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
         Row(
           children: [
             Expanded(
-              child: Text('Handover  :', textAlign: TextAlign.left),
+              child: Text(
+                'Handover  :',
+                textAlign: TextAlign.left,
+                style: TextStyles.listSubTitleTextStyle
+                    .copyWith(color: Colors.black),
+              ),
             ),
             Expanded(
               child: Text(
                 'Not initiated',
                 textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyles.listSubTitleTextStyle,
               ),
             ),
           ],
@@ -285,13 +300,18 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
         Row(
           children: [
             Expanded(
-              child: Text('Clearance  :', textAlign: TextAlign.left),
+              child: Text(
+                'Clearance  :',
+                textAlign: TextAlign.left,
+                style: TextStyles.listSubTitleTextStyle
+                    .copyWith(color: Colors.black),
+              ),
             ),
             Expanded(
               child: Text(
                 'Not initiated',
                 textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyles.listSubTitleTextStyle,
               ),
             ),
           ],
@@ -300,13 +320,18 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
         Row(
           children: [
             Expanded(
-              child: Text('Reason  :', textAlign: TextAlign.left),
+              child: Text(
+                'Reason  :',
+                textAlign: TextAlign.left,
+                style: TextStyles.listSubTitleTextStyle
+                    .copyWith(color: Colors.black),
+              ),
             ),
             Expanded(
               child: Text(
                 'Stomach pain',
                 textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyles.listSubTitleTextStyle,
               ),
             ),
           ],

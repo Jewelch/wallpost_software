@@ -30,14 +30,19 @@ class TextStyles {
         color: AppColors.getColorFromHex('#9aa6b2'),
       );
 
-  static get listSubTitleTextStyle => TextStyle(
-        fontSize: 12,
-        color: AppColors.getColorFromHex('#9aa6b2'),
-      );
-
   static get smallSubTitleTextStyle => TextStyle(
         fontSize: 10,
         color: AppColors.getColorFromHex('#777777'),
+      );
+
+  static get listTitleTextStyle => TextStyle(
+        fontSize: 14,
+        color: AppColors.defaultColor,
+      );
+
+  static get listSubTitleTextStyle => TextStyle(
+        fontSize: 12,
+        color: AppColors.getColorFromHex('#9aa6b2'),
       );
 
   static get buttonTextStyle => TextStyle(
