@@ -11,12 +11,15 @@ class CompanyListCardWithOutRevenue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: Card(
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: onPressed,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -24,14 +27,37 @@ class CompanyListCardWithOutRevenue extends StatelessWidget {
                   company.name,
                   style: TextStyles.boldTitleTextStyle,
                 ),
+                SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Approvals', style: TextStyles.subTitleTextStyle),
-                    Text(
-                      company.approvalCount.toString(),
-                      style: TextStyles.subTitleTextStyle
-                          .copyWith(color: AppColors.defaultColor),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            company.approvalCount.toString(),
+                            style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColor),
+                          ),
+                          SizedBox(height: 6),
+                          Text('Approval${company.approvalCount == 1 ? '' : 's'}',
+                              style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            company.notificationCount.toString(),
+                            style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColor),
+                          ),
+                          SizedBox(height: 6),
+                          Text('Notification${company.notificationCount == 1 ? '' : 's'}',
+                              style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+                        ],
+                      ),
                     )
                   ],
                 )
@@ -40,7 +66,6 @@ class CompanyListCardWithOutRevenue extends StatelessWidget {
           ),
         ),
       ),
-      onTap: onPressed,
     );
   }
 }

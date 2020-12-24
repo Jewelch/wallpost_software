@@ -13,12 +13,15 @@ class CompanyListCardWithRevenue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: Card(
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: onPressed,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -26,25 +29,41 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
                         children: [
-                          Text('Approvals',
-                              style: TextStyles.subTitleTextStyle),
-                          Text(
-                            company.approvalCount.toString(),
-                            style: TextStyles.subTitleTextStyle
-                                .copyWith(color: AppColors.defaultColor),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Approval${company.approvalCount == 1 ? '' : 's'}',
+                                  style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+                              Text(
+                                company.approvalCount.toString(),
+                                style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
+                              ),
+                            ],
                           ),
+                          SizedBox(height: 12),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Notification${company.notificationCount == 1 ? '' : 's'}',
+                                  style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+                              Text(
+                                company.notificationCount.toString(),
+                                style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
-                    Container(height: 60, child: VerticalDivider()),
+                    Container(height: 80, child: VerticalDivider()),
                     Expanded(
                       child: Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
                                 company.actualSalesAmount,
@@ -53,24 +72,23 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                               SizedBox(width: 4),
                               Text(
                                 company.currencyCode,
-                                style: TextStyles.currencyTextStyle,
+                                style: TextStyles.smallSubTitleTextStyle,
                               ),
                             ],
                           ),
-                          SizedBox(height: 4),
+                          SizedBox(height: 2),
                           Text(
-                            'Actual Revenue',
+                            'Actual Sales',
                             style: TextStyles.smallSubTitleTextStyle,
                           ),
-                          SizedBox(height: 4),
+                          SizedBox(height: 16),
                           LinearPercentIndicator(
                             lineHeight: 14,
                             percent: company.achievedSalesPercent / 100,
-                            progressColor: _getColorForPerformance(
-                                company.achievedSalesPercent.toInt()),
+                            progressColor: _getColorForPerformance(company.achievedSalesPercent.toInt()),
                             center: Text(
                               company.achievedSalesPercent.toString() + "%",
-                              style: TextStyles.progressBarTextStyle,
+                              style: TextStyles.labelTextStyle.copyWith(color: Colors.white),
                             ),
                           ),
                           SizedBox(height: 4),
@@ -88,7 +106,6 @@ class CompanyListCardWithRevenue extends StatelessWidget {
           ),
         ),
       ),
-      onTap: onPressed,
     );
   }
 
@@ -103,4 +120,3 @@ class CompanyListCardWithRevenue extends StatelessWidget {
     }
   }
 }
-//TODO: Review performance classes

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
@@ -37,28 +38,29 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: SimpleAppBar(
-        title: 'Group Dashboard',
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/menu.svg',
-          iconSize: 12,
-          onPressed: () => ScreenPresenter.present(LeftMenuScreen(), context,
-              slideDirection: SlideDirection.fromLeft),
-        ),
-      ),
-      body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+    return OnTapKeyboardDismisser(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: SimpleAppBar(
+          title: 'Group Dashboard',
+          leading: RoundedIconButton(
+            iconName: 'assets/icons/menu.svg',
+            iconSize: 12,
+            onPressed: () => ScreenPresenter.present(LeftMenuScreen(), context, slideDirection: SlideDirection.fromLeft),
           ),
-          child: Column(children: [
-            _createSearchView(),
-            Expanded(child: _createListWidget()),
-          ]),
+        ),
+        body: SafeArea(
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            decoration: BoxDecoration(
+              color: AppColors.primaryContrastColor,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Column(children: [
+              _createSearchView(),
+              Expanded(child: _createListWidget()),
+            ]),
+          ),
         ),
       ),
     );
@@ -100,6 +102,8 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
           suffixIcon: _getClearButton(),
           border: InputBorder.none,
         ),
+        autocorrect: false,
+        enableSuggestions: false,
         controller: _searchTextController,
       ),
     );
@@ -182,9 +186,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     _filterList = new List<CompanyListItem>();
     for (int i = 0; i < _companies.length; i++) {
       var item = _companies[i];
-      if (item.name
-          .toLowerCase()
-          .contains(_searchTextController.text.toLowerCase())) {
+      if (item.name.toLowerCase().contains(_searchTextController.text.toLowerCase())) {
         _filterList.add(item);
       }
     }
@@ -195,11 +197,9 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     var selectedCompany = _filterList[index];
     await loader.show('');
     try {
-      var _ =
-          await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
+      var _ = await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
       await loader.hide();
-      Navigator.pushNamedAndRemoveUntil(
-          context, RouteNames.dashboard, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
     } on WPException catch (e) {
       await loader.hide();
       Alert.showSimpleAlert(
