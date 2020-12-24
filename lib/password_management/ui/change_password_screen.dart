@@ -31,8 +31,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     super.initState();
     _loader = Loader(context);
     KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) =>
-          setState(() => _showLogo = visible ? false : true),
+      onChange: (bool visible) => setState(() => _showLogo = visible ? false : true),
     );
   }
 
@@ -53,7 +52,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             onPressed: _changePassword,
           ),
           showDivider: true,
-          showTrailing: true,
         ),
         body: Container(
           height: double.infinity,
@@ -80,36 +78,30 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       curve: Curves.easeInOut,
       height: _showLogo ? 180 : 0,
       child: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.defaultColor, width: 1),
-                    borderRadius: BorderRadius.circular(50)),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: AspectRatio(
-                    aspectRatio: 1 / 1,
-                    child: ClipOval(
-                      child: FadeInImage.assetNetwork(
-                          fit: BoxFit.cover,
-                          placeholder:
-                              "assets/icons/user_image_placeholder.png",
-                          image: CurrentUserProvider()
-                              .getCurrentUser()
-                              .profileImageUrl),
-                    ),
-                  ),
+        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+                border: Border.all(color: AppColors.defaultColor, width: 1), borderRadius: BorderRadius.circular(50)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: ClipOval(
+                  child: FadeInImage.assetNetwork(
+                      fit: BoxFit.cover,
+                      placeholder: "assets/icons/user_image_placeholder.png",
+                      image: CurrentUserProvider().getCurrentUser().profileImageUrl),
                 ),
               ),
-              Text(
-                CurrentUserProvider().getCurrentUser().fullName,
-                style: TextStyles.titleTextStyle,
-              ),
-            ]),
+            ),
+          ),
+          Text(
+            CurrentUserProvider().getCurrentUser().fullName,
+            style: TextStyles.titleTextStyle,
+          ),
+        ]),
       ),
     );
   }
