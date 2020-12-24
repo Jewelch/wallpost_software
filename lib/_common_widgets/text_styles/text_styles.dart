@@ -2,36 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class TextStyles {
-  static get screenTitleTextStyle => TextStyle(
-        fontSize: 16,
-        color: Colors.black,
-      );
-
   static get titleTextStyle => TextStyle(
-        fontSize: 18,
-        color: Colors.black,
-      );
-
-  static get boldTitleTextStyle =>
-      TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold);
-
-  static get listButtonTextStyle => TextStyle(
-        fontSize: 18,
-        color: Colors.black,
-      );
-
-  static get failureMessageTextStyle => TextStyle(
         fontSize: 16,
-        color: AppColors.labelColor,
+        color: Colors.black,
+      );
+
+  static get largeTitleTextStyle => TextStyle(
+        fontSize: 18,
+        color: Colors.black,
       );
 
   static get subTitleTextStyle => TextStyle(
         fontSize: 14,
-        color: AppColors.getColorFromHex('#9aa6b2'),
+        color: AppColors.getColorFromHex('#777777'),
       );
 
+  static get labelTextStyle => TextStyle(
+        fontSize: 12,
+        color: AppColors.getColorFromHex('#777777'),
+      );
+
+  static get failureMessageTextStyle => TextStyle(
+        fontSize: 16,
+        color: AppColors.getColorFromHex('#777777'),
+      );
+
+
+
+
+
+
+//Remove all three
+
   static get smallSubTitleTextStyle => TextStyle(
-        fontSize: 10,
+        fontSize: 12,
         color: AppColors.getColorFromHex('#777777'),
       );
 
@@ -43,20 +47,5 @@ class TextStyles {
   static get listSubTitleTextStyle => TextStyle(
         fontSize: 12,
         color: AppColors.getColorFromHex('#9aa6b2'),
-      );
-
-  static get buttonTextStyle => TextStyle(
-        fontSize: 16,
-        color: Colors.white,
-      );
-
-  static get currencyTextStyle => TextStyle(
-        fontSize: 12,
-        color: AppColors.getColorFromHex('#777777'),
-      );
-
-  static get progressBarTextStyle => TextStyle(
-        fontSize: 12,
-        color: Colors.white,
       );
 }
