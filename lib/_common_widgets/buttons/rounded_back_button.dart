@@ -10,6 +10,7 @@ class RoundedBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RoundedIconButton(
       iconName: 'assets/icons/back.svg',
+      iconSize: 16,
       onPressed: onPressed,
     );
   }
