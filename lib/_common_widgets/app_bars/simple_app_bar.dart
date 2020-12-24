@@ -37,7 +37,7 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         textAlign: TextAlign.center,
-        style: TextStyles.titleTextStyle,
+        style: TextStyles.titleTextStyle.copyWith(fontSize: 18.0),
       ),
       leading: _constraintWidgetToSize(leading),
       actions: trailing != null ? [_constraintWidgetToSize(trailing)] : [],
