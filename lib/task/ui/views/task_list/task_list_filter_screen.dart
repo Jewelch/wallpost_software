@@ -162,7 +162,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen>
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Year', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Year',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         MultiSelectFilterChips(
           titles: AppYears.years().map((e) => '$e').toList(),
@@ -194,7 +195,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen>
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Department', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Department',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         _presenter.isLoadingDepartments()
             ? Center(
@@ -245,7 +247,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen>
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Category', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Category',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         _presenter.isLoadingCategories()
             ? Center(
@@ -291,7 +294,8 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen>
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Employee', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Employee',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         _presenter.isLoadingEmployees()
             ? Center(
