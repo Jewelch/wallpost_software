@@ -26,26 +26,4 @@ class TextStyles {
         fontSize: 16,
         color: AppColors.getColorFromHex('#777777'),
       );
-
-
-
-
-
-
-//Remove all three
-
-  static get smallSubTitleTextStyle => TextStyle(
-        fontSize: 12,
-        color: AppColors.getColorFromHex('#777777'),
-      );
-
-  static get listTitleTextStyle => TextStyle(
-        fontSize: 14,
-        color: AppColors.defaultColor,
-      );
-
-  static get listSubTitleTextStyle => TextStyle(
-        fontSize: 12,
-        color: AppColors.getColorFromHex('#9aa6b2'),
-      );
 }
