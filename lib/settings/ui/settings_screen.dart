@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 
@@ -18,7 +18,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: 'Settings',
-        leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
+        leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
         showDivider: true,
       ),
       body: Container(

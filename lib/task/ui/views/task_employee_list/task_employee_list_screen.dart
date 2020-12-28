@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/task/ui/presenters/task_employees_list_presenter.dart';
@@ -41,8 +41,8 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> implements Empl
         title: 'Select Employee',
         leadingSpace: 0,
         trailingSpace: 12,
-        leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
-        trailing: RoundedIconButton(
+        leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
+        trailing: CircularIconButton(
           iconName: 'assets/icons/check.svg',
           iconSize: 20,
           iconColor: AppColors.defaultColor,

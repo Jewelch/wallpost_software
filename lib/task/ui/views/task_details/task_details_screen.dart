@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -31,7 +31,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: 'Task Details',
-        leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
+        leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
       ),
       body: SafeArea(
         child: Container(

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 
-class RoundedBackButton extends StatelessWidget {
+class CircularBackButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  RoundedBackButton({this.onPressed});
+  CircularBackButton({this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return RoundedIconButton(
+    return CircularIconButton(
       iconName: 'assets/icons/back.svg',
       iconSize: 16,
       onPressed: onPressed,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/multi_select_filter_chips.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
@@ -41,7 +41,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
         title: 'Filters',
         leadingSpace: 0,
         trailingSpace: 0,
-        leading: RoundedIconButton(
+        leading: CircularIconButton(
           iconName: 'assets/icons/close_icon.svg',
           iconColor: AppColors.defaultColor,
           color: Colors.transparent,
@@ -49,14 +49,14 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
         ),
         trailing: Row(
           children: [
-            RoundedIconButton(
+            CircularIconButton(
               iconName: 'assets/icons/reset_icon.svg',
               iconColor: AppColors.defaultColor,
               color: Colors.transparent,
               onPressed: () => _resetData(),
             ),
             SizedBox(width: 8),
-            RoundedIconButton(
+            CircularIconButton(
               iconName: 'assets/icons/check.svg',
               iconColor: AppColors.defaultColor,
               color: Colors.transparent,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
@@ -41,8 +41,8 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
       backgroundColor: Colors.white,
       appBar: WPAppBar(
         title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
-        leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
-        trailing: RoundedIconButton(
+        leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
+        trailing: CircularIconButton(
           iconName: 'assets/icons/filters_icon.svg',
           onPressed: () => goToTaskFilter(),
         ),

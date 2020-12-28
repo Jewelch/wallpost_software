@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
@@ -43,7 +43,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         backgroundColor: Colors.white,
         appBar: SimpleAppBar(
           title: 'Group Dashboard',
-          leading: RoundedIconButton(
+          leading: CircularIconButton(
             iconName: 'assets/icons/menu.svg',
             iconSize: 12,
             onPressed: () => ScreenPresenter.present(LeftMenuScreen(), context, slideDirection: SlideDirection.fromLeft),

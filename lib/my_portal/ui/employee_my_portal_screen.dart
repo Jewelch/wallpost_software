@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -53,7 +53,7 @@ class _EmployeeMyPortalScreenState extends State<EmployeeMyPortalScreen> with Si
       backgroundColor: Colors.white,
       appBar: WPAppBar(
         title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().shortName,
-        leading: RoundedIconButton(
+        leading: CircularIconButton(
           iconName: 'assets/icons/menu.svg',
           iconSize: 12,
           onPressed: () => ScreenPresenter.present(
@@ -62,7 +62,7 @@ class _EmployeeMyPortalScreenState extends State<EmployeeMyPortalScreen> with Si
             slideDirection: SlideDirection.fromLeft,
           ),
         ),
-        trailing: RoundedIconButton(
+        trailing: CircularIconButton(
           iconName: 'assets/icons/filters_icon.svg',
           onPressed: () => {
             //TODO: Go to filters screen

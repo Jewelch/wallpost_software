@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-class RoundedIconButton extends StatelessWidget {
+class CircularIconButton extends StatelessWidget {
   final String iconName;
   final double iconSize;
   final Color iconColor;
@@ -10,7 +10,7 @@ class RoundedIconButton extends StatelessWidget {
   final Color color;
   final VoidCallback onPressed;
 
-  RoundedIconButton(
+  CircularIconButton(
       {this.iconName,
       this.iconSize = 20,
       this.iconColor = Colors.white,
