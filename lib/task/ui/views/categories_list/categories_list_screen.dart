@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -10,8 +11,7 @@ class CategoriesListScreen extends StatefulWidget {
   _CategoriesListScreenState createState() => _CategoriesListScreenState();
 }
 
-class _CategoriesListScreenState extends State<CategoriesListScreen>
-    implements CategoriesListView {
+class _CategoriesListScreenState extends State<CategoriesListScreen> implements CategoriesListView {
   var _searchBarController = TextEditingController();
   ScrollController _categoriesListScrollController = ScrollController();
   ScrollController _selectedCategoriesListScrollController = ScrollController();
@@ -27,8 +27,7 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _categoriesListScrollController.addListener(() {
-      if (_categoriesListScrollController.position.pixels ==
-          _categoriesListScrollController.position.maxScrollExtent) {
+      if (_categoriesListScrollController.position.pixels == _categoriesListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfCategories(_searchBarController.text);
       }
     });
@@ -42,20 +41,13 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
         title: 'Select Category',
         leadingSpace: 0,
         trailingSpace: 12,
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/back.svg',
-          iconSize: 20,
-          iconColor: AppColors.defaultColor,
-          color: Colors.white,
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
         trailing: RoundedIconButton(
           iconName: 'assets/icons/check.svg',
           iconSize: 20,
           iconColor: AppColors.defaultColor,
           color: Colors.white,
-          onPressed: () =>
-              Navigator.pop(context, _presenter.getSelectedCategoriesList()),
+          onPressed: () => Navigator.pop(context, _presenter.getSelectedCategoriesList()),
         ),
       ),
       body: Column(

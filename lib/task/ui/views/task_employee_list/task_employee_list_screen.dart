@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -10,8 +11,7 @@ class EmployeeListScreen extends StatefulWidget {
   _EmployeeListScreenState createState() => _EmployeeListScreenState();
 }
 
-class _EmployeeListScreenState extends State<EmployeeListScreen>
-    implements EmployeesListView {
+class _EmployeeListScreenState extends State<EmployeeListScreen> implements EmployeesListView {
   var _searchBarController = TextEditingController();
   ScrollController _employeesListScrollController = ScrollController();
   ScrollController _selectedEmployeesListScrollController = ScrollController();
@@ -27,8 +27,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _employeesListScrollController.addListener(() {
-      if (_employeesListScrollController.position.pixels ==
-          _employeesListScrollController.position.maxScrollExtent) {
+      if (_employeesListScrollController.position.pixels == _employeesListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfEmployees(_searchBarController.text);
       }
     });
@@ -42,20 +41,13 @@ class _EmployeeListScreenState extends State<EmployeeListScreen>
         title: 'Select Employee',
         leadingSpace: 0,
         trailingSpace: 12,
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/back.svg',
-          iconSize: 20,
-          iconColor: AppColors.defaultColor,
-          color: Colors.white,
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
         trailing: RoundedIconButton(
           iconName: 'assets/icons/check.svg',
           iconSize: 20,
           iconColor: AppColors.defaultColor,
           color: Colors.white,
-          onPressed: () =>
-              Navigator.pop(context, _presenter.getSelectedEmployeesList()),
+          onPressed: () => Navigator.pop(context, _presenter.getSelectedEmployeesList()),
         ),
       ),
       body: Column(
@@ -122,10 +114,8 @@ class _EmployeeListScreenState extends State<EmployeeListScreen>
     if (this.mounted) setState(() {});
 
     Future.delayed(Duration(milliseconds: 200)).then((value) {
-      _selectedEmployeesListScrollController.animateTo(
-          _selectedEmployeesListScrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeOut);
+      _selectedEmployeesListScrollController.animateTo(_selectedEmployeesListScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     });
   }
 

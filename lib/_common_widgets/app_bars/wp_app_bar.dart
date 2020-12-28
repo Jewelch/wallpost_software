@@ -35,14 +35,14 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       title: Row(
         children: [
-          SizedBox(width: 12),
+          SizedBox(width: 8),
           if (leading != null) SizedBox(width: 32, height: 32, child: leading),
           if (leading != null) SizedBox(width: 8),
           Expanded(child: _makeCenterTitleView()),
           if (trailing != null) SizedBox(width: 8),
           if (trailing != null)
             SizedBox(width: 32, height: 32, child: trailing),
-          SizedBox(width: 12),
+          SizedBox(width: 8),
         ],
       ),
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
-import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/leave/ui/presenters/leave_employees_list_presenter.dart';
 
@@ -11,8 +11,7 @@ class LeaveEmployeeListScreen extends StatefulWidget {
   _EmployeeListScreenState createState() => _EmployeeListScreenState();
 }
 
-class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
-    implements EmployeesListView {
+class _EmployeeListScreenState extends State<LeaveEmployeeListScreen> implements EmployeesListView {
   var _searchBarController = TextEditingController();
   ScrollController _employeesListScrollController = ScrollController();
   ScrollController _selectedEmployeesListScrollController = ScrollController();
@@ -28,8 +27,7 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _employeesListScrollController.addListener(() {
-      if (_employeesListScrollController.position.pixels ==
-          _employeesListScrollController.position.maxScrollExtent) {
+      if (_employeesListScrollController.position.pixels == _employeesListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfEmployees(_searchBarController.text);
       }
     });
@@ -43,14 +41,7 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
         title: 'Select Employee',
         leadingSpace: 0,
         trailingSpace: 12,
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/back.svg',
-          iconSize: 20,
-          iconColor: AppColors.defaultColor,
-          color: Colors.white,
-          onPressed: () =>
-              Navigator.pushNamed(context, RouteNames.leaveListFilter),
-        ),
+        leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
         trailing: RoundedIconButton(
           iconName: 'assets/icons/check.svg',
           iconSize: 20,
@@ -125,10 +116,8 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
     if (this.mounted) setState(() {});
 
     Future.delayed(Duration(milliseconds: 200)).then((value) {
-      _selectedEmployeesListScrollController.animateTo(
-          _selectedEmployeesListScrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeOut);
+      _selectedEmployeesListScrollController.animateTo(_selectedEmployeesListScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     });
   }
 

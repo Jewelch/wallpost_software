@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
@@ -27,10 +28,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
     return Scaffold(
       appBar: SimpleAppBar(
         title: 'Password Recovery',
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/back.svg',
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
       ),
       body: Container(
         margin: EdgeInsets.only(bottom: 60),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
@@ -15,8 +16,7 @@ class TaskListScreen extends StatefulWidget {
   _TaskScreen createState() => _TaskScreen();
 }
 
-class _TaskScreen extends State<TaskListScreen>
-    with SingleTickerProviderStateMixin, TaskListView {
+class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMixin, TaskListView {
   var _searchBarController = TextEditingController();
   TabController _tabController;
   TaskListPresenter _presenter;
@@ -40,13 +40,8 @@ class _TaskScreen extends State<TaskListScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title:
-            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/back.svg',
-          iconSize: 12,
-          onPressed: () => Navigator.pop(context),
-        ),
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
         trailing: RoundedIconButton(
           iconName: 'assets/icons/filters_icon.svg',
           onPressed: () => goToTaskFilter(),
@@ -86,23 +81,18 @@ class _TaskScreen extends State<TaskListScreen>
                     onSearchTextChanged: (searchText) {
                       _presenter.reset();
                       _filters.searchText = searchText;
-                      _presenter.loadNextListOfTasks(
-                          _tabController.index, _filters);
+                      _presenter.loadNextListOfTasks(_tabController.index, _filters);
                     },
                   ),
                 )
               : Text('Task Requests', style: TextStyles.titleTextStyle),
           IconButton(
               icon: _listFilterVisible
-                  ? SvgPicture.asset('assets/icons/close_icon.svg',
-                      width: 42, height: 23)
-                  : SvgPicture.asset('assets/icons/search_icon.svg',
-                      width: 42, height: 23),
+                  ? SvgPicture.asset('assets/icons/close_icon.svg', width: 42, height: 23)
+                  : SvgPicture.asset('assets/icons/search_icon.svg', width: 42, height: 23),
               onPressed: () {
                 setState(() {
-                  _listFilterVisible
-                      ? _listFilterVisible = false
-                      : _listFilterVisible = true;
+                  _listFilterVisible ? _listFilterVisible = false : _listFilterVisible = true;
                 });
               }),
         ],
@@ -193,8 +183,7 @@ class _TaskScreen extends State<TaskListScreen>
 
   void goToTaskFilter() async {
     _filters.reset();
-    await Navigator.pushNamed(context, RouteNames.taskFilter,
-        arguments: _filters);
+    await Navigator.pushNamed(context, RouteNames.taskFilter, arguments: _filters);
     _selectedTab = _tabController.index;
     _presenter.reset();
     _presenter.loadNextListOfTasks(_selectedTab, _filters);
@@ -202,8 +191,7 @@ class _TaskScreen extends State<TaskListScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _tasksListScrollController.addListener(() {
-      if (_tasksListScrollController.position.pixels ==
-          _tasksListScrollController.position.maxScrollExtent) {
+      if (_tasksListScrollController.position.pixels == _tasksListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfTasks(_selectedTab, _filters);
       }
     });
@@ -216,8 +204,7 @@ class _TaskScreen extends State<TaskListScreen>
 
   @override
   void onTaskSelected(int index) {
-    Navigator.pushNamed(context, RouteNames.taskDetails,
-        arguments: _presenter.getTaskForIndex(index));
+    Navigator.pushNamed(context, RouteNames.taskDetails, arguments: _presenter.getTaskForIndex(index));
   }
 
   @override
@@ -248,20 +235,14 @@ class TabWidget extends StatelessWidget {
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text: '$_totalCount',
-                      style: TextStyle(
-                          color: AppColors.defaultColor, fontSize: 22))
+                  TextSpan(text: '$_totalCount', style: TextStyle(color: AppColors.defaultColor, fontSize: 22))
                 ],
               ),
             ),
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text: _tabName,
-                      style: TextStyles.labelTextStyle
-                          .copyWith(color: Colors.black)),
+                  TextSpan(text: _tabName, style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
                 ],
               ),
             ),

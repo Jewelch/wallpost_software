@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/password_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
@@ -43,10 +44,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         resizeToAvoidBottomInset: true,
         appBar: SimpleAppBar(
           title: 'Change Password',
-          leading: RoundedIconButton(
-            iconName: 'assets/icons/back.svg',
-            onPressed: () => Navigator.pop(context),
-          ),
+          leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
           trailing: RoundedIconButton(
             iconName: 'assets/icons/check.svg',
             onPressed: _changePassword,

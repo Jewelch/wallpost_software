@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -10,12 +11,10 @@ class DepartmentsListScreen extends StatefulWidget {
   _DepartmentsListScreenState createState() => _DepartmentsListScreenState();
 }
 
-class _DepartmentsListScreenState extends State<DepartmentsListScreen>
-    implements DepartmentsListView {
+class _DepartmentsListScreenState extends State<DepartmentsListScreen> implements DepartmentsListView {
   var _searchBarController = TextEditingController();
   ScrollController _departmentsListScrollController = ScrollController();
-  ScrollController _selectedDepartmentsListScrollController =
-      ScrollController();
+  ScrollController _selectedDepartmentsListScrollController = ScrollController();
   DepartmentsListPresenter _presenter;
 
   @override
@@ -43,20 +42,13 @@ class _DepartmentsListScreenState extends State<DepartmentsListScreen>
         title: 'Select Department',
         leadingSpace: 0,
         trailingSpace: 12,
-        leading: RoundedIconButton(
-          iconName: 'assets/icons/back.svg',
-          iconSize: 20,
-          iconColor: AppColors.defaultColor,
-          color: Colors.white,
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: RoundedBackButton(onPressed: () => Navigator.pop(context)),
         trailing: RoundedIconButton(
           iconName: 'assets/icons/check.svg',
           iconSize: 20,
           iconColor: AppColors.defaultColor,
           color: Colors.white,
-          onPressed: () =>
-              Navigator.pop(context, _presenter.getSelectedDepartmentsList()),
+          onPressed: () => Navigator.pop(context, _presenter.getSelectedDepartmentsList()),
         ),
       ),
       body: Column(
