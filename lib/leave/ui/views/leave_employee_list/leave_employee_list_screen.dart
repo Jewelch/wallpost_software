@@ -42,7 +42,7 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen> implements
         leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
         trailingButtons: [
           CircularIconButton(
-            iconName: 'assets/icons/check.svg',
+            iconName: 'assets/icons/check_mark_icon.svg',
             iconSize: 20,
             iconColor: AppColors.defaultColor,
             color: Colors.white,

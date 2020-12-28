@@ -24,7 +24,7 @@ class ForgotPasswordSuccessScreen extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.all(10),
                 child: SvgPicture.asset(
-                  'assets/icons/check.svg',
+                  'assets/icons/check_mark_icon.svg',
                   width: 40,
                   height: 40,
                 ),

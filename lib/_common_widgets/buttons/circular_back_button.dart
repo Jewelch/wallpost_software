@@ -11,7 +11,7 @@ class CircularBackButton extends CircularIconButton {
   @override
   Widget build(BuildContext context) {
     return CircularIconButton(
-      iconName: 'assets/icons/back.svg',
+      iconName: 'assets/icons/back_icon.svg',
       iconSize: 18,
       iconColor: iconColor,
       color: color,

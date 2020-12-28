@@ -27,7 +27,7 @@ class _LocationAddressViewState extends State<LocationAddressView> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: SvgPicture.asset(
-            'assets/icons/location.svg',
+            'assets/icons/location_icon.svg',
             width: 14,
             height: 18,
           ),

@@ -11,7 +11,7 @@ class CircularCheckMarkButton extends CircularIconButton {
   @override
   Widget build(BuildContext context) {
     return CircularIconButton(
-      iconName: 'assets/icons/check.svg',
+      iconName: 'assets/icons/check_mark_icon.svg',
       iconSize: 18,
       iconColor: iconColor,
       color: color,

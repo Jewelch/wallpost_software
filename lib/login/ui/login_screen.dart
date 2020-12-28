@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
           margin: EdgeInsets.symmetric(vertical: _showLogo ? 40 : 0),
           height: _showLogo ? 120 : 0,
           width: 120,
-          child: Image.asset('assets/images/logo.png'),
+          child: Image.asset('assets/logo/logo.png'),
         ),
       ),
     );

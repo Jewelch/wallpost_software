@@ -55,7 +55,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
             onPressed: () => _resetData(),
           ),
           CircularIconButton(
-            iconName: 'assets/icons/check.svg',
+            iconName: 'assets/icons/check_mark_icon.svg',
             iconColor: AppColors.defaultColor,
             color: Colors.transparent,
             onPressed: () => _updateAllSelectedFilters(),

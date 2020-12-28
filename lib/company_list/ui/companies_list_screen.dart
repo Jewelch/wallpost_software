@@ -45,7 +45,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
           title: 'Group Dashboard',
           leadingButtons: [
             CircularIconButton(
-              iconName: 'assets/icons/menu.svg',
+              iconName: 'assets/icons/menu_icon.svg',
               iconSize: 12,
               onPressed: () => ScreenPresenter.present(
                 LeftMenuScreen(),

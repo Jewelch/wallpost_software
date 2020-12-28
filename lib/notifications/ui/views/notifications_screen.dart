@@ -61,7 +61,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
       appBar: WPAppBar(
         title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: CircularIconButton(
-          iconName: 'assets/icons/menu.svg',
+          iconName: 'assets/icons/menu_icon.svg',
           iconSize: 12,
           onPressed: () => ScreenPresenter.present(
             LeftMenuScreen(),

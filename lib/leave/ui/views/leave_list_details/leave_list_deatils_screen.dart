@@ -25,7 +25,7 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
         title:
             SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: CircularIconButton(
-          iconName: 'assets/icons/back.svg',
+          iconName: 'assets/icons/back_icon.svg',
           iconSize: 15,
           onPressed: () => Navigator.pop(context),
         ),
