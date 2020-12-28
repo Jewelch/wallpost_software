@@ -241,7 +241,7 @@ class Mocks {
       ],
       "old_table_ref": randomBetween(1000, 5000),
       "parent_task": randomString(10),
-      "progress_percentage": true,
+      "progress_percentage": randomBetween(0, 100),
       "reassignee_assignee_fullName": randomString(10),
       "schedule": {
         "completed_at": randomString(10),
@@ -299,11 +299,13 @@ class Mocks {
     },
   ];
 
-  static Map<String, dynamic> taskTimeZonesResponse = {'timezones':[
-    randomString(10),
-    randomString(10),
-    randomString(10),
-  ]};
+  static Map<String, dynamic> taskTimeZonesResponse = {
+    'timezones': [
+      randomString(10),
+      randomString(10),
+      randomString(10),
+    ]
+  };
 
   static Map<String, dynamic> createTaskResponse = {
     "alloted_asset": randomString(10),
