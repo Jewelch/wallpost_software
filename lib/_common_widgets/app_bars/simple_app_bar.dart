@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
 import 'app_bar_divider.dart';
 
 class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final Widget leading;
-  final double leadingSpace;
-  final Widget trailing;
-  final double trailingSpace;
+  final List<CircularIconButton> leadingButtons;
+  final List<CircularIconButton> trailingButtons;
   final bool showDivider;
 
   @override
@@ -16,10 +15,8 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   SimpleAppBar({
     this.title,
-    this.leading,
-    this.leadingSpace = 12,
-    this.trailing,
-    this.trailingSpace = 12,
+    this.leadingButtons = const [],
+    this.trailingButtons = const [],
     this.showDivider = false,
   }) : preferredSize = Size.fromHeight(56);
 
@@ -34,19 +31,44 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
       bottom: showDivider ? AppBarDivider() : null,
       // Don't show the default leading button
       automaticallyImplyLeading: false,
-      title: Text(
-        title,
-        textAlign: TextAlign.center,
-        style: TextStyles.titleTextStyle.copyWith(fontSize: 18.0),
+      title: Stack(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (leadingButtons != null)
+                Row(children: [
+                  ...[SizedBox(width: 8)],
+                  ..._resizeButtons(leadingButtons),
+                ]),
+              if (trailingButtons != null) Row(children: _resizeButtons(trailingButtons)),
+            ],
+          ),
+          Positioned.fill(
+            child: Center(
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyles.titleTextStyle.copyWith(fontSize: 18.0),
+              ),
+            ),
+          )
+        ],
       ),
-      leading: _constraintWidgetToSize(leading),
-      actions: trailing != null ? [_constraintWidgetToSize(trailing)] : [],
     );
+  }
+
+  List<Widget> _resizeButtons(List<Widget> buttons) {
+    List<Widget> resizedButtons = [];
+    for (Widget button in buttons) {
+      resizedButtons.add(_constraintWidgetToSize(button));
+      resizedButtons.add(SizedBox(width: 8));
+    }
+    return resizedButtons;
   }
 
   Widget _constraintWidgetToSize(Widget widget) {
     return Container(
-      padding: EdgeInsets.only(right: trailingSpace),
       child: Center(
         child: SizedBox(
           width: 32,

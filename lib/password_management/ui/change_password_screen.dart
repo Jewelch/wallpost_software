@@ -44,11 +44,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         resizeToAvoidBottomInset: true,
         appBar: SimpleAppBar(
           title: 'Change Password',
-          leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
-          trailing: CircularIconButton(
-            iconName: 'assets/icons/check.svg',
-            onPressed: _changePassword,
-          ),
+          leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
+          trailingButtons: [
+            CircularIconButton(
+              iconName: 'assets/icons/check.svg',
+              onPressed: _changePassword,
+            )
+          ],
           showDivider: true,
         ),
         body: Container(

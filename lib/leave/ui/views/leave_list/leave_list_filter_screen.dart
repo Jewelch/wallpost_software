@@ -39,31 +39,28 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: 'Filters',
-        leadingSpace: 0,
-        trailingSpace: 0,
-        leading: CircularIconButton(
-          iconName: 'assets/icons/close_icon.svg',
-          iconColor: AppColors.defaultColor,
-          color: Colors.transparent,
-          onPressed: () => Navigator.pop(context),
-        ),
-        trailing: Row(
-          children: [
-            CircularIconButton(
-              iconName: 'assets/icons/reset_icon.svg',
-              iconColor: AppColors.defaultColor,
-              color: Colors.transparent,
-              onPressed: () => _resetData(),
-            ),
-            SizedBox(width: 8),
-            CircularIconButton(
-              iconName: 'assets/icons/check.svg',
-              iconColor: AppColors.defaultColor,
-              color: Colors.transparent,
-              onPressed: () => _updateAllSelectedFilters(),
-            ),
-          ],
-        ),
+        leadingButtons: [
+          CircularIconButton(
+            iconName: 'assets/icons/close_icon.svg',
+            iconColor: AppColors.defaultColor,
+            color: Colors.transparent,
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
+        trailingButtons: [
+          CircularIconButton(
+            iconName: 'assets/icons/reset_icon.svg',
+            iconColor: AppColors.defaultColor,
+            color: Colors.transparent,
+            onPressed: () => _resetData(),
+          ),
+          CircularIconButton(
+            iconName: 'assets/icons/check.svg',
+            iconColor: AppColors.defaultColor,
+            color: Colors.transparent,
+            onPressed: () => _updateAllSelectedFilters(),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(

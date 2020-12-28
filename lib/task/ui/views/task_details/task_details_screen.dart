@@ -31,7 +31,9 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: 'Task Details',
-        leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
+        leadingButtons: [
+          CircularBackButton(onPressed: () => Navigator.pop(context)),
+        ],
       ),
       body: SafeArea(
         child: Container(

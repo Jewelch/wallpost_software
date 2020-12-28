@@ -85,7 +85,7 @@ class LeftMenuScreen extends StatelessWidget {
     if (selectedCompany == null) {
       return SimpleAppBar(
         title: '',
-        leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
+        leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
       );
     } else {
       return WPAppBar(

@@ -39,18 +39,16 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen> implements
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: 'Select Employee',
-        leadingSpace: 0,
-        trailingSpace: 12,
-        leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
-        trailing: CircularIconButton(
-          iconName: 'assets/icons/check.svg',
-          iconSize: 20,
-          iconColor: AppColors.defaultColor,
-          color: Colors.white,
-          onPressed: () =>
-              //  Navigator.pop(context, _presenter.getSelectedEmployeesList()),
-              Navigator.pop(context, false),
-        ),
+        leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
+        trailingButtons: [
+          CircularIconButton(
+            iconName: 'assets/icons/check.svg',
+            iconSize: 20,
+            iconColor: AppColors.defaultColor,
+            color: Colors.white,
+            onPressed: () => Navigator.pop(context, false),
+          ),
+        ],
       ),
       body: Column(
         children: [

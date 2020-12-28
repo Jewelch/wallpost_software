@@ -27,7 +27,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
     return Scaffold(
       appBar: SimpleAppBar(
         title: 'Password Recovery',
-        leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
+        leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
       ),
       body: Container(
         margin: EdgeInsets.only(bottom: 60),

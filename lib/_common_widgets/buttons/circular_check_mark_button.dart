@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 
-class CircularBackButton extends CircularIconButton {
+class CircularCheckMarkButton extends CircularIconButton {
   final Color iconColor;
   final Color color;
   final VoidCallback onPressed;
 
-  CircularBackButton({this.iconColor, this.color, this.onPressed});
+  CircularCheckMarkButton({this.iconColor, this.color, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return CircularIconButton(
-      iconName: 'assets/icons/back.svg',
+      iconName: 'assets/icons/check.svg',
       iconSize: 18,
       iconColor: iconColor,
       color: color,

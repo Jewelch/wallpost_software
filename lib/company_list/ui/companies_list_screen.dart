@@ -43,11 +43,17 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         backgroundColor: Colors.white,
         appBar: SimpleAppBar(
           title: 'Group Dashboard',
-          leading: CircularIconButton(
-            iconName: 'assets/icons/menu.svg',
-            iconSize: 12,
-            onPressed: () => ScreenPresenter.present(LeftMenuScreen(), context, slideDirection: SlideDirection.fromLeft),
-          ),
+          leadingButtons: [
+            CircularIconButton(
+              iconName: 'assets/icons/menu.svg',
+              iconSize: 12,
+              onPressed: () => ScreenPresenter.present(
+                LeftMenuScreen(),
+                context,
+                slideDirection: SlideDirection.fromLeft,
+              ),
+            )
+          ],
         ),
         body: SafeArea(
           child: Container(

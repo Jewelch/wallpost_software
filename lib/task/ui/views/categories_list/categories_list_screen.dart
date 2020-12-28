@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_check_mark_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/task/ui/presenters/categories_list_presenter.dart';
@@ -39,16 +39,20 @@ class _CategoriesListScreenState extends State<CategoriesListScreen> implements 
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: 'Select Category',
-        leadingSpace: 0,
-        trailingSpace: 12,
-        leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
-        trailing: CircularIconButton(
-          iconName: 'assets/icons/check.svg',
-          iconSize: 20,
-          iconColor: AppColors.defaultColor,
-          color: Colors.white,
-          onPressed: () => Navigator.pop(context, _presenter.getSelectedCategoriesList()),
-        ),
+        leadingButtons: [
+          CircularBackButton(
+            iconColor: AppColors.defaultColor,
+            color: Colors.transparent,
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
+        trailingButtons: [
+          CircularCheckMarkButton(
+            iconColor: AppColors.defaultColor,
+            color: Colors.transparent,
+            onPressed: () => Navigator.pop(context, _presenter.getSelectedCategoriesList()),
+          ),
+        ],
       ),
       body: Column(
         children: [

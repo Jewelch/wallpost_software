@@ -18,7 +18,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: 'Settings',
-        leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
+        leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
         showDivider: true,
       ),
       body: Container(
