@@ -11,7 +11,7 @@ import 'package:wallpost/task/ui/views/task_list/task_list_tile.dart';
 
 abstract class TaskListView {
   void reloadData();
-  void onTaskSelected();
+  void onTaskSelected(int index);
 }
 
 class TaskListPresenter {
@@ -135,6 +135,10 @@ class TaskListPresenter {
     }
   }
 
+  TaskListItem getTaskForIndex(int index) {
+    return _task[index];
+  }
+
   Widget getTaskViewForIndex(int index) {
     if (_shouldShowErrorAtIndex(index)) return _buildErrorView(_errorMessage);
 
@@ -173,7 +177,7 @@ class TaskListPresenter {
 
   Widget _buildTaskViewForIndex(int index) {
     return TaskListTile(_task[index], onTaskListTileTap: () {
-      _view.onTaskSelected();
+      _view.onTaskSelected(index);
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -12,12 +13,14 @@ class TaskNotificationsListTile extends StatefulWidget {
   TaskNotificationsListTile(this.notification);
 
   @override
-  _TaskNotificationsListTileState createState() => _TaskNotificationsListTileState();
+  _TaskNotificationsListTileState createState() =>
+      _TaskNotificationsListTileState();
 }
 
 //TODO: Obaid Change the color according to the status status
 class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
-  SingleNotificationReader _singleNotificationReader = SingleNotificationReader();
+  SingleNotificationReader _singleNotificationReader =
+      SingleNotificationReader();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,8 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
         widget.notification.taskName,
         style: TextStyle(
           color: AppColors.defaultColor,
-          fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
+          fontWeight:
+              widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
         ),
       ),
       subtitle: Column(
@@ -38,22 +42,22 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
           SizedBox(height: 8),
           Row(
             children: [
-              Text('Created On : ', style: TextStyle(color: Colors.black, fontSize: 12)),
+              Text('Created On : ',
+                  style:
+                      TextStyles.labelTextStyle.copyWith(color: Colors.black)),
               Text(_convertToDateFormat(widget.notification.createdAt),
-                  style: TextStyle(color: Colors.grey, fontSize: 12))
+                  style: TextStyles.labelTextStyle.copyWith(color: Colors.grey))
             ],
           ),
           SizedBox(height: 8),
           Text(
             widget.notification.status,
-            style: TextStyle(
-              color: Colors.orange,
-              fontSize: 12,
-            ),
+            style: TextStyles.labelTextStyle.copyWith(color: Colors.orange),
           ),
         ],
       ),
-      trailing: Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14),
+      trailing:
+          Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14),
       onTap: () {
         setState(() {
           widget.notification.isRead = true;
@@ -64,7 +68,8 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;

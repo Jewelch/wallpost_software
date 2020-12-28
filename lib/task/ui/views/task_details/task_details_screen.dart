@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/task/entities/task_employee.dart';
+import 'package:wallpost/task/entities/task_list_item.dart';
 import 'package:wallpost/task/ui/views/task_details/task_comment_tile.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
@@ -9,8 +14,10 @@ class TaskDetailsScreen extends StatefulWidget {
   _TaskDetailsScreen createState() => _TaskDetailsScreen();
 }
 
-class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProviderStateMixin {
+class _TaskDetailsScreen extends State<TaskDetailsScreen>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
+  TaskListItem _taskListItem;
 
   @override
   void initState() {
@@ -20,54 +27,15 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
 
   @override
   Widget build(BuildContext context) {
+    _taskListItem = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        centerTitle: true,
-        titleSpacing: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        // Don't show the leading button
-        automaticallyImplyLeading: false,
-        title: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 10.0),
-              child: Row(
-                children: [
-                  SizedBox(
-                    child: RoundedIconButton(
-                        iconName: 'assets/icons/back.svg', iconSize: 12, onPressed: () => Navigator.pop(context)),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 32,
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Container(
-                              child: Text('Task Details', style: TextStyles.titleTextStyle),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: RoundedIconButton(
-                        iconName: 'assets/icons/check.svg', iconSize: 12, onPressed: () => Navigator.pop(context)),
-                  ),
-                ],
-              ),
-            ),
-            Divider(
-              height: 4,
-              color: Colors.black,
-            ),
-          ],
+      appBar: SimpleAppBar(
+        title: 'Task Details',
+        leading: RoundedIconButton(
+          iconName: 'assets/icons/back.svg',
+          iconSize: 12,
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: SafeArea(
@@ -76,6 +44,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Divider(),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -89,113 +58,149 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.defaultColor, width: 0),
+                            border: Border.all(
+                                color: AppColors.defaultColor, width: 0),
                             borderRadius: BorderRadius.circular(50),
                             image: DecorationImage(
-                                image: AssetImage('assets/icons/user_image_placeholder.png'), fit: BoxFit.fill),
+                                image: AssetImage(
+                                    'assets/icons/user_image_placeholder.png'),
+                                fit: BoxFit.fill),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 7.0),
-                          child: Text('33%', style: TextStyle(fontSize: 12)),
+                          child: Text('33%', style: TextStyles.labelTextStyle),
                         ),
                       ]),
                     ),
                   ),
                   Expanded(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Container(
-                        padding: EdgeInsets.only(top: 11.0, left: 10.0, right: 10.0),
-                        child: Text(
-                          'WallPost App Android and IOS Main Navigation Structure',
-                          style: TextStyle(color: AppColors.defaultColor, fontSize: 16),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Text('Assigned to :', style: TextStyle(color: Colors.black, fontSize: 14)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text('Jaseel Kiliyanthodi',
-                                    style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Text('Status :', style: TextStyle(color: Colors.black, fontSize: 14)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text('In Progress',
-                                    style: TextStyle(color: Colors.purple, fontSize: 14)),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0, left: 8.0, right: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Expanded(
-                                child: Row(
-                                  children: [
-                                    Text('Created By : ', style: TextStyle(color: Colors.black, fontSize: 14)),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Text('Muhammed Nadeem',
-                                          style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(
+                                top: 11.0, left: 10.0, right: 10.0),
+                            child: Text(
+                              _taskListItem.name,
+                              style: TextStyles.titleTextStyle
+                                  .copyWith(color: AppColors.defaultColor),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: false,
                             ),
-                            Container(
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
                               child: Row(
                                 children: [
-                                  Text('On :', style: TextStyle(color: Colors.black, fontSize: 14)),
+                                  Text('Assigned to :',
+                                      style: TextStyles.subTitleTextStyle
+                                          .copyWith(color: Colors.black)),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
-                                    child:
-                                        Text('21.02.2018', style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
+                                    child: Text(
+                                        _getAssigneesString(
+                                            _taskListItem.assignees),
+                                        style: TextStyles.subTitleTextStyle
+                                            .copyWith(
+                                                color: AppColors.labelColor)),
                                   ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Text('Code :', style: TextStyle(color: Colors.black, fontSize: 14)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text('CCO', style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
-                              ),
-                            ],
                           ),
-                        ),
-                      ),
-                    ]),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text('Status :',
+                                      style: TextStyles.subTitleTextStyle
+                                          .copyWith(color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(_taskListItem.status,
+                                        style: TextStyles.subTitleTextStyle
+                                            .copyWith(
+                                                color: AppColors.defaultColor)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text('Created By :',
+                                      style: TextStyles.subTitleTextStyle
+                                          .copyWith(color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(_taskListItem.name,
+                                        style: TextStyles.subTitleTextStyle
+                                            .copyWith(
+                                                color: AppColors.labelColor)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text('Created On :',
+                                      style: TextStyles.subTitleTextStyle
+                                          .copyWith(color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                        _convertToDateFormat(
+                                            _taskListItem.startDate),
+                                        style: TextStyles.subTitleTextStyle
+                                            .copyWith(
+                                                color: AppColors.labelColor)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text('Code :',
+                                      style: TextStyles.subTitleTextStyle
+                                          .copyWith(color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                        _taskListItem.hashCode.toString(),
+                                        style: TextStyles.subTitleTextStyle
+                                            .copyWith(
+                                                color: AppColors.labelColor)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ]),
                   ),
                 ],
               ),
@@ -210,6 +215,27 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
         ),
       ),
     );
+  }
+
+  String _getAssigneesString(List<TaskEmployee> assignees) {
+    String allAssignees;
+    allAssignees = assignees.first.fullName;
+    if (assignees.length > 1) {
+      for (var assignee in assignees) {
+        allAssignees = allAssignees + ',' + assignee.fullName;
+      }
+      return allAssignees;
+    } else {
+      return allAssignees;
+    }
+  }
+
+  String _convertToDateFormat(DateTime date) {
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
+    final String formatted = formatter.format(date);
+    return formatted;
   }
 
   SizedBox _tabBarWidget() {
@@ -241,7 +267,11 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
       child: Expanded(
         child: TabBarView(
           controller: _tabController,
-          children: <Widget>[_createDetailsWidget(), _createCommentsWidget(), _createCommentsWidget()],
+          children: <Widget>[
+            _createDetailsWidget(),
+            _createCommentsWidget(),
+            _createCommentsWidget()
+          ],
         ),
       ),
     );
@@ -269,45 +299,49 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
           child: Column(children: [
             Padding(
               padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Container(
-                  child: RaisedButton.icon(
-                    onPressed: () {
-                      print('Button Clicked.');
-                    },
-                    label: Text(
-                      'Add comment',
-                      style: TextStyle(color: AppColors.defaultColor),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: RaisedButton.icon(
+                        onPressed: () {
+                          print('Button Clicked.');
+                        },
+                        label: Text(
+                          'Add comment',
+                          style: TextStyles.subTitleTextStyle
+                              .copyWith(color: AppColors.defaultColor),
+                        ),
+                        icon: Icon(
+                          Icons.add,
+                          color: AppColors.defaultColor,
+                        ),
+                        textColor: Colors.white,
+                        color: Colors.white,
+                        elevation: 0.0,
+                      ),
                     ),
-                    icon: Icon(
-                      Icons.add,
-                      color: AppColors.defaultColor,
+                    Container(
+                      child: RaisedButton.icon(
+                        onPressed: () {
+                          print('Button Clicked.');
+                        },
+                        label: Text(
+                          'Send',
+                          style: TextStyles.subTitleTextStyle
+                              .copyWith(color: AppColors.defaultColor),
+                        ),
+                        icon: ImageIcon(
+                          AssetImage('assets/icons/send_icon.svg'),
+                          size: 30,
+                          color: AppColors.defaultColor,
+                        ),
+                        textColor: Colors.white,
+                        color: Colors.white,
+                        elevation: 0.0,
+                      ),
                     ),
-                    textColor: Colors.white,
-                    color: Colors.white,
-                    elevation: 0.0,
-                  ),
-                ),
-                Container(
-                  child: RaisedButton.icon(
-                    onPressed: () {
-                      print('Button Clicked.');
-                    },
-                    label: Text(
-                      'Send',
-                      style: TextStyle(color: AppColors.defaultColor),
-                    ),
-                    icon: ImageIcon(
-                      AssetImage('assets/icons/send_icon.svg'),
-                      size: 30,
-                      color: AppColors.defaultColor,
-                    ),
-                    textColor: Colors.white,
-                    color: Colors.white,
-                    elevation: 0.0,
-                  ),
-                ),
-              ]),
+                  ]),
             ),
             SizedBox(
               height: 53.0,
@@ -343,44 +377,39 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
     return Column(
       children: [
         Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            DetailsRowWidget('Start :', '21.02.2018'),
-            DetailsRowWidget('End :', '21.02.2018'),
-            DetailsRowWidget('Category :', 'Business Development'),
-            DetailsRowWidget('Task Duration :', '1'),
-            DetailsRowWidget('Duration In :', 'Working Days'),
-            DetailsRowWidget('Task Owner :', 'Muhammad Nadeem'),
-            DetailsRowWidget('Description :', 'Lorem ipsum'),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            detailsRowWidget(
+                'Start :', _convertToDateFormat(_taskListItem.startDate)),
+            detailsRowWidget(
+                'End :', _convertToDateFormat(_taskListItem.endDate)),
+            detailsRowWidget('Category :', 'Business Development'),
+            detailsRowWidget('Task Duration :', '1'),
+            detailsRowWidget('Duration In :', 'Working Days'),
+            detailsRowWidget('Task Owner :', 'Muhammad Nadeem'),
+            detailsRowWidget('Description :', 'Lorem ipsum'),
           ]),
         ),
       ],
     );
   }
-}
 
-class DetailsRowWidget extends StatelessWidget {
-  const DetailsRowWidget(
-    String _rowTitle,
-    String _rowValue, {
-    Key key,
-  })  : _rowTitle = _rowTitle,
-        _rowValue = _rowValue,
-        super(key: key);
-  final String _rowTitle;
-  final String _rowValue;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget detailsRowWidget(String _rowTitle, String _rowValue) {
     return Padding(
       padding: const EdgeInsets.only(top: 13.0, left: 10.0, right: 10.0),
       child: Container(
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            Expanded(child: Text(_rowTitle, style: TextStyle(color: Colors.black, fontSize: 14))),
+            Expanded(
+                child: Text(_rowTitle,
+                    style: TextStyles.subTitleTextStyle
+                        .copyWith(color: Colors.black))),
             Expanded(
               flex: 2,
-              child: Text(_rowValue, style: TextStyle(color: AppColors.labelColor, fontSize: 14)),
+              child: Text(_rowValue,
+                  style: TextStyles.subTitleTextStyle
+                      .copyWith(color: AppColors.labelColor)),
             ),
           ],
         ),
@@ -405,7 +434,10 @@ class TabWidget extends StatelessWidget {
         child: RichText(
           text: TextSpan(
             children: [
-              TextSpan(text: _tabName, style: TextStyle(color: Colors.black, fontSize: 12)),
+              TextSpan(
+                  text: _tabName,
+                  style:
+                      TextStyles.labelTextStyle.copyWith(color: Colors.black)),
             ],
           ),
         ),
