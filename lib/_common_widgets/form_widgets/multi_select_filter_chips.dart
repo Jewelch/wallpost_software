@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/chips/filter_chip.dart';
+import 'package:wallpost/_common_widgets/chips/custom_chip.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
