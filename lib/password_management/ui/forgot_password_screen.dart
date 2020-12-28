@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'package:wallpost/_routing/route_names.dart';
