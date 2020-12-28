@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/leave/entities/leave_employee.dart';
 
@@ -22,7 +23,7 @@ class EmployeeListTile extends StatelessWidget {
           child: Container(
             alignment: AlignmentDirectional.centerStart,
             child: Text(employee.fullName,
-                style: TextStyle(
+                style: TextStyles.titleTextStyle.copyWith(
                   color: isSelected ? AppColors.defaultColor : Colors.black,
                 )),
           ),
