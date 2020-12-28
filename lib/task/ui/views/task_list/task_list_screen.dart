@@ -215,8 +215,9 @@ class _TaskScreen extends State<TaskListScreen>
   }
 
   @override
-  void onTaskSelected() {
-    Navigator.pushNamed(context, RouteNames.taskDetails);
+  void onTaskSelected(int index) {
+    Navigator.pushNamed(context, RouteNames.taskDetails,
+        arguments: _presenter.getTaskForIndex(index));
   }
 
   @override
@@ -259,7 +260,8 @@ class TabWidget extends StatelessWidget {
                 children: [
                   TextSpan(
                       text: _tabName,
-                      style: TextStyle(color: Colors.black, fontSize: 12)),
+                      style: TextStyles.labelTextStyle
+                          .copyWith(color: Colors.black)),
                 ],
               ),
             ),

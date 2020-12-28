@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class TaskCommentTile extends StatelessWidget {
@@ -47,8 +48,8 @@ class TaskCommentTile extends StatelessWidget {
                               top: 11.0, left: 10.0, right: 10.0),
                           child: Text(
                             'Basheer Thathamaparambath',
-                            style: TextStyle(
-                                color: Colors.black, fontSize: 16),
+                            style: TextStyles.titleTextStyle
+                                .copyWith(color: Colors.black),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
@@ -60,8 +61,8 @@ class TaskCommentTile extends StatelessWidget {
                           child: Container(
                             child: Text(
                                 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-                                style: TextStyle(
-                                    color: AppColors.labelColor, fontSize: 14)),
+                                style: TextStyles.subTitleTextStyle
+                                    .copyWith(AppColors.labelColor)),
                           ),
                         ),
                         Padding(
@@ -71,10 +72,10 @@ class TaskCommentTile extends StatelessWidget {
                             children: [
                               Container(
                                 child: Text('5 minutes ago',
-                                    style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        color: AppColors.labelColor,
-                                        fontSize: 14)),
+                                    style: TextStyles.subTitleTextStyle
+                                        .copyWith(
+                                            fontStyle: FontStyle.italic,
+                                            color: AppColors.labelColor)),
                               ),
                             ],
                           ),
