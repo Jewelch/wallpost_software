@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
 class ErrorListTile extends StatelessWidget {
   final String message;
@@ -18,7 +19,7 @@ class ErrorListTile extends StatelessWidget {
               child: Text(
                 message,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
+                style: TextStyles.subTitleTextStyle,
               ),
               onPressed: () {
                 if (onTap != null) onTap();
