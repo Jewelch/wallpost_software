@@ -5,7 +5,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/leave/entities/leave_list_item.dart';
 import 'package:wallpost/leave/entities/leave_status.dart';
-import 'package:wallpost/leave/ui/views/Leave_list_datails/leave_list_deatils_screen.dart';
+import 'package:wallpost/leave/ui/views/leave_list_details/leave_list_deatils_screen.dart';
 
 class LeaveListTile extends StatefulWidget {
   final LeaveListItem leaveListItem;
