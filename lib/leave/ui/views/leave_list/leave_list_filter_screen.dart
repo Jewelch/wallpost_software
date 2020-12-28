@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/multi_select_filter_chips.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/leave/entities/leave_employee.dart';
@@ -85,7 +86,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Category', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Category', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         MultiSelectFilterChips(
           titles: _categoryList,
@@ -112,7 +113,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Leave Type', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Leave Type', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         _presenter.isLoadingLeaveTypes()
             ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
@@ -144,7 +145,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Employee', style: TextStyle(color: Colors.black, fontSize: 14)),
+        Text('Employee', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         _presenter.isLoadingEmployees()
             ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
