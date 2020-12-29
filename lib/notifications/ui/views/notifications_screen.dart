@@ -5,6 +5,7 @@ import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -18,8 +19,10 @@ class NotificationsScreen extends StatefulWidget {
   _NotificationsScreenState createState() => _NotificationsScreenState();
 }
 
-class _NotificationsScreenState extends State<NotificationsScreen> implements NotificationsListView {
-  UnreadNotificationsCountProvider _unreadNotificationsCountProvider = UnreadNotificationsCountProvider();
+class _NotificationsScreenState extends State<NotificationsScreen>
+    implements NotificationsListView {
+  UnreadNotificationsCountProvider _unreadNotificationsCountProvider =
+      UnreadNotificationsCountProvider();
   AllNotificationsReader _allNotificationsReader = AllNotificationsReader();
   NotificationsListPresenter _presenter;
   ScrollController _scrollController;
@@ -37,7 +40,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfNotifications();
       }
     });
@@ -45,9 +49,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
 
   void _getUnreadNotificationsCount() async {
     try {
-      var unreadNotificationsCount = await _unreadNotificationsCountProvider.getCount();
+      var unreadNotificationsCount =
+          await _unreadNotificationsCountProvider.getCount();
       setStateIfMounted(() {
-        _unreadNotificationsCount = unreadNotificationsCount.totalUnreadNotifications;
+        _unreadNotificationsCount =
+            unreadNotificationsCount.totalUnreadNotifications;
       });
     } on WPException catch (_) {
       setStateIfMounted(() => {});
@@ -59,7 +65,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title:
+            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: CircularIconButton(
           iconName: 'assets/icons/menu_icon.svg',
           iconSize: 12,
@@ -81,7 +88,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
                   Expanded(
                     child: Text(
                       'Notifications${_unreadNotificationsCount == 0 ? '' : ' ($_unreadNotificationsCount)'}',
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyles.titleTextStyle,
                     ),
                   ),
                   Container(
@@ -92,15 +99,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
                       onPressed: () => _showReadAllConfirmationAlert(),
                       child: Text(
                         'Read All',
-                        style: TextStyle(color: AppColors.defaultColor),
+                        style: TextStyles.subTitleTextStyle
+                            .copyWith(color: AppColors.defaultColor),
                       ),
                     ),
                   ),
                   SizedBox(width: 12),
                 ],
               ),
-              SizedBox(width: 8),
-              Divider(height: 1),
+              Divider(),
               Expanded(child: _buildNotificationListWidget())
             ],
           ),

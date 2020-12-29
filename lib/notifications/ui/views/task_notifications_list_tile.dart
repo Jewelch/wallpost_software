@@ -26,11 +26,11 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
   Widget build(BuildContext context) {
     return Container(
         child: ListTile(
-      contentPadding: EdgeInsets.only(top: 4),
+      contentPadding: EdgeInsets.symmetric(vertical: 4),
       leading: Icon(Icons.account_circle_sharp, size: 36),
       title: Text(
         widget.notification.taskName,
-        style: TextStyle(
+        style: TextStyles.subTitleTextStyle.copyWith(
           color: AppColors.defaultColor,
           fontWeight:
               widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
@@ -42,11 +42,12 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
           SizedBox(height: 8),
           Row(
             children: [
-              Text('Created On : ',
-                  style:
-                      TextStyles.labelTextStyle.copyWith(color: Colors.black)),
+              Text(
+                'Created On : ',
+                style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
+              ),
               Text(_convertToDateFormat(widget.notification.createdAt),
-                  style: TextStyles.labelTextStyle.copyWith(color: Colors.grey))
+                  style: TextStyles.labelTextStyle)
             ],
           ),
           SizedBox(height: 8),
@@ -56,8 +57,13 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
           ),
         ],
       ),
-      trailing:
-          Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14),
+      trailing: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14)
+        ],
+      ),
       onTap: () {
         setState(() {
           widget.notification.isRead = true;

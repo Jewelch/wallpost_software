@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -12,36 +13,48 @@ class ExpenseRequestNotificationsListTile extends StatefulWidget {
   ExpenseRequestNotificationsListTile(this.notification);
 
   @override
-  _ExpenseRequestNotificationsListTileState createState() => _ExpenseRequestNotificationsListTileState();
+  _ExpenseRequestNotificationsListTileState createState() =>
+      _ExpenseRequestNotificationsListTileState();
 }
 
-class _ExpenseRequestNotificationsListTileState extends State<ExpenseRequestNotificationsListTile> {
-  SingleNotificationReader _singleNotificationReader = SingleNotificationReader();
+class _ExpenseRequestNotificationsListTileState
+    extends State<ExpenseRequestNotificationsListTile> {
+  SingleNotificationReader _singleNotificationReader =
+      SingleNotificationReader();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: ListTile(
-        contentPadding: EdgeInsets.only(top: 4),
+        contentPadding: EdgeInsets.symmetric(vertical: 4),
         leading: Icon(Icons.account_circle_sharp, size: 36),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               widget.notification.title,
-              style: TextStyle(
+              style: TextStyles.subTitleTextStyle.copyWith(
                   color: AppColors.defaultColor,
-                  fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold),
+                  fontWeight: widget.notification.isRead
+                      ? FontWeight.normal
+                      : FontWeight.bold),
             ),
             RichText(
               text: TextSpan(
                 children: [
                   TextSpan(
-                      text: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().currency,
-                      style: TextStyle(color: AppColors.defaultColor, fontSize: 11)),
+                    text: SelectedCompanyProvider()
+                        .getSelectedCompanyForCurrentUser()
+                        .currency,
+                    style: TextStyles.labelTextStyle
+                        .copyWith(color: AppColors.defaultColor),
+                  ),
                   TextSpan(
-                      text: ' ${widget.notification.amount}',
-                      style: TextStyle(color: AppColors.defaultColor, fontWeight: FontWeight.bold))
+                    text: ' ${widget.notification.amount}',
+                    style: TextStyles.subTitleTextStyle.copyWith(
+                        color: AppColors.defaultColor,
+                        fontWeight: FontWeight.bold),
+                  )
                 ],
               ),
             )
@@ -59,26 +72,32 @@ class _ExpenseRequestNotificationsListTileState extends State<ExpenseRequestNoti
                     children: [
                       TextSpan(
                         text: 'Requested By: ',
-                        style: TextStyle(color: Colors.black, fontSize: 12),
+                        style: TextStyles.labelTextStyle
+                            .copyWith(color: Colors.black),
                       ),
                       TextSpan(
                         text: widget.notification.applicantName,
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                        style: TextStyles.labelTextStyle,
                       ),
                     ],
                   ),
                 ),
-                Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14)
+                Icon(Icons.arrow_forward_ios_outlined,
+                    color: Colors.grey, size: 14)
               ],
             ),
             SizedBox(height: 8),
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(text: 'Date: ', style: TextStyle(color: Colors.black, fontSize: 12)),
+                  TextSpan(
+                    text: 'Date: ',
+                    style:
+                        TextStyles.labelTextStyle.copyWith(color: Colors.black),
+                  ),
                   TextSpan(
                       text: _convertToDateFormat(widget.notification.createdAt),
-                      style: TextStyle(color: Colors.grey, fontSize: 12))
+                      style: TextStyles.labelTextStyle)
                 ],
               ),
             )
@@ -93,7 +112,8 @@ class _ExpenseRequestNotificationsListTileState extends State<ExpenseRequestNoti
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;
