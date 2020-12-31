@@ -11,7 +11,8 @@ class EmployeeListScreen extends StatefulWidget {
   _EmployeeListScreenState createState() => _EmployeeListScreenState();
 }
 
-class _EmployeeListScreenState extends State<EmployeeListScreen> implements EmployeesListView {
+class _EmployeeListScreenState extends State<EmployeeListScreen>
+    implements EmployeesListView {
   var _searchBarController = TextEditingController();
   ScrollController _employeesListScrollController = ScrollController();
   ScrollController _selectedEmployeesListScrollController = ScrollController();
@@ -27,7 +28,8 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> implements Empl
 
   void _setupScrollDownToLoadMoreItems() {
     _employeesListScrollController.addListener(() {
-      if (_employeesListScrollController.position.pixels == _employeesListScrollController.position.maxScrollExtent) {
+      if (_employeesListScrollController.position.pixels ==
+          _employeesListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfEmployees(_searchBarController.text);
       }
     });
@@ -50,7 +52,8 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> implements Empl
           CircularCheckMarkButton(
             iconColor: AppColors.defaultColor,
             color: Colors.transparent,
-            onPressed: () => Navigator.pop(context, _presenter.getSelectedEmployeesList()),
+            onPressed: () =>
+                Navigator.pop(context, _presenter.getSelectedEmployeesList()),
           ),
         ],
       ),
@@ -118,8 +121,10 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> implements Empl
     if (this.mounted) setState(() {});
 
     Future.delayed(Duration(milliseconds: 200)).then((value) {
-      _selectedEmployeesListScrollController.animateTo(_selectedEmployeesListScrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      _selectedEmployeesListScrollController.animateTo(
+          _selectedEmployeesListScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut);
     });
   }
 
