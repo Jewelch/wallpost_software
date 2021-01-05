@@ -29,18 +29,18 @@ class SearchBar extends StatelessWidget {
           SizedBox(width: 12),
           SvgPicture.asset(
             AppImages.searchIcon,
-            width: 16,
-            height: 16,
+            width: 18,
+            height: 18,
           ),
-          SizedBox(width: 8),
           Expanded(
             child: TextField(
               controller: controller,
               maxLines: 1,
               textCapitalization: TextCapitalization.words,
+              textAlignVertical: TextAlignVertical(y: 1),
               decoration: InputDecoration(
                 hintText: hint,
-                border: InputBorder.none,
+                border: OutlineInputBorder(borderSide: BorderSide.none),
                 suffixIcon: controller.text.isEmpty
                     ? null
                     : IconButton(
