@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/request_exception.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/request_exception.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/unexpected_response_format_exception.dart';
 
 import 'network_adapter.dart';
 
@@ -74,7 +75,7 @@ class NetworkRequestExecutor implements NetworkAdapter {
       var responseData = json.decode(response.data);
       return APIResponse(apiRequest, response.statusCode, responseData, {});
     } catch (e) {
-      throw WrongResponseFormatException();
+      throw UnexpectedResponseFormatException();
     }
   }
 
@@ -84,7 +85,7 @@ class NetworkRequestExecutor implements NetworkAdapter {
       return RequestException(error.message);
     } else {
       // The request was made and the server responded with a statusCode != 200
-      return HTTPException(error.response.statusCode);
+      return HTTPException(error.response.statusCode, error.response.data);
     }
   }
 }

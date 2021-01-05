@@ -2,11 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_shared/constants/app_id.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/malformed_response_exception.dart';
-import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
 import 'package:wallpost/_wp_core/user_management/services/access_token_provider.dart';
-import 'package:wallpost/_wp_core/wpapi/nonce_provider.dart';
-import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/malformed_response_exception.dart';
+import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
+import 'package:wallpost/_wp_core/wpapi/services/nonce_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 
@@ -44,6 +44,7 @@ void main() {
 
   setUp(() {
     reset(mockAccessTokenProvider);
+    mockNetworkAdapter.reset();
   });
 
   group('test if the right network executor functions are called', () {
@@ -119,25 +120,39 @@ void main() {
   });
 
   group('test error processing', () {
-    test('throws WrongResponseFormatException when json decoding fails', () async {
+    test('force refreshes token and reattempts API call in case of HTTP 401 exception with token expired code',
+        () async {
+      mockNetworkAdapter.fail(HTTPException(401, '{"code": 1022}'));
+      mockNetworkAdapter.onComplete = () {
+        mockNetworkAdapter.succeed(simpleWpResponse);
+      };
+
+      var _ = await wpApi.post(apiRequest);
+
+      verify(mockAccessTokenProvider.getToken(forceRefresh: false)).called(1);
+      verify(mockAccessTokenProvider.getToken(forceRefresh: true)).called(1);
+      expect(mockNetworkAdapter.noOfTimesPostIsCalled, 2);
+    });
+
+    test('throws UnexpectedResponseFormatException when json decoding fails', () async {
       mockNetworkAdapter.succeed('non-json string');
 
       try {
         var _ = await wpApi.post(apiRequest);
         fail('expected to throw error, but did not');
       } catch (error) {
-        expect(error is WrongResponseFormatException, true);
+        expect(error is UnexpectedResponseFormatException, true);
       }
     });
 
-    test('throws WrongResponseFormatException when response data is not a map', () async {
+    test('throws UnexpectedResponseFormatException when response data is not a map', () async {
       mockNetworkAdapter.succeed('not a map');
 
       try {
         var _ = await wpApi.post(apiRequest);
         fail('expected to throw error, but did not');
       } catch (error) {
-        expect(error is WrongResponseFormatException, true);
+        expect(error is UnexpectedResponseFormatException, true);
       }
     });
 

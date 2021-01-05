@@ -5,5 +5,8 @@ class HTTPException extends APIException {
   static const String _INTERNAL_MESSAGE = "Request failed with HTTP error code: ";
   final int httpCode;
 
-  HTTPException(this.httpCode) : super(_USER_READABLE_MESSAGE, '$_INTERNAL_MESSAGE $httpCode');
+  HTTPException(
+    this.httpCode,
+    dynamic responseData,
+  ) : super(_USER_READABLE_MESSAGE, '$_INTERNAL_MESSAGE $httpCode', responseData: responseData);
 }

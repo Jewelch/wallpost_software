@@ -1,7 +1,7 @@
-import 'package:wallpost/_shared/network_adapter/entities/api_response.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/malformed_response_exception.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/server_sent_exception.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/wrong_response_format_exception.dart';
+import 'package:wallpost/_wp_core/wpapi/entities/api_response.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/malformed_response_exception.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/server_sent_exception.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/unexpected_response_format_exception.dart';
 
 class WPAPIResponseProcessor {
   dynamic processResponse(APIResponse response) {
@@ -10,7 +10,7 @@ class WPAPIResponseProcessor {
 
   dynamic _parseResponseData(dynamic responseData) {
     if (responseData is! Map<String, dynamic>) {
-      throw WrongResponseFormatException();
+      throw UnexpectedResponseFormatException();
     }
 
     var responseMap = responseData as Map<String, dynamic>;

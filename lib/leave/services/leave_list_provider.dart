@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
-import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/leave/constants/leave_urls.dart';
 import 'package:wallpost/leave/entities/leave_list_item.dart';
 
@@ -14,8 +15,7 @@ class LeaveListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  LeaveListProvider.initWith(
-      this._selectedEmployeeProvider, this._networkAdapter);
+  LeaveListProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
 
   LeaveListProvider()
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
@@ -29,10 +29,8 @@ class LeaveListProvider {
   }
 
   Future<List<LeaveListItem>> getNext() async {
-    var employee =
-        _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-    var url = LeaveUrls.leaveListUrl(
-        employee.companyId, employee.v1Id, '$_pageNumber', '$_perPage');
+    var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
+    var url = LeaveUrls.leaveListUrl(employee.companyId, employee.v1Id, '$_pageNumber', '$_perPage');
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
@@ -48,18 +46,15 @@ class LeaveListProvider {
 
   Future<List<LeaveListItem>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId)
-      return Completer<List<LeaveListItem>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<LeaveListItem>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! List<Map<String, dynamic>>)
-      throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<LeaveListItem> _readItemsFromResponse(
-      List<Map<String, dynamic>> responseMapList) {
+  List<LeaveListItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
       var leaveListItemList = <LeaveListItem>[];
       for (var responseMap in responseMapList) {

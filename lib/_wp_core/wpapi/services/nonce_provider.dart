@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
-import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
-import 'package:wallpost/_shared/network_adapter/network_request_executor.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/unexpected_response_format_exception.dart';
+import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
+import 'package:wallpost/_wp_core/wpapi/services/network_request_executor.dart';
 
 class Nonce extends JSONInitializable {
   String _value;
@@ -51,7 +52,7 @@ class NonceProvider {
     //returning if the response is from another session
     if (apiResponse.apiRequest.requestId != _sessionId) return Completer<Nonce>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
+    if (apiResponse.data is! Map<String, dynamic>) throw UnexpectedResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
     var sift = Sift();

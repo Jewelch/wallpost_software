@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
-import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/leave/constants/leave_urls.dart';
 import 'package:wallpost/leave/entities/leave_employee.dart';
 
@@ -16,8 +17,7 @@ class LeaveEmployeesListProvider {
   bool isLoading = false;
   bool _shouldGetAllEmployees = true;
 
-  LeaveEmployeesListProvider.initWith(this._selectedCompanyProvider,
-      this._networkAdapter, this._shouldGetAllEmployees);
+  LeaveEmployeesListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter, this._shouldGetAllEmployees);
 
   LeaveEmployeesListProvider()
       : _selectedCompanyProvider = SelectedCompanyProvider(),
@@ -41,15 +41,12 @@ class LeaveEmployeesListProvider {
   }
 
   Future<List<LeaveEmployee>> getNext({String searchText}) async {
-    var companyId =
-        _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
+    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     String url;
     if (_shouldGetAllEmployees) {
-      url =
-          LeaveUrls.assigneesUrl(companyId, _pageNumber, _perPage, searchText);
+      url = LeaveUrls.assigneesUrl(companyId, _pageNumber, _perPage, searchText);
     } else {
-      url = LeaveUrls.subordinatesUrl(
-          companyId, _pageNumber, _perPage, searchText);
+      url = LeaveUrls.subordinatesUrl(companyId, _pageNumber, _perPage, searchText);
     }
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
@@ -66,18 +63,15 @@ class LeaveEmployeesListProvider {
 
   Future<List<LeaveEmployee>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId)
-      return Completer<List<LeaveEmployee>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<LeaveEmployee>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! List<Map<String, dynamic>>)
-      throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<LeaveEmployee> _readItemsFromResponse(
-      List<Map<String, dynamic>> responseMapList) {
+  List<LeaveEmployee> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
       var taskEmployeeList = <LeaveEmployee>[];
       for (var responseMap in responseMapList) {

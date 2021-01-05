@@ -5,8 +5,10 @@ class ServerSentException extends APIException {
   static const String _INTERNAL_MESSAGE = "";
   int errorCode;
 
-  ServerSentException(String errorMessage, int errorCode)
-      : super(errorMessage ?? _USER_READABLE_MESSAGE, _INTERNAL_MESSAGE) {
+  ServerSentException(
+    String errorMessage,
+    int errorCode,
+  ) : super(errorMessage ?? _USER_READABLE_MESSAGE, _INTERNAL_MESSAGE) {
     this.errorCode = errorCode;
   }
 }

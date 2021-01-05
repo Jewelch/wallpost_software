@@ -1,12 +1,13 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
-import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/task/constants/task_urls.dart';
 import 'package:wallpost/task/entities/task_category.dart';
 
-class TaskCategoriesListProvider {
+class TaskCategoryListProvider {
   final SelectedCompanyProvider _selectedCompanyProvider;
   final NetworkAdapter _networkAdapter;
   final int _perPage = 15;
@@ -15,9 +16,9 @@ class TaskCategoriesListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  TaskCategoriesListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
+  TaskCategoryListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
-  TaskCategoriesListProvider()
+  TaskCategoryListProvider()
       : _selectedCompanyProvider = SelectedCompanyProvider(),
         _networkAdapter = WPAPI();
 

@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:sift/sift.dart';
-import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/notifications/constants/notification_urls.dart';
 import 'package:wallpost/notifications/entities/unread_notifications_count.dart';
 

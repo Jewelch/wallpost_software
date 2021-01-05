@@ -3,10 +3,10 @@ import 'package:wallpost/task/entities/task_list_filters.dart';
 
 void main() {
   test('test defaults', () async {
-    var filters = TasksListFilters();
+    var filters = TaskListFilters();
 
-    expect(filters.scope, TasksListFilters.MY_SCOPE);
-    expect(filters.status, TasksListFilters.OVERDUE);
+    expect(filters.scope, TaskListFilters.MY_SCOPE);
+    expect(filters.status, TaskListFilters.OVERDUE);
     expect(filters.searchText, null);
     expect(filters.year, DateTime.now().year);
     expect(filters.assignees, isEmpty);
@@ -15,46 +15,46 @@ void main() {
   });
 
   test('setting the scope', () async {
-    var filters = TasksListFilters();
+    var filters = TaskListFilters();
 
     filters.showMyTasks();
-    expect(filters.scope, TasksListFilters.MY_SCOPE);
+    expect(filters.scope, TaskListFilters.MY_SCOPE);
 
     filters.showTeamTasks();
-    expect(filters.scope, TasksListFilters.TEAM_SCOPE);
+    expect(filters.scope, TaskListFilters.TEAM_SCOPE);
   });
 
   test('setting the status', () async {
-    var filters = TasksListFilters();
+    var filters = TaskListFilters();
 
     filters.showOverdueTasks();
-    expect(filters.status, TasksListFilters.OVERDUE);
+    expect(filters.status, TaskListFilters.OVERDUE);
 
     filters.showTasksThatAreDueToday();
-    expect(filters.status, TasksListFilters.DUE_TODAY);
+    expect(filters.status, TaskListFilters.DUE_TODAY);
 
     filters.showTasksThatAreDueInAWeek();
-    expect(filters.status, TasksListFilters.DUE_IN_A_WEEK);
+    expect(filters.status, TaskListFilters.DUE_IN_A_WEEK);
 
     filters.showUpcomingDueTasks();
-    expect(filters.status, TasksListFilters.UPCOMING_DUE);
+    expect(filters.status, TaskListFilters.UPCOMING_DUE);
 
     filters.showCompletedTasks();
-    expect(filters.status, TasksListFilters.COMPLETED);
+    expect(filters.status, TaskListFilters.COMPLETED);
 
     filters.showAllTasks();
-    expect(filters.status, TasksListFilters.ALL);
+    expect(filters.status, TaskListFilters.ALL);
   });
 
   test('resetting the filters', () async {
-    var filters = TasksListFilters();
+    var filters = TaskListFilters();
     filters.showTeamTasks();
     filters.showAllTasks();
 
     filters.reset();
 
-    expect(filters.scope, TasksListFilters.MY_SCOPE);
-    expect(filters.status, TasksListFilters.OVERDUE);
+    expect(filters.scope, TaskListFilters.MY_SCOPE);
+    expect(filters.status, TaskListFilters.OVERDUE);
     expect(filters.searchText, null);
     expect(filters.year, DateTime.now().year);
     expect(filters.assignees, isEmpty);
@@ -63,7 +63,7 @@ void main() {
   });
 
   test('resetting date filter', () async {
-    var filters = TasksListFilters();
+    var filters = TaskListFilters();
     filters.year = 2018;
 
     filters.resetDateFilter();

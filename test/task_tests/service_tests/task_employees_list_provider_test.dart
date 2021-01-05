@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/task/constants/task_urls.dart';
-import 'package:wallpost/task/services/task_employees_list_provider.dart';
+import 'package:wallpost/task/services/task_employee_list_provider.dart';
 
 import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_company_provider.dart';
@@ -13,7 +14,7 @@ void main() {
   var mockCompany = MockCompany();
   var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var taskAssigneesListProvider = TaskEmployeesListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, true);
+  var taskAssigneesListProvider = TaskEmployeeListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, true);
 
   setUpAll(() {
     when(mockCompany.id).thenReturn('someCompanyId');
@@ -23,11 +24,11 @@ void main() {
   test('correct url is selected depending on whether the provider should get all employees or not', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var taskAssigneesListProvider = TaskEmployeesListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, true);
+    var taskAssigneesListProvider = TaskEmployeeListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, true);
     await taskAssigneesListProvider.getNext();
     expect(mockNetworkAdapter.apiRequest.url, TaskUrls.assigneesUrl('someCompanyId', 1, 15, null));
 
-    taskAssigneesListProvider = TaskEmployeesListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, false);
+    taskAssigneesListProvider = TaskEmployeeListProvider.initWith(mockCompanyProvider, mockNetworkAdapter, false);
     await taskAssigneesListProvider.getNext();
     expect(mockNetworkAdapter.apiRequest.url, TaskUrls.subordinatesUrl('someCompanyId', 1, 15, null));
   });
@@ -151,7 +152,7 @@ void main() {
   });
 
   test('test loading flag is reset after failure', () async {
-    mockNetworkAdapter.fail(InvalidResponseException());
+    mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
       var _ = await taskAssigneesListProvider.getNext();

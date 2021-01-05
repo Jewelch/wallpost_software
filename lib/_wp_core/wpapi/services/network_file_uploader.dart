@@ -6,10 +6,11 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime_type/mime_type.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/unexpected_response_format_exception.dart';
 
-import 'entities/api_request.dart';
-import 'entities/api_response.dart';
-import 'exceptions/api_exception.dart';
+import '../entities/api_request.dart';
+import '../entities/api_response.dart';
+import '../exceptions/api_exception.dart';
 
 class NetworkFileUploader {
   Future<APIResponse> upload(List<File> files, APIRequest apiRequest, {Function(double) onUploadProgress}) async {
@@ -53,14 +54,14 @@ class NetworkFileUploader {
   }
 
   Future<APIResponse> _processResponse(http.StreamedResponse response, APIRequest apiRequest) async {
-    if (response.statusCode != 200) throw HTTPException(response.statusCode);
+    var responseString = await response.stream.bytesToString();
+    if (response.statusCode != 200) throw HTTPException(response.statusCode, responseString);
 
     try {
-      var responseString = await response.stream.bytesToString();
       var responseData = json.decode(responseString);
       return APIResponse(apiRequest, 200, responseData, {});
     } catch (e) {
-      throw WrongResponseFormatException();
+      throw UnexpectedResponseFormatException();
     }
   }
 }
