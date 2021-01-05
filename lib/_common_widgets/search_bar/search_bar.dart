@@ -27,11 +27,7 @@ class SearchBar extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(width: 12),
-          SvgPicture.asset(
-            AppImages.searchIcon,
-            width: 18,
-            height: 18,
-          ),
+          SvgPicture.asset(AppImages.searchIcon, width: 18, height: 18),
           Expanded(
             child: TextField(
               controller: controller,
