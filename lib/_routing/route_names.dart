@@ -50,4 +50,7 @@ class RouteNames {
 
   //leave Employee List
   static final String leaveEmployeeListScreen = "/leave-employee-list-screen";
+
+  //create Task Screen
+  static final String createTaskScreen = "/create-task-screen";
 }

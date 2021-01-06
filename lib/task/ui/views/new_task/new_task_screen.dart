@@ -7,19 +7,18 @@ import 'package:wallpost/_common_widgets/form_widgets/multi_select_filter_chips.
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/task/entities/department.dart';
 import 'package:wallpost/task/entities/task_category.dart';
 import 'package:wallpost/task/entities/task_employee.dart';
 import 'package:wallpost/task/entities/task_list_filters.dart';
 import 'package:wallpost/task/ui/presenters/task_filter_presenter.dart';
 
-class TaskListFilterScreen extends StatefulWidget {
+class CreateTaskScreen extends StatefulWidget {
   @override
-  _TaskListFilterScreenState createState() => _TaskListFilterScreenState();
+  _CreateTaskScreenState createState() => _CreateTaskScreenState();
 }
 
-class _TaskListFilterScreenState extends State<TaskListFilterScreen>
+class _CreateTaskScreenState extends State<CreateTaskScreen>
     implements DepartmentsWrapView {
   TaskFilterPresenter _presenter;
   List<Department> filteredDepartments;
@@ -29,7 +28,6 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen>
   List<TaskEmployee> filteredEmployees;
   bool isFromEmployeeFilter = false;
 
-  var _yearsFilterController = MultiSelectFilterChipsController();
   var _departmentsFilterController = MultiSelectFilterChipsController();
   var _categoriesFilterController = MultiSelectFilterChipsController();
   var _employeesFilterController = MultiSelectFilterChipsController();
@@ -67,9 +65,6 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: _buildYearSection()),
               Divider(height: 1),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -91,7 +86,7 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen>
 
   PreferredSizeWidget _buildAppBar() {
     return SimpleAppBar(
-      title: 'Select Filters',
+      title: 'Create Task',
       leadingButtons: [
         CircularCloseButton(
           iconColor: AppColors.defaultColor,
@@ -111,37 +106,9 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen>
           iconColor: AppColors.defaultColor,
           color: Colors.transparent,
           onPressed: () {
-            _updateAllSelectedFilters();
             Navigator.pop(context);
           },
         ),
-      ],
-    );
-  }
-
-  Column _buildYearSection() {
-    var selectedYearIndex = AppYears.years().indexOf(_filters.year);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(height: 12),
-        Text('Year',
-            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
-        SizedBox(height: 8),
-        MultiSelectFilterChips(
-          titles: AppYears.years().map((e) => '$e').toList(),
-          selectedIndices: [selectedYearIndex],
-          controller: _yearsFilterController,
-          allowMultipleSelection: false,
-          onItemSelected: (selectedIndex) =>
-              _filters.year = AppYears.years()[selectedIndex],
-          onItemDeselected: (_) {
-            setState(() => _filters.resetDateFilter());
-          },
-        ),
-        SizedBox(height: 12),
       ],
     );
   }
@@ -295,23 +262,6 @@ class _TaskListFilterScreenState extends State<TaskListFilterScreen>
   @override
   void reloadData() {
     if (this.mounted) setState(() {});
-  }
-
-  void _updateAllSelectedFilters() {
-    TasksListFilters _tasksListFilter = TasksListFilters();
-
-    _tasksListFilter.year =
-        AppYears.years()[_yearsFilterController.getSelectedIndices()[0]];
-
-    _tasksListFilter.departments.addAll(isFromDepartmentFilter
-        ? filteredDepartments
-        : _getSelectedDepartments());
-
-    _tasksListFilter.categories.addAll(
-        isFromCategoryFilter ? filteredCategories : _getSelectedCategories());
-
-    _tasksListFilter.assignees.addAll(
-        isFromEmployeeFilter ? filteredEmployees : _getSelectedEmployees());
   }
 
   List<Department> _getSelectedDepartments() {

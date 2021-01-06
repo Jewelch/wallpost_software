@@ -3,10 +3,10 @@ import 'package:wallpost/_main/main_screen.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/company_list//ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
-import 'package:wallpost/leave/ui/views/leave_list_details/leave_list_deatils_screen.dart';
 import 'package:wallpost/leave/ui/views/leave_employee_list/leave_employee_list_screen.dart';
 import 'package:wallpost/leave/ui/views/leave_list/leave_list_filter_screen.dart';
 import 'package:wallpost/leave/ui/views/leave_list/leave_list_screen.dart';
+import 'package:wallpost/leave/ui/views/leave_list_details/leave_list_deatils_screen.dart';
 import 'package:wallpost/login/ui/login_screen.dart';
 import 'package:wallpost/password_management/ui/change_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_screen.dart';
@@ -14,6 +14,7 @@ import 'package:wallpost/password_management/ui/forgot_password_success_screen.d
 import 'package:wallpost/settings/ui/settings_screen.dart';
 import 'package:wallpost/task/ui/views/categories_list/categories_list_screen.dart';
 import 'package:wallpost/task/ui/views/departments_list/departments_list_screen.dart';
+import 'package:wallpost/task/ui/views/new_task/new_task_screen.dart';
 import 'package:wallpost/task/ui/views/task_details/task_details_screen.dart';
 import 'package:wallpost/task/ui/views/task_employee_list/task_employee_list_screen.dart';
 import 'package:wallpost/task/ui/views/task_list/task_list_filter_screen.dart';
@@ -81,7 +82,10 @@ class Routes {
 
       //leave employee list
       RouteNames.leaveEmployeeListScreen: (BuildContext context) =>
-          LeaveEmployeeListScreen()
+          LeaveEmployeeListScreen(),
+
+      //create Task Screen
+      RouteNames.createTaskScreen: (BuildContext context) => CreateTaskScreen()
     };
   }
 }
