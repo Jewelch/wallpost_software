@@ -4,6 +4,7 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/leave/constants/leave_urls.dart';
+import 'package:wallpost/leave/entities/leave_list_filters.dart';
 import 'package:wallpost/leave/entities/leave_list_item.dart';
 
 class LeaveListProvider {
@@ -28,9 +29,9 @@ class LeaveListProvider {
     isLoading = false;
   }
 
-  Future<List<LeaveListItem>> getNext() async {
+  Future<List<LeaveListItem>> getNext(LeaveListFilters filters) async {
     var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-    var url = LeaveUrls.leaveListUrl(employee.companyId, employee.v1Id, '$_pageNumber', '$_perPage');
+    var url = LeaveUrls.leaveListUrl(employee.companyId, employee.v1Id, filters, '$_pageNumber', '$_perPage');
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 

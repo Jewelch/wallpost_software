@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/_list_view/error_list_tile.dart';
 import 'package:wallpost/_common_widgets/_list_view/loader_list_tile.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/leave/entities/leave_list_filters.dart';
 import 'package:wallpost/leave/entities/leave_list_item.dart';
 import 'package:wallpost/leave/services/leave_list_provider.dart';
 import 'package:wallpost/leave/ui/views/leave_list/leave_list_tile.dart';
@@ -15,6 +16,7 @@ class LeaveListPresenter {
   final LeaveListProvider provider;
   List<LeaveListItem> _leaveLists = [];
   String _errorMessage;
+  LeaveListFilters _filters;
 
   LeaveListPresenter(this.view) : provider = LeaveListProvider();
 
@@ -26,7 +28,7 @@ class LeaveListPresenter {
     _resetErrors();
     view.reloadData();
     try {
-      var leaveList = await provider.getNext();
+      var leaveList = await provider.getNext(_filters);
       _leaveLists.addAll(leaveList);
       view.reloadData();
     } on WPException catch (e) {
