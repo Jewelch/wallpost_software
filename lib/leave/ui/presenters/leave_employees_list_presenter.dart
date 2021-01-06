@@ -25,7 +25,7 @@ class EmployeesListPresenter {
   String _errorMessage;
   String _searchText;
 
-  EmployeesListPresenter(this._view) : _provider = LeaveEmployeesListProvider();
+  EmployeesListPresenter(this._view) : _provider = LeaveEmployeesListProvider.allEmployeesProvider();
 
   Future<void> loadNextListOfEmployees(String searchText) async {
     if (_provider.isLoading || _provider.didReachListEnd) return null;

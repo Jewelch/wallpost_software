@@ -17,11 +17,11 @@ class LeaveEmployeesListProvider {
   bool isLoading = false;
   bool _shouldGetAllEmployees = true;
 
-  LeaveEmployeesListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter, this._shouldGetAllEmployees);
-
-  LeaveEmployeesListProvider()
-      : _selectedCompanyProvider = SelectedCompanyProvider(),
-        _networkAdapter = WPAPI();
+  LeaveEmployeesListProvider.initWith(
+    this._selectedCompanyProvider,
+    this._networkAdapter,
+    this._shouldGetAllEmployees,
+  );
 
   LeaveEmployeesListProvider.allEmployeesProvider()
       : _selectedCompanyProvider = SelectedCompanyProvider(),

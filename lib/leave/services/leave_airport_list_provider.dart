@@ -4,10 +4,9 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/leave/constants/leave_urls.dart';
-import 'package:wallpost/leave/entities/leave_list_filters.dart';
-import 'package:wallpost/leave/entities/leave_list_item.dart';
+import 'package:wallpost/leave/entities/leave_airport.dart';
 
-class LeaveListProvider {
+class LeaveAirportListProvider {
   final SelectedEmployeeProvider _selectedEmployeeProvider;
   final NetworkAdapter _networkAdapter;
   final int _perPage = 15;
@@ -16,9 +15,9 @@ class LeaveListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  LeaveListProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
+  LeaveAirportListProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
 
-  LeaveListProvider()
+  LeaveAirportListProvider()
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
         _networkAdapter = WPAPI();
 
@@ -29,9 +28,10 @@ class LeaveListProvider {
     isLoading = false;
   }
 
-  Future<List<LeaveListItem>> getNext(LeaveListFilters filters) async {
-    var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-    var url = LeaveUrls.leaveListUrl(employee.companyId, employee.v1Id, filters, _pageNumber, _perPage);
+  Future<List<LeaveAirport>> getNext(String searchText) async {
+    var companyId = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser().companyId;
+    var employeeId = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser().v1Id;
+    var url = LeaveUrls.airportsListUrl(companyId, employeeId, searchText, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
@@ -45,9 +45,9 @@ class LeaveListProvider {
     }
   }
 
-  Future<List<LeaveListItem>> _processResponse(APIResponse apiResponse) async {
+  Future<List<LeaveAirport>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<LeaveListItem>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<LeaveAirport>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
@@ -55,15 +55,15 @@ class LeaveListProvider {
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<LeaveListItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<LeaveAirport> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var leaveListItemList = <LeaveListItem>[];
+      var leaveAirportList = <LeaveAirport>[];
       for (var responseMap in responseMapList) {
-        var leaveListItem = LeaveListItem.fromJson(responseMap);
-        leaveListItemList.add(leaveListItem);
+        var leaveAirport = LeaveAirport.fromJson(responseMap);
+        leaveAirportList.add(leaveAirport);
       }
-      _updatePaginationRelatedData(leaveListItemList.length);
-      return leaveListItemList;
+      _updatePaginationRelatedData(leaveAirportList.length);
+      return leaveAirportList;
     } catch (e) {
       throw InvalidResponseException();
     }
@@ -81,6 +81,4 @@ class LeaveListProvider {
   int getCurrentPageNumber() {
     return _pageNumber;
   }
-
-  bool get didReachListEnd => _didReachListEnd;
 }

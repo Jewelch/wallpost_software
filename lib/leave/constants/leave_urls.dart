@@ -3,7 +3,7 @@ import 'package:wallpost/leave/entities/leave_list_filters.dart';
 
 class LeaveUrls {
   static String leaveListUrl(
-      String companyId, String employeeId, LeaveListFilters filters, String pageNumber, String itemsPerPage) {
+      String companyId, String employeeId, LeaveListFilters filters, int pageNumber, int itemsPerPage) {
     var url = '${BaseUrls.hrUrlV3()}/companies/$companyId/employees/$employeeId/leaverequests?'
         '&pageNumber=$pageNumber&itemsPerPage=$itemsPerPage';
 
@@ -31,6 +31,13 @@ class LeaveUrls {
     var url =
         '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/getSubOrdinates?&page=$pageNumber&per_page=$itemsPerPage';
     if (searchText != null) url += '&search=$searchText';
+    return url;
+  }
+
+  static String airportsListUrl(String companyId, String employeeId, String search, int pageNumber, int itemsPerPage) {
+    var url =
+        '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/airports?pageNumber=$pageNumber&itemsPerPage=$itemsPerPage';
+    if (search != null || search.isNotEmpty) url += '?&search=$search';
     return url;
   }
 }

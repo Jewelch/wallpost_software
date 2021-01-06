@@ -2,8 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/leave/constants/leave_urls.dart';
-import 'package:wallpost/leave/entities/leave_list_filters.dart';
-import 'package:wallpost/leave/services/leave_list_provider.dart';
+import 'package:wallpost/leave/services/leave_airport_list_provider.dart';
 
 import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_employee_provider.dart';
@@ -11,12 +10,11 @@ import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
-  List<Map<String, dynamic>> successfulResponse = Mocks.leaveListResponse;
+  List<Map<String, dynamic>> successfulResponse = Mocks.airportListResponse;
   var mockEmployee = MockEmployee();
-  var filters = LeaveListFilters();
   var mockEmployeeProvider = MockEmployeeProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var leaveListProvider = LeaveListProvider.initWith(mockEmployeeProvider, mockNetworkAdapter);
+  var leaveAirportListProvider = LeaveAirportListProvider.initWith(mockEmployeeProvider, mockNetworkAdapter);
 
   setUpAll(() {
     when(mockEmployee.companyId).thenReturn('someCompanyId');
@@ -28,9 +26,10 @@ void main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await leaveListProvider.getNext(filters);
+    var _ = await leaveAirportListProvider.getNext('someSearchText');
 
-    expect(mockNetworkAdapter.apiRequest.url, LeaveUrls.leaveListUrl('someCompanyId', 'v1EmpId', filters, 0, 15));
+    expect(mockNetworkAdapter.apiRequest.url,
+        LeaveUrls.airportsListUrl('someCompanyId', 'v1EmpId', 'someSearchText', 0, 15));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -39,7 +38,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await leaveListProvider.getNext(filters);
+      var _ = await leaveAirportListProvider.getNext('someSearchText');
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -50,15 +49,15 @@ void main() {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
-    leaveListProvider.getNext(filters).then((_) {
+    leaveAirportListProvider.getNext('someSearchText').then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
-    leaveListProvider.reset();
+    leaveAirportListProvider.reset();
 
     mockNetworkAdapter.succeed(successfulResponse);
-    leaveListProvider.getNext(filters).then((_) {
+    leaveAirportListProvider.getNext('someSearchText').then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -70,7 +69,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await leaveListProvider.getNext(filters);
+      var _ = await leaveAirportListProvider.getNext('someSearchText');
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -81,7 +80,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      var _ = await leaveListProvider.getNext(filters);
+      var _ = await leaveAirportListProvider.getNext('someSearchText');
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -92,7 +91,7 @@ void main() {
     mockNetworkAdapter.succeed([<String, dynamic>{}]);
 
     try {
-      var _ = await leaveListProvider.getNext(filters);
+      var _ = await leaveAirportListProvider.getNext('someSearchText');
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -103,8 +102,8 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var leaveListItem = await leaveListProvider.getNext(filters);
-      expect(leaveListItem, isNotNull);
+      var leaveAirport = await leaveAirportListProvider.getNext('someSearchText');
+      expect(leaveAirport, isNotNull);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
@@ -112,15 +111,15 @@ void main() {
 
   test('page number is updated after each call', () async {
     mockNetworkAdapter.succeed(successfulResponse);
-    leaveListProvider.reset();
+    leaveAirportListProvider.reset();
     try {
-      expect(leaveListProvider.getCurrentPageNumber(), 0);
-      await leaveListProvider.getNext(filters);
-      expect(leaveListProvider.getCurrentPageNumber(), 1);
-      await leaveListProvider.getNext(filters);
-      expect(leaveListProvider.getCurrentPageNumber(), 2);
-      await leaveListProvider.getNext(filters);
-      expect(leaveListProvider.getCurrentPageNumber(), 3);
+      expect(leaveAirportListProvider.getCurrentPageNumber(), 0);
+      await leaveAirportListProvider.getNext('someSearchText');
+      expect(leaveAirportListProvider.getCurrentPageNumber(), 1);
+      await leaveAirportListProvider.getNext('someSearchText');
+      expect(leaveAirportListProvider.getCurrentPageNumber(), 2);
+      await leaveAirportListProvider.getNext('someSearchText');
+      expect(leaveAirportListProvider.getCurrentPageNumber(), 3);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
@@ -129,27 +128,27 @@ void main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    leaveListProvider.getNext(filters);
+    leaveAirportListProvider.getNext('someSearchText');
 
-    expect(leaveListProvider.isLoading, true);
+    expect(leaveAirportListProvider.isLoading, true);
   });
 
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await leaveListProvider.getNext(filters);
+    var _ = await leaveAirportListProvider.getNext('someSearchText');
 
-    expect(leaveListProvider.isLoading, false);
+    expect(leaveAirportListProvider.isLoading, false);
   });
 
   test('test loading flag is reset after failure', () async {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await leaveListProvider.getNext(filters);
+      var _ = await leaveAirportListProvider.getNext('someSearchText');
       fail('failed to throw exception');
     } catch (_) {
-      expect(leaveListProvider.isLoading, false);
+      expect(leaveAirportListProvider.isLoading, false);
     }
   });
 }
