@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -23,31 +24,36 @@ class _HandoverNotificationsListTileState extends State<HandoverNotificationsLis
   Widget build(BuildContext context) {
     return Container(
       child: ListTile(
-        contentPadding: EdgeInsets.only(top: 4),
+        contentPadding: EdgeInsets.symmetric(vertical: 4),
         leading: Icon(Icons.account_circle_sharp, size: 36),
         title: Text(
           widget.notification.title,
-          style: TextStyle(color: AppColors.defaultColor),
+          style: TextStyles.subTitleTextStyle.copyWith(
+            color: AppColors.defaultColor,
+            fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
+          ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 8),
-            Text(widget.notification.message),
+            Text(widget.notification.message, style: TextStyles.labelTextStyle),
             SizedBox(height: 8),
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(text: 'Date: ', style: TextStyle(color: Colors.black, fontSize: 12)),
-                  TextSpan(
-                      text: _convertToDateFormat(widget.notification.createdAt),
-                      style: TextStyle(color: Colors.grey, fontSize: 12))
+                  TextSpan(text: 'Date: ', style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
+                  TextSpan(text: _convertToDateFormat(widget.notification.createdAt), style: TextStyles.labelTextStyle)
                 ],
               ),
             )
           ],
         ),
-        trailing: Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14),
+        trailing: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14)],
+        ),
         onTap: () => _readSingleNotification(widget.notification),
       ),
     );

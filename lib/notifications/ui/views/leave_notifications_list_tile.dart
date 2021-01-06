@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -22,12 +23,14 @@ class _LeaveNotificationsListTileState extends State<LeaveNotificationsListTile>
   Widget build(BuildContext context) {
     return Container(
       child: ListTile(
-        contentPadding: EdgeInsets.only(top: 4),
+        contentPadding: EdgeInsets.symmetric(vertical: 4),
         leading: Icon(Icons.account_circle_sharp, size: 36),
-        title: Text(widget.notification.title,
-            style: TextStyle(
-                color: AppColors.defaultColor,
-                fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold)),
+        title: Text(
+          widget.notification.title,
+          style: TextStyles.subTitleTextStyle.copyWith(
+              color: AppColors.defaultColor,
+              fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold),
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -38,9 +41,11 @@ class _LeaveNotificationsListTileState extends State<LeaveNotificationsListTile>
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: 'Requested By : ', style: TextStyle(color: Colors.black, fontSize: 12)),
                       TextSpan(
-                          text: widget.notification.applicantName, style: TextStyle(color: Colors.grey, fontSize: 12)),
+                        text: 'Requested By : ',
+                        style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
+                      ),
+                      TextSpan(text: widget.notification.applicantName, style: TextStyles.labelTextStyle),
                     ],
                   ),
                 ),
@@ -54,20 +59,21 @@ class _LeaveNotificationsListTileState extends State<LeaveNotificationsListTile>
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: 'From : ', style: TextStyle(color: Colors.black, fontSize: 12)),
                       TextSpan(
-                          text: _convertToDateFormat(widget.notification.leaveFrom),
-                          style: TextStyle(color: Colors.grey, fontSize: 12))
+                        text: 'From : ',
+                        style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
+                      ),
+                      TextSpan(
+                          text: _convertToDateFormat(widget.notification.leaveFrom), style: TextStyles.labelTextStyle)
                     ],
                   ),
                 ),
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: 'To : ', style: TextStyle(color: Colors.black, fontSize: 12)),
+                      TextSpan(text: 'To : ', style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
                       TextSpan(
-                          text: _convertToDateFormat(widget.notification.leaveTo),
-                          style: TextStyle(color: Colors.grey, fontSize: 12))
+                          text: _convertToDateFormat(widget.notification.leaveTo), style: TextStyles.labelTextStyle)
                     ],
                   ),
                 ),
@@ -82,16 +88,15 @@ class _LeaveNotificationsListTileState extends State<LeaveNotificationsListTile>
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColors.defaultColor),
                   child: Text(
                     widget.notification.leaveType,
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                    style: TextStyles.labelTextStyle.copyWith(color: Colors.white),
                   ),
                 ),
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: 'Request On : ', style: TextStyle(color: Colors.black, fontSize: 12)),
+                      TextSpan(text: 'Request On : ', style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
                       TextSpan(
-                          text: _convertToDateFormat(widget.notification.createdAt),
-                          style: TextStyle(color: Colors.grey, fontSize: 12))
+                          text: _convertToDateFormat(widget.notification.createdAt), style: TextStyles.labelTextStyle)
                     ],
                   ),
                 ),
