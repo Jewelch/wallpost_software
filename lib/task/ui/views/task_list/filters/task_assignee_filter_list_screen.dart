@@ -16,7 +16,7 @@ class TaskAssigneeFilterListScreen extends StatefulWidget {
 
 class _TaskAssigneeFilterListScreenState extends State<TaskAssigneeFilterListScreen> {
   final List<TaskEmployee> _employees = [];
-  final TaskEmployeeListProvider _provider = TaskEmployeeListProvider();
+  final TaskEmployeeListProvider _provider = TaskEmployeeListProvider.allEmployeesProvider();
   final _filterListController = MultiSelectFilterListController();
 
   @override

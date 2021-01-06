@@ -19,10 +19,6 @@ class TaskEmployeeListProvider {
 
   TaskEmployeeListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter, this._shouldGetAllEmployees);
 
-  TaskEmployeeListProvider()
-      : _selectedCompanyProvider = SelectedCompanyProvider(),
-        _networkAdapter = WPAPI();
-
   TaskEmployeeListProvider.allEmployeesProvider()
       : _selectedCompanyProvider = SelectedCompanyProvider(),
         _networkAdapter = WPAPI(),
