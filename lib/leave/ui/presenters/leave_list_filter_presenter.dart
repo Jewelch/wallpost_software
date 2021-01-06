@@ -55,6 +55,12 @@ class LeaveListFilterPresenter {
   }
 
   //MARK: Util functions
+  void reset() {
+    employeesListProvider.reset();
+    //  _resetErrors();
+    employees.clear();
+    view.reloadData();
+  }
 
   bool isLoadingLeaveTypes() {
     return leaveTypesProvider.isLoading;

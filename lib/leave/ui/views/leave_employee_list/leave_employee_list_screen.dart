@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_check_mark_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -11,7 +12,8 @@ class LeaveEmployeeListScreen extends StatefulWidget {
   _EmployeeListScreenState createState() => _EmployeeListScreenState();
 }
 
-class _EmployeeListScreenState extends State<LeaveEmployeeListScreen> implements EmployeesListView {
+class _EmployeeListScreenState extends State<LeaveEmployeeListScreen>
+    implements EmployeesListView {
   var _searchBarController = TextEditingController();
   ScrollController _employeesListScrollController = ScrollController();
   ScrollController _selectedEmployeesListScrollController = ScrollController();
@@ -27,7 +29,8 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen> implements
 
   void _setupScrollDownToLoadMoreItems() {
     _employeesListScrollController.addListener(() {
-      if (_employeesListScrollController.position.pixels == _employeesListScrollController.position.maxScrollExtent) {
+      if (_employeesListScrollController.position.pixels ==
+          _employeesListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfEmployees(_searchBarController.text);
       }
     });
@@ -39,14 +42,15 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen> implements
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
         title: 'Select Employee',
-        leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
+        leadingButtons: [
+          CircularBackButton(onPressed: () => Navigator.pop(context))
+        ],
         trailingButtons: [
-          CircularIconButton(
-            iconName: 'assets/icons/check_mark_icon.svg',
-            iconSize: 20,
+          CircularCheckMarkButton(
             iconColor: AppColors.defaultColor,
-            color: Colors.white,
-            onPressed: () => Navigator.pop(context, false),
+            color: Colors.transparent,
+            onPressed: () =>
+                Navigator.pop(context, _presenter.getSelectedEmployeesList()),
           ),
         ],
       ),
@@ -114,8 +118,10 @@ class _EmployeeListScreenState extends State<LeaveEmployeeListScreen> implements
     if (this.mounted) setState(() {});
 
     Future.delayed(Duration(milliseconds: 200)).then((value) {
-      _selectedEmployeesListScrollController.animateTo(_selectedEmployeesListScrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      _selectedEmployeesListScrollController.animateTo(
+          _selectedEmployeesListScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut);
     });
   }
 

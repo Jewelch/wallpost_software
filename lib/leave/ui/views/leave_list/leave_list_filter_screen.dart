@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
-import 'package:wallpost/_common_widgets/form_widgets/multi_select_filter_chips.dart';
+import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -16,14 +16,14 @@ class LeaveListFilterScreen extends StatefulWidget {
 
 class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implements LeaveListView {
   LeaveListFilterPresenter _presenter;
-  List<LeaveType> leaveTypes;
+  List<LeaveType> filteredLeaveTypes;
   bool isFilteredLeaveType = false;
   List<LeaveEmployee> filteredEmployees;
   bool isFromEmployeeFilter = false;
 
-  var _categoryFilterController = MultiSelectFilterChipsController();
-  var _employeesFilterController = MultiSelectFilterChipsController();
-  var _leaveTypeFilterController = MultiSelectFilterChipsController();
+//  var _categoryFilterController = MultiSelectFilterChipsController();
+//  var _employeesFilterController = MultiSelectFilterChipsController();
+//  var _leaveTypeFilterController = MultiSelectFilterChipsController();
 
   @override
   void initState() {
@@ -88,7 +88,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
         MultiSelectFilterChips(
           titles: _categoryList,
           selectedIndices: [selectedCategoryIndex],
-          controller: _categoryFilterController,
+//          controller: _categoryFilterController,
           allowMultipleSelection: false,
           onItemSelected: (selectedIndex) => {_categoryList[selectedIndex]},
           onItemDeselected: (selectedIndex) {
@@ -102,7 +102,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
 
   Widget _buildLeaveTypeList() {
     var leaveTypeTitles = isFilteredLeaveType
-        ? leaveTypes.map((e) => e.name).toList()
+        ? filteredLeaveTypes.map((e) => e.name).toList()
         : _presenter.leaveTypes.map((e) => e.name).toList();
 
     return Column(
@@ -118,8 +118,8 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
                 titles: leaveTypeTitles,
                 selectedIndices: [],
                 allowMultipleSelection: true,
-                allIndexesSelected: isFilteredLeaveType,
-                controller: _leaveTypeFilterController,
+//                allIndexesSelected: isFilteredLeaveType,
+//                controller: _leaveTypeFilterController,
                 onItemSelected: (index) {
                   //select item
                 },
@@ -150,8 +150,8 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
                 titles: employeeTitles,
                 selectedIndices: [],
                 allowMultipleSelection: true,
-                allIndexesSelected: isFromEmployeeFilter,
-                controller: _employeesFilterController,
+//                allIndexesSelected: isFromEmployeeFilter,
+//                controller: _employeesFilterController,
                 showTrailingButton: true,
                 trailingButtonTitle: 'More',
                 onTrailingButtonPressed: () {
@@ -165,10 +165,11 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
 
   void goToEmployeesFilter() async {
     final selectedEmployees = await Navigator.pushNamed(context, RouteNames.leaveEmployeeListScreen);
-
-    filteredEmployees = selectedEmployees;
-    isFromEmployeeFilter = true;
-    _presenter.loadFilteredEmployees(filteredEmployees);
+    if (selectedEmployees != null) {
+      filteredEmployees = selectedEmployees;
+      isFromEmployeeFilter = true;
+      _presenter.loadFilteredEmployees(filteredEmployees);
+    }
   }
 
   void _updateAllSelectedFilters() {
@@ -177,7 +178,10 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
   }
 
   void _resetData() {
-    if (this.mounted) setState(() {});
+    if (this.mounted)
+      setState(() {
+        filteredEmployees = [];
+      });
   }
 
   void setStateIfMounted(VoidCallback callback) {
