@@ -6,8 +6,8 @@ import 'package:wallpost/task/entities/task_count.dart';
 import 'package:wallpost/task/entities/task_list_filters.dart';
 import 'package:wallpost/task/entities/task_list_item.dart';
 import 'package:wallpost/task/services/task_count_provider.dart';
-import 'package:wallpost/task/services/tasks_list_provider.dart';
-import 'package:wallpost/task/ui/views/task_list/task_list_tile.dart';
+import 'package:wallpost/task/services/task_list_provider.dart';
+import 'package:wallpost/task/ui/views/task_list/list/task_list_tile.dart';
 
 abstract class TaskListView {
   void reloadData();
@@ -16,7 +16,7 @@ abstract class TaskListView {
 
 class TaskListPresenter {
   final TaskListView _view;
-  final TasksListProvider _provider;
+  final TaskListProvider _provider;
   final TaskCountProvider _taskCountProvider;
   List<TaskListItem> _task = [];
   String _errorMessage;
@@ -30,11 +30,11 @@ class TaskListPresenter {
   int allCount = 0;
 
   TaskListPresenter(this._view)
-      : _provider = TasksListProvider(),
+      : _provider = TaskListProvider(),
         _taskCountProvider = TaskCountProvider();
 
   Future<void> loadTaskCount(
-      int selectedTab, TasksListFilters _selectedFilters) async {
+      int selectedTab, TaskListFilters _selectedFilters) async {
     if (_taskCountProvider.isLoading) return null;
 
     try {
@@ -57,13 +57,13 @@ class TaskListPresenter {
   }
 
   Future<void> loadNextListOfTasks(
-      int selectedTab, TasksListFilters _selectedFilters) async {
+      int selectedTab, TaskListFilters _selectedFilters) async {
     if (_provider.isLoading || _provider.didReachListEnd) return null;
 
     _searchText = _selectedFilters == null ? '' : _selectedFilters.searchText;
     _resetErrors();
     if (_selectedFilters == null) {
-      _selectedFilters = TasksListFilters();
+      _selectedFilters = TaskListFilters();
     }
     if (_searchText != '') {
       _selectedFilters.searchText = _searchText;

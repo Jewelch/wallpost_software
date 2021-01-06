@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/task/constants/task_urls.dart';
-import 'package:wallpost/task/entities/department.dart';
+import 'package:wallpost/task/entities/task_department.dart';
 
 class TaskDepartmentListProvider {
   final SelectedCompanyProvider _selectedCompanyProvider;
@@ -28,7 +28,7 @@ class TaskDepartmentListProvider {
     isLoading = false;
   }
 
-  Future<List<Department>> getNext({String searchText}) async {
+  Future<List<TaskDepartment>> getNext({String searchText}) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     var url = TaskUrls.departmentsUrl(companyId, _pageNumber, _perPage, searchText);
     var apiRequest = APIRequest.withId(url, _sessionId);
@@ -44,9 +44,9 @@ class TaskDepartmentListProvider {
     }
   }
 
-  Future<List<Department>> _processResponse(APIResponse apiResponse) async {
+  Future<List<TaskDepartment>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<Department>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<TaskDepartment>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
@@ -54,11 +54,11 @@ class TaskDepartmentListProvider {
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<Department> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<TaskDepartment> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var departmentList = <Department>[];
+      var departmentList = <TaskDepartment>[];
       for (var responseMap in responseMapList) {
-        var department = Department.fromJson(responseMap);
+        var department = TaskDepartment.fromJson(responseMap);
         departmentList.add(department);
       }
       _updatePaginationRelatedData(departmentList.length);

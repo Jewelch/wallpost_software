@@ -36,7 +36,7 @@ class CreateTaskForm implements JSONConvertible {
       'start_time': startTime.HHmmssString(),
       'end_date': endDate.yyyyMMddString(),
       'end_time': endTime.HHmmssString(),
-      'assignees': _readAssigneesList(assignees),
+      'assignees': _readAssigneeList(assignees),
       'filenames': attachedFileNames,
       'attachment_req': isAttachmentRequiredOnCompletion,
       'timezone': timezone,
@@ -48,7 +48,7 @@ class CreateTaskForm implements JSONConvertible {
     };
   }
 
-  List<Map<String, dynamic>> _readAssigneesList(List<TaskEmployee> customList) {
+  List<Map<String, dynamic>> _readAssigneeList(List<TaskEmployee> customList) {
     if (customList == null) {
       return [];
     }

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
@@ -10,6 +11,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/task/entities/task_list_filters.dart';
 import 'package:wallpost/task/ui/presenters/task_list_presenter.dart';
+import 'package:wallpost/task/ui/views/task_list/filters/task_list_filters_screen.dart';
 
 class TaskListScreen extends StatefulWidget {
   @override
@@ -21,8 +23,8 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
   TabController _tabController;
   TaskListPresenter _presenter;
   int _selectedTab = 0;
-  ScrollController _tasksListScrollController = ScrollController();
-  TasksListFilters _filters = TasksListFilters();
+  ScrollController _taskListScrollController = ScrollController();
+  TaskListFilters _filters = TaskListFilters();
   bool _listFilterVisible = false;
 
   @override
@@ -169,7 +171,7 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
               return Future.value(null);
             },
             child: ListView.builder(
-              controller: _tasksListScrollController,
+              controller: _taskListScrollController,
               itemCount: _presenter.getNumberOfTask(),
               itemBuilder: (context, index) {
                 return _presenter.getTaskViewForIndex(index);
@@ -182,16 +184,18 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
   }
 
   void goToTaskFilter() async {
-    _filters.reset();
-    await Navigator.pushNamed(context, RouteNames.taskFilter, arguments: _filters);
+//    _filters.reset();
+
+  print(_filters);
+    await ScreenPresenter.present(TaskListFiltersScreen(_filters), context);
     _selectedTab = _tabController.index;
     _presenter.reset();
     _presenter.loadNextListOfTasks(_selectedTab, _filters);
   }
 
   void _setupScrollDownToLoadMoreItems() {
-    _tasksListScrollController.addListener(() {
-      if (_tasksListScrollController.position.pixels == _tasksListScrollController.position.maxScrollExtent) {
+    _taskListScrollController.addListener(() {
+      if (_taskListScrollController.position.pixels == _taskListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfTasks(_selectedTab, _filters);
       }
     });

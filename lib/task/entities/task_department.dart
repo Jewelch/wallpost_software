@@ -2,12 +2,12 @@ import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
-class Department extends JSONInitializable {
+class TaskDepartment extends JSONInitializable {
   num _id;
   String _name;
   String _description;
 
-  Department.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  TaskDepartment.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       _id = sift.readNumberFromMap(jsonMap, 'id');

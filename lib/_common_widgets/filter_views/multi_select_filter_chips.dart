@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/chips/custom_chip.dart';
+import 'package:wallpost/_common_widgets/filter_views/custom_filter_chip.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+
+class MultiSelectFilterChipsController {
+  _MultiSelectFilterChipsState _state;
+
+  void addState(_MultiSelectFilterChipsState state) {
+    _state = state;
+  }
+
+  List<int> getSelectedIndices() {
+    assert(_isAttached, 'State not attached');
+    return _state._selectedIndices;
+  }
+
+  void dispose() => _state = null;
+
+  bool get _isAttached => _state != null;
+}
 
 class MultiSelectFilterChips extends StatefulWidget {
   final List<String> titles;
   final List<int> selectedIndices;
-  final bool allIndexesSelected;
   final bool allowMultipleSelection;
   final Function(int) onItemSelected;
   final Function(int) onItemDeselected;
@@ -18,7 +34,6 @@ class MultiSelectFilterChips extends StatefulWidget {
   MultiSelectFilterChips({
     this.titles,
     this.selectedIndices,
-    this.allIndexesSelected = false,
     this.allowMultipleSelection = false,
     this.onItemSelected,
     this.onItemDeselected,
@@ -61,12 +76,12 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
       children: List.generate(
         _getNumberOfItems(),
         (index) {
-          return CustomChip(
+          return CustomFilterChip(
             title: Text(_isItemAtIndexTheTrailingButton(index) ? widget.trailingButtonTitle : widget.titles[index],
                 style: _isSelected(index)
                     ? TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor)
                     : TextStyles.subTitleTextStyle),
-            shape: CustomChipShape.roundedRectangle,
+            shape: CustomFilterChipShape.roundedRectangle,
             backgroundColor: _isSelected(index) ? Colors.white : AppColors.primaryContrastColor,
             borderColor: _isSelected(index) ? AppColors.defaultColor : AppColors.primaryContrastColor,
             onPressed: _getActionForItemAtIndex(index),
@@ -108,28 +123,11 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
     if (widget.showTrailingButton && (widget.titles.length == index)) {
       return false;
     } else {
-      return _selectedIndices.contains(index) || widget.allIndexesSelected;
+      return _selectedIndices.contains(index);
     }
   }
 
   bool _isItemAtIndexTheTrailingButton(int index) {
     return index == widget.titles.length && widget.showTrailingButton;
   }
-}
-
-class MultiSelectFilterChipsController {
-  _MultiSelectFilterChipsState _state;
-
-  void addState(_MultiSelectFilterChipsState state) {
-    _state = state;
-  }
-
-  List<int> getSelectedIndices() {
-    assert(_isAttached, 'State not attached');
-    return _state._selectedIndices;
-  }
-
-  void dispose() => _state = null;
-
-  bool get _isAttached => _state != null;
 }

@@ -33,9 +33,9 @@ class TaskUrls {
     return url;
   }
 
-  static String tasksListUrl(
+  static String taskListUrl(
     String companyId,
-    TasksListFilters filters,
+    TaskListFilters filters,
     int pageNumber,
     int itemsPerPage,
   ) {

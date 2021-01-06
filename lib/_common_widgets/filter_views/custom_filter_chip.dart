@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-enum CustomChipShape {
+enum CustomFilterChipShape {
   roundedRectangle,
   capsule,
 }
 
-class CustomChip extends StatelessWidget {
+class CustomFilterChip extends StatelessWidget {
   final Text title;
   final Widget icon;
   final Color backgroundColor;
   final Color borderColor;
-  final CustomChipShape shape;
+  final CustomFilterChipShape shape;
   final VoidCallback onPressed;
 
-  CustomChip({
+  CustomFilterChip({
     this.title,
     this.icon,
     Color backgroundColor,
@@ -54,8 +54,8 @@ class CustomChip extends StatelessWidget {
 
   ShapeBorder _buildBorder() {
     double borderRadius = 0;
-    if (shape == CustomChipShape.roundedRectangle) borderRadius = 5.0;
-    if (shape == CustomChipShape.capsule) borderRadius = 100.0;
+    if (shape == CustomFilterChipShape.roundedRectangle) borderRadius = 5.0;
+    if (shape == CustomFilterChipShape.capsule) borderRadius = 100.0;
 
     return RoundedRectangleBorder(
       borderRadius: new BorderRadius.circular(borderRadius),
