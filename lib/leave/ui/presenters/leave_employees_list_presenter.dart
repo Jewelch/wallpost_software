@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/_common_widgets/_list_view/error_list_tile.dart';
-import 'package:wallpost/_common_widgets/_list_view/loader_list_tile.dart';
+import 'package:wallpost/_common_widgets/list_view/error_list_tile.dart';
+import 'package:wallpost/_common_widgets/list_view/loader_list_tile.dart';
 import 'package:wallpost/_common_widgets/filter_views/custom_filter_chip.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';

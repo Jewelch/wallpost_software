@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/_list_view/error_list_tile.dart';
-import 'package:wallpost/_common_widgets/_list_view/loader_list_tile.dart';
+import 'package:wallpost/_common_widgets/list_view/error_list_tile.dart';
+import 'package:wallpost/_common_widgets/list_view/loader_list_tile.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_check_mark_button.dart';
