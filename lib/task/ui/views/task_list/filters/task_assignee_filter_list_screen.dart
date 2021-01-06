@@ -68,6 +68,7 @@ class _TaskAssigneeFilterListScreenState extends State<TaskAssigneeFilterListScr
       var employeeList = await _provider.getNext(searchText: _filterListController.getSearchText());
       _employees.addAll(employeeList);
       _filterListController.addItems(employeeList.map((e) => e.fullName).toList());
+      if (_provider.didReachListEnd) _filterListController.reachedListEnd();
     } on WPException catch (e) {
       _filterListController.showError(e.userReadableMessage);
     }

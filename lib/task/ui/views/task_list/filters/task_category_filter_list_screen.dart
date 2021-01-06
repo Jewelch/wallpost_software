@@ -68,6 +68,7 @@ class _TaskCategoryFilterListScreenState extends State<TaskCategoryFilterListScr
       var categoryList = await _provider.getNext(searchText: _filterListController.getSearchText());
       _categories.addAll(categoryList);
       _filterListController.addItems(categoryList.map((e) => e.name).toList());
+      if(_provider.didReachListEnd) _filterListController.reachedListEnd();
     } on WPException catch (e) {
       _filterListController.showError(e.userReadableMessage);
     }

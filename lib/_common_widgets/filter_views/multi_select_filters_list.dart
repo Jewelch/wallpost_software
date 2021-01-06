@@ -11,15 +11,6 @@ import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-//delete MultiSelectFilterListItem class - make this view string list based and
-//since this is a filters class, we SHOULD expect that each string is unique
-
-//class MultiSelectFilterListItem {
-//  final String title;
-//
-//  MultiSelectFilterListItem({this.title});
-//}
-
 class MultiSelectFilterListController {
   _MultiSelectFilterListState _state;
 
@@ -45,6 +36,11 @@ class MultiSelectFilterListController {
     if (_isAttached == false) return '';
 
     return _state._searchBarController.text;
+  }
+
+  void reachedListEnd() {
+    assert(_isAttached, 'State not attached');
+    _state._didReachListEnd = true;
   }
 
   List<int> getSelectedIndices() {
@@ -185,10 +181,6 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
     );
   }
 
-  ////-----
-
-//  void removeSelectedItem() - we are working on passing in selected indices - or should we just add is selected to the entity -- let's' do this - we can then remove selected items or indicecs array and just filter the items list where isselected = true
-
   //MARK: Functions to get list items count and view
 
   int _getNumberOfItems() {
@@ -259,7 +251,7 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
     setState(() {
       _resetError();
       if (_isRefreshing) _stopRefresh();
-      if (items.isEmpty) _didReachListEnd = true;
+//      if (items.isEmpty) _didReachListEnd = true;
 
       _items.addAll(items);
 

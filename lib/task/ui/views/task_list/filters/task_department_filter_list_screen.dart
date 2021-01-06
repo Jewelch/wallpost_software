@@ -68,6 +68,7 @@ class _TaskDepartmentFilterListScreenState extends State<TaskDepartmentFilterLis
       var departmentList = await _provider.getNext(searchText: _filterListController.getSearchText());
       _departments.addAll(departmentList);
       _filterListController.addItems(departmentList.map((e) => e.name).toList());
+      if(_provider.didReachListEnd) _filterListController.reachedListEnd();
     } on WPException catch (e) {
       _filterListController.showError(e.userReadableMessage);
     }
