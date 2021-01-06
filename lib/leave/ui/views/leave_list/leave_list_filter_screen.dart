@@ -6,7 +6,6 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/leave/entities/leave_employee.dart';
-import 'package:wallpost/leave/entities/leave_type.dart';
 import 'package:wallpost/leave/ui/presenters/leave_list_filter_presenter.dart';
 
 class LeaveListFilterScreen extends StatefulWidget {
@@ -17,8 +16,6 @@ class LeaveListFilterScreen extends StatefulWidget {
 class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
     implements LeaveListView {
   LeaveListFilterPresenter _presenter;
-  List<LeaveType> filteredLeaveTypes;
-  bool isFilteredLeaveType = false;
   List<LeaveEmployee> filteredEmployees;
   bool isFromEmployeeFilter = false;
 
@@ -109,27 +106,30 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
   }
 
   Widget _buildLeaveTypeList() {
-    var leaveTypeTitles = isFilteredLeaveType
-        ? filteredLeaveTypes.map((e) => e.name).toList()
-        : _presenter.leaveTypes.map((e) => e.name).toList();
+    var leaveTypeTitles = _presenter.leaveTypes.map((e) => e.name).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Leave Type',
-            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+        Text(
+          'Leave Type',
+          style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+        ),
         SizedBox(height: 8),
         _presenter.isLoadingLeaveTypes()
             ? Center(
                 child: SizedBox(
-                    width: 30, height: 30, child: CircularProgressIndicator()))
+                  width: 30,
+                  height: 30,
+                  child: CircularProgressIndicator(),
+                ),
+              )
             : MultiSelectFilterChips(
                 titles: leaveTypeTitles,
                 selectedIndices: [],
                 allowMultipleSelection: true,
-                allIndexesSelected: isFilteredLeaveType,
                 controller: _leaveTypeFilterController,
                 onItemSelected: (index) {
                   //select item
@@ -154,13 +154,19 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Employee',
-            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+        Text(
+          'Employee',
+          style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+        ),
         SizedBox(height: 8),
         _presenter.isLoadingEmployees()
             ? Center(
                 child: SizedBox(
-                    width: 30, height: 30, child: CircularProgressIndicator()))
+                  width: 30,
+                  height: 30,
+                  child: CircularProgressIndicator(),
+                ),
+              )
             : MultiSelectFilterChips(
                 titles: employeeTitles,
                 selectedIndices: [],

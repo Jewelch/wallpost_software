@@ -3,6 +3,7 @@ import 'package:wallpost/_main/main_screen.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/company_list//ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
+import 'package:wallpost/leave/ui/views/create_leave/create_leave_screen.dart';
 import 'package:wallpost/leave/ui/views/leave_list_details/leave_list_deatils_screen.dart';
 import 'package:wallpost/leave/ui/views/leave_employee_list/leave_employee_list_screen.dart';
 import 'package:wallpost/leave/ui/views/leave_list/leave_list_filter_screen.dart';
@@ -81,7 +82,11 @@ class Routes {
 
       //leave employee list
       RouteNames.leaveEmployeeListScreen: (BuildContext context) =>
-          LeaveEmployeeListScreen()
+          LeaveEmployeeListScreen(),
+
+      //Create Leave
+      RouteNames.createLeaveScreen: (BuildContext context) =>
+          CreateLeaveScreen()
     };
   }
 }

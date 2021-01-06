@@ -20,7 +20,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title:
+            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
       ),
       body: SafeArea(
         child: Container(
@@ -50,12 +51,14 @@ class _RequestsScreenState extends State<RequestsScreen> {
                 ),
               ),
               Divider(),
-              buildRequestsButton('Task', 'tasks_icon.svg', () => {Navigator.pushNamed(context, RouteNames.task)}),
-              buildRequestsButton(
-                  'Leave', 'leave_icon.svg', () => {Navigator.pushNamed(context, RouteNames.leaveList)}),
+              buildRequestsButton('Task', 'tasks_icon.svg',
+                  () => {Navigator.pushNamed(context, RouteNames.task)}),
+              buildRequestsButton('Leave', 'leave_icon.svg',
+                  () => {Navigator.pushNamed(context, RouteNames.leaveList)}),
               buildRequestsButton('Expense', 'expense_icon.svg', () => {}),
               buildRequestsButton('Overtime', 'overtime_icon.svg', () => {}),
-              buildRequestsButton('Attendance Adjustment', 'attendance_icon.svg', () => {}),
+              buildRequestsButton(
+                  'Attendance Adjustment', 'attendance_icon.svg', () => {}),
             ],
           ),
         ),
@@ -63,7 +66,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
     );
   }
 
-  Widget buildRequestsButton(String buttonTitle, String buttonIcon, VoidCallback _onTap) {
+  Widget buildRequestsButton(
+      String buttonTitle, String buttonIcon, VoidCallback _onTap) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: _onTap,
@@ -76,7 +80,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: SizedBox(
                   width: 30,
-                  child: SvgPicture.asset('assets/icons/$buttonIcon', width: 30, height: 30),
+                  child: SvgPicture.asset('assets/icons/$buttonIcon',
+                      width: 30, height: 30),
                 ),
               ),
               Text(
