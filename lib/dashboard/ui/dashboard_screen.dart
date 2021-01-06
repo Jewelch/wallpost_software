@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/dashboard/ui/requests_screen.dart';
@@ -8,6 +9,7 @@ import 'package:wallpost/my_portal/ui/sales_my_portal_screen.dart';
 import 'package:wallpost/notifications/ui/views/notifications_screen.dart';
 
 import 'modules_screen.dart';
+import 'popup_menu.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -15,13 +17,26 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  PopupMenu menu;
   int _currentIndex = 0;
   List<Widget> _screens = [];
+  GlobalKey btnKey2 = GlobalKey();
 
   @override
   void initState() {
     _initScreens();
     super.initState();
+  }
+
+  void onClickMenu(MenuItemProvider item) {
+    if (item.menuTitle == 'Task') {
+      Navigator.pushNamed(context, RouteNames.createTaskScreen);
+    }
+    print('Click menu -> ${item.menuTitle}');
+  }
+
+  void onDismiss() {
+    print('Menu is closed');
   }
 
   void _initScreens() {
@@ -51,7 +66,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           height: 28,
           width: 28,
         ),
-        onPressed: () {},
+        key: btnKey2,
+        onPressed: () {
+          customBackground();
+        },
       ),
       bottomNavigationBar: BottomAppBar(
         child: new Row(
@@ -111,6 +129,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
+  }
+
+  void customBackground() {
+    PopupMenu menu = PopupMenu(
+        context: this.context,
+        // backgroundColor: Colors.teal,
+        // lineColor: Colors.tealAccent,
+        // maxColumn: 2,
+        items: [
+          MenuItem(
+              title: 'Task',
+              // textStyle: TextStyle(fontSize: 10.0, color: Colors.tealAccent),
+              image: Icon(
+                Icons.home,
+                color: AppColors.defaultColor,
+              )),
+          MenuItem(
+              title: 'Leave',
+              image: Icon(
+                Icons.mail,
+                color: AppColors.defaultColor,
+              )),
+          MenuItem(
+              title: 'Expense',
+              image: Icon(
+                Icons.power,
+                color: AppColors.defaultColor,
+              )),
+          MenuItem(
+              title: 'Overtime',
+              image: Icon(
+                Icons.settings,
+                color: AppColors.defaultColor,
+              ))
+        ],
+        onClickMenu: onClickMenu,
+        onDismiss: onDismiss);
+    menu.show(widgetKey: btnKey2);
   }
 }
 

@@ -12,6 +12,7 @@ import 'package:wallpost/password_management/ui/change_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_screen.dart';
 import 'package:wallpost/password_management/ui/forgot_password_success_screen.dart';
 import 'package:wallpost/settings/ui/settings_screen.dart';
+import 'package:wallpost/task/ui/views/new_task/new_task_screen.dart';
 import 'package:wallpost/task/ui/views/task_details/task_details_screen.dart';
 import 'package:wallpost/task/ui/views/task_list/list/task_list_screen.dart';
 
@@ -36,20 +37,8 @@ class Routes {
       //task
       RouteNames.task: (BuildContext context) => TaskListScreen(),
 
-//      //task filter
-//      RouteNames.taskFilter: (BuildContext context) => TaskListFilterScreen(),
-
       //task Details
       RouteNames.taskDetails: (BuildContext context) => TaskDetailsScreen(),
-
-//      //filter Departments List Screen
-//      RouteNames.departmentsListScreen: (BuildContext context) => DepartmentsListScreen(),
-//
-//      //filter Task Category List Screen
-//      RouteNames.taskCategoryListScreen: (BuildContext context) => CategoriesListScreen(),
-//
-//      //filter Task Employee List Screen
-//      RouteNames.taskEmployeeListScreen: (BuildContext context) => EmployeeListScreen(),
 
       //Password management
       RouteNames.forgotPassword: (BuildContext context) => ForgotPasswordScreen(),
@@ -68,7 +57,10 @@ class Routes {
       RouteNames.leaveListdetails: (BuildContext context) => LeaveListDetailsScreen(),
 
       //leave employee list
-      RouteNames.leaveEmployeeListScreen: (BuildContext context) => LeaveEmployeeListScreen()
+      RouteNames.leaveEmployeeListScreen: (BuildContext context) => LeaveEmployeeListScreen(),
+
+      //create Task Screen
+      RouteNames.createTaskScreen: (BuildContext context) => CreateTaskScreen()
     };
   }
 }
