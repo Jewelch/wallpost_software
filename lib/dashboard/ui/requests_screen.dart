@@ -55,6 +55,13 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   () => {Navigator.pushNamed(context, RouteNames.task)}),
               buildRequestsButton('Leave', 'leave_icon.svg',
                   () => {Navigator.pushNamed(context, RouteNames.leaveList)}),
+              buildRequestsButton(
+                  'Apply Leave',
+                  'leave_icon.svg',
+                  () => {
+                        Navigator.pushNamed(
+                            context, RouteNames.createLeaveScreen)
+                      }),
               buildRequestsButton('Expense', 'expense_icon.svg', () => {}),
               buildRequestsButton('Overtime', 'overtime_icon.svg', () => {}),
               buildRequestsButton(
