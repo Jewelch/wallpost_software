@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/_list_view/error_list_tile.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/leave/entities/leave_type.dart';
 import 'package:wallpost/leave/services/leave_types_provider.dart';
@@ -26,7 +24,6 @@ class LeaveTypesPresenter {
     try {
       var leaveTypesList = await provider.getLeaveTypes();
       leaveTypes.addAll(leaveTypesList);
-      print("types...>>>" + leaveTypes.toString());
       view.reloadData();
     } on WPException catch (e) {
       _errorMessage = e.userReadableMessage;
@@ -45,23 +42,6 @@ class LeaveTypesPresenter {
   //     return _leaveTypes.length + 1;
   //   }
   // }
-
-  Widget getViewAtIndex(int index) {
-    if (_shouldShowErrorAtIndex(index))
-      return ErrorListTile(
-        '$_errorMessage \nTap here to reload.',
-        onTap: () {
-          loadNextListOfLeaveTypes();
-          view.reloadData();
-        },
-      );
-
-    // if (_leaveTypes.isEmpty) return _buildViewWhenThereAreNoResults();
-  }
-
-  bool _shouldShowErrorAtIndex(int index) {
-    return _hasErrors() && index == leaveTypes.length;
-  }
 
 //MARK: Util functions
   // void reset() {

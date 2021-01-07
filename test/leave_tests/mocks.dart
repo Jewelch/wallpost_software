@@ -143,4 +143,25 @@ class Mocks {
     ],
     "ticketDetails": {},
   };
+
+  static List<Map<String, dynamic>> airportListResponse = [
+    {
+      "active_status": randomString(10),
+      "airport": randomString(10),
+      "code": randomString(10),
+      "id": randomBetween(1000, 5000),
+    },
+    {
+      "active_status": randomString(10),
+      "airport": randomString(10),
+      "code": randomString(10),
+      "id": randomBetween(1000, 5000),
+    },
+    {
+      "active_status": randomString(10),
+      "airport": randomString(10),
+      "code": randomString(10),
+      "id": randomBetween(1000, 5000),
+    },
+  ];
 }

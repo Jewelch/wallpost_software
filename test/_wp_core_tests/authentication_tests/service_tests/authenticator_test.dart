@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/user_management/constants/login_urls.dart';
 import 'package:wallpost/_wp_core/user_management/services/authenticator.dart';
 import 'package:wallpost/_wp_core/user_management/services/new_user_adder.dart';
@@ -59,7 +60,7 @@ void main() {
   });
 
   test('convert 401 HTTP exception to a server sent exception', () async {
-    mockNetworkAdapter.fail(HTTPException(401));
+    mockNetworkAdapter.fail(HTTPException(401, 'error response data'));
 
     try {
       var _ = await authenticator.login(credentials);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/_common_widgets/_list_view/error_list_tile.dart';
-import 'package:wallpost/_common_widgets/_list_view/loader_list_tile.dart';
-import 'package:wallpost/_common_widgets/chips/filter_chip.dart';
+import 'package:wallpost/_common_widgets/list_view/error_list_tile.dart';
+import 'package:wallpost/_common_widgets/list_view/loader_list_tile.dart';
+import 'package:wallpost/_common_widgets/filter_views/custom_filter_chip.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/leave/entities/leave_employee.dart';
@@ -25,7 +25,7 @@ class EmployeesListPresenter {
   String _errorMessage;
   String _searchText;
 
-  EmployeesListPresenter(this._view) : _provider = LeaveEmployeesListProvider();
+  EmployeesListPresenter(this._view) : _provider = LeaveEmployeesListProvider.allEmployeesProvider();
 
   Future<void> loadNextListOfEmployees(String searchText) async {
     if (_provider.isLoading || _provider.didReachListEnd) return null;
@@ -125,10 +125,10 @@ class EmployeesListPresenter {
   }
 
   Widget getSelectedEmployeeViewForIndex(int index) {
-    return CustomChip(
+    return CustomFilterChip(
       title: Text(_selectedEmployees[index].fullName),
       backgroundColor: AppColors.primaryContrastColor,
-      shape: CustomChipShape.capsule,
+      shape: CustomFilterChipShape.capsule,
       icon: SvgPicture.asset(
         'assets/icons/close_icon.svg',
         width: 12,

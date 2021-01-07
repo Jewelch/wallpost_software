@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/attendance/constants/attendance_urls.dart';
 import 'package:wallpost/attendance/services/attendance_report_provider.dart';
 
@@ -126,7 +127,7 @@ void main() {
   });
 
   test('test loading flag is reset after failure', () async {
-    mockNetworkAdapter.fail(InvalidResponseException());
+    mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
       var _ = await attendanceReportProvider.getReport();

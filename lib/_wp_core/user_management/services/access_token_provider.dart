@@ -1,8 +1,8 @@
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/constants/base_urls.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
-import 'package:wallpost/_shared/network_adapter/network_adapter.dart';
-import 'package:wallpost/_shared/network_adapter/network_request_executor.dart';
+import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
+import 'package:wallpost/_wp_core/wpapi/services/network_request_executor.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/_wp_core/user_management/repositories/user_repository.dart';
 
@@ -19,11 +19,12 @@ class AccessTokenProvider {
 
   AccessTokenProvider.initWith(this._userRepository, this._deviceInfoProvider, this._networkAdapter);
 
-  Future<String> getToken() async {
+  Future<String> getToken({bool forceRefresh = false}) async {
     var user = _userRepository.getCurrentUser();
-    if (user != null && user.session.isActive() == true) {
+
+    if (forceRefresh == false && user != null && user.session.isActive() == true) {
       return user.session.accessToken;
-    } else if (user != null && user.session.isActive() == false) {
+    } else if (user != null && (forceRefresh == true || user.session.isActive() == false)) {
       var refreshedToken = await _refreshSessionForUser(user);
       return refreshedToken;
     } else {

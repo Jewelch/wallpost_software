@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance/constants/attendance_urls.dart';
 import 'package:wallpost/attendance/entities/attendance_details.dart';
 import 'package:wallpost/attendance/entities/attendance_location.dart';

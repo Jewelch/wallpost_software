@@ -13,14 +13,11 @@ class HandoverNotificationsListTile extends StatefulWidget {
   HandoverNotificationsListTile(this.notification);
 
   @override
-  _HandoverNotificationsListTileState createState() =>
-      _HandoverNotificationsListTileState();
+  _HandoverNotificationsListTileState createState() => _HandoverNotificationsListTileState();
 }
 
-class _HandoverNotificationsListTileState
-    extends State<HandoverNotificationsListTile> {
-  SingleNotificationReader _singleNotificationReader =
-      SingleNotificationReader();
+class _HandoverNotificationsListTileState extends State<HandoverNotificationsListTile> {
+  SingleNotificationReader _singleNotificationReader = SingleNotificationReader();
   bool showError = false;
 
   @override
@@ -33,9 +30,7 @@ class _HandoverNotificationsListTileState
           widget.notification.title,
           style: TextStyles.subTitleTextStyle.copyWith(
             color: AppColors.defaultColor,
-            fontWeight: widget.notification.isRead
-                ? FontWeight.normal
-                : FontWeight.bold,
+            fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
           ),
         ),
         subtitle: Column(
@@ -47,13 +42,8 @@ class _HandoverNotificationsListTileState
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text: 'Date: ',
-                      style: TextStyles.labelTextStyle
-                          .copyWith(color: Colors.black)),
-                  TextSpan(
-                      text: _convertToDateFormat(widget.notification.createdAt),
-                      style: TextStyles.labelTextStyle)
+                  TextSpan(text: 'Date: ', style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
+                  TextSpan(text: _convertToDateFormat(widget.notification.createdAt), style: TextStyles.labelTextStyle)
                 ],
               ),
             )
@@ -62,9 +52,7 @@ class _HandoverNotificationsListTileState
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14)
-          ],
+          children: [Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14)],
         ),
         onTap: () => _readSingleNotification(widget.notification),
       ),
@@ -72,8 +60,7 @@ class _HandoverNotificationsListTileState
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany =
-        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;

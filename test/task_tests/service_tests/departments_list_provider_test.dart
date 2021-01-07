@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/task/constants/task_urls.dart';
-import 'package:wallpost/task/services/departments_list_provider.dart';
+import 'package:wallpost/task/services/task_department_list_provider.dart';
 
 import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_company_provider.dart';
@@ -13,7 +14,7 @@ void main() {
   var mockCompany = MockCompany();
   var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var departmentsListProvider = DepartmentsListProvider.initWith(
+  var departmentsListProvider = TaskDepartmentListProvider.initWith(
     mockCompanyProvider,
     mockNetworkAdapter,
   );
@@ -142,7 +143,7 @@ void main() {
   });
 
   test('test loading flag is reset after failure', () async {
-    mockNetworkAdapter.fail(InvalidResponseException());
+    mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
       var _ = await departmentsListProvider.getNext();

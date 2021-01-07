@@ -1,8 +1,8 @@
-import 'package:wallpost/task/entities/department.dart';
+import 'package:wallpost/task/entities/task_department.dart';
 import 'package:wallpost/task/entities/task_category.dart';
 import 'package:wallpost/task/entities/task_employee.dart';
 
-class TasksListFilters {
+class TaskListFilters {
   static const String MY_SCOPE = 'mytasks';
   static const String TEAM_SCOPE = 'teamtasks';
 
@@ -18,7 +18,7 @@ class TasksListFilters {
   String searchText;
   int year = DateTime.now().year;
   List<TaskEmployee> assignees = [];
-  List<Department> departments = [];
+  List<TaskDepartment> departments = [];
   List<TaskCategory> categories = [];
 
   void showMyTasks() => _scope = MY_SCOPE;

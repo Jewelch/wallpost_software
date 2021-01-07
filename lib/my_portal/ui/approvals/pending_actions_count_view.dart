@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/network_adapter/exceptions/api_exception.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/api_exception.dart';
 import 'package:wallpost/my_portal/entities/pending_actions_count.dart';
 import 'package:wallpost/my_portal/services/pending_actions_count_provider.dart';
 

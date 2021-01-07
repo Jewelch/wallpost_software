@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/_list_view/error_list_tile.dart';
-import 'package:wallpost/_common_widgets/_list_view/loader_list_tile.dart';
+import 'package:wallpost/_common_widgets/list_view/error_list_tile.dart';
+import 'package:wallpost/_common_widgets/list_view/loader_list_tile.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/notifications/services/notifications_list_provider.dart';
 import 'package:wallpost/notifications/ui/views/expense_request_notifications_list_tile.dart';

@@ -19,10 +19,8 @@ class NotificationsScreen extends StatefulWidget {
   _NotificationsScreenState createState() => _NotificationsScreenState();
 }
 
-class _NotificationsScreenState extends State<NotificationsScreen>
-    implements NotificationsListView {
-  UnreadNotificationsCountProvider _unreadNotificationsCountProvider =
-      UnreadNotificationsCountProvider();
+class _NotificationsScreenState extends State<NotificationsScreen> implements NotificationsListView {
+  UnreadNotificationsCountProvider _unreadNotificationsCountProvider = UnreadNotificationsCountProvider();
   AllNotificationsReader _allNotificationsReader = AllNotificationsReader();
   NotificationsListPresenter _presenter;
   ScrollController _scrollController;
@@ -40,8 +38,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfNotifications();
       }
     });
@@ -49,11 +46,9 @@ class _NotificationsScreenState extends State<NotificationsScreen>
 
   void _getUnreadNotificationsCount() async {
     try {
-      var unreadNotificationsCount =
-          await _unreadNotificationsCountProvider.getCount();
+      var unreadNotificationsCount = await _unreadNotificationsCountProvider.getCount();
       setStateIfMounted(() {
-        _unreadNotificationsCount =
-            unreadNotificationsCount.totalUnreadNotifications;
+        _unreadNotificationsCount = unreadNotificationsCount.totalUnreadNotifications;
       });
     } on WPException catch (_) {
       setStateIfMounted(() => {});
@@ -65,8 +60,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title:
-            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: CircularIconButton(
           iconName: 'assets/icons/menu_icon.svg',
           iconSize: 12,
@@ -99,8 +93,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                       onPressed: () => _showReadAllConfirmationAlert(),
                       child: Text(
                         'Read All',
-                        style: TextStyles.subTitleTextStyle
-                            .copyWith(color: AppColors.defaultColor),
+                        style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
                       ),
                     ),
                   ),

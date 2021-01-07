@@ -13,14 +13,11 @@ class LeaveNotificationsListTile extends StatefulWidget {
   LeaveNotificationsListTile(this.notification);
 
   @override
-  _LeaveNotificationsListTileState createState() =>
-      _LeaveNotificationsListTileState();
+  _LeaveNotificationsListTileState createState() => _LeaveNotificationsListTileState();
 }
 
-class _LeaveNotificationsListTileState
-    extends State<LeaveNotificationsListTile> {
-  SingleNotificationReader _singleNotificationReader =
-      SingleNotificationReader();
+class _LeaveNotificationsListTileState extends State<LeaveNotificationsListTile> {
+  SingleNotificationReader _singleNotificationReader = SingleNotificationReader();
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +29,7 @@ class _LeaveNotificationsListTileState
           widget.notification.title,
           style: TextStyles.subTitleTextStyle.copyWith(
               color: AppColors.defaultColor,
-              fontWeight: widget.notification.isRead
-                  ? FontWeight.normal
-                  : FontWeight.bold),
+              fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,17 +43,13 @@ class _LeaveNotificationsListTileState
                     children: [
                       TextSpan(
                         text: 'Requested By : ',
-                        style: TextStyles.labelTextStyle
-                            .copyWith(color: Colors.black),
+                        style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
                       ),
-                      TextSpan(
-                          text: widget.notification.applicantName,
-                          style: TextStyles.labelTextStyle),
+                      TextSpan(text: widget.notification.applicantName, style: TextStyles.labelTextStyle),
                     ],
                   ),
                 ),
-                Icon(Icons.arrow_forward_ios_outlined,
-                    color: Colors.grey, size: 14)
+                Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14)
               ],
             ),
             SizedBox(height: 8),
@@ -70,27 +61,19 @@ class _LeaveNotificationsListTileState
                     children: [
                       TextSpan(
                         text: 'From : ',
-                        style: TextStyles.labelTextStyle
-                            .copyWith(color: Colors.black),
+                        style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
                       ),
                       TextSpan(
-                          text: _convertToDateFormat(
-                              widget.notification.leaveFrom),
-                          style: TextStyles.labelTextStyle)
+                          text: _convertToDateFormat(widget.notification.leaveFrom), style: TextStyles.labelTextStyle)
                     ],
                   ),
                 ),
                 RichText(
                   text: TextSpan(
                     children: [
+                      TextSpan(text: 'To : ', style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
                       TextSpan(
-                          text: 'To : ',
-                          style: TextStyles.labelTextStyle
-                              .copyWith(color: Colors.black)),
-                      TextSpan(
-                          text:
-                              _convertToDateFormat(widget.notification.leaveTo),
-                          style: TextStyles.labelTextStyle)
+                          text: _convertToDateFormat(widget.notification.leaveTo), style: TextStyles.labelTextStyle)
                     ],
                   ),
                 ),
@@ -102,26 +85,18 @@ class _LeaveNotificationsListTileState
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.defaultColor),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColors.defaultColor),
                   child: Text(
                     widget.notification.leaveType,
-                    style:
-                        TextStyles.labelTextStyle.copyWith(color: Colors.white),
+                    style: TextStyles.labelTextStyle.copyWith(color: Colors.white),
                   ),
                 ),
                 RichText(
                   text: TextSpan(
                     children: [
+                      TextSpan(text: 'Request On : ', style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
                       TextSpan(
-                          text: 'Request On : ',
-                          style: TextStyles.labelTextStyle
-                              .copyWith(color: Colors.black)),
-                      TextSpan(
-                          text: _convertToDateFormat(
-                              widget.notification.createdAt),
-                          style: TextStyles.labelTextStyle)
+                          text: _convertToDateFormat(widget.notification.createdAt), style: TextStyles.labelTextStyle)
                     ],
                   ),
                 ),
@@ -140,8 +115,7 @@ class _LeaveNotificationsListTileState
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany =
-        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;

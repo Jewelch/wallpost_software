@@ -55,7 +55,7 @@ void main() {
     test('request is built correctly', () async {
       var user = User.fromJson(Mocks.userMapWithInactiveSession);
       when(mockUserRepository.getCurrentUser()).thenReturn(user);
-      mockNetworkAdapter.fail(HTTPException(400));
+      mockNetworkAdapter.fail(HTTPException(400,'error response data'));
 
       var accessToken = await accessTokenProvider.getToken();
 
@@ -69,7 +69,7 @@ void main() {
     test('returns null if refresh token API fails', () async {
       var user = User.fromJson(Mocks.userMapWithInactiveSession);
       when(mockUserRepository.getCurrentUser()).thenReturn(user);
-      mockNetworkAdapter.fail(HTTPException(400));
+      mockNetworkAdapter.fail(HTTPException(400, 'error response data'));
 
       var accessToken = await accessTokenProvider.getToken();
 
@@ -119,7 +119,19 @@ void main() {
 
       verify(mockUserRepository.getCurrentUser()).called(1);
       verify(mockUserRepository.updateUser(any)).called(1);
-      expect(accessToken, 'activeToken');
+      expect(accessToken, 'refreshedToken');
+    });
+
+    test('force refresh even if the local token has not expired', () async {
+      var user = User.fromJson(Mocks.loginResponse);
+      when(mockUserRepository.getCurrentUser()).thenReturn(user);
+      mockNetworkAdapter.succeed({'status': 'success', 'data': Mocks.refreshSessionResponse});
+
+      var accessToken = await accessTokenProvider.getToken(forceRefresh: true);
+
+      verify(mockUserRepository.getCurrentUser()).called(1);
+      verify(mockUserRepository.updateUser(any)).called(1);
+      expect(accessToken, 'refreshedToken');
     });
   });
 }

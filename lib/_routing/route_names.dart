@@ -53,4 +53,6 @@ class RouteNames {
 
   //Create Leave
   static final String createLeaveScreen = "/create-leave-screen";
+  //create Task Screen
+  static final String createTaskScreen = "/create-task-screen";
 }

@@ -1,8 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/task/constants/task_urls.dart';
 import 'package:wallpost/task/entities/task_list_filters.dart';
-import 'package:wallpost/task/services/tasks_list_provider.dart';
+import 'package:wallpost/task/services/task_list_provider.dart';
 
 import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_company_provider.dart';
@@ -10,12 +11,12 @@ import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
-  var filters = TasksListFilters();
+  var filters = TaskListFilters();
   List<Map<String, dynamic>> successfulResponse = Mocks.tasksListResponse;
   var mockCompany = MockCompany();
   var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var tasksListProvider = TasksListProvider.initWith(mockCompanyProvider, mockNetworkAdapter);
+  var tasksListProvider = TaskListProvider.initWith(mockCompanyProvider, mockNetworkAdapter);
 
   setUpAll(() {
     when(mockCompany.id).thenReturn('someCompanyId');
@@ -34,7 +35,7 @@ void main() {
 
     var _ = await tasksListProvider.getNext(filters);
 
-    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.tasksListUrl('someCompanyId', filters, 1, 15));
+    expect(mockNetworkAdapter.apiRequest.url, TaskUrls.taskListUrl('someCompanyId', filters, 1, 15));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -147,7 +148,7 @@ void main() {
   });
 
   test('test loading flag is reset after failure', () async {
-    mockNetworkAdapter.fail(InvalidResponseException());
+    mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
       var _ = await tasksListProvider.getNext(filters);

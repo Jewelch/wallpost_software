@@ -67,7 +67,7 @@ void main() {
   });
 
   test('test loading flag is reset after failure', () async {
-    mockNetworkAdapter.fail(InvalidResponseException());
+    mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
       var _ = await singleNotificationReader.markAsRead(mockNotification);

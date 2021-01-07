@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/task/constants/task_urls.dart';
 import 'package:wallpost/task/services/task_time_zones_provider.dart';
 
@@ -113,7 +114,7 @@ void main() {
   });
 
   test('test loading flag is reset after failure', () async {
-    mockNetworkAdapter.fail(InvalidResponseException());
+    mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
       var _ = await taskTimeZonesProvider.getTimeZones();

@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:wallpost/_wp_core/wpapi/wp_api.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/my_portal/constants/my_portal_urls.dart';
 import 'package:wallpost/my_portal/entities/sales_performance.dart';
 

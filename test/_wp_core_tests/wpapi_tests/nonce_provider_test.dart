@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallpost/_wp_core/wpapi/nonce_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/services/nonce_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 
@@ -61,14 +61,14 @@ void main() {
     }
   });
 
-  test('throws WrongResponseFormatException when response is of the wrong format', () async {
+  test('throws UnexpectedResponseFormatException when response is of the wrong format', () async {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
       var _ = await nonceProvider.getNonce({});
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
-      expect(e is WrongResponseFormatException, true);
+      expect(e is UnexpectedResponseFormatException, true);
     }
   });
 
@@ -111,7 +111,7 @@ void main() {
   });
 
   test('test loading flag is reset after failure', () async {
-    mockNetworkAdapter.fail(InvalidResponseException());
+    mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
       var _ = await nonceProvider.getNonce({});

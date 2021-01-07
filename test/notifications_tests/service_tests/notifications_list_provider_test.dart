@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/notifications/constants/notification_urls.dart';
 import 'package:wallpost/notifications/services/notifications_list_provider.dart';
 
@@ -26,8 +27,7 @@ void main() {
 
     var _ = await notificationListProvider.getNext();
 
-    expect(mockNetworkAdapter.apiRequest.url,
-        NotificationUrls.notificationsListUrl('selectedCompanyId', 1, 15));
+    expect(mockNetworkAdapter.apiRequest.url, NotificationUrls.notificationsListUrl('selectedCompanyId', 1, 15));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -140,7 +140,7 @@ void main() {
   });
 
   test('test loading flag is reset after failure', () async {
-    mockNetworkAdapter.fail(InvalidResponseException());
+    mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
       var _ = await notificationListProvider.getNext();

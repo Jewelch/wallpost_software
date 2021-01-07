@@ -13,14 +13,12 @@ class TaskNotificationsListTile extends StatefulWidget {
   TaskNotificationsListTile(this.notification);
 
   @override
-  _TaskNotificationsListTileState createState() =>
-      _TaskNotificationsListTileState();
+  _TaskNotificationsListTileState createState() => _TaskNotificationsListTileState();
 }
 
 //TODO: Obaid Change the color according to the status status
 class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
-  SingleNotificationReader _singleNotificationReader =
-      SingleNotificationReader();
+  SingleNotificationReader _singleNotificationReader = SingleNotificationReader();
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +30,7 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
         widget.notification.taskName,
         style: TextStyles.subTitleTextStyle.copyWith(
           color: AppColors.defaultColor,
-          fontWeight:
-              widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
+          fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
         ),
       ),
       subtitle: Column(
@@ -46,8 +43,7 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
                 'Created On : ',
                 style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
               ),
-              Text(_convertToDateFormat(widget.notification.createdAt),
-                  style: TextStyles.labelTextStyle)
+              Text(_convertToDateFormat(widget.notification.createdAt), style: TextStyles.labelTextStyle)
             ],
           ),
           SizedBox(height: 8),
@@ -60,9 +56,7 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14)
-        ],
+        children: [Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14)],
       ),
       onTap: () {
         setState(() {
@@ -74,8 +68,7 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany =
-        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;

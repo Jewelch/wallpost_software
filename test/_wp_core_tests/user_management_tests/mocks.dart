@@ -16,7 +16,7 @@ class Mocks {
   }
 
   static final Map<String, dynamic> refreshSessionResponse = {
-    'token': 'activeToken',
+    'token': 'refreshedToken',
     'token_expiry': DateTime.now().millisecondsSinceEpoch + 100000,
   };
 }

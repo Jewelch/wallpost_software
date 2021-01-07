@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_check_mark_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_close_button.dart';
-import 'package:wallpost/_common_widgets/form_widgets/multi_select_filter_chips.dart';
+import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -17,7 +17,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
     implements LeaveTypeView {
   LeaveTypesPresenter _presenter;
   bool isFilteredLeaveType = false;
-  var _leaveTypeFilterController = MultiSelectFilterChipsController();
+  //var _leaveTypeFilterController = MultiSelectFilterChipsController();
   var _controller = TextEditingController();
   bool valuefirst = false;
   @override
@@ -99,8 +99,8 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                 titles: leaveTypeTitles,
                 selectedIndices: [],
                 allowMultipleSelection: false,
-                allIndexesSelected: isFilteredLeaveType,
-                controller: _leaveTypeFilterController,
+                // allIndexesSelected: isFilteredLeaveType,
+                //  controller: _leaveTypeFilterController,
                 onItemSelected: (index) {
                   //select item
                 },

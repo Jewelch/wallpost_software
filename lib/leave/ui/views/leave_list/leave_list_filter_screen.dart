@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
-import 'package:wallpost/_common_widgets/form_widgets/multi_select_filter_chips.dart';
+import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -19,9 +19,9 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
   List<LeaveEmployee> filteredEmployees;
   bool isFromEmployeeFilter = false;
 
-  var _categoryFilterController = MultiSelectFilterChipsController();
-  var _employeesFilterController = MultiSelectFilterChipsController();
-  var _leaveTypeFilterController = MultiSelectFilterChipsController();
+//  var _categoryFilterController = MultiSelectFilterChipsController();
+//  var _employeesFilterController = MultiSelectFilterChipsController();
+//  var _leaveTypeFilterController = MultiSelectFilterChipsController();
 
   @override
   void initState() {
@@ -93,7 +93,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
         MultiSelectFilterChips(
           titles: _categoryList,
           selectedIndices: [selectedCategoryIndex],
-          controller: _categoryFilterController,
+//          controller: _categoryFilterController,
           allowMultipleSelection: false,
           onItemSelected: (selectedIndex) => {_categoryList[selectedIndex]},
           onItemDeselected: (selectedIndex) {
@@ -130,7 +130,9 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
                 titles: leaveTypeTitles,
                 selectedIndices: [],
                 allowMultipleSelection: true,
-                controller: _leaveTypeFilterController,
+
+//                allIndexesSelected: isFilteredLeaveType,
+//                controller: _leaveTypeFilterController,
                 onItemSelected: (index) {
                   //select item
                 },
@@ -171,8 +173,8 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
                 titles: employeeTitles,
                 selectedIndices: [],
                 allowMultipleSelection: true,
-                allIndexesSelected: isFromEmployeeFilter,
-                controller: _employeesFilterController,
+//                allIndexesSelected: isFromEmployeeFilter,
+//                controller: _employeesFilterController,
                 showTrailingButton: true,
                 trailingButtonTitle: 'More',
                 onTrailingButtonPressed: () {
