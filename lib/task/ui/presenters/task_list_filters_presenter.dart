@@ -1,7 +1,7 @@
 import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/task/entities/task_department.dart';
 import 'package:wallpost/task/entities/task_category.dart';
+import 'package:wallpost/task/entities/task_department.dart';
 import 'package:wallpost/task/entities/task_employee.dart';
 import 'package:wallpost/task/entities/task_list_filters.dart';
 import 'package:wallpost/task/services/task_category_list_provider.dart';
@@ -30,18 +30,23 @@ class TaskListFiltersPresenter {
         categoryListProvider = TaskCategoryListProvider(),
         employeeListProvider = TaskEmployeeListProvider.subordinatesProvider();
 
-  Future<void> loadDepartments() async {
+  void loadDepartments() async {
     if (_filters.departments.isNotEmpty) {
+      _departments.clear();
       _departments.addAll(_filters.departments);
       view.reloadData();
     } else {
-      if (departmentListProvider.isLoading || departmentListProvider.didReachListEnd) return null;
+      if(_departments.isNotEmpty) {
+       view.reloadData();
+       return;
+      }
+
+      if (departmentListProvider.isLoading) return;
 
       try {
         var departmentList = await departmentListProvider.getNext();
         _departments.addAll(departmentList);
         view.reloadData();
-        loadCategories();
       } on WPException catch (_) {
         //fail silently as this is not a critical error
         view.reloadData();
@@ -49,12 +54,18 @@ class TaskListFiltersPresenter {
     }
   }
 
-  Future<void> loadCategories() async {
+  void loadCategories() async {
     if (_filters.categories.isNotEmpty) {
+      _categories.clear();
       _categories.addAll(_filters.categories);
       view.reloadData();
     } else {
-      if (categoryListProvider.isLoading || categoryListProvider.didReachListEnd) return null;
+      if(_categories.isNotEmpty) {
+        view.reloadData();
+        return;
+      }
+
+      if (categoryListProvider.isLoading) return;
 
       try {
         var categoryList = await categoryListProvider.getNext();
@@ -67,12 +78,18 @@ class TaskListFiltersPresenter {
     }
   }
 
-  Future<void> loadAssignees() async {
+  void loadAssignees() async {
     if (_filters.assignees.isNotEmpty) {
+      _assignees.clear();
       _assignees.addAll(_filters.assignees);
       view.reloadData();
     } else {
-      if (employeeListProvider.isLoading || employeeListProvider.didReachListEnd) return null;
+      if(_assignees.isNotEmpty) {
+        view.reloadData();
+        return;
+      }
+
+      if (employeeListProvider.isLoading) return;
 
       try {
         var employeeList = await employeeListProvider.getNext();
@@ -128,14 +145,6 @@ class TaskListFiltersPresenter {
     view.reloadData();
   }
 
-  void updateSelectedDepartments(List<TaskDepartment> departments) {
-    _departments.clear();
-    _departments.addAll(departments);
-    _filters.departments.clear();
-    _filters.departments.addAll(departments);
-    view.reloadData();
-  }
-
   //MARK: Functions to get, select, and deselect categories
 
   List<TaskCategory> getCategories() {
@@ -160,14 +169,6 @@ class TaskListFiltersPresenter {
     view.reloadData();
   }
 
-  void updateSelectedCategories(List<TaskCategory> categories) {
-    _categories.clear();
-    _categories.addAll(categories);
-    _filters.categories.clear();
-    _filters.categories.addAll(categories);
-    view.reloadData();
-  }
-
   //MARK: Functions to get, select, and deselect assignees
 
   List<TaskEmployee> getAssignees() {
@@ -189,14 +190,6 @@ class TaskListFiltersPresenter {
 
   void deselectAssigneeAtIndex(int index) {
     _filters.assignees.remove(_assignees[index]);
-    view.reloadData();
-  }
-
-  void updateSelectedAssignees(List<TaskEmployee> assignees) {
-    _assignees.clear();
-    _assignees.addAll(assignees);
-    _filters.assignees.clear();
-    _filters.assignees.addAll(assignees);
     view.reloadData();
   }
 

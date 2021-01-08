@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/list_view/error_list_tile.dart';
-import 'package:wallpost/_common_widgets/list_view/loader_list_tile.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_check_mark_button.dart';
 import 'package:wallpost/_common_widgets/filter_views/selected_filters_view.dart';
+import 'package:wallpost/_common_widgets/list_view/error_list_tile.dart';
+import 'package:wallpost/_common_widgets/list_view/loader_list_tile.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -18,13 +18,16 @@ class MultiSelectFilterList extends StatefulWidget {
   final bool singleSelection;
   final String searchBarHint;
   final bool hideSearchBar;
-  final String noItemsMessage;
-  final MultiSelectFilterListController controller;
+  final bool showMessage;
+  final String message;
+  final bool showLoaderAtEnd;
   final VoidCallback onRefresh;
   final VoidCallback onRetry;
   final VoidCallback didReachEndOfList;
   final Function(String) onSearchTextChanged;
-  final VoidCallback onFiltersSelectionComplete;
+  final Function(String) onFilterSelected;
+  final Function(String) onFilterDeselected;
+  final VoidCallback onFilterSelectionComplete;
 
   MultiSelectFilterList({
     this.screenTitle,
@@ -33,35 +36,28 @@ class MultiSelectFilterList extends StatefulWidget {
     this.singleSelection = false,
     this.searchBarHint = '',
     this.hideSearchBar = false,
-    this.noItemsMessage = '',
-    this.controller,
+    this.showMessage,
+    this.message,
+    this.showLoaderAtEnd = true,
     this.onRefresh,
     this.onRetry,
     this.didReachEndOfList,
     this.onSearchTextChanged,
-    this.onFiltersSelectionComplete,
+    this.onFilterSelected,
+    this.onFilterDeselected,
+    this.onFilterSelectionComplete,
   });
 
   @override
-  _MultiSelectFilterListState createState() => _MultiSelectFilterListState(items, selectedItems, controller);
+  _MultiSelectFilterListState createState() => _MultiSelectFilterListState();
 }
 
 class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
   var _scrollController = ScrollController();
   var _searchBarController = TextEditingController();
   var _selectedFiltersViewController = SelectedFiltersViewController();
-  MultiSelectFilterListController _controller;
-  List<String> _items = [];
-  List<String> _selectedItems = [];
   Completer<void> _refreshIndicatorCompleter;
   bool _isRefreshing = false;
-  bool _didReachListEnd = false;
-  String _errorMessage;
-
-  _MultiSelectFilterListState(this._items, List<String> selectedItems, this._controller) {
-    _controller.addState(this);
-    this._selectedItems.addAll(selectedItems ?? []);
-  }
 
   @override
   void initState() {
@@ -72,13 +68,15 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        if (_didReachListEnd == false) widget.didReachEndOfList();
+        widget.didReachEndOfList();
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isRefreshing) _stopRefresh();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
@@ -94,7 +92,7 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
           CircularCheckMarkButton(
             iconColor: AppColors.defaultColor,
             color: Colors.transparent,
-            onPressed: () => widget.onFiltersSelectionComplete(),
+            onPressed: () => widget.onFilterSelectionComplete(),
           ),
         ],
       ),
@@ -106,23 +104,19 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
               hint: widget.searchBarHint,
               controller: _searchBarController,
               onSearchTextChanged: (searchText) {
-                _clearAll();
                 widget.onSearchTextChanged(searchText);
               },
             ),
           if (widget.hideSearchBar == false) SizedBox(height: 8),
           SizedBox(
-            height: _selectedItems.length > 0 && widget.singleSelection == false ? 32 : 0,
+            height: widget.items.length > 0 && widget.singleSelection == false ? 32 : 0,
             child: SelectedFiltersView(
               controller: _selectedFiltersViewController,
-              titles: _selectedItems,
+              titles: widget.selectedItems,
               onItemPressed: (index) {
-                _selectedFiltersViewController.removeItemAtIndex(index);
-
-                var itm = _selectedItems[index];
-                setState(() {
-                  _selectedItems.remove(itm);
-                });
+                print(widget.selectedItems);
+                var selectedItem = widget.selectedItems[index];
+                _deselectItem(selectedItem);
               },
             ),
           ),
@@ -130,7 +124,6 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: () {
-                _clearAll();
                 widget.onRefresh();
                 return _startRefresh();
               },
@@ -148,21 +141,19 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
     );
   }
 
-  //MARK: Functions to get list items count and view
+  //MARK: Functions to get list item count and view
 
   int _getNumberOfItems() {
-    return _items.length + 1; //+1 for the loader and error view
+    return widget.items.length + 1; //+1 for the loader and error view
   }
 
   Widget _getViewForIndex(int index) {
-    if (index < _items.length) return _buildFilterListTileForIndex(index);
+    if (index < widget.items.length) return _buildFilterListTileForIndex(index);
 
-    if (_errorMessage != null) {
-      return _buildErrorView(_errorMessage);
-    } else if (_items.length == 0 && _didReachListEnd) {
-      return _buildErrorView(widget.noItemsMessage);
+    if (widget.showMessage) {
+      return _buildErrorView(widget.message);
     } else {
-      if (_didReachListEnd || _isRefreshing) {
+      if (_isRefreshing || widget.showLoaderAtEnd == false) {
         return Container(height: 200);
       } else {
         return LoaderListTile();
@@ -173,76 +164,36 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
   Widget _buildFilterListTileForIndex(int index) {
     return _MultiSelectFilterListTile(
       isSelected: _isItemAtIndexSelected(index),
-      title: _items[index],
-      onItemSelected: () {
-        var selectedItem = _items[index];
-        if (widget.singleSelection) _selectedFiltersViewController.removeItemAtIndex(0);
-        _selectedFiltersViewController.addItem(selectedItem);
-
-        setState(() {
-          if (widget.singleSelection) _selectedItems.clear();
-          _selectedItems.add(selectedItem);
-        });
-      },
-      onItemDeselected: () {
-        var itemToRemove = _items[index];
-        var indexOfItemToRemove = _selectedItems.indexOf(itemToRemove);
-        _selectedFiltersViewController.removeItemAtIndex(indexOfItemToRemove);
-        setState(() => _selectedItems.remove(itemToRemove));
-      },
+      title: widget.items[index],
+      onItemSelected: () => _selectItem(widget.items[index]),
+      onItemDeselected: () => _deselectItem(widget.items[index]),
     );
   }
 
   bool _isItemAtIndexSelected(int index) {
-    var item = _items[index];
-    return _selectedItems.contains(item);
+    var item = widget.items[index];
+    return widget.selectedItems.contains(item);
   }
 
   Widget _buildErrorView(String errorMessage) {
     return ErrorListTile(
       '$errorMessage Tap here to reload.',
-      onTap: () {
-        setState(() {
-          _didReachListEnd = false;
-          _resetError();
-        });
-        widget.onRetry();
-      },
+      onTap: () => widget.onRetry(),
     );
   }
 
-  //MARK: Function to add items
+  //MARK: Util functions to select and deselect an item
 
-  void _addItems(List<String> items) {
-    setState(() {
-      _resetError();
-      if (_isRefreshing) _stopRefresh();
-      _items.addAll(items);
-
-      //manually invoking didReachEndOfList to get the next list of
-      //items if there current items list has less than 15 items
-      if (items.isNotEmpty && _items.length < 15) widget.didReachEndOfList();
-    });
+  void _selectItem(String title) {
+    if (widget.singleSelection) _selectedFiltersViewController.removeItemAtIndex(0);
+    _selectedFiltersViewController.addItem(title);
+    widget.onFilterSelected(title);
   }
 
-  //MARK: Function to show  error
-
-  void _showError(String errorMessage) {
-    setState(() {
-      if (_isRefreshing) _stopRefresh();
-      _errorMessage = errorMessage;
-    });
-  }
-
-  //MARK: Function to get the selected indices
-
-  List<int> _getSelectedIndices() {
-    List<int> indices = [];
-
-    for (String t in _selectedItems) {
-      indices.add(_items.indexOf(t));
-    }
-    return indices;
+  void _deselectItem(String title) {
+    var indexOfItemToRemove = widget.selectedItems.indexOf(title);
+    _selectedFiltersViewController.removeItemAtIndex(indexOfItemToRemove);
+    widget.onFilterDeselected(title);
   }
 
   //MARK: Util functions to start and stop refresh
@@ -250,7 +201,7 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
   Future<void> _startRefresh() {
     _isRefreshing = true;
 
-    //this completer finishes when items are added, or an error is shown
+    //this completer finishes when items are added, or a message is shown
     _refreshIndicatorCompleter = Completer();
     return _refreshIndicatorCompleter.future;
   }
@@ -258,20 +209,6 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
   void _stopRefresh() {
     _isRefreshing = false;
     _refreshIndicatorCompleter.complete(null);
-  }
-
-  //MARK: Util functions to reset data
-
-  void _clearAll() {
-    setState(() {
-      _didReachListEnd = false;
-      _resetError();
-      _items.clear();
-    });
-  }
-
-  void _resetError() {
-    _errorMessage = null;
   }
 }
 
@@ -303,43 +240,5 @@ class _MultiSelectFilterListTile extends StatelessWidget {
         Divider(height: 1),
       ],
     );
-  }
-}
-
-class MultiSelectFilterListController {
-  _MultiSelectFilterListState _state;
-
-  bool get _isAttached => _state != null;
-
-  void addState(_MultiSelectFilterListState state) {
-    _state = state;
-  }
-
-  void dispose() => _state = null;
-
-  void addItems(List<String> items) {
-    assert(_isAttached, 'State not attached');
-    _state._addItems(items);
-  }
-
-  void showError(String errorMessage) {
-    assert(_isAttached, 'State not attached');
-    _state._showError(errorMessage);
-  }
-
-  String getSearchText() {
-    if (_isAttached == false) return '';
-
-    return _state._searchBarController.text;
-  }
-
-  void reachedListEnd() {
-    assert(_isAttached, 'State not attached');
-    _state._didReachListEnd = true;
-  }
-
-  List<int> getSelectedIndices() {
-    assert(_isAttached, 'State not attached');
-    return _state._getSelectedIndices();
   }
 }

@@ -15,62 +15,89 @@ class TaskDepartmentFilterListScreen extends StatefulWidget {
 }
 
 class _TaskDepartmentFilterListScreenState extends State<TaskDepartmentFilterListScreen> {
-  final List<TaskDepartment> _departments = [];
   final TaskDepartmentListProvider _provider = TaskDepartmentListProvider();
-  final _filterListController = MultiSelectFilterListController();
+  final List<TaskDepartment> _departments = [];
+  final List<TaskDepartment> _selectedDepartments = [];
+  var _searchText = '';
+  bool _showMessage = false;
+  String _message;
 
   @override
   void initState() {
-    getDepartments();
+    _selectedDepartments.addAll(widget._filters.departments);
+    _getDepartments();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiSelectFilterList(
-      screenTitle: 'Select Department',
-      items: [],
-      selectedItems: widget._filters.departments.map((e) => e.name).toList(),
-      searchBarHint: 'Search by department name',
-      noItemsMessage: 'There are no departments to show.',
-      controller: _filterListController,
-      onRefresh: () {
-        _provider.reset();
-        _departments.clear();
-        getDepartments();
-      },
-      onRetry: () {
-        getDepartments();
-      },
-      didReachEndOfList: () {
-        getDepartments();
-      },
-      onSearchTextChanged: (_) {
-        _provider.reset();
-        _departments.clear();
-        getDepartments();
-      },
-      onFiltersSelectionComplete: () {
-        var selectedIndices = _filterListController.getSelectedIndices();
-        List<TaskDepartment> selectedDepartments = [];
-        for (int index in selectedIndices) {
-          selectedDepartments.add(_departments[index]);
-        }
-        Navigator.pop(context, selectedDepartments);
-      },
+    return Column(
+      children: [
+        Expanded(
+          child: MultiSelectFilterList(
+            screenTitle: 'Select Departments',
+            items: _departments.map((e) => e.name).toList(),
+            selectedItems: _selectedDepartments.map((e) => e.name).toList(),
+            searchBarHint: 'Search by department name',
+            showMessage: _showMessage,
+            message: _message,
+            showLoaderAtEnd: _provider.didReachListEnd ? false : true,
+            onSearchTextChanged: (searchText) {
+              _provider.reset();
+              _departments.clear();
+              _searchText = searchText;
+              _getDepartments();
+            },
+            onRefresh: () {
+              setState(() => _departments.clear());
+              _provider.reset();
+              _getDepartments();
+            },
+            onRetry: () {
+              setState(() => _getDepartments());
+            },
+            didReachEndOfList: () {
+              _getDepartments();
+            },
+            onFilterSelected: (title) {
+              setState(() {
+                _selectedDepartments.add(_departments.firstWhere((e) => e.name == title));
+              });
+            },
+            onFilterDeselected: (title) {
+              setState(() {
+                _selectedDepartments.removeWhere((e) => e.name == title);
+              });
+            },
+            onFilterSelectionComplete: () {
+              widget._filters.departments.clear();
+              widget._filters.departments.addAll(_selectedDepartments);
+              Navigator.pop(context, true);
+            },
+          ),
+        ),
+      ],
     );
   }
 
-  void getDepartments() async {
+  void _getDepartments() async {
     if (_provider.isLoading) return;
 
+    setState(() => _showMessage = false);
     try {
-      var departmentList = await _provider.getNext(searchText: _filterListController.getSearchText());
-      _departments.addAll(departmentList);
-      _filterListController.addItems(departmentList.map((e) => e.name).toList());
-      if (_provider.didReachListEnd) _filterListController.reachedListEnd();
-    } on WPException catch (e) {
-      _filterListController.showError(e.userReadableMessage);
+      var departmentList = await _provider.getNext(searchText: _searchText);
+      setState(() {
+        _departments.addAll(departmentList);
+        if (_departments.length == 0) {
+          _showMessage = true;
+          _message = 'There are no departments to show.';
+        }
+      });
+    } on WPException catch (error) {
+      setState(() {
+        _showMessage = true;
+        _message = error.userReadableMessage;
+      });
     }
   }
 }

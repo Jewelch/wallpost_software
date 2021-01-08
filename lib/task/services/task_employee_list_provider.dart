@@ -45,6 +45,7 @@ class TaskEmployeeListProvider {
       url = TaskUrls.subordinatesUrl(companyId, _pageNumber, _perPage, searchText);
     }
     var apiRequest = APIRequest.withId(url, _sessionId);
+    _didReachListEnd = false;
     isLoading = true;
 
     try {

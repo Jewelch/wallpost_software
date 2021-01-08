@@ -136,8 +136,10 @@ class _TaskListFiltersScreenState extends State<TaskListFiltersScreen> implement
   }
 
   void goToDepartmentFilterList() async {
-    final selectedDepartments = await ScreenPresenter.present(TaskDepartmentFilterListScreen(_filters), context);
-    if (selectedDepartments != null) _presenter.updateSelectedDepartments(selectedDepartments);
+    var didSelectFilters = await ScreenPresenter.present(TaskDepartmentFilterListScreen(_filters), context) as bool;
+    if (didSelectFilters != null && didSelectFilters == true) {
+      _presenter.loadDepartments();
+    }
   }
 
   Column _buildCategoriesSection() {
@@ -166,8 +168,10 @@ class _TaskListFiltersScreenState extends State<TaskListFiltersScreen> implement
   }
 
   void goToCategoryFilterList() async {
-    final selectedCategories = await ScreenPresenter.present(TaskCategoryFilterListScreen(_filters), context);
-    if (selectedCategories != null) _presenter.updateSelectedCategories(selectedCategories);
+    var didSelectFilters = await ScreenPresenter.present(TaskCategoryFilterListScreen(_filters), context) as bool;
+    if (didSelectFilters != null && didSelectFilters == true) {
+      _presenter.loadCategories();
+    }
   }
 
   Column _buildEmployeesSection() {
@@ -196,8 +200,10 @@ class _TaskListFiltersScreenState extends State<TaskListFiltersScreen> implement
   }
 
   void goToEmployeeFilterList() async {
-    final selectedEmployees = await ScreenPresenter.present(TaskAssigneeFilterListScreen(_filters), context);
-    if (selectedEmployees != null) _presenter.updateSelectedAssignees(selectedEmployees);
+    var didSelectFilters = await ScreenPresenter.present(TaskAssigneeFilterListScreen(_filters), context) as bool;
+    if (didSelectFilters != null && didSelectFilters == true) {
+      _presenter.loadAssignees();
+    }
   }
 
   @override

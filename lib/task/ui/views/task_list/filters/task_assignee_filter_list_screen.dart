@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/filter_views/custom_segment.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filters_list.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/task/entities/task_employee.dart';
@@ -15,62 +16,127 @@ class TaskAssigneeFilterListScreen extends StatefulWidget {
 }
 
 class _TaskAssigneeFilterListScreenState extends State<TaskAssigneeFilterListScreen> {
+  TaskEmployeeListProvider _provider = TaskEmployeeListProvider.subordinatesProvider();
   final List<TaskEmployee> _employees = [];
-  final TaskEmployeeListProvider _provider = TaskEmployeeListProvider.allEmployeesProvider();
-  final _filterListController = MultiSelectFilterListController();
+  final List<TaskEmployee> _selectedEmployees = [];
+  var _searchText = '';
+  bool _showMessage = false;
+  String _message;
 
   @override
   void initState() {
+    _selectedEmployees.addAll(widget._filters.assignees);
     getEmployees();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiSelectFilterList(
-      screenTitle: 'Select Assignees',
-      items: [],
-      selectedItems: widget._filters.assignees.map((e) => e.fullName).toList(),
-      searchBarHint: 'Search by assignee name',
-      noItemsMessage: 'There are no employees to show.',
-      controller: _filterListController,
-      onRefresh: () {
-        _provider.reset();
-        _employees.clear();
-        getEmployees();
-      },
-      onRetry: () {
-        getEmployees();
-      },
-      didReachEndOfList: () {
-        getEmployees();
-      },
-      onSearchTextChanged: (_) {
-        _provider.reset();
-        _employees.clear();
-        getEmployees();
-      },
-      onFiltersSelectionComplete: () {
-        var selectedIndices = _filterListController.getSelectedIndices();
-        List<TaskEmployee> selectedDepartments = [];
-        for (int index in selectedIndices) {
-          selectedDepartments.add(_employees[index]);
-        }
-        Navigator.pop(context, selectedDepartments);
-      },
+    return Column(
+      children: [
+        Expanded(
+          child: MultiSelectFilterList(
+            screenTitle: 'Select Assignees',
+            items: _employees.map((e) => e.fullName).toList(),
+            selectedItems: _selectedEmployees.map((e) => e.fullName).toList(),
+            searchBarHint: 'Search by assignee name',
+            showMessage: _showMessage,
+            message: _message,
+            showLoaderAtEnd: _provider.didReachListEnd ? false : true,
+            onSearchTextChanged: (searchText) {
+              _provider.reset();
+              _employees.clear();
+              _searchText = searchText;
+              getEmployees();
+            },
+            onRefresh: () {
+              setState(() => _employees.clear());
+              _provider.reset();
+              getEmployees();
+            },
+            onRetry: () {
+              setState(() => getEmployees());
+            },
+            didReachEndOfList: () {
+              getEmployees();
+            },
+            onFilterSelected: (title) {
+              setState(() {
+                _selectedEmployees.add(_employees.firstWhere((e) => e.fullName == title));
+              });
+            },
+            onFilterDeselected: (title) {
+              setState(() {
+                _selectedEmployees.removeWhere((e) => e.fullName == title);
+              });
+            },
+            onFilterSelectionComplete: () {
+              widget._filters.assignees.clear();
+              widget._filters.assignees.addAll(_selectedEmployees);
+              Navigator.pop(context, true);
+            },
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                offset: Offset(0, -1),
+                blurRadius: 3.0,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              color: Colors.white,
+              width: 200,
+              child: CustomSegment(
+                titles: ['Subordinates', 'All'],
+                selectedIndex: 0,
+                onChanged: (index) {
+                  _changeProviderType(index);
+                  _provider.reset();
+                  setState(() => _employees.clear());
+                  getEmployees();
+                },
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 
   void getEmployees() async {
     if (_provider.isLoading) return;
 
+    setState(() => _showMessage = false);
     try {
-      var employeeList = await _provider.getNext(searchText: _filterListController.getSearchText());
-      _employees.addAll(employeeList);
-      _filterListController.addItems(employeeList.map((e) => e.fullName).toList());
-      if (_provider.didReachListEnd) _filterListController.reachedListEnd();
-    } on WPException catch (e) {
-      _filterListController.showError(e.userReadableMessage);
+      var employeeList = await _provider.getNext(searchText: _searchText);
+      setState(() {
+        _employees.addAll(employeeList);
+        if (_employees.length == 0) {
+          _showMessage = true;
+          _message = 'There are no employees to show.';
+        }
+      });
+    } on WPException catch (error) {
+      setState(() {
+        _showMessage = true;
+        _message = error.userReadableMessage;
+      });
+    }
+  }
+
+  void _changeProviderType(int typeIndex) {
+    if (typeIndex == 0) {
+      _provider = TaskEmployeeListProvider.subordinatesProvider();
+    } else {
+      _provider = TaskEmployeeListProvider.allEmployeesProvider();
     }
   }
 }

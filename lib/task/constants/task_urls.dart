@@ -22,14 +22,14 @@ class TaskUrls {
 
   static String assigneesUrl(String companyId, int pageNumber, int itemsPerPage, String searchText) {
     var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/employees?&page=$pageNumber&per_page=$itemsPerPage';
-    if (searchText != null) url += '&search=$searchText';
+    if (searchText != null && searchText.isNotEmpty) url += '&search=$searchText';
     return url;
   }
 
   static String subordinatesUrl(String companyId, int pageNumber, int itemsPerPage, String searchText) {
     var url =
         '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/getSubOrdinates?&page=$pageNumber&per_page=$itemsPerPage';
-    if (searchText != null) url += '&search=$searchText';
+    if (searchText != null && searchText.isNotEmpty) url += '&search=$searchText';
     return url;
   }
 

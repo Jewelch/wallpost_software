@@ -11,6 +11,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     return Container();
   }
 }
+
+
+/*
+
+folder structure - ui -> feature -> models, views, and presenters
+
+
+ */
 //    implements DepartmentsWrapView {
 //  TaskFilterPresenter _presenter;
 //  List<Department> filteredDepartments;

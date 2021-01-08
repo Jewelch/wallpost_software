@@ -15,62 +15,89 @@ class TaskCategoryFilterListScreen extends StatefulWidget {
 }
 
 class _TaskCategoryFilterListScreenState extends State<TaskCategoryFilterListScreen> {
-  final List<TaskCategory> _categories = [];
   final TaskCategoryListProvider _provider = TaskCategoryListProvider();
-  final _filterListController = MultiSelectFilterListController();
+  final List<TaskCategory> _categories = [];
+  final List<TaskCategory> _selectedCategories = [];
+  var _searchText = '';
+  bool _showMessage = false;
+  String _message;
 
   @override
   void initState() {
-    getCategories();
+    _selectedCategories.addAll(widget._filters.categories);
+    _getCategories();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiSelectFilterList(
-      screenTitle: 'Select Category',
-      items: [],
-      selectedItems: widget._filters.categories.map((e) => e.name).toList(),
-      searchBarHint: 'Search by category name',
-      noItemsMessage: 'There are no categories to show.',
-      controller: _filterListController,
-      onRefresh: () {
-        _provider.reset();
-        _categories.clear();
-        getCategories();
-      },
-      onRetry: () {
-        getCategories();
-      },
-      didReachEndOfList: () {
-        getCategories();
-      },
-      onSearchTextChanged: (_) {
-        _provider.reset();
-        _categories.clear();
-        getCategories();
-      },
-      onFiltersSelectionComplete: () {
-        var selectedIndices = _filterListController.getSelectedIndices();
-        List<TaskCategory> selectedCategories = [];
-        for (int index in selectedIndices) {
-          selectedCategories.add(_categories[index]);
-        }
-        Navigator.pop(context, selectedCategories);
-      },
+    return Column(
+      children: [
+        Expanded(
+          child: MultiSelectFilterList(
+            screenTitle: 'Select Categories',
+            items: _categories.map((e) => e.name).toList(),
+            selectedItems: _selectedCategories.map((e) => e.name).toList(),
+            searchBarHint: 'Search by category name',
+            showMessage: _showMessage,
+            message: _message,
+            showLoaderAtEnd: _provider.didReachListEnd ? false : true,
+            onSearchTextChanged: (searchText) {
+              _provider.reset();
+              _categories.clear();
+              _searchText = searchText;
+              _getCategories();
+            },
+            onRefresh: () {
+              setState(() => _categories.clear());
+              _provider.reset();
+              _getCategories();
+            },
+            onRetry: () {
+              setState(() => _getCategories());
+            },
+            didReachEndOfList: () {
+              _getCategories();
+            },
+            onFilterSelected: (title) {
+              setState(() {
+                _selectedCategories.add(_categories.firstWhere((e) => e.name == title));
+              });
+            },
+            onFilterDeselected: (title) {
+              setState(() {
+                _selectedCategories.removeWhere((e) => e.name == title);
+              });
+            },
+            onFilterSelectionComplete: () {
+              widget._filters.categories.clear();
+              widget._filters.categories.addAll(_selectedCategories);
+              Navigator.pop(context, true);
+            },
+          ),
+        ),
+      ],
     );
   }
 
-  void getCategories() async {
+  void _getCategories() async {
     if (_provider.isLoading) return;
 
+    setState(() => _showMessage = false);
     try {
-      var categoryList = await _provider.getNext(searchText: _filterListController.getSearchText());
-      _categories.addAll(categoryList);
-      _filterListController.addItems(categoryList.map((e) => e.name).toList());
-      if(_provider.didReachListEnd) _filterListController.reachedListEnd();
-    } on WPException catch (e) {
-      _filterListController.showError(e.userReadableMessage);
+      var categoryList = await _provider.getNext(searchText: _searchText);
+      setState(() {
+        _categories.addAll(categoryList);
+        if (_categories.length == 0) {
+          _showMessage = true;
+          _message = 'There are no categories to show.';
+        }
+      });
+    } on WPException catch (error) {
+      setState(() {
+        _showMessage = true;
+        _message = error.userReadableMessage;
+      });
     }
   }
 }
