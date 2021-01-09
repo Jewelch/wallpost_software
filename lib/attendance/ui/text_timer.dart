@@ -25,15 +25,15 @@ class TextTimerState extends State<TextTimer> {
   @override
   void initState() {
     super.initState();
-    _triggerUpdate();
+//    _triggerUpdate();
   }
 
   @override
   Widget build(BuildContext context) {
-    String title = _getTime() + "\nTo Punch In";
+//    String title = _getTime() + "\nTo Punch In";
 
     return Text(
-      title,
+      'some text',
       textAlign: TextAlign.center,
       style: TextStyle(
         color: Colors.white,
@@ -41,24 +41,24 @@ class TextTimerState extends State<TextTimer> {
       ),
     );
   }
-
-  _triggerUpdate() {
-    Timer.periodic(
-        Duration(seconds: 1),
-        (Timer timer) => setState(
-              () {
-                if (secondsToPunchIn <= 1) {
-                  timer.cancel();
-
-                  onTimerFinished.call();
-                }
-                secondsToPunchIn = secondsToPunchIn - 1;
-              },
-            ));
-  }
-
-  String _getTime() {
-    String duration = TimeToPunchInCalculator.timeTillPunchIn(secondsToPunchIn);
-    return duration;
-  }
+//
+//  _triggerUpdate() {
+//    Timer.periodic(
+//        Duration(seconds: 1),
+//        (Timer timer) => setState(
+//              () {
+//                if (secondsToPunchIn <= 1) {
+//                  timer.cancel();
+//
+//                  onTimerFinished.call();
+//                }
+//                secondsToPunchIn = secondsToPunchIn - 1;
+//              },
+//            ));
+//  }
+//
+//  String _getTime() {
+//    String duration = TimeToPunchInCalculator.timeTillPunchIn(secondsToPunchIn);
+//    return duration;
+//  }
 }

@@ -13,36 +13,36 @@ class TextClock extends StatefulWidget{
 class _TextClockState extends State<TextClock>{
   double seconds;
 
-  @override
-  void initState() {
-    super.initState();
-    seconds = DateTime.now().second / 60;
-    _triggerUpdate();
-  }
+//  @override
+//  void initState() {
+//    super.initState();
+//    seconds = DateTime.now().second / 60;
+//    _triggerUpdate();
+//  }
 
   @override
   Widget build(BuildContext context) {
-    return Text(_currentTime(),style: TextStyle(color: Colors.white, fontSize: 13),);
+    return Text('some text');
   }
 
 
-  _triggerUpdate() {
-    Timer.periodic(
-        Duration(seconds: 60),
-            (Timer timer) => setState(
-              () {
-            seconds = DateTime.now().second / 60;
-          },
-        ));
-  }
-
-   _currentTime() {
-    final DateTime now = DateTime.now();
-    return _formatDateTime(now);
-
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    return DateFormat('hh:mm: a').format(dateTime);
-  }
+//  _triggerUpdate() {
+//    Timer.periodic(
+//        Duration(seconds: 60),
+//            (Timer timer) => setState(
+//              () {
+//            seconds = DateTime.now().second / 60;
+//          },
+//        ));
+//  }
+//
+//   _currentTime() {
+//    final DateTime now = DateTime.now();
+//    return _formatDateTime(now);
+//
+//  }
+//
+//  String _formatDateTime(DateTime dateTime) {
+//    return DateFormat('hh:mm: a').format(dateTime);
+//  }
 }
