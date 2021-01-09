@@ -3,12 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-class CustomSegment extends StatefulWidget {
+class SegmentControl extends StatefulWidget {
   final List<String> titles;
   final int selectedIndex;
   final Function(int) onChanged;
 
-  CustomSegment({
+  SegmentControl({
     this.titles,
     this.selectedIndex = 0,
     this.onChanged,
@@ -19,13 +19,13 @@ class CustomSegment extends StatefulWidget {
   }
 
   @override
-  _CustomSegmentState createState() => _CustomSegmentState(selectedIndex);
+  _SegmentControlState createState() => _SegmentControlState(selectedIndex);
 }
 
-class _CustomSegmentState extends State<CustomSegment> with SingleTickerProviderStateMixin {
+class _SegmentControlState extends State<SegmentControl> with SingleTickerProviderStateMixin {
   int _selectedIndex;
 
-  _CustomSegmentState(this._selectedIndex);
+  _SegmentControlState(this._selectedIndex);
 
   @override
   Widget build(BuildContext context) {
