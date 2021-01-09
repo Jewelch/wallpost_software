@@ -84,7 +84,7 @@ class _TaskListFiltersScreenState extends State<TaskListFiltersScreen> implement
         CircularCheckMarkButton(
           iconColor: AppColors.defaultColor,
           color: Colors.transparent,
-          onPressed: () {},
+          onPressed: () => Navigator.pop(context, _filters),
         ),
       ],
     );

@@ -69,7 +69,7 @@ void main() {
     var filters = TaskListFilters();
     filters.departments.add(MockTaskDepartment());
 
-    filters.resetSelectedAssignees();
+    filters.resetSelectedDepartments();
 
     expect(filters.departments, isEmpty);
   });
@@ -78,7 +78,7 @@ void main() {
     var filters = TaskListFilters();
     filters.categories.add(MockTaskCategory());
 
-    filters.resetSelectedAssignees();
+    filters.resetSelectedCategories();
 
     expect(filters.categories, isEmpty);
   });
@@ -90,5 +90,19 @@ void main() {
     filters.resetYearFilter();
 
     expect(filters.year, DateTime.now().year);
+  });
+
+  test('test cloning', () async {
+    var filters = TaskListFilters();
+    var clone = filters.clone();
+
+    expect(filters != clone, true);
+    expect(filters.scope, clone.scope);
+    expect(filters.status, clone.status);
+    expect(filters.searchText, clone.searchText);
+    expect(filters.year, clone.year);
+    expect(filters.assignees, clone.assignees);
+    expect(filters.departments, clone.departments);
+    expect(filters.categories, clone.categories);
   });
 }

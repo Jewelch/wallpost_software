@@ -56,4 +56,16 @@ class TaskListFilters {
   String get scope => _scope;
 
   String get status => _status;
+
+  TaskListFilters clone() {
+    var filters = TaskListFilters();
+    filters._scope = this._scope;
+    filters._status = this._status;
+    filters.searchText = this.searchText;
+    filters.year = this.year;
+    filters.assignees.addAll(this.assignees);
+    filters.departments.addAll(this.departments);
+    filters.categories.addAll(this.categories);
+    return filters;
+  }
 }
