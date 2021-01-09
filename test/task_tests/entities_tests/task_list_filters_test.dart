@@ -1,5 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:wallpost/task/entities/task_category.dart';
+import 'package:wallpost/task/entities/task_department.dart';
+import 'package:wallpost/task/entities/task_employee.dart';
 import 'package:wallpost/task/entities/task_list_filters.dart';
+
+class MockTaskEmployee extends Mock implements TaskEmployee {}
+
+class MockTaskDepartment extends Mock implements TaskDepartment {}
+
+class MockTaskCategory extends Mock implements TaskCategory {}
 
 void main() {
   test('test defaults', () async {
@@ -46,19 +56,30 @@ void main() {
     expect(filters.status, TaskListFilters.ALL);
   });
 
-  test('resetting the filters', () async {
+  test('resetting selected assignees filter', () async {
     var filters = TaskListFilters();
-    filters.showTeamTasks();
-    filters.showAllTasks();
+    filters.assignees.add(MockTaskEmployee());
 
-    filters.reset();
+    filters.resetSelectedAssignees();
 
-    expect(filters.scope, TaskListFilters.MY_SCOPE);
-    expect(filters.status, TaskListFilters.OVERDUE);
-    expect(filters.searchText, null);
-    expect(filters.year, DateTime.now().year);
     expect(filters.assignees, isEmpty);
+  });
+
+  test('resetting selected departments filter', () async {
+    var filters = TaskListFilters();
+    filters.departments.add(MockTaskDepartment());
+
+    filters.resetSelectedAssignees();
+
     expect(filters.departments, isEmpty);
+  });
+
+  test('resetting selected categories filter', () async {
+    var filters = TaskListFilters();
+    filters.categories.add(MockTaskCategory());
+
+    filters.resetSelectedAssignees();
+
     expect(filters.categories, isEmpty);
   });
 
@@ -66,7 +87,7 @@ void main() {
     var filters = TaskListFilters();
     filters.year = 2018;
 
-    filters.resetDateFilter();
+    filters.resetYearFilter();
 
     expect(filters.year, DateTime.now().year);
   });

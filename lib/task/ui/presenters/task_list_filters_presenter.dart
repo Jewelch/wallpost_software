@@ -36,9 +36,9 @@ class TaskListFiltersPresenter {
       _departments.addAll(_filters.departments);
       view.reloadData();
     } else {
-      if(_departments.isNotEmpty) {
-       view.reloadData();
-       return;
+      if (_departments.isNotEmpty) {
+        view.reloadData();
+        return;
       }
 
       if (departmentListProvider.isLoading) return;
@@ -60,7 +60,7 @@ class TaskListFiltersPresenter {
       _categories.addAll(_filters.categories);
       view.reloadData();
     } else {
-      if(_categories.isNotEmpty) {
+      if (_categories.isNotEmpty) {
         view.reloadData();
         return;
       }
@@ -84,7 +84,7 @@ class TaskListFiltersPresenter {
       _assignees.addAll(_filters.assignees);
       view.reloadData();
     } else {
-      if(_assignees.isNotEmpty) {
+      if (_assignees.isNotEmpty) {
         view.reloadData();
         return;
       }
@@ -117,7 +117,7 @@ class TaskListFiltersPresenter {
   }
 
   void resetYearFilter() {
-    _filters.reset();
+    _filters.resetYearFilter();
     view.reloadData();
   }
 
@@ -196,7 +196,10 @@ class TaskListFiltersPresenter {
   //MARK: Function to reset the filters
 
   void resetFilters() {
-    _filters.reset();
+    _filters.resetYearFilter();
+    _filters.resetSelectedAssignees();
+    _filters.resetSelectedDepartments();
+    _filters.resetSelectedCategories();
     departmentListProvider.reset();
     categoryListProvider.reset();
     employeeListProvider.reset();

@@ -1,5 +1,5 @@
-import 'package:wallpost/task/entities/task_department.dart';
 import 'package:wallpost/task/entities/task_category.dart';
+import 'package:wallpost/task/entities/task_department.dart';
 import 'package:wallpost/task/entities/task_employee.dart';
 
 class TaskListFilters {
@@ -37,17 +37,19 @@ class TaskListFilters {
 
   void showAllTasks() => _status = ALL;
 
-  void reset() {
-    _scope = MY_SCOPE;
-    _status = OVERDUE;
-    searchText = null;
-    resetDateFilter();
+  void resetSelectedAssignees() {
     assignees = [];
+  }
+
+  void resetSelectedDepartments() {
     departments = [];
+  }
+
+  void resetSelectedCategories() {
     categories = [];
   }
 
-  void resetDateFilter() {
+  void resetYearFilter() {
     year = DateTime.now().year;
   }
 
