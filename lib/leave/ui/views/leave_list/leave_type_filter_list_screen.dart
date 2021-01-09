@@ -12,7 +12,7 @@ class LeaveTypeFilterListScreen extends StatefulWidget {
 class _LeaveTypeFilterListScreenState extends State<LeaveTypeFilterListScreen> {
   final List<LeaveType> _leaveTypes = [];
   final LeaveTypesProvider _provider = LeaveTypesProvider();
-  final _filterListController = MultiSelectFilterListController();
+//  final _filterListController = MultiSelectFilterListController();
 
   @override
   void initState() {
@@ -28,8 +28,8 @@ class _LeaveTypeFilterListScreenState extends State<LeaveTypeFilterListScreen> {
       selectedItems: [],
       singleSelection: true,
       hideSearchBar: true,
-      noItemsMessage: 'There are no leave types to show.',
-      controller: _filterListController,
+//      noItemsMessage: 'There are no leave types to show.',
+//      controller: _filterListController,
       onRefresh: () {
         _leaveTypes.clear();
         getLeaveTypes();
@@ -44,14 +44,14 @@ class _LeaveTypeFilterListScreenState extends State<LeaveTypeFilterListScreen> {
         _leaveTypes.clear();
         getLeaveTypes();
       },
-      onFiltersSelectionComplete: () {
-        var selectedIndices = _filterListController.getSelectedIndices();
-        List<LeaveType> selectedLeaveTypes = [];
-        for (int index in selectedIndices) {
-          selectedLeaveTypes.add(_leaveTypes[index]);
-        }
-        Navigator.pop(context, selectedLeaveTypes);
-      },
+//      onFiltersSelectionComplete: () {
+//        var selectedIndices = _filterListController.getSelectedIndices();
+//        List<LeaveType> selectedLeaveTypes = [];
+//        for (int index in selectedIndices) {
+//          selectedLeaveTypes.add(_leaveTypes[index]);
+//        }
+//        Navigator.pop(context, selectedLeaveTypes);
+//      },
     );
   }
 
@@ -61,10 +61,10 @@ class _LeaveTypeFilterListScreenState extends State<LeaveTypeFilterListScreen> {
     try {
       var leaveTypeList = await _provider.getLeaveTypes();
       _leaveTypes.addAll(leaveTypeList);
-      _filterListController.addItems(leaveTypeList.map((e) => e.name).toList());
-      _filterListController.reachedListEnd();
+//      _filterListController.addItems(leaveTypeList.map((e) => e.name).toList());
+//      _filterListController.reachedListEnd();
     } on WPException catch (e) {
-      _filterListController.showError(e.userReadableMessage);
+//      _filterListController.showError(e.userReadableMessage);
     }
   }
 }
