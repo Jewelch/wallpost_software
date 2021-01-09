@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/filter_views/custom_segment.dart';
+import 'package:wallpost/_common_widgets/filter_views/segment_control.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filters_list.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/task/entities/task_employee.dart';
@@ -94,7 +94,7 @@ class _TaskAssigneeFilterListScreenState extends State<TaskAssigneeFilterListScr
               padding: EdgeInsets.symmetric(vertical: 12),
               color: Colors.white,
               width: 200,
-              child: CustomSegment(
+              child: SegmentControl(
                 titles: ['Subordinates', 'All'],
                 selectedIndex: 0,
                 onChanged: (index) {
