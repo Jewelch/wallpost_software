@@ -5,6 +5,7 @@ import 'package:wallpost/_wp_core/company_management/services/selected_company_p
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/task/constants/task_urls.dart';
 import 'package:wallpost/task/entities/task_count.dart';
+import 'package:wallpost/task/entities/task_list_filters.dart';
 
 class TaskCountProvider {
   final SelectedCompanyProvider _selectedCompanyProvider;
@@ -18,9 +19,9 @@ class TaskCountProvider {
       : _selectedCompanyProvider = SelectedCompanyProvider(),
         _networkAdapter = WPAPI();
 
-  Future<TaskCount> getCount({int year}) async {
+  Future<TaskCount> getCount(TaskListFilters filters) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = TaskUrls.taskListCountUrl(companyId, year);
+    var url = TaskUrls.taskListCountUrl(companyId, filters);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;

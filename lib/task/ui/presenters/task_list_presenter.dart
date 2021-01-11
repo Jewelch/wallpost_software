@@ -38,10 +38,7 @@ class TaskListPresenter {
     if (_taskCountProvider.isLoading) return null;
 
     try {
-      taskCount = await _taskCountProvider.getCount(
-          year: _selectedFilters.year == null
-              ? DateTime.now().year
-              : _selectedFilters.year);
+      taskCount = await _taskCountProvider.getCount(_selectedFilters);
       overdueCount = taskCount.overdue;
       dueTodayCount = taskCount.dueToday;
       dueInAWeekCount = taskCount.dueInAWeek;

@@ -2,9 +2,34 @@ import 'package:wallpost/_shared/constants/base_urls.dart';
 import 'package:wallpost/task/entities/task_list_filters.dart';
 
 class TaskUrls {
-  static String taskListCountUrl(String companyId, int year) {
-    var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/reports/counts';
-    if (year != null) url += '?year=$year';
+  static String taskListCountUrl(String companyId, TaskListFilters filters) {
+    var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/reports/counts?';
+    url += '?&scope=${filters.scope}';
+    url += '&status=${filters.status}';
+    if (filters.searchText != null) url += '&search=${filters.searchText}';
+    if (filters.year != null) url += '&year=${filters.year}';
+    filters.assignees.forEach((assignee) => url += '&assignees[]=${assignee.v1Id}');
+    filters.departments.forEach((department) => url += '&department[]=${department.id}');
+    filters.categories.forEach((category) => url += '&categories[]=${category.id}');
+    return url;
+  }
+
+  static String taskListUrl(
+    String companyId,
+    TaskListFilters filters,
+    int pageNumber,
+    int itemsPerPage,
+  ) {
+    var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks';
+    url += '?&scope=${filters.scope}';
+    url += '&status=${filters.status}';
+    if (filters.searchText != null) url += '&search=${filters.searchText}';
+    if (filters.year != null) url += '&year=${filters.year}';
+    filters.assignees.forEach((assignee) => url += '&assignees[]=${assignee.v1Id}');
+    filters.departments.forEach((department) => url += '&department[]=${department.id}');
+    filters.categories.forEach((category) => url += '&categories[]=${category.id}');
+    url += '&page=$pageNumber';
+    url += '&per_page=$itemsPerPage';
     return url;
   }
 
@@ -30,25 +55,6 @@ class TaskUrls {
     var url =
         '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/getSubOrdinates?&page=$pageNumber&per_page=$itemsPerPage';
     if (searchText != null && searchText.isNotEmpty) url += '&search=$searchText';
-    return url;
-  }
-
-  static String taskListUrl(
-    String companyId,
-    TaskListFilters filters,
-    int pageNumber,
-    int itemsPerPage,
-  ) {
-    var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks';
-    url += '?&scope=${filters.scope}';
-    url += '&status=${filters.status}';
-    if (filters.searchText != null) url += '&search=${filters.searchText}';
-    if (filters.year != null) url += '&year=${filters.year}';
-    filters.assignees.forEach((assignee) => url += '&assignees[]=${assignee.v1Id}');
-    filters.departments.forEach((department) => url += '&department[]=${department.id}');
-    filters.categories.forEach((category) => url += '&categories[]=${category.id}');
-    url += '&page=$pageNumber';
-    url += '&per_page=$itemsPerPage';
     return url;
   }
 
