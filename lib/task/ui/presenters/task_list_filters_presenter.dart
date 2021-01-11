@@ -8,22 +8,21 @@ import 'package:wallpost/task/services/task_category_list_provider.dart';
 import 'package:wallpost/task/services/task_department_list_provider.dart';
 import 'package:wallpost/task/services/task_employee_list_provider.dart';
 
-abstract class DepartmentsWrapView {
+abstract class TaskListFiltersView {
   void reloadData();
 
   void resetAndReloadData();
 }
 
 class TaskListFiltersPresenter {
-  final DepartmentsWrapView view;
+  final TaskListFiltersView view;
+  TaskListFilters _filters;
   final TaskDepartmentListProvider departmentListProvider;
   final TaskCategoryListProvider categoryListProvider;
   final TaskEmployeeListProvider employeeListProvider;
   List<TaskDepartment> _departments = [];
   List<TaskCategory> _categories = [];
   List<TaskEmployee> _assignees = [];
-
-  TaskListFilters _filters;
 
   TaskListFiltersPresenter(this.view, this._filters)
       : departmentListProvider = TaskDepartmentListProvider(),

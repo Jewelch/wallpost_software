@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
+import 'package:wallpost/_common_widgets/filter_views/filter_tab_bar.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
-import 'package:wallpost/_common_widgets/search_bar/search_bar.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_routing/route_names.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/task/entities/task_list_filters.dart';
 import 'package:wallpost/task/ui/presenters/task_list_presenter.dart';
 import 'package:wallpost/task/ui/views/task_list/filters/task_list_filters_screen.dart';
 
@@ -19,22 +16,26 @@ class TaskListScreen extends StatefulWidget {
 }
 
 class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMixin, TaskListView {
-  var _searchBarController = TextEditingController();
+  ScrollController _taskListScrollController = ScrollController();
   TabController _tabController;
   TaskListPresenter _presenter;
-  int _selectedTab = 0;
-  ScrollController _taskListScrollController = ScrollController();
-  TaskListFilters _filters = TaskListFilters();
-  bool _listFilterVisible = false;
 
   @override
   void initState() {
-    _presenter = TaskListPresenter(this);
-    _presenter.loadTaskCount(_selectedTab, _filters);
     _setupScrollDownToLoadMoreItems();
-    super.initState();
     _tabController = new TabController(length: 6, vsync: this);
-    _tabController.addListener(_setActiveTabIndex);
+    _presenter = TaskListPresenter(this);
+    _presenter.loadTaskCount();
+    _presenter.loadNextListOfTasks();
+    super.initState();
+  }
+
+  void _setupScrollDownToLoadMoreItems() {
+    _taskListScrollController.addListener(() {
+      if (_taskListScrollController.position.pixels == _taskListScrollController.position.maxScrollExtent) {
+        _presenter.loadNextListOfTasks();
+      }
+    });
   }
 
   @override
@@ -51,110 +52,41 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _headerFilterTextFieldWidget(),
-              Divider(
-                height: 4,
+              SearchBarWithTitle(
+                title: 'Tasks',
+                onChanged: (searchText) => _presenter.updateSearchText(searchText),
               ),
-              _buildTabBarWidget(),
-              // ),
-              _filterListWidget(),
+              Divider(height: 1),
+              FilterTabBar(
+                controller: _tabController,
+                onTabChanged: (index) => _presenter.updateStatus(index),
+                items: [
+                  FilterTabBarItem(title: 'Overdue', count: _presenter.getOverdueTaskCount()),
+                  FilterTabBarItem(title: 'Due Today', count: _presenter.getCountOfTasksThatAreDueToday()),
+                  FilterTabBarItem(title: 'Due In A Week', count: _presenter.getCountOfTasksThatAreDueInAWeek()),
+                  FilterTabBarItem(title: 'Upcoming Due', count: _presenter.getUpcomingDueTaskCount()),
+                  FilterTabBarItem(title: 'Completed', count: _presenter.getCompletedTaskCount()),
+                  FilterTabBarItem(title: 'All', count: _presenter.getCountOfAllTasks()),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: <Widget>[
+                    _createListWidget(),
+                    _createListWidget(),
+                    _createListWidget(),
+                    _createListWidget(),
+                    _createListWidget(),
+                    _createListWidget(),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  SizedBox _headerFilterTextFieldWidget() {
-    return SizedBox(
-      height: 40,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _listFilterVisible
-              ? Expanded(
-                  child: SearchBar(
-                    hint: 'Enter a search term',
-                    controller: _searchBarController,
-                    onSearchTextChanged: (searchText) {
-                      _presenter.reset();
-                      _filters.searchText = searchText;
-                      _presenter.loadNextListOfTasks(_tabController.index, _filters);
-                    },
-                  ),
-                )
-              : Text('Task Requests', style: TextStyles.titleTextStyle),
-          IconButton(
-              icon: _listFilterVisible
-                  ? SvgPicture.asset('assets/icons/close_icon.svg', width: 42, height: 23)
-                  : SvgPicture.asset('assets/icons/search_icon.svg', width: 42, height: 23),
-              onPressed: () {
-                setState(() {
-                  _listFilterVisible ? _listFilterVisible = false : _listFilterVisible = true;
-                });
-              }),
-        ],
-      ),
-    );
-  }
-
-  SizedBox _buildTabBarWidget() {
-    return SizedBox(
-      height: 50,
-      child: TabBar(
-        isScrollable: true,
-        controller: _tabController,
-        labelColor: Colors.black,
-        unselectedLabelColor: Colors.black,
-        indicatorColor: AppColors.defaultColor,
-        indicatorWeight: 3,
-        tabs: [
-          TabWidget(
-            tabCount: _presenter.overdueCount,
-            tabName: 'Overdue',
-          ),
-          TabWidget(
-            tabCount: _presenter.dueTodayCount,
-            tabName: 'Due Today',
-          ),
-          TabWidget(
-            tabCount: _presenter.dueInAWeekCount,
-            tabName: 'Due in a week',
-          ),
-          TabWidget(
-            tabCount: _presenter.upcomingDueCount,
-            tabName: 'Upcoming Due',
-          ),
-          TabWidget(
-            tabCount: _presenter.completedCount,
-            tabName: 'Completed',
-          ),
-          TabWidget(
-            tabCount: _presenter.allCount,
-            tabName: 'All',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container _filterListWidget() {
-    return Container(
-      child: Expanded(
-        child: TabBarView(
-          controller: _tabController,
-          children: <Widget>[
-            _createListWidget(),
-            _createListWidget(),
-            _createListWidget(),
-            _createListWidget(),
-            _createListWidget(),
-            _createListWidget(),
-          ],
         ),
       ),
     );
@@ -167,12 +99,12 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
           child: RefreshIndicator(
             onRefresh: () {
               _presenter.reset();
-              _presenter.loadNextListOfTasks(_tabController.index, _filters);
+              _presenter.loadNextListOfTasks();
               return Future.value(null);
             },
             child: ListView.builder(
               controller: _taskListScrollController,
-              itemCount: _presenter.getNumberOfTask(),
+              itemCount: _presenter.getNumberOfTasks(),
               itemBuilder: (context, index) {
                 return _presenter.getTaskViewForIndex(index);
               },
@@ -184,27 +116,12 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
   }
 
   void goToTaskFilter() async {
-//    _filters.reset();
-
-  print(_filters);
-    await ScreenPresenter.present(TaskListFiltersScreen(_filters), context);
-    _selectedTab = _tabController.index;
-    _presenter.reset();
-    _presenter.loadNextListOfTasks(_selectedTab, _filters);
+    var selectedFilters =
+        await ScreenPresenter.present(TaskListFiltersScreen(_presenter.getFilters().clone()), context);
+    if (selectedFilters != null) _presenter.updateFilters(selectedFilters);
   }
 
-  void _setupScrollDownToLoadMoreItems() {
-    _taskListScrollController.addListener(() {
-      if (_taskListScrollController.position.pixels == _taskListScrollController.position.maxScrollExtent) {
-        _presenter.loadNextListOfTasks(_selectedTab, _filters);
-      }
-    });
-  }
-
-  void _setActiveTabIndex() {
-    _presenter.reset();
-    _presenter.loadNextListOfTasks(_tabController.index, _filters);
-  }
+  //MARK: Task list view functions
 
   @override
   void onTaskSelected(int index) {
@@ -214,45 +131,5 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
   @override
   void reloadData() {
     if (this.mounted) setState(() {});
-  }
-}
-
-class TabWidget extends StatelessWidget {
-  const TabWidget({
-    Key key,
-    @required String tabName,
-    @required num tabCount,
-  })  : _totalCount = tabCount,
-        _tabName = tabName,
-        super(key: key);
-
-  final num _totalCount;
-  final String _tabName;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 46,
-      child: Tab(
-        child: Column(
-          children: <Widget>[
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(text: '$_totalCount', style: TextStyle(color: AppColors.defaultColor, fontSize: 22))
-                ],
-              ),
-            ),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(text: _tabName, style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

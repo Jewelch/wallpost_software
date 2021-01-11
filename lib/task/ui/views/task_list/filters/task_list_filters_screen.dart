@@ -23,7 +23,7 @@ class TaskListFiltersScreen extends StatefulWidget {
   _TaskListFiltersScreenState createState() => _TaskListFiltersScreenState(_filters);
 }
 
-class _TaskListFiltersScreenState extends State<TaskListFiltersScreen> implements DepartmentsWrapView {
+class _TaskListFiltersScreenState extends State<TaskListFiltersScreen> implements TaskListFiltersView {
   TaskListFiltersPresenter _presenter;
   TaskListFilters _filters;
 

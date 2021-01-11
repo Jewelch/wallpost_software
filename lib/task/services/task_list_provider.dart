@@ -33,8 +33,9 @@ class TaskListProvider {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     var url = TaskUrls.taskListUrl(companyId, filters, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
-    isLoading = true;
 
+    isLoading = true;
+    _didReachListEnd = false;
     try {
       var apiResponse = await _networkAdapter.get(apiRequest);
       isLoading = false;

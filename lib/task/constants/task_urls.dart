@@ -3,10 +3,8 @@ import 'package:wallpost/task/entities/task_list_filters.dart';
 
 class TaskUrls {
   static String taskListCountUrl(String companyId, TaskListFilters filters) {
-    var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/reports/counts?';
+    var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks/reports/counts';
     url += '?&scope=${filters.scope}';
-    url += '&status=${filters.status}';
-    if (filters.searchText != null) url += '&search=${filters.searchText}';
     if (filters.year != null) url += '&year=${filters.year}';
     filters.assignees.forEach((assignee) => url += '&assignees[]=${assignee.v1Id}');
     filters.departments.forEach((department) => url += '&department[]=${department.id}');
@@ -23,7 +21,7 @@ class TaskUrls {
     var url = '${BaseUrls.taskUrlV2()}/companies/$companyId/tasks';
     url += '?&scope=${filters.scope}';
     url += '&status=${filters.status}';
-    if (filters.searchText != null) url += '&search=${filters.searchText}';
+    if (filters.searchText != null && filters.searchText.isNotEmpty) url += '&search=${filters.searchText}';
     if (filters.year != null) url += '&year=${filters.year}';
     filters.assignees.forEach((assignee) => url += '&assignees[]=${assignee.v1Id}');
     filters.departments.forEach((department) => url += '&department[]=${department.id}');
