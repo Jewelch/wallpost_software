@@ -5,13 +5,16 @@ class Loader {
   ProgressDialog _progressDialog;
 
   Loader(BuildContext context) {
-    _progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
+    _progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+      showLogs: false,
+    );
   }
 
   Future<void> show(String message) async {
-    if (_progressDialog.isShowing()) {
-      return;
-    }
+    if (_progressDialog.isShowing()) return;
 
     _progressDialog.style(
         message: message,
