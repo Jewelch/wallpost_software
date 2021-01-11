@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
-import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
+import 'package:wallpost/_common_widgets/keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -25,20 +26,20 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
   CompaniesListProvider _companiesListProvider = CompaniesListProvider();
   List<CompanyListItem> _companies = [];
   List<CompanyListItem> _filterList = [];
-  var _searchTextController = TextEditingController();
+  var _scrollController = ScrollController();
   Loader loader;
 
   @override
   void initState() {
-    super.initState();
     _getCompanies();
-    _searchTextController.addListener(() => _performSearch());
     loader = Loader(context);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return OnTapKeyboardDismisser(
+    return KeyboardDismisser(
+      scrollController: _scrollController,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: SimpleAppBar(
@@ -63,7 +64,10 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: Column(children: [
-              _createSearchView(),
+              SearchBarWithTitle(
+                title: 'Companies',
+                onChanged: (searchText) => _performSearch(searchText),
+              ),
               Expanded(child: _createListWidget()),
             ]),
           ),
@@ -77,6 +81,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
       return Container(
         padding: EdgeInsets.only(top: 8, bottom: 8),
         child: ListView.builder(
+          controller: _scrollController,
           itemCount: _filterList.length,
           itemBuilder: (context, index) {
             return _getCompanyCard(index);
@@ -90,29 +95,6 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
         child: Center(child: CircularProgressIndicator()),
       );
     }
-  }
-
-  Widget _createSearchView() {
-    return Container(
-      padding: EdgeInsets.only(left: 10),
-      decoration: BoxDecoration(
-        color: AppColors.primaryContrastColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-        ),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: 'Search By Company Name',
-          suffixIcon: _getClearButton(),
-          border: InputBorder.none,
-        ),
-        autocorrect: false,
-        enableSuggestions: false,
-        controller: _searchTextController,
-      ),
-    );
   }
 
   Widget _buildErrorAndRetryView() {
@@ -136,20 +118,6 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _getClearButton() {
-    if (_searchTextController.text.isEmpty) {
-      return IconButton(
-        onPressed: () => _searchTextController.clear(),
-        icon: Icon(Icons.search),
-      );
-    }
-
-    return IconButton(
-      onPressed: () => _searchTextController.clear(),
-      icon: Icon(Icons.clear),
     );
   }
 
@@ -188,11 +156,11 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     }
   }
 
-  void _performSearch() {
+  void _performSearch(String searchText) {
     _filterList = new List<CompanyListItem>();
     for (int i = 0; i < _companies.length; i++) {
       var item = _companies[i];
-      if (item.name.toLowerCase().contains(_searchTextController.text.toLowerCase())) {
+      if (item.name.toLowerCase().contains(searchText.toLowerCase())) {
         _filterList.add(item);
       }
     }
