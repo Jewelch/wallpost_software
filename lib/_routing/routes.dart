@@ -5,8 +5,6 @@ import 'package:wallpost/company_list//ui/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/leave/ui/views/create_leave/create_leave_screen.dart';
 import 'package:wallpost/leave/ui/views/leave_list_details/leave_list_deatils_screen.dart';
-import 'package:wallpost/leave/ui/views/leave_employee_list/leave_employee_list_screen.dart';
-import 'package:wallpost/leave/ui/views/leave_list/leave_list_filter_screen.dart';
 import 'package:wallpost/leave/ui/views/leave_list/leave_list_screen.dart';
 import 'package:wallpost/login/ui/login_screen.dart';
 import 'package:wallpost/password_management/ui/change_password_screen.dart';
@@ -54,17 +52,9 @@ class Routes {
       //leave
       RouteNames.leaveList: (BuildContext context) => LeaveListScreen(),
 
-      //leave list filters
-      RouteNames.leaveListFilter: (BuildContext context) =>
-          LeaveListFilterScreen(),
-
       //leave list details
       RouteNames.leaveListdetails: (BuildContext context) =>
           LeaveListDetailsScreen(),
-
-      //leave employee list
-      RouteNames.leaveEmployeeListScreen: (BuildContext context) =>
-          LeaveEmployeeListScreen(),
 
       //Create Leave
       RouteNames.createLeaveScreen: (BuildContext context) =>

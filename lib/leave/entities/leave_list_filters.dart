@@ -6,7 +6,7 @@ import 'leave_type.dart';
 class LeaveListFilters {
   DateTime _fromDate;
   DateTime _toDate;
-  LeaveType leaveType;
+  List<LeaveType> leaveType = [];
   List<LeaveEmployee> applicants = [];
 
   void showCurrentLeaves() {
@@ -31,7 +31,9 @@ class LeaveListFilters {
     applicants.clear();
   }
 
-  String get fromDateString => _fromDate != null ? DateFormat('yyyy-MM-dd').format(_fromDate) : null;
+  String get fromDateString =>
+      _fromDate != null ? DateFormat('yyyy-MM-dd').format(_fromDate) : null;
 
-  String get toDateString => _toDate != null ? DateFormat('yyyy-MM-dd').format(_toDate) : null;
+  String get toDateString =>
+      _toDate != null ? DateFormat('yyyy-MM-dd').format(_toDate) : null;
 }

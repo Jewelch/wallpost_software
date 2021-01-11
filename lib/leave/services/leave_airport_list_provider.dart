@@ -15,7 +15,8 @@ class LeaveAirportListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  LeaveAirportListProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
+  LeaveAirportListProvider.initWith(
+      this._selectedEmployeeProvider, this._networkAdapter);
 
   LeaveAirportListProvider()
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
@@ -28,10 +29,13 @@ class LeaveAirportListProvider {
     isLoading = false;
   }
 
-  Future<List<LeaveAirport>> getNext(String searchText) async {
-    var companyId = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser().companyId;
-    var employeeId = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser().v1Id;
-    var url = LeaveUrls.airportsListUrl(companyId, employeeId, searchText, _pageNumber, _perPage);
+  Future<List<LeaveAirport>> getNext({String searchText}) async {
+    var companyId =
+        _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser().companyId;
+    var employeeId =
+        _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser().v1Id;
+    var url = LeaveUrls.airportsListUrl(
+        companyId, employeeId, searchText, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
@@ -47,15 +51,18 @@ class LeaveAirportListProvider {
 
   Future<List<LeaveAirport>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<LeaveAirport>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId)
+      return Completer<List<LeaveAirport>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>)
+      throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<LeaveAirport> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<LeaveAirport> _readItemsFromResponse(
+      List<Map<String, dynamic>> responseMapList) {
     try {
       var leaveAirportList = <LeaveAirport>[];
       for (var responseMap in responseMapList) {

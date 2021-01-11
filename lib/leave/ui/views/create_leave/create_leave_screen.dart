@@ -3,10 +3,12 @@ import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_check_mark_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_close_button.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/leave/entities/leave_airport.dart';
 import 'package:wallpost/leave/ui/presenters/leave_types_presenter.dart';
+import 'package:wallpost/leave/ui/views/leave_airport_list/leave_airport_list_screen.dart';
 
 class CreateLeaveScreen extends StatefulWidget {
   @override
@@ -17,9 +19,11 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
     implements LeaveTypeView {
   LeaveTypesPresenter _presenter;
   bool isFilteredLeaveType = false;
-  //var _leaveTypeFilterController = MultiSelectFilterChipsController();
-  var _controller = TextEditingController();
-  bool valuefirst = false;
+  List<LeaveAirport> filteredLeaveAirport;
+  var _departureListController = TextEditingController();
+  var _arrivalListController = TextEditingController();
+
+  bool isTicketRequired = false;
   @override
   void initState() {
     super.initState();
@@ -39,31 +43,38 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
           onPressed: () => Navigator.pop(context),
         ),
         trailing: CircularCheckMarkButton(
-          iconColor: Colors.white,
-          onPressed: () =>
-              Navigator.pushNamed(context, RouteNames.leaveListFilter),
-        ),
+            iconColor: Colors.white, onPressed: () => {}),
       ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Apply Leave', style: TextStyles.titleTextStyle),
-              SizedBox(height: 4),
-              Divider(),
-              SizedBox(height: 4),
-              _buildLeaveTypeList(),
-              SizedBox(height: 4),
-              _buildReasonView(),
-              SizedBox(height: 4),
-              _buildDateView(),
-              SizedBox(height: 4),
-              _buildPhoneTextField(),
-              _buildTicketCheckBox(),
-              _buildDepartureAirportView()
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Apply Leave', style: TextStyles.titleTextStyle),
+                SizedBox(height: 4),
+                Divider(),
+                SizedBox(height: 4),
+                _buildLeaveTypeList(),
+                SizedBox(height: 4),
+                _buildReasonView(),
+                SizedBox(height: 4),
+                _buildDateView(),
+                SizedBox(height: 4),
+                _buildPhoneTextField(),
+                _buildEmailTextField(),
+                _buildAttachmentsTextField(),
+                _buildTicketCheckBox(),
+                if (isTicketRequired) _buildDepartureAirportView(),
+                if (isTicketRequired) _buildArrivalAirportView(),
+                if (isTicketRequired) _buildNoOfTravellersView(),
+                if (isTicketRequired) SizedBox(height: 16),
+                if (isTicketRequired) _buildAirClassView(),
+                if (isTicketRequired) SizedBox(height: 16),
+                if (isTicketRequired) _buildWayTypeView()
+              ],
+            ),
           ),
         ),
       ),
@@ -99,8 +110,6 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                 titles: leaveTypeTitles,
                 selectedIndices: [],
                 allowMultipleSelection: false,
-                // allIndexesSelected: isFilteredLeaveType,
-                //  controller: _leaveTypeFilterController,
                 onItemSelected: (index) {
                   //select item
                 },
@@ -118,7 +127,8 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
       maxLines: null,
       enableInteractiveSelection: false,
       decoration: InputDecoration(
-        labelStyle: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+        labelStyle:
+            TextStyles.largeTitleTextStyle.copyWith(color: Colors.black),
         labelText: 'Reason',
         hintText:
             'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
@@ -152,8 +162,8 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                 Text(
                   'Start Date :',
                   textAlign: TextAlign.center,
-                  style:
-                      TextStyles.labelTextStyle.copyWith(color: Colors.black),
+                  style: TextStyles.subTitleTextStyle
+                      .copyWith(color: Colors.black),
                 ),
                 SizedBox(width: 4),
                 Expanded(
@@ -163,7 +173,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                           top: 20), // add padding to adjust text
                       isDense: true,
                       hintText: "01.02.2019",
-                      hintStyle: TextStyles.labelTextStyle,
+                      hintStyle: TextStyles.subTitleTextStyle,
                       suffixIcon: Padding(
                         padding: EdgeInsets.only(
                             top: 15), // add padding to adjust icon
@@ -183,8 +193,8 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                 Text(
                   'End Date :',
                   textAlign: TextAlign.center,
-                  style:
-                      TextStyles.labelTextStyle.copyWith(color: Colors.black),
+                  style: TextStyles.subTitleTextStyle
+                      .copyWith(color: Colors.black),
                 ),
                 SizedBox(width: 8),
                 Expanded(
@@ -194,7 +204,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                           top: 20), // add padding to adjust text
                       isDense: true,
                       hintText: "01.02.2012",
-                      hintStyle: TextStyles.labelTextStyle,
+                      hintStyle: TextStyles.subTitleTextStyle,
                       suffixIcon: Padding(
                         padding: EdgeInsets.only(
                             top: 15), // add padding to adjust icon
@@ -230,15 +240,55 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
         ]);
   }
 
+  Widget _buildEmailTextField() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'Email :',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+          ),
+          SizedBox(width: 8),
+          Expanded(
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: "abc@gmail.com",
+                hintStyle: TextStyles.subTitleTextStyle,
+              ),
+            ),
+          ),
+        ]);
+  }
+
+  Widget _buildAttachmentsTextField() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'Attachments :',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+          ),
+          SizedBox(width: 8),
+          Expanded(
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: "jaseel_medical.jpeg",
+                hintStyle: TextStyles.subTitleTextStyle,
+              ),
+            ),
+          ),
+        ]);
+  }
+
   Widget _buildTicketCheckBox() {
-    return Row(children: <Widget>[
+    return Row(children: [
       Checkbox(
-        checkColor: Colors.greenAccent,
-        activeColor: Colors.red,
-        value: this.valuefirst,
+        value: this.isTicketRequired,
         onChanged: (bool value) {
           setState(() {
-            this.valuefirst = value;
+            this.isTicketRequired = value;
           });
         },
       ),
@@ -253,6 +303,8 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
   Widget _buildDepartureAirportView() {
     return TextFormField(
         readOnly: true,
+        controller: _departureListController,
+        style: TextStyles.subTitleTextStyle,
         decoration: InputDecoration(
           labelStyle:
               TextStyles.largeTitleTextStyle.copyWith(color: Colors.black),
@@ -262,8 +314,148 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
           floatingLabelBehavior: FloatingLabelBehavior.always,
         ),
         onTap: () {
-          print("I'm here!!!");
+          getDepartureAirports();
         });
+  }
+
+  Widget _buildArrivalAirportView() {
+    return TextFormField(
+        readOnly: true,
+        controller: _arrivalListController,
+        style: TextStyles.subTitleTextStyle,
+        decoration: InputDecoration(
+          labelStyle:
+              TextStyles.largeTitleTextStyle.copyWith(color: Colors.black),
+          labelText: 'Arrival Airport',
+          hintText: ' Kozhikkode CCJ',
+          hintStyle: TextStyles.subTitleTextStyle,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+        ),
+        onTap: () {
+          getArrivalAirports();
+        });
+  }
+
+  Widget _buildNoOfTravellersView() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      children: [
+        Expanded(
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Adults :',
+                  textAlign: TextAlign.center,
+                  style: TextStyles.subTitleTextStyle
+                      .copyWith(color: Colors.black),
+                ),
+                SizedBox(width: 4),
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(top: 20),
+                      hintText: "2",
+                      hintStyle: TextStyles.subTitleTextStyle,
+                    ),
+                  ),
+                ),
+              ]),
+        ),
+        SizedBox(width: 8),
+        Expanded(
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Children :',
+                  textAlign: TextAlign.center,
+                  style: TextStyles.subTitleTextStyle
+                      .copyWith(color: Colors.black),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(top: 20),
+                      hintText: "4",
+                      hintStyle: TextStyles.subTitleTextStyle,
+                    ),
+                  ),
+                ),
+              ]),
+        )
+      ],
+    );
+  }
+
+  Widget _buildAirClassView() {
+    var _airClassList = ["Buisness", "Economy"];
+    var selectedAirClassIndex = 0;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text('Air class',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+        SizedBox(width: 8),
+        MultiSelectFilterChips(
+          titles: _airClassList,
+          selectedIndices: [selectedAirClassIndex],
+          allowMultipleSelection: false,
+          onItemSelected: (selectedIndex) => {_airClassList[selectedIndex]},
+          onItemDeselected: (selectedIndex) {
+            setState(() => {});
+          },
+        ),
+        SizedBox(height: 12),
+      ],
+    );
+  }
+
+  Widget _buildWayTypeView() {
+    var _airWayList = ["One way", "Two way"];
+    var selectedAirWayndex = 0;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text('Way type',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+        SizedBox(width: 8),
+        MultiSelectFilterChips(
+          titles: _airWayList,
+          selectedIndices: [selectedAirWayndex],
+          allowMultipleSelection: false,
+          onItemSelected: (selectedIndex) => {_airWayList[selectedIndex]},
+          onItemDeselected: (selectedIndex) {
+            setState(() => {});
+          },
+        ),
+        SizedBox(height: 12),
+      ],
+    );
+  }
+
+  void getDepartureAirports() async {
+    final selectedAirport =
+        await ScreenPresenter.present(LeaveAirportListScreen(), context);
+    if (selectedAirport != null) filteredLeaveAirport = selectedAirport;
+    _departureListController.text =
+        filteredLeaveAirport.map((e) => e.name).toString();
+  }
+
+  void getArrivalAirports() async {
+    final selectedAirport =
+        await ScreenPresenter.present(LeaveAirportListScreen(), context);
+    if (selectedAirport != null) filteredLeaveAirport = selectedAirport;
+    _arrivalListController.text =
+        filteredLeaveAirport.map((e) => e.name).toString();
   }
 
   @override

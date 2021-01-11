@@ -8,15 +8,15 @@ class LeaveUrls {
         '${BaseUrls.hrUrlV3()}/companies/$companyId/employees/$employeeId/leaverequests?'
         '&pageNumber=$pageNumber&itemsPerPage=$itemsPerPage';
 
-    if (filters.fromDateString != null)
-      url += '&from_date=${filters.fromDateString}';
-    if (filters.toDateString != null) url += '&to_date=${filters.toDateString}';
-    if (filters.leaveType != null)
-      url += '&leave_type_id=${filters.leaveType.id}';
-    if (filters.applicants != null) {
-      filters.applicants
-          .forEach((assignee) => url += '&employeeIds[]=${assignee.v1Id}');
-    }
+    // if (filters.fromDateString != null)
+    //   url += '&from_date=${filters.fromDateString}';
+    // if (filters.toDateString != null) url += '&to_date=${filters.toDateString}';
+    // if (filters.leaveType != null)
+    //   url += '&leave_type_id=${filters.leaveType.id}';
+    // if (filters.applicants != null) {
+    //   filters.applicants
+    //       .forEach((assignee) => url += '&employeeIds[]=${assignee.v1Id}');
+    // }
 
     return url;
   }
