@@ -2,20 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/leave/entities/leave_employee.dart';
+import 'package:wallpost/leave/entities/leave_list_filters.dart';
 import 'package:wallpost/leave/ui/presenters/leave_list_filter_presenter.dart';
+import 'package:wallpost/leave/ui/views/leave_employee_list/leave_employee_list_filter_screen.dart';
 
 class LeaveListFilterScreen extends StatefulWidget {
+  final LeaveListFilters _filters;
+
+  LeaveListFilterScreen(this._filters);
+
   @override
-  _LeaveListFilterScreenState createState() => _LeaveListFilterScreenState();
+  _LeaveListFilterScreenState createState() => _LeaveListFilterScreenState(_filters);
 }
 
-class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
-    implements LeaveListView {
+class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implements LeaveListView {
   LeaveListFilterPresenter _presenter;
+  LeaveListFilters _filters;
+
+  _LeaveListFilterScreenState(this._filters);
+
   List<LeaveEmployee> filteredEmployees;
   bool isFromEmployeeFilter = false;
 
@@ -25,7 +34,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
 
   @override
   void initState() {
-    _presenter = LeaveListFilterPresenter(this);
+    _presenter = LeaveListFilterPresenter(this, _filters);
     _presenter.loadLeaveType();
     _presenter.loadEmployees();
     super.initState();
@@ -50,7 +59,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
             iconName: 'assets/icons/reset_icon.svg',
             iconColor: AppColors.defaultColor,
             color: Colors.transparent,
-            onPressed: () => _resetData(),
+            onPressed: () => _presenter.resetFilters(),
           ),
           CircularIconButton(
             iconName: 'assets/icons/check_mark_icon.svg',
@@ -65,20 +74,14 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
           padding: EdgeInsets.symmetric(horizontal: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildCategoryList(),
-              Divider(),
-              _buildLeaveTypeList(),
-              Divider(),
-              _buildEmployeeList()
-            ],
+            children: [_buildCategoryView(), Divider(), _buildLeaveTypeView(), Divider(), _buildEmployeeView()],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCategoryList() {
+  Widget _buildCategoryView() {
     var _categoryList = ["All", "Current", "History"];
     var selectedCategoryIndex = _categoryList.indexOf("Current");
 
@@ -87,13 +90,11 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Category',
-            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+        Text('Category', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         MultiSelectFilterChips(
           titles: _categoryList,
           selectedIndices: [selectedCategoryIndex],
-//          controller: _categoryFilterController,
           allowMultipleSelection: false,
           onItemSelected: (selectedIndex) => {_categoryList[selectedIndex]},
           onItemDeselected: (selectedIndex) {
@@ -105,9 +106,8 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
     );
   }
 
-  Widget _buildLeaveTypeList() {
-    var leaveTypeTitles = _presenter.leaveTypes.map((e) => e.name).toList();
-
+  Widget _buildLeaveTypeView() {
+    var leaveTypeTitles = _presenter.getLeaveType().map((e) => e.name).toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -128,29 +128,17 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
               )
             : MultiSelectFilterChips(
                 titles: leaveTypeTitles,
-                selectedIndices: [],
+                selectedIndices: _presenter.getSelectedLeaveTypeIndices(),
                 allowMultipleSelection: true,
-
-//                allIndexesSelected: isFilteredLeaveType,
-//                controller: _leaveTypeFilterController,
-                onItemSelected: (index) {
-                  //select item
-                },
+                onItemSelected: (index) => _presenter.selectLeaveTypeAtIndex(index),
+                onItemDeselected: (index) => _presenter.deselectLeaveTypeAtIndex(index),
               ),
         SizedBox(height: 12),
       ],
     );
   }
 
-  Widget _buildEmployeeList() {
-    var employeeTitles = isFromEmployeeFilter
-        ? filteredEmployees.map((e) => e.fullName).toList()
-        : _presenter.employees.map((e) => e.fullName).toList();
-    if (employeeTitles.isNotEmpty && !isFromEmployeeFilter) {
-      employeeTitles = employeeTitles.sublist(
-          0, employeeTitles.length > 8 ? 8 : employeeTitles.length);
-    }
-
+  Widget _buildEmployeeView() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -170,16 +158,14 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
                 ),
               )
             : MultiSelectFilterChips(
-                titles: employeeTitles,
-                selectedIndices: [],
+                titles: _presenter.getApplicant().map((e) => e.fullName).toList(),
+                selectedIndices: _presenter.getSelectedApplicantIndices(),
                 allowMultipleSelection: true,
-//                allIndexesSelected: isFromEmployeeFilter,
-//                controller: _employeesFilterController,
                 showTrailingButton: true,
                 trailingButtonTitle: 'More',
-                onTrailingButtonPressed: () {
-                  goToEmployeesFilter();
-                },
+                onTrailingButtonPressed: () => goToEmployeesFilter(),
+                onItemSelected: (index) => _presenter.selectApplicantAtIndex(index),
+                onItemDeselected: (index) => _presenter.deselectApplicantAtIndex(index),
               ),
         SizedBox(height: 12),
       ],
@@ -187,25 +173,16 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
   }
 
   void goToEmployeesFilter() async {
-    final selectedEmployees =
-        await Navigator.pushNamed(context, RouteNames.leaveEmployeeListScreen);
-    if (selectedEmployees != null) {
-      filteredEmployees = selectedEmployees;
-      isFromEmployeeFilter = true;
-      _presenter.loadFilteredEmployees(filteredEmployees);
+    var didSelectApplicants = await ScreenPresenter.present(LeaveEmployeeListFilterScreen(_filters), context);
+    if (didSelectApplicants != null && didSelectApplicants == true) {
+//      _presenter.load
     }
+    //
+//    if (didSelectApplicants != null) _presenter.updateSelectedApplicant(selectedEmployees);
   }
 
   void _updateAllSelectedFilters() {
     //use after selection
-    //move to parent page
-  }
-
-  void _resetData() {
-    if (this.mounted)
-      setState(() {
-        filteredEmployees = [];
-      });
   }
 
   void setStateIfMounted(VoidCallback callback) {
@@ -215,6 +192,13 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
 
   @override
   void reloadData() {
+    if (this.mounted) setState(() {});
+  }
+
+  @override
+  void resetAndReloadData() {
+    _presenter.loadEmployees();
+    _presenter.loadLeaveType();
     if (this.mounted) setState(() {});
   }
 }

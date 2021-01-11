@@ -28,7 +28,7 @@ class LeaveAirportListProvider {
     isLoading = false;
   }
 
-  Future<List<LeaveAirport>> getNext(String searchText) async {
+  Future<List<LeaveAirport>> getNext({String searchText}) async {
     var companyId = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser().companyId;
     var employeeId = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser().v1Id;
     var url = LeaveUrls.airportsListUrl(companyId, employeeId, searchText, _pageNumber, _perPage);
@@ -81,4 +81,6 @@ class LeaveAirportListProvider {
   int getCurrentPageNumber() {
     return _pageNumber;
   }
+
+  bool get didReachListEnd => _didReachListEnd;
 }

@@ -1,5 +1,23 @@
+Yahya
+1. Task list tile add profile image
+2. Check text formats
+3. Sized and edge insets should be multiples of 2
+4. Task list screen  - show selected filters using the SelectedFiltersView
+5. Multiple assinees image
+6. Escalated color from design
 
-CREATE common text styles class
+
+Munavir
+1. Use the task list and filters code and replicate it in the leave list and filters
+2. Only one leave type  in the filters
+
+
+
+
+
+
+Progress colors
+
 
 # Miscellaneous
 *.class

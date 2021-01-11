@@ -62,3 +62,8 @@ void main() {
     expect(filters.applicants, isEmpty);
   });
 }
+
+
+//TODO: Obaid
+
+add _didReachListEnd = false; for each list provider service before making the API call

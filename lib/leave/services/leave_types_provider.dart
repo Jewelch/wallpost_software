@@ -13,14 +13,21 @@ class LeaveTypesProvider {
   bool isLoading = false;
   String _sessionId;
 
-  LeaveTypesProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
+  LeaveTypesProvider.initWith(
+      this._selectedEmployeeProvider, this._networkAdapter);
 
   LeaveTypesProvider()
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
         _networkAdapter = WPAPI();
 
+  void reset() {
+    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+    isLoading = false;
+  }
+
   Future<List<LeaveType>> getLeaveTypes() async {
-    var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
+    var employee =
+        _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
     var url = LeaveUrls.leaveTypesUrl(employee.companyId, employee.v1Id);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
@@ -38,26 +45,31 @@ class LeaveTypesProvider {
 
   Future<List<LeaveType>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<LeaveType>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId)
+      return Completer<List<LeaveType>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
+    if (apiResponse.data is! Map<String, dynamic>)
+      throw WrongResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
     return _readLeaveTypesFromResponse(responseMap);
   }
 
-  List<LeaveType> _readLeaveTypesFromResponse(Map<String, dynamic> responseMap) {
+  List<LeaveType> _readLeaveTypesFromResponse(
+      Map<String, dynamic> responseMap) {
     var sift = Sift();
 
     try {
-      var leaveTypesMapList = sift.readMapListFromMap(responseMap, 'leaveTypes');
+      var leaveTypesMapList =
+          sift.readMapListFromMap(responseMap, 'leaveTypes');
       return _readLeaveTypesFromMapList(leaveTypesMapList);
     } catch (e) {
       throw InvalidResponseException();
     }
   }
 
-  List<LeaveType> _readLeaveTypesFromMapList(List<Map<String, dynamic>> jsonMapList) {
+  List<LeaveType> _readLeaveTypesFromMapList(
+      List<Map<String, dynamic>> jsonMapList) {
     var items = <LeaveType>[];
     for (var jsonMap in jsonMapList) {
       var item = LeaveType.fromJson(jsonMap);

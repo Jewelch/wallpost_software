@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/leave/entities/leave_list_filters.dart';
 import 'package:wallpost/leave/ui/presenters/leave_list_presenter.dart';
+import 'package:wallpost/leave/ui/views/leave_list/leave_list_filter_screen.dart';
 
 class LeaveListScreen extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class LeaveListScreen extends StatefulWidget {
 class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListView {
   LeaveListPresenter _presenter;
   ScrollController _scrollController;
+  LeaveListFilters _filters = LeaveListFilters();
 
   @override
   void initState() {
@@ -43,7 +46,7 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
         trailing: CircularIconButton(
           iconName: 'assets/icons/filters_icon.svg',
           iconSize: 15,
-          onPressed: () => Navigator.pushNamed(context, RouteNames.leaveListFilter),
+          onPressed: () => goToLeaveFilter(),
         ),
       ),
       body: SafeArea(
@@ -78,6 +81,16 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
         ),
       ),
     );
+  }
+
+  void goToLeaveFilter() async {
+//    _filters.reset();
+    print("hai....");
+    print(_filters);
+    await ScreenPresenter.present(LeaveListFilterScreen(_filters), context);
+    //  _selectedTab = _tabController.index;
+    _presenter.reset();
+    //_presenter.loadNextListOfTasks(_selectedTab, _filters);
   }
 
   Future<void> _getRefreshList() async {

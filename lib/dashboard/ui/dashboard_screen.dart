@@ -31,6 +31,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void onClickMenu(MenuItemProvider item) {
     if (item.menuTitle == 'Task') {
       Navigator.pushNamed(context, RouteNames.createTaskScreen);
+    } else if (item.menuTitle == 'Leave') {
+      Navigator.pushNamed(context, RouteNames.createLeaveScreen);
     }
     print('Click menu -> ${item.menuTitle}');
   }
