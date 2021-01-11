@@ -8,7 +8,7 @@ class OnTapKeyboardDismisser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: child,
     );
   }
