@@ -53,6 +53,7 @@ class _SearchBarWithTitleState extends State<SearchBarWithTitle> {
         onPressed: () {
           _controller.clear();
           _focusNode.unfocus();
+          widget.onChanged(_controller.text);
           setState(() {});
         },
         icon: SvgPicture.asset(
