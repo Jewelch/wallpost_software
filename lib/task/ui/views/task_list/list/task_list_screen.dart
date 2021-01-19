@@ -159,6 +159,7 @@ class _TaskScreen extends State<TaskListScreen>
 
   void _deselectItem(String title) {
     var indexOfItemToRemove = selectedItems.indexOf(title);
+    selectedItems.remove(indexOfItemToRemove);
     _selectedFiltersViewController.removeItemAtIndex(indexOfItemToRemove);
     refreshSelectedFilterNames();
     //todo refresh filter
