@@ -80,7 +80,7 @@ class TaskListTile extends StatelessWidget {
                                 child: Expanded(
                                   child: Row(
                                     children: [
-                                      Text('Start : ',
+                                      Text('Start: ',
                                           style: TextStyles.subTitleTextStyle
                                               .copyWith(color: Colors.black)),
                                       Text(
@@ -97,7 +97,7 @@ class TaskListTile extends StatelessWidget {
                                 child: Expanded(
                                   child: Row(
                                     children: [
-                                      Text('End :',
+                                      Text('End: ',
                                           style: TextStyles.subTitleTextStyle
                                               .copyWith(color: Colors.black)),
                                       Text(

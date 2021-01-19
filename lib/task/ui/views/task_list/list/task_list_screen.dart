@@ -167,6 +167,7 @@ class _TaskScreen extends State<TaskListScreen>
 
   refreshSelectedFilterNames() {
     setState(() {
+      _selectedFiltersViewController = SelectedFiltersViewController();
       selectedItems.clear();
       selectedItems.add(_presenter.getFilters().year.toString());
       selectedItems.addAll(

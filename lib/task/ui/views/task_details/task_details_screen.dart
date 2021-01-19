@@ -96,7 +96,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
                               alignment: Alignment.centerLeft,
                               child: Row(
                                 children: [
-                                  Text('Assigned to :',
+                                  Text('Assigned to: ',
                                       style: TextStyles.subTitleTextStyle
                                           .copyWith(color: Colors.black)),
                                   Padding(
@@ -119,7 +119,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
                               alignment: Alignment.centerLeft,
                               child: Row(
                                 children: [
-                                  Text('Status :',
+                                  Text('Status: ',
                                       style: TextStyles.subTitleTextStyle
                                           .copyWith(color: Colors.black)),
                                   Padding(
@@ -140,7 +140,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
                               alignment: Alignment.centerLeft,
                               child: Row(
                                 children: [
-                                  Text('Created By :',
+                                  Text('Created By: ',
                                       style: TextStyles.subTitleTextStyle
                                           .copyWith(color: Colors.black)),
                                   Padding(
@@ -161,7 +161,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
                               alignment: Alignment.centerLeft,
                               child: Row(
                                 children: [
-                                  Text('Created On :',
+                                  Text('Created On: ',
                                       style: TextStyles.subTitleTextStyle
                                           .copyWith(color: Colors.black)),
                                   Padding(
@@ -184,7 +184,7 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
                               alignment: Alignment.centerLeft,
                               child: Row(
                                 children: [
-                                  Text('Code :',
+                                  Text('Code: ',
                                       style: TextStyles.subTitleTextStyle
                                           .copyWith(color: Colors.black)),
                                   Padding(
@@ -408,14 +408,14 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen>
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             detailsRowWidget(
-                'Start :', _convertToDateFormat(_taskListItem.startDate)),
+                'Start: ', _convertToDateFormat(_taskListItem.startDate)),
             detailsRowWidget(
-                'End :', _convertToDateFormat(_taskListItem.endDate)),
-            detailsRowWidget('Category :', 'Business Development'),
-            detailsRowWidget('Task Duration :', '1'),
-            detailsRowWidget('Duration In :', 'Working Days'),
-            detailsRowWidget('Task Owner :', 'Muhammad Nadeem'),
-            detailsRowWidget('Description :', 'Lorem ipsum'),
+                'End: ', _convertToDateFormat(_taskListItem.endDate)),
+            detailsRowWidget('Category: ', 'Business Development'),
+            detailsRowWidget('Task Duration: ', '1'),
+            detailsRowWidget('Duration In: ', 'Working Days'),
+            detailsRowWidget('Task Owner: ', 'Muhammad Nadeem'),
+            detailsRowWidget('Description: ', 'Lorem ipsum'),
           ]),
         ),
       ],
