@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
+
 enum LeaveStatus {
   pendingApproval,
   approved,
@@ -15,6 +18,18 @@ extension LeaveStatusExtension on LeaveStatus {
       return 'Rejected';
     } else {
       return 'Cancelled';
+    }
+  }
+
+  Color colorValue() {
+    if (this == LeaveStatus.pendingApproval) {
+      return AppColors.pendingApprovalColor;
+    } else if (this == LeaveStatus.approved) {
+      return AppColors.approvedColor;
+    } else if (this == LeaveStatus.rejected) {
+      return AppColors.rejectedColor;
+    } else {
+      return AppColors.cancelledColor;
     }
   }
 }

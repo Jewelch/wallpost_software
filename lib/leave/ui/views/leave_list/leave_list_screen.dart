@@ -4,8 +4,8 @@ import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/leave/entities/leave_list_filters.dart';
 import 'package:wallpost/leave/ui/presenters/leave_list_presenter.dart';
 import 'package:wallpost/leave/ui/views/leave_list/leave_list_filter_screen.dart';
 
@@ -14,10 +14,10 @@ class LeaveListScreen extends StatefulWidget {
   _LeaveListScreenState createState() => _LeaveListScreenState();
 }
 
-class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListView {
+class _LeaveListScreenState extends State<LeaveListScreen>
+    implements LeaveListView {
   LeaveListPresenter _presenter;
   ScrollController _scrollController;
-  LeaveListFilters _filters = LeaveListFilters();
 
   @override
   void initState() {
@@ -30,7 +30,8 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfLeave();
       }
     });
@@ -41,7 +42,8 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title:
+            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
         trailing: CircularIconButton(
           iconName: 'assets/icons/filters_icon.svg',
@@ -76,7 +78,7 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
           itemCount: _presenter.getNumberOfItems(),
           separatorBuilder: (context, i) => const Divider(),
           itemBuilder: (BuildContext context, index) {
-            return _presenter.getViewAtIndex(index);
+            return _presenter.getLeaveListViewAtIndex(index);
           },
         ),
       ),
@@ -84,13 +86,9 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
   }
 
   void goToLeaveFilter() async {
-//    _filters.reset();
-    print("hai....");
-    print(_filters);
-    await ScreenPresenter.present(LeaveListFilterScreen(_filters), context);
-    //  _selectedTab = _tabController.index;
-    _presenter.reset();
-    //_presenter.loadNextListOfTasks(_selectedTab, _filters);
+    var selectedFilters = await ScreenPresenter.present(
+        LeaveListFilterScreen(_presenter.getFilters().clone()), context);
+    if (selectedFilters != null) _presenter.updateFilters(selectedFilters);
   }
 
   Future<void> _getRefreshList() async {
@@ -103,5 +101,11 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
   @override
   void reloadData() {
     if (this.mounted) setState(() {});
+  }
+
+  @override
+  void onLeaveSelected(int index) {
+    Navigator.pushNamed(context, RouteNames.leaveListdetails,
+        arguments: _presenter.getLeaveListForIndex(index));
   }
 }

@@ -5,32 +5,35 @@ import 'package:wallpost/leave/entities/leave_type.dart';
 import 'package:wallpost/leave/services/leave_employees_list_provider.dart';
 import 'package:wallpost/leave/services/leave_types_provider.dart';
 
-abstract class LeaveListView {
+abstract class LeaveListFiltersView {
   void reloadData();
   void resetAndReloadData();
 }
 
 class LeaveListFilterPresenter {
-  final LeaveListView view;
+  final LeaveListFiltersView view;
+  LeaveListFilters _filters;
   final LeaveTypesProvider leaveTypesProvider;
   final LeaveEmployeesListProvider employeesListProvider;
-
   List<LeaveType> _leaveTypes = [];
   List<LeaveEmployee> _applicants = [];
-
-  LeaveListFilters _filters;
 
   LeaveListFilterPresenter(this.view, this._filters)
       : leaveTypesProvider = LeaveTypesProvider(),
         employeesListProvider =
             LeaveEmployeesListProvider.subordinatesProvider();
 
-  Future<void> loadLeaveType() async {
+  void loadLeaveType() async {
     if (_filters.leaveType.isNotEmpty) {
+      _leaveTypes.clear();
       _leaveTypes.addAll(_filters.leaveType);
       view.reloadData();
     } else {
-      if (leaveTypesProvider.isLoading) return null;
+      if (_leaveTypes.isNotEmpty) {
+        view.reloadData();
+        return;
+      }
+      if (leaveTypesProvider.isLoading) return;
 
       try {
         var leaveTypesList = await leaveTypesProvider.getLeaveTypes();
@@ -42,13 +45,17 @@ class LeaveListFilterPresenter {
     }
   }
 
-  Future<void> loadEmployees() async {
+  void loadEmployees() async {
     if (_filters.applicants.isNotEmpty) {
+      _applicants.clear();
       _applicants.addAll(_filters.applicants);
       view.reloadData();
     } else {
-      if (employeesListProvider.isLoading ||
-          employeesListProvider.didReachListEnd) return null;
+      if (_applicants.isNotEmpty) {
+        view.reloadData();
+        return;
+      }
+      if (employeesListProvider.isLoading) return;
 
       try {
         var employeeList = await employeesListProvider.getNext();
@@ -59,12 +66,6 @@ class LeaveListFilterPresenter {
         view.reloadData();
       }
     }
-  }
-
-  void loadFilteredEmployees(List<LeaveEmployee> employeesList) {
-    _applicants.clear();
-    _applicants.addAll(employeesList);
-    view.reloadData();
   }
 
   //MARK: Functions to get, select, and deselect leavetype
@@ -91,7 +92,7 @@ class LeaveListFilterPresenter {
     view.reloadData();
   }
 
-  //MARK: Functions to get, select, and deselect assignees
+  //MARK: Functions to get, select, and deselect applicant
 
   List<LeaveEmployee> getApplicant() {
     return _applicants;
@@ -115,30 +116,16 @@ class LeaveListFilterPresenter {
     view.reloadData();
   }
 
-  void updateSelectedApplicant(List<LeaveEmployee> assignees) {
-    _applicants.clear();
-    _applicants.addAll(assignees);
-    _filters.applicants.clear();
-    _filters.applicants.addAll(assignees);
-    view.reloadData();
-  }
-
   //MARK: Util functions
 
   void resetFilters() {
-    _filters.reset();
+    _filters.resetSelectedLeaveType();
+    _filters.resetSelectedApplicant();
     employeesListProvider.reset();
     leaveTypesProvider.reset();
     _applicants.clear();
     _leaveTypes.clear();
     view.resetAndReloadData();
-  }
-
-  void reset() {
-    employeesListProvider.reset();
-    //  _resetErrors();
-    _applicants.clear();
-    view.reloadData();
   }
 
   bool isLoadingLeaveTypes() {

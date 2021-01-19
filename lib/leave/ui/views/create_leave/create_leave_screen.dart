@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_check_mark_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_close_button.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/_shared/constants/app_date_picker.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/leave/entities/leave_airport.dart';
 import 'package:wallpost/leave/ui/presenters/leave_types_presenter.dart';
@@ -20,8 +22,12 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
   LeaveTypesPresenter _presenter;
   bool isFilteredLeaveType = false;
   List<LeaveAirport> filteredLeaveAirport;
+  var _startDateTextController = TextEditingController();
+  var _endDateTextController = TextEditingController();
   var _departureListController = TextEditingController();
   var _arrivalListController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
+  var myFormat = DateFormat('d-MM-yyyy');
 
   bool isTicketRequired = false;
   @override
@@ -59,19 +65,22 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                 _buildLeaveTypeList(),
                 SizedBox(height: 4),
                 _buildReasonView(),
-                SizedBox(height: 4),
+                SizedBox(height: 8),
                 _buildDateView(),
-                SizedBox(height: 4),
+                SizedBox(height: 8),
                 _buildPhoneTextField(),
+                SizedBox(height: 8),
                 _buildEmailTextField(),
+                SizedBox(height: 8),
                 _buildAttachmentsTextField(),
                 _buildTicketCheckBox(),
                 if (isTicketRequired) _buildDepartureAirportView(),
                 if (isTicketRequired) _buildArrivalAirportView(),
+                SizedBox(height: 8),
                 if (isTicketRequired) _buildNoOfTravellersView(),
-                if (isTicketRequired) SizedBox(height: 16),
+                SizedBox(height: 16),
                 if (isTicketRequired) _buildAirClassView(),
-                if (isTicketRequired) SizedBox(height: 16),
+                SizedBox(height: 16),
                 if (isTicketRequired) _buildWayTypeView()
               ],
             ),
@@ -123,10 +132,13 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
     return TextFormField(
       keyboardType: TextInputType.multiline,
       textInputAction: TextInputAction.newline,
-      minLines: 2,
+      minLines: null,
       maxLines: null,
       enableInteractiveSelection: false,
+      style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(vertical: 6),
+        isDense: true,
         labelStyle:
             TextStyles.largeTitleTextStyle.copyWith(color: Colors.black),
         labelText: 'Reason',
@@ -155,131 +167,126 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
       crossAxisAlignment: CrossAxisAlignment.baseline,
       children: [
         Expanded(
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Start Date :',
-                  textAlign: TextAlign.center,
-                  style: TextStyles.subTitleTextStyle
-                      .copyWith(color: Colors.black),
+          child: Row(children: [
+            Text(
+              'Start Date :',
+              textAlign: TextAlign.center,
+              style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+            ),
+            SizedBox(width: 4),
+            Expanded(
+              flex: 1,
+              child: TextFormField(
+                controller: _startDateTextController,
+                style:
+                    TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 6),
+                  isDense: true,
+                  hintText: "01.02.2019",
+                  hintStyle: TextStyles.subTitleTextStyle,
+                  suffixIcon: Icon(Icons.calendar_today_outlined, size: 14),
+                  suffixIconConstraints: BoxConstraints(minWidth: 20),
                 ),
-                SizedBox(width: 4),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          top: 20), // add padding to adjust text
-                      isDense: true,
-                      hintText: "01.02.2019",
-                      hintStyle: TextStyles.subTitleTextStyle,
-                      suffixIcon: Padding(
-                        padding: EdgeInsets.only(
-                            top: 15), // add padding to adjust icon
-                        child: Icon(Icons.calendar_today_outlined, size: 14),
-                      ),
-                    ),
-                  ),
-                ),
-              ]),
+                onTap: () {
+                  // Below line stops keyboard from appearing
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  _selectDate(context);
+                  // Show Date Picker Here
+                },
+              ),
+            ),
+          ]),
         ),
         SizedBox(width: 8),
         Expanded(
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'End Date :',
-                  textAlign: TextAlign.center,
-                  style: TextStyles.subTitleTextStyle
-                      .copyWith(color: Colors.black),
+          child: Row(children: [
+            Text(
+              'End Date :',
+              textAlign: TextAlign.center,
+              style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: TextFormField(
+                controller: _endDateTextController,
+                style:
+                    TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 6),
+                  isDense: true,
+                  hintText: "01.02.2012",
+                  hintStyle: TextStyles.subTitleTextStyle,
+                  suffixIcon: Icon(Icons.calendar_today_outlined, size: 14),
+                  suffixIconConstraints: BoxConstraints(minWidth: 20),
                 ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          top: 20), // add padding to adjust text
-                      isDense: true,
-                      hintText: "01.02.2012",
-                      hintStyle: TextStyles.subTitleTextStyle,
-                      suffixIcon: Padding(
-                        padding: EdgeInsets.only(
-                            top: 15), // add padding to adjust icon
-                        child: Icon(Icons.calendar_today_outlined, size: 14),
-                      ),
-                    ),
-                  ),
-                ),
-              ]),
+              ),
+            ),
+          ]),
         )
       ],
     );
   }
 
   Widget _buildPhoneTextField() {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Phone :',
-            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+    return Row(children: [
+      Text('Phone :',
+          style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+      SizedBox(width: 8),
+      Expanded(
+        child: TextFormField(
+          style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 6),
+            isDense: true,
+            hintText: "+91 9745909644",
+            hintStyle: TextStyles.subTitleTextStyle,
           ),
-          SizedBox(width: 8),
-          Expanded(
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: "+91 9745909644",
-                hintStyle: TextStyles.subTitleTextStyle,
-              ),
-            ),
-          ),
-        ]);
+        ),
+      ),
+    ]);
   }
 
   Widget _buildEmailTextField() {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Email :',
-            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+    return Row(children: [
+      Text(
+        'Email :',
+        style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+      ),
+      SizedBox(width: 8),
+      Expanded(
+        child: TextFormField(
+          style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 6),
+            isDense: true,
+            hintText: "abc@gmail.com",
+            hintStyle: TextStyles.subTitleTextStyle,
           ),
-          SizedBox(width: 8),
-          Expanded(
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: "abc@gmail.com",
-                hintStyle: TextStyles.subTitleTextStyle,
-              ),
-            ),
-          ),
-        ]);
+        ),
+      ),
+    ]);
   }
 
   Widget _buildAttachmentsTextField() {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Attachments :',
-            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+    return Row(children: [
+      Text(
+        'Attachments :',
+        style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+      ),
+      SizedBox(width: 8),
+      Expanded(
+        child: TextFormField(
+          style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 6),
+            isDense: true,
+            hintText: "jaseel_medical.jpeg",
+            hintStyle: TextStyles.subTitleTextStyle,
           ),
-          SizedBox(width: 8),
-          Expanded(
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: "jaseel_medical.jpeg",
-                hintStyle: TextStyles.subTitleTextStyle,
-              ),
-            ),
-          ),
-        ]);
+        ),
+      ),
+    ]);
   }
 
   Widget _buildTicketCheckBox() {
@@ -302,7 +309,6 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
 
   Widget _buildDepartureAirportView() {
     return TextFormField(
-        readOnly: true,
         controller: _departureListController,
         style: TextStyles.subTitleTextStyle,
         decoration: InputDecoration(
@@ -314,13 +320,13 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
           floatingLabelBehavior: FloatingLabelBehavior.always,
         ),
         onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
           getDepartureAirports();
         });
   }
 
   Widget _buildArrivalAirportView() {
     return TextFormField(
-        readOnly: true,
         controller: _arrivalListController,
         style: TextStyles.subTitleTextStyle,
         decoration: InputDecoration(
@@ -332,61 +338,60 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
           floatingLabelBehavior: FloatingLabelBehavior.always,
         ),
         onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
           getArrivalAirports();
         });
   }
 
   Widget _buildNoOfTravellersView() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
       children: [
         Expanded(
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Adults :',
-                  textAlign: TextAlign.center,
-                  style: TextStyles.subTitleTextStyle
-                      .copyWith(color: Colors.black),
+          child: Row(children: [
+            Text(
+              'Adults :',
+              textAlign: TextAlign.center,
+              style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                style:
+                    TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 6),
+                  isDense: true,
+                  hintText: "2",
+                  hintStyle: TextStyles.subTitleTextStyle,
                 ),
-                SizedBox(width: 4),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(top: 20),
-                      hintText: "2",
-                      hintStyle: TextStyles.subTitleTextStyle,
-                    ),
-                  ),
-                ),
-              ]),
+              ),
+            ),
+          ]),
         ),
-        SizedBox(width: 8),
+        SizedBox(width: 20),
         Expanded(
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Children :',
-                  textAlign: TextAlign.center,
-                  style: TextStyles.subTitleTextStyle
-                      .copyWith(color: Colors.black),
+          child: Row(children: [
+            Text(
+              'Children :',
+              textAlign: TextAlign.center,
+              style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                style:
+                    TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 6),
+                  isDense: true,
+                  hintText: "4",
+                  hintStyle: TextStyles.subTitleTextStyle,
                 ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(top: 20),
-                      hintText: "4",
-                      hintStyle: TextStyles.subTitleTextStyle,
-                    ),
-                  ),
-                ),
-              ]),
+              ),
+            ),
+          ]),
         )
       ],
     );
@@ -461,5 +466,19 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
   @override
   void reloadData() {
     if (this.mounted) setState(() {});
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        print("selecte date>>>>>" + selectedDate.toString());
+        _startDateTextController.text = myFormat.format(selectedDate);
+      });
   }
 }

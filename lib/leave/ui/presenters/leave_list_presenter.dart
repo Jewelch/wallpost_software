@@ -9,27 +9,25 @@ import 'package:wallpost/leave/ui/views/leave_list/leave_list_tile.dart';
 
 abstract class LeaveListView {
   void reloadData();
+  void onLeaveSelected(int index);
 }
 
 class LeaveListPresenter {
   final LeaveListView view;
-  final LeaveListProvider provider;
+  final LeaveListProvider _leaveListProvider;
   List<LeaveListItem> _leaveLists = [];
+  LeaveListFilters _filters = LeaveListFilters();
   String _errorMessage;
-  LeaveListFilters _filters;
 
-  LeaveListPresenter(this.view) : provider = LeaveListProvider();
-
-  LeaveListPresenter.initWith(this.view, this.provider);
+  LeaveListPresenter(this.view) : _leaveListProvider = LeaveListProvider();
 
   Future<void> loadNextListOfLeave() async {
-    if (provider.isLoading || provider.didReachListEnd) return null;
-
+    if (_leaveListProvider.isLoading) return null;
     _resetErrors();
-    view.reloadData();
     try {
-      var leaveList = await provider.getNext(_filters);
+      var leaveList = await _leaveListProvider.getNext(_filters);
       _leaveLists.addAll(leaveList);
+      if (_leaveLists.isEmpty) _errorMessage = 'There are no Leave to show.';
       view.reloadData();
     } on WPException catch (e) {
       _errorMessage = e.userReadableMessage;
@@ -37,59 +35,59 @@ class LeaveListPresenter {
     }
   }
 
+//MARK: Functions to get leave list views
   int getNumberOfItems() {
-    if (_hasErrors()) return _leaveLists.length + 1;
+    return _leaveLists.length + 1;
+  }
 
-    if (_leaveLists.isEmpty) return 1;
+  Widget getLeaveListViewAtIndex(int index) {
+    if (index < _leaveLists.length) return _buildLeaveListViewForIndex(index);
 
-    if (provider.didReachListEnd) {
-      return _leaveLists.length;
+    if (_hasErrors()) {
+      return _buildErrorView(_errorMessage);
     } else {
-      return _leaveLists.length + 1;
+      if (_leaveListProvider.didReachListEnd) {
+        return Container(height: 200);
+      } else {
+        return LoaderListTile();
+      }
     }
   }
 
-  Widget getViewAtIndex(int index) {
-    if (_shouldShowErrorAtIndex(index))
-      return ErrorListTile(
-        '$_errorMessage \nTap here to reload.',
-        onTap: () {
-          loadNextListOfLeave();
-          view.reloadData();
-        },
-      );
-
-    if (_leaveLists.isEmpty) return _buildViewWhenThereAreNoResults();
-
-    if (index < _leaveLists.length) {
-      return LeaveListTile(_leaveLists[index]);
-    } else {
-      return LoaderListTile();
-    }
+  Widget _buildLeaveListViewForIndex(int index) {
+    return LeaveListTile(_leaveLists[index], onLeaveListTileTap: () {
+      view.onLeaveSelected(index);
+    });
   }
 
-  bool _shouldShowErrorAtIndex(int index) {
-    return _hasErrors() && index == _leaveLists.length;
+  Widget _buildErrorView(String errorMessage) {
+    return ErrorListTile(
+      '$errorMessage Tap here to reload.',
+      onTap: () {
+        loadNextListOfLeave();
+        view.reloadData();
+      },
+    );
   }
 
-  Widget _buildViewWhenThereAreNoResults() {
-    if (provider.didReachListEnd) {
-      return ErrorListTile(
-        'There are no leaves to show. \nTap here to reload.',
-        onTap: () {
-          reset();
-          loadNextListOfLeave();
-          view.reloadData();
-        },
-      );
-    } else {
-      return LoaderListTile();
-    }
+  LeaveListItem getLeaveListForIndex(int index) {
+    return _leaveLists[index];
+  }
+
+  LeaveListFilters getFilters() {
+    return _filters;
+  }
+
+//MARK: Functions to change the filters
+  void updateFilters(LeaveListFilters filters) {
+    this._filters = filters;
+    reset();
+    loadNextListOfLeave();
   }
 
 //MARK: Util functions
   void reset() {
-    provider.reset();
+    _leaveListProvider.reset();
     _resetErrors();
     _leaveLists.clear();
     view.reloadData();

@@ -5,46 +5,34 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/leave/entities/leave_list_item.dart';
 import 'package:wallpost/leave/entities/leave_status.dart';
-import 'package:wallpost/leave/ui/views/leave_list_details/leave_list_deatils_screen.dart';
 
-class LeaveListTile extends StatefulWidget {
+class LeaveListTile extends StatelessWidget {
   final LeaveListItem leaveListItem;
+  final VoidCallback onLeaveListTileTap;
 
-  const LeaveListTile(this.leaveListItem);
+  const LeaveListTile(
+    this.leaveListItem, {
+    this.onLeaveListTileTap,
+  });
 
-  @override
-  _LeaveListTileState createState() => _LeaveListTileState();
-}
-
-class _LeaveListTileState extends State<LeaveListTile> {
-  @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            new MaterialPageRoute(
-              builder: (__) => new LeaveListDetailsScreen(
-                  leaveListSingleItem: widget.leaveListItem,
-                  leaveStatus: widget.leaveListItem.status.stringValue()),
-            ),
-          );
-        },
+        onTap: () => {onLeaveListTileTap()},
         child: Row(
           children: [
             Column(
               children: <Widget>[
                 CircleAvatar(
                   radius: 20.0,
-                  backgroundImage: NetworkImage(
-                      widget.leaveListItem.applicantProfileImageUrl),
+                  backgroundImage:
+                      NetworkImage(leaveListItem.applicantProfileImageUrl),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(height: 4),
                 Text(
-                  widget.leaveListItem.totalLeaveDays.toString(),
+                  leaveListItem.totalLeaveDays.toString(),
                   style: TextStyles.labelTextStyle,
                 ),
                 Text(
@@ -60,7 +48,7 @@ class _LeaveListTileState extends State<LeaveListTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.leaveListItem.applicantName,
+                    leaveListItem.applicantName,
                     style: TextStyles.subTitleTextStyle.copyWith(
                       color: AppColors.defaultColor,
                     ),
@@ -79,7 +67,7 @@ class _LeaveListTileState extends State<LeaveListTile> {
                             ),
                             TextSpan(
                               text: _convertToDateFormat(
-                                widget.leaveListItem.leaveFrom,
+                                leaveListItem.leaveFrom,
                               ),
                               style: TextStyles.labelTextStyle,
                             )
@@ -96,7 +84,7 @@ class _LeaveListTileState extends State<LeaveListTile> {
                             ),
                             TextSpan(
                               text: _convertToDateFormat(
-                                widget.leaveListItem.leaveTo,
+                                leaveListItem.leaveTo,
                               ),
                               style: TextStyles.labelTextStyle,
                             )
@@ -117,15 +105,15 @@ class _LeaveListTileState extends State<LeaveListTile> {
                               borderRadius: BorderRadius.circular(10),
                               color: AppColors.defaultColor),
                           child: Text(
-                            widget.leaveListItem.leaveType,
+                            leaveListItem.leaveType,
                             style: TextStyles.labelTextStyle
                                 .copyWith(color: Colors.white),
                           ),
                         ),
                         Text(
-                          widget.leaveListItem.status.stringValue(),
-                          style: TextStyles.labelTextStyle
-                              .copyWith(color: Colors.orange),
+                          leaveListItem.status.stringValue(),
+                          style: TextStyles.labelTextStyle.copyWith(
+                              color: leaveListItem.status.colorValue()),
                         ),
                       ])
                 ],

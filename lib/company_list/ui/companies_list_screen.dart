@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
-import 'package:wallpost/_common_widgets/keyboard_dismisser/keyboard_dismisser.dart';
+import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
@@ -38,8 +38,8 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardDismisser(
-      scrollController: _scrollController,
+    return OnTapKeyboardDismisser(
+      //  scrollController: _scrollController,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: SimpleAppBar(
@@ -171,9 +171,11 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     var selectedCompany = _filterList[index];
     await loader.show('');
     try {
-      var _ = await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
+      var _ =
+          await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
       await loader.hide();
-      Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, RouteNames.dashboard, (route) => false);
     } on WPException catch (e) {
       await loader.hide();
       Alert.showSimpleAlert(

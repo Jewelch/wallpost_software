@@ -27,7 +27,7 @@ class _LeaveAirportListScreenState extends State<LeaveAirportListScreen> {
   @override
   Widget build(BuildContext context) {
     return MultiSelectFilterList(
-      screenTitle: 'Select Applicants',
+      screenTitle: 'Select Airports',
       items: _airports.map((e) => e.name).toList(),
       selectedItems: [],
       searchBarHint: 'Search by airport or city name',
@@ -65,38 +65,6 @@ class _LeaveAirportListScreenState extends State<LeaveAirportListScreen> {
         Navigator.pop(context, _selectedAirports);
       },
     );
-
-//    return MultiSelectFilterList(
-//      screenTitle: 'Airports',
-//      items: [],
-//      selectedItems: [],
-//      singleSelection: true,
-//      searchBarHint: 'Search by airport name',
-//      noItemsMessage: 'There are no airports to show.',
-//      controller: _filterListController,
-//      onRefresh: () {
-//        _leaveAirport.clear();
-//        getLeaveAirport();
-//      },
-//      onRetry: () {
-//        getLeaveAirport();
-//      },
-//      didReachEndOfList: () {
-//        //do nothing
-//      },
-//      onSearchTextChanged: (_) {
-//        _leaveAirport.clear();
-//        getLeaveAirport();
-//      },
-//      onFiltersSelectionComplete: () {
-//        var selectedIndices = _filterListController.getSelectedIndices();
-//        List<LeaveAirport> selectedLeaveAirport = [];
-//        for (int index in selectedIndices) {
-//          selectedLeaveAirport.add(_leaveAirport[index]);
-//        }
-//        Navigator.pop(context, selectedLeaveAirport);
-//      },
-//    );
   }
 
   void _getAirports() async {
@@ -119,17 +87,4 @@ class _LeaveAirportListScreenState extends State<LeaveAirportListScreen> {
       });
     }
   }
-/*
-  void getLeaveAirport() async {
-    if (_provider.isLoading) return;
-
-    try {
-      var leaveAirportList = await _provider.getNext(searchText: _filterListController.getSearchText());
-      _leaveAirport.addAll(leaveAirportList);
-      _filterListController.addItems(leaveAirportList.map((e) => e.name).toList());
-      _filterListController.reachedListEnd();
-    } on WPException catch (e) {
-      _filterListController.showError(e.userReadableMessage);
-    }
-  }*/
 }

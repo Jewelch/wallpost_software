@@ -29,6 +29,12 @@ class AppColors {
   static final Color averagePerformanceColor = getColorFromHex('#f0ad4e');
   static final Color badPerformanceColor = getColorFromHex('#db544e');
 
+  //Leave status colors
+  static final Color pendingApprovalColor = getColorFromHex('#f0ad4e');
+  static final Color approvedColor = getColorFromHex('#2bba68');
+  static final Color rejectedColor = getColorFromHex('#db544e');
+  static final Color cancelledColor = getColorFromHex('#db544e');
+
   //MARK: Util function to convert hex string to color
   static Color getColorFromHex(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll('#', '');

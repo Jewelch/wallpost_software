@@ -31,7 +31,24 @@ class LeaveListFilters {
     applicants.clear();
   }
 
-  String get fromDateString => _fromDate != null ? DateFormat('yyyy-MM-dd').format(_fromDate) : null;
+  void resetSelectedLeaveType() {
+    leaveType = [];
+  }
 
-  String get toDateString => _toDate != null ? DateFormat('yyyy-MM-dd').format(_toDate) : null;
+  void resetSelectedApplicant() {
+    applicants = [];
+  }
+
+  String get fromDateString =>
+      _fromDate != null ? DateFormat('yyyy-MM-dd').format(_fromDate) : null;
+
+  String get toDateString =>
+      _toDate != null ? DateFormat('yyyy-MM-dd').format(_toDate) : null;
+
+  LeaveListFilters clone() {
+    var filters = LeaveListFilters();
+    filters.leaveType.addAll(this.leaveType);
+    filters.applicants.addAll(this.applicants);
+    return filters;
+  }
 }

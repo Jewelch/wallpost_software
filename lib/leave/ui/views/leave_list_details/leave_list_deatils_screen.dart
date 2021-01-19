@@ -5,20 +5,19 @@ import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/leave/entities/leave_list_item.dart';
+import 'package:wallpost/leave/entities/leave_status.dart';
 
 class LeaveListDetailsScreen extends StatefulWidget {
-  final dynamic leaveListSingleItem;
-  final String leaveStatus;
-
-  LeaveListDetailsScreen({this.leaveListSingleItem, this.leaveStatus});
-
   @override
   _LeaveListDetailsScreenState createState() => _LeaveListDetailsScreenState();
 }
 
 class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
+  LeaveListItem _leaveListItem;
   @override
   Widget build(BuildContext context) {
+    _leaveListItem = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
@@ -62,13 +61,13 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
             children: <Widget>[
               CircleAvatar(
                 radius: 20.0,
-                backgroundImage: NetworkImage(
-                    widget.leaveListSingleItem.applicantProfileImageUrl),
+                backgroundImage:
+                    NetworkImage(_leaveListItem.applicantProfileImageUrl),
                 backgroundColor: Colors.transparent,
               ),
               SizedBox(height: 4),
               Text(
-                '${widget.leaveListSingleItem.totalLeaveDays}',
+                '${_leaveListItem.totalLeaveDays}',
                 style: TextStyles.labelTextStyle,
               ),
               Text(
@@ -86,12 +85,12 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(widget.leaveListSingleItem.applicantName,
+                      Text(_leaveListItem.applicantName,
                           style: TextStyles.subTitleTextStyle),
                       Text(
-                        widget.leaveStatus,
-                        style: TextStyles.labelTextStyle
-                            .copyWith(color: Colors.green),
+                        _leaveListItem.status.stringValue(),
+                        style: TextStyles.labelTextStyle.copyWith(
+                            color: _leaveListItem.status.colorValue()),
                       ),
                     ]),
                 SizedBox(height: 12),
@@ -138,7 +137,7 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
                             borderRadius: BorderRadius.circular(10),
                             color: AppColors.defaultColor),
                         child: Text(
-                          widget.leaveListSingleItem.leaveType,
+                          _leaveListItem.leaveType,
                           style: TextStyles.labelTextStyle
                               .copyWith(color: Colors.white),
                         ),
@@ -166,7 +165,7 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
             ),
             Expanded(
               child: Text(
-                _convertToDateFormat(widget.leaveListSingleItem.leaveFrom),
+                _convertToDateFormat(_leaveListItem.leaveFrom),
                 textAlign: TextAlign.left,
                 style: TextStyles.labelTextStyle,
               ),
@@ -184,7 +183,7 @@ class _LeaveListDetailsScreenState extends State<LeaveListDetailsScreen> {
             ),
             Expanded(
               child: Text(
-                _convertToDateFormat(widget.leaveListSingleItem.leaveTo),
+                _convertToDateFormat(_leaveListItem.leaveTo),
                 textAlign: TextAlign.left,
                 style: TextStyles.labelTextStyle,
               ),
