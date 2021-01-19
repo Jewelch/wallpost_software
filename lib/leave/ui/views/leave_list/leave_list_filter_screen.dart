@@ -17,14 +17,13 @@ class LeaveListFilterScreen extends StatefulWidget {
   LeaveListFilterScreen(this._filters);
 
   @override
-  _LeaveListFilterScreenState createState() =>
-      _LeaveListFilterScreenState(_filters);
+  _LeaveListFilterScreenState createState() => _LeaveListFilterScreenState(_filters);
 }
 
-class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
-    implements LeaveListFiltersView {
+class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implements LeaveListFiltersView {
   LeaveListFilterPresenter _presenter;
   LeaveListFilters _filters;
+
   _LeaveListFilterScreenState(this._filters);
 
   @override
@@ -46,13 +45,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
           padding: EdgeInsets.symmetric(horizontal: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildCategoryView(),
-              Divider(),
-              _buildLeaveTypeView(),
-              Divider(),
-              _buildEmployeeView()
-            ],
+            children: [_buildCategoryView(), Divider(), _buildLeaveTypeView(), Divider(), _buildEmployeeView()],
           ),
         ),
       ),
@@ -95,8 +88,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Category',
-            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+        Text('Category', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         MultiSelectFilterChips(
           titles: _categoryList,
@@ -118,21 +110,16 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 12),
-        Text('Leave Type',
-            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+        Text('Leave Type', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         _presenter.isLoadingLeaveTypes()
-            ? Center(
-                child: SizedBox(
-                    width: 30, height: 30, child: CircularProgressIndicator()))
+            ? Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()))
             : MultiSelectFilterChips(
                 titles: _presenter.getLeaveType().map((e) => e.name).toList(),
-                selectedIndices: _presenter.getSelectedLeaveTypeIndices(),
+                selectedIndices: [_presenter.getSelectedLeaveTypeIndex()],
                 allowMultipleSelection: true,
-                onItemSelected: (index) =>
-                    _presenter.selectLeaveTypeAtIndex(index),
-                onItemDeselected: (index) =>
-                    _presenter.deselectLeaveTypeAtIndex(index),
+                onItemSelected: (index) => _presenter.selectLeaveTypeAtIndex(index),
+                onItemDeselected: (index) => _presenter.deselectLeaveTypeAtIndex(index),
               ),
         SizedBox(height: 12),
       ],
@@ -159,17 +146,14 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
                 ),
               )
             : MultiSelectFilterChips(
-                titles:
-                    _presenter.getApplicant().map((e) => e.fullName).toList(),
+                titles: _presenter.getApplicant().map((e) => e.fullName).toList(),
                 selectedIndices: _presenter.getSelectedApplicantIndices(),
                 allowMultipleSelection: true,
                 showTrailingButton: true,
                 trailingButtonTitle: 'More',
                 onTrailingButtonPressed: () => goToEmployeesFilterList(),
-                onItemSelected: (index) =>
-                    _presenter.selectApplicantAtIndex(index),
-                onItemDeselected: (index) =>
-                    _presenter.deselectApplicantAtIndex(index),
+                onItemSelected: (index) => _presenter.selectApplicantAtIndex(index),
+                onItemDeselected: (index) => _presenter.deselectApplicantAtIndex(index),
               ),
         SizedBox(height: 12),
       ],
@@ -177,8 +161,7 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen>
   }
 
   void goToEmployeesFilterList() async {
-    var didSelectApplicants = await ScreenPresenter.present(
-        LeaveEmployeeListFilterScreen(_filters), context) as bool;
+    var didSelectApplicants = await ScreenPresenter.present(LeaveEmployeeListFilterScreen(_filters), context) as bool;
     if (didSelectApplicants != null && didSelectApplicants == true) {
       _presenter.loadEmployees();
     }

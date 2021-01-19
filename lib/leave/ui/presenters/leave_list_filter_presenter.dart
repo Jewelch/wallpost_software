@@ -7,6 +7,7 @@ import 'package:wallpost/leave/services/leave_types_provider.dart';
 
 abstract class LeaveListFiltersView {
   void reloadData();
+
   void resetAndReloadData();
 }
 
@@ -20,13 +21,12 @@ class LeaveListFilterPresenter {
 
   LeaveListFilterPresenter(this.view, this._filters)
       : leaveTypesProvider = LeaveTypesProvider(),
-        employeesListProvider =
-            LeaveEmployeesListProvider.subordinatesProvider();
+        employeesListProvider = LeaveEmployeesListProvider.subordinatesProvider();
 
   void loadLeaveType() async {
-    if (_filters.leaveType.isNotEmpty) {
+    if (_filters.leaveType != null) {
       _leaveTypes.clear();
-      _leaveTypes.addAll(_filters.leaveType);
+      _leaveTypes.add(_filters.leaveType);
       view.reloadData();
     } else {
       if (_leaveTypes.isNotEmpty) {
@@ -74,21 +74,21 @@ class LeaveListFilterPresenter {
     return _leaveTypes;
   }
 
-  List<int> getSelectedLeaveTypeIndices() {
-    List<int> indices = [];
-    for (LeaveType e in _filters.leaveType) {
-      indices.add(_leaveTypes.indexOf(e));
+  int getSelectedLeaveTypeIndex() {
+    if(_filters.leaveType != null) {
+      return _leaveTypes.indexOf(_filters.leaveType);
+    } else {
+      return null;
     }
-    return indices;
   }
 
   void selectLeaveTypeAtIndex(int index) {
-    _filters.leaveType.add(_leaveTypes[index]);
+    _filters.leaveType = _leaveTypes[index];
     view.reloadData();
   }
 
   void deselectLeaveTypeAtIndex(int index) {
-    _filters.leaveType.remove(_leaveTypes[index]);
+    _filters.resetSelectedLeaveType();
     view.reloadData();
   }
 

@@ -6,7 +6,7 @@ import 'leave_type.dart';
 class LeaveListFilters {
   DateTime _fromDate;
   DateTime _toDate;
-  List<LeaveType> leaveType = [];
+  LeaveType leaveType;
   List<LeaveEmployee> applicants = [];
 
   void showCurrentLeaves() {
@@ -32,7 +32,7 @@ class LeaveListFilters {
   }
 
   void resetSelectedLeaveType() {
-    leaveType = [];
+    leaveType = null;
   }
 
   void resetSelectedApplicant() {
@@ -47,7 +47,7 @@ class LeaveListFilters {
 
   LeaveListFilters clone() {
     var filters = LeaveListFilters();
-    filters.leaveType.addAll(this.leaveType);
+    filters.leaveType = this.leaveType;
     filters.applicants.addAll(this.applicants);
     return filters;
   }
