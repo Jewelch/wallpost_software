@@ -10,7 +10,7 @@ class LeaveAirportListProvider {
   final SelectedEmployeeProvider _selectedEmployeeProvider;
   final NetworkAdapter _networkAdapter;
   final int _perPage = 15;
-  int _pageNumber = 0;
+  int _pageNumber = 1;
   bool _didReachListEnd = false;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
@@ -22,7 +22,7 @@ class LeaveAirportListProvider {
         _networkAdapter = WPAPI();
 
   void reset() {
-    _pageNumber = 0;
+    _pageNumber = 1;
     _didReachListEnd = false;
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     isLoading = false;
