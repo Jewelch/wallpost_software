@@ -158,6 +158,7 @@ class _TaskScreen extends State<TaskListScreen>
 
   void _deselectItem(String title) {
     var indexOfItemToRemove = selectedItems.indexOf(title);
+    _selectedFiltersViewController.removeItemAtIndex(indexOfItemToRemove);
     refreshSelectedFilterNames();
     //todo refresh filter
   }
@@ -172,6 +173,9 @@ class _TaskScreen extends State<TaskListScreen>
           _presenter.getFilters().categories.map((e) => e.name).toList());
       selectedItems.addAll(
           _presenter.getFilters().assignees.map((e) => e.fullName).toList());
+      for (int i = 0; i < selectedItems.length; i++) {
+        _selectedFiltersViewController.addItem(selectedItems[i]);
+      }
     });
   }
 
