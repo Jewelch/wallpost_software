@@ -5,13 +5,13 @@ class LeaveUrls {
   static String leaveListUrl(
       String companyId, String employeeId, LeaveListFilters filters, int pageNumber, int itemsPerPage) {
     var url = '${BaseUrls.hrUrlV3()}/companies/$companyId/employees/$employeeId/leaverequests?'
-        '&pageNumber=$pageNumber&itemsPerPage=$itemsPerPage';
+        '&page=$pageNumber&perPage=$itemsPerPage';
 
     if (filters.fromDateString != null) url += '&from_date=${filters.fromDateString}';
     if (filters.toDateString != null) url += '&to_date=${filters.toDateString}';
-    if (filters.leaveType != null) url += '&leave_type_id=${filters.leaveType}';
+    if (filters.leaveType != null) url += '&leave_type_id=${filters.leaveType.id}';
     if (filters.applicants != null) {
-      filters.applicants.forEach((assignee) => url += '&employeeIds[]=${assignee.v1Id}');
+      filters.applicants.forEach((applicant) => url += '&employeeIds[]=${applicant.v1Id}');
     }
     return url;
   }

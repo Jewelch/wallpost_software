@@ -10,14 +10,11 @@ class LeaveListTile extends StatelessWidget {
   final LeaveListItem leaveListItem;
   final VoidCallback onLeaveListTileTap;
 
-  const LeaveListTile(
-    this.leaveListItem, {
-    this.onLeaveListTileTap,
-  });
+  const LeaveListTile(this.leaveListItem, {this.onLeaveListTileTap});
 
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: InkWell(
         onTap: () => {onLeaveListTileTap()},
         child: Row(
@@ -26,8 +23,7 @@ class LeaveListTile extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 20.0,
-                  backgroundImage:
-                      NetworkImage(leaveListItem.applicantProfileImageUrl),
+                  backgroundImage: NetworkImage(leaveListItem.applicantProfileImageUrl),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(height: 4),
@@ -37,8 +33,7 @@ class LeaveListTile extends StatelessWidget {
                 ),
                 Text(
                   'Days',
-                  style:
-                      TextStyles.labelTextStyle.copyWith(color: Colors.black),
+                  style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
                 )
               ],
             ),
@@ -61,9 +56,8 @@ class LeaveListTile extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: 'Start : ',
-                              style: TextStyles.labelTextStyle
-                                  .copyWith(color: Colors.black),
+                              text: 'Start: ',
+                              style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
                             ),
                             TextSpan(
                               text: _convertToDateFormat(
@@ -78,9 +72,8 @@ class LeaveListTile extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: 'End : ',
-                              style: TextStyles.labelTextStyle
-                                  .copyWith(color: Colors.black),
+                              text: 'End: ',
+                              style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
                             ),
                             TextSpan(
                               text: _convertToDateFormat(
@@ -91,31 +84,24 @@ class LeaveListTile extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios_outlined,
-                          color: Colors.grey, size: 14),
+                      Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14),
                     ],
                   ),
                   SizedBox(height: 12),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: AppColors.defaultColor),
-                          child: Text(
-                            leaveListItem.leaveType,
-                            style: TextStyles.labelTextStyle
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                        Text(
-                          leaveListItem.status.stringValue(),
-                          style: TextStyles.labelTextStyle.copyWith(
-                              color: leaveListItem.status.colorValue()),
-                        ),
-                      ])
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColors.defaultColor),
+                      child: Text(
+                        leaveListItem.leaveType,
+                        style: TextStyles.labelTextStyle.copyWith(color: Colors.white),
+                      ),
+                    ),
+                    Text(
+                      leaveListItem.status.stringValue(),
+                      style: TextStyles.labelTextStyle.copyWith(color: leaveListItem.status.colorValue()),
+                    ),
+                  ])
                 ],
               ),
             )
@@ -126,8 +112,7 @@ class LeaveListTile extends StatelessWidget {
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany =
-        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;

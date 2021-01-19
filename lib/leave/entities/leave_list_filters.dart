@@ -39,14 +39,14 @@ class LeaveListFilters {
     applicants = [];
   }
 
-  String get fromDateString =>
-      _fromDate != null ? DateFormat('yyyy-MM-dd').format(_fromDate) : null;
+  String get fromDateString => _fromDate != null ? DateFormat('yyyy-MM-dd').format(_fromDate) : null;
 
-  String get toDateString =>
-      _toDate != null ? DateFormat('yyyy-MM-dd').format(_toDate) : null;
+  String get toDateString => _toDate != null ? DateFormat('yyyy-MM-dd').format(_toDate) : null;
 
   LeaveListFilters clone() {
     var filters = LeaveListFilters();
+    filters._fromDate = this._fromDate;
+    filters._toDate = this._toDate;
     filters.leaveType = this.leaveType;
     filters.applicants.addAll(this.applicants);
     return filters;

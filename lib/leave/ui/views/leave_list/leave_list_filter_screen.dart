@@ -8,7 +8,7 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/leave/entities/leave_list_filters.dart';
-import 'package:wallpost/leave/ui/presenters/leave_list_filter_presenter.dart';
+import 'package:wallpost/leave/ui/presenters/leave_list_filters_presenter.dart';
 import 'package:wallpost/leave/ui/views/leave_employee_list/leave_employee_list_filter_screen.dart';
 
 class LeaveListFilterScreen extends StatefulWidget {
@@ -38,51 +38,50 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
+      appBar: SimpleAppBar(
+        title: 'Filters',
+        leadingButtons: [
+          CircularCloseButton(
+            iconColor: AppColors.defaultColor,
+            color: Colors.transparent,
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
+        trailingButtons: [
+          CircularIconButton(
+            iconName: 'assets/icons/reset_icon.svg',
+            iconSize: 18,
+            iconColor: AppColors.defaultColor,
+            color: Colors.transparent,
+            onPressed: () => _presenter.resetFilters(),
+          ),
+          CircularCheckMarkButton(
+            iconColor: AppColors.defaultColor,
+            color: Colors.transparent,
+            onPressed: () => Navigator.pop(context, _filters),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         physics: new ClampingScrollPhysics(),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [_buildCategoryView(), Divider(), _buildLeaveTypeView(), Divider(), _buildEmployeeView()],
+            children: [
+              _buildCategoryView(),
+              Divider(),
+              _buildLeaveTypeView(),
+              Divider(),
+              _buildEmployeeView(),
+            ],
           ),
         ),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return SimpleAppBar(
-      title: 'Filters',
-      leadingButtons: [
-        CircularCloseButton(
-          iconColor: AppColors.defaultColor,
-          color: Colors.transparent,
-          onPressed: () => Navigator.pop(context),
-        )
-      ],
-      trailingButtons: [
-        CircularIconButton(
-          iconName: 'assets/icons/reset_icon.svg',
-          iconSize: 18,
-          iconColor: AppColors.defaultColor,
-          color: Colors.transparent,
-          onPressed: () => _presenter.resetFilters(),
-        ),
-        CircularCheckMarkButton(
-          iconColor: AppColors.defaultColor,
-          color: Colors.transparent,
-          onPressed: () => Navigator.pop(context, _filters),
-        ),
-      ],
-    );
-  }
-
   Widget _buildCategoryView() {
-    var _categoryList = ["All", "Current", "History"];
-    var selectedCategoryIndex = 1;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -91,12 +90,21 @@ class _LeaveListFilterScreenState extends State<LeaveListFilterScreen> implement
         Text('Category', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         MultiSelectFilterChips(
-          titles: _categoryList,
-          selectedIndices: [selectedCategoryIndex],
+          titles: _presenter.getDurations(),
+          selectedIndices: [_presenter.getSelectedDurationIndex()],
           allowMultipleSelection: false,
-          onItemSelected: (selectedIndex) => {_categoryList[selectedIndex]},
+          onItemSelected: (selectedIndex) {
+            if (selectedIndex == 0) {
+              _presenter.showAllLeaves();
+            } else if (selectedIndex == 1) {
+              _presenter.showCurrentLeaves();
+            } else {
+              _presenter.showLeaveHistory();
+            }
+          },
           onItemDeselected: (selectedIndex) {
-            setState(() => {});
+            _presenter.showAllLeaves();
+            setState(() {});
           },
         ),
         SizedBox(height: 12),

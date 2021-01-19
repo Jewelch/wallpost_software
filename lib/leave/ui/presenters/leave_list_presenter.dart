@@ -9,6 +9,7 @@ import 'package:wallpost/leave/ui/views/leave_list/leave_list_tile.dart';
 
 abstract class LeaveListView {
   void reloadData();
+
   void onLeaveSelected(int index);
 }
 
@@ -27,7 +28,7 @@ class LeaveListPresenter {
     try {
       var leaveList = await _leaveListProvider.getNext(_filters);
       _leaveLists.addAll(leaveList);
-      if (_leaveLists.isEmpty) _errorMessage = 'There are no Leave to show.';
+      if (_leaveLists.isEmpty) _errorMessage = 'There are no leaves to show.';
       view.reloadData();
     } on WPException catch (e) {
       _errorMessage = e.userReadableMessage;
