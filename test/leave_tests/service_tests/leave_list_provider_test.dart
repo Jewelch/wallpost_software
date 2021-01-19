@@ -30,7 +30,7 @@ void main() {
 
     var _ = await leaveListProvider.getNext(filters);
 
-    expect(mockNetworkAdapter.apiRequest.url, LeaveUrls.leaveListUrl('someCompanyId', 'v1EmpId', filters, 0, 15));
+    expect(mockNetworkAdapter.apiRequest.url, LeaveUrls.leaveListUrl('someCompanyId', 'v1EmpId', filters, 1, 15));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -114,13 +114,13 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
     leaveListProvider.reset();
     try {
-      expect(leaveListProvider.getCurrentPageNumber(), 0);
-      await leaveListProvider.getNext(filters);
       expect(leaveListProvider.getCurrentPageNumber(), 1);
       await leaveListProvider.getNext(filters);
       expect(leaveListProvider.getCurrentPageNumber(), 2);
       await leaveListProvider.getNext(filters);
       expect(leaveListProvider.getCurrentPageNumber(), 3);
+      await leaveListProvider.getNext(filters);
+      expect(leaveListProvider.getCurrentPageNumber(), 4);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
