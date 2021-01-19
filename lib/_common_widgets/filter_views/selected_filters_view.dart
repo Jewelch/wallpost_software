@@ -32,11 +32,13 @@ class SelectedFiltersView extends StatefulWidget {
   final Function(int) onItemPressed;
   final SelectedFiltersViewController controller;
 
-  SelectedFiltersView({List<String> titles, this.onItemPressed, this.controller})
+  SelectedFiltersView(
+      {List<String> titles, this.onItemPressed, this.controller})
       : this.titles = [...titles]; //creating a copy of the list;
 
   @override
-  _SelectedFiltersViewState createState() => _SelectedFiltersViewState(titles, controller);
+  _SelectedFiltersViewState createState() =>
+      _SelectedFiltersViewState(titles, controller);
 }
 
 class _SelectedFiltersViewState extends State<SelectedFiltersView> {
@@ -63,7 +65,8 @@ class _SelectedFiltersViewState extends State<SelectedFiltersView> {
               key: listKey,
               initialItemCount: _titles.length,
               itemBuilder: (context, index, animation) {
-                return _buildItem(context, _titles[index], animation, onPressed: () {
+                return _buildItem(context, _titles[index], animation,
+                    onPressed: () {
                   widget.onItemPressed(index);
                 });
               },
@@ -74,7 +77,8 @@ class _SelectedFiltersViewState extends State<SelectedFiltersView> {
     );
   }
 
-  Widget _buildItem(BuildContext context, String title, animation, {VoidCallback onPressed}) {
+  Widget _buildItem(BuildContext context, String title, animation,
+      {VoidCallback onPressed}) {
     return ScaleTransition(
       scale: animation,
       child: Padding(
@@ -98,7 +102,8 @@ class _SelectedFiltersViewState extends State<SelectedFiltersView> {
   //MARK: Functions to  add and remove an item
 
   void _addItem(String title) {
-    listKey.currentState.insertItem(_titles.length, duration: const Duration(milliseconds: 200));
+    listKey.currentState.insertItem(_titles.length,
+        duration: const Duration(milliseconds: 200));
     _titles.add(title);
     Timer(Duration(milliseconds: 300), () {
       _scrollController.animateTo(

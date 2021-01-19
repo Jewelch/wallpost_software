@@ -51,7 +51,7 @@ void main() {
   test('resetting filters', () async {
     var filters = LeaveListFilters();
     filters.showCurrentLeaves();
-    filters.leaveType = MockLeaveType();
+    //filters.leaveType = MockLeaveType();
     filters.applicants.add(MockLeaveEmployee());
 
     filters.reset();
@@ -63,7 +63,6 @@ void main() {
   });
 }
 
-
 //TODO: Obaid
 
-add _didReachListEnd = false; for each list provider service before making the API call
+//add _didReachListEnd = false; for each list provider service before making the API call

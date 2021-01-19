@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
-import 'package:wallpost/_common_widgets/keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
@@ -38,41 +37,42 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardDismisser(
-      scrollController: _scrollController,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: SimpleAppBar(
-          title: 'Group Dashboard',
-          leadingButtons: [
-            CircularIconButton(
-              iconName: 'assets/icons/menu_icon.svg',
-              iconSize: 12,
-              onPressed: () => ScreenPresenter.present(
-                LeftMenuScreen(),
-                context,
-                slideDirection: SlideDirection.fromLeft,
-              ),
-            )
-          ],
-        ),
-        body: SafeArea(
-          child: Container(
-            margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-            decoration: BoxDecoration(
-              color: AppColors.primaryContrastColor,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+    return //KeyboardDismisser(
+        // scrollController: _scrollController,
+        //child:
+        Scaffold(
+      backgroundColor: Colors.white,
+      appBar: SimpleAppBar(
+        title: 'Group Dashboard',
+        leadingButtons: [
+          CircularIconButton(
+            iconName: 'assets/icons/menu_icon.svg',
+            iconSize: 12,
+            onPressed: () => ScreenPresenter.present(
+              LeftMenuScreen(),
+              context,
+              slideDirection: SlideDirection.fromLeft,
             ),
-            child: Column(children: [
-              SearchBarWithTitle(
-                title: 'Companies',
-                onChanged: (searchText) => _performSearch(searchText),
-              ),
-              Expanded(child: _createListWidget()),
-            ]),
+          )
+        ],
+      ),
+      body: SafeArea(
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          decoration: BoxDecoration(
+            color: AppColors.primaryContrastColor,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
+          child: Column(children: [
+            SearchBarWithTitle(
+              title: 'Companies',
+              onChanged: (searchText) => _performSearch(searchText),
+            ),
+            Expanded(child: _createListWidget()),
+          ]),
         ),
       ),
+      //),
     );
   }
 
@@ -171,9 +171,11 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
     var selectedCompany = _filterList[index];
     await loader.show('');
     try {
-      var _ = await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
+      var _ =
+          await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
       await loader.hide();
-      Navigator.pushNamedAndRemoveUntil(context, RouteNames.dashboard, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, RouteNames.dashboard, (route) => false);
     } on WPException catch (e) {
       await loader.hide();
       Alert.showSimpleAlert(

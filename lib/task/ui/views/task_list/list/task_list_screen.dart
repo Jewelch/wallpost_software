@@ -3,6 +3,7 @@ import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/filter_views/filter_tab_bar.dart';
+import 'package:wallpost/_common_widgets/filter_views/selected_filters_view.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_routing/route_names.dart';
@@ -15,10 +16,13 @@ class TaskListScreen extends StatefulWidget {
   _TaskScreen createState() => _TaskScreen();
 }
 
-class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMixin, TaskListView {
+class _TaskScreen extends State<TaskListScreen>
+    with SingleTickerProviderStateMixin, TaskListView {
   ScrollController _taskListScrollController = ScrollController();
   TabController _tabController;
   TaskListPresenter _presenter;
+  var _selectedFiltersViewController = SelectedFiltersViewController();
+  List<String> selectedItems = [];
 
   @override
   void initState() {
@@ -32,7 +36,8 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
 
   void _setupScrollDownToLoadMoreItems() {
     _taskListScrollController.addListener(() {
-      if (_taskListScrollController.position.pixels == _taskListScrollController.position.maxScrollExtent) {
+      if (_taskListScrollController.position.pixels ==
+          _taskListScrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfTasks();
       }
     });
@@ -43,7 +48,8 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title:
+            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
         trailing: CircularIconButton(
           iconName: 'assets/icons/filters_icon.svg',
@@ -57,19 +63,46 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
             children: [
               SearchBarWithTitle(
                 title: 'Tasks',
-                onChanged: (searchText) => _presenter.updateSearchText(searchText),
+                onChanged: (searchText) =>
+                    _presenter.updateSearchText(searchText),
               ),
               Divider(height: 1),
+              selectedItems.isEmpty
+                  ? Container()
+                  : SizedBox(
+                      height: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: SelectedFiltersView(
+                          titles: selectedItems,
+                          onItemPressed: (index) {
+                            var selectedItem = selectedItems[index];
+                            _deselectItem(selectedItem);
+                          },
+                        ),
+                      ),
+                    ),
               FilterTabBar(
                 controller: _tabController,
                 onTabChanged: (index) => _presenter.updateStatus(index),
                 items: [
-                  FilterTabBarItem(title: 'Overdue', count: _presenter.getOverdueTaskCount()),
-                  FilterTabBarItem(title: 'Due Today', count: _presenter.getCountOfTasksThatAreDueToday()),
-                  FilterTabBarItem(title: 'Due In A Week', count: _presenter.getCountOfTasksThatAreDueInAWeek()),
-                  FilterTabBarItem(title: 'Upcoming Due', count: _presenter.getUpcomingDueTaskCount()),
-                  FilterTabBarItem(title: 'Completed', count: _presenter.getCompletedTaskCount()),
-                  FilterTabBarItem(title: 'All', count: _presenter.getCountOfAllTasks()),
+                  FilterTabBarItem(
+                      title: 'Overdue',
+                      count: _presenter.getOverdueTaskCount()),
+                  FilterTabBarItem(
+                      title: 'Due Today',
+                      count: _presenter.getCountOfTasksThatAreDueToday()),
+                  FilterTabBarItem(
+                      title: 'Due In A Week',
+                      count: _presenter.getCountOfTasksThatAreDueInAWeek()),
+                  FilterTabBarItem(
+                      title: 'Upcoming Due',
+                      count: _presenter.getUpcomingDueTaskCount()),
+                  FilterTabBarItem(
+                      title: 'Completed',
+                      count: _presenter.getCompletedTaskCount()),
+                  FilterTabBarItem(
+                      title: 'All', count: _presenter.getCountOfAllTasks()),
                 ],
               ),
               Expanded(
@@ -116,16 +149,38 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
   }
 
   void goToTaskFilter() async {
-    var selectedFilters =
-        await ScreenPresenter.present(TaskListFiltersScreen(_presenter.getFilters().clone()), context);
-    if (selectedFilters != null) _presenter.updateFilters(selectedFilters);
+    var selectedFilters = await ScreenPresenter.present(
+        TaskListFiltersScreen(_presenter.getFilters().clone()), context);
+    if (selectedFilters != null) {
+      _presenter.updateFilters(selectedFilters);
+    }
+  }
+
+  void _deselectItem(String title) {
+    var indexOfItemToRemove = selectedItems.indexOf(title);
+    refreshSelectedFilterNames();
+    //todo refresh filter
+  }
+
+  refreshSelectedFilterNames() {
+    setState(() {
+      selectedItems.clear();
+      selectedItems.add(_presenter.getFilters().year.toString());
+      selectedItems.addAll(
+          _presenter.getFilters().departments.map((e) => e.name).toList());
+      selectedItems.addAll(
+          _presenter.getFilters().categories.map((e) => e.name).toList());
+      selectedItems.addAll(
+          _presenter.getFilters().assignees.map((e) => e.fullName).toList());
+    });
   }
 
   //MARK: Task list view functions
 
   @override
   void onTaskSelected(int index) {
-    Navigator.pushNamed(context, RouteNames.taskDetails, arguments: _presenter.getTaskForIndex(index));
+    Navigator.pushNamed(context, RouteNames.taskDetails,
+        arguments: _presenter.getTaskForIndex(index));
   }
 
   @override
