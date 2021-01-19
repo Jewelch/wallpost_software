@@ -153,6 +153,7 @@ class _TaskScreen extends State<TaskListScreen>
         TaskListFiltersScreen(_presenter.getFilters().clone()), context);
     if (selectedFilters != null) {
       _presenter.updateFilters(selectedFilters);
+      refreshSelectedFilterNames();
     }
   }
 
