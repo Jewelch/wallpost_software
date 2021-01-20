@@ -5,14 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/filter_views/custom_filter_chip.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-/*
-
-  make this like the text editing controller -
-  the intial titles will be provided in the controller constructor
-  rather than pass it in the
-
-  als0 - remoevAllitems fnction - do setstate and see if it works or not
- */
 class SelectedFiltersViewController {
   List<String> _titles = [];
   _SelectedFiltersViewState _state;
