@@ -3,6 +3,7 @@ import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/filter_views/filter_tab_bar.dart';
+import 'package:wallpost/_common_widgets/filter_views/selected_filters_view.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_routing/route_names.dart';
@@ -19,6 +20,8 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
   ScrollController _taskListScrollController = ScrollController();
   TabController _tabController;
   TaskListPresenter _presenter;
+  var _selectedFiltersViewController = SelectedFiltersViewController();
+  List<String> selectedItems = [];
 
   @override
   void initState() {
@@ -60,6 +63,21 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
                 onChanged: (searchText) => _presenter.updateSearchText(searchText),
               ),
               Divider(height: 1),
+              selectedItems.isEmpty
+                  ? Container()
+                  : SizedBox(
+                      height: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: SelectedFiltersView(
+                          controller: _selectedFiltersViewController,
+                          onItemPressed: (index) {
+                            var selectedItem = selectedItems[index];
+                            _deselectItem(selectedItem);
+                          },
+                        ),
+                      ),
+                    ),
               FilterTabBar(
                 controller: _tabController,
                 onTabChanged: (index) => _presenter.updateStatus(index),
@@ -118,7 +136,32 @@ class _TaskScreen extends State<TaskListScreen> with SingleTickerProviderStateMi
   void goToTaskFilter() async {
     var selectedFilters =
         await ScreenPresenter.present(TaskListFiltersScreen(_presenter.getFilters().clone()), context);
-    if (selectedFilters != null) _presenter.updateFilters(selectedFilters);
+    if (selectedFilters != null) {
+      _presenter.updateFilters(selectedFilters);
+      refreshSelectedFilterNames();
+    }
+  }
+
+  void _deselectItem(String title) {
+    var indexOfItemToRemove = selectedItems.indexOf(title);
+    selectedItems.removeAt(indexOfItemToRemove);
+    _selectedFiltersViewController.removeItemAtIndex(indexOfItemToRemove);
+
+    if ('${_presenter.getFilters().year}' == title) _presenter.getFilters().resetYearFilter();
+    _presenter.getFilters().departments.removeWhere((element) => element.name == title);
+    _presenter.getFilters().categories.removeWhere((element) => element.name == title);
+    _presenter.getFilters().assignees.removeWhere((element) => element.fullName == title);
+  }
+
+  refreshSelectedFilterNames() {
+    setState(() {
+      selectedItems.clear();
+      selectedItems.add(_presenter.getFilters().year.toString());
+      selectedItems.addAll(_presenter.getFilters().departments.map((e) => e.name).toList());
+      selectedItems.addAll(_presenter.getFilters().categories.map((e) => e.name).toList());
+      selectedItems.addAll(_presenter.getFilters().assignees.map((e) => e.fullName).toList());
+      _selectedFiltersViewController.replaceAllItems(selectedItems);
+    });
   }
 
   //MARK: Task list view functions

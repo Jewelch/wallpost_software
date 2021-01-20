@@ -14,8 +14,7 @@ class LeaveListScreen extends StatefulWidget {
   _LeaveListScreenState createState() => _LeaveListScreenState();
 }
 
-class _LeaveListScreenState extends State<LeaveListScreen>
-    implements LeaveListView {
+class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListView {
   LeaveListPresenter _presenter;
   ScrollController _scrollController;
 
@@ -30,8 +29,7 @@ class _LeaveListScreenState extends State<LeaveListScreen>
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _presenter.loadNextListOfLeave();
       }
     });
@@ -42,8 +40,7 @@ class _LeaveListScreenState extends State<LeaveListScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title:
-            SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
         trailing: CircularIconButton(
           iconName: 'assets/icons/filters_icon.svg',
@@ -53,14 +50,16 @@ class _LeaveListScreenState extends State<LeaveListScreen>
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Leave Requests', style: TextStyles.titleTextStyle),
-              SizedBox(height: 4),
-              Divider(),
-              Expanded(child: _filterListWidget())
+              Padding(
+                padding: const EdgeInsets.only(left: 12, top: 8),
+                child: Text('Leave Requests', style: TextStyles.titleTextStyle),
+              ),
+              SizedBox(height: 8),
+              Divider(height: 1),
+              Expanded(child: _buildLeaveListWidget())
             ],
           ),
         ),
@@ -68,11 +67,16 @@ class _LeaveListScreenState extends State<LeaveListScreen>
     );
   }
 
-  Widget _filterListWidget() {
+  void goToLeaveFilter() async {
+    var filters = LeaveListFilterScreen(_presenter.getFilters().clone());
+    var selectedFilters = await ScreenPresenter.present(filters, context);
+    if (selectedFilters != null) _presenter.updateFilters(selectedFilters);
+  }
+
+  Widget _buildLeaveListWidget() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12),
       child: RefreshIndicator(
-        onRefresh: _getRefreshList,
+        onRefresh: _refreshLeaveList,
         child: ListView.separated(
           controller: _scrollController,
           itemCount: _presenter.getNumberOfItems(),
@@ -85,13 +89,7 @@ class _LeaveListScreenState extends State<LeaveListScreen>
     );
   }
 
-  void goToLeaveFilter() async {
-    var selectedFilters = await ScreenPresenter.present(
-        LeaveListFilterScreen(_presenter.getFilters().clone()), context);
-    if (selectedFilters != null) _presenter.updateFilters(selectedFilters);
-  }
-
-  Future<void> _getRefreshList() async {
+  Future<void> _refreshLeaveList() async {
     setState(() {
       _presenter.reset();
       _presenter.loadNextListOfLeave();
@@ -105,7 +103,6 @@ class _LeaveListScreenState extends State<LeaveListScreen>
 
   @override
   void onLeaveSelected(int index) {
-    Navigator.pushNamed(context, RouteNames.leaveListdetails,
-        arguments: _presenter.getLeaveListForIndex(index));
+    Navigator.pushNamed(context, RouteNames.leaveListdetails, arguments: _presenter.getLeaveListForIndex(index));
   }
 }

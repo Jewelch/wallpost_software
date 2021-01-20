@@ -5,10 +5,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/filter_views/custom_filter_chip.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
+/*
+
+  make this like the text editing controller -
+  the intial titles will be provided in the controller constructor
+  rather than pass it in the
+
+  als0 - remoevAllitems fnction - do setstate and see if it works or not
+ */
 class SelectedFiltersViewController {
+  List<String> _titles = [];
   _SelectedFiltersViewState _state;
 
   bool get _isAttached => _state != null;
+
+  SelectedFiltersViewController({List<String> titles = const []}) {
+    this._titles.addAll(titles);
+  }
 
   void dispose() => _state = null;
 
@@ -19,34 +32,44 @@ class SelectedFiltersViewController {
   void addItem(String title) {
     assert(_isAttached, 'State not attached');
     _state._addItem(title);
+    _titles.add(title);
   }
 
   void removeItemAtIndex(int index) {
     assert(_isAttached, 'State not attached');
-    _state._removeItemAtIndex(index);
+    if (index >= _titles.length) return;
+
+    var itemToRemove = _titles[index];
+    _state._removeItemAtIndex(index, itemToRemove);
+    _titles.removeAt(index);
+  }
+
+  void replaceAllItems(List<String> titles) {
+    if (_isAttached) _state._removeAllItems();
+    this._titles.clear();
+    this._titles.addAll(titles);
+    if (_isAttached) _state._addAllItems();
   }
 }
 
 class SelectedFiltersView extends StatefulWidget {
-  final List<String> titles;
   final Function(int) onItemPressed;
   final SelectedFiltersViewController controller;
 
-  SelectedFiltersView({List<String> titles, this.onItemPressed, this.controller})
-      : this.titles = [...titles]; //creating a copy of the list;
+  SelectedFiltersView({this.onItemPressed, this.controller});
 
   @override
-  _SelectedFiltersViewState createState() => _SelectedFiltersViewState(titles, controller);
+  _SelectedFiltersViewState createState() => _SelectedFiltersViewState(controller);
 }
 
 class _SelectedFiltersViewState extends State<SelectedFiltersView> {
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   final _scrollController = ScrollController();
-  List<String> _titles;
   SelectedFiltersViewController _controller;
 
-  _SelectedFiltersViewState(this._titles, this._controller) {
-    if (_controller != null) _controller.addState(this);
+  _SelectedFiltersViewState(this._controller) {
+    assert(_controller != null, 'please add a controller');
+    _controller.addState(this);
   }
 
   @override
@@ -61,9 +84,9 @@ class _SelectedFiltersViewState extends State<SelectedFiltersView> {
               controller: _scrollController,
               scrollDirection: Axis.horizontal,
               key: listKey,
-              initialItemCount: _titles.length,
+              initialItemCount: _controller._titles.length,
               itemBuilder: (context, index, animation) {
-                return _buildItem(context, _titles[index], animation, onPressed: () {
+                return _buildItem(context, _controller._titles[index], animation, onPressed: () {
                   widget.onItemPressed(index);
                 });
               },
@@ -98,8 +121,7 @@ class _SelectedFiltersViewState extends State<SelectedFiltersView> {
   //MARK: Functions to  add and remove an item
 
   void _addItem(String title) {
-    listKey.currentState.insertItem(_titles.length, duration: const Duration(milliseconds: 200));
-    _titles.add(title);
+    listKey.currentState.insertItem(_controller._titles.length, duration: const Duration(milliseconds: 200));
     Timer(Duration(milliseconds: 300), () {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
@@ -109,13 +131,25 @@ class _SelectedFiltersViewState extends State<SelectedFiltersView> {
     });
   }
 
-  void _removeItemAtIndex(int index) {
-    if (index >= _titles.length) return;
-
-    var removedItem = _titles.removeAt(index);
+  void _removeItemAtIndex(int index, String removedItemTitle) {
     AnimatedListRemovedItemBuilder builder = (context, animation) {
-      return _buildItem(context, removedItem, animation, onPressed: () {});
+      return _buildItem(context, removedItemTitle, animation, onPressed: () {});
     };
     listKey.currentState.removeItem(index, builder);
+  }
+
+  void _removeAllItems() {
+    for (int i = 0; i < _controller._titles.length; i++) {
+      AnimatedListRemovedItemBuilder builder = (context, animation) {
+        return Container();
+      };
+      listKey.currentState.removeItem(0, builder);
+    }
+  }
+
+  void _addAllItems() {
+    for (int i = 0; i < _controller._titles.length; i++) {
+      listKey.currentState.insertItem(i);
+    }
   }
 }

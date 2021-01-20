@@ -55,13 +55,14 @@ class MultiSelectFilterList extends StatefulWidget {
 class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
   var _scrollController = ScrollController();
   var _searchBarController = TextEditingController();
-  var _selectedFiltersViewController = SelectedFiltersViewController();
+  SelectedFiltersViewController _selectedFiltersViewController;
   Completer<void> _refreshIndicatorCompleter;
   bool _isRefreshing = false;
 
   @override
   void initState() {
     _setupScrollDownToLoadMoreItems();
+    _selectedFiltersViewController = SelectedFiltersViewController(titles: widget.selectedItems);
     super.initState();
   }
 
@@ -112,7 +113,6 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
             height: widget.items.length > 0 && widget.singleSelection == false ? 32 : 0,
             child: SelectedFiltersView(
               controller: _selectedFiltersViewController,
-              titles: widget.selectedItems,
               onItemPressed: (index) {
                 print(widget.selectedItems);
                 var selectedItem = widget.selectedItems[index];
