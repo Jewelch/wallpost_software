@@ -4,6 +4,7 @@ import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_check_mark_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_close_button.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
+import 'package:wallpost/_common_widgets/form_widgets/multi_line_text_field.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -21,6 +22,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
   LeaveTypesPresenter _presenter;
   bool isFilteredLeaveType = false;
   List<LeaveAirport> filteredLeaveAirport;
+  var _reasonTextController = TextEditingController();
   var _startDateTextController = TextEditingController();
   var _endDateTextController = TextEditingController();
   var _departureListController = TextEditingController();
@@ -62,10 +64,9 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                 Divider(),
                 SizedBox(height: 4),
                 _buildLeaveTypeList(),
-                SizedBox(height: 4),
-                _buildReasonView(),
+                _buildReasonTextView(),
                 SizedBox(height: 8),
-                _buildDateView(),
+                _buildDateTextView(),
                 SizedBox(height: 8),
                 _buildPhoneTextField(),
                 SizedBox(height: 8),
@@ -98,8 +99,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
           0, leaveTypeTitles.length > 2 ? 2 : leaveTypeTitles.length);
     }
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           'Leave Type',
@@ -116,51 +116,54 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
               )
             : MultiSelectFilterChips(
                 titles: leaveTypeTitles,
-                selectedIndices: [],
+                selectedIndices: [0],
                 allowMultipleSelection: false,
                 onItemSelected: (index) {
                   //select item
                 },
               ),
-        SizedBox(height: 12),
+        SizedBox(width: 12),
+        Container(
+          width: 60,
+          child: DropdownButton(
+            isExpanded: true,
+            hint: Text(
+              "More",
+              style: TextStyles.subTitleTextStyle,
+            ),
+            items: _presenter.leaveTypes.map((value) {
+              return DropdownMenuItem(
+                value: value.name,
+                child: Text(
+                  value.name,
+                  style: TextStyles.subTitleTextStyle,
+                ),
+              );
+            }).toList(),
+            onChanged: (_) {},
+          ),
+        )
       ],
     );
   }
 
-  Widget _buildReasonView() {
-    return TextFormField(
-      keyboardType: TextInputType.multiline,
-      textInputAction: TextInputAction.newline,
-      minLines: null,
-      maxLines: null,
-      enableInteractiveSelection: false,
-      style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 6),
-        isDense: true,
-        labelStyle:
-            TextStyles.largeTitleTextStyle.copyWith(color: Colors.black),
-        labelText: 'Reason',
-        hintText:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        hintMaxLines: 2,
-        hintStyle: TextStyles.subTitleTextStyle,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-      ),
+  Widget _buildReasonTextView() {
+    return MultiLineTextField(
+      label: 'Reason',
+      controller: _reasonTextController,
+      placeholder:
+          'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
       validator: (value) {
         if (value.isEmpty) {
-          return 'Please enter some text';
+          return 'Please Re-Enter Leave Reason';
+        } else {
+          return null;
         }
-        return null;
       },
-      onChanged: (String text) => {},
     );
   }
 
-  Widget _buildDateView() {
+  Widget _buildDateTextView() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -174,7 +177,6 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
             ),
             SizedBox(width: 4),
             Expanded(
-              flex: 1,
               child: TextFormField(
                 controller: _startDateTextController,
                 style:
@@ -188,10 +190,8 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                   suffixIconConstraints: BoxConstraints(minWidth: 20),
                 ),
                 onTap: () {
-                  // Below line stops keyboard from appearing
                   FocusScope.of(context).requestFocus(new FocusNode());
-                  _selectDate(context);
-                  // Show Date Picker Here
+                  _selectStartDate(context);
                 },
               ),
             ),
@@ -219,6 +219,10 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                   suffixIcon: Icon(Icons.calendar_today_outlined, size: 14),
                   suffixIconConstraints: BoxConstraints(minWidth: 20),
                 ),
+                onTap: () {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  _selectEndDate(context);
+                },
               ),
             ),
           ]),
@@ -467,7 +471,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
     if (this.mounted) setState(() {});
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectStartDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -476,8 +480,20 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
-        print("selecte date>>>>>" + selectedDate.toString());
         _startDateTextController.text = myFormat.format(selectedDate);
+      });
+  }
+
+  Future<void> _selectEndDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        _endDateTextController.text = myFormat.format(selectedDate);
       });
   }
 }

@@ -49,7 +49,8 @@ class MultiSelectFilterChips extends StatefulWidget {
   }
 
   @override
-  _MultiSelectFilterChipsState createState() => _MultiSelectFilterChipsState(selectedIndices, controller: controller);
+  _MultiSelectFilterChipsState createState() =>
+      _MultiSelectFilterChipsState(selectedIndices, controller: controller);
 }
 
 class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
@@ -72,18 +73,26 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 10.0,
-      runSpacing: 8,
+      runSpacing: 2,
       children: List.generate(
         _getNumberOfItems(),
         (index) {
           return CustomFilterChip(
-            title: Text(_isItemAtIndexTheTrailingButton(index) ? widget.trailingButtonTitle : widget.titles[index],
+            title: Text(
+                _isItemAtIndexTheTrailingButton(index)
+                    ? widget.trailingButtonTitle
+                    : widget.titles[index],
                 style: _isSelected(index)
-                    ? TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor)
+                    ? TextStyles.subTitleTextStyle
+                        .copyWith(color: AppColors.defaultColor)
                     : TextStyles.subTitleTextStyle),
             shape: CustomFilterChipShape.roundedRectangle,
-            backgroundColor: _isSelected(index) ? Colors.white : AppColors.primaryContrastColor,
-            borderColor: _isSelected(index) ? AppColors.defaultColor : AppColors.primaryContrastColor,
+            backgroundColor: _isSelected(index)
+                ? Colors.white
+                : AppColors.primaryContrastColor,
+            borderColor: _isSelected(index)
+                ? AppColors.defaultColor
+                : AppColors.primaryContrastColor,
             onPressed: _getActionForItemAtIndex(index),
           );
         },
@@ -99,7 +108,9 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
     if (_isItemAtIndexTheTrailingButton(index)) {
       return () => widget.onTrailingButtonPressed();
     } else {
-      return () => _isSelected(index) ? _deselectItemAtIndex(index) : _selectItemAtIndex(index);
+      return () => _isSelected(index)
+          ? _deselectItemAtIndex(index)
+          : _selectItemAtIndex(index);
     }
   }
 
