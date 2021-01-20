@@ -7,6 +7,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/task/entities/task_employee.dart';
 import 'package:wallpost/task/entities/task_list_item.dart';
+import 'package:wallpost/task/ui/views/task_details/task_attachment_tile.dart';
 import 'package:wallpost/task/ui/views/task_details/task_comment_tile.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
@@ -14,7 +15,8 @@ class TaskDetailsScreen extends StatefulWidget {
   _TaskDetailsScreen createState() => _TaskDetailsScreen();
 }
 
-class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProviderStateMixin {
+class _TaskDetailsScreen extends State<TaskDetailsScreen>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
   TaskListItem _taskListItem;
 
@@ -55,10 +57,13 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.defaultColor, width: 0),
+                            border: Border.all(
+                                color: AppColors.defaultColor, width: 0),
                             borderRadius: BorderRadius.circular(50),
                             image: DecorationImage(
-                                image: AssetImage('assets/icons/user_image_placeholder.png'), fit: BoxFit.fill),
+                                image: AssetImage(
+                                    'assets/icons/user_image_placeholder.png'),
+                                fit: BoxFit.fill),
                           ),
                         ),
                         Padding(
@@ -69,98 +74,132 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
                     ),
                   ),
                   Expanded(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Container(
-                        padding: EdgeInsets.only(top: 11.0, left: 10.0, right: 10.0),
-                        child: Text(
-                          _taskListItem.name,
-                          style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColor),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Text('Assigned to :', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(_getAssigneesString(_taskListItem.assignees),
-                                    style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.labelColor)),
-                              ),
-                            ],
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(
+                                top: 11.0, left: 10.0, right: 10.0),
+                            child: Text(
+                              _taskListItem.name,
+                              style: TextStyles.titleTextStyle
+                                  .copyWith(color: AppColors.defaultColor),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: false,
+                            ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Text('Status :', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(_taskListItem.status,
-                                    style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor)),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text('Assigned to: ',
+                                      style: TextStyles.subTitleTextStyle
+                                          .copyWith(color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                        _getAssigneesString(
+                                            _taskListItem.assignees),
+                                        style: TextStyles.subTitleTextStyle
+                                            .copyWith(
+                                                color: AppColors.labelColor)),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Text('Created By :', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(_taskListItem.name,
-                                    style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.labelColor)),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text('Status: ',
+                                      style: TextStyles.subTitleTextStyle
+                                          .copyWith(color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(_taskListItem.status,
+                                        style: TextStyles.subTitleTextStyle
+                                            .copyWith(
+                                                color: AppColors.defaultColor)),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Text('Created On :', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(_convertToDateFormat(_taskListItem.startDate),
-                                    style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.labelColor)),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text('Created By: ',
+                                      style: TextStyles.subTitleTextStyle
+                                          .copyWith(color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(_taskListItem.name,
+                                        style: TextStyles.subTitleTextStyle
+                                            .copyWith(
+                                                color: AppColors.labelColor)),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 10.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Text('Code :', style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(_taskListItem.hashCode.toString(),
-                                    style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.labelColor)),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text('Created On: ',
+                                      style: TextStyles.subTitleTextStyle
+                                          .copyWith(color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                        _convertToDateFormat(
+                                            _taskListItem.startDate),
+                                        style: TextStyles.subTitleTextStyle
+                                            .copyWith(
+                                                color: AppColors.labelColor)),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ]),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text('Code: ',
+                                      style: TextStyles.subTitleTextStyle
+                                          .copyWith(color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                        _taskListItem.hashCode.toString(),
+                                        style: TextStyles.subTitleTextStyle
+                                            .copyWith(
+                                                color: AppColors.labelColor)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ]),
                   ),
                 ],
               ),
@@ -191,34 +230,43 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;
   }
 
-  SizedBox _tabBarWidget() {
-    return SizedBox(
-      height: 50,
-      child: TabBar(
-        controller: _tabController,
-        labelColor: Colors.black,
-        unselectedLabelColor: Colors.black,
-        indicatorColor: AppColors.defaultColor,
-        indicatorWeight: 3,
-        tabs: [
-          TabWidget(
-            tabName: 'Details',
-          ),
-          TabWidget(
-            tabName: 'Comments',
-          ),
-          TabWidget(
-            tabName: 'Attachments',
-          ),
-        ],
+  Widget _tabBarWidget() {
+    return Stack(children: [
+      Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: Container(height: 3, color: AppColors.primaryContrastColor),
       ),
-    );
+      SizedBox(
+        height: 50,
+        child: TabBar(
+          controller: _tabController,
+          labelColor: Colors.black,
+          unselectedLabelColor: Colors.black,
+          indicatorColor: AppColors.defaultColor,
+          indicatorWeight: 3,
+          tabs: [
+            TabWidget(
+              tabName: 'Details',
+            ),
+            TabWidget(
+              tabName: 'Comments',
+            ),
+            TabWidget(
+              tabName: 'Attachments',
+            ),
+          ],
+        ),
+      ),
+    ]);
   }
 
   Container _tabBarViewWidget() {
@@ -226,7 +274,11 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
       child: Expanded(
         child: TabBarView(
           controller: _tabController,
-          children: <Widget>[_createDetailsWidget(), _createCommentsWidget(), _createCommentsWidget()],
+          children: <Widget>[
+            _createDetailsWidget(),
+            _createCommentsWidget(),
+            _createAttachmentsWidget()
+          ],
         ),
       ),
     );
@@ -234,6 +286,12 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
 
   Widget _getCommentsCard(int index) {
     return TaskCommentTile(
+      onPressed: () => {},
+    );
+  }
+
+  Widget _getAttachmentsCard(int index) {
+    return TaskAttachmentTile(
       onPressed: () => {},
     );
   }
@@ -254,45 +312,49 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
           child: Column(children: [
             Padding(
               padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Container(
-                  child: RaisedButton.icon(
-                    onPressed: () {
-                      print('Button Clicked.');
-                    },
-                    label: Text(
-                      'Add comment',
-                      style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: RaisedButton.icon(
+                        onPressed: () {
+                          print('Button Clicked.');
+                        },
+                        label: Text(
+                          'Add comment',
+                          style: TextStyles.subTitleTextStyle
+                              .copyWith(color: AppColors.defaultColor),
+                        ),
+                        icon: Icon(
+                          Icons.add,
+                          color: AppColors.defaultColor,
+                        ),
+                        textColor: Colors.white,
+                        color: Colors.white,
+                        elevation: 0.0,
+                      ),
                     ),
-                    icon: Icon(
-                      Icons.add,
-                      color: AppColors.defaultColor,
+                    Container(
+                      child: RaisedButton.icon(
+                        onPressed: () {
+                          print('Button Clicked.');
+                        },
+                        label: Text(
+                          'Send',
+                          style: TextStyles.subTitleTextStyle
+                              .copyWith(color: AppColors.defaultColor),
+                        ),
+                        icon: ImageIcon(
+                          AssetImage('assets/icons/send_icon.svg'),
+                          size: 30,
+                          color: AppColors.defaultColor,
+                        ),
+                        textColor: Colors.white,
+                        color: Colors.white,
+                        elevation: 0.0,
+                      ),
                     ),
-                    textColor: Colors.white,
-                    color: Colors.white,
-                    elevation: 0.0,
-                  ),
-                ),
-                Container(
-                  child: RaisedButton.icon(
-                    onPressed: () {
-                      print('Button Clicked.');
-                    },
-                    label: Text(
-                      'Send',
-                      style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
-                    ),
-                    icon: ImageIcon(
-                      AssetImage('assets/icons/send_icon.svg'),
-                      size: 30,
-                      color: AppColors.defaultColor,
-                    ),
-                    textColor: Colors.white,
-                    color: Colors.white,
-                    elevation: 0.0,
-                  ),
-                ),
-              ]),
+                  ]),
             ),
             SizedBox(
               height: 53.0,
@@ -324,18 +386,36 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
     );
   }
 
+  Widget _createAttachmentsWidget() {
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: 19,
+            itemBuilder: (context, index) {
+              return _getAttachmentsCard(index);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _createDetailsWidget() {
     return Column(
       children: [
         Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            detailsRowWidget('Start :', _convertToDateFormat(_taskListItem.startDate)),
-            detailsRowWidget('End :', _convertToDateFormat(_taskListItem.endDate)),
-            detailsRowWidget('Category :', 'Business Development'),
-            detailsRowWidget('Task Duration :', '1'),
-            detailsRowWidget('Duration In :', 'Working Days'),
-            detailsRowWidget('Task Owner :', 'Muhammad Nadeem'),
-            detailsRowWidget('Description :', 'Lorem ipsum'),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            detailsRowWidget(
+                'Start: ', _convertToDateFormat(_taskListItem.startDate)),
+            detailsRowWidget(
+                'End: ', _convertToDateFormat(_taskListItem.endDate)),
+            detailsRowWidget('Category: ', 'Business Development'),
+            detailsRowWidget('Task Duration: ', '1'),
+            detailsRowWidget('Duration In: ', 'Working Days'),
+            detailsRowWidget('Task Owner: ', 'Muhammad Nadeem'),
+            detailsRowWidget('Description: ', 'Lorem ipsum'),
           ]),
         ),
       ],
@@ -349,10 +429,15 @@ class _TaskDetailsScreen extends State<TaskDetailsScreen> with SingleTickerProvi
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            Expanded(child: Text(_rowTitle, style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black))),
+            Expanded(
+                child: Text(_rowTitle,
+                    style: TextStyles.subTitleTextStyle
+                        .copyWith(color: Colors.black))),
             Expanded(
               flex: 2,
-              child: Text(_rowValue, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.labelColor)),
+              child: Text(_rowValue,
+                  style: TextStyles.subTitleTextStyle
+                      .copyWith(color: AppColors.labelColor)),
             ),
           ],
         ),
@@ -377,7 +462,10 @@ class TabWidget extends StatelessWidget {
         child: RichText(
           text: TextSpan(
             children: [
-              TextSpan(text: _tabName, style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
+              TextSpan(
+                  text: _tabName,
+                  style:
+                      TextStyles.labelTextStyle.copyWith(color: Colors.black)),
             ],
           ),
         ),

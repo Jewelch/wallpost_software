@@ -19,7 +19,7 @@ class TaskCommentTile extends StatelessWidget {
                 SizedBox(
                   width: 50,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 13.0),
+                    padding: const EdgeInsets.only(top: 14.0),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -45,7 +45,7 @@ class TaskCommentTile extends StatelessWidget {
                       children: [
                         Container(
                           padding: EdgeInsets.only(
-                              top: 11.0, left: 10.0, right: 10.0),
+                              top: 12.0, left: 10.0, right: 10.0),
                           child: Text(
                             'Basheer Thathamaparambath',
                             style: TextStyles.titleTextStyle
@@ -57,17 +57,17 @@ class TaskCommentTile extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 3.0, left: 10.0, right: 10.0),
+                              top: 4.0, left: 10.0, right: 10.0),
                           child: Container(
                             child: Text(
                                 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
                                 style: TextStyles.subTitleTextStyle
-                                    .copyWith(AppColors.labelColor)),
+                                    .copyWith(color: AppColors.labelColor)),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 3.0, left: 8.0, right: 10.0),
+                              top: 4.0, left: 8.0, right: 10.0),
                           child: Row(
                             children: [
                               Container(
