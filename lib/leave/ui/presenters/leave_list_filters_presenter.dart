@@ -21,7 +21,8 @@ class LeaveListFilterPresenter {
 
   LeaveListFilterPresenter(this.view, this._filters)
       : leaveTypesProvider = LeaveTypesProvider(),
-        employeesListProvider = LeaveEmployeesListProvider.subordinatesProvider();
+        employeesListProvider =
+            LeaveEmployeesListProvider.subordinatesProvider();
 
   List<String> getDurations() {
     return ["All", "Current", "History"];

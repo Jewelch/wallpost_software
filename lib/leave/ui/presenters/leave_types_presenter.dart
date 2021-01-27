@@ -14,13 +14,10 @@ class LeaveTypesPresenter {
 
   LeaveTypesPresenter(this.view) : provider = LeaveTypesProvider();
 
-  //LeaveTypesPresenter.initWith(this.view, this.provider);
 
   Future<void> loadNextListOfLeaveTypes() async {
     if (provider.isLoading) return null;
 
-    //_resetErrors();
-    // view.reloadData();
     try {
       var leaveTypesList = await provider.getLeaveTypes();
       leaveTypes.addAll(leaveTypesList);
@@ -31,33 +28,6 @@ class LeaveTypesPresenter {
     }
   }
 
-  // int getNumberOfItems() {
-  //   if (_hasErrors()) return _leaveTypes.length + 1;
-
-  //   if (_leaveTypes.isEmpty) return 1;
-
-  //   if (provider.didReachListEnd) {
-  //     return _leaveTypes.length;
-  //   } else {
-  //     return _leaveTypes.length + 1;
-  //   }
-  // }
-
-//MARK: Util functions
-  // void reset() {
-  //   provider.reset();
-  //   _resetErrors();
-  //   _leaveLists.clear();
-  //   view.reloadData();
-  // }
-
-  void _resetErrors() {
-    _errorMessage = null;
-  }
-
-  bool _hasErrors() {
-    return _errorMessage != null;
-  }
 
   bool isLoadingLeaveTypes() {
     return provider.isLoading;

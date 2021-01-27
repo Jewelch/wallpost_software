@@ -23,7 +23,8 @@ class LeaveListTile extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 20.0,
-                  backgroundImage: NetworkImage(leaveListItem.applicantProfileImageUrl),
+                  backgroundImage:
+                      NetworkImage(leaveListItem.applicantProfileImageUrl),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(height: 4),
@@ -32,8 +33,9 @@ class LeaveListTile extends StatelessWidget {
                   style: TextStyles.labelTextStyle,
                 ),
                 Text(
-                  'Days',
-                  style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
+                  '${leaveListItem.totalLeaveDays == 0 || leaveListItem.totalLeaveDays > 1 ? 'Days' : 'Day'}',
+                  style:
+                      TextStyles.labelTextStyle.copyWith(color: Colors.black),
                 )
               ],
             ),
@@ -57,7 +59,8 @@ class LeaveListTile extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: 'Start: ',
-                              style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
+                              style: TextStyles.labelTextStyle
+                                  .copyWith(color: Colors.black),
                             ),
                             TextSpan(
                               text: _convertToDateFormat(
@@ -73,7 +76,8 @@ class LeaveListTile extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: 'End: ',
-                              style: TextStyles.labelTextStyle.copyWith(color: Colors.black),
+                              style: TextStyles.labelTextStyle
+                                  .copyWith(color: Colors.black),
                             ),
                             TextSpan(
                               text: _convertToDateFormat(
@@ -84,24 +88,31 @@ class LeaveListTile extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey, size: 14),
+                      Icon(Icons.arrow_forward_ios_outlined,
+                          color: Colors.grey, size: 14),
                     ],
                   ),
                   SizedBox(height: 12),
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColors.defaultColor),
-                      child: Text(
-                        leaveListItem.leaveType,
-                        style: TextStyles.labelTextStyle.copyWith(color: Colors.white),
-                      ),
-                    ),
-                    Text(
-                      leaveListItem.status.stringValue(),
-                      style: TextStyles.labelTextStyle.copyWith(color: leaveListItem.status.colorValue()),
-                    ),
-                  ])
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.defaultColor),
+                          child: Text(
+                            leaveListItem.leaveType,
+                            style: TextStyles.labelTextStyle
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          leaveListItem.status.stringValue(),
+                          style: TextStyles.labelTextStyle.copyWith(
+                              color: leaveListItem.status.colorValue()),
+                        ),
+                      ])
                 ],
               ),
             )
@@ -112,7 +123,8 @@ class LeaveListTile extends StatelessWidget {
   }
 
   String _convertToDateFormat(DateTime date) {
-    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
+    var selectedCompany =
+        SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
     final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;

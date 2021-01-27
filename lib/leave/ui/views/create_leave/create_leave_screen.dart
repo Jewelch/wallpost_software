@@ -28,7 +28,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
   var _departureListController = TextEditingController();
   var _arrivalListController = TextEditingController();
   DateTime selectedDate = DateTime.now();
-  var myFormat = DateFormat('d-MM-yyyy');
+  var myFormat = DateFormat('dd-MM-yyyy');
 
   bool isTicketRequired = false;
   @override
@@ -54,34 +54,40 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Apply Leave', style: TextStyles.titleTextStyle),
-                SizedBox(height: 4),
-                Divider(),
-                SizedBox(height: 4),
-                _buildLeaveTypeList(),
-                _buildReasonTextView(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 12, top: 8),
+                  child: Text('Apply Leave', style: TextStyles.titleTextStyle),
+                ),
                 SizedBox(height: 8),
-                _buildDateTextView(),
-                SizedBox(height: 8),
-                _buildPhoneTextField(),
-                SizedBox(height: 8),
-                _buildEmailTextField(),
-                SizedBox(height: 8),
-                _buildAttachmentsTextField(),
-                _buildTicketCheckBox(),
-                if (isTicketRequired) _buildDepartureAirportView(),
-                if (isTicketRequired) _buildArrivalAirportView(),
-                SizedBox(height: 8),
-                if (isTicketRequired) _buildNoOfTravellersView(),
-                SizedBox(height: 16),
-                if (isTicketRequired) _buildAirClassView(),
-                SizedBox(height: 16),
-                if (isTicketRequired) _buildWayTypeView()
+                Divider(height: 1),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  child: Column(children: [
+                    _buildLeaveTypeList(),
+                    _buildLeaveReasonTextView(),
+                    SizedBox(height: 8),
+                    _buildDateTextView(),
+                    SizedBox(height: 8),
+                    _buildPhoneTextField(),
+                    SizedBox(height: 8),
+                    _buildEmailTextField(),
+                    SizedBox(height: 8),
+                    _buildAttachmentsTextField(),
+                    _buildTicketCheckBox(),
+                    if (isTicketRequired) _buildDepartureAirportView(),
+                    if (isTicketRequired) _buildArrivalAirportView(),
+                    SizedBox(height: 8),
+                    if (isTicketRequired) _buildNoOfTravellersView(),
+                    SizedBox(height: 8),
+                    if (isTicketRequired) _buildAirClassView(),
+                    SizedBox(height: 8),
+                    if (isTicketRequired) _buildWayTypeView()
+                  ]),
+                ),
               ],
             ),
           ),
@@ -147,7 +153,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
     );
   }
 
-  Widget _buildReasonTextView() {
+  Widget _buildLeaveReasonTextView() {
     return MultiLineTextField(
       label: 'Reason',
       controller: _reasonTextController,
@@ -155,7 +161,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
           'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
       validator: (value) {
         if (value.isEmpty) {
-          return 'Please Re-Enter Leave Reason';
+          return 'Please Enter Leave Reason';
         } else {
           return null;
         }
@@ -171,11 +177,11 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
         Expanded(
           child: Row(children: [
             Text(
-              'Start Date :',
+              'Start Date',
               textAlign: TextAlign.center,
               style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
             ),
-            SizedBox(width: 4),
+            SizedBox(width: 12),
             Expanded(
               child: TextFormField(
                 controller: _startDateTextController,
@@ -187,7 +193,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                   hintText: "01.02.2019",
                   hintStyle: TextStyles.subTitleTextStyle,
                   suffixIcon: Icon(Icons.calendar_today_outlined, size: 14),
-                  suffixIconConstraints: BoxConstraints(minWidth: 20),
+                  suffixIconConstraints: BoxConstraints(minWidth: 16),
                 ),
                 onTap: () {
                   FocusScope.of(context).requestFocus(new FocusNode());
@@ -197,15 +203,15 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
             ),
           ]),
         ),
-        SizedBox(width: 8),
+        SizedBox(width: 12),
         Expanded(
           child: Row(children: [
             Text(
-              'End Date :',
+              'End Date',
               textAlign: TextAlign.center,
               style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 12),
             Expanded(
               child: TextFormField(
                 controller: _endDateTextController,
@@ -217,7 +223,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
                   hintText: "01.02.2012",
                   hintStyle: TextStyles.subTitleTextStyle,
                   suffixIcon: Icon(Icons.calendar_today_outlined, size: 14),
-                  suffixIconConstraints: BoxConstraints(minWidth: 20),
+                  suffixIconConstraints: BoxConstraints(minWidth: 16),
                 ),
                 onTap: () {
                   FocusScope.of(context).requestFocus(new FocusNode());
@@ -233,8 +239,11 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
 
   Widget _buildPhoneTextField() {
     return Row(children: [
-      Text('Phone :',
-          style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+      SizedBox(
+        width: 80,
+        child: Text('Phone',
+            style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
+      ),
       SizedBox(width: 8),
       Expanded(
         child: TextFormField(
@@ -252,9 +261,12 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
 
   Widget _buildEmailTextField() {
     return Row(children: [
-      Text(
-        'Email :',
-        style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+      SizedBox(
+        width: 80,
+        child: Text(
+          'Email',
+          style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+        ),
       ),
       SizedBox(width: 8),
       Expanded(
@@ -273,9 +285,12 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
 
   Widget _buildAttachmentsTextField() {
     return Row(children: [
-      Text(
-        'Attachments :',
-        style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+      SizedBox(
+        width: 80,
+        child: Text(
+          'Attachments',
+          style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
+        ),
       ),
       SizedBox(width: 8),
       Expanded(
@@ -302,7 +317,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
           });
         },
       ),
-      SizedBox(width: 8),
+      SizedBox(width: 4),
       Text(
         'Ticket required ',
         style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
@@ -352,7 +367,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
         Expanded(
           child: Row(children: [
             Text(
-              'Adults :',
+              'Adults',
               textAlign: TextAlign.center,
               style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
             ),
@@ -376,7 +391,7 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
         Expanded(
           child: Row(children: [
             Text(
-              'Children :',
+              'Children',
               textAlign: TextAlign.center,
               style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black),
             ),
@@ -401,12 +416,10 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
   }
 
   Widget _buildAirClassView() {
-    var _airClassList = ["Buisness", "Economy"];
-    var selectedAirClassIndex = 0;
-
+    List<String> _airClassList = ["Buisness", "Economy"];
+    int selectedAirClassIndex = 0;
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text('Air class',
             style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
@@ -420,17 +433,28 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen>
             setState(() => {});
           },
         ),
-        SizedBox(height: 12),
+        SizedBox(width: 20),
+        Container(
+          width: 60,
+          child: DropdownButton(
+            isExpanded: true,
+            hint: Text(
+              "More",
+              style: TextStyles.subTitleTextStyle,
+            ),
+            items: [],
+            onChanged: (_) {},
+          ),
+        )
       ],
     );
   }
 
   Widget _buildWayTypeView() {
-    var _airWayList = ["One way", "Two way"];
-    var selectedAirWayndex = 0;
-
+    List<String> _airWayList = ["One way", "Two way"];
+    int selectedAirWayndex = 0;
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text('Way type',
