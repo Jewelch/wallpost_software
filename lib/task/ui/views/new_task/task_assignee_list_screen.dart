@@ -3,21 +3,18 @@ import 'package:wallpost/_common_widgets/filter_views/multi_select_filters_list.
 import 'package:wallpost/_common_widgets/filter_views/segment_control.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/task/entities/task_employee.dart';
-import 'package:wallpost/task/entities/task_list_filters.dart';
 import 'package:wallpost/task/services/task_employee_list_provider.dart';
 
-class TaskAssigneeFilterListScreen extends StatefulWidget {
-  final TaskListFilters _filters;
+class TaskAssigneeListScreen extends StatefulWidget {
+  final List<TaskEmployee> _previouslySelectedEmployees;
 
-  TaskAssigneeFilterListScreen(this._filters);
+  TaskAssigneeListScreen(this._previouslySelectedEmployees);
 
   @override
-  _TaskAssigneeFilterListScreenState createState() =>
-      _TaskAssigneeFilterListScreenState();
+  _TaskAssigneeListScreenState createState() => _TaskAssigneeListScreenState();
 }
 
-class _TaskAssigneeFilterListScreenState
-    extends State<TaskAssigneeFilterListScreen> {
+class _TaskAssigneeListScreenState extends State<TaskAssigneeListScreen> {
   TaskEmployeeListProvider _provider =
       TaskEmployeeListProvider.subordinatesProvider();
   final List<TaskEmployee> _employees = [];
@@ -28,7 +25,7 @@ class _TaskAssigneeFilterListScreenState
 
   @override
   void initState() {
-    _selectedEmployees.addAll(widget._filters.assignees);
+    _selectedEmployees.addAll(widget._previouslySelectedEmployees);
     getEmployees();
     super.initState();
   }
@@ -75,8 +72,8 @@ class _TaskAssigneeFilterListScreenState
               });
             },
             onFilterSelectionComplete: () {
-              widget._filters.assignees.clear();
-              widget._filters.assignees.addAll(_selectedEmployees);
+              widget._previouslySelectedEmployees.clear();
+              widget._previouslySelectedEmployees.addAll(_selectedEmployees);
               Navigator.pop(context, true);
             },
           ),
