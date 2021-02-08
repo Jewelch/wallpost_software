@@ -10,9 +10,9 @@ class CreateTaskForm implements JSONConvertible {
   final DateTime endDate;
   final DateTime endTime;
   final List<TaskEmployee> assignees;
+  final TaskEmployee taskOwner;
   final List<String> attachedFileNames;
   final bool isAttachmentRequiredOnCompletion;
-  final String timezone;
 
   CreateTaskForm({
     this.name,
@@ -22,9 +22,9 @@ class CreateTaskForm implements JSONConvertible {
     this.endDate,
     this.endTime,
     this.assignees,
+    this.taskOwner,
     this.attachedFileNames,
     this.isAttachmentRequiredOnCompletion,
-    this.timezone,
   });
 
   @override
@@ -39,12 +39,12 @@ class CreateTaskForm implements JSONConvertible {
       'assignees': _readAssigneeList(assignees),
       'filenames': attachedFileNames,
       'attachment_req': isAttachmentRequiredOnCompletion,
-      'timezone': timezone,
       'status': 'new',
       'is_draft': false,
       'is_private': false,
       'no_time_conversion': false,
       'rrule': null,
+      if (taskOwner != null) 'task_owner': taskOwner.v1Id,
     };
   }
 

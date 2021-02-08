@@ -26,7 +26,6 @@ void main() {
     assignees: [mockTaskEmployee1, mockTaskEmployee2],
     attachedFileNames: ['filename1', 'filename2'],
     isAttachmentRequiredOnCompletion: true,
-    timezone: 'TimeZoneString',
   );
   Map<String, dynamic> successfulResponse = Mocks.createTaskResponse;
   var mockCompany = MockCompany();
