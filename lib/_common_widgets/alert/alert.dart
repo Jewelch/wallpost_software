@@ -11,9 +11,8 @@ class Alert {
     showDialog(
       context: context,
       barrierDismissible: true,
-      child: new AlertDialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      builder: (context) => new AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
         title: new Text(title),
         content: new Text(message),
         actions: <Widget>[
@@ -41,9 +40,8 @@ class Alert {
     showDialog(
       context: context,
       barrierDismissible: true,
-      child: new AlertDialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      builder: (context) => new AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
         title: new Text(title),
         content: new Text(message),
         actions: <Widget>[
