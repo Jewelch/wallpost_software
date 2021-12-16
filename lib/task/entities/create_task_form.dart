@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/task/entities/task_employee.dart';

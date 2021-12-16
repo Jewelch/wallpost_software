@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:wallpost/_wp_core/wpapi/entities/api_response.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/malformed_response_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/server_sent_exception.dart';

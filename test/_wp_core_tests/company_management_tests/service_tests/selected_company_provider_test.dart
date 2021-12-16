@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company.dart';

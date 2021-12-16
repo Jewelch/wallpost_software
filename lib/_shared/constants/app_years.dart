@@ -1,3 +1,5 @@
+// @dart=2.9
+
 class AppYears {
   static int _startYear = 2015;
 

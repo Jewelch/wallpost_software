@@ -1,3 +1,5 @@
+// @dart=2.9
+
 class Mocks {
   static var loginResponse = {
     "full_name": "Full User Name",

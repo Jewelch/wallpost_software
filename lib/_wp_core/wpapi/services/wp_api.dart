@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:convert';
 
 import 'package:wallpost/_shared/constants/app_id.dart';

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filters_list.dart';
 import 'package:wallpost/_common_widgets/filter_views/segment_control.dart';

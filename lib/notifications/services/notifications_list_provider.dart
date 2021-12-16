@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';

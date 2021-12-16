@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 
 export 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';

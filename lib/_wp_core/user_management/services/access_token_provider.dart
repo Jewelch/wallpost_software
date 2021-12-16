@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/constants/base_urls.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';

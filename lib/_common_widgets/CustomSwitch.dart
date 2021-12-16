@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 

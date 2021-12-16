@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:wallpost/_wp_core/user_management/services/logout_handler.dart';
 

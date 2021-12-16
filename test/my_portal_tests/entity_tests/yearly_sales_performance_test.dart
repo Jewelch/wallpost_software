@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/my_portal/entities/sales_performance.dart';
 

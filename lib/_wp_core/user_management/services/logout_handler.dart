@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:wallpost/_main/main_screen.dart';
 import 'package:wallpost/_routing/route_names.dart';

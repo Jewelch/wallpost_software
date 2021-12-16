@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:random_string/random_string.dart';
 import 'package:wallpost/password_management/constants/password_management_urls.dart';

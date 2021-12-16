@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'api_request.dart';
 
 class APIResponse {

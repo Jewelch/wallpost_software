@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/constants/company_management_urls.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';

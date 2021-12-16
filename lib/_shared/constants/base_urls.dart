@@ -1,3 +1,5 @@
+// @dart=2.9
+
 class BaseUrls {
   //Sub domains
   static const String _CORE = 'core';

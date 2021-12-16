@@ -1,3 +1,5 @@
+// @dart=2.9
+
 class TimeToPunchInCalculator {
   static String timeTillPunchIn(int durationInSeconds) {
     int aMinuteInSeconds = 60;

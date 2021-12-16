@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:wallpost/task/entities/task_category.dart';
 import 'package:wallpost/task/entities/task_department.dart';
 import 'package:wallpost/task/entities/task_employee.dart';

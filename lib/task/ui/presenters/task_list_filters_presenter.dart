@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/task/entities/task_category.dart';
