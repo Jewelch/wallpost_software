@@ -102,7 +102,7 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
                 minY: 0,
                 lineBarsData: lineBarsData,
                 showingTooltipIndicators: showIndexes.map((index) {
-                  return ShowingTooltipIndicators(index, [
+                  return ShowingTooltipIndicators([
                     LineBarSpot(tooltipsOnBar, lineBarsData.indexOf(tooltipsOnBar), tooltipsOnBar.spots[index]),
                   ]);
                 }).toList(),
@@ -127,7 +127,7 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
                   touchTooltipData: LineTouchTooltipData(
                     tooltipBgColor: AppColors.chartLineColor,
                     tooltipPadding: EdgeInsets.all(4),
-                    tooltipBottomMargin: 12,
+                    tooltipMargin: 12,
                     tooltipRoundedRadius: 40,
                     getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
                       return lineBarsSpot.map((lineBarSpot) {
@@ -151,14 +151,14 @@ class _SalesFinancialsGraphViewState extends State<SalesFinancialsGraphView> {
                     showTitles: true,
                     reservedSize: 24,
                     margin: 4,
-                    textStyle: TextStyle(color: Colors.grey, fontSize: 8),
+                    // textStyle: TextStyle(color: Colors.grey, fontSize: 8),
                     getTitles: (value) => _getMonthString(value.toInt()),
                   ),
                   leftTitles: SideTitles(
                     showTitles: true,
                     margin: 8,
                     reservedSize: 20,
-                    textStyle: TextStyle(color: Colors.grey, fontSize: 8),
+                    // textStyle: TextStyle(color: Colors.grey, fontSize: 8),
                     getTitles: (value) {
                       switch (value.toInt()) {
                         case 25:

@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
@@ -22,13 +24,21 @@ class _LoginScreenState extends State<LoginScreen> {
   var _usernameTextController = TextEditingController();
   var _passwordTextController = TextEditingController();
   var _isLoading = false;
+  StreamSubscription<bool> _keyboardSubscription;
 
   @override
   void initState() {
     super.initState();
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) => setState(() => _showLogo = visible ? false : true),
-    );
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    _keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+      setState(() => _showLogo = visible ? false : true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _keyboardSubscription.cancel();
+    super.dispose();
   }
 
   @override

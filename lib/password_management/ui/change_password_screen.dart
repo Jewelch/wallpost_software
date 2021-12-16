@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
@@ -26,14 +28,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   var _currentPasswordTextController = TextEditingController();
   var _newPasswordTextController = TextEditingController();
   var _confirmPasswordTextController = TextEditingController();
+  StreamSubscription<bool> _keyboardSubscription;
 
   @override
   void initState() {
     super.initState();
     _loader = Loader(context);
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) => setState(() => _showLogo = visible ? false : true),
-    );
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    _keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+      setState(() => _showLogo = visible ? false : true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _keyboardSubscription.cancel();
+    super.dispose();
   }
 
   @override

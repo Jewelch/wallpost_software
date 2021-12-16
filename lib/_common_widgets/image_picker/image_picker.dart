@@ -9,7 +9,7 @@ class ImagePicker {
   static void show({BuildContext context, ValueChanged<File> onImageSelected}) {
     showMaterialModalBottomSheet(
       context: context,
-      builder: (context, scrollController) => Container(
+      builder: (context) => Container(
         height: 200,
         child: ListView(
           padding: EdgeInsets.all(0),

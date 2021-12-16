@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 
 export 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
@@ -18,7 +17,7 @@ class MockNetworkAdapter implements NetworkAdapter {
   int noOfTimesGetIsCalled = 0;
   int noOfTimesPostIsCalled = 0;
   int noOfTimesPutIsCalled = 0;
-  VoidCallback onComplete;
+  Function onComplete;
 
   APIRequest get apiRequest => _apiRequest;
 

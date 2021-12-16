@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/request_exception.dart';
@@ -12,14 +12,14 @@ class NetworkRequestExecutor implements NetworkAdapter {
   Dio dio = new Dio();
 
   NetworkRequestExecutor() {
-//    dio.interceptors.add(PrettyDioLogger(
-//        requestHeader: true,
-//        requestBody: true,
-//        responseBody: true,
-//        responseHeader: false,
-//        error: true,
-//        compact: true,
-//        maxWidth: 90));
+    dio.interceptors.add(PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        error: true,
+        compact: true,
+        maxWidth: 90));
   }
 
   @override
