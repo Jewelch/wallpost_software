@@ -9,7 +9,9 @@ class LoginPresenter {
   final LoginView _view;
   final Authenticator _authenticator;
 
-  LoginPresenter(this._view, this._authenticator);
+  LoginPresenter(this._view) : _authenticator = Authenticator();
+
+  LoginPresenter.initWith(this._view, this._authenticator);
 
   Future<void> login(String accountNumber, String username, String password) async {
     if (!_isInputValid(accountNumber, username, password)) return;
@@ -31,17 +33,17 @@ class LoginPresenter {
 
     if (accountNumber.isEmpty) {
       isValid = false;
-      _view.notifyInvalidAccountNumber();
+      _view.notifyInvalidAccountNumber("Invalid account number");
     }
 
     if (username.isEmpty) {
       isValid = false;
-      _view.notifyInvalidUsername();
+      _view.notifyInvalidUsername("Invalid username");
     }
 
     if (password.isEmpty) {
       isValid = false;
-      _view.notifyInvalidPassword();
+      _view.notifyInvalidPassword("Invalid password");
     }
 
     return isValid;

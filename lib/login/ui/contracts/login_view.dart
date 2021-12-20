@@ -3,11 +3,11 @@ abstract class LoginView {
 
   void hideLoader();
 
-  void notifyInvalidUsername();
+  void notifyInvalidAccountNumber(String message);
 
-  void notifyInvalidPassword();
+  void notifyInvalidUsername(String message);
 
-  void notifyInvalidAccountNumber();
+  void notifyInvalidPassword(String message);
 
   void goToCompanyListScreen();
 
