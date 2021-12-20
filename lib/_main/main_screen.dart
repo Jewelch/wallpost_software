@@ -1,11 +1,13 @@
 // @dart=2.9
 
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
+import 'package:wallpost/login/ui/views/login_screen.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key key}) : super(key: key);
@@ -47,7 +49,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _showLoginScreen() async {
-    Navigator.pushNamedAndRemoveUntil(context, RouteNames.login, (_) => false);
+    ScreenPresenter.present(LoginScreen(), context);
+    // Navigator.pu(context, RouteNames.login, (_) => false);
   }
 
   void _showLandingScreenForLoggedInUser() {

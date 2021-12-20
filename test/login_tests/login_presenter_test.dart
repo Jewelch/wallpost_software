@@ -88,17 +88,3 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 }
-
-/*
-    IN CASE OF VALID INPUT AND API SUCCESS
-    - validate input
-    - show loader
-    - call the login api
-    - hide loader
-    - navigate to next screen
-
-
-    IN CASE OF FAILURE
-    - show loader
-    - show error message
- */
