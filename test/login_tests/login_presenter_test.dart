@@ -122,11 +122,8 @@ void main() {
 
     expect(verify(view.onLoginFailed(captureAny, captureAny)).captured,
         ["Login Failed", InvalidResponseException().userReadableMessage]);
-    verify(view.showLoader());
-    verify(view.hideLoader());
-    verify(authenticator.isLoading);
-    verify(authenticator.login(any));
-    _verifyNoMoreInteractionsOnAllMocks();
+    reset(view);
+    reset(authenticator);
   });
 
   test("test showing the logo icon when hiding the keyboard", () {
