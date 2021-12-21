@@ -28,7 +28,7 @@ class RoundedRectangleActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: (subtitle != null) ? 50 : 40,
-      child: FlatButton(
+      child: MaterialButton(
         minWidth: 50,
         shape: RoundedRectangleBorder(
           side: BorderSide(color: borderColor ?? Colors.transparent),

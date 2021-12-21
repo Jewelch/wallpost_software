@@ -1,6 +1,7 @@
 // @dart=2.9
 
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'package:wallpost/_routing/route_names.dart';
@@ -17,11 +18,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+
   @override
   void initState() {
     super.initState();
     StatusBarColorSetter.setColorToAppColor();
     _showLandingScreen();
+    _setUp();
   }
 
   @override
@@ -75,5 +78,9 @@ class _MainScreenState extends State<MainScreen> {
 
   void _showScreenAndClearStack(String route, {Object arguments}) {
     Navigator.pushNamedAndRemoveUntil(context, route, (_) => false, arguments: arguments);
+  }
+
+  void _setUp() {
+    Alert.setContext(context);
   }
 }

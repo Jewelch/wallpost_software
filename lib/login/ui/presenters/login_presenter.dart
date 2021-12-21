@@ -48,4 +48,8 @@ class LoginPresenter {
 
     return isValid;
   }
+
+  void onKeyboardVisibilityChange({bool visibility}) {
+    visibility ? _view.hideLogoIcon() : _view.showLogoIcon();
+  }
 }

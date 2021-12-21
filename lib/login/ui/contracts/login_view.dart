@@ -1,4 +1,8 @@
 abstract class LoginView {
+  void showLogoIcon();
+
+  void hideLogoIcon();
+
   void showLoader();
 
   void hideLoader();
