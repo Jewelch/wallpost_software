@@ -81,6 +81,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _setUp() {
-    Alert.setContext(context);
+    // Alert.setContext(context);
   }
 }

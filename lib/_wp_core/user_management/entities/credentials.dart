@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 
 class Credentials implements JSONConvertible {

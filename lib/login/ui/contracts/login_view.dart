@@ -1,8 +1,4 @@
 abstract class LoginView {
-  void showLogoIcon();
-
-  void hideLogoIcon();
-
   void showLoader();
 
   void hideLoader();
@@ -12,6 +8,8 @@ abstract class LoginView {
   void notifyInvalidUsername(String message);
 
   void notifyInvalidPassword(String message);
+
+  void clearLoginErrors();
 
   void goToCompanyListScreen();
 

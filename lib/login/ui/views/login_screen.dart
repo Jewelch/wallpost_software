@@ -2,28 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
+import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/login/ui/contracts/login_view.dart';
 import 'package:wallpost/login/ui/presenters/login_presenter.dart';
 
-class LoginScreen extends StatelessWidget implements LoginView {
-  late LoginPresenter presenter;
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
 
+class _LoginScreenState extends State<LoginScreen> implements LoginView {
+  late LoginPresenter presenter;
   var _accountNumberErrorNotifier = ItemNotifier<String>();
   var _usernameErrorNotifier = ItemNotifier<String>();
   var _passwordErrorNotifier = ItemNotifier<String>();
   var _showLogoNotifier = ItemNotifier<bool>();
   var _showLoaderNotifier = ItemNotifier<bool>();
+  var _accountNumberTextController = TextEditingController();
+  var _usernameTextController = TextEditingController();
+  var _passwordTextController = TextEditingController();
 
-  TextEditingController _accountNumberTextController = TextEditingController();
-  TextEditingController _usernameTextController = TextEditingController();
-  TextEditingController _passwordTextController = TextEditingController();
-
-  LoginScreen() {
+  @override
+  void initState() {
     presenter = LoginPresenter(this);
-    KeyboardVisibilityController().onChange.listen((visibility) =>
-        presenter.onKeyboardVisibilityChange(visibility: visibility));
+    KeyboardVisibilityController().onChange.listen((visibility) => _showLogoNotifier.notify(!visibility));
+    super.initState();
   }
 
   @override
@@ -35,8 +40,8 @@ class LoginScreen extends StatelessWidget implements LoginView {
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
                 colors: [
-                  AppColors.getColorFromHex('#4bafe1'),
-                  AppColors.getColorFromHex('#2771ba'),
+                  AppColors.defaultColor.withOpacity(0.8),
+                  AppColors.defaultColor,
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -44,10 +49,17 @@ class LoginScreen extends StatelessWidget implements LoginView {
                 tileMode: TileMode.clamp),
           ),
           padding: EdgeInsets.all(10.0),
-          child: Column(
+          child: ListView(
+            physics: ClampingScrollPhysics(),
             children: <Widget>[
               loginIcon(),
-              Expanded(child: formUI()),
+              SizedBox(height: 40),
+              formUI(),
+              SizedBox(height: 16),
+              _loginButton(),
+              SizedBox(height: 16),
+              _forgotPasswordButton(),
+              SizedBox(height: 16),
             ],
           ),
         ),
@@ -56,16 +68,16 @@ class LoginScreen extends StatelessWidget implements LoginView {
   }
 
   Widget loginIcon() {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 100),
-      curve: Curves.easeInOut,
-      width: double.infinity,
-      child: Center(
-        child: ItemNotifiable<bool>(
-          notifier: _showLogoNotifier,
-          builder: (context, value) => Container(
-            margin: EdgeInsets.symmetric(vertical: (value ?? true) ? 40 : 0),
-            height: (value ?? true) ? 120 : 0,
+    return ItemNotifiable<bool>(
+      notifier: _showLogoNotifier,
+      builder: (context, showLogo) => AnimatedContainer(
+        duration: Duration(milliseconds: 100),
+        margin: EdgeInsets.only(top: (showLogo ?? true) ? 40 : 0),
+        curve: Curves.easeInOut,
+        width: double.infinity,
+        child: Center(
+          child: Container(
+            height: (showLogo ?? true) ? 120 : 0,
             width: 120,
             child: Image.asset('assets/logo/logo.png'),
           ),
@@ -75,73 +87,65 @@ class LoginScreen extends StatelessWidget implements LoginView {
   }
 
   Widget formUI() {
-    return ItemNotifiable<bool>(
-      notifier: _showLogoNotifier,
-      builder: (context, value) => SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
-        padding: EdgeInsets.only(top: (value ?? true) ? 0 : 40),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ItemNotifiable<String>(
-                notifier: _accountNumberErrorNotifier,
-                builder: (context, value) => TextField(
-                  controller: _accountNumberTextController,
-                  decoration: InputDecoration(
-                      hintText: "Account Number", errorText: value),
-                  textInputAction: TextInputAction.next,
-                ),
-              ),
-              SizedBox(height: 16),
-              ItemNotifiable<String>(
-                notifier: _usernameErrorNotifier,
-                builder: (context, value) => TextField(
-                  controller: _usernameTextController,
-                  decoration:
-                      InputDecoration(hintText: "Username", errorText: value),
-                  textInputAction: TextInputAction.next,
-                ),
-              ),
-              SizedBox(height: 16),
-              ItemNotifiable<String>(
-                notifier: _passwordErrorNotifier,
-                builder: (context, value) => TextField(
-                  controller: _passwordTextController,
-                  decoration:
-                      InputDecoration(hintText: "Password", errorText: value),
-                  textInputAction: TextInputAction.done,
-                  obscureText: true,
-                ),
-              ),
-              SizedBox(height: 16),
-              loginButton(),
-              SizedBox(height: 16),
-              forgetPassword(),
-              SizedBox(height: 16),
-            ],
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ItemNotifiable<String>(
+          notifier: _accountNumberErrorNotifier,
+          builder: (context, value) => LoginTextField(
+            controller: _accountNumberTextController,
+            hint: "Account Number",
+            errorText: value,
+            textInputAction: TextInputAction.next,
           ),
         ),
-      ),
+        SizedBox(height: 16),
+        ItemNotifiable<String>(
+          notifier: _usernameErrorNotifier,
+          builder: (context, value) => LoginTextField(
+            controller: _usernameTextController,
+            hint: "Username",
+            errorText: value,
+            textInputAction: TextInputAction.next,
+          ),
+        ),
+        SizedBox(height: 16),
+        ItemNotifiable<String>(
+          notifier: _passwordErrorNotifier,
+          builder: (context, value) => LoginTextField(
+            controller: _passwordTextController,
+            hint: "Password",
+            errorText: value,
+            textInputAction: TextInputAction.done,
+            obscureText: true,
+            onFieldSubmitted: (_) => _performLogin(),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget loginButton() {
+  Widget _loginButton() {
     return ItemNotifiable<bool>(
       notifier: _showLoaderNotifier,
-      builder:(context,value)=> RoundedRectangleActionButton(
+      builder: (context, value) => RoundedRectangleActionButton(
         title: 'Login',
-        borderColor: Colors.grey.withOpacity(0.3),
-        onPressed: () {
-          presenter.login(_accountNumberTextController.text,
-              _usernameTextController.text, _passwordTextController.text);
-        },
+        borderColor: AppColors.defaultColorDark,
+        onPressed: () => _performLogin(),
         showLoader: value ?? false,
       ),
     );
   }
 
-  Widget forgetPassword() {
+  void _performLogin() {
+    presenter.login(
+      _accountNumberTextController.text,
+      _usernameTextController.text,
+      _passwordTextController.text,
+    );
+  }
+
+  Widget _forgotPasswordButton() {
     return RoundedRectangleActionButton(
       title: 'Forgot your password?',
       color: Colors.transparent,
@@ -149,18 +153,6 @@ class LoginScreen extends StatelessWidget implements LoginView {
         // ScreenPresenter.present(, context)
       },
     );
-  }
-
-  //MARK: View functions
-
-  @override
-  void showLogoIcon() {
-    _showLogoNotifier.notify(true);
-  }
-
-  @override
-  void hideLogoIcon() {
-    _showLogoNotifier.notify(false);
   }
 
   @override
@@ -192,8 +184,15 @@ class LoginScreen extends StatelessWidget implements LoginView {
   }
 
   @override
+  void clearLoginErrors() {
+    _accountNumberErrorNotifier.notify(null);
+    _usernameErrorNotifier.notify(null);
+    _passwordErrorNotifier.notify(null);
+  }
+
+  @override
   void onLoginFailed(String title, String message) {
-    Alert.showSimpleAlert(title: title,message: message);
+    Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 
   @override

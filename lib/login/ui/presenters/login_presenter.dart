@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/user_management/entities/credentials.dart';
 import 'package:wallpost/_wp_core/user_management/services/authenticator.dart';
@@ -14,6 +12,7 @@ class LoginPresenter {
   LoginPresenter.initWith(this._view, this._authenticator);
 
   Future<void> login(String accountNumber, String username, String password) async {
+    _view.clearLoginErrors();
     if (!_isInputValid(accountNumber, username, password)) return;
     if (_authenticator.isLoading) return;
 
@@ -47,9 +46,5 @@ class LoginPresenter {
     }
 
     return isValid;
-  }
-
-  void onKeyboardVisibilityChange({bool visibility}) {
-    visibility ? _view.hideLogoIcon() : _view.showLogoIcon();
   }
 }

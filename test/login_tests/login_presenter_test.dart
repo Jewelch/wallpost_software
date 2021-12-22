@@ -31,6 +31,7 @@ void main() {
 
     //then
     verifyInOrder([
+      view.clearLoginErrors(),
       authenticator.isLoading,
       view.showLoader(),
       authenticator.login(any),
@@ -40,55 +41,63 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test(
-      'logging in with invalid credentials notifies the view | verify the order',
-      () async {
+  test('logging in with invalid credentials notifies the view', () async {
+    //given
     when(authenticator.isLoading).thenReturn(false);
     LoginPresenter presenter = LoginPresenter.initWith(view, authenticator);
 
     //when
     await presenter.login("", "", "");
 
+    //then
     verifyInOrder([
-      view.notifyInvalidAccountNumber(any),
-      view.notifyInvalidUsername(any),
-      view.notifyInvalidPassword(any),
+      view.clearLoginErrors(),
+      view.notifyInvalidAccountNumber("Invalid account number"),
+      view.notifyInvalidUsername("Invalid username"),
+      view.notifyInvalidPassword("Invalid password"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test(
-      'logging in with invalid credentials notifies the view | verify the messages',
-      () async {
+  test('logging in with valid credentials clears the errors', () async {
+    //given
     when(authenticator.isLoading).thenReturn(false);
     LoginPresenter presenter = LoginPresenter.initWith(view, authenticator);
-
-    //when
     await presenter.login("", "", "");
 
-    expect(verify(view.notifyInvalidAccountNumber(captureAny)).captured.single,
-        "Invalid account number");
-    expect(verify(view.notifyInvalidUsername(captureAny)).captured.single,
-        "Invalid username");
-    expect(verify(view.notifyInvalidPassword(captureAny)).captured.single,
-        "Invalid password");
+    //when
+    await presenter.login("someAccountNumber", "someUsername", "");
+
+    //then
+    verifyInOrder([
+      view.clearLoginErrors(),
+      view.notifyInvalidAccountNumber("Invalid account number"),
+      view.notifyInvalidUsername("Invalid username"),
+      view.notifyInvalidPassword("Invalid password"),
+      view.clearLoginErrors(),
+      view.notifyInvalidPassword("Invalid password"),
+    ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
   test('logging in when the authenticator is loading does nothing', () async {
+    //given
     when(authenticator.isLoading).thenReturn(true);
     LoginPresenter presenter = LoginPresenter.initWith(view, authenticator);
 
     //when
     await presenter.login("account number", "username", "password");
 
+    //then
     verifyInOrder([
+      view.clearLoginErrors(),
       authenticator.isLoading,
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('failure to login successfully | verify the order', () async {
+  test('failure to login successfully', () async {
+    //given
     when(authenticator.isLoading).thenReturn(false);
     when(authenticator.login(any)).thenAnswer(
       (realInvocation) => Future.error(InvalidResponseException()),
@@ -98,57 +107,15 @@ void main() {
     //when
     await presenter.login("account number", "username", "password");
 
+    //then
     verifyInOrder([
+      view.clearLoginErrors(),
       authenticator.isLoading,
       view.showLoader(),
       authenticator.login(any),
       view.hideLoader(),
-      view.onLoginFailed(
-          "Login Failed", InvalidResponseException().userReadableMessage),
+      view.onLoginFailed("Login Failed", InvalidResponseException().userReadableMessage),
     ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-  test('failure to login successfully | verify the title and the message',
-      () async {
-    when(authenticator.isLoading).thenReturn(false);
-    when(authenticator.login(any)).thenAnswer(
-      (realInvocation) => Future.error(InvalidResponseException()),
-    );
-    LoginPresenter presenter = LoginPresenter.initWith(view, authenticator);
-
-    //when
-    await presenter.login("account number", "username", "password");
-
-    expect(verify(view.onLoginFailed(captureAny, captureAny)).captured,
-        ["Login Failed", InvalidResponseException().userReadableMessage]);
-    reset(view);
-    reset(authenticator);
-  });
-
-  test("test showing the logo icon when hiding the keyboard", () {
-    when(authenticator.isLoading).thenReturn(false);
-    when(authenticator.login(any)).thenAnswer(
-      (realInvocation) => Future.error(InvalidResponseException()),
-    );
-
-    LoginPresenter presenter = LoginPresenter.initWith(view, authenticator);
-
-    presenter.onKeyboardVisibilityChange(visibility: false);
-    verify(view.showLogoIcon());
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-  test("test hiding the logo icon when showing the keyboard", () {
-    when(authenticator.isLoading).thenReturn(false);
-    when(authenticator.login(any)).thenAnswer(
-      (realInvocation) => Future.error(InvalidResponseException()),
-    );
-
-    LoginPresenter presenter = LoginPresenter.initWith(view, authenticator);
-
-    presenter.onKeyboardVisibilityChange(visibility: true);
-    verify(view.hideLogoIcon());
     _verifyNoMoreInteractionsOnAllMocks();
   });
 }

@@ -1,29 +1,25 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class LoginTextField extends StatelessWidget {
-  final String hint;
+  final String? hint;
   final bool obscureText;
+  final String? errorText;
   final Color errorColor;
   final TextInputType keyboardType;
-  final TextEditingController controller;
-  final FormFieldValidator validator;
-  final TextInputAction textInputAction;
-  final ValueChanged<String> onFieldSubmitted;
-  final FormFieldSetter<String> onSaved;
+  final TextEditingController? controller;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
 
   LoginTextField({
     this.hint,
     this.obscureText = false,
+    this.errorText,
     this.errorColor = AppColors.failureColor,
     this.keyboardType = TextInputType.text,
     this.controller,
-    this.validator,
     this.textInputAction,
     this.onFieldSubmitted,
-    this.onSaved,
   });
 
   @override
@@ -35,14 +31,13 @@ class LoginTextField extends StatelessWidget {
         obscureText: obscureText,
         keyboardType: keyboardType,
         controller: controller,
-        validator: validator,
         textInputAction: textInputAction,
         onFieldSubmitted: onFieldSubmitted,
-        onSaved: onSaved,
         decoration: InputDecoration(
           fillColor: Colors.white,
           filled: true,
           hintText: hint,
+          errorText: errorText,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(100.0)),
             borderSide: BorderSide(

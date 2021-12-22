@@ -1,14 +1,12 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class RoundedRectangleActionButton extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final Widget icon;
-  final Color color;
-  final Color borderColor;
+  final String? title;
+  final String? subtitle;
+  final Widget? icon;
+  final Color? color;
+  final Color? borderColor;
   final VoidCallback onPressed;
   final bool disabled;
   final bool showLoader;
@@ -19,7 +17,7 @@ class RoundedRectangleActionButton extends StatelessWidget {
     this.icon,
     this.color,
     this.borderColor,
-    this.onPressed,
+    required this.onPressed,
     this.disabled = false,
     this.showLoader = false,
   });
@@ -30,6 +28,8 @@ class RoundedRectangleActionButton extends StatelessWidget {
       height: (subtitle != null) ? 50 : 40,
       child: MaterialButton(
         minWidth: 50,
+        elevation: 0,
+        highlightElevation: 0,
         shape: RoundedRectangleBorder(
           side: BorderSide(color: borderColor ?? Colors.transparent),
           borderRadius: BorderRadius.circular(25.0),
@@ -48,15 +48,15 @@ class RoundedRectangleActionButton extends StatelessWidget {
 
   List<Widget> _buildIconAndTitle() {
     return [
-      if (icon != null) icon,
-      if (icon != null && title != null && title.isNotEmpty) SizedBox(width: 8),
-      if (title != null && title.isNotEmpty)
+      if (icon != null) icon!,
+      if (icon != null && title != null && title!.isNotEmpty) SizedBox(width: 8),
+      if (title != null && title!.isNotEmpty)
         Flexible(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                title,
+                title!,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
@@ -69,7 +69,7 @@ class RoundedRectangleActionButton extends StatelessWidget {
               if (subtitle != null) SizedBox(height: 6),
               if (subtitle != null)
                 Text(
-                  subtitle,
+                  subtitle!,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
