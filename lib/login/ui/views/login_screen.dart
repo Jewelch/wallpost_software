@@ -4,9 +4,12 @@ import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/login/ui/contracts/login_view.dart';
 import 'package:wallpost/login/ui/presenters/login_presenter.dart';
+import 'package:wallpost/password_management/ui/views/forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -150,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
       title: 'Forgot your password?',
       color: Colors.transparent,
       onPressed: () {
-        // ScreenPresenter.present(, context)
+        ScreenPresenter.present(ForgotPasswordScreen(), context);
       },
     );
   }
@@ -196,5 +199,12 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
   }
 
   @override
-  void goToCompanyListScreen() {}
+  void goToCompanyListScreen() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RouteNames.main,
+          (_) => false,
+      arguments: _passwordTextController.text,
+    );
+  }
 }
