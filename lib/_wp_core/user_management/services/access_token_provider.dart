@@ -1,17 +1,15 @@
-// @dart=2.9
-
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/constants/base_urls.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
-import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
-import 'package:wallpost/_wp_core/wpapi/services/network_request_executor.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/_wp_core/user_management/repositories/user_repository.dart';
+import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
+import 'package:wallpost/_wp_core/wpapi/services/network_request_executor.dart';
 
 class AccessTokenProvider {
-  UserRepository _userRepository;
-  DeviceInfoProvider _deviceInfoProvider;
-  NetworkAdapter _networkAdapter;
+  late UserRepository _userRepository;
+  late DeviceInfoProvider _deviceInfoProvider;
+  late NetworkAdapter _networkAdapter;
 
   AccessTokenProvider() {
     _userRepository = UserRepository();
@@ -21,7 +19,7 @@ class AccessTokenProvider {
 
   AccessTokenProvider.initWith(this._userRepository, this._deviceInfoProvider, this._networkAdapter);
 
-  Future<String> getToken({bool forceRefresh = false}) async {
+  Future<String?> getToken({bool forceRefresh = false}) async {
     var user = _userRepository.getCurrentUser();
 
     if (forceRefresh == false && user != null && user.session.isActive() == true) {
@@ -34,7 +32,7 @@ class AccessTokenProvider {
     }
   }
 
-  Future<String> _refreshSessionForUser(User user) async {
+  Future<String?> _refreshSessionForUser(User user) async {
     var apiRequest = APIRequest('${BaseUrls.baseUrlV2()}/auth/refresh');
     var inactiveSession = user.session;
     apiRequest.addHeader('Authorization', inactiveSession.accessToken);
@@ -53,7 +51,7 @@ class AccessTokenProvider {
     }
   }
 
-  String _processResponse(APIResponse apiResponse, User user) {
+  String? _processResponse(APIResponse apiResponse, User user) {
     if (apiResponse.data == null || apiResponse.data is! Map<String, dynamic>) {
       return null;
     }

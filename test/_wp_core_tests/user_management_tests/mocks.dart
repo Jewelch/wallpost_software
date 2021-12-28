@@ -1,5 +1,3 @@
-// @dart=2.9
-
 class Mocks {
   static var loginResponse = {
     "full_name": "Full User Name",
@@ -11,7 +9,7 @@ class Mocks {
     "username": "someUserName"
   };
 
-  static Map get userMapWithInactiveSession {
+  static Map<String, dynamic> get userMapWithInactiveSession {
     Map<String, dynamic> map = Map.from(loginResponse);
     map['token_expiry'] = 123;
     return map;

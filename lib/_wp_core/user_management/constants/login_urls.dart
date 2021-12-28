@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:wallpost/_shared/constants/base_urls.dart';
 
 class LoginUrls {

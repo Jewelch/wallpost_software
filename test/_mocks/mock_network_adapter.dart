@@ -1,16 +1,14 @@
-// @dart=2.9
-
 import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 
 export 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 
 class MockNetworkAdapter implements NetworkAdapter {
-  bool _shouldSucceed;
+  late bool _shouldSucceed;
   dynamic _data;
   int _delay = 0;
   Map<String, Object> _metadata = {};
-  APIException _apiException;
-  APIRequest _apiRequest;
+  APIException? _apiException;
+  late APIRequest _apiRequest;
   var didCallGet = false;
   var didCallPut = false;
   var didCallPost = false;
@@ -19,7 +17,7 @@ class MockNetworkAdapter implements NetworkAdapter {
   int noOfTimesGetIsCalled = 0;
   int noOfTimesPostIsCalled = 0;
   int noOfTimesPutIsCalled = 0;
-  Function onComplete;
+  Function? onComplete;
 
   APIRequest get apiRequest => _apiRequest;
 
@@ -84,11 +82,11 @@ class MockNetworkAdapter implements NetworkAdapter {
     if (_shouldSucceed) {
       if (_delay > 0) await Future.delayed(Duration(milliseconds: _delay));
       int statusCode = 200;
-      if (onComplete != null) onComplete();
+      if (onComplete != null) onComplete!();
       return Future.value(APIResponse(apiRequest, statusCode, _data, _metadata));
     } else {
-      if (onComplete != null) onComplete();
-      throw _apiException;
+      if (onComplete != null) onComplete!();
+      throw _apiException!;
     }
   }
 }

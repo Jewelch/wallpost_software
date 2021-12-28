@@ -1,7 +1,5 @@
-// @dart=2.9
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_wp_core/user_management/repositories/user_repository.dart';
 import 'package:wallpost/_wp_core/user_management/services/new_user_adder.dart';
 
@@ -17,6 +15,6 @@ void main() {
   test('adding a user adds it to the user repository', () async {
     newUserAdder.addUser(mockUser);
 
-    expect(verify(mockUserRepository.saveNewCurrentUser(captureAny)).captured.single, mockUser);
+    expect(verify(() => mockUserRepository.saveNewCurrentUser(captureAny())).captured.single, mockUser);
   });
 }

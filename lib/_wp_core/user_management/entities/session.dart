@@ -1,14 +1,12 @@
-// @dart=2.9
-
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 class Session extends JSONInitializable implements JSONConvertible {
-  String _accessToken;
-  num _expirationTimeStamp;
-  String _refreshToken;
+  late String _accessToken;
+  late num _expirationTimeStamp;
+  late String _refreshToken;
 
   Session.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();

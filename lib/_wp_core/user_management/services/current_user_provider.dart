@@ -1,10 +1,8 @@
-// @dart=2.9
-
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/_wp_core/user_management/repositories/user_repository.dart';
 
 class CurrentUserProvider {
-  UserRepository _userRepository;
+  late UserRepository _userRepository;
 
   CurrentUserProvider() {
     _userRepository = UserRepository();
@@ -14,7 +12,11 @@ class CurrentUserProvider {
     _userRepository = userRepository;
   }
 
+  bool isLoggedIn() {
+    return _userRepository.getCurrentUser() != null;
+  }
+
   User getCurrentUser() {
-    return _userRepository.getCurrentUser();
+    return _userRepository.getCurrentUser()!;
   }
 }

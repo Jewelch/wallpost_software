@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
@@ -7,11 +5,11 @@ import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart
 import 'package:wallpost/_wp_core/user_management/entities/session.dart';
 
 class User extends JSONInitializable implements JSONConvertible {
-  String _id;
-  String _username;
-  String _fullName;
-  String _profileImageUrl;
-  Session _session;
+  late String _id;
+  late String _username;
+  late String _fullName;
+  late String _profileImageUrl;
+  late Session _session;
 
   User.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();

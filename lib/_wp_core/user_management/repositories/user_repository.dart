@@ -1,20 +1,18 @@
-// @dart=2.9
-
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 
 class UserRepository {
-  SecureSharedPrefs _sharedPrefs;
+  late SecureSharedPrefs _sharedPrefs;
   Map<String, User> _users = {};
-  String _currentUsername;
+  String? _currentUsername;
 
-  static UserRepository _singleton;
+  static UserRepository? _singleton;
 
   factory UserRepository() {
     if (_singleton == null) {
       _singleton = UserRepository.initWith(SecureSharedPrefs());
     }
-    return _singleton;
+    return _singleton!;
   }
 
   UserRepository.initWith(SecureSharedPrefs sharedPrefs) {
@@ -28,7 +26,7 @@ class UserRepository {
     _saveUsersData();
   }
 
-  User getCurrentUser() {
+  User? getCurrentUser() {
     return _users[_currentUsername];
   }
 
@@ -69,7 +67,7 @@ class UserRepository {
   }
 
   void _saveUsersData() {
-    List<Map<String, Object>> usersDataList = [];
+    List<Map<String, dynamic>> usersDataList = [];
     for (User user in _users.values) {
       usersDataList.add(user.toJson());
     }

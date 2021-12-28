@@ -1,7 +1,5 @@
-// @dart=2.9
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_id.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
 import 'package:wallpost/_wp_core/user_management/services/access_token_provider.dart';
@@ -39,9 +37,9 @@ void main() {
   );
 
   setUpAll(() {
-    when(mockDeviceInfo.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));
-    when(mockNonce.value).thenReturn('randomNonce');
-    when(mockNonceProvider.getNonce(any)).thenAnswer((_) => Future.value(mockNonce));
+    when(() => mockDeviceInfo.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));
+    when(() => mockNonce.value).thenReturn('randomNonce');
+    when(() => mockNonceProvider.getNonce(any())).thenAnswer((_) => Future.value(mockNonce));
   });
 
   setUp(() {
@@ -85,7 +83,7 @@ void main() {
 
   group('test adding wp headers', () {
     test('auth token is not added when it is not available locally', () async {
-      when(mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value(null));
+      when(() => mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value(null));
       mockNetworkAdapter.succeed(simpleWpResponse);
 
       var _ = await wpApi.post(apiRequest);
@@ -98,7 +96,7 @@ void main() {
     });
 
     test('auth token is added when it is available locally', () async {
-      when(mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value('someAuthToken'));
+      when(() => mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value('someAuthToken'));
       mockNetworkAdapter.succeed(simpleWpResponse);
 
       var _ = await wpApi.post(apiRequest);
@@ -111,7 +109,7 @@ void main() {
     });
 
     test('nonce is added when nonce functions are called', () async {
-      when(mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value('someAuthToken'));
+      when(() => mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value('someAuthToken'));
       mockNetworkAdapter.succeed(simpleWpResponse);
 
       var _ = await wpApi.postWithNonce(apiRequest);
@@ -131,8 +129,8 @@ void main() {
 
       var _ = await wpApi.post(apiRequest);
 
-      verify(mockAccessTokenProvider.getToken(forceRefresh: false)).called(1);
-      verify(mockAccessTokenProvider.getToken(forceRefresh: true)).called(1);
+      verify(() => mockAccessTokenProvider.getToken(forceRefresh: false)).called(1);
+      verify(() => mockAccessTokenProvider.getToken(forceRefresh: true)).called(1);
       expect(mockNetworkAdapter.noOfTimesPostIsCalled, 2);
     });
 
@@ -189,7 +187,7 @@ void main() {
       } catch (error) {
         expect(error is ServerSentException, true);
         expect((error as ServerSentException).userReadableMessage, 'task failed');
-        expect((error as ServerSentException).errorCode, 1004);
+        expect((error).errorCode, 1004);
       }
     });
 

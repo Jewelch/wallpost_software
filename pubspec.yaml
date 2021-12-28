@@ -37,7 +37,7 @@ dependencies:
   date_format: ^2.0.4
   file_picker: ^4.2.7
   collection: ^1.15.0-nullsafety.4
-  notifiable: ^1.0.1
+  mocktail: ^0.2.0
 
 
 dev_dependencies:
