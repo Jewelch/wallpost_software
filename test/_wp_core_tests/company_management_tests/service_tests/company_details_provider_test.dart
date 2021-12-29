@@ -1,7 +1,7 @@
 // @dart=2.9
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/constants/company_management_urls.dart';
 import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
@@ -27,7 +27,7 @@ void main() {
   );
 
   setUpAll(() {
-    when(mockUserProvider.getCurrentUser()).thenReturn(mockUser);
+    when(() => mockUserProvider.getCurrentUser()).thenReturn(mockUser);
   });
 
   setUp(() {
@@ -112,7 +112,7 @@ void main() {
 
     try {
       var _ = await companyDetailsProvider.getCompanyDetails('someCompanyId');
-      verify(mockCompanyRepository.selectCompanyAndEmployeeForUser(any, any, any)).called(1);
+      verify(() => mockCompanyRepository.selectCompanyAndEmployeeForUser(any(), any(), any())).called(1);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }

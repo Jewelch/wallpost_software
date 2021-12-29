@@ -1,7 +1,7 @@
 // @dart=2.9
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/constants/company_management_urls.dart';
 import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
@@ -88,8 +88,8 @@ void main() {
 
     try {
       var companies = await companyListProvider.get();
-      verify(mockCurrentUserProvider.getCurrentUser()).called(1);
-      verify(mockCompanyRepository.saveCompaniesForUser(any, any)).called(1);
+      verify(() => mockCurrentUserProvider.getCurrentUser()).called(1);
+      verify(() => mockCompanyRepository.saveCompaniesForUser(any(), any())).called(1);
       expect(companies, isNotEmpty);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');

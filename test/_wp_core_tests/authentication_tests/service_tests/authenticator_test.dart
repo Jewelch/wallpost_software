@@ -1,7 +1,7 @@
 // @dart=2.9
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/user_management/constants/login_urls.dart';
@@ -24,7 +24,7 @@ void main() {
   var authenticator = Authenticator.initWith(mockDeviceInfo, mockNewUserAdder, mockNetworkAdapter);
 
   setUpAll(() {
-    when(mockDeviceInfo.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));
+    when(() => mockDeviceInfo.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));
   });
 
   setUp(() {
@@ -112,7 +112,7 @@ void main() {
     var user = await authenticator.login(credentials);
     expect(user, isNotNull);
 
-    var userRepoVerificationResult = verify(mockNewUserAdder.addUser(captureAny));
+    var userRepoVerificationResult = verify(() => mockNewUserAdder.addUser(captureAny()));
     expect(userRepoVerificationResult.callCount, 1);
     expect(userRepoVerificationResult.captured.single, isNotNull);
   });

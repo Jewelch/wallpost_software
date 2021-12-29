@@ -1,7 +1,7 @@
 // @dart=2.9
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
 
 import '../../../_mocks/mock_current_user_provider.dart';
@@ -17,24 +17,24 @@ void main() {
   var selectedEmployeeProvider = SelectedEmployeeProvider.initWith(mockCurrentUserProvider, mockCompanyRepository);
 
   test('returns null if there is no current user', () async {
-    when(mockCurrentUserProvider.getCurrentUser()).thenReturn(null);
+    when(() => mockCurrentUserProvider.getCurrentUser()).thenReturn(null);
 
     var selectedEmployee = selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
 
     expect(selectedEmployee, null);
-    verify(mockCurrentUserProvider.getCurrentUser()).called(1);
-    verifyNever(mockCompanyRepository.getSelectedCompanyForUser(any));
+    verify(() => mockCurrentUserProvider.getCurrentUser()).called(1);
+    verifyNever(() => mockCompanyRepository.getSelectedCompanyForUser(any()));
   });
 
   test('getting selected employee for current user', () async {
-    when(mockCurrentUserProvider.getCurrentUser()).thenReturn(mockUser);
-    when(mockCompanyRepository.getSelectedEmployeeForUser(any)).thenReturn(mockEmployee);
+    when(() => mockCurrentUserProvider.getCurrentUser()).thenReturn(mockUser);
+    when(() => mockCompanyRepository.getSelectedEmployeeForUser(any())).thenReturn(mockEmployee);
 
     var selectedEmployee = selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
 
     expect(selectedEmployee, mockEmployee);
-    verify(mockCurrentUserProvider.getCurrentUser()).called(1);
-    var verificationResult = verify(mockCompanyRepository.getSelectedEmployeeForUser(captureAny));
+    verify(() => mockCurrentUserProvider.getCurrentUser()).called(1);
+    var verificationResult = verify(() => mockCompanyRepository.getSelectedEmployeeForUser(captureAny()));
     verificationResult.called(1);
     expect(verificationResult.captured[0], mockUser);
   });
