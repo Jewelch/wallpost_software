@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
@@ -10,7 +8,7 @@ import 'package:wallpost/_wp_core/user_management/services/current_user_provider
 import 'package:wallpost/login/ui/views/login_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  MainScreen({Key key}) : super(key: key);
+  MainScreen({Key? key}) : super(key: key);
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -46,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   bool _isLoggedIn() {
-    return CurrentUserProvider().getCurrentUser() != null;
+    return CurrentUserProvider().isLoggedIn();
   }
 
   void _showLoginScreen() async {
@@ -74,8 +72,8 @@ class _MainScreenState extends State<MainScreen> {
 //                'Looks like you do not have access to this company any more. Please select another company from the list.'
   }
 
-  void _showScreenAndClearStack(String route, {Object arguments}) {
-    Navigator.pushNamedAndRemoveUntil(context, route, (_) => false, arguments: arguments);
+  void _showScreenAndClearStack(String rout) {
+    // Navigator.pushNamedAndRemoveUntil(context, route, (_) => false, arguments: arguments);
   }
 
   void _setUp() {
