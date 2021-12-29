@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
@@ -9,7 +7,7 @@ import 'package:wallpost/password_management/entities/change_password_form.dart'
 class PasswordChanger {
   final NetworkAdapter _networkAdapter;
   bool isLoading = false;
-  String _sessionId;
+  late String _sessionId;
 
   PasswordChanger() : _networkAdapter = WPAPI();
 

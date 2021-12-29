@@ -3,9 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/login/ui/views/login_screen.dart';
 
 class ForgotPasswordSuccessScreen extends StatelessWidget {
   @override
@@ -42,7 +43,11 @@ class ForgotPasswordSuccessScreen extends StatelessWidget {
               title: 'Go back to login',
               color: AppColors.successColor,
               onPressed: () {
-                Navigator.of(context).pushNamed(RouteNames.login);
+                ScreenPresenter.present(
+                  LoginScreen(),
+                  context,
+                  slideDirection: SlideDirection.fromLeft,
+                );
               },
             ),
           ],

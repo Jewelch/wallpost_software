@@ -16,8 +16,7 @@ class ForgotPasswordScreen extends StatefulWidget {
   _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
-class _ForgotPasswordState extends State<ForgotPasswordScreen>
-    implements ForgotPasswordView {
+class _ForgotPasswordState extends State<ForgotPasswordScreen> implements ForgotPasswordView {
   late ForgotPasswordPresenter presenter;
   var _accountNumberErrorNotifier = ItemNotifier<String>();
   var _emailErrorNotifier = ItemNotifier<String>();
@@ -37,9 +36,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen>
     return Scaffold(
       appBar: SimpleAppBar(
         title: 'Password Recovery',
-        leadingButtons: [
-          CircularBackButton(onPressed: () => Navigator.pop(context))
-        ],
+        leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
       ),
       body: Container(
         margin: EdgeInsets.only(bottom: 60),
@@ -85,9 +82,10 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen>
   }
 
   void _submit() {
-    presenter.resetPassword(
-        _accountNumberTextController.text, _emailTextController.text);
+    presenter.resetPassword(_accountNumberTextController.text, _emailTextController.text);
   }
+
+  //MARK: View functions
 
   @override
   void showLoader() {
@@ -110,8 +108,8 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen>
   @override
   void notifyInvalidAccountNumber(String message) {
     _accountNumberErrorNotifier.notify(message);
-
   }
+
   @override
   void notifyInvalidEmailFormat(String message) {
     _emailErrorNotifier.notify(message);
@@ -123,8 +121,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen>
   }
 
   @override
-  void onFailed(String title, String message) {
+  void onResetPasswordFailed(String title, String message) {
     Alert.showSimpleAlert(context: context, title: title, message: message);
   }
-
 }

@@ -16,6 +16,7 @@ class ChangePasswordScreen extends StatefulWidget {
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   var _showLogo = true;
+
   //Loader _loader;
   var _currentPasswordTextController = TextEditingController();
   var _newPasswordTextController = TextEditingController();
@@ -86,8 +87,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: FadeInImage.assetNetwork(
                       fit: BoxFit.cover,
                       placeholder: "assets/icons/user_image_placeholder.png",
-                      image: CurrentUserProvider().getCurrentUser().profileImageUrl
-                  ),
+                      image: CurrentUserProvider().getCurrentUser().profileImageUrl),
                 ),
               ),
             ),

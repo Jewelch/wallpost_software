@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 
 class ChangePasswordForm implements JSONConvertible {
@@ -7,8 +5,8 @@ class ChangePasswordForm implements JSONConvertible {
   final String newPassword;
 
   ChangePasswordForm({
-    this.oldPassword,
-    this.newPassword,
+    required this.oldPassword,
+    required this.newPassword,
   });
 
   @override

@@ -1,5 +1,4 @@
 abstract class ForgotPasswordView {
-
   void showLoader();
 
   void hideLoader();
@@ -12,5 +11,5 @@ abstract class ForgotPasswordView {
 
   void goToSuccessScreen();
 
-  void onFailed(String title, String message);
+  void onResetPasswordFailed(String title, String message);
 }
