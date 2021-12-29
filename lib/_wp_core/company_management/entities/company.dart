@@ -1,26 +1,24 @@
-// @dart=2.9
-
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 class Company extends JSONInitializable implements JSONConvertible {
-  String _id;
-  String _accountNumber;
-  String _name;
-  String _shortName;
-  String _commercialName;
-  String _logoUrl;
-  String _dateFormat;
-  String _currency;
-  bool _shouldShowRevenue;
-  List<String> _packages;
-  bool _showTimeSheet;
-  String _timezone;
-  num _allowedPunchInRadiusInMeters;
-  bool _isTrial;
-  String _fileUploadPath;
+  late String _id;
+  late String _accountNumber;
+  late String _name;
+  late String _shortName;
+  late String _commercialName;
+  late String _logoUrl;
+  late String _dateFormat;
+  late String _currency;
+  late bool _shouldShowRevenue;
+  late List<String> _packages;
+  late bool _showTimeSheet;
+  late String _timezone;
+  late num _allowedPunchInRadiusInMeters;
+  late bool _isTrial;
+  late String _fileUploadPath;
 
   Company.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
