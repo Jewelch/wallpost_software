@@ -7,12 +7,17 @@ import 'package:wallpost/_wp_core/company_management/services/user_companies_rem
 import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
 
 import '../../../_mocks/mock_current_user_provider.dart';
+import '../../../_mocks/mock_user.dart';
 
 class MockUserRemover extends Mock implements UserRemover {}
 
 class MockUserCompaniesRemover extends Mock implements UserCompaniesRemover {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(MockUser());
+  });
+
   test('logging out clears all the data', () async {
     var currentUserProvider = MockCurrentUserProvider();
     var userRemover = MockUserRemover();

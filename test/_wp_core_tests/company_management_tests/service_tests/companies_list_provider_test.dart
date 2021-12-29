@@ -9,6 +9,7 @@ import 'package:wallpost/_wp_core/company_management/services/companies_list_pro
 
 import '../../../_mocks/mock_current_user_provider.dart';
 import '../../../_mocks/mock_network_adapter.dart';
+import '../../../_mocks/mock_user.dart';
 import '../mocks.dart';
 
 class MockCompanyRepository extends Mock implements CompanyRepository {}
@@ -23,6 +24,10 @@ void main() {
     mockCompanyRepository,
     mockNetworkAdapter,
   );
+
+  setUpAll(() {
+    registerFallbackValue(MockUser());
+  });
 
   setUp(() {
     reset(mockCurrentUserProvider);

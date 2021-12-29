@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
 
+import '../../../_mocks/mock_company.dart';
 import '../../../_mocks/mock_current_user_provider.dart';
 import '../../../_mocks/mock_employee.dart';
 import '../../../_mocks/mock_user.dart';
@@ -15,6 +16,11 @@ void main() {
   var mockEmployee = MockEmployee();
   var mockCompanyRepository = MockCompanyRepository();
   var selectedEmployeeProvider = SelectedEmployeeProvider.initWith(mockCurrentUserProvider, mockCompanyRepository);
+
+  setUpAll(() {
+    registerFallbackValue(MockUser());
+    registerFallbackValue(MockCompany());
+  });
 
   test('returns null if there is no current user', () async {
     when(() => mockCurrentUserProvider.getCurrentUser()).thenReturn(null);

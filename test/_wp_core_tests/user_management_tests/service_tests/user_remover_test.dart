@@ -12,6 +12,10 @@ void main() {
   var mockUserRepository = MockUserRepository();
   var userRemover = UserRemover.initWith(mockUserRepository);
 
+  setUpAll(() {
+    registerFallbackValue(MockUser());
+  });
+
   test('removing current user', () async {
     userRemover.removeUser(mockUser);
 
