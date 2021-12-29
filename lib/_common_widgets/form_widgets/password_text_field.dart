@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
@@ -8,14 +6,14 @@ class PasswordTextField extends StatefulWidget {
   final String placeholder;
   final Color tintColor;
   final TextInputType textInputType;
-  final FormFieldValidator validator;
-  final TextEditingController controller;
-  final TextInputAction textInputAction;
-  final ValueChanged<String> onFieldSubmitted;
+  final FormFieldValidator? validator;
+  final TextEditingController? controller;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
   final textCapitalization;
-  final Widget trailingWidget;
+  final Widget? trailingWidget;
   final isObscured;
-  final FormFieldSetter<String> onSaved;
+  final FormFieldSetter<String>? onSaved;
 
   PasswordTextField({
     this.label = '',
