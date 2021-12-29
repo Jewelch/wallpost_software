@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:convert';
 
 import 'package:encrypt/encrypt.dart';
@@ -16,13 +14,18 @@ class SecureSharedPrefs {
     await preferences.setString(key, encryptedMapString);
   }
 
-  Future<Map> getMap(String key) async {
+  Future<Map?> getMap(String key) async {
     var preferences = await SharedPreferences.getInstance();
+
     if (preferences.containsKey(key) == false) {
       return null;
     }
 
     var encryptedMapString = preferences.getString(key);
+    if (encryptedMapString == null) {
+      return null;
+    }
+
     var mapString = _decryptString(encryptedMapString);
     var map = json.decode(mapString);
     return map;

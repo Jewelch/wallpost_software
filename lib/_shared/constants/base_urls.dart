@@ -1,5 +1,3 @@
-// @dart=2.9
-
 class BaseUrls {
   //Sub domains
   static const String _CORE = 'core';
@@ -15,7 +13,11 @@ class BaseUrls {
   static const String _VERSION_2_PATH = 'v2';
   static const String _VERSION_3_PATH = 'v3';
 
-  static String generateUrl({String subDomain, String environment, String version}) {
+  static String generateUrl({
+    required String subDomain,
+    required String environment,
+    required String version,
+  }) {
     return 'https://$subDomain.${environment}api.wallpostsoftware.com/api/$version';
   }
 

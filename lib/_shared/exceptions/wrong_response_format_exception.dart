@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 
 class WrongResponseFormatException extends WPException {
