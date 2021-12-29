@@ -1,5 +1,3 @@
-// @dart=2.9
-
 class RouteNames {
   //Main
   static final String main = "/main";

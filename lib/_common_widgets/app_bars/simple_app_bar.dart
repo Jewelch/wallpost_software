@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
@@ -16,7 +14,7 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Size preferredSize;
 
   SimpleAppBar({
-    this.title,
+    required this.title,
     this.leadingButtons = const [],
     this.trailingButtons = const [],
     this.showDivider = false,

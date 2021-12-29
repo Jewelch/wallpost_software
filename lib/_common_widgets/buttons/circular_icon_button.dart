@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -7,18 +5,19 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 class CircularIconButton extends StatelessWidget {
   final String iconName;
   final double iconSize;
-  final Color iconColor;
+  final Color? iconColor;
   final double buttonSize;
-  final Color color;
-  final VoidCallback onPressed;
+  final Color? color;
+  final VoidCallback? onPressed;
 
-  CircularIconButton(
-      {this.iconName,
-      this.iconSize = 20,
-      this.iconColor = Colors.white,
-      this.buttonSize = 44,
-      this.color,
-      this.onPressed});
+  CircularIconButton({
+    required this.iconName,
+    this.iconSize = 20,
+    this.iconColor = Colors.white,
+    this.buttonSize = 44,
+    this.color,
+    this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {

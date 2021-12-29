@@ -37,13 +37,13 @@ dependencies:
   date_format: ^2.0.4
   file_picker: ^4.2.7
   collection: ^1.15.0-nullsafety.4
-  mocktail: ^0.2.0
+
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.0.16
+  mocktail: ^0.2.0
   random_string: ^2.3.1
 
 # The following section is specific to Flutter.

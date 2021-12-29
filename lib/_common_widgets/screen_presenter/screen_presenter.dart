@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 
 enum SlideDirection {
@@ -10,7 +8,7 @@ enum SlideDirection {
 }
 
 class ScreenPresenter {
-  static Future<T> present<T extends Object>(
+  static Future<dynamic> present(
     Widget screen,
     BuildContext context, {
     SlideDirection slideDirection = SlideDirection.fromRight,

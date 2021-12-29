@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/password_management/entities/reset_password_form.dart';
 import 'package:wallpost/password_management/services/password_resetter.dart';
 import 'package:wallpost/password_management/ui/contracts/forgot_password_view.dart';
 import 'package:wallpost/password_management/ui/presenters/forgot_password_presenter.dart';
@@ -10,6 +11,8 @@ class MockForgotPasswordView extends Mock implements ForgotPasswordView {}
 
 class MockPasswordResetter extends Mock implements PasswordResetter {}
 
+class MockResetPasswordForm extends Mock implements ResetPasswordForm {}
+
 void main() {
   var view = MockForgotPasswordView();
   var passwordResetter = MockPasswordResetter();
@@ -19,42 +22,51 @@ void main() {
     verifyNoMoreInteractions(passwordResetter);
   }
 
-  // test('reset password is successful', () async {
-  //   //given
-  //   when(passwordResetter.isLoading).thenReturn(false);
-  //   ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
-  //
-  //   //when
-  //   await presenter.resetPassword("account number", "email@email.com");
-  //
-  //   //then
-  //   verifyInOrder([
-  //     view.clearErrors(),
-  //     passwordResetter.isLoading,
-  //     view.showLoader(),
-  //     passwordResetter.resetPassword(any),
-  //     view.hideLoader(),
-  //     view.goToSuccessScreen(),
-  //   ]);
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
+  setUpAll(() {
+    registerFallbackValue(MockResetPasswordForm());
+  });
+
+  test('reset password is successful', () async {
+    //given
+    when(() => passwordResetter.isLoading).thenReturn(false);
+    when(() => passwordResetter.resetPassword(any())).thenAnswer((_) => Future.value(null));
+
+    ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
+
+    //when
+    await presenter.resetPassword("account number", "email@email.com");
+
+    //then
+    verifyInOrder([
+      () => view.clearErrors(),
+      () => passwordResetter.isLoading,
+      () => view.showLoader(),
+      () => passwordResetter.resetPassword(any()),
+      () => view.hideLoader(),
+      () => view.goToSuccessScreen(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
 
   test('email format is faulty', () async {
     //given
-    when(passwordResetter.isLoading).thenReturn(false);
+    when(() => passwordResetter.isLoading).thenReturn(false);
     ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
 
     //when
     await presenter.resetPassword("account number", "email");
 
     //then
-    verifyInOrder([view.clearErrors(), view.notifyInvalidEmailFormat("Invalid email format")]);
+    verifyInOrder([
+      () => view.clearErrors(),
+      () => view.notifyInvalidEmailFormat("Invalid email format"),
+    ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
   test('submit invalid credentials notifies the view', () async {
     //given
-    when(passwordResetter.isLoading).thenReturn(false);
+    when(() => passwordResetter.isLoading).thenReturn(false);
     ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
 
     //when
@@ -62,73 +74,73 @@ void main() {
 
     //then
     verifyInOrder([
-      view.clearErrors(),
-      view.notifyInvalidAccountNumber("Invalid account number"),
-      view.notifyInvalidEmailFormat("Invalid email format"),
+      () => view.clearErrors(),
+      () => view.notifyInvalidAccountNumber("Invalid account number"),
+      () => view.notifyInvalidEmailFormat("Invalid email format"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  // test('submit valid credentials clears the errors', () async {
-  //   //given
-  //   when(passwordResetter.isLoading).thenReturn(false);
-  //   ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
-  //   await presenter.resetPassword("", "");
-  //
-  //   //when
-  //   await presenter.resetPassword("someAccountNumber", "email@email.com");
-  //
-  //   //then
-  //   verifyInOrder([
-  //     view.clearErrors(),
-  //     view.notifyInvalidAccountNumber("Invalid account number"),
-  //     view.notifyInvalidEmailFormat("Invalid email format"),
-  //     view.clearErrors(),
-  //     passwordResetter.isLoading,
-  //     view.showLoader(),
-  //     passwordResetter.resetPassword(any),
-  //     view.hideLoader(),
-  //     view.goToSuccessScreen(),
-  //   ]);
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('passwordResetter loading does nothing', () async {
-  //   //given
-  //   when(passwordResetter.isLoading).thenReturn(true);
-  //   ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
-  //
-  //   //when
-  //   await presenter.resetPassword("someAccountNumber", "email@email.com");
-  //
-  //   //then
-  //   verifyInOrder([
-  //     view.clearErrors(),
-  //     passwordResetter.isLoading,
-  //   ]);
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('failure to reset password ', () async {
-  //   //given
-  //   when(passwordResetter.isLoading).thenReturn(false);
-  //   when(passwordResetter.resetPassword(any)).thenAnswer(
-  //     (realInvocation) => Future.error(InvalidResponseException()),
-  //   );
-  //   ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
-  //
-  //   //when
-  //   await presenter.resetPassword("account number", "email@email.com");
-  //
-  //   //then
-  //   verifyInOrder([
-  //     view.clearErrors(),
-  //     passwordResetter.isLoading,
-  //     view.showLoader(),
-  //     passwordResetter.resetPassword(any),
-  //     view.hideLoader(),
-  //     view.onResetPasswordFailed("Reset password Failed", InvalidResponseException().userReadableMessage),
-  //   ]);
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
+  test('submit valid credentials clears the errors', () async {
+    //given
+    when(() => passwordResetter.isLoading).thenReturn(false);
+    ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
+    await presenter.resetPassword("", "");
+
+    //when
+    await presenter.resetPassword("someAccountNumber", "email@email.com");
+
+    //then
+    verifyInOrder([
+      () => view.clearErrors(),
+      () => view.notifyInvalidAccountNumber("Invalid account number"),
+      () => view.notifyInvalidEmailFormat("Invalid email format"),
+      () => view.clearErrors(),
+      () => passwordResetter.isLoading,
+      () => view.showLoader(),
+      () => passwordResetter.resetPassword(any()),
+      () => view.hideLoader(),
+      () => view.goToSuccessScreen(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('passwordResetter loading does nothing', () async {
+    //given
+    when(() => passwordResetter.isLoading).thenReturn(true);
+    ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
+
+    //when
+    await presenter.resetPassword("someAccountNumber", "email@email.com");
+
+    //then
+    verifyInOrder([
+      () => view.clearErrors(),
+      () => passwordResetter.isLoading,
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('failure to reset password ', () async {
+    //given
+    when(() => passwordResetter.isLoading).thenReturn(false);
+    when(() => passwordResetter.resetPassword(any())).thenAnswer(
+      (_) => Future.error(InvalidResponseException()),
+    );
+    ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
+
+    //when
+    await presenter.resetPassword("account number", "email@email.com");
+
+    //then
+    verifyInOrder([
+      () => view.clearErrors(),
+      () => passwordResetter.isLoading,
+      () => view.showLoader(),
+      () => passwordResetter.resetPassword(any()),
+      () => view.hideLoader(),
+      () => view.onResetPasswordFailed("Reset password failed", InvalidResponseException().userReadableMessage),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
 }
