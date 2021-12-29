@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -15,7 +13,7 @@ import '../entities/api_response.dart';
 import '../exceptions/api_exception.dart';
 
 class NetworkFileUploader {
-  Future<APIResponse> upload(List<File> files, APIRequest apiRequest, {Function(double) onUploadProgress}) async {
+  Future<APIResponse> upload(List<File> files, APIRequest apiRequest, {Function(double)? onUploadProgress}) async {
     if (await _isConnected() == false) throw NetworkFailureException();
 
     final url = apiRequest.url;
@@ -49,7 +47,7 @@ class NetworkFileUploader {
   }
 
   MediaType getMimeTypeFromFileName(String filename) {
-    String mimeType = mime(filename);
+    String mimeType = mime(filename)!;
     String mimee = mimeType.split('/')[0];
     String type = mimeType.split('/')[1];
     return MediaType(mimee, type);
@@ -71,7 +69,7 @@ class NetworkFileUploader {
 class MultipartRequest extends http.MultipartRequest {
   MultipartRequest(String method, Uri url, {this.onProgress}) : super(method, url);
 
-  final void Function(int bytes, int totalBytes) onProgress;
+  final void Function(int bytes, int totalBytes)? onProgress;
 
   /// Freezes all mutable fields and returns a single-subscription [ByteStream]
   /// that will emit the request body.
@@ -85,7 +83,7 @@ class MultipartRequest extends http.MultipartRequest {
     final t = StreamTransformer.fromHandlers(
       handleData: (List<int> data, EventSink<List<int>> sink) {
         bytes += data.length;
-        onProgress(bytes, total);
+        if (onProgress != null) onProgress!(bytes, total);
         sink.add(data);
       },
     );

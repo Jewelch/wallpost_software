@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'api_exception.dart';
 
 class MalformedResponseException extends APIException {

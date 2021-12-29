@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:core';
 
 import 'package:uuid/uuid.dart';

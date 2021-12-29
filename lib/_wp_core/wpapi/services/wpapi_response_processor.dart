@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:wallpost/_wp_core/wpapi/entities/api_response.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/malformed_response_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/server_sent_exception.dart';
@@ -15,13 +13,11 @@ class WPAPIResponseProcessor {
       throw UnexpectedResponseFormatException();
     }
 
-    var responseMap = responseData as Map<String, dynamic>;
-
-    if (_isResponseProperlyFormed(responseMap) == false) {
+    if (_isResponseProperlyFormed(responseData) == false) {
       throw MalformedResponseException();
     }
 
-    return _readWPResponseDataFromResponse(responseMap);
+    return _readWPResponseDataFromResponse(responseData);
   }
 
   bool _isResponseProperlyFormed(Map<String, dynamic> responseMap) {
@@ -50,13 +46,14 @@ class WPAPIResponseProcessor {
   List<Map<String, dynamic>> _parseDataList(List<dynamic> responseDataList) {
     List<Map<String, dynamic>> items = [];
 
-    responseDataList.forEach((element) {
+    for (dynamic element in responseDataList) {
       if (element is Map<String, dynamic>) {
         items.add(element);
       } else {
-        return [];
+        items.clear();
+        break;
       }
-    });
+    }
     return items;
   }
 }

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:wallpost/_wp_core/wpapi/entities/api_request.dart';
 import 'package:wallpost/_wp_core/wpapi/entities/api_response.dart';
 

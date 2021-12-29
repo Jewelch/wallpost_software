@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -7,19 +5,19 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:wallpost/_shared/constants/app_id.dart';
 import 'package:wallpost/_shared/constants/base_urls.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
+import 'package:wallpost/_wp_core/user_management/services/access_token_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/entities/api_request.dart';
 import 'package:wallpost/_wp_core/wpapi/entities/api_response.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/api_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_file_uploader.dart';
-import 'package:wallpost/_wp_core/user_management/services/access_token_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/nonce_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wpapi_response_processor.dart';
 
 class WPFileUploader {
-  DeviceInfoProvider _deviceInfo;
-  AccessTokenProvider _accessTokenProvider;
-  NonceProvider _nonceProvider;
-  NetworkFileUploader _networkFileUploader;
+  late DeviceInfoProvider _deviceInfo;
+  late AccessTokenProvider _accessTokenProvider;
+  late NonceProvider _nonceProvider;
+  late NetworkFileUploader _networkFileUploader;
   Dio dio = new Dio();
 
   WPFileUploader() {
@@ -37,7 +35,7 @@ class WPFileUploader {
         maxWidth: 90));
   }
 
-  Future<APIResponse> upload(List<File> files, {Function(double) onUploadProgress}) async {
+  Future<APIResponse> upload(List<File> files, {Function(double)? onUploadProgress}) async {
     if (files == null || files.isEmpty) throw RequestException('no files attached');
 
     APIRequest apiRequest = APIRequest('${BaseUrls.baseUrlV2()}/fileupload/temp');

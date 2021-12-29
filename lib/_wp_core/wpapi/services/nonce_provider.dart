@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:sift/sift.dart';
@@ -10,7 +8,7 @@ import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_request_executor.dart';
 
 class Nonce extends JSONInitializable {
-  String _value;
+  late String _value;
 
   Nonce.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
@@ -27,7 +25,7 @@ class Nonce extends JSONInitializable {
 class NonceProvider {
   final NetworkAdapter _networkAdapter;
   bool isLoading = false;
-  String _sessionId;
+  late String _sessionId;
 
   NonceProvider.initWith(this._networkAdapter);
 

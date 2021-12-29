@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:convert';
 
 import 'package:wallpost/_shared/constants/app_id.dart';
@@ -13,10 +11,10 @@ import 'package:wallpost/_wp_core/wpapi/services/wpapi_response_processor.dart';
 export 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 
 class WPAPI implements NetworkAdapter {
-  DeviceInfoProvider _deviceInfo;
-  AccessTokenProvider _accessTokenProvider;
-  NonceProvider _nonceProvider;
-  NetworkAdapter _networkAdapter;
+  late DeviceInfoProvider _deviceInfo;
+  late AccessTokenProvider _accessTokenProvider;
+  late NonceProvider _nonceProvider;
+  late NetworkAdapter _networkAdapter;
 
   WPAPI() {
     this._deviceInfo = DeviceInfoProvider();

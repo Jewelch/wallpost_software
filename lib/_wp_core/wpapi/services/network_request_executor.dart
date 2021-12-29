@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:convert';
 
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
@@ -75,19 +73,19 @@ class NetworkRequestExecutor implements NetworkAdapter {
   APIResponse _processResponse(Response response, APIRequest apiRequest) {
     try {
       var responseData = json.decode(response.data);
-      return APIResponse(apiRequest, response.statusCode, responseData, {});
+      return APIResponse(apiRequest, response.statusCode!, responseData, {});
     } catch (e) {
       throw UnexpectedResponseFormatException();
     }
   }
 
   APIException _processError(DioError error) {
-    if (error.response == null) {
+    if (error.response == null || error.response!.statusCode == null) {
       //Something happened in setting up or sending the request that triggered an Error
       return RequestException(error.message);
     } else {
       // The request was made and the server responded with a statusCode != 200
-      return HTTPException(error.response.statusCode, error.response.data);
+      return HTTPException(error.response!.statusCode!, error.response!.data);
     }
   }
 }
