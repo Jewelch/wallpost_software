@@ -1,19 +1,17 @@
-// @dart=2.9
-
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 class Employee extends JSONInitializable implements JSONConvertible {
-  String _v1Id;
-  String _v2Id;
-  String _companyId;
-  String _employeeName;
-  String _employeeEmail;
-  String _designation;
-  String _lineManager;
-  String _departmentRank;
+  late String _v1Id;
+  late String _v2Id;
+  late String _companyId;
+  late String _employeeName;
+  late String _employeeEmail;
+  late String _designation;
+  late String? _lineManager;
+  late String _departmentRank;
 
   Employee.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();

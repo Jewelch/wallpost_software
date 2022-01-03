@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:wallpost/_wp_core/company_management/entities/company.dart';
 import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
@@ -14,11 +12,13 @@ class SelectedCompanyProvider {
 
   SelectedCompanyProvider.initWith(this._currentUserProvider, this._companyRepository);
 
+  bool isCompanySelected() {
+    var currentUser = _currentUserProvider.getCurrentUser();
+    return _companyRepository.getSelectedCompanyForUser(currentUser) != null;
+  }
+
   Company getSelectedCompanyForCurrentUser() {
     var currentUser = _currentUserProvider.getCurrentUser();
-
-    if (currentUser == null) return null;
-
-    return _companyRepository.getSelectedCompanyForUser(currentUser);
+    return _companyRepository.getSelectedCompanyForUser(currentUser)!;
   }
 }

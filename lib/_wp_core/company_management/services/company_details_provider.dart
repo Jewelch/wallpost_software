@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
@@ -15,7 +13,7 @@ class CompanyDetailsProvider {
   final CompanyRepository _companyRepository;
   final NetworkAdapter _networkAdapter;
   bool isLoading = false;
-  String _sessionId;
+  late String _sessionId;
 
   CompanyDetailsProvider.initWith(this._currentUserProvider, this._companyRepository, this._networkAdapter);
 
