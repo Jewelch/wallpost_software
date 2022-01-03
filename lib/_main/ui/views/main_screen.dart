@@ -3,12 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
-import 'package:wallpost/_main/contracts/main_view.dart';
-import 'package:wallpost/_main/presenters/main_presenter.dart';
-import 'package:wallpost/_routing/route_names.dart';
+import 'package:wallpost/_main/ui/contracts/main_view.dart';
+import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/login/ui/views/login_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -24,9 +21,8 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   @override
   void initState() {
     presenter = MainPresenter(this);
-    StatusBarColorSetter.setColorToAppColor();
-    presenter.showLandingScreen();
     StatusBarColorSetter.setColorBasedOnLoginStatus(presenter.isLoggedIn());
+    presenter.showLandingScreen();
     super.initState();
   }
 
@@ -39,25 +35,29 @@ class _MainScreenState extends State<MainScreen> implements MainView {
     );
   }
 
+  //MARK: View functions
+
   @override
-  void showLoginScreen() {
-    ScreenPresenter.present(LoginScreen(), context);
+  void goToLoginScreen() {
+    //waiting for build to complete
+    Future.microtask(() {
+      ScreenPresenter.present(LoginScreen(), context);
+    });
   }
 
   @override
   void goToCompaniesListScreen() {
-    // navigate  to companiesList
-    log("navigated to companieslist");
-
+    //waiting for build to complete
+    Future.microtask(() {
+      log("navigated to company list");
+    });
   }
 
   @override
   void goToDashboardScreen() {
-    // navigate to dashboard
-    log("navigated to dahsboard");
+    //waiting for build to complete
+    Future.microtask(() {
+      log("navigated to dashboard");
+    });
   }
-
-
-
-
 }

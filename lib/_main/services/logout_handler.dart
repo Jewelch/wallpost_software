@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_main/ui/views/main_screen.dart';
 import 'package:wallpost/_wp_core/company_management/services/user_companies_remover.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
@@ -19,26 +20,14 @@ class LogoutHandler {
     var user = _currentUserProvider.getCurrentUser();
     _userRemover.removeUser(user);
     _userCompaniesRemover.removeCompaniesForUser(user);
-
-    // if (context != null) Navigator.of(context).push(_createMainScreenRoute());
+    _goToMainScreenAndClearStack(context);
   }
 
-  // Route _createMainScreenRoute() {
-  //   // return PageRouteBuilder(
-  //   //   pageBuilder: (context, animation, secondaryAnimation) => MainScreen(),
-  //   //   settings: RouteSettings(name: RouteNames.main),
-  //   //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //   //     var begin = Offset(-1.0, 0.0);
-  //   //     var end = Offset.zero;
-  //   //     var curve = Curves.ease;
-  //   //
-  //   //     var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-  //   //
-  //   //     return SlideTransition(
-  //   //       position: animation.drive(tween),
-  //   //       child: child,
-  //   //     );
-  //   //   },
-  //   // );
-  // }
+  void _goToMainScreenAndClearStack(BuildContext? context) {
+    if (context != null)
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => MainScreen()),
+        (Route<dynamic> route) => false,
+      );
+  }
 }
