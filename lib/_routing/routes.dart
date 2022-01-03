@@ -1,7 +1,7 @@
 // @dart=2.9
 
 import 'package:flutter/material.dart';
-import 'package:wallpost/_main/main_screen.dart';
+import 'package:wallpost/_main/views/main_screen.dart';
 import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/login/ui/views/login_screen.dart';
 import 'package:wallpost/password_management/ui/views/change_password_screen.dart';

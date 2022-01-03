@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
-import 'package:wallpost/_main/main_screen.dart';
+import 'package:wallpost/_main/views/main_screen.dart';
 import 'package:wallpost/_wp_core/start_up/repository_initializer.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 
