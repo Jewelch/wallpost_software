@@ -14,6 +14,10 @@ void main() {
   var mockCompanyRepository = MockCompanyRepository();
   var companiesRemover = UserCompaniesRemover.initWith(mockCompanyRepository);
 
+  setUpAll(() {
+    registerFallbackValue(MockUser());
+  });
+
   test('removing companies for a user', () async {
     companiesRemover.removeCompaniesForUser(mockUser);
 

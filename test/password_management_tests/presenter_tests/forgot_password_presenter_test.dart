@@ -5,7 +5,7 @@ import 'package:wallpost/password_management/services/password_resetter.dart';
 import 'package:wallpost/password_management/ui/contracts/forgot_password_view.dart';
 import 'package:wallpost/password_management/ui/presenters/forgot_password_presenter.dart';
 
-import '../_mocks/mock_network_adapter.dart';
+import '../../_mocks/mock_network_adapter.dart';
 
 class MockForgotPasswordView extends Mock implements ForgotPasswordView {}
 
@@ -44,22 +44,6 @@ void main() {
       () => passwordResetter.resetPassword(any()),
       () => view.hideLoader(),
       () => view.goToSuccessScreen(),
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-  test('email format is faulty', () async {
-    //given
-    when(() => passwordResetter.isLoading).thenReturn(false);
-    ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
-
-    //when
-    await presenter.resetPassword("account number", "email");
-
-    //then
-    verifyInOrder([
-      () => view.clearErrors(),
-      () => view.notifyInvalidEmailFormat("Invalid email format"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -105,7 +89,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('passwordResetter loading does nothing', () async {
+  test('resetting when the password resetter is loading does nothing', () async {
     //given
     when(() => passwordResetter.isLoading).thenReturn(true);
     ForgotPasswordPresenter presenter = ForgotPasswordPresenter.initWith(view, passwordResetter);
@@ -121,7 +105,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('failure to reset password ', () async {
+  test('failure to reset password', () async {
     //given
     when(() => passwordResetter.isLoading).thenReturn(false);
     when(() => passwordResetter.resetPassword(any())).thenAnswer(

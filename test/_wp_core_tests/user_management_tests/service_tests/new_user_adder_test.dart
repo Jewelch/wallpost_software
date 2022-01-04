@@ -12,6 +12,10 @@ void main() {
   var mockUserRepository = MockUserRepository();
   var newUserAdder = NewUserAdder.initWith(mockUserRepository);
 
+  setUpAll(() {
+    registerFallbackValue(MockUser());
+  });
+
   test('adding a user adds it to the user repository', () async {
     newUserAdder.addUser(mockUser);
 

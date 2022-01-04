@@ -20,6 +20,10 @@ void main() {
   var mockCompanyRepository = MockCompanyRepository();
   var selectedCompanyProvider = SelectedCompanyProvider.initWith(mockCurrentUserProvider, mockCompanyRepository);
 
+  setUpAll(() {
+    registerFallbackValue(MockUser());
+  });
+
   test('returns null if there is no current user', () async {
     when(() => mockCurrentUserProvider.getCurrentUser()).thenReturn(null);
 

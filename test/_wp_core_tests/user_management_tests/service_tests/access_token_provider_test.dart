@@ -8,6 +8,7 @@ import 'package:wallpost/_wp_core/user_management/repositories/user_repository.d
 import 'package:wallpost/_wp_core/user_management/services/access_token_provider.dart';
 
 import '../../../_mocks/mock_network_adapter.dart';
+import '../../../_mocks/mock_user.dart';
 import '../mocks.dart';
 
 class MockUserRepository extends Mock implements UserRepository {}
@@ -25,6 +26,7 @@ void main() {
   );
 
   setUpAll(() {
+    registerFallbackValue(MockUser());
     when(() => mockDeviceInfoProvider.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));
   });
 

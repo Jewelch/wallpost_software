@@ -9,6 +9,7 @@ import 'package:wallpost/_wp_core/user_management/services/authenticator.dart';
 import 'package:wallpost/_wp_core/user_management/services/new_user_adder.dart';
 
 import '../../../_mocks/mock_network_adapter.dart';
+import '../../../_mocks/mock_user.dart';
 import '../mocks.dart';
 
 class MockDeviceInfo extends Mock implements DeviceInfoProvider {}
@@ -22,6 +23,10 @@ void main() {
   var mockNewUserAdder = MockNewUserAdder();
   var mockNetworkAdapter = MockNetworkAdapter();
   var authenticator = Authenticator.initWith(mockDeviceInfo, mockNewUserAdder, mockNetworkAdapter);
+
+  setUpAll(() {
+    registerFallbackValue(MockUser());
+  });
 
   setUpAll(() {
     when(() => mockDeviceInfo.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));

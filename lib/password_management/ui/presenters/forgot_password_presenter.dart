@@ -47,10 +47,6 @@ class ForgotPasswordPresenter {
   }
 
   bool _isEmailValid(String email) {
-    // if (email.isEmpty) {
-    //   return false;
-    // }
-
     const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
     final regExp = RegExp(pattern);
 
