@@ -12,6 +12,18 @@ void main() {
   var mockUserRepository = MockUserRepository();
   var mockCurrentUserProvider = CurrentUserProvider.initWith(mockUserRepository);
 
+  setUp(() {
+    reset(mockUserRepository);
+  });
+
+  test('checking if is logged in or not', () async {
+    when(() => mockUserRepository.getCurrentUser()).thenReturn(null);
+    expect(mockCurrentUserProvider.isLoggedIn(), false);
+
+    when(() => mockUserRepository.getCurrentUser()).thenReturn(mockUser);
+    expect(mockCurrentUserProvider.isLoggedIn(), true);
+  });
+
   test('returns the current user from the user repository', () async {
     when(() => mockUserRepository.getCurrentUser()).thenReturn(mockUser);
     when(() => mockUser.username).thenReturn('someUserName');

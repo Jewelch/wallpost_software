@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
@@ -30,9 +28,15 @@ void main() {
   });
 
   setUp(() {
-    reset(mockCurrentUserProvider);
     reset(mockCompanyRepository);
+    reset(mockCurrentUserProvider);
+    when(() => mockCurrentUserProvider.getCurrentUser()).thenReturn(MockUser());
   });
+
+  void _verifyNoMoreInteractions() {
+    verifyNoMoreInteractions(mockCurrentUserProvider);
+    verifyNoMoreInteractions(mockCompanyRepository);
+  }
 
   test('api request is built correctly', () async {
     Map<String, dynamic> requestParams = {};
@@ -93,9 +97,12 @@ void main() {
 
     try {
       var companies = await companyListProvider.get();
-      verify(() => mockCurrentUserProvider.getCurrentUser()).called(1);
-      verify(() => mockCompanyRepository.saveCompaniesForUser(any(), any())).called(1);
       expect(companies, isNotEmpty);
+      verifyInOrder([
+        () => mockCurrentUserProvider.getCurrentUser(),
+        () => mockCompanyRepository.saveCompaniesForUser(any(), any())
+      ]);
+      _verifyNoMoreInteractions();
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }

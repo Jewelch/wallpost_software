@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company.dart';
@@ -24,14 +22,19 @@ void main() {
     registerFallbackValue(MockUser());
   });
 
-  test('returns null if there is no current user', () async {
-    when(() => mockCurrentUserProvider.getCurrentUser()).thenReturn(null);
+  setUp(() {
+    reset(mockCurrentUserProvider);
+    reset(mockCompanyRepository);
+  });
 
-    var selectedCompany = selectedCompanyProvider.getSelectedCompanyForCurrentUser();
+  test('checking if a company is selected or not', () async {
+    when(() => mockCurrentUserProvider.getCurrentUser()).thenReturn(mockUser);
 
-    expect(selectedCompany, null);
-    verify(() => mockCurrentUserProvider.getCurrentUser()).called(1);
-    verifyNever(() => mockCompanyRepository.getSelectedCompanyForUser(any()));
+    when(() => mockCompanyRepository.getSelectedCompanyForUser(any())).thenReturn(null);
+    expect(selectedCompanyProvider.isCompanySelected(), false);
+
+    when(() => mockCompanyRepository.getSelectedCompanyForUser(any())).thenReturn(MockCompany());
+    expect(selectedCompanyProvider.isCompanySelected(), true);
   });
 
   test('getting selected company for current user', () async {

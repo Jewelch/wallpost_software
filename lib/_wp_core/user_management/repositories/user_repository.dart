@@ -54,7 +54,7 @@ class UserRepository {
     var usersMap = await _sharedPrefs.getMap('users');
     if (usersMap != null) {
       var usersMapList = usersMap['allUsers'];
-      for (Map<String, Object> map in usersMapList) {
+      for (Map<String, dynamic> map in usersMapList) {
         var user = User.fromJson(map);
         _users[user.username] = user;
       }

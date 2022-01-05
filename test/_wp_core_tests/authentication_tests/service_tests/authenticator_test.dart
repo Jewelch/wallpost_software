@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
@@ -30,6 +28,9 @@ void main() {
 
   setUpAll(() {
     when(() => mockDeviceInfo.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));
+    when(() => mockDeviceInfo.getDeviceOS()).thenAnswer((_) => Future.value('someDeviceOS'));
+    when(() => mockDeviceInfo.getDeviceModel()).thenAnswer((_) => Future.value('someDeviceModel'));
+    when(() => mockDeviceInfo.getAppVersion()).thenAnswer((_) => Future.value('someAppVersion'));
   });
 
   setUp(() {
@@ -47,13 +48,13 @@ void main() {
     expect(mockNetworkAdapter.apiRequest.parameters['accountno'], credentials.accountNumber);
     expect(mockNetworkAdapter.apiRequest.parameters['username'], credentials.username);
     expect(mockNetworkAdapter.apiRequest.parameters['password'], credentials.password);
-    expect(mockNetworkAdapter.apiRequest.parameters.containsKey('apptype'), true);
-    expect(mockNetworkAdapter.apiRequest.parameters.containsKey('deviceuid'), true);
-    expect(mockNetworkAdapter.apiRequest.parameters.containsKey('environment'), true);
-    expect(mockNetworkAdapter.apiRequest.parameters.containsKey('deviceos'), true);
-    expect(mockNetworkAdapter.apiRequest.parameters.containsKey('devicemodel'), true);
-    expect(mockNetworkAdapter.apiRequest.parameters.containsKey('appversion'), true);
-  });
+    expect(mockNetworkAdapter.apiRequest.parameters['apptype'], 'MOBILE');
+    expect(mockNetworkAdapter.apiRequest.parameters['deviceuid'], 'someDeviceId');
+    expect(mockNetworkAdapter.apiRequest.parameters['environment'], 'Development');
+    expect(mockNetworkAdapter.apiRequest.parameters['deviceos'], 'someDeviceOS');
+    expect(mockNetworkAdapter.apiRequest.parameters['devicemodel'], 'someDeviceModel');
+    expect(mockNetworkAdapter.apiRequest.parameters['appversion'], 'someAppVersion');
+    });
 
   test('throws exception when network adapter fails', () async {
     mockNetworkAdapter.fail(NetworkFailureException());

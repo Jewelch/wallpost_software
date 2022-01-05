@@ -3,7 +3,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_id.dart';
 import 'package:wallpost/_shared/constants/device_info.dart';
 import 'package:wallpost/_wp_core/user_management/services/access_token_provider.dart';
-import 'package:wallpost/_wp_core/wpapi/exceptions/malformed_response_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 import 'package:wallpost/_wp_core/wpapi/services/nonce_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
@@ -23,7 +22,7 @@ void main() {
     "status": "success",
     "data": {"some": "data"}
   };
-  var apiRequest = APIRequest('www.url.com');
+  late APIRequest apiRequest;
   var mockDeviceInfo = MockDeviceInfo();
   var mockAccessTokenProvider = MockAccessTokenProvider();
   var mockNonce = MockNonce();
@@ -36,18 +35,20 @@ void main() {
     mockNetworkAdapter,
   );
 
-  setUpAll(() {
-    when(() => mockDeviceInfo.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));
-    when(() => mockNonce.value).thenReturn('randomNonce');
-    when(() => mockNonceProvider.getNonce(any())).thenAnswer((_) => Future.value(mockNonce));
-  });
-
   setUp(() {
+    apiRequest = APIRequest('www.url.com');
+    reset(mockDeviceInfo);
+    reset(mockNonceProvider);
     reset(mockAccessTokenProvider);
     mockNetworkAdapter.reset();
+    when(() => mockDeviceInfo.getDeviceId()).thenAnswer((_) => Future.value('someDeviceId'));
   });
 
   group('test if the right network executor functions are called', () {
+    setUp(() {
+      when(() => mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value("someAccessToken"));
+    });
+
     test('get', () async {
       mockNetworkAdapter.succeed(simpleWpResponse);
 
@@ -109,7 +110,10 @@ void main() {
     });
 
     test('nonce is added when nonce functions are called', () async {
-      when(() => mockAccessTokenProvider.getToken()).thenAnswer((_) => Future.value('someAuthToken'));
+      when(() => mockNonce.value).thenReturn('randomNonce');
+      when(() => mockNonceProvider.getNonce(any())).thenAnswer((_) => Future.value(mockNonce));
+      when(() => mockAccessTokenProvider.getToken(forceRefresh: any(named: 'forceRefresh')))
+          .thenAnswer((_) => Future.value('someAuthToken'));
       mockNetworkAdapter.succeed(simpleWpResponse);
 
       var _ = await wpApi.postWithNonce(apiRequest);
@@ -120,6 +124,11 @@ void main() {
   });
 
   group('test error processing', () {
+    setUp(() {
+      when(() => mockAccessTokenProvider.getToken(forceRefresh: any(named: 'forceRefresh')))
+          .thenAnswer((_) => Future.value("someAuthToken"));
+    });
+
     test('force refreshes token and reattempts API call in case of HTTP 401 exception with token expired code',
         () async {
       mockNetworkAdapter.fail(HTTPException(401, '{"code": 1022}'));

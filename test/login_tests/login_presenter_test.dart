@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_wp_core/user_management/entities/credentials.dart';
@@ -8,6 +6,7 @@ import 'package:wallpost/login/ui/contracts/login_view.dart';
 import 'package:wallpost/login/ui/presenters/login_presenter.dart';
 
 import '../_mocks/mock_network_adapter.dart';
+import '../_mocks/mock_user.dart';
 
 class MockLoginView extends Mock implements LoginView {}
 
@@ -31,6 +30,7 @@ void main() {
   test('logging in successfully', () async {
     //given
     when(() => authenticator.isLoading).thenReturn(false);
+    when(() => authenticator.login(any())).thenAnswer((_) => Future.value(MockUser()));
     LoginPresenter presenter = LoginPresenter.initWith(view, authenticator);
 
     //when

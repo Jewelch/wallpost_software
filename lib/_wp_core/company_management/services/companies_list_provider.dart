@@ -40,7 +40,7 @@ class CompaniesListProvider {
 
     if (apiResponse.data == null) throw InvalidResponseException();
 
-    if (apiResponse.data is! List<Map<String, Object>>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);

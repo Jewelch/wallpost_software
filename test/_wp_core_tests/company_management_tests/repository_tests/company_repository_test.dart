@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
@@ -22,7 +20,7 @@ void main() {
   var mockCompany = MockCompany();
   var mockEmployee = MockEmployee();
   var mockSharedPrefs = MockSharedPrefs();
-  CompanyRepository companyRepository;
+  late CompanyRepository companyRepository;
 
   setUpAll(() {
     when(() => mockUser.username).thenReturn('someUserName');
@@ -39,7 +37,9 @@ void main() {
 
   setUp(() {
     reset(mockSharedPrefs);
+    when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value());
     companyRepository = CompanyRepository.withSharedPrefs(mockSharedPrefs);
+    reset(mockSharedPrefs);
   });
 
   test('saving companies for a user', () async {
@@ -171,6 +171,7 @@ void main() {
     var userWhoseCompaniesAreNotStored = MockUser();
     when(() => user1.username).thenReturn('username1');
     when(() => user2.username).thenReturn('username2');
+    when(() => userWhoseCompaniesAreNotStored.username).thenReturn('username3');
     when(() => mockSharedPrefs.getMap('allUsersCompanies')).thenAnswer(
       (_) => Future.value({
         'username1': {
@@ -190,7 +191,7 @@ void main() {
     //awaiting because the shared prefs get method is async and takes a few ms to load
     //This will not be an issue in the actual app because the repo is initialized when the
     //app starts and there is time before it is actually used.
-    await Future.delayed(Duration(milliseconds: 50));
+    await Future.delayed(Duration(milliseconds: 450));
 
     expect(companyRepository.getCompaniesForUser(userWhoseCompaniesAreNotStored).length, 0);
     expect(companyRepository.getSelectedCompanyForUser(userWhoseCompaniesAreNotStored), null);
@@ -203,7 +204,7 @@ void main() {
     expect(companyRepository.getCompaniesForUser(user2).length, 2);
     var selectedCompanyId = '${Mocks.companyDetailsResponse['company_id']}';
     var selectedEmployeeId = '${Mocks.companyDetailsResponse['employee']['employment_id_v1']}';
-    expect(companyRepository.getSelectedCompanyForUser(user2).id, selectedCompanyId);
-    expect(companyRepository.getSelectedEmployeeForUser(user2).v1Id, selectedEmployeeId);
+    expect(companyRepository.getSelectedCompanyForUser(user2)!.id, selectedCompanyId);
+    expect(companyRepository.getSelectedEmployeeForUser(user2)!.v1Id, selectedEmployeeId);
   });
 }

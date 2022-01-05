@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
 import 'package:wallpost/_wp_core/user_management/repositories/user_repository.dart';
 
 import '../../../_mocks/mock_user.dart';
-import '../mocks.dart';
+import '../../authentication_tests/mocks.dart';
 
 class MockSharedPrefs extends Mock implements SecureSharedPrefs {}
 
@@ -16,17 +16,27 @@ void main() {
   setUp(() {
     reset(mockUser);
     reset(mockSharedPrefs);
-    userRepository = UserRepository.initWith(mockSharedPrefs);
   });
 
-  test('reading user data on initialization when no data is available', () async {
-    var verificationResult = verify(() => mockSharedPrefs.getMap(captureAny()));
+  Future<void> _initUserRepoAndWaitForInitialization() async {
+    userRepository = UserRepository.initWith(mockSharedPrefs);
+    //awaiting because the shared prefs get method is async and takes a few ms to load
+    //This will not be an issue in the actual app because the repo is initialized when the
+    //app starts and there is time before it is actually used.
+    await Future.delayed(Duration(milliseconds: 50));
+  }
 
-    verificationResult.called(2);
-    expect(verificationResult.captured[0], 'users');
-    expect(verificationResult.captured[1], 'currentUser');
+  test('reading user data on initialization when no data is available', () async {
+    when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    await _initUserRepoAndWaitForInitialization();
+
     expect(userRepository.getCurrentUser(), isNull);
     expect(userRepository.getAllUsers(), []);
+    verifyInOrder([
+      () => mockSharedPrefs.getMap("users"),
+      () => mockSharedPrefs.getMap("currentUser"),
+    ]);
+    verifyNoMoreInteractions(mockSharedPrefs);
   });
 
   test('reading user data on initialization when data is available', () async {
@@ -38,11 +48,7 @@ void main() {
     when(() => mockSharedPrefs.getMap('currentUser')).thenAnswer(
       (_) => Future.value({'username': 'someUserName'}),
     );
-    userRepository = UserRepository.initWith(mockSharedPrefs);
-    //awaiting because the shared prefs get method is async and takes a few ms to load
-    //This will not be an issue in the actual app because the repo is initialized when the
-    //app starts and there is time before it is actually used.
-    await Future.delayed(Duration(milliseconds: 50));
+    await _initUserRepoAndWaitForInitialization();
 
     expect(userRepository.getCurrentUser()!.username, 'someUserName');
     expect(userRepository.getAllUsers().length, 1);
@@ -50,6 +56,8 @@ void main() {
   });
 
   test('saving new current user, saves user in memory as well as locally', () async {
+    when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    await _initUserRepoAndWaitForInitialization();
     when(() => mockUser.toJson()).thenReturn({'user': 'json'});
     when(() => mockUser.username).thenReturn('someUserName');
 
@@ -69,6 +77,8 @@ void main() {
   });
 
   test('saving a user with that already exists, replaces it', () async {
+    when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    await _initUserRepoAndWaitForInitialization();
     var mockUser1 = MockUser();
     var mockUser2 = MockUser();
     when(() => mockUser1.username).thenReturn("username");
@@ -90,6 +100,8 @@ void main() {
   });
 
   test('updating user info, updates the user info, and stores it locally', () async {
+    when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    await _initUserRepoAndWaitForInitialization();
     when(() => mockUser.toJson()).thenReturn({'user': 'json'});
     when(() => mockUser.username).thenReturn('someUserName');
     userRepository.saveNewCurrentUser(mockUser);
@@ -111,7 +123,10 @@ void main() {
   });
 
   test('removing a user when only one user exists clears all the data', () async {
+    when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    await _initUserRepoAndWaitForInitialization();
     when(() => mockUser.username).thenReturn('someUserName');
+    when(() => mockUser.toJson()).thenReturn({});
     userRepository.saveNewCurrentUser(mockUser);
     clearInteractions(mockSharedPrefs);
 
@@ -127,10 +142,14 @@ void main() {
   });
 
   test('removing a user when multiple users are present selects the next user', () async {
+    when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    await _initUserRepoAndWaitForInitialization();
     var mockUser1 = MockUser();
     var mockUser2 = MockUser();
     when(() => mockUser1.username).thenReturn("username1");
     when(() => mockUser2.username).thenReturn("username2");
+    when(() => mockUser1.toJson()).thenReturn({});
+    when(() => mockUser2.toJson()).thenReturn({});
     userRepository.saveNewCurrentUser(mockUser1);
     userRepository.saveNewCurrentUser(mockUser2);
 
