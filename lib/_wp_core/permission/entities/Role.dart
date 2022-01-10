@@ -5,8 +5,7 @@ enum Roles { employee, financial }
 Roles initializeRoleFromString(String string) {
   if (string.toLowerCase() == "employee")
     return Roles.employee;
-  else if (string.toLowerCase() == "financial")
-    return Roles.financial;
+  else if (string.toLowerCase() == "financial") return Roles.financial;
 
   throw MappingException("Failed to cast role response.");
 }

@@ -7,7 +7,6 @@ import 'package:wallpost/_wp_core/permission/entities/Role.dart';
 class Permission implements JSONInitializable, JSONConvertible {
   late Roles role;
 
-
   Permission.fromJson(Map<String, dynamic> jsonMap) {
     var sift = Sift();
     try {

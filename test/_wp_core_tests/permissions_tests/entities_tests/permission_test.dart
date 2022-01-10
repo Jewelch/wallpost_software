@@ -23,8 +23,8 @@ main() {
       expect(e is MappingException, true);
     }
   });
-  
-  test("test only financials can see financials widgets",(){
+
+  test("test only financials can see financials widgets", () {
     var employeeMap = {'role': 'employee'};
     var financialMap = {'role': 'financial'};
 

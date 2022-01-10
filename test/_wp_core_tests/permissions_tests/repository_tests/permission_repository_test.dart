@@ -3,11 +3,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
 import 'package:wallpost/_wp_core/permission/entities/Role.dart';
 import 'package:wallpost/_wp_core/permission/repositories/permission_repository.dart';
-
 import '../_mocks/mock_permission.dart';
 
 class MockSharedPrefs extends Mock implements SecureSharedPrefs {}
-
 
 void main() {
   var mockSharedPrefs = MockSharedPrefs();

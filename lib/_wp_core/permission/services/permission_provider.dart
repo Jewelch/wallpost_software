@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/permission/constants/permissions_urls.dart';
 import 'package:wallpost/_wp_core/permission/entities/Permission.dart';
