@@ -4,9 +4,9 @@ abstract class CompaniesListView {
 
   void showLoader();
 
-  void hideLoader();
-
   void companiesRetrievedSuccessfully(List<CompanyListItem> companies);
+
+  void companiesRetrievedSuccessfullyWithEmptyList();
 
   void companiesRetrievedError(String title, String message);
 

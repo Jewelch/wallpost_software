@@ -21,10 +21,9 @@ class CompanyListScreen extends StatefulWidget {
 class _CompanyListScreenState extends State<CompanyListScreen>
     implements CompaniesListView {
   late CompaniesListPresenter presenter;
-  var _showLoaderNotifier = ItemNotifier<bool>();
   var _showErrorNotifier = ItemNotifier<bool>();
   var _companiesListNotifier = ItemNotifier<List<CompanyListItem>?>();
-  var _viewSelector = ItemNotifier<int>();
+  var _viewSelectorNotifier = ItemNotifier<int>();
   var _scrollController = ScrollController();
 
   @override
@@ -68,13 +67,13 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                 onChanged: (searchText) => presenter.performSearch(searchText),
               ),
               ItemNotifiable<int>(
-                  notifier: _viewSelector,
+                  notifier: _viewSelectorNotifier,
                   builder: (context, value) {
-                    if (value == 0) {
+                    if (value == LOADER_VIEW) {
                       return Expanded(child: _loader());
-                    } else if (value == 1) {
+                    } else if (value == COMPANIES_VIEW) {
                       return Expanded(child: _getCompanies());
-                    } else if (value == 2) {
+                    } else if (value == NO_COMPANIES_VIEW) {
                       return Expanded(child: _noCompaniesMessage());
                     }
                     return Expanded(child: _buildErrorAndRetryView());
@@ -92,31 +91,27 @@ class _CompanyListScreenState extends State<CompanyListScreen>
       notifier: _companiesListNotifier,
       builder: (context, value) => Container(
         padding: EdgeInsets.only(top: 8, bottom: 8),
-        child: ListView.builder(
-          controller: _scrollController,
-          itemCount: value?.length,
-          itemBuilder: (context, index) {
-            if (value != null) {
-              return _getCompanyCard(index, value);
-            } else
-              return Container();
-          },
-        ),
+        child: RefreshIndicator(
+            onRefresh: () => presenter.getCompanies(),
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              controller: _scrollController,
+              itemCount: value?.length,
+              itemBuilder: (context, index) {
+                if (value != null) {
+                  return _getCompanyCard(index, value);
+                } else
+                  return Container();
+              },
+            )),
       ),
     );
   }
 
   Widget _loader() {
-    return ItemNotifiable<bool>(
-        notifier: _showLoaderNotifier,
-        builder: (context, value) {
-          if (value == true) {
-            return Container(
-              child: Center(child: CircularProgressIndicator()),
-            );
-          } else
-            return Container();
-        });
+    return Container(
+      child: Center(child: CircularProgressIndicator()),
+    );
   }
 
   Widget _noCompaniesMessage() {
@@ -136,16 +131,13 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FlatButton(
+                    TextButton(
                       child: Text(
                         'Failed to load companies\nTap Here To Retry',
                         textAlign: TextAlign.center,
                         style: TextStyles.failureMessageTextStyle,
                       ),
-                      onPressed: () {
-                        setState(() {});
-                        presenter.getCompanies();
-                      },
+                      onPressed: () => presenter.refresh(),
                     ),
                   ],
                 ),
@@ -213,30 +205,27 @@ class _CompanyListScreenState extends State<CompanyListScreen>
 
   @override
   void showLoader() {
-    _showLoaderNotifier.notify(true);
-    _viewSelector.notify(0);
-  }
-
-  @override
-  void hideLoader() {
-    _showLoaderNotifier.notify(false);
+    _viewSelectorNotifier.notify(LOADER_VIEW);
   }
 
   @override
   void companiesRetrievedSuccessfully(List<CompanyListItem> companies) {
-    if (companies.isNotEmpty) {
-      _companiesListNotifier.notify(companies);
-      _viewSelector.notify(1);
-    } else {
-      _viewSelector.notify(2);
-    }
+    _companiesListNotifier.notify(companies);
+    _viewSelectorNotifier.notify(COMPANIES_VIEW);
+  }
+
+  @override
+  void companiesRetrievedSuccessfullyWithEmptyList() {
+    _viewSelectorNotifier.notify(NO_COMPANIES_VIEW);
   }
 
   @override
   void companiesRetrievedError(String title, String message) {
     _showErrorNotifier.notify(true);
-    _viewSelector.notify(3);
+    _viewSelectorNotifier.notify(ERROR_VIEW);
 
     //Alert.showSimpleAlert(context: context, title: title, message: message);
   }
+
+
 }

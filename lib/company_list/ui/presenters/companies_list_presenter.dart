@@ -6,6 +6,14 @@ import 'package:wallpost/_wp_core/user_management/services/authenticator.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 import 'package:wallpost/login/ui/contracts/login_view.dart';
 
+
+const LOADER_VIEW = 0 ;
+const COMPANIES_VIEW = 1 ;
+const NO_COMPANIES_VIEW = 2 ;
+const ERROR_VIEW = 3 ;
+
+
+
 class CompaniesListPresenter {
   final CompaniesListView _view;
   final CompaniesListProvider _companiesListProvider ;
@@ -24,11 +32,13 @@ class CompaniesListPresenter {
     try {
       _view.showLoader();
       var companies = await _companiesListProvider.get();
-      _view.hideLoader();
-      _view.companiesRetrievedSuccessfully(companies);
+      if (companies.isNotEmpty) {
+        _view.companiesRetrievedSuccessfully(companies);
+      } else {
+        _view.companiesRetrievedSuccessfullyWithEmptyList();
+      }
       _companies.addAll(companies);
     } on WPException catch (e) {
-      _view.hideLoader();
       _view.companiesRetrievedError("Failed To Load Companies", e.userReadableMessage);
     }
   }
@@ -41,7 +51,16 @@ class CompaniesListPresenter {
         _filterList.add(item);
       }
     }
-    _view.companiesRetrievedSuccessfully(_filterList);
+    if (_filterList.isNotEmpty) {
+      _view.companiesRetrievedSuccessfully(_filterList);
+    } else {
+      _view.companiesRetrievedSuccessfullyWithEmptyList();
+    }
+  }
+
+  refresh() {
+    _companiesListProvider.reset();
+    getCompanies();
   }
 
 }
