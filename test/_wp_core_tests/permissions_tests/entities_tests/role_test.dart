@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
-import 'package:wallpost/_wp_core/permission/entities/Role.dart';
+import 'package:wallpost/_wp_core/permission/entities/role.dart';
 
 main() {
   test("test initializing Roles from string successfully", () {

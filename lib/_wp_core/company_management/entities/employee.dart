@@ -2,6 +2,7 @@ import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
+import 'package:wallpost/_wp_core/company_management/entities/permission.dart';
 
 class Employee extends JSONInitializable implements JSONConvertible {
   late String _v1Id;
@@ -12,6 +13,7 @@ class Employee extends JSONInitializable implements JSONConvertible {
   late String _designation;
   late String? _lineManager;
   late String _departmentRank;
+  late Permissions permissions;
 
   Employee.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
@@ -28,6 +30,7 @@ class Employee extends JSONInitializable implements JSONConvertible {
       var rank = sift.readNumberFromMapWithDefaultValue(departmentRankMap, 'rank', null);
       var rankOutOf = sift.readNumberFromMapWithDefaultValue(departmentRankMap, 'out_of', null);
       _departmentRank = (rank == null || rankOutOf == null) ? '' : '$rank/$rankOutOf';
+      //todo init permissions
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Employee response. Error message - ${e.errorMessage}');
     }

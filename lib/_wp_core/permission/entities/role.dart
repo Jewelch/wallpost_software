@@ -2,6 +2,7 @@ import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 
 enum Roles { employee, financial }
 
+//won't need this
 Roles initializeRoleFromString(String string) {
   if (string.toLowerCase() == "employee")
     return Roles.employee;

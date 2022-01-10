@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
@@ -29,7 +27,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
   List<CompanyListItem> _companies = [];
   List<CompanyListItem> _filterList = [];
   var _scrollController = ScrollController();
-  Loader loader;
+  late Loader loader;
 
   @override
   void initState() {
@@ -161,7 +159,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
   }
 
   void _performSearch(String searchText) {
-    _filterList = new List<CompanyListItem>();
+    _filterList = [];
     for (int i = 0; i < _companies.length; i++) {
       var item = _companies[i];
       if (item.name.toLowerCase().contains(searchText.toLowerCase())) {

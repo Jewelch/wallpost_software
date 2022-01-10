@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/permission/constants/permissions_urls.dart';
-import 'package:wallpost/_wp_core/permission/entities/Permission.dart';
+import 'package:wallpost/_wp_core/company_management/entities/permission.dart';
 import 'package:wallpost/_wp_core/permission/repositories/permission_repository.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
@@ -42,7 +42,7 @@ class PermissionProvider {
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
-      var permission = Permission.fromJson(responseMap);
+      var permission = Permissions.fromJson(responseMap);
       _permissionRepository.savePermission(permission);
       return null;
     } catch (e) {

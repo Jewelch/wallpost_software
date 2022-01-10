@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
@@ -11,7 +9,7 @@ class CompanyListCardWithRevenue extends StatelessWidget {
   final CompanyListItem company;
   final VoidCallback onPressed;
 
-  CompanyListCardWithRevenue({this.company, this.onPressed});
+  CompanyListCardWithRevenue({required this.company, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -130,5 +128,6 @@ class CompanyListCardWithRevenue extends StatelessWidget {
     // } else {
     //   return AppColors.badPerformanceColor;
     // }
+    return Colors.white;
   }
 }

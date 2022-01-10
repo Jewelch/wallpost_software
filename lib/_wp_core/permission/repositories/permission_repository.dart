@@ -1,11 +1,11 @@
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
-import 'package:wallpost/_wp_core/permission/entities/Permission.dart';
+import 'package:wallpost/_wp_core/company_management/entities/permission.dart';
 
 class PermissionRepository {
   final _permissionPerfKey = "Permission";
 
   late SecureSharedPrefs _sharedPrefs;
-  Permission? _userPermission;
+  Permissions? _userPermission;
 
   static PermissionRepository? _singleton;
 
@@ -26,10 +26,10 @@ class PermissionRepository {
 
     if (permissionData == null) return;
     var permissionJsonData = Map<String, dynamic>.from(permissionData);
-    _userPermission = Permission.fromJson(permissionJsonData);
+    _userPermission = Permissions.fromJson(permissionJsonData);
   }
 
-  void savePermission(Permission permission) {
+  void savePermission(Permissions permission) {
     _userPermission = permission;
     _sharedPrefs.saveMap(_permissionPerfKey, _userPermission!.toJson());
   }
@@ -39,5 +39,5 @@ class PermissionRepository {
     _sharedPrefs.removeMap(_permissionPerfKey);
   }
 
-  Permission? getPermissions() => _userPermission;
+  Permissions? getPermissions() => _userPermission;
 }

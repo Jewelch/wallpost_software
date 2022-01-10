@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
@@ -8,19 +6,19 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 class SearchBarWithTitle extends StatefulWidget {
   final String title;
   final Function(String) onChanged;
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
-  SearchBarWithTitle({this.title, this.onChanged, this.controller});
+  SearchBarWithTitle({required this.title, required this.onChanged, this.controller});
 
   @override
   _SearchBarWithTitleState createState() => _SearchBarWithTitleState(controller);
 }
 
 class _SearchBarWithTitleState extends State<SearchBarWithTitle> {
-  TextEditingController _controller;
+  late TextEditingController _controller;
   FocusNode _focusNode = FocusNode();
 
-  _SearchBarWithTitleState(TextEditingController controller) {
+  _SearchBarWithTitleState(TextEditingController? controller) {
     if (controller != null) {
       _controller = controller;
     } else {

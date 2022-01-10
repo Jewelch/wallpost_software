@@ -4,6 +4,7 @@ import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 class Company extends JSONInitializable implements JSONConvertible {
+  //todo - add modules
   late String _id;
   late String _accountNumber;
   late String _name;
