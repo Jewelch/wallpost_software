@@ -6,7 +6,7 @@ import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_sette
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/company_list/ui/companies_list_screen.dart';
+import 'package:wallpost/company_list/ui/views/companies_list_screen.dart';
 import 'package:wallpost/login/ui/views/login_screen.dart';
 
 class MainScreen extends StatefulWidget {

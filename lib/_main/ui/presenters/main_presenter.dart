@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:developer';
 
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -16,6 +17,7 @@ class MainPresenter {
   MainPresenter.initWith(this._view, this._currentUserProvider, this._selectedCompanyProvider);
 
   Future<void> showLandingScreen() async {
+    var _ = await Future.delayed(const Duration(milliseconds: 5000));
     if (isLoggedIn() == false) {
       _view.goToLoginScreen();
     } else {

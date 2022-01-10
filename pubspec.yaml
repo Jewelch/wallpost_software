@@ -26,7 +26,7 @@ dependencies:
   flutter_svg: ^1.0.0
   image_picker: ^0.8.4+4
   modal_bottom_sheet: ^2.0.0
-  flutter_statusbarcolor_ns: ^0.4.0
+#  flutter_statusbarcolor: ^0.2.3
   fl_chart: ^0.40.6
   percent_indicator: ^3.4.0
   intl: ^0.17.0
