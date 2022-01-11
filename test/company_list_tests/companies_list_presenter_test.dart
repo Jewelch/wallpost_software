@@ -10,38 +10,35 @@ class MockCompaniesListViewView extends Mock implements CompaniesListView {}
 
 class MockCompaniesListProvider extends Mock implements CompaniesListProvider {}
 
-class MockCompanyListItem extends Mock implements CompanyListItem {
-  @override
-  String get name => "test";
-}
-
-class MockCompanyListItem2 extends Mock implements CompanyListItem {
-  @override
-  String get name => "test2";
-}
+class MockCompanyListItem extends Mock implements CompanyListItem {}
 
 void main() {
   var view = MockCompaniesListViewView();
   var mockCompaniesListProvider = MockCompaniesListProvider();
+  var company1 = MockCompanyListItem();
+  var company2 = MockCompanyListItem();
+  List<CompanyListItem> _companyList = [company1, company2];
+
+  setUpAll(() {
+    when(() => company1.name).thenReturn("test1");
+    when(() => company2.name).thenReturn("test2");
+  });
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
     verifyNoMoreInteractions(mockCompaniesListProvider);
   }
 
-  List<CompanyListItem> _companyList = [
-    MockCompanyListItem(),
-    MockCompanyListItem2()
-  ];
-  List<CompanyListItem> _filteredCompanyList = [MockCompanyListItem2()];
+  void _resetAllMockInteractions() {
+    clearInteractions(view);
+    clearInteractions(mockCompaniesListProvider);
+  }
 
   test('retrieving companies successfully', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get())
-        .thenAnswer((_) => Future.value(_companyList));
-    CompaniesListPresenter presenter =
-        CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
+    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
+    CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
 
     //when
     await presenter.getCompanies();
@@ -51,7 +48,7 @@ void main() {
       () => mockCompaniesListProvider.isLoading,
       () => view.showLoader(),
       () => mockCompaniesListProvider.get(),
-      () => view.companiesRetrievedSuccessfully(_companyList),
+      () => view.showCompanyList(_companyList),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -59,10 +56,8 @@ void main() {
   test('retrieving companies successfully with empty list', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get())
-        .thenAnswer((_) => Future.value(List.empty()));
-    CompaniesListPresenter presenter =
-        CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
+    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(List.empty()));
+    CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
 
     //when
     await presenter.getCompanies();
@@ -72,7 +67,7 @@ void main() {
       () => mockCompaniesListProvider.isLoading,
       () => view.showLoader(),
       () => mockCompaniesListProvider.get(),
-      () => view.companiesRetrievedSuccessfullyWithEmptyList(),
+      () => view.showNoCompaniesMessage(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -83,8 +78,7 @@ void main() {
     when(() => mockCompaniesListProvider.get()).thenAnswer(
       (realInvocation) => Future.error(InvalidResponseException()),
     );
-    CompaniesListPresenter presenter =
-        CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
+    CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
 
     //when
     await presenter.getCompanies();
@@ -94,34 +88,25 @@ void main() {
       () => mockCompaniesListProvider.isLoading,
       () => view.showLoader(),
       () => mockCompaniesListProvider.get(),
-      () => view.companiesRetrievedError("Failed To Load Companies",
-          InvalidResponseException().userReadableMessage),
+      () => view.showErrorMessage("Failed To Load Companies", InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-
   test('applying search successfully', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get())
-        .thenAnswer((_) => Future.value(_companyList));
-    CompaniesListPresenter presenter =
-        CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
-
+    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
+    CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
     await presenter.getCompanies();
+    _resetAllMockInteractions();
 
     //when
-    presenter.performSearch("test");
+    presenter.performSearch("test2");
 
     //then
     verifyInOrder([
-      () => mockCompaniesListProvider.isLoading,
-      () => view.showLoader(),
-      () => mockCompaniesListProvider.get(),
-      () => view.companiesRetrievedSuccessfully(_companyList),
-      () => mockCompaniesListProvider.get(),
-      () => view.companiesRetrievedSuccessfully(_filteredCompanyList)
+      () => view.showCompanyList([company2]),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -129,50 +114,39 @@ void main() {
   test('applying search with empty results', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get())
-        .thenAnswer((_) => Future.value(_companyList));
-    CompaniesListPresenter presenter =
-        CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
+    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
+    CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
     await presenter.getCompanies();
+    _resetAllMockInteractions();
 
     //when
     presenter.performSearch("search");
 
     //then
     verifyInOrder([
-      () => mockCompaniesListProvider.isLoading,
-      () => view.showLoader(),
-      () => mockCompaniesListProvider.get(),
-      () => view.companiesRetrievedSuccessfully(_companyList),
-      () => view.companiesRetrievedSuccessfullyWithEmptyList()
+      () => view.showCompanyList([]),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-
-  test('refresh loading', () async {
+  test('refresh the list of companies', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get())
-        .thenAnswer((_) => Future.value(_companyList));
-    CompaniesListPresenter presenter =
-        CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
+    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
+    CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
     await presenter.getCompanies();
+    _resetAllMockInteractions();
 
     //when
-    presenter.refresh();
+    await presenter.refresh();
 
     //then
     verifyInOrder([
-      () => mockCompaniesListProvider.isLoading,
-      () => view.showLoader(),
-      () => mockCompaniesListProvider.get(),
-      () => view.companiesRetrievedSuccessfully(_companyList),
       () => mockCompaniesListProvider.reset(),
       () => mockCompaniesListProvider.isLoading,
       () => view.showLoader(),
       () => mockCompaniesListProvider.get(),
-      //  () => view.companiesRetrievedSuccessfully(_companyList),
+      () => view.showCompanyList(_companyList),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });

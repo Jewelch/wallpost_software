@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
-import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
@@ -18,13 +17,17 @@ class CompanyListScreen extends StatefulWidget {
   _CompanyListScreenState createState() => _CompanyListScreenState();
 }
 
-class _CompanyListScreenState extends State<CompanyListScreen>
-    implements CompaniesListView {
+class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
   late CompaniesListPresenter presenter;
   var _showErrorNotifier = ItemNotifier<bool>();
   var _companiesListNotifier = ItemNotifier<List<CompanyListItem>?>();
   var _viewSelectorNotifier = ItemNotifier<int>();
   var _scrollController = ScrollController();
+
+  static const LOADER_VIEW = 0;
+  static const COMPANIES_VIEW = 1;
+  static const NO_COMPANIES_VIEW = 2;
+  static const ERROR_VIEW = 3;
 
   @override
   void initState() {
@@ -165,24 +168,6 @@ class _CompanyListScreenState extends State<CompanyListScreen>
       );
   }
 
-  // void _getCompanies() async {
-  //   try {
-  //     var companies = await _companiesListProvider.get();
-  //     setState(() {
-  //       _companies.addAll(companies);
-  //       _filterList.addAll(companies);
-  //     });
-  //   } on WPException catch (error) {
-  //     // Alert.showSimpleAlert(
-  //     //   context,
-  //     //   title: 'Failed To Load Companies',
-  //     //   message: error.userReadableMessage,
-  //     //   buttonTitle: 'Okay',
-  //     // );
-  //     // setState(() {});
-  //   }
-  // }
-
   void _selectCompanyAtIndex(int index) async {
     // var selectedCompany = _filterList[index];
     // await loader.show('');
@@ -209,23 +194,19 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   }
 
   @override
-  void companiesRetrievedSuccessfully(List<CompanyListItem> companies) {
+  void showCompanyList(List<CompanyListItem> companies) {
     _companiesListNotifier.notify(companies);
     _viewSelectorNotifier.notify(COMPANIES_VIEW);
   }
 
   @override
-  void companiesRetrievedSuccessfullyWithEmptyList() {
+  void showNoCompaniesMessage() {
     _viewSelectorNotifier.notify(NO_COMPANIES_VIEW);
   }
 
   @override
-  void companiesRetrievedError(String title, String message) {
+  void showErrorMessage(String title, String message) {
     _showErrorNotifier.notify(true);
     _viewSelectorNotifier.notify(ERROR_VIEW);
-
-    //Alert.showSimpleAlert(context: context, title: title, message: message);
   }
-
-
 }

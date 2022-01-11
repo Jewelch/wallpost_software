@@ -1,17 +1,14 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
-// import 'package:wallpost/my_portal/services/my_portal_performance_level_calculator.dart';
 
 class CompanyListCardWithRevenue extends StatelessWidget {
   final CompanyListItem company;
   final VoidCallback onPressed;
 
-  CompanyListCardWithRevenue({ required this.company, required this.onPressed});
+  CompanyListCardWithRevenue({required this.company, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +24,7 @@ class CompanyListCardWithRevenue extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(company.name,
-                    style: TextStyles.titleTextStyle
-                        .copyWith(fontWeight: FontWeight.bold)),
+                Text(company.name, style: TextStyles.titleTextStyle.copyWith(fontWeight: FontWeight.bold)),
                 Row(
                   children: [
                     Expanded(
@@ -38,14 +33,11 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                  'Approval${company.approvalCount == 1 ? '' : 's'}',
-                                  style: TextStyles.subTitleTextStyle
-                                      .copyWith(color: Colors.black)),
+                              Text('Approval${company.approvalCount == 1 ? '' : 's'}',
+                                  style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
                               Text(
                                 company.approvalCount.toString(),
-                                style: TextStyles.subTitleTextStyle
-                                    .copyWith(color: AppColors.defaultColor),
+                                style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
                               ),
                             ],
                           ),
@@ -53,14 +45,11 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                  'Notification${company.notificationCount == 1 ? '' : 's'}',
-                                  style: TextStyles.subTitleTextStyle
-                                      .copyWith(color: Colors.black)),
+                              Text('Notification${company.notificationCount == 1 ? '' : 's'}',
+                                  style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
                               Text(
                                 company.notificationCount.toString(),
-                                style: TextStyles.subTitleTextStyle
-                                    .copyWith(color: AppColors.defaultColor),
+                                style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
                               ),
                             ],
                           )
@@ -95,12 +84,10 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                           LinearPercentIndicator(
                             lineHeight: 14,
                             percent: company.achievedSalesPercent / 100,
-                            progressColor: _getColorForPerformance(
-                                company.achievedSalesPercent.toInt()),
+                            progressColor: _getColorForPerformance(company.achievedSalesPercent.toInt()),
                             center: Text(
                               company.achievedSalesPercent.toString() + "%",
-                              style: TextStyles.labelTextStyle
-                                  .copyWith(color: Colors.white),
+                              style: TextStyles.labelTextStyle.copyWith(color: Colors.white),
                             ),
                           ),
                           SizedBox(height: 4),

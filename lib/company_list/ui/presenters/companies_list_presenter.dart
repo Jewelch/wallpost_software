@@ -1,26 +1,25 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
 import 'package:wallpost/_wp_core/company_management/services/companies_list_provider.dart';
-import 'package:wallpost/_wp_core/user_management/entities/credentials.dart';
-import 'package:wallpost/_wp_core/user_management/services/authenticator.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
-import 'package:wallpost/login/ui/contracts/login_view.dart';
-
-
-const LOADER_VIEW = 0 ;
-const COMPANIES_VIEW = 1 ;
-const NO_COMPANIES_VIEW = 2 ;
-const ERROR_VIEW = 3 ;
-
-
 
 class CompaniesListPresenter {
   final CompaniesListView _view;
-  final CompaniesListProvider _companiesListProvider ;
-
+  final CompaniesListProvider _companiesListProvider;
 
   List<CompanyListItem> _companies = [];
-  List<CompanyListItem> _filterList = [];
+
+  //todo
+  /*
+  1. CASE - WHEN THE API RETURNS AN EMPTY LIST or THROWS AN ERROR - HIDE SEARCH BAR else - show it
+  2. CASE - WHEN THE SEARCH TEXT RETURNS AN EMPTY LIST - There are no companies for the  given search criteria. ->
+  3. simulate empty response by commenting out _companies.addAll(companies);
+     then enter search text -> then clear it off using the x button in the search text field
+     there is not empty list message
+  4. Add tests
+   */
+
+  var _searchText = "";
 
   CompaniesListPresenter(this._view) : _companiesListProvider = CompaniesListProvider();
 
@@ -29,38 +28,35 @@ class CompaniesListPresenter {
   Future<void> getCompanies() async {
     if (_companiesListProvider.isLoading) return;
 
+    _companies.clear();
+    _view.showLoader();
     try {
-      _view.showLoader();
       var companies = await _companiesListProvider.get();
-      if (companies.isNotEmpty) {
-        _view.companiesRetrievedSuccessfully(companies);
-      } else {
-        _view.companiesRetrievedSuccessfullyWithEmptyList();
-      }
       _companies.addAll(companies);
+      _companies.isNotEmpty ? _showFilteredCompanies() : _view.showNoCompaniesMessage();
     } on WPException catch (e) {
-      _view.companiesRetrievedError("Failed To Load Companies", e.userReadableMessage);
+      _view.showErrorMessage("Failed To Load Companies", e.userReadableMessage);
     }
   }
 
   void performSearch(String searchText) {
-    _filterList.clear();
+    _searchText = searchText;
+    _showFilteredCompanies();
+  }
+
+  void _showFilteredCompanies() {
+    List<CompanyListItem> _filterList = [];
     for (int i = 0; i < _companies.length; i++) {
       var item = _companies[i];
-      if (item.name.toLowerCase().contains(searchText.toLowerCase())) {
+      if (item.name.toLowerCase().contains(_searchText.toLowerCase())) {
         _filterList.add(item);
       }
     }
-    if (_filterList.isNotEmpty) {
-      _view.companiesRetrievedSuccessfully(_filterList);
-    } else {
-      _view.companiesRetrievedSuccessfullyWithEmptyList();
-    }
+    _view.showCompanyList(_filterList);
   }
 
   refresh() {
     _companiesListProvider.reset();
     getCompanies();
   }
-
 }
