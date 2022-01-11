@@ -6,19 +6,7 @@ import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 class CompaniesListPresenter {
   final CompaniesListView _view;
   final CompaniesListProvider _companiesListProvider;
-
   List<CompanyListItem> _companies = [];
-
-  //todo
-  /*
-  1. CASE - WHEN THE API RETURNS AN EMPTY LIST or THROWS AN ERROR - HIDE SEARCH BAR else - show it
-  2. CASE - WHEN THE SEARCH TEXT RETURNS AN EMPTY LIST - There are no companies for the  given search criteria. ->
-  3. simulate empty response by commenting out _companies.addAll(companies);
-     then enter search text -> then clear it off using the x button in the search text field
-     there is not empty list message
-  4. Add tests
-   */
-
   var _searchText = "";
 
   CompaniesListPresenter(this._view) : _companiesListProvider = CompaniesListProvider();
@@ -27,21 +15,27 @@ class CompaniesListPresenter {
 
   Future<void> getCompanies() async {
     if (_companiesListProvider.isLoading) return;
-
     _companies.clear();
     _view.showLoader();
+
     try {
       var companies = await _companiesListProvider.get();
-      _companies.addAll(companies);
-      _companies.isNotEmpty ? _showFilteredCompanies() : _view.showNoCompaniesMessage();
+      _handleResponse(companies);
     } on WPException catch (e) {
-      _view.showErrorMessage("Failed To Load Companies", e.userReadableMessage);
+      _clearSearchTextAndHideSearchBar();
+      _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
     }
   }
 
-  void performSearch(String searchText) {
-    _searchText = searchText;
-    _showFilteredCompanies();
+  void _handleResponse(List<CompanyListItem> companies) {
+    _companies.addAll(companies);
+    if (_companies.isNotEmpty) {
+      _view.showSearchBar();
+      _showFilteredCompanies();
+    } else {
+      _clearSearchTextAndHideSearchBar();
+      _view.showNoCompaniesMessage("There are no companies.\n\nTap here to reload");
+    }
   }
 
   void _showFilteredCompanies() {
@@ -52,11 +46,36 @@ class CompaniesListPresenter {
         _filterList.add(item);
       }
     }
-    _view.showCompanyList(_filterList);
+
+    if (_filterList.isEmpty) {
+      _view.showNoSearchResultsMessage("There are no companies for the  given search criteria.");
+    } else {
+      _view.showCompanyList(_filterList);
+    }
   }
+
+  void _clearSearchTextAndHideSearchBar() {
+    _searchText = "";
+    _view.hideSearchBar();
+  }
+
+  //MARK: Function to perform search
+
+  void performSearch(String searchText) {
+    _searchText = searchText;
+    _showFilteredCompanies();
+  }
+
+  //MARK: Function to refresh the company list
 
   refresh() {
     _companiesListProvider.reset();
     getCompanies();
+  }
+
+  //MARK: Getters
+
+  String getSearchText() {
+    return _searchText;
   }
 }

@@ -48,6 +48,7 @@ void main() {
       () => mockCompaniesListProvider.isLoading,
       () => view.showLoader(),
       () => mockCompaniesListProvider.get(),
+      () => view.showSearchBar(),
       () => view.showCompanyList(_companyList),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -67,7 +68,8 @@ void main() {
       () => mockCompaniesListProvider.isLoading,
       () => view.showLoader(),
       () => mockCompaniesListProvider.get(),
-      () => view.showNoCompaniesMessage(),
+      () => view.hideSearchBar(),
+      () => view.showNoCompaniesMessage("There are no companies.\n\nTap here to reload"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -88,12 +90,13 @@ void main() {
       () => mockCompaniesListProvider.isLoading,
       () => view.showLoader(),
       () => mockCompaniesListProvider.get(),
-      () => view.showErrorMessage("Failed To Load Companies", InvalidResponseException().userReadableMessage),
+      () => view.hideSearchBar(),
+      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('applying search successfully', () async {
+  test('performing search successfully', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
     when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
@@ -111,22 +114,40 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('applying search with empty results', () async {
+  test('performing a search with no results', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
+    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value([]));
     CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
     await presenter.getCompanies();
     _resetAllMockInteractions();
 
     //when
-    presenter.performSearch("search");
+    presenter.performSearch("non existent company id");
 
     //then
     verifyInOrder([
-      () => view.showCompanyList([]),
+      () => view.showNoSearchResultsMessage("There are no companies for the  given search criteria."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('test search text is reset when search bar is hidden', () async {
+    //given
+    CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
+    //step 1 - load companies
+    when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
+    //step 2 - perform search
+    presenter.performSearch("c1");
+
+    //when
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((realInvocation) => Future.error(InvalidResponseException()));
+    await presenter.getCompanies();
+
+    //then
+    expect(presenter.getSearchText(), "");
   });
 
   test('refresh the list of companies', () async {
@@ -146,6 +167,7 @@ void main() {
       () => mockCompaniesListProvider.isLoading,
       () => view.showLoader(),
       () => mockCompaniesListProvider.get(),
+      () => view.showSearchBar(),
       () => view.showCompanyList(_companyList),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();

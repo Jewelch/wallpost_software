@@ -19,15 +19,20 @@ class CompanyListScreen extends StatefulWidget {
 
 class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
   late CompaniesListPresenter presenter;
+  var _searchBarVisibilityNotifier = ItemNotifier<bool>();
   var _showErrorNotifier = ItemNotifier<bool>();
   var _companiesListNotifier = ItemNotifier<List<CompanyListItem>?>();
   var _viewSelectorNotifier = ItemNotifier<int>();
   var _scrollController = ScrollController();
 
+  String _noCompaniesMessage = "";
+  String _noSearchResultsMessage = "";
+  String _errorMessage = "";
   static const LOADER_VIEW = 0;
   static const COMPANIES_VIEW = 1;
   static const NO_COMPANIES_VIEW = 2;
-  static const ERROR_VIEW = 3;
+  static const NO_SEARCH_RESULTS_VIEW = 3;
+  static const ERROR_VIEW = 4;
 
   @override
   void initState() {
@@ -65,10 +70,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: Column(children: [
-              SearchBarWithTitle(
-                title: 'Companies',
-                onChanged: (searchText) => presenter.performSearch(searchText),
-              ),
+              _searchBar(),
               ItemNotifiable<int>(
                   notifier: _viewSelectorNotifier,
                   builder: (context, value) {
@@ -77,7 +79,9 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                     } else if (value == COMPANIES_VIEW) {
                       return Expanded(child: _getCompanies());
                     } else if (value == NO_COMPANIES_VIEW) {
-                      return Expanded(child: _noCompaniesMessage());
+                      return Expanded(child: _noCompaniesMessageView());
+                    } else if (value == NO_SEARCH_RESULTS_VIEW) {
+                      return Expanded(child: _noSearchResultsMessageView());
                     }
                     return Expanded(child: _buildErrorAndRetryView());
                   })
@@ -89,24 +93,41 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     );
   }
 
+  Widget _searchBar() {
+    return ItemNotifiable<bool>(
+      notifier: _searchBarVisibilityNotifier,
+      builder: (context, shouldShowSearchBar) {
+        if (shouldShowSearchBar == true) {
+          return SearchBarWithTitle(
+            title: 'Companies',
+            onChanged: (searchText) => presenter.performSearch(searchText),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
   Widget _getCompanies() {
     return ItemNotifiable<List<CompanyListItem>>(
       notifier: _companiesListNotifier,
       builder: (context, value) => Container(
         padding: EdgeInsets.only(top: 8, bottom: 8),
         child: RefreshIndicator(
-            onRefresh: () => presenter.getCompanies(),
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              controller: _scrollController,
-              itemCount: value?.length,
-              itemBuilder: (context, index) {
-                if (value != null) {
-                  return _getCompanyCard(index, value);
-                } else
-                  return Container();
-              },
-            )),
+          onRefresh: () => presenter.getCompanies(),
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            controller: _scrollController,
+            itemCount: value?.length,
+            itemBuilder: (context, index) {
+              if (value != null) {
+                return _getCompanyCard(index, value);
+              } else
+                return Container();
+            },
+          ),
+        ),
       ),
     );
   }
@@ -117,9 +138,28 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     );
   }
 
-  Widget _noCompaniesMessage() {
+  Widget _noCompaniesMessageView() {
+    return GestureDetector(
+      onTap: () => presenter.getCompanies(),
+      child: Container(
+        child: Center(
+            child: Text(
+          _noCompaniesMessage,
+          textAlign: TextAlign.center,
+          style: TextStyles.failureMessageTextStyle,
+        )),
+      ),
+    );
+  }
+
+  Widget _noSearchResultsMessageView() {
     return Container(
-      child: Center(child: Text("No companies Available")),
+      child: Center(
+          child: Text(
+        _noSearchResultsMessage,
+        textAlign: TextAlign.center,
+        style: TextStyles.failureMessageTextStyle,
+      )),
     );
   }
 
@@ -136,7 +176,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                   children: [
                     TextButton(
                       child: Text(
-                        'Failed to load companies\nTap Here To Retry',
+                        _errorMessage,
                         textAlign: TextAlign.center,
                         style: TextStyles.failureMessageTextStyle,
                       ),
@@ -188,9 +228,21 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     // }
   }
 
+  //MARK: View functions
+
   @override
   void showLoader() {
     _viewSelectorNotifier.notify(LOADER_VIEW);
+  }
+
+  @override
+  void showSearchBar() {
+    _searchBarVisibilityNotifier.notify(true);
+  }
+
+  @override
+  void hideSearchBar() {
+    _searchBarVisibilityNotifier.notify(false);
   }
 
   @override
@@ -200,12 +252,20 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   @override
-  void showNoCompaniesMessage() {
+  void showNoCompaniesMessage(String message) {
+    _noCompaniesMessage = message;
     _viewSelectorNotifier.notify(NO_COMPANIES_VIEW);
   }
 
   @override
-  void showErrorMessage(String title, String message) {
+  void showNoSearchResultsMessage(String message) {
+    _noSearchResultsMessage = message;
+    _viewSelectorNotifier.notify(NO_SEARCH_RESULTS_VIEW);
+  }
+
+  @override
+  void showErrorMessage(String message) {
+    _errorMessage = message;
     _showErrorNotifier.notify(true);
     _viewSelectorNotifier.notify(ERROR_VIEW);
   }
