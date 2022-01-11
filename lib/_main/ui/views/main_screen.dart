@@ -21,9 +21,11 @@ class _MainScreenState extends State<MainScreen> implements MainView {
 
   @override
   void initState() {
-    presenter = MainPresenter(this);
-    StatusBarColorSetter.setColorBasedOnLoginStatus(presenter.isLoggedIn());
-    presenter.showLandingScreen();
+    Future.microtask(() {
+      presenter = MainPresenter(this);
+      StatusBarColorSetter.setColorBasedOnLoginStatus(presenter.isLoggedIn());
+      presenter.showLandingScreen();
+    });
     super.initState();
   }
 
