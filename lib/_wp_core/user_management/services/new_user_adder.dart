@@ -5,7 +5,7 @@ class NewUserAdder {
   late UserRepository _userRepository;
 
   NewUserAdder() {
-    _userRepository = UserRepository();
+    _userRepository = UserRepository.getInstance();
   }
 
   NewUserAdder.initWith(UserRepository userRepository) {

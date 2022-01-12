@@ -3,14 +3,18 @@ import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
+import 'package:wallpost/_wp_core/company_management/services/company_details_provider.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dart';
 import 'package:wallpost/company_list/ui/views/company_list_card_with_revenue.dart';
 import 'package:wallpost/company_list/ui/views/company_list_card_without_revenue.dart';
+import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 
 class CompanyListScreen extends StatefulWidget {
   @override
@@ -37,7 +41,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   @override
   void initState() {
     presenter = CompaniesListPresenter(this);
-    presenter.getCompanies();
+    presenter.loadCompanies();
     super.initState();
   }
 
@@ -115,7 +119,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
       builder: (context, value) => Container(
         padding: EdgeInsets.only(top: 8, bottom: 8),
         child: RefreshIndicator(
-          onRefresh: () => presenter.getCompanies(),
+          onRefresh: () => presenter.loadCompanies(),
           child: ListView.builder(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             controller: _scrollController,
@@ -140,7 +144,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
 
   Widget _noCompaniesMessageView() {
     return GestureDetector(
-      onTap: () => presenter.getCompanies(),
+      onTap: () => presenter.loadCompanies(),
       child: Container(
         child: Center(
             child: Text(
@@ -209,23 +213,22 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   void _selectCompanyAtIndex(int index) async {
-    // var selectedCompany = _filterList[index];
+    var selectedCompany = presenter.getCompanies()[index];
     // await loader.show('');
-    // try {
-    //   var _ =
-    //       await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
-    //   await loader.hide();
-    //   Navigator.pushNamedAndRemoveUntil(
-    //       context, RouteNames.dashboard, (route) => false);
-    // } on WPException catch (e) {
-    //   await loader.hide();
-    //   Alert.showSimpleAlert(
-    //     context,
-    //     title: 'Failed To Load Company Details',
-    //     message: e.userReadableMessage,
-    //     buttonTitle: 'Okay',
-    //   );
-    // }
+    try {
+      var _ =
+          await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
+      // await loader.hide();
+      ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
+    } on WPException catch (e) {
+      // await loader.hide();
+      // Alert.showSimpleAlert(
+      //   context,
+      //   title: 'Failed To Load Company Details',
+      //   message: e.userReadableMessage,
+      //   buttonTitle: 'Okay',
+      // );
+    }
   }
 
   //MARK: View functions

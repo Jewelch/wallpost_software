@@ -13,7 +13,7 @@ class CompaniesListPresenter {
 
   CompaniesListPresenter.initWith(this._view, this._companiesListProvider);
 
-  Future<void> getCompanies() async {
+  Future<void> loadCompanies() async {
     if (_companiesListProvider.isLoading) return;
     _companies.clear();
     _view.showLoader();
@@ -70,12 +70,17 @@ class CompaniesListPresenter {
 
   refresh() {
     _companiesListProvider.reset();
-    getCompanies();
+    loadCompanies();
   }
 
   //MARK: Getters
 
   String getSearchText() {
     return _searchText;
+  }
+
+
+  List<CompanyListItem> getCompanies() {
+    return _companies;
   }
 }

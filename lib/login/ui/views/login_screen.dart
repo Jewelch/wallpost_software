@@ -200,6 +200,6 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
 
   @override
   void goToCompanyListScreen() {
-    ScreenPresenter.present(MainScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(MainScreen(), context);
   }
 }

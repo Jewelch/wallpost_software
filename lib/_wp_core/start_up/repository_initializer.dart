@@ -2,8 +2,8 @@ import 'package:wallpost/_wp_core/company_management/repositories/company_reposi
 import 'package:wallpost/_wp_core/user_management/repositories/user_repository.dart';
 
 class RepositoryInitializer {
-  static void initializeRepos() {
-    UserRepository();
+  Future<void> initializeRepos() async {
+    await UserRepository.initRepo();
     CompanyRepository();
   }
 }

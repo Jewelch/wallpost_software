@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/_wp_core/user_management/repositories/user_repository.dart';
 
@@ -7,7 +5,7 @@ class CurrentUserProvider {
   late UserRepository _userRepository;
 
   CurrentUserProvider() {
-    _userRepository = UserRepository();
+    _userRepository = UserRepository.getInstance();
   }
 
   CurrentUserProvider.initWith(UserRepository userRepository) {

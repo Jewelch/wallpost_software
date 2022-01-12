@@ -3,9 +3,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/start_up/repository_initializer.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 
 class MockMainView extends Mock implements MainView {}
+
+class MockRepositoryInitializer extends Mock implements RepositoryInitializer {}
 
 class MockCurrentUserProvider extends Mock implements CurrentUserProvider {}
 
@@ -13,12 +16,18 @@ class MockSelectedCompanyProvider extends Mock implements SelectedCompanyProvide
 
 void main() {
   var view = MockMainView();
+  var repositoryInitializer = MockRepositoryInitializer();
   var currentUserProvider = MockCurrentUserProvider();
   var selectedCompanyProvider = MockSelectedCompanyProvider();
-  var presenter = MainPresenter.initWith(view, currentUserProvider, selectedCompanyProvider);
+  var presenter = MainPresenter.initWith(view, repositoryInitializer, currentUserProvider, selectedCompanyProvider);
+
+  setUpAll(() {
+    when(() => repositoryInitializer.initializeRepos()).thenAnswer((invocation) => Future.value(null));
+  });
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
+    verifyNoMoreInteractions(repositoryInitializer);
     verifyNoMoreInteractions(currentUserProvider);
     verifyNoMoreInteractions(selectedCompanyProvider);
   }
@@ -28,11 +37,13 @@ void main() {
     when(() => currentUserProvider.isLoggedIn()).thenReturn(false);
 
     //when
-    await presenter.showLandingScreen();
+    await presenter.initializeReposAndShowLandingScreen();
 
     //then
     verifyInOrder([
+      () => repositoryInitializer.initializeRepos(),
       () => currentUserProvider.isLoggedIn(),
+      () => view.setStatusBarColor(false),
       () => view.goToLoginScreen(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -44,11 +55,13 @@ void main() {
     when(() => selectedCompanyProvider.isCompanySelected()).thenReturn(false);
 
     //when
-    await presenter.showLandingScreen();
+    await presenter.initializeReposAndShowLandingScreen();
 
     //then
     verifyInOrder([
+      () => repositoryInitializer.initializeRepos(),
       () => currentUserProvider.isLoggedIn(),
+      () => view.setStatusBarColor(true),
       () => selectedCompanyProvider.isCompanySelected(),
       () => view.goToCompaniesListScreen()
     ]);
@@ -61,11 +74,13 @@ void main() {
     when(() => selectedCompanyProvider.isCompanySelected()).thenReturn(true);
 
     //when
-    await presenter.showLandingScreen();
+    await presenter.initializeReposAndShowLandingScreen();
 
     //then
     verifyInOrder([
+      () => repositoryInitializer.initializeRepos(),
       () => currentUserProvider.isLoggedIn(),
+      () => view.setStatusBarColor(true),
       () => selectedCompanyProvider.isCompanySelected(),
       () => view.goToDashboardScreen()
     ]);

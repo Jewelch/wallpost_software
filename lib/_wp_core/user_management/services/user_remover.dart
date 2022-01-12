@@ -5,7 +5,7 @@ class UserRemover {
   late UserRepository _userRepository;
 
   UserRemover() {
-    _userRepository = UserRepository();
+    _userRepository = UserRepository.getInstance();
   }
 
   UserRemover.initWith(UserRepository userRepository) {

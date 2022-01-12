@@ -41,7 +41,7 @@ void main() {
     CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
 
     //when
-    await presenter.getCompanies();
+    await presenter.loadCompanies();
 
     //then
     verifyInOrder([
@@ -61,7 +61,7 @@ void main() {
     CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
 
     //when
-    await presenter.getCompanies();
+    await presenter.loadCompanies();
 
     //then
     verifyInOrder([
@@ -83,7 +83,7 @@ void main() {
     CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
 
     //when
-    await presenter.getCompanies();
+    await presenter.loadCompanies();
 
     //then
     verifyInOrder([
@@ -101,7 +101,7 @@ void main() {
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
     when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
     CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
-    await presenter.getCompanies();
+    await presenter.loadCompanies();
     _resetAllMockInteractions();
 
     //when
@@ -119,7 +119,7 @@ void main() {
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
     when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value([]));
     CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
-    await presenter.getCompanies();
+    await presenter.loadCompanies();
     _resetAllMockInteractions();
 
     //when
@@ -144,7 +144,7 @@ void main() {
     //when
     when(() => mockCompaniesListProvider.get())
         .thenAnswer((realInvocation) => Future.error(InvalidResponseException()));
-    await presenter.getCompanies();
+    await presenter.loadCompanies();
 
     //then
     expect(presenter.getSearchText(), "");
@@ -155,7 +155,7 @@ void main() {
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
     when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
     CompaniesListPresenter presenter = CompaniesListPresenter.initWith(view, mockCompaniesListProvider);
-    await presenter.getCompanies();
+    await presenter.loadCompanies();
     _resetAllMockInteractions();
 
     //when

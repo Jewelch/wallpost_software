@@ -1,4 +1,3 @@
-
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 
@@ -9,7 +8,11 @@ class UserRepository {
 
   static UserRepository? _singleton;
 
-  factory UserRepository() {
+  static Future<void> initRepo() async {
+    await getInstance()._readUserData();
+  }
+
+  static UserRepository getInstance() {
     if (_singleton == null) {
       _singleton = UserRepository.initWith(SecureSharedPrefs());
     }
@@ -51,7 +54,7 @@ class UserRepository {
     _saveUsersData();
   }
 
-  void _readUserData() async {
+  Future<void> _readUserData() async {
     var usersMap = await _sharedPrefs.getMap('users');
     if (usersMap != null) {
       var usersMapList = usersMap['allUsers'];
