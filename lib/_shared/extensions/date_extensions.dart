@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:intl/intl.dart';
 
 extension DateUtils on DateTime {
