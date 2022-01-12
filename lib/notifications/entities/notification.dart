@@ -2,6 +2,8 @@ import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
+import 'notification_route.dart';
+
 abstract class Notification extends JSONInitializable {
   late String _notificationId;
   late String _objectReferenceId;
@@ -27,6 +29,10 @@ abstract class Notification extends JSONInitializable {
     }
   }
 
+  void markAsRead() {
+    _isRead = true;
+  }
+
   bool get isATaskNotification => _route.isATaskNotification();
 
   bool get isALeaveNotification => _route.isALeaveNotification();
@@ -47,31 +53,5 @@ abstract class Notification extends JSONInitializable {
 
   bool get isRead => _isRead;
 
-  set isRead(bool value) {
-    _isRead = value;
-  }
-
   DateTime get createdAt => _createdAt;
-}
-
-class NotificationRoute {
-  final String route;
-
-  NotificationRoute(this.route);
-
-  bool isATaskNotification() {
-    return route.toLowerCase().contains('task');
-  }
-
-  bool isALeaveNotification() {
-    return route.toLowerCase().contains('leave');
-  }
-
-  bool isAHandoverNotification() {
-    return route.toLowerCase().contains('handover');
-  }
-
-  bool isAnExpenseRequestNotification() {
-    return route.toLowerCase().contains('expense');
-  }
 }

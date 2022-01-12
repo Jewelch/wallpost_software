@@ -3,6 +3,17 @@ import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 class UnreadNotificationsCount extends JSONInitializable {
+  //total count
+  //unreadcompanymodulenotificationcount
+  /*
+    move
+  late num _unreadTaskNotificationsCount;
+  late num _unreadMyPortalNotificationsCount;
+  companymodulenotificationcount - will also include company id
+   */
+
+  //this class will have  List<CompanyModuleWiseNotificationCount>
+
   late num _unreadTaskNotificationsCount;
   late num _unreadMyPortalNotificationsCount;
 
@@ -19,3 +30,13 @@ class UnreadNotificationsCount extends JSONInitializable {
 
   num get totalUnreadNotifications => _unreadTaskNotificationsCount + _unreadMyPortalNotificationsCount;
 }
+/*
+
+class UnreadNotificationCountr {
+total
+List<ompanyModuleNotificationCoount>
+
+}}
+
+
+ */

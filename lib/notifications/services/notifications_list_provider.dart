@@ -5,7 +5,7 @@ import 'package:wallpost/_wp_core/company_management/services/selected_company_p
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/notifications/constants/notification_urls.dart';
 import 'package:wallpost/notifications/entities/notification.dart';
-import 'package:wallpost/notifications/services/notification_factory.dart';
+import 'package:wallpost/notifications/factories/notification_factory.dart';
 
 class NotificationsListProvider {
   final SelectedCompanyProvider _selectedCompanyProvider;

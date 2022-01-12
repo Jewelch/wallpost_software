@@ -4,6 +4,7 @@ import 'package:wallpost/notifications/entities/expense_request_notification.dar
 import 'package:wallpost/notifications/entities/handover_notification.dart';
 import 'package:wallpost/notifications/entities/leave_notification.dart';
 import 'package:wallpost/notifications/entities/notification.dart';
+import 'package:wallpost/notifications/entities/notification_route.dart';
 import 'package:wallpost/notifications/entities/task_notification.dart';
 
 class NotificationFactory {

@@ -59,7 +59,7 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
       ),
       onTap: () {
         setState(() {
-          widget.notification.isRead = true;
+          widget.notification.markAsRead();
           _readSingleNotification(widget.notification);
         });
       },

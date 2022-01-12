@@ -90,7 +90,7 @@ class _ExpenseRequestNotificationsListTileState extends State<ExpenseRequestNoti
           ],
         ),
         onTap: () {
-          widget.notification.isRead = true;
+          widget.notification.markAsRead();
           _readSingleNotification(widget.notification);
         },
       ),
