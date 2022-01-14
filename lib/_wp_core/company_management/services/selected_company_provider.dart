@@ -24,8 +24,8 @@ class SelectedCompanyProvider {
     return singleCompany;
   }
 
-  Company getSelectedCompanyForCurrentUser() {
+  Company? getSelectedCompanyForCurrentUser() {
     var currentUser = _currentUserProvider.getCurrentUser();
-    return _companyRepository.getSelectedCompanyForUser(currentUser)!;
+    return _companyRepository.getSelectedCompanyForUser(currentUser);
   }
 }

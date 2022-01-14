@@ -116,7 +116,7 @@ class _LeaveNotificationsListTileState extends State<LeaveNotificationsListTile>
 
   String _convertToDateFormat(DateTime date) {
     var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
-    final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
+    final DateFormat formatter = DateFormat(selectedCompany!.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;
   }

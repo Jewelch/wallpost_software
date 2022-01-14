@@ -13,7 +13,7 @@ class CompaniesListPresenter {
   List<CompanyListItem> _companies = [];
   var _searchText = "";
 
-  late CompanyListItem _selectedCompanyItem;
+  late CompanyListItem? _selectedCompanyItem;
 
   CompaniesListPresenter(this._view)
       : _companiesListProvider = CompaniesListProvider(),
@@ -41,21 +41,25 @@ class CompaniesListPresenter {
     var _selectedCompany =
         _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
 
-    var _selectedCompanyListItem = _companies.firstWhere(
-        (selectedCompanyListItem) =>
-            selectedCompanyListItem.id == _selectedCompany.id);
+    if (_selectedCompany != null) {
+      var _selectedCompanyListItem = _companies.firstWhere(
+          (selectedCompanyListItem) =>
+              selectedCompanyListItem.id == _selectedCompany.id);
 
-    _selectedCompanyItem = _selectedCompanyListItem;
+      _selectedCompanyItem = _selectedCompanyListItem;
 
-    _view.showSelectedCompany(_selectedCompanyListItem);
+      _view.showSelectedCompany(_selectedCompanyListItem);
+    } else {
+      _selectedCompanyItem = null;
+    }
   }
 
-  void selectCompanyAtIndex(int index) async {
+  selectCompanyAtIndex(int index) async {
     var _selectedCompany = _companies[index];
     selectCompany(_selectedCompany);
   }
 
-  void selectCompany(CompanyListItem companyListItem) async {
+  selectCompany(CompanyListItem companyListItem) async {
     _view.showLoader();
     try {
       var _ =
@@ -64,7 +68,7 @@ class CompaniesListPresenter {
       _view.onCompanyDetailsLoadedSuccessfully();
     } on WPException catch (e) {
       _view.hideLoader();
-      loadCompanies();
+      // loadCompanies();
       _view.onCompanyDetailsLoadingFailed(
           'Failed To Load Company Details', e.userReadableMessage);
     }
@@ -97,6 +101,7 @@ class CompaniesListPresenter {
           "There are no companies for the  given search criteria.");
     } else {
       _filterList.remove(_selectedCompanyItem);
+      _companies.remove(_selectedCompanyItem);
       _view.showCompanyList(_filterList);
     }
   }

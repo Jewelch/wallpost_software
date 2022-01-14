@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
@@ -80,6 +82,37 @@ void main() {
       () => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser(),
       () => view.showSelectedCompany(company1),
       () => view.showCompanyList([company2]),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('retrieving companies successfully with null selectedCompany', () async {
+    //given
+    when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
+
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenAnswer((_) => null);
+
+    CompaniesListPresenter presenter = CompaniesListPresenter.initWith(
+        view,
+        mockCompaniesListProvider,
+        mockCompanyDetailsProvider,
+        mockSelectedCompanyProvider);
+
+    //when
+    await presenter.loadCompanies();
+
+    //then
+    verifyInOrder([
+      () => mockCompaniesListProvider.isLoading,
+      () => view.showLoader(),
+      () => mockCompaniesListProvider.get(),
+      () => view.showSearchBar(),
+      () => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser(),
+      () => view.showCompanyList(_companyList),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -238,6 +271,74 @@ void main() {
       () => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser(),
       () => view.showSelectedCompany(company1),
       () => view.showCompanyList([company2]),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('select company from company list successfully', () async {
+    //given
+    when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenAnswer((_) => mockCompany);
+
+    when(() => mockCompanyDetailsProvider.getCompanyDetails("id2"))
+        .thenAnswer((_) async {});
+
+    CompaniesListPresenter presenter = CompaniesListPresenter.initWith(
+        view,
+        mockCompaniesListProvider,
+        mockCompanyDetailsProvider,
+        mockSelectedCompanyProvider);
+    await presenter.loadCompanies();
+    _resetAllMockInteractions();
+
+    //when
+
+    await presenter.selectCompanyAtIndex(0);
+
+    //then
+    verifyInOrder([
+      () => view.showLoader(),
+      () => mockCompanyDetailsProvider.getCompanyDetails("id2"),
+      () => view.hideLoader(),
+      () => view.onCompanyDetailsLoadedSuccessfully()
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('select company from company list failed', () async {
+    //given
+    when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenAnswer((_) => mockCompany);
+
+    when(() => mockCompanyDetailsProvider.getCompanyDetails("id2"))
+        .thenAnswer((invocation) => Future.error(InvalidResponseException()));
+
+    CompaniesListPresenter presenter = CompaniesListPresenter.initWith(
+        view,
+        mockCompaniesListProvider,
+        mockCompanyDetailsProvider,
+        mockSelectedCompanyProvider);
+    await presenter.loadCompanies();
+    _resetAllMockInteractions();
+
+    //when
+
+    await presenter.selectCompanyAtIndex(0);
+
+    //then
+    verifyInOrder([
+      () => view.showLoader(),
+      () => mockCompanyDetailsProvider.getCompanyDetails("id2"),
+      () => view.hideLoader(),
+      () => view.onCompanyDetailsLoadingFailed( 'Failed To Load Company Details', InvalidResponseException().userReadableMessage)
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });

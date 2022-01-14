@@ -61,7 +61,7 @@ class _HandoverNotificationsListTileState extends State<HandoverNotificationsLis
 
   String _convertToDateFormat(DateTime date) {
     var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
-    final DateFormat formatter = DateFormat(selectedCompany.dateFormat);
+    final DateFormat formatter = DateFormat(selectedCompany!.dateFormat);
     final String formatted = formatter.format(date);
     return formatted;
   }

@@ -55,7 +55,7 @@ class UnreadNotificationsCountProvider {
     var sift = Sift();
 
     try {
-      var selectedCompanyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
+      var selectedCompanyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser()!.id;
       var companiesCountMap = sift.readMapFromMap(responseMap, 'companies_count');
       var selectedCompanyCountMap = sift.readMapFromMap(companiesCountMap, selectedCompanyId);
       return selectedCompanyCountMap;
