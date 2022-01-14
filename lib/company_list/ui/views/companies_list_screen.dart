@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
@@ -7,9 +8,7 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
-import 'package:wallpost/_wp_core/company_management/services/company_details_provider.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dart';
 import 'package:wallpost/company_list/ui/views/company_list_card_with_revenue.dart';
@@ -21,11 +20,14 @@ class CompanyListScreen extends StatefulWidget {
   _CompanyListScreenState createState() => _CompanyListScreenState();
 }
 
-class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
+class _CompanyListScreenState extends State<CompanyListScreen>
+    implements CompaniesListView {
   late CompaniesListPresenter presenter;
   var _searchBarVisibilityNotifier = ItemNotifier<bool>();
+  var _showLoaderNotifier = ItemNotifier<bool>();
   var _showErrorNotifier = ItemNotifier<bool>();
   var _companiesListNotifier = ItemNotifier<List<CompanyListItem>?>();
+  var _selectedCompanyNotifier = ItemNotifier<CompanyListItem>();
   var _viewSelectorNotifier = ItemNotifier<int>();
   var _scrollController = ScrollController();
 
@@ -66,8 +68,23 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                     })
           ],
         ),
-        body: SafeArea(
-          child: Container(
+        body: Column(children: <Widget>[
+          ItemNotifiable<CompanyListItem>(
+              notifier: _selectedCompanyNotifier,
+              builder: (context, companyListItem) {
+                if (companyListItem != null) {
+                  return Container(
+                    child: CompanyListCardWithRevenue(
+                        company: companyListItem,
+                        onPressed: () =>
+                            presenter.selectCompany(companyListItem)),
+                  );
+                } else {
+                  return Container();
+                }
+              }),
+          Expanded(
+              child: Container(
             margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             decoration: BoxDecoration(
               color: AppColors.primaryContrastColor,
@@ -91,8 +108,8 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                   })
               // _buildErrorAndRetryView()
             ]),
-          ),
-        ),
+          )),
+        ]),
       ),
     );
   }
@@ -103,7 +120,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
       builder: (context, shouldShowSearchBar) {
         if (shouldShowSearchBar == true) {
           return SearchBarWithTitle(
-            title: 'Companies',
+            title: 'Choose company',
             onChanged: (searchText) => presenter.performSearch(searchText),
           );
         } else {
@@ -121,7 +138,8 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         child: RefreshIndicator(
           onRefresh: () => presenter.loadCompanies(),
           child: ListView.builder(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
             controller: _scrollController,
             itemCount: value?.length,
             itemBuilder: (context, index) {
@@ -137,9 +155,16 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   Widget _loader() {
-    return Container(
-      child: Center(child: CircularProgressIndicator()),
-    );
+    return ItemNotifiable<bool>(
+        notifier: _showLoaderNotifier,
+        builder: (context, showLoader) {
+          if (showLoader == true) {
+            return Container(
+              child: Center(child: CircularProgressIndicator()),
+            );
+          } else
+            return Container();
+        });
   }
 
   Widget _noCompaniesMessageView() {
@@ -200,35 +225,16 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
       return CompanyListCardWithRevenue(
         company: companyList[index],
         onPressed: () => {
-          _selectCompanyAtIndex(index),
+          presenter.selectCompanyAtIndex(index),
         },
       );
     } else
       return CompanyListCardWithOutRevenue(
         company: companyList[index],
         onPressed: () => {
-          _selectCompanyAtIndex(index),
+          presenter.selectCompanyAtIndex(index),
         },
       );
-  }
-
-  void _selectCompanyAtIndex(int index) async {
-    var selectedCompany = presenter.getCompanies()[index];
-    // await loader.show('');
-    try {
-      var _ =
-          await CompanyDetailsProvider().getCompanyDetails(selectedCompany.id);
-      // await loader.hide();
-      ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
-    } on WPException catch (e) {
-      // await loader.hide();
-      // Alert.showSimpleAlert(
-      //   context,
-      //   title: 'Failed To Load Company Details',
-      //   message: e.userReadableMessage,
-      //   buttonTitle: 'Okay',
-      // );
-    }
   }
 
   //MARK: View functions
@@ -236,6 +242,12 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   @override
   void showLoader() {
     _viewSelectorNotifier.notify(LOADER_VIEW);
+    _showLoaderNotifier.notify(true);
+  }
+
+  @override
+  void hideLoader() {
+    _showLoaderNotifier.notify(false);
   }
 
   @override
@@ -246,6 +258,13 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   @override
   void hideSearchBar() {
     _searchBarVisibilityNotifier.notify(false);
+  }
+
+  @override
+  void showSelectedCompany(CompanyListItem? company) {
+    if (company != null) {
+      _selectedCompanyNotifier.notify(company);
+    }
   }
 
   @override
@@ -271,5 +290,16 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     _errorMessage = message;
     _showErrorNotifier.notify(true);
     _viewSelectorNotifier.notify(ERROR_VIEW);
+  }
+
+  @override
+  void onCompanyDetailsLoadedSuccessfully() {
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(
+        DashboardScreen(), context);
+  }
+
+  @override
+  void onCompanyDetailsLoadingFailed(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 }
