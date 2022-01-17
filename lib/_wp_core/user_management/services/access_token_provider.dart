@@ -12,7 +12,7 @@ class AccessTokenProvider {
   late NetworkAdapter _networkAdapter;
 
   AccessTokenProvider() {
-    _userRepository = UserRepository();
+    _userRepository = UserRepository.getInstance();
     _deviceInfoProvider = DeviceInfoProvider();
     _networkAdapter = NetworkRequestExecutor();
   }

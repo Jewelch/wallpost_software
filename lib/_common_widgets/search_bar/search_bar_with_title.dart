@@ -42,13 +42,16 @@ class _SearchBarWithTitleState extends State<SearchBarWithTitle> {
           suffixIcon: _suffixIcon(),
           border: InputBorder.none,
         ),
-        onChanged: (text) => widget.onChanged(text),
+        onChanged: (text) {
+          widget.onChanged(text);
+          setState(() {});
+        },
       ),
     );
   }
 
   Widget _suffixIcon() {
-    if (_focusNode.hasFocus) {
+    if (_controller.text.isNotEmpty) {
       return IconButton(
         onPressed: () {
           _controller.clear();

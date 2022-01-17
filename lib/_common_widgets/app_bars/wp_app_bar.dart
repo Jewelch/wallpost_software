@@ -1,22 +1,20 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final Widget leading;
-  final Widget trailing;
+  final Widget? leading;
+  final Widget? trailing;
   final bool showCompanySwitchButton;
   final int companySwitchBadgeCount;
-  final VoidCallback onCompanySwitchButtonPressed;
+  final VoidCallback? onCompanySwitchButtonPressed;
 
   @override
   final Size preferredSize;
 
   WPAppBar({
-    this.title,
+    required this.title,
     this.leading,
     this.trailing,
     this.showCompanySwitchButton = false,
@@ -88,7 +86,9 @@ class WPAppBar extends StatelessWidget implements PreferredSizeWidget {
                 width: 20,
                 height: 20,
               ),
-              onPressed: () => onCompanySwitchButtonPressed(),
+              onPressed: () {
+                if (onCompanySwitchButtonPressed != null) onCompanySwitchButtonPressed!();
+              },
             ),
           ),
           if (companySwitchBadgeCount > 0)

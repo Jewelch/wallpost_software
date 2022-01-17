@@ -1,12 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/company_list/ui/companies_list_screen.dart';
+import 'package:wallpost/company_list/ui/views/companies_list_screen.dart';
+import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/login/ui/views/login_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -22,8 +21,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   @override
   void initState() {
     presenter = MainPresenter(this);
-    StatusBarColorSetter.setColorBasedOnLoginStatus(presenter.isLoggedIn());
-    presenter.showLandingScreen();
+    presenter.initializeReposAndShowLandingScreen();
     super.initState();
   }
 
@@ -39,26 +37,22 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   //MARK: View functions
 
   @override
+  void setStatusBarColor(bool isLoggedIn) {
+    StatusBarColorSetter.setColorBasedOnLoginStatus(isLoggedIn);
+  }
+
+  @override
   void goToLoginScreen() {
-    //waiting for build to complete
-    Future.microtask(() {
-      ScreenPresenter.present(LoginScreen(), context);
-    });
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(LoginScreen(), context);
   }
 
   @override
   void goToCompaniesListScreen() {
-    //waiting for build to complete
-    Future.microtask(() {
-      ScreenPresenter.present(CompanyListScreen(), context);
-    });
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(CompanyListScreen(), context);
   }
 
   @override
   void goToDashboardScreen() {
-    //waiting for build to complete
-    Future.microtask(() {
-      log("navigated to dashboard");
-    });
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
   }
 }

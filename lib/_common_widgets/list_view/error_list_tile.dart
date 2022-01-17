@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
@@ -7,7 +5,7 @@ class ErrorListTile extends StatelessWidget {
   final String message;
   final VoidCallback onTap;
 
-  ErrorListTile(this.message, {this.onTap});
+  ErrorListTile(this.message, {required this.onTap});
 
   @override
   Widget build(BuildContext context) {

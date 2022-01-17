@@ -43,7 +43,7 @@ class ForgotPasswordSuccessScreen extends StatelessWidget {
               title: 'Go back to login',
               color: AppColors.successColor,
               onPressed: () {
-                ScreenPresenter.present(
+                ScreenPresenter.presentAndRemoveAllPreviousScreens(
                   LoginScreen(),
                   context,
                   slideDirection: SlideDirection.fromLeft,

@@ -5,7 +5,7 @@ class CurrentUserProvider {
   late UserRepository _userRepository;
 
   CurrentUserProvider() {
-    _userRepository = UserRepository();
+    _userRepository = UserRepository.getInstance();
   }
 
   CurrentUserProvider.initWith(UserRepository userRepository) {

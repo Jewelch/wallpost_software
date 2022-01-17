@@ -28,7 +28,7 @@ class Alert {
     );
   }
 
-  Future showSimpleAlertWithButtons({
+  static Future showSimpleAlertWithButtons({
     required BuildContext context,
     required String title,
     required String message,

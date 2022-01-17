@@ -2,21 +2,33 @@ import 'dart:core';
 
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/start_up/repository_initializer.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 
 class MainPresenter {
   final MainView _view;
+  final RepositoryInitializer _repositoryInitializer;
   final CurrentUserProvider _currentUserProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
 
   MainPresenter(this._view)
-      : _currentUserProvider = CurrentUserProvider(),
+      : _repositoryInitializer = RepositoryInitializer(),
+        _currentUserProvider = CurrentUserProvider(),
         _selectedCompanyProvider = SelectedCompanyProvider();
 
-  MainPresenter.initWith(this._view, this._currentUserProvider, this._selectedCompanyProvider);
+  MainPresenter.initWith(
+    this._view,
+    this._repositoryInitializer,
+    this._currentUserProvider,
+    this._selectedCompanyProvider,
+  );
 
-  Future<void> showLandingScreen() async {
-    if (isLoggedIn() == false) {
+  Future<void> initializeReposAndShowLandingScreen() async {
+    await _repositoryInitializer.initializeRepos();
+    var isLoggedIn = _currentUserProvider.isLoggedIn();
+
+    _view.setStatusBarColor(isLoggedIn);
+    if (isLoggedIn == false) {
       _view.goToLoginScreen();
     } else {
       _showLandingScreenForLoggedInUser();
@@ -24,15 +36,11 @@ class MainPresenter {
   }
 
   void _showLandingScreenForLoggedInUser() {
-    if (_selectedCompanyProvider.isCompanySelected() == false) {
-      _view.goToCompaniesListScreen();
-    } else {
+    if ((_selectedCompanyProvider.isCompanySelected() == true)) {
       _view.goToDashboardScreen();
+    } else {
+      _view.goToCompaniesListScreen();
     }
-  }
-
-  bool isLoggedIn() {
-    return _currentUserProvider.isLoggedIn();
   }
 }
 
