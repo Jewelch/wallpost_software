@@ -9,26 +9,31 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
   late String _name;
   late String _currencyCode;
   late num _approvalCount;
-  late num _alertCount;
+
+  //late num _alertCount;
   late num _notificationCount;
   late String _actualSalesAmount;
   late num _achievedSalesPercent;
-  late bool _shouldShowRevenue;
+  //late bool _shouldShowRevenue;
 
-  CompanyListItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  CompanyListItem.fromJson(Map<String, dynamic> jsonMap)
+      : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
-      _id = '${sift.readNumberFromMap(jsonMap, 'companyId')}';
-      _name = sift.readStringFromMap(jsonMap, 'name');
+      _id = '${sift.readNumberFromMap(jsonMap, 'company_id')}';
+      _name = sift.readStringFromMap(jsonMap, 'company_name');
       _currencyCode = sift.readStringFromMap(jsonMap, 'currency');
-      _approvalCount = sift.readNumberFromMap(jsonMap, 'approvals');
-      _alertCount = sift.readNumberFromMap(jsonMap, 'alerts');
+      _approvalCount = sift.readNumberFromMap(jsonMap, 'approval_count');
+      //_alertCount = sift.readNumberFromMap(jsonMap, 'alerts');
       _notificationCount = sift.readNumberFromMap(jsonMap, 'notifications');
-      _actualSalesAmount = sift.readStringFromMap(jsonMap, 'actual_revenue_display');
-      _achievedSalesPercent = sift.readNumberFromMap(jsonMap, 'overall_revenue');
-      _shouldShowRevenue = sift.readNumberFromMap(jsonMap, 'show_revenue') == 0 ? false : true;
+      _actualSalesAmount =
+          sift.readStringFromMap(jsonMap, 'actual_revenue_display');
+      _achievedSalesPercent =
+          sift.readNumberFromMap(jsonMap, 'overall_revenue');
+     // _shouldShowRevenue = sift.readNumberFromMap(jsonMap, 'show_revenue') == 0 ? false : true;
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast CompanyListItem response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast CompanyListItem response. Error message - ${e.errorMessage}');
     }
   }
 
@@ -36,14 +41,14 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> jsonMap = {
       'actual_revenue_display': _actualSalesAmount,
-      'companyId': int.parse(_id),
-      'name': _name,
+      'company_id': int.parse(_id),
+      'company_name': _name,
       'currency': _currencyCode,
-      'approvals': _approvalCount,
-      'alerts': _alertCount,
+      'approval_count': _approvalCount,
+      // 'alerts': _alertCount,
       'notifications': _notificationCount,
       'overall_revenue': _achievedSalesPercent,
-      'show_revenue': _shouldShowRevenue ? 1 : 0,
+      //  'show_revenue': _shouldShowRevenue ? 1 : 0,
     };
     return jsonMap;
   }
@@ -56,7 +61,7 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
 
   num get approvalCount => _approvalCount;
 
-  num get alertCount => _alertCount;
+  //num get alertCount => _alertCount;
 
   num get notificationCount => _notificationCount;
 
@@ -64,5 +69,5 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
 
   num get achievedSalesPercent => _achievedSalesPercent;
 
-  bool get shouldShowRevenue => _shouldShowRevenue;
+ // bool get shouldShowRevenue => _shouldShowRevenue;
 }

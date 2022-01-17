@@ -25,4 +25,8 @@ abstract class CompaniesListView {
 
   void showSelectedCompany(CompanyListItem? company);
 
+  void showLogoutAlert(String title, String message);
+
+  void logout();
+
 }

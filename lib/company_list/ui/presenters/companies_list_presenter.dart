@@ -3,6 +3,8 @@ import 'package:wallpost/_wp_core/company_management/entities/company_list_item.
 import 'package:wallpost/_wp_core/company_management/services/companies_list_provider.dart';
 import 'package:wallpost/_wp_core/company_management/services/company_details_provider.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
+import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 
 class CompaniesListPresenter {
@@ -10,7 +12,10 @@ class CompaniesListPresenter {
   final CompaniesListProvider _companiesListProvider;
   final CompanyDetailsProvider _companyDetailsProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
+  final CurrentUserProvider _currentUserProvider;
+  final UserRemover _userRemover;
   List<CompanyListItem> _companies = [];
+  List<CompanyListItem> _filterList = [];
   var _searchText = "";
 
   late CompanyListItem? _selectedCompanyItem;
@@ -18,10 +23,17 @@ class CompaniesListPresenter {
   CompaniesListPresenter(this._view)
       : _companiesListProvider = CompaniesListProvider(),
         _companyDetailsProvider = CompanyDetailsProvider(),
-        _selectedCompanyProvider = SelectedCompanyProvider();
+        _selectedCompanyProvider = SelectedCompanyProvider(),
+        _currentUserProvider = CurrentUserProvider(),
+        _userRemover = UserRemover();
 
-  CompaniesListPresenter.initWith(this._view, this._companiesListProvider,
-      this._companyDetailsProvider, this._selectedCompanyProvider);
+  CompaniesListPresenter.initWith(
+      this._view,
+      this._companiesListProvider,
+      this._companyDetailsProvider,
+      this._selectedCompanyProvider,
+      this._currentUserProvider,
+      this._userRemover);
 
   Future<void> loadCompanies() async {
     if (_companiesListProvider.isLoading) return;
@@ -31,9 +43,11 @@ class CompaniesListPresenter {
     try {
       var companies = await _companiesListProvider.get();
       _handleResponse(companies);
+      _view.hideLoader();
     } on WPException catch (e) {
       _clearSearchTextAndHideSearchBar();
       _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
+      _view.hideLoader();
     }
   }
 
@@ -55,7 +69,7 @@ class CompaniesListPresenter {
   }
 
   selectCompanyAtIndex(int index) async {
-    var _selectedCompany = _companies[index];
+    var _selectedCompany = _filterList[index];
     selectCompany(_selectedCompany);
   }
 
@@ -68,7 +82,6 @@ class CompaniesListPresenter {
       _view.onCompanyDetailsLoadedSuccessfully();
     } on WPException catch (e) {
       _view.hideLoader();
-      // loadCompanies();
       _view.onCompanyDetailsLoadingFailed(
           'Failed To Load Company Details', e.userReadableMessage);
     }
@@ -88,7 +101,7 @@ class CompaniesListPresenter {
   }
 
   void _showFilteredCompanies() {
-    List<CompanyListItem> _filterList = [];
+    _filterList.clear();
     for (int i = 0; i < _companies.length; i++) {
       var item = _companies[i];
       if (item.name.toLowerCase().contains(_searchText.toLowerCase())) {
@@ -133,5 +146,16 @@ class CompaniesListPresenter {
 
   List<CompanyListItem> getCompanies() {
     return _companies;
+  }
+
+  // remove user from cache and log out
+  logout() {
+    _view.showLogoutAlert("Logout", "Are you sure you want to log out");
+  }
+
+  void confirmLogout() {
+    var _currentUser = _currentUserProvider.getCurrentUser();
+    _userRemover.removeUser(_currentUser);
+    _view.logout();
   }
 }

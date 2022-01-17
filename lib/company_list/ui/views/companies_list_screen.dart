@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
+import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
@@ -14,6 +17,7 @@ import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dar
 import 'package:wallpost/company_list/ui/views/company_list_card_with_revenue.dart';
 import 'package:wallpost/company_list/ui/views/company_list_card_without_revenue.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
+import 'package:wallpost/login/ui/views/login_screen.dart';
 
 class CompanyListScreen extends StatefulWidget {
   @override
@@ -24,7 +28,6 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     implements CompaniesListView {
   late CompaniesListPresenter presenter;
   var _searchBarVisibilityNotifier = ItemNotifier<bool>();
-  var _showLoaderNotifier = ItemNotifier<bool>();
   var _showErrorNotifier = ItemNotifier<bool>();
   var _companiesListNotifier = ItemNotifier<List<CompanyListItem>?>();
   var _selectedCompanyNotifier = ItemNotifier<CompanyListItem>();
@@ -39,11 +42,13 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   static const NO_COMPANIES_VIEW = 2;
   static const NO_SEARCH_RESULTS_VIEW = 3;
   static const ERROR_VIEW = 4;
+  late Loader loader;
 
   @override
   void initState() {
     presenter = CompaniesListPresenter(this);
     presenter.loadCompanies();
+    loader = Loader(context);
     super.initState();
   }
 
@@ -59,13 +64,14 @@ class _CompanyListScreenState extends State<CompanyListScreen>
             CircularIconButton(
                 iconName: 'assets/icons/menu_icon.svg',
                 iconSize: 12,
-                onPressed: () => {
-                      // ScreenPresenter.present(
-                      //   LeftMenuScreen(),
-                      //   context,
-                      //   slideDirection: SlideDirection.fromLeft,
-                      // )
-                    })
+                onPressed: () => presenter.logout()
+
+              // ScreenPresenter.present(
+              //   LeftMenuScreen(),
+              //   context,
+              //   slideDirection: SlideDirection.fromLeft,
+              // )
+            )
           ],
         ),
         body: Column(children: <Widget>[
@@ -85,30 +91,32 @@ class _CompanyListScreenState extends State<CompanyListScreen>
               }),
           Expanded(
               child: Container(
-            margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-            decoration: BoxDecoration(
-              color: AppColors.primaryContrastColor,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Column(children: [
-              _searchBar(),
-              ItemNotifiable<int>(
-                  notifier: _viewSelectorNotifier,
-                  builder: (context, value) {
-                    if (value == LOADER_VIEW) {
-                      return Expanded(child: _loader());
-                    } else if (value == COMPANIES_VIEW) {
-                      return Expanded(child: _getCompanies());
-                    } else if (value == NO_COMPANIES_VIEW) {
-                      return Expanded(child: _noCompaniesMessageView());
-                    } else if (value == NO_SEARCH_RESULTS_VIEW) {
-                      return Expanded(child: _noSearchResultsMessageView());
-                    }
-                    return Expanded(child: _buildErrorAndRetryView());
-                  })
-              // _buildErrorAndRetryView()
-            ]),
-          )),
+                margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryContrastColor,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: Column(children: [
+                  _searchBar(),
+                  ItemNotifiable<int>(
+                      notifier: _viewSelectorNotifier,
+                      builder: (context, value) {
+                        if
+                        // (value == LOADER_VIEW) {
+                        //   return Expanded(child: loader());
+                        // } else if
+                        (value == COMPANIES_VIEW) {
+                          return Expanded(child: _getCompanies());
+                        } else if (value == NO_COMPANIES_VIEW) {
+                          return Expanded(child: _noCompaniesMessageView());
+                        } else if (value == NO_SEARCH_RESULTS_VIEW) {
+                          return Expanded(child: _noSearchResultsMessageView());
+                        }
+                        return Expanded(child: _buildErrorAndRetryView());
+                      })
+                  // _buildErrorAndRetryView()
+                ]),
+              )),
         ]),
       ),
     );
@@ -133,38 +141,26 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   Widget _getCompanies() {
     return ItemNotifiable<List<CompanyListItem>>(
       notifier: _companiesListNotifier,
-      builder: (context, value) => Container(
-        padding: EdgeInsets.only(top: 8, bottom: 8),
-        child: RefreshIndicator(
-          onRefresh: () => presenter.loadCompanies(),
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics()),
-            controller: _scrollController,
-            itemCount: value?.length,
-            itemBuilder: (context, index) {
-              if (value != null) {
-                return _getCompanyCard(index, value);
-              } else
-                return Container();
-            },
+      builder: (context, value) =>
+          Container(
+            padding: EdgeInsets.only(top: 8, bottom: 8),
+            child: RefreshIndicator(
+              onRefresh: () => presenter.loadCompanies(),
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                controller: _scrollController,
+                itemCount: value?.length,
+                itemBuilder: (context, index) {
+                  if (value != null) {
+                    return _getCompanyCard(index, value);
+                  } else
+                    return Container();
+                },
+              ),
+            ),
           ),
-        ),
-      ),
     );
-  }
-
-  Widget _loader() {
-    return ItemNotifiable<bool>(
-        notifier: _showLoaderNotifier,
-        builder: (context, showLoader) {
-          if (showLoader == true) {
-            return Container(
-              child: Center(child: CircularProgressIndicator()),
-            );
-          } else
-            return Container();
-        });
   }
 
   Widget _noCompaniesMessageView() {
@@ -173,10 +169,10 @@ class _CompanyListScreenState extends State<CompanyListScreen>
       child: Container(
         child: Center(
             child: Text(
-          _noCompaniesMessage,
-          textAlign: TextAlign.center,
-          style: TextStyles.failureMessageTextStyle,
-        )),
+              _noCompaniesMessage,
+              textAlign: TextAlign.center,
+              style: TextStyles.failureMessageTextStyle,
+            )),
       ),
     );
   }
@@ -185,10 +181,10 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     return Container(
       child: Center(
           child: Text(
-        _noSearchResultsMessage,
-        textAlign: TextAlign.center,
-        style: TextStyles.failureMessageTextStyle,
-      )),
+            _noSearchResultsMessage,
+            textAlign: TextAlign.center,
+            style: TextStyles.failureMessageTextStyle,
+          )),
     );
   }
 
@@ -221,33 +217,38 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   }
 
   Widget _getCompanyCard(int index, List<CompanyListItem> companyList) {
-    if (companyList[index].shouldShowRevenue) {
-      return CompanyListCardWithRevenue(
-        company: companyList[index],
-        onPressed: () => {
-          presenter.selectCompanyAtIndex(index),
-        },
-      );
-    } else
-      return CompanyListCardWithOutRevenue(
-        company: companyList[index],
-        onPressed: () => {
-          presenter.selectCompanyAtIndex(index),
-        },
-      );
+    //if (companyList[index].shouldShowRevenue) {
+    return CompanyListCardWithRevenue(
+      company: companyList[index],
+      onPressed: () =>
+      {
+        presenter.selectCompanyAtIndex(index),
+      },
+    );
+    // need to check with specifications
+    // } else
+    //   return CompanyListCardWithOutRevenue(
+    //     company: companyList[index],
+    //     onPressed: () =>
+    //     {
+    //       presenter.selectCompanyAtIndex(index),
+    //     },
+    //   );
   }
+
 
   //MARK: View functions
 
   @override
   void showLoader() {
-    _viewSelectorNotifier.notify(LOADER_VIEW);
-    _showLoaderNotifier.notify(true);
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      loader.showLoadingIndicator("Loading");
+    });
   }
 
   @override
   void hideLoader() {
-    _showLoaderNotifier.notify(false);
+    loader.hideOpenDialog();
   }
 
   @override
@@ -301,5 +302,19 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   @override
   void onCompanyDetailsLoadingFailed(String title, String message) {
     Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
+  void showLogoutAlert(String title, String message) {
+    Alert.showSimpleAlert(
+        context: context, title: title, message: message, onPressed: () {
+      presenter.confirmLogout();
+    });
+  }
+
+  @override
+  void logout() {
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(
+        LoginScreen(), context);
   }
 }

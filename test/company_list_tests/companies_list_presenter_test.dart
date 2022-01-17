@@ -7,6 +7,8 @@ import 'package:wallpost/_wp_core/company_management/entities/company_list_item.
 import 'package:wallpost/_wp_core/company_management/services/companies_list_provider.dart';
 import 'package:wallpost/_wp_core/company_management/services/company_details_provider.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
+import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dart';
 
@@ -24,11 +26,18 @@ class MockCompanyDetailsProvider extends Mock
 class MockSelectedCompanyProvider extends Mock
     implements SelectedCompanyProvider {}
 
+class MockCurrentUserProvider extends Mock implements CurrentUserProvider {}
+
+class MockUserRemover extends Mock implements UserRemover {}
+
 void main() {
   var view = MockCompaniesListViewView();
   var mockCompaniesListProvider = MockCompaniesListProvider();
   var mockCompanyDetailsProvider = MockCompanyDetailsProvider();
   var mockSelectedCompanyProvider = MockSelectedCompanyProvider();
+  var mockCurrentUserProvider = MockCurrentUserProvider();
+  var mockUserRemover = MockUserRemover();
+
   var company1 = MockCompanyListItem();
   var company2 = MockCompanyListItem();
   var mockCompany = MockCompany();
@@ -68,7 +77,9 @@ void main() {
         view,
         mockCompaniesListProvider,
         mockCompanyDetailsProvider,
-        mockSelectedCompanyProvider);
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider,
+        mockUserRemover);
 
     //when
     await presenter.loadCompanies();
@@ -82,6 +93,7 @@ void main() {
       () => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser(),
       () => view.showSelectedCompany(company1),
       () => view.showCompanyList([company2]),
+      () => view.hideLoader()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -100,7 +112,9 @@ void main() {
         view,
         mockCompaniesListProvider,
         mockCompanyDetailsProvider,
-        mockSelectedCompanyProvider);
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider,
+        mockUserRemover);
 
     //when
     await presenter.loadCompanies();
@@ -113,6 +127,7 @@ void main() {
       () => view.showSearchBar(),
       () => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser(),
       () => view.showCompanyList(_companyList),
+      () => view.hideLoader()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -126,7 +141,9 @@ void main() {
         view,
         mockCompaniesListProvider,
         mockCompanyDetailsProvider,
-        mockSelectedCompanyProvider);
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider,
+        mockUserRemover);
 
     //when
     await presenter.loadCompanies();
@@ -139,6 +156,7 @@ void main() {
       () => view.hideSearchBar(),
       () => view.showNoCompaniesMessage(
           "There are no companies.\n\nTap here to reload"),
+      () => view.hideLoader()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -153,7 +171,9 @@ void main() {
         view,
         mockCompaniesListProvider,
         mockCompanyDetailsProvider,
-        mockSelectedCompanyProvider);
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider,
+        mockUserRemover);
 
     //when
     await presenter.loadCompanies();
@@ -166,6 +186,7 @@ void main() {
       () => view.hideSearchBar(),
       () => view.showErrorMessage(
           "${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
+      () => view.hideLoader(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -181,7 +202,9 @@ void main() {
         view,
         mockCompaniesListProvider,
         mockCompanyDetailsProvider,
-        mockSelectedCompanyProvider);
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider,
+        mockUserRemover);
     await presenter.loadCompanies();
     _resetAllMockInteractions();
 
@@ -204,7 +227,10 @@ void main() {
         view,
         mockCompaniesListProvider,
         mockCompanyDetailsProvider,
-        mockSelectedCompanyProvider);
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider,
+        mockUserRemover);
+
     await presenter.loadCompanies();
     _resetAllMockInteractions();
 
@@ -225,7 +251,10 @@ void main() {
         view,
         mockCompaniesListProvider,
         mockCompanyDetailsProvider,
-        mockSelectedCompanyProvider);
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider,
+        mockUserRemover);
+
     //step 1 - load companies
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
     when(() => mockCompaniesListProvider.get())
@@ -254,7 +283,10 @@ void main() {
         view,
         mockCompaniesListProvider,
         mockCompanyDetailsProvider,
-        mockSelectedCompanyProvider);
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider,
+        mockUserRemover);
+
     await presenter.loadCompanies();
     _resetAllMockInteractions();
 
@@ -271,6 +303,7 @@ void main() {
       () => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser(),
       () => view.showSelectedCompany(company1),
       () => view.showCompanyList([company2]),
+      () => view.hideLoader()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -291,7 +324,9 @@ void main() {
         view,
         mockCompaniesListProvider,
         mockCompanyDetailsProvider,
-        mockSelectedCompanyProvider);
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider,
+        mockUserRemover);
     await presenter.loadCompanies();
     _resetAllMockInteractions();
 
@@ -325,7 +360,10 @@ void main() {
         view,
         mockCompaniesListProvider,
         mockCompanyDetailsProvider,
-        mockSelectedCompanyProvider);
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider,
+        mockUserRemover);
+
     await presenter.loadCompanies();
     _resetAllMockInteractions();
 
@@ -338,7 +376,8 @@ void main() {
       () => view.showLoader(),
       () => mockCompanyDetailsProvider.getCompanyDetails("id2"),
       () => view.hideLoader(),
-      () => view.onCompanyDetailsLoadingFailed( 'Failed To Load Company Details', InvalidResponseException().userReadableMessage)
+      () => view.onCompanyDetailsLoadingFailed('Failed To Load Company Details',
+          InvalidResponseException().userReadableMessage)
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
