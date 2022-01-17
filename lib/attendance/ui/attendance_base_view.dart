@@ -262,24 +262,24 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
   }
 
   void _doPunchIn() async {
-    await _loader.show('Punch In ..');
-
-    AttendanceLocation _attendanceLocation = await _getLocation();
-    try {
-      var _ = await PunchInMarker().punchIn(_attendanceLocation, isLocationValid: true);
-      await _loader.hide();
-
-      setState(() {});
-    } on WPException catch (error) {
-      await _loader.hide();
-      // Alert.showSimpleAlert(
-      //   context,
-      //   title: 'Failed To Punch In',
-      //   message: error.userReadableMessage,
-      //   buttonTitle: 'Okay',
-      // );
-      setState(() {});
-    }
+    // await _loader.show('Punch In ..');
+    //
+    // AttendanceLocation _attendanceLocation = await _getLocation();
+    // try {
+    //   var _ = await PunchInMarker().punchIn(_attendanceLocation, isLocationValid: true);
+    //   await _loader.hide();
+    //
+    //   setState(() {});
+    // } on WPException catch (error) {
+    //   await _loader.hide();
+    //   // Alert.showSimpleAlert(
+    //   //   context,
+    //   //   title: 'Failed To Punch In',
+    //   //   message: error.userReadableMessage,
+    //   //   buttonTitle: 'Okay',
+    //   // );
+    //   setState(() {});
+    // }
   }
 
   _showPunchPotConfirmationAlert() {
@@ -295,24 +295,24 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
   }
 
   void _doPunchOut() async {
-    await _loader.show('Punch Out..');
-
-    AttendanceLocation _attendanceLocation = await _getLocation();
-    try {
-      var _ = await PunchOutMarker().punchOut(attendanceDetail, _attendanceLocation, isLocationValid: false);
-      await _loader.hide();
-
-      setState(() {});
-    } on WPException catch (error) {
-      await _loader.hide();
-      // Alert.showSimpleAlert(
-      //   context,
-      //   title: 'Failed To Punch Out',
-      //   message: error.userReadableMessage,
-      //   buttonTitle: 'Okay',
-      // );
-      setState(() {});
-    }
+    // await _loader.show('Punch Out..');
+    //
+    // AttendanceLocation _attendanceLocation = await _getLocation();
+    // try {
+    //   var _ = await PunchOutMarker().punchOut(attendanceDetail, _attendanceLocation, isLocationValid: false);
+    //   await _loader.hide();
+    //
+    //   setState(() {});
+    // } on WPException catch (error) {
+    //   await _loader.hide();
+    //   // Alert.showSimpleAlert(
+    //   //   context,
+    //   //   title: 'Failed To Punch Out',
+    //   //   message: error.userReadableMessage,
+    //   //   buttonTitle: 'Okay',
+    //   // );
+    //   setState(() {});
+    // }
   }
 
   Future<AttendanceLocation> _getLocation() async {

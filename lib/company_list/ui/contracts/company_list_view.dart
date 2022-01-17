@@ -1,8 +1,6 @@
-import 'package:wallpost/_wp_core/company_management/entities/company.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
 
 abstract class CompaniesListView {
-  
   void showLoader();
 
   void hideLoader();
@@ -26,7 +24,4 @@ abstract class CompaniesListView {
   void showSelectedCompany(CompanyListItem? company);
 
   void showLogoutAlert(String title, String message);
-
-  void logout();
-
 }

@@ -3,8 +3,6 @@ import 'package:wallpost/_wp_core/company_management/entities/company_list_item.
 import 'package:wallpost/_wp_core/company_management/services/companies_list_provider.dart';
 import 'package:wallpost/_wp_core/company_management/services/company_details_provider.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
-import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 
 class CompaniesListPresenter {
@@ -12,8 +10,6 @@ class CompaniesListPresenter {
   final CompaniesListProvider _companiesListProvider;
   final CompanyDetailsProvider _companyDetailsProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
-  final CurrentUserProvider _currentUserProvider;
-  final UserRemover _userRemover;
   List<CompanyListItem> _companies = [];
   List<CompanyListItem> _filterList = [];
   var _searchText = "";
@@ -23,17 +19,14 @@ class CompaniesListPresenter {
   CompaniesListPresenter(this._view)
       : _companiesListProvider = CompaniesListProvider(),
         _companyDetailsProvider = CompanyDetailsProvider(),
-        _selectedCompanyProvider = SelectedCompanyProvider(),
-        _currentUserProvider = CurrentUserProvider(),
-        _userRemover = UserRemover();
+        _selectedCompanyProvider = SelectedCompanyProvider();
 
   CompaniesListPresenter.initWith(
-      this._view,
-      this._companiesListProvider,
-      this._companyDetailsProvider,
-      this._selectedCompanyProvider,
-      this._currentUserProvider,
-      this._userRemover);
+    this._view,
+    this._companiesListProvider,
+    this._companyDetailsProvider,
+    this._selectedCompanyProvider,
+  );
 
   Future<void> loadCompanies() async {
     if (_companiesListProvider.isLoading) return;
@@ -52,13 +45,11 @@ class CompaniesListPresenter {
   }
 
   void loadSelectedCompany() {
-    var _selectedCompany =
-        _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
+    var _selectedCompany = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
 
     if (_selectedCompany != null) {
-      var _selectedCompanyListItem = _companies.firstWhere(
-          (selectedCompanyListItem) =>
-              selectedCompanyListItem.id == _selectedCompany.id);
+      var _selectedCompanyListItem =
+          _companies.firstWhere((selectedCompanyListItem) => selectedCompanyListItem.id == _selectedCompany.id);
 
       _selectedCompanyItem = _selectedCompanyListItem;
 
@@ -76,14 +67,12 @@ class CompaniesListPresenter {
   selectCompany(CompanyListItem companyListItem) async {
     _view.showLoader();
     try {
-      var _ =
-          await _companyDetailsProvider.getCompanyDetails(companyListItem.id);
+      var _ = await _companyDetailsProvider.getCompanyDetails(companyListItem.id);
       _view.hideLoader();
       _view.onCompanyDetailsLoadedSuccessfully();
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.onCompanyDetailsLoadingFailed(
-          'Failed To Load Company Details', e.userReadableMessage);
+      _view.onCompanyDetailsLoadingFailed('Failed To load company details', e.userReadableMessage);
     }
   }
 
@@ -95,8 +84,7 @@ class CompaniesListPresenter {
       _showFilteredCompanies();
     } else {
       _clearSearchTextAndHideSearchBar();
-      _view.showNoCompaniesMessage(
-          "There are no companies.\n\nTap here to reload");
+      _view.showNoCompaniesMessage("There are no companies.\n\nTap here to reload");
     }
   }
 
@@ -110,8 +98,7 @@ class CompaniesListPresenter {
     }
 
     if (_filterList.isEmpty) {
-      _view.showNoSearchResultsMessage(
-          "There are no companies for the  given search criteria.");
+      _view.showNoSearchResultsMessage("There are no companies for the  given search criteria.");
     } else {
       _filterList.remove(_selectedCompanyItem);
       _companies.remove(_selectedCompanyItem);
@@ -148,14 +135,7 @@ class CompaniesListPresenter {
     return _companies;
   }
 
-  // remove user from cache and log out
   logout() {
-    _view.showLogoutAlert("Logout", "Are you sure you want to log out");
-  }
-
-  void confirmLogout() {
-    var _currentUser = _currentUserProvider.getCurrentUser();
-    _userRemover.removeUser(_currentUser);
-    _view.logout();
+    _view.showLogoutAlert("Logout", "Are you sure you want to log out?");
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
@@ -10,22 +9,20 @@ import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dart';
 import 'package:wallpost/company_list/ui/views/company_list_card_with_revenue.dart';
-import 'package:wallpost/company_list/ui/views/company_list_card_without_revenue.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
-import 'package:wallpost/login/ui/views/login_screen.dart';
 
 class CompanyListScreen extends StatefulWidget {
   @override
   _CompanyListScreenState createState() => _CompanyListScreenState();
 }
 
-class _CompanyListScreenState extends State<CompanyListScreen>
-    implements CompaniesListView {
+class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
   late CompaniesListPresenter presenter;
   var _searchBarVisibilityNotifier = ItemNotifier<bool>();
   var _showErrorNotifier = ItemNotifier<bool>();
@@ -37,7 +34,6 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   String _noCompaniesMessage = "";
   String _noSearchResultsMessage = "";
   String _errorMessage = "";
-  static const LOADER_VIEW = 0;
   static const COMPANIES_VIEW = 1;
   static const NO_COMPANIES_VIEW = 2;
   static const NO_SEARCH_RESULTS_VIEW = 3;
@@ -61,17 +57,13 @@ class _CompanyListScreenState extends State<CompanyListScreen>
         appBar: SimpleAppBar(
           title: 'Group Dashboard',
           leadingButtons: [
-            CircularIconButton(
-                iconName: 'assets/icons/menu_icon.svg',
-                iconSize: 12,
-                onPressed: () => presenter.logout()
-
-              // ScreenPresenter.present(
-              //   LeftMenuScreen(),
-              //   context,
-              //   slideDirection: SlideDirection.fromLeft,
-              // )
-            )
+            CircularIconButton(iconName: 'assets/icons/menu_icon.svg', iconSize: 12, onPressed: () => presenter.logout()
+                // ScreenPresenter.present(
+                //   LeftMenuScreen(),
+                //   context,
+                //   slideDirection: SlideDirection.fromLeft,
+                // )
+                )
           ],
         ),
         body: Column(children: <Widget>[
@@ -81,9 +73,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                 if (companyListItem != null) {
                   return Container(
                     child: CompanyListCardWithRevenue(
-                        company: companyListItem,
-                        onPressed: () =>
-                            presenter.selectCompany(companyListItem)),
+                        company: companyListItem, onPressed: () => presenter.selectCompany(companyListItem)),
                   );
                 } else {
                   return Container();
@@ -91,32 +81,27 @@ class _CompanyListScreenState extends State<CompanyListScreen>
               }),
           Expanded(
               child: Container(
-                margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryContrastColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Column(children: [
-                  _searchBar(),
-                  ItemNotifiable<int>(
-                      notifier: _viewSelectorNotifier,
-                      builder: (context, value) {
-                        if
-                        // (value == LOADER_VIEW) {
-                        //   return Expanded(child: loader());
-                        // } else if
-                        (value == COMPANIES_VIEW) {
-                          return Expanded(child: _getCompanies());
-                        } else if (value == NO_COMPANIES_VIEW) {
-                          return Expanded(child: _noCompaniesMessageView());
-                        } else if (value == NO_SEARCH_RESULTS_VIEW) {
-                          return Expanded(child: _noSearchResultsMessageView());
-                        }
-                        return Expanded(child: _buildErrorAndRetryView());
-                      })
-                  // _buildErrorAndRetryView()
-                ]),
-              )),
+            margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            decoration: BoxDecoration(
+              color: AppColors.primaryContrastColor,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Column(children: [
+              _searchBar(),
+              ItemNotifiable<int>(
+                  notifier: _viewSelectorNotifier,
+                  builder: (context, value) {
+                    if (value == COMPANIES_VIEW) {
+                      return Expanded(child: _getCompanies());
+                    } else if (value == NO_COMPANIES_VIEW) {
+                      return Expanded(child: _noCompaniesMessageView());
+                    } else if (value == NO_SEARCH_RESULTS_VIEW) {
+                      return Expanded(child: _noSearchResultsMessageView());
+                    }
+                    return Expanded(child: _buildErrorAndRetryView());
+                  })
+            ]),
+          )),
         ]),
       ),
     );
@@ -141,25 +126,23 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   Widget _getCompanies() {
     return ItemNotifiable<List<CompanyListItem>>(
       notifier: _companiesListNotifier,
-      builder: (context, value) =>
-          Container(
-            padding: EdgeInsets.only(top: 8, bottom: 8),
-            child: RefreshIndicator(
-              onRefresh: () => presenter.loadCompanies(),
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                controller: _scrollController,
-                itemCount: value?.length,
-                itemBuilder: (context, index) {
-                  if (value != null) {
-                    return _getCompanyCard(index, value);
-                  } else
-                    return Container();
-                },
-              ),
-            ),
+      builder: (context, value) => Container(
+        padding: EdgeInsets.only(top: 8, bottom: 8),
+        child: RefreshIndicator(
+          onRefresh: () => presenter.loadCompanies(),
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            controller: _scrollController,
+            itemCount: value?.length,
+            itemBuilder: (context, index) {
+              if (value != null) {
+                return _getCompanyCard(index, value);
+              } else
+                return Container();
+            },
           ),
+        ),
+      ),
     );
   }
 
@@ -169,10 +152,10 @@ class _CompanyListScreenState extends State<CompanyListScreen>
       child: Container(
         child: Center(
             child: Text(
-              _noCompaniesMessage,
-              textAlign: TextAlign.center,
-              style: TextStyles.failureMessageTextStyle,
-            )),
+          _noCompaniesMessage,
+          textAlign: TextAlign.center,
+          style: TextStyles.failureMessageTextStyle,
+        )),
       ),
     );
   }
@@ -181,10 +164,10 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     return Container(
       child: Center(
           child: Text(
-            _noSearchResultsMessage,
-            textAlign: TextAlign.center,
-            style: TextStyles.failureMessageTextStyle,
-          )),
+        _noSearchResultsMessage,
+        textAlign: TextAlign.center,
+        style: TextStyles.failureMessageTextStyle,
+      )),
     );
   }
 
@@ -220,8 +203,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     //if (companyList[index].shouldShowRevenue) {
     return CompanyListCardWithRevenue(
       company: companyList[index],
-      onPressed: () =>
-      {
+      onPressed: () => {
         presenter.selectCompanyAtIndex(index),
       },
     );
@@ -235,7 +217,6 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     //     },
     //   );
   }
-
 
   //MARK: View functions
 
@@ -295,8 +276,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
 
   @override
   void onCompanyDetailsLoadedSuccessfully() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(
-        DashboardScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
   }
 
   @override
@@ -306,15 +286,15 @@ class _CompanyListScreenState extends State<CompanyListScreen>
 
   @override
   void showLogoutAlert(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context, title: title, message: message, onPressed: () {
-      presenter.confirmLogout();
-    });
-  }
-
-  @override
-  void logout() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(
-        LoginScreen(), context);
+    Alert.showSimpleAlertWithButtons(
+      context: context,
+      title: title,
+      message: message,
+      buttonOneTitle: "Yes",
+      buttonTwoTitle: "Cancel",
+      buttonOneOnPressed: () {
+        LogoutHandler().logout(context);
+      },
+    );
   }
 }

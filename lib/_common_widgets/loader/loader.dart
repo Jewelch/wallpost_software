@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 
 class Loader {
   Loader(this.context);
@@ -15,10 +14,9 @@ class Loader {
         return WillPopScope(
             onWillPop: () async => false,
             child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8.0))),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
               backgroundColor: Colors.black87,
-              content: LoadingIndicator(text: text),
+              content: _LoadingIndicator(text: text),
             ));
       },
     );
@@ -29,9 +27,8 @@ class Loader {
   }
 }
 
-
-class LoadingIndicator extends StatelessWidget {
-  LoadingIndicator({this.text = ''});
+class _LoadingIndicator extends StatelessWidget {
+  _LoadingIndicator({this.text = ''});
 
   final String text;
 
@@ -45,19 +42,12 @@ class LoadingIndicator extends StatelessWidget {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
-            children: [
-              _getLoadingIndicator(),
-              _getHeading(context),
-              _getText(displayedText)
-            ]));
+            children: [_getLoadingIndicator(), _getHeading(context), _getText(displayedText)]));
   }
 
   Padding _getLoadingIndicator() {
     return Padding(
-        child: Container(
-            child: CircularProgressIndicator(strokeWidth: 3),
-            width: 32,
-            height: 32),
+        child: Container(child: CircularProgressIndicator(strokeWidth: 3), width: 32, height: 32),
         padding: EdgeInsets.only(bottom: 16));
   }
 

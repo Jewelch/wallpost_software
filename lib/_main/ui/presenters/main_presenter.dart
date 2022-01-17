@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:developer';
 
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -37,8 +36,7 @@ class MainPresenter {
   }
 
   void _showLandingScreenForLoggedInUser() {
-    if ((_selectedCompanyProvider.isCompanySelected() == true) &&
-        (_selectedCompanyProvider.isSingleCompany() == true)) {
+    if ((_selectedCompanyProvider.isCompanySelected() == true)) {
       _view.goToDashboardScreen();
     } else {
       _view.goToCompaniesListScreen();
