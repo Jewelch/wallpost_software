@@ -1,5 +1,5 @@
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
-import 'package:wallpost/_wp_core/permission/entities/Permission.dart';
+import 'package:wallpost/permission/entities/Permission.dart';
 
 class PermissionRepository {
   final _permissionPerfKey = "Permission";

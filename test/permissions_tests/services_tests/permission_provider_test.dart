@@ -1,16 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/_wp_core/permission/constants/permissions_urls.dart';
-import 'package:wallpost/_wp_core/permission/repositories/permission_repository.dart';
-import 'package:wallpost/_wp_core/permission/services/permission_provider.dart';
-import '../../../_mocks/mock_network_adapter.dart';
+import 'package:wallpost/permission/constants/permissions_urls.dart';
+import 'package:wallpost/permission/repositories/permission_repository.dart';
+import 'package:wallpost/permission/services/permission_provider.dart';
+import '../../_mocks/mock_network_adapter.dart';
 import '../_mocks/mock_permission.dart';
 
 class MockPermissionRepository extends Mock implements PermissionRepository {}
 
 void main() {
-  var successfulResponse = {'role': 'employee'};
+  var successfulResponse = {'role': 'owner'};
   var mockPermissionRepository = MockPermissionRepository();
   var mockNetworkAdapter = MockNetworkAdapter();
   var permissionsProvider =
@@ -33,6 +33,7 @@ void main() {
     expect(
         mockNetworkAdapter.apiRequest.url, PermissionsUrls.getPermissionsUrl());
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
+    clearInteractions(mockPermissionRepository);
   });
 
   test('throws exception when network adapter fails', () async {

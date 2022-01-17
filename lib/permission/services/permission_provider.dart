@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/_wp_core/permission/constants/permissions_urls.dart';
-import 'package:wallpost/_wp_core/permission/entities/Permission.dart';
-import 'package:wallpost/_wp_core/permission/repositories/permission_repository.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
+import 'package:wallpost/permission/constants/permissions_urls.dart';
+import 'package:wallpost/permission/entities/Permission.dart';
+import 'package:wallpost/permission/repositories/permission_repository.dart';
 
 class PermissionProvider {
   final PermissionRepository _permissionRepository;

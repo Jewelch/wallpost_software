@@ -2,6 +2,8 @@ import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
+import 'package:wallpost/_wp_core/company_management/entities/Role.dart';
+import 'package:wallpost/permission/entities/Permission.dart';
 
 class Employee extends JSONInitializable implements JSONConvertible {
   late String _v1Id;
@@ -12,6 +14,7 @@ class Employee extends JSONInitializable implements JSONConvertible {
   late String _designation;
   late String? _lineManager;
   late String _departmentRank;
+  late Roles role;
 
   Employee.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
@@ -24,12 +27,18 @@ class Employee extends JSONInitializable implements JSONConvertible {
       _employeeName = sift.readStringFromMap(employeeMap, 'name');
       _employeeEmail = sift.readStringFromMap(employeeMap, 'email_id_office');
       _designation = sift.readStringFromMap(employeeMap, 'designation');
-      _lineManager = sift.readStringFromMapWithDefaultValue(employeeMap, 'line_manager', null);
-      var rank = sift.readNumberFromMapWithDefaultValue(departmentRankMap, 'rank', null);
-      var rankOutOf = sift.readNumberFromMapWithDefaultValue(departmentRankMap, 'out_of', null);
-      _departmentRank = (rank == null || rankOutOf == null) ? '' : '$rank/$rankOutOf';
+      _lineManager = sift.readStringFromMapWithDefaultValue(
+          employeeMap, 'line_manager', null);
+      var rank = sift.readNumberFromMapWithDefaultValue(
+          departmentRankMap, 'rank', null);
+      var rankOutOf = sift.readNumberFromMapWithDefaultValue(
+          departmentRankMap, 'out_of', null);
+      _departmentRank =
+          (rank == null || rankOutOf == null) ? '' : '$rank/$rankOutOf';
+      // role = Permission.fromJson(jsonMap);
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast Employee response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast Employee response. Error message - ${e.errorMessage}');
     }
   }
 
@@ -50,7 +59,8 @@ class Employee extends JSONInitializable implements JSONConvertible {
     Map<String, dynamic> jsonMap = {
       'employee': employeeMap,
       'department_rank': departmentRankMap,
-      'company_id': int.parse(_companyId)
+      'company_id': int.parse(_companyId),
+      'permission': role.toJson(),
     };
     return jsonMap;
   }

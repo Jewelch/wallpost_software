@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
-import 'package:wallpost/_wp_core/permission/entities/Role.dart';
-import 'package:wallpost/_wp_core/permission/repositories/permission_repository.dart';
+import 'package:wallpost/_wp_core/company_management/entities/Role.dart';
+import 'package:wallpost/permission/repositories/permission_repository.dart';
 import '../_mocks/mock_permission.dart';
 
 class MockSharedPrefs extends Mock implements SecureSharedPrefs {}
@@ -42,11 +42,11 @@ void main() {
   test('reading permissions on initialization when data is available',
       () async {
     when(() => mockSharedPrefs.getMap('Permission')).thenAnswer(
-      (_) => Future.value({'role': 'employee'}),
+      (_) => Future.value({'role': 'owner'}),
     );
     await _initUserRepoAndWaitForInitialization();
 
-    expect(permissionRepository.getPermissions()!.role, Roles.employee);
+    expect(permissionRepository.getPermissions()!.role, Roles.owner);
   });
 
   test('saving new permissions, saves permissions in memory as well as locally',
