@@ -9,10 +9,12 @@ class Permissions {
 
   Permissions.initWith(this._company, this._employee);
 
+  // Permissions.forSelectedCompany()
   Permissions()
       : this._company = SelectedCompanyProvider().getSelectedCompanyForCurrentUser(),
         this._employee = SelectedEmployeeProvider().getSelectedEmployeeForCurrentUser();
 
+  //?
   bool shouldShowFinancialWidgets() => false;
 
   // company has task module and user role doesn't matter
@@ -22,13 +24,7 @@ class Permissions {
   bool canRequestLeave() => false;
 
   //?
-  bool canRequestExpense() => false;
-
-  //?
-  bool canCreateOvertime() => false;
-
-  //?
-  bool canShowManagementViews() => false;
+  bool canCreateHandover() => false;
 
 // bool canApproveEmployeeHandover(handover)=> false;
 // bool canApproveExpense(expense)=> false;
