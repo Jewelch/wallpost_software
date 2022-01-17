@@ -48,7 +48,9 @@ class CompanyDetailsProvider {
     try {
       var company = Company.fromJson(responseMap);
       var employee = Employee.fromJson(responseMap);
+      //todo var permissions = Permissions.fromJson(responseMap);
       _companyRepository.selectCompanyAndEmployeeForUser(company, employee, _currentUserProvider.getCurrentUser());
+      //todo _permissionsRepo.savePermissionsForEmployeeOrEmployee(permissions, employee)
       return null;
     } catch (e) {
       throw InvalidResponseException();

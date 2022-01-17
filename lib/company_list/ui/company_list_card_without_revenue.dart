@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -9,7 +7,7 @@ class CompanyListCardWithOutRevenue extends StatelessWidget {
   final CompanyListItem company;
   final VoidCallback onPressed;
 
-  CompanyListCardWithOutRevenue({this.company, this.onPressed});
+  CompanyListCardWithOutRevenue({required this.company, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
