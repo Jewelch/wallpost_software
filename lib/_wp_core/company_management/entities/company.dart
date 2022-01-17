@@ -52,7 +52,7 @@ class Company extends JSONInitializable implements JSONConvertible {
     List<Module> modules = [];
     moduleStrings.forEach((moduleString) {
       var module = initializeModuleFromString(moduleString);
-      modules.add(module);
+      if (module != null) modules.add(module);
     });
     return modules;
   }
