@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
-import 'package:wallpost/_wp_core/company_management/entities/Role.dart';
+import 'package:wallpost/_wp_core/company_management/entities/role.dart';
 
 main() {
   test("test initializing Roles from string successfully", () {
@@ -12,9 +12,9 @@ main() {
     var role2 = initializeRoleFromString(ownerString);
     var role3 = initializeRoleFromString(taskManagerString);
 
-    expect(role1, Roles.generalManager);
-    expect(role2, Roles.owner);
-    expect(role3, Roles.taskLineManager);
+    expect(role1, Role.GeneralManager);
+    expect(role2, Role.Owner);
+    expect(role3, Role.TaskLineManager);
   });
 
   test("test initializing Roles from wrong data throw mapping exception", () {
@@ -29,9 +29,9 @@ main() {
   });
 
   test("test convert Roles to string", () {
-    var managerRole = Roles.generalManager;
-    var ownerRole = Roles.owner;
-    var taskManagerRole = Roles.taskLineManager;
+    var managerRole = Role.GeneralManager;
+    var ownerRole = Role.Owner;
+    var taskManagerRole = Role.TaskLineManager;
 
     var managerString = managerRole.toReadableString();
     var ownerString = ownerRole.toReadableString();

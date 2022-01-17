@@ -60,7 +60,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser()!.name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
         leading: CircularIconButton(
           iconName: 'assets/icons/menu_icon.svg',
           iconSize: 12,

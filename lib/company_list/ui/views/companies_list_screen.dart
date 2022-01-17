@@ -27,7 +27,6 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   var _searchBarVisibilityNotifier = ItemNotifier<bool>();
   var _showErrorNotifier = ItemNotifier<bool>();
   var _companiesListNotifier = ItemNotifier<List<CompanyListItem>?>();
-  var _selectedCompanyNotifier = ItemNotifier<CompanyListItem>();
   var _viewSelectorNotifier = ItemNotifier<int>();
   var _scrollController = ScrollController();
 
@@ -67,18 +66,6 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
           ],
         ),
         body: Column(children: <Widget>[
-          ItemNotifiable<CompanyListItem>(
-              notifier: _selectedCompanyNotifier,
-              builder: (context, companyListItem) {
-                if (companyListItem != null) {
-                  return Container(
-                    child: CompanyListCardWithRevenue(
-                        company: companyListItem, onPressed: () => presenter.selectCompany(companyListItem)),
-                  );
-                } else {
-                  return Container();
-                }
-              }),
           Expanded(
               child: Container(
             margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -240,13 +227,6 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   @override
   void hideSearchBar() {
     _searchBarVisibilityNotifier.notify(false);
-  }
-
-  @override
-  void showSelectedCompany(CompanyListItem? company) {
-    if (company != null) {
-      _selectedCompanyNotifier.notify(company);
-    }
   }
 
   @override

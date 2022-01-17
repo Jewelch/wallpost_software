@@ -21,7 +21,5 @@ abstract class CompaniesListView {
 
   void onCompanyDetailsLoadingFailed(String title, String message);
 
-  void showSelectedCompany(CompanyListItem? company);
-
   void showLogoutAlert(String title, String message);
 }
