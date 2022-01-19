@@ -2,6 +2,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationProvider {
+  //Create a new class called Location in entities
+  //catch all errors and return a custom error - eg LocationError() in new package called errors
   Future<Position> getLocation() async {
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       return position;

@@ -27,12 +27,8 @@ class AttendancePresenter {
         _punchInFromAppPermissionProvider = PunchInFromAppPermissionProvider(),
         _punchInNowPermissionProvider = PunchInNowPermissionProvider();
 
-  AttendancePresenter.initWith(
-      this._view,
-      this._attendanceDetailsProvider,
-      this._locationProvider,
-      this._punchInFromAppPermissionProvider,
-      this._punchInNowPermissionProvider);
+  AttendancePresenter.initWith(this._view, this._attendanceDetailsProvider, this._locationProvider,
+      this._punchInFromAppPermissionProvider, this._punchInNowPermissionProvider);
 
   Future<void> loadAttendanceDetails() async {
     if (_attendanceDetailsProvider.isLoading) return;
@@ -46,8 +42,7 @@ class AttendancePresenter {
     } on WPException catch (e) {
       _view.hideLoader();
       _view.showDisableButton();
-      _view.showFailedToLoadAttendance(
-          "loading attendance details failed", e.userReadableMessage);
+      _view.showFailedToLoadAttendance("Loading attendance details failed", e.userReadableMessage);
     }
   }
 
@@ -57,28 +52,25 @@ class AttendancePresenter {
       if (!attendanceDetails.isPunchedIn) {
         _getPunchInFromAppPermission();
       }
-    } catch (e) {
+    } on WPException catch (e) {
       _view.showDisableButton();
       _view.showFailedToGetLocation("Getting location failed");
     }
   }
 
   void _getPunchInFromAppPermission() async {
-    var punchInFromAppPermission =
-        await _punchInFromAppPermissionProvider.canPunchInFromApp();
+    var punchInFromAppPermission = await _punchInFromAppPermissionProvider.canPunchInFromApp();
     if (punchInFromAppPermission.isAllowed) {
       _loadPunchInDetails();
     } else {
       _view.showDisableButton();
       _view.hideBreakButton();
-      _view.showFailedToGetPunchInFromAppPermission(
-          "Punch in from app permission failed");
+      _view.showFailedToGetPunchInFromAppPermission("Punch in from app permission failed");
     }
   }
 
-  void _loadPunchInDetails()async{
-    var punchInNowPermission =
-        await _punchInNowPermissionProvider.canPunchInNow();
+  void _loadPunchInDetails() async {
+    var punchInNowPermission = await _punchInNowPermissionProvider.canPunchInNow();
     if (punchInNowPermission.canPunchInNow) {
       _view.showPunchInButton();
     } else {

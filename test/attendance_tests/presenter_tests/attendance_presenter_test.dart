@@ -15,21 +15,17 @@ import '../../_mocks/mock_network_adapter.dart';
 
 class MockAttendanceView extends Mock implements AttendanceView {}
 
-class MockAttendanceDetailsProvider extends Mock
-    implements AttendanceDetailsProvider {}
+class MockAttendanceDetailsProvider extends Mock implements AttendanceDetailsProvider {}
 
-class MockPunchInNowPermissionProvider extends Mock
-    implements PunchInNowPermissionProvider {}
+class MockPunchInNowPermissionProvider extends Mock implements PunchInNowPermissionProvider {}
 
 class MockLocationProvider extends Mock implements LocationProvider {}
 
-class MockPunchInFromAppPermissionProvider extends Mock
-    implements PunchInFromAppPermissionProvider {}
+class MockPunchInFromAppPermissionProvider extends Mock implements PunchInFromAppPermissionProvider {}
 
 class MockAttendanceDetails extends Mock implements AttendanceDetails {}
 
-class MockPunchInFromAppPermission extends Mock
-    implements PunchInFromAppPermission {}
+class MockPunchInFromAppPermission extends Mock implements PunchInFromAppPermission {}
 
 class MockPunchInNowPermission extends Mock implements PunchInNowPermission {}
 
@@ -39,18 +35,18 @@ void main() {
   var view = MockAttendanceView();
   var mockAttendanceDetailsProvider = MockAttendanceDetailsProvider();
   var mockLocationProvider = MockLocationProvider();
-  var mockPunchInFromAppPermissionProvider =
-      MockPunchInFromAppPermissionProvider();
+  var mockPunchInFromAppPermissionProvider = MockPunchInFromAppPermissionProvider();
   var mockPunchInNowPermissionProvider = MockPunchInNowPermissionProvider();
 
   AttendancePresenter presenter = AttendancePresenter.initWith(
-      view,
-      mockAttendanceDetailsProvider,
-      mockLocationProvider,
-      mockPunchInFromAppPermissionProvider,
-      mockPunchInNowPermissionProvider);
+    view,
+    mockAttendanceDetailsProvider,
+    mockLocationProvider,
+    mockPunchInFromAppPermissionProvider,
+    mockPunchInNowPermissionProvider,
+  );
 
-  setUpAll(() {
+  setUp(() {
     reset(view);
     reset(mockAttendanceDetailsProvider);
     reset(mockLocationProvider);
@@ -70,10 +66,8 @@ void main() {
   test("loading attendance details successfully", () async {
     //given
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-    when(() => mockAttendanceDetailsProvider.getDetails())
-        .thenAnswer((_) => Future.value(MockAttendanceDetails()));
-    when(() => mockLocationProvider.getLocation())
-        .thenAnswer((_) => Future.value(MockPosition()));
+    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(MockAttendanceDetails()));
+    when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.value(MockPosition()));
 
     // when
     await presenter.loadAttendanceDetails();
@@ -92,9 +86,7 @@ void main() {
   test('failure to loading attendance details', () async {
     //given
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer(
-      (_) => Future.error(InvalidResponseException()),
-    );
+    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await presenter.loadAttendanceDetails();
@@ -106,20 +98,19 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => view.hideLoader(),
       () => view.showDisableButton(),
-      () => view.showFailedToLoadAttendance("loading attendance details failed",
-          InvalidResponseException().userReadableMessage),
+      () => view.showFailedToLoadAttendance(
+          "Loading attendance details failed", InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("get location  successfully", () async {
+  test("get location successfully", () async {
     //given
+    var attendance = MockAttendanceDetails();
+    when(() => attendance.isPunchedIn).thenReturn(true);
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-    when(() => mockAttendanceDetailsProvider.getDetails())
-        .thenAnswer((_) => Future.value(MockAttendanceDetails()));
-
-    when(() => mockLocationProvider.getLocation())
-        .thenAnswer((_) => Future.value(MockPosition()));
+    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.value(MockPosition()));
 
     // when
     await presenter.loadAttendanceDetails();
@@ -135,14 +126,11 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('failure to getting location', () async {
+  test('failure to get location', () async {
     //given
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-    when(() => mockAttendanceDetailsProvider.getDetails())
-        .thenAnswer((_) => Future.value(MockAttendanceDetails()));
-    when(() => mockLocationProvider.getLocation()).thenThrow(
-      (_) => null,
-    );
+    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(MockAttendanceDetails()));
+    when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await presenter.loadAttendanceDetails();
@@ -160,8 +148,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test(
-      "show punch in button when user not punch in and  allowed to punch in app permission also can punch in now",
+  test("show punch in button when user not punch in and  allowed to punch in app permission also can punch in now",
       () async {
     //given
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
@@ -172,10 +159,8 @@ void main() {
 
     when(() => MockPunchInNowPermission().canPunchInNow).thenReturn(true);
 
-    when(() => mockAttendanceDetailsProvider.getDetails())
-        .thenAnswer((_) => Future.value(MockAttendanceDetails()));
-    when(() => mockLocationProvider.getLocation())
-        .thenAnswer((_) => Future.value(MockPosition()));
+    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(MockAttendanceDetails()));
+    when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.value(MockPosition()));
     when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp())
         .thenAnswer((_) => Future.value(MockPunchInFromAppPermission()));
     when(() => mockPunchInNowPermissionProvider.canPunchInNow())
@@ -198,9 +183,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test(
-      "show disable button when user not punch in and not allowed to punch in app permission ",
-      () async {
+  test("show disable button when user not punch in and not allowed to punch in app permission ", () async {
     //given
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
 
@@ -210,13 +193,10 @@ void main() {
 
     when(() => MockPunchInFromAppPermission().isAllowed).thenReturn(false);
 
-    when(() => mockAttendanceDetailsProvider.getDetails())
-        .thenAnswer((_) => Future.value(MockAttendanceDetails()));
-    when(() => mockLocationProvider.getLocation())
-        .thenAnswer((_) => Future.value(MockPosition()));
+    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(MockAttendanceDetails()));
+    when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.value(MockPosition()));
 
-    when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp())
-        .thenAnswer(
+    when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp()).thenAnswer(
       (_) => Future.error(InvalidResponseException()),
     );
 
@@ -233,9 +213,12 @@ void main() {
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
       () => view.showDisableButton(),
       () => view.hideBreakButton(),
-      () => view.showFailedToGetPunchInFromAppPermission(
-          "Punch in from app permission failed")
+      () => view.showFailedToGetPunchInFromAppPermission("Punch in from app permission failed")
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 }
+
+//When to get the location first
+// 1. user is not punched in (attendance details) and can punch in now + can punch in from app (call the two services)
+// 2. user is punched in
