@@ -17,6 +17,10 @@ class SelectedCompanyProvider {
     return _companyRepository.getSelectedCompanyForUser(currentUser) != null;
   }
 
+  //NOTE: Should only call this function once a company
+  //has already be selected. Returning null from this function
+  //will mean using the force unwrap operator (!) througout
+  //the app
   Company getSelectedCompanyForCurrentUser() {
     var currentUser = _currentUserProvider.getCurrentUser();
     return _companyRepository.getSelectedCompanyForUser(currentUser)!;

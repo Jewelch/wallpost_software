@@ -197,11 +197,11 @@ void main() {
     expect(companyRepository.getSelectedCompanyForUser(userWhoseCompaniesAreNotStored), null);
     expect(companyRepository.getSelectedEmployeeForUser(userWhoseCompaniesAreNotStored), null);
 
-    expect(companyRepository.getCompaniesForUser(user1).length, 2);
+    expect(companyRepository.getCompaniesForUser(user1).length, 3);
     expect(companyRepository.getSelectedCompanyForUser(user1), null);
     expect(companyRepository.getSelectedEmployeeForUser(user1), null);
 
-    expect(companyRepository.getCompaniesForUser(user2).length, 2);
+    expect(companyRepository.getCompaniesForUser(user2).length, 3);
     var selectedCompanyId = '${Mocks.companyDetailsResponse['company_id']}';
     var selectedEmployeeId = '${Mocks.companyDetailsResponse['employee']['employment_id_v1']}';
     expect(companyRepository.getSelectedCompanyForUser(user2)!.id, selectedCompanyId);

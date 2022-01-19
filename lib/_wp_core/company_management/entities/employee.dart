@@ -2,6 +2,7 @@ import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
+import 'package:wallpost/_wp_core/company_management/entities/role.dart';
 
 class Employee extends JSONInitializable implements JSONConvertible {
   late String _v1Id;
@@ -10,6 +11,7 @@ class Employee extends JSONInitializable implements JSONConvertible {
   late String _employeeName;
   late String _employeeEmail;
   late String _designation;
+  late List<Role> _roles;
   late String? _lineManager;
   late String _departmentRank;
 
@@ -24,6 +26,8 @@ class Employee extends JSONInitializable implements JSONConvertible {
       _employeeName = sift.readStringFromMap(employeeMap, 'name');
       _employeeEmail = sift.readStringFromMap(employeeMap, 'email_id_office');
       _designation = sift.readStringFromMap(employeeMap, 'designation');
+      var roleStrings = sift.readStringListFromMap(employeeMap, "Roles");
+      _roles = _initRoles(roleStrings);
       _lineManager = sift.readStringFromMapWithDefaultValue(employeeMap, 'line_manager', null);
       var rank = sift.readNumberFromMapWithDefaultValue(departmentRankMap, 'rank', null);
       var rankOutOf = sift.readNumberFromMapWithDefaultValue(departmentRankMap, 'out_of', null);
@@ -31,6 +35,15 @@ class Employee extends JSONInitializable implements JSONConvertible {
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Employee response. Error message - ${e.errorMessage}');
     }
+  }
+
+  List<Role> _initRoles(List<String> roleStrings) {
+    List<Role> roles = [];
+    roleStrings.forEach((roleString) {
+      var role = initializeRoleFromString(roleString);
+      roles.add(role);
+    });
+    return roles;
   }
 
   @override
@@ -42,6 +55,7 @@ class Employee extends JSONInitializable implements JSONConvertible {
     employeeMap['email_id_office'] = _employeeEmail;
     employeeMap['designation'] = _designation;
     employeeMap['line_manager'] = _lineManager;
+    employeeMap['Roles'] = _roles.map((e) => e.toReadableString()).toList();
 
     Map departmentRankMap = {};
     departmentRankMap['rank'] = int.parse(_departmentRank.split('/')[0]);
@@ -50,7 +64,7 @@ class Employee extends JSONInitializable implements JSONConvertible {
     Map<String, dynamic> jsonMap = {
       'employee': employeeMap,
       'department_rank': departmentRankMap,
-      'company_id': int.parse(_companyId)
+      'company_id': int.parse(_companyId),
     };
     return jsonMap;
   }
@@ -58,4 +72,6 @@ class Employee extends JSONInitializable implements JSONConvertible {
   String get companyId => _companyId;
 
   String get v1Id => _v1Id;
+
+  List<Role> get roles => _roles;
 }
