@@ -3,8 +3,8 @@ import 'package:geolocator/geolocator.dart';
 
 class LocationProvider {
   Future<Position> getLocation() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    return position;
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      return position;
   }
 
   Future<String?> getLocationAddress(Position position) async {
@@ -19,3 +19,5 @@ class LocationProvider {
     }
   }
 }
+// 1. Getting the location - attendance will not work wihtout this - use get location
+//     2. getlocationaddress - optional
