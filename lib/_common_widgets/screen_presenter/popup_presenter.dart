@@ -11,7 +11,7 @@ class PopupPresenter {
     VoidCallback? onCloseButtonPressed,
   }) {
     return showDialog(
-      barrierDismissible: false,
+      barrierDismissible: true,
       context: context,
       builder: (context) {
         return AlertDialog(
