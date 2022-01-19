@@ -3,6 +3,8 @@ import 'package:wallpost/_wp_core/company_management/entities/company_list_item.
 abstract class CompaniesListView {
   void showLoader();
 
+  void hideLoader();
+
   void showSearchBar();
 
   void hideSearchBar();
@@ -14,4 +16,10 @@ abstract class CompaniesListView {
   void showNoSearchResultsMessage(String message);
 
   void showErrorMessage(String message);
+
+  void onCompanyDetailsLoadedSuccessfully();
+
+  void onCompanyDetailsLoadingFailed(String title, String message);
+
+  void showLogoutAlert(String title, String message);
 }

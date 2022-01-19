@@ -36,10 +36,10 @@ class MainPresenter {
   }
 
   void _showLandingScreenForLoggedInUser() {
-    if (_selectedCompanyProvider.isCompanySelected() == false) {
-      _view.goToCompaniesListScreen();
-    } else {
+    if ((_selectedCompanyProvider.isCompanySelected() == true)) {
       _view.goToDashboardScreen();
+    } else {
+      _view.goToCompaniesListScreen();
     }
   }
 }

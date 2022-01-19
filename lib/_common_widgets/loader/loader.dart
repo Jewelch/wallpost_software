@@ -1,39 +1,71 @@
-
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:progress_dialog/progress_dialog.dart';
 
 class Loader {
-  // ProgressDialog _progressDialog;
+  Loader(this.context);
 
-  Loader(BuildContext context) {
-    // _progressDialog = ProgressDialog(
-    //   context,
-    //   type: ProgressDialogType.Normal,
-    //   isDismissible: false,
-    //   showLogs: false,
-    // );
+  final BuildContext context;
+
+  void showLoadingIndicator(String text) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
+              backgroundColor: Colors.black87,
+              content: _LoadingIndicator(text: text),
+            ));
+      },
+    );
   }
 
-  Future<void> show(String message) async {
-    // if (_progressDialog.isShowing()) return;
-    //
-    // _progressDialog.style(
-    //     message: message,
-    //     padding: EdgeInsets.all(12),
-    //     borderRadius: 10.0,
-    //     backgroundColor: Colors.white,
-    //     progressWidget: Container(
-    //       padding: EdgeInsets.all(12),
-    //       child: CircularProgressIndicator(),
-    //     ),
-    //     elevation: 2.0,
-    //     insetAnimCurve: Curves.easeInOut,
-    //     messageTextStyle: TextStyle(color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.normal));
-    // await _progressDialog.show();
+  void hideOpenDialog() {
+    Navigator.of(context).pop();
+  }
+}
+
+class _LoadingIndicator extends StatelessWidget {
+  _LoadingIndicator({this.text = ''});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    var displayedText = text;
+
+    return Container(
+        padding: EdgeInsets.all(16),
+        color: Colors.black87,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [_getLoadingIndicator(), _getHeading(context), _getText(displayedText)]));
   }
 
-  Future<void> hide() async {
-    // await _progressDialog.hide();
+  Padding _getLoadingIndicator() {
+    return Padding(
+        child: Container(child: CircularProgressIndicator(strokeWidth: 3), width: 32, height: 32),
+        padding: EdgeInsets.only(bottom: 16));
+  }
+
+  Widget _getHeading(context) {
+    return Padding(
+        child: Text(
+          'Please wait …',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
+        padding: EdgeInsets.only(bottom: 4));
+  }
+
+  Text _getText(String displayedText) {
+    return Text(
+      displayedText,
+      style: TextStyle(color: Colors.white, fontSize: 14),
+      textAlign: TextAlign.center,
+    );
   }
 }
