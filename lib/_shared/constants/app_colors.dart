@@ -8,6 +8,7 @@ class AppColors {
   //Button colors
   static final Color actionButtonColor = defaultColor;
   static final Color criticalButtonColor = getColorFromHex('#db544e');
+  static final Color darkGreyIconColor = Color.fromRGBO(100, 100, 100, 1.0);
 
   //Text colors
   static final Color labelColor = getColorFromHex('#777777');
