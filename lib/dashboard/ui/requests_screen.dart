@@ -18,7 +18,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser()!.name,
+        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
       ),
       body: SafeArea(
         child: Container(

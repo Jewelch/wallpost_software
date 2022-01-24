@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
+import 'package:wallpost/password_management/ui/views/change_password_screen.dart';
 
 class MyPortalScreen extends StatelessWidget {
   @override
@@ -15,6 +17,13 @@ class MyPortalScreen extends StatelessWidget {
                 child: Text('Logout'),
                 onPressed: () {
                   LogoutHandler().logout(context);
+                },
+              ),
+              FlatButton(
+                color: Colors.blueAccent,
+                child: Text('Change password'),
+                onPressed: () {
+                  ScreenPresenter.present(ChangePasswordScreen(), context);
                 },
               ),
             ],

@@ -2,6 +2,7 @@ import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
+import 'package:wallpost/_wp_core/company_management/entities/module.dart';
 
 class Company extends JSONInitializable implements JSONConvertible {
   late String _id;
@@ -13,7 +14,7 @@ class Company extends JSONInitializable implements JSONConvertible {
   late String _dateFormat;
   late String _currency;
   late bool _shouldShowRevenue;
-  late List<String> _packages;
+  late List<Module> _modules;
   late bool _showTimeSheet;
   late String _timezone;
   late num _allowedPunchInRadiusInMeters;
@@ -33,7 +34,8 @@ class Company extends JSONInitializable implements JSONConvertible {
       _dateFormat = sift.readStringFromMap(companyInfoMap, 'js_date_format');
       _currency = sift.readStringFromMap(companyInfoMap, 'currency');
       _shouldShowRevenue = sift.readNumberFromMap(jsonMap, 'show_revenue') == 0 ? false : true;
-      _packages = sift.readStringListFromMap(jsonMap, 'packages');
+      var _packages = sift.readStringListFromMap(jsonMap, 'packages');
+      _modules = _initModules(_packages);
       _showTimeSheet = sift.readBooleanFromMap(companyInfoMap, 'show_timesheet_icon');
       _timezone = sift.readStringFromMap(companyInfoMap, 'time_zone');
       _allowedPunchInRadiusInMeters = sift.readNumberFromMap(companyInfoMap, 'allowed_radius');
@@ -41,7 +43,18 @@ class Company extends JSONInitializable implements JSONConvertible {
       _fileUploadPath = sift.readStringFromMap(jsonMap, 'absolute_upload_path');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Company response. Error message - ${e.errorMessage}');
+    } on MappingException {
+      rethrow;
     }
+  }
+
+  List<Module> _initModules(List<String> moduleStrings) {
+    List<Module> modules = [];
+    moduleStrings.forEach((moduleString) {
+      var module = initializeModuleFromString(moduleString);
+      if (module != null) modules.add(module);
+    });
+    return modules;
   }
 
   @override
@@ -63,7 +76,7 @@ class Company extends JSONInitializable implements JSONConvertible {
       'commercial_name': _commercialName,
       'company_logo': _logoUrl,
       'show_revenue': _shouldShowRevenue ? 1 : 0,
-      'packages': _packages,
+      'packages': _modules.map((e) => e.toReadableString()).toList(),
       'absolute_upload_path': _fileUploadPath,
     };
     return jsonMap;

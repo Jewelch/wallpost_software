@@ -25,7 +25,7 @@ class AllNotificationsReader {
 
   Future<void> markAllAsRead() async {
     var userId = _currentUserProvider.getCurrentUser().id;
-    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser()!.id;
+    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     var url = NotificationUrls.markAllNotificationsAsReadUrl(companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);

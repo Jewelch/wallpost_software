@@ -9,3 +9,4 @@ class CompanyManagementUrls {
     return '${BaseUrls.baseUrlV2()}/companies/$companyId';
   }
 }
+

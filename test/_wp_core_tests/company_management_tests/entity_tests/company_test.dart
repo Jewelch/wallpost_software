@@ -5,6 +5,7 @@ import '../../../_test_utils/map_comparer.dart';
 import '../mocks.dart';
 
 void main() {
+
   test('json initialization', () async {
     expect(Company.fromJson(Mocks.companyDetailsResponse), isNotNull);
   });

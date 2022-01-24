@@ -2,31 +2,27 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
 import 'package:wallpost/_wp_core/company_management/services/companies_list_provider.dart';
 import 'package:wallpost/_wp_core/company_management/services/company_details_provider.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 
 class CompaniesListPresenter {
   final CompaniesListView _view;
   final CompaniesListProvider _companiesListProvider;
   final CompanyDetailsProvider _companyDetailsProvider;
-  final SelectedCompanyProvider _selectedCompanyProvider;
   List<CompanyListItem> _companies = [];
   List<CompanyListItem> _filterList = [];
   var _searchText = "";
 
-  late CompanyListItem? _selectedCompanyItem;
-
   CompaniesListPresenter(this._view)
       : _companiesListProvider = CompaniesListProvider(),
-        _companyDetailsProvider = CompanyDetailsProvider(),
-        _selectedCompanyProvider = SelectedCompanyProvider();
+        _companyDetailsProvider = CompanyDetailsProvider();
 
   CompaniesListPresenter.initWith(
     this._view,
     this._companiesListProvider,
     this._companyDetailsProvider,
-    this._selectedCompanyProvider,
   );
+
+  //MARK: Functions to load the list of companies
 
   Future<void> loadCompanies() async {
     if (_companiesListProvider.isLoading) return;
@@ -44,47 +40,29 @@ class CompaniesListPresenter {
     }
   }
 
-  void loadSelectedCompany() {
-    var _selectedCompany = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
-
-    if (_selectedCompany != null) {
-      var _selectedCompanyListItem =
-          _companies.firstWhere((selectedCompanyListItem) => selectedCompanyListItem.id == _selectedCompany.id);
-
-      _selectedCompanyItem = _selectedCompanyListItem;
-
-      _view.showSelectedCompany(_selectedCompanyListItem);
+  void _handleResponse(List<CompanyListItem> companies) {
+    _companies.addAll(companies);
+    if (_companies.isNotEmpty) {
+      _view.showSearchBar();
+      _showFilteredCompanies();
     } else {
-      _selectedCompanyItem = null;
+      _clearSearchTextAndHideSearchBar();
+      _view.showNoCompaniesMessage("There are no companies.\n\nTap here to reload");
     }
   }
 
+  //MARK: Functions to select company at index
+
   selectCompanyAtIndex(int index) async {
     var _selectedCompany = _filterList[index];
-    selectCompany(_selectedCompany);
-  }
-
-  selectCompany(CompanyListItem companyListItem) async {
     _view.showLoader();
     try {
-      var _ = await _companyDetailsProvider.getCompanyDetails(companyListItem.id);
+      var _ = await _companyDetailsProvider.getCompanyDetails(_selectedCompany.id);
       _view.hideLoader();
       _view.onCompanyDetailsLoadedSuccessfully();
     } on WPException catch (e) {
       _view.hideLoader();
       _view.onCompanyDetailsLoadingFailed('Failed To load company details', e.userReadableMessage);
-    }
-  }
-
-  void _handleResponse(List<CompanyListItem> companies) {
-    _companies.addAll(companies);
-    if (_companies.isNotEmpty) {
-      _view.showSearchBar();
-      loadSelectedCompany();
-      _showFilteredCompanies();
-    } else {
-      _clearSearchTextAndHideSearchBar();
-      _view.showNoCompaniesMessage("There are no companies.\n\nTap here to reload");
     }
   }
 
@@ -100,8 +78,6 @@ class CompaniesListPresenter {
     if (_filterList.isEmpty) {
       _view.showNoSearchResultsMessage("There are no companies for the  given search criteria.");
     } else {
-      _filterList.remove(_selectedCompanyItem);
-      _companies.remove(_selectedCompanyItem);
       _view.showCompanyList(_filterList);
     }
   }
