@@ -82,13 +82,13 @@ class LeftMenuScreen extends StatelessWidget {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
-    if (selectedCompany == null) {
+    if (SelectedCompanyProvider().isCompanySelected()) {
       return SimpleAppBar(
         title: '',
         leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
       );
     } else {
+      var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
       return WPAppBar(
         title: selectedCompany.shortName,
         leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
