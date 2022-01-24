@@ -19,8 +19,7 @@ class ChangePasswordScreen extends StatefulWidget {
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen>
-    implements ChangePasswordView {
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements ChangePasswordView {
   var _showLogo = true;
   late Loader _loader;
   late ChangePasswordPresenter presenter;
@@ -46,9 +45,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
         resizeToAvoidBottomInset: true,
         appBar: SimpleAppBar(
           title: 'Change Password',
-          leadingButtons: [
-            CircularBackButton(onPressed: () => Navigator.pop(context))
-          ],
+          leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
           trailingButtons: [
             CircularIconButton(
               iconName: 'assets/icons/check_mark_icon.svg',
@@ -82,34 +79,30 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
       curve: Curves.easeInOut,
       height: _showLogo ? 180 : 0,
       child: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.defaultColor, width: 1),
-                    borderRadius: BorderRadius.circular(50)),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: AspectRatio(
-                    aspectRatio: 1 / 1,
-                    child: ClipOval(
-                      child: FadeInImage.assetNetwork(
-                          fit: BoxFit.cover,
-                          placeholder:
-                              "assets/icons/user_image_placeholder.png",
-                          image: presenter.getProfileImage()),
-                    ),
-                  ),
+        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+                border: Border.all(color: AppColors.defaultColor, width: 1), borderRadius: BorderRadius.circular(50)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: ClipOval(
+                  child: FadeInImage.assetNetwork(
+                      fit: BoxFit.cover,
+                      placeholder: "assets/icons/user_image_placeholder.png",
+                      image: presenter.getProfileImage()),
                 ),
               ),
-              Text(
-                presenter.getUserName(),
-                style: TextStyles.titleTextStyle,
-              ),
-            ]),
+            ),
+          ),
+          Text(
+            presenter.getUserName(),
+            style: TextStyles.titleTextStyle,
+          ),
+        ]),
       ),
     );
   }
@@ -167,11 +160,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   }
 
   void _changePassword() {
-    presenter.changePassword(_currentPasswordTextController.text,
-        _newPasswordTextController.text, _confirmPasswordTextController.text);
+    presenter.changePassword(
+        _currentPasswordTextController.text, _newPasswordTextController.text, _confirmPasswordTextController.text);
   }
 
-  //MARK : VIEW FUNCTIONS
+  //MARK : View functions
+
   @override
   void showLoader() {
     _loader.showLoadingIndicator("Changing your password...");

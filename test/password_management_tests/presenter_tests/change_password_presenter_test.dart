@@ -5,7 +5,9 @@ import 'package:wallpost/password_management/services/password_changer.dart';
 import 'package:wallpost/password_management/ui/contracts/change_password_view.dart';
 import 'package:wallpost/password_management/ui/presenters/change_password_presenter.dart';
 
+import '../../_mocks/mock_current_user_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
+import '../../_mocks/mock_user.dart';
 
 class MockChangePasswordView extends Mock implements ChangePasswordView {}
 
@@ -15,6 +17,7 @@ class MockChangePasswordForm extends Mock implements ChangePasswordForm {}
 
 void main() {
   var view = MockChangePasswordView();
+  var userProvider = MockCurrentUserProvider();
   var passwordChanger = MockPasswordChanger();
 
   void _verifyNoMoreInteractionsOnAllMocks() {
@@ -26,25 +29,22 @@ void main() {
     registerFallbackValue(MockChangePasswordForm());
   });
 
-  test('change password successful', () async {
+  setUp(() {
+    clearInteractions(view);
+    clearInteractions(passwordChanger);
+  });
+
+  test('resetting when the password changer is loading does nothing ', () async {
     //given
-    when(() => passwordChanger.isLoading).thenReturn(false);
-    when(() => passwordChanger.changePassword(any()))
-        .thenAnswer((_) => Future.value(null));
-    ChangePasswordPresenter presenter =
-        ChangePasswordPresenter.initWith(view, passwordChanger);
+    when(() => passwordChanger.isLoading).thenReturn(true);
+    ChangePasswordPresenter presenter = ChangePasswordPresenter.initWith(view, userProvider, passwordChanger);
 
     //when
     await presenter.changePassword("oldPassword", "newPassword", "newPassword");
 
     //then
     verifyInOrder([
-      () => view.clearErrors(),
       () => passwordChanger.isLoading,
-      () => view.showLoader(),
-      () => passwordChanger.changePassword(any()),
-      () => view.hideLoader(),
-      () => view.goToSuccessScreen(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -52,18 +52,35 @@ void main() {
   test('submit invalid credentials notifies the view ', () async {
     //given
     when(() => passwordChanger.isLoading).thenReturn(false);
-    ChangePasswordPresenter presenter =
-        ChangePasswordPresenter.initWith(view, passwordChanger);
+    ChangePasswordPresenter presenter = ChangePasswordPresenter.initWith(view, userProvider, passwordChanger);
 
     //when
     await presenter.changePassword("", "", "");
 
     //then
     verifyInOrder([
+      () => passwordChanger.isLoading,
       () => view.clearErrors(),
-      () => view.notifyInvalidCurrentPassword("Please Enter Current Password"),
-      () => view.notifyInvalidNewPassword("Please Enter New Password"),
-      () => view.notifyInvalidConfirmPassword("Please Re-Enter New Password"),
+      () => view.notifyInvalidCurrentPassword("Please enter current password"),
+      () => view.notifyInvalidNewPassword("Please enter new password"),
+      () => view.notifyInvalidConfirmPassword("Please re-enter new password"),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('notifies view if new password and confirm password does not match ', () async {
+    //given
+    when(() => passwordChanger.isLoading).thenReturn(false);
+    ChangePasswordPresenter presenter = ChangePasswordPresenter.initWith(view, userProvider, passwordChanger);
+
+    //when
+    await presenter.changePassword("password", "new", "confirm");
+
+    //then
+    verifyInOrder([
+      () => passwordChanger.isLoading,
+      () => view.clearErrors(),
+      () => view.notifyInvalidConfirmPassword("The passwords do not match"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -71,10 +88,8 @@ void main() {
   test('submit valid credentials clears the errors ', () async {
     //given
     when(() => passwordChanger.isLoading).thenReturn(false);
-    ChangePasswordPresenter presenter =
-        ChangePasswordPresenter.initWith(view, passwordChanger);
-    when(() => passwordChanger.changePassword(any()))
-        .thenAnswer((_) => Future.value(null));
+    ChangePasswordPresenter presenter = ChangePasswordPresenter.initWith(view, userProvider, passwordChanger);
+    when(() => passwordChanger.changePassword(any())).thenAnswer((_) => Future.value(null));
     await presenter.changePassword("", "", "");
 
     //when
@@ -82,12 +97,13 @@ void main() {
 
     //then
     verifyInOrder([
-      () => view.clearErrors(),
-      () => view.notifyInvalidCurrentPassword("Please Enter Current Password"),
-      () => view.notifyInvalidNewPassword("Please Enter New Password"),
-      () => view.notifyInvalidConfirmPassword("Please Re-Enter New Password"),
-      () => view.clearErrors(),
       () => passwordChanger.isLoading,
+      () => view.clearErrors(),
+      () => view.notifyInvalidCurrentPassword("Please enter current password"),
+      () => view.notifyInvalidNewPassword("Please enter new password"),
+      () => view.notifyInvalidConfirmPassword("Please re-enter new password"),
+      () => passwordChanger.isLoading,
+      () => view.clearErrors(),
       () => view.showLoader(),
       () => passwordChanger.changePassword(any()),
       () => view.hideLoader(),
@@ -96,38 +112,23 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('notifies view if new password and confirm password does not match ',
-      () async {
+  test('change password successful', () async {
     //given
     when(() => passwordChanger.isLoading).thenReturn(false);
-    ChangePasswordPresenter presenter =
-        ChangePasswordPresenter.initWith(view, passwordChanger);
-
-    //when
-    await presenter.changePassword("password", "new", "confirm");
-
-    //then
-    verifyInOrder([
-      () => view.clearErrors(),
-      () => view.notifyInvalidConfirmPassword("The Passwords Do Not Match"),
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-  test('resetting when the password changer is loading does nothing ',
-      () async {
-    //given
-    when(() => passwordChanger.isLoading).thenReturn(true);
-    ChangePasswordPresenter presenter =
-        ChangePasswordPresenter.initWith(view, passwordChanger);
+    when(() => passwordChanger.changePassword(any())).thenAnswer((_) => Future.value(null));
+    ChangePasswordPresenter presenter = ChangePasswordPresenter.initWith(view, userProvider, passwordChanger);
 
     //when
     await presenter.changePassword("oldPassword", "newPassword", "newPassword");
 
     //then
     verifyInOrder([
-      () => view.clearErrors(),
       () => passwordChanger.isLoading,
+      () => view.clearErrors(),
+      () => view.showLoader(),
+      () => passwordChanger.changePassword(any()),
+      () => view.hideLoader(),
+      () => view.goToSuccessScreen(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -135,34 +136,35 @@ void main() {
   test('change password failed', () async {
     //given
     when(() => passwordChanger.isLoading).thenReturn(false);
-    when(() => passwordChanger.changePassword(any()))
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
-    ChangePasswordPresenter presenter =
-        ChangePasswordPresenter.initWith(view, passwordChanger);
+    when(() => passwordChanger.changePassword(any())).thenAnswer((_) => Future.error(InvalidResponseException()));
+    ChangePasswordPresenter presenter = ChangePasswordPresenter.initWith(view, userProvider, passwordChanger);
 
     //when
     await presenter.changePassword("oldPassword", "newPassword", "newPassword");
 
     //then
     verifyInOrder([
-      () => view.clearErrors(),
       () => passwordChanger.isLoading,
+      () => view.clearErrors(),
       () => view.showLoader(),
       () => passwordChanger.changePassword(any()),
       () => view.hideLoader(),
-      () => view.onChangePasswordFailed("Failed to change Password",
-          InvalidResponseException().userReadableMessage),
+      () => view.onChangePasswordFailed("Failed to change password", InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
   test('get name and profile image of user successfully', () {
-    ChangePasswordPresenter presenter =
-    ChangePasswordPresenter.initWith(view, passwordChanger);
+    var mockUser = MockUser();
+    when(() => mockUser.fullName).thenReturn("some name");
+    when(() => mockUser.profileImageUrl).thenReturn("www.someImageUrl.com");
+    when(() => userProvider.getCurrentUser()).thenReturn(mockUser);
+    ChangePasswordPresenter presenter = ChangePasswordPresenter.initWith(view, userProvider, passwordChanger);
 
+    expect(presenter.getUserName(), "some name");
+    expect(presenter.getProfileImage(), "www.someImageUrl.com");
     verifyInOrder([
-      () => presenter.getProfileImage(),
-      () => presenter.getUserName(),
+      () => userProvider.getCurrentUser(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
