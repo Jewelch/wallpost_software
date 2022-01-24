@@ -11,6 +11,11 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
   late num _notificationCount;
   late String _actualSalesAmount;
   late num _achievedSalesPercent;
+  late String _avatar;
+  late String _profit_loss;
+  late String _receivable_overdue;
+  late String _fund_availability;
+  late String _payable_overdue;
 
   CompanyListItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
@@ -22,6 +27,11 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
       _notificationCount = sift.readNumberFromMap(jsonMap, 'notifications');
       _actualSalesAmount = sift.readStringFromMap(jsonMap, 'actual_revenue_display');
       _achievedSalesPercent = sift.readNumberFromMap(jsonMap, 'overall_revenue');
+      _avatar = 'https://placeimg.com/640/480/any';
+      _profit_loss ="180,000";
+      _receivable_overdue ="80,000";
+      _fund_availability="200,000";
+      _payable_overdue ="50,000";
     } on SiftException catch (e) {
       print(e.errorMessage);
       throw MappingException('Failed to cast CompanyListItem response. Error message - ${e.errorMessage}');
@@ -38,6 +48,11 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
       'approval_count': _approvalCount,
       'notifications': _notificationCount,
       'overall_revenue': _achievedSalesPercent,
+      'avatar': _avatar,
+      'profit_loss' :_profit_loss,
+      'receivable_overdue' :_receivable_overdue,
+      'fund_availability' : _fund_availability,
+      'payable_overdue' :_payable_overdue
     };
     return jsonMap;
   }
@@ -55,4 +70,14 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
   String get actualSalesAmount => _actualSalesAmount;
 
   num get achievedSalesPercent => _achievedSalesPercent;
+
+  String get  avatar  => _avatar ;
+
+  String get profitLoss => _profit_loss;
+
+  String get receivableOverdue  => _receivable_overdue;
+
+  String get fundAvailability => _fund_availability;
+
+  String get payableOverdue => _payable_overdue;
 }
