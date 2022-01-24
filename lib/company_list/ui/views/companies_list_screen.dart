@@ -11,7 +11,7 @@ import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
+import 'package:wallpost/company_list/entities/company_list_item.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dart';
 import 'package:wallpost/company_list/ui/views/company_list_card.dart';

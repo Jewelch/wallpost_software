@@ -1,7 +1,7 @@
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/_wp_core/company_management/constants/company_management_urls.dart';
-import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
-import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
+import 'package:wallpost/company_list/constants/company_management_urls.dart';
+import 'package:wallpost/company_list/entities/company_list_item.dart';
+import 'package:wallpost/company_list/repositories/company_repository.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 

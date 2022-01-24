@@ -2,7 +2,7 @@ import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
-import 'package:wallpost/_wp_core/company_management/entities/module.dart';
+import 'package:wallpost/company_list/entities/module.dart';
 
 class Company extends JSONInitializable implements JSONConvertible {
   late String _id;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
+import 'package:wallpost/company_list/entities/company_list_item.dart';
 
 class CompanyListCard extends StatelessWidget {
   final CompanyListItem company;

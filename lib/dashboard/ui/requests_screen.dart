@@ -4,7 +4,7 @@ import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/custom_switch/custom_switch.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/company_list/services/selected_company_provider.dart';
 
 class RequestsScreen extends StatefulWidget {
   @override
