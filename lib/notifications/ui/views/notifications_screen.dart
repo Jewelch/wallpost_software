@@ -10,7 +10,9 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
+import 'package:wallpost/notifications/entities/selected_company_unread_notifications_count.dart';
 import 'package:wallpost/notifications/services/all_notifications_reader.dart';
+import 'package:wallpost/notifications/services/selected_company_unread_notifications_count_provider.dart';
 import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';
 import 'package:wallpost/notifications/ui/presenters/notifications_list_presenter.dart';
 
@@ -21,10 +23,13 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> implements NotificationsListView {
   UnreadNotificationsCountProvider _unreadNotificationsCountProvider = UnreadNotificationsCountProvider();
+  SelectedCompanyUnreadNotificationsCountProvider _selectedCompanyUnreadNotificationsCountProvider = SelectedCompanyUnreadNotificationsCountProvider();
   AllNotificationsReader _allNotificationsReader = AllNotificationsReader();
   late NotificationsListPresenter _presenter;
   late ScrollController _scrollController;
   num _unreadNotificationsCount = 0;
+  late List<SelectedCompanyUnreadNotificationsCount> _allCompaniesUnreadNotificationsCount ;
+  num _selectedCompanyUnreadNotificationsCount = 0;
 
   @override
   void initState() {
@@ -33,6 +38,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
     _presenter.loadNextListOfNotifications();
     _setupScrollDownToLoadMoreItems();
     _getUnreadNotificationsCount();
+    _getSelectedCompanyUnreadNotificationsCount();
     super.initState();
   }
 
@@ -49,6 +55,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
       var unreadNotificationsCount = await _unreadNotificationsCountProvider.getCount();
       setStateIfMounted(() {
         _unreadNotificationsCount = unreadNotificationsCount.totalUnreadNotifications;
+        _allCompaniesUnreadNotificationsCount = unreadNotificationsCount.allCompaniesUnreadNotificationsCount;
+      });
+    } on WPException catch (_) {
+      setStateIfMounted(() => {});
+    }
+  }
+
+  void _getSelectedCompanyUnreadNotificationsCount() async {
+    try {
+      var unreadNotificationsCount = await _selectedCompanyUnreadNotificationsCountProvider.getCount();
+      setStateIfMounted(() {
+        _selectedCompanyUnreadNotificationsCount = unreadNotificationsCount.totalUnreadNotifications;
       });
     } on WPException catch (_) {
       setStateIfMounted(() => {});
@@ -150,6 +168,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
         _presenter.reset();
         _presenter.loadNextListOfNotifications();
         _getUnreadNotificationsCount();
+        _getSelectedCompanyUnreadNotificationsCount();
       });
     } on WPException catch (error) {
       Alert.showSimpleAlert(

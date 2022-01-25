@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
@@ -42,24 +41,10 @@ class UnreadNotificationsCountProvider {
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
-    var selectCompanyCountsMap = readUnreadNotificationsCountForSelectedCompany(responseMap);
     try {
-      var unreadNotificationCount = UnreadNotificationsCount.fromJson(selectCompanyCountsMap);
+      var unreadNotificationCount = UnreadNotificationsCount.fromJson(responseMap);
       return unreadNotificationCount;
     } catch (e) {
-      throw InvalidResponseException();
-    }
-  }
-
-  Map<String, dynamic> readUnreadNotificationsCountForSelectedCompany(Map<String, dynamic> responseMap) {
-    var sift = Sift();
-
-    try {
-      var selectedCompanyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-      var companiesCountMap = sift.readMapFromMap(responseMap, 'companies_count');
-      var selectedCompanyCountMap = sift.readMapFromMap(companiesCountMap, selectedCompanyId);
-      return selectedCompanyCountMap;
-    } on SiftException catch (_) {
       throw InvalidResponseException();
     }
   }
