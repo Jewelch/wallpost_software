@@ -1,7 +1,7 @@
-import 'package:wallpost/_wp_core/company_management/entities/company.dart';
-import 'package:wallpost/_wp_core/company_management/entities/employee.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
+import 'package:wallpost/company_list/entities/company.dart';
+import 'package:wallpost/company_list/entities/employee.dart';
+import 'package:wallpost/company_list/services/selected_company_provider.dart';
+import 'package:wallpost/company_list/services/selected_employee_provider.dart';
 
 class Permissions {
   final Company _company;

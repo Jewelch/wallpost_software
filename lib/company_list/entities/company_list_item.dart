@@ -11,6 +11,11 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
   late num _notificationCount;
   late String _actualSalesAmount;
   late num _achievedSalesPercent;
+  late String _avatar;
+  late String _profitLoss;
+  late String _receivableOverdue;
+  late String _fundAvailability;
+  late String _payableOverdue;
 
   CompanyListItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
@@ -22,6 +27,11 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
       _notificationCount = sift.readNumberFromMap(jsonMap, 'notifications');
       _actualSalesAmount = sift.readStringFromMap(jsonMap, 'actual_revenue_display');
       _achievedSalesPercent = sift.readNumberFromMap(jsonMap, 'overall_revenue');
+      _avatar = 'https://placeimg.com/640/480/any';
+      _profitLoss = "180,000";
+      _receivableOverdue = "80,000";
+      _fundAvailability = "200,000";
+      _payableOverdue = "50,000";
     } on SiftException catch (e) {
       print(e.errorMessage);
       throw MappingException('Failed to cast CompanyListItem response. Error message - ${e.errorMessage}');
@@ -38,6 +48,11 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
       'approval_count': _approvalCount,
       'notifications': _notificationCount,
       'overall_revenue': _achievedSalesPercent,
+      'avatar': _avatar,
+      'profit_loss': _profitLoss,
+      'receivable_overdue': _receivableOverdue,
+      'fund_availability': _fundAvailability,
+      'payable_overdue': _payableOverdue
     };
     return jsonMap;
   }
@@ -55,4 +70,14 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
   String get actualSalesAmount => _actualSalesAmount;
 
   num get achievedSalesPercent => _achievedSalesPercent;
+
+  String get avatar => _avatar;
+
+  String get profitLoss => _profitLoss;
+
+  String get receivableOverdue => _receivableOverdue;
+
+  String get fundAvailability => _fundAvailability;
+
+  String get payableOverdue => _payableOverdue;
 }

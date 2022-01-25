@@ -1,4 +1,4 @@
-import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
+import 'package:wallpost/company_list/repositories/company_repository.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 
 class UserCompaniesRemover {

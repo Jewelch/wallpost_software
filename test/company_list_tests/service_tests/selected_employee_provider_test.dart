@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
+import 'package:wallpost/company_list/services/selected_employee_provider.dart';
 
-import '../../../_mocks/mock_company.dart';
-import '../../../_mocks/mock_current_user_provider.dart';
-import '../../../_mocks/mock_employee.dart';
-import '../../../_mocks/mock_user.dart';
+import '../../_mocks/mock_company.dart';
+import '../../_mocks/mock_current_user_provider.dart';
+import '../../_mocks/mock_employee.dart';
+import '../../_mocks/mock_user.dart';
 import 'companies_list_provider_test.dart';
 
 void main() {

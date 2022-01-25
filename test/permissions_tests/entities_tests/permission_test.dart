@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/permission/entities/permissions.dart';
-import 'package:wallpost/_wp_core/company_management/entities/role.dart';
+import 'package:wallpost/company_list/entities/role.dart';
 
 main() {
   // test("test initialize Permission from json successfully", () {

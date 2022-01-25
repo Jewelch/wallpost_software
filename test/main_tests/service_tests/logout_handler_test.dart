@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
-import 'package:wallpost/_wp_core/company_management/services/user_companies_remover.dart';
+import 'package:wallpost/company_list/services/user_companies_remover.dart';
 import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
 
 import '../../_mocks/mock_current_user_provider.dart';

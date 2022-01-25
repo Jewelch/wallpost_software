@@ -1,7 +1,7 @@
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
-import 'package:wallpost/_wp_core/company_management/entities/company.dart';
-import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
-import 'package:wallpost/_wp_core/company_management/entities/employee.dart';
+import 'package:wallpost/company_list/entities/company.dart';
+import 'package:wallpost/company_list/entities/company_list_item.dart';
+import 'package:wallpost/company_list/entities/employee.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 
 class CompanyRepository {
