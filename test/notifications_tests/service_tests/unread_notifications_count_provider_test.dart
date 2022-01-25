@@ -1,28 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/notifications/constants/notification_urls.dart';
 import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';
 
-import '../../_mocks/mock_company.dart';
-import '../../_mocks/mock_company_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
   Map<String, dynamic> successfulResponse = Mocks.unreadNotificationsCount;
-  var mockCompany = MockCompany();
-  var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var unreadNotificationsCountProvider = UnreadNotificationsCountProvider.initWith(
-    mockCompanyProvider,
-    mockNetworkAdapter,
-  );
+  var unreadNotificationsCountProvider = UnreadNotificationsCountProvider.initWith(mockNetworkAdapter);
 
-  setUp(() {
-    when(() => mockCompany.id).thenReturn('selectedCompanyId');
-    when(() => mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
-  });
+  setUp(() {});
 
   test('api request is built and executed correctly', () async {
     Map<String, dynamic> requestParams = {};
@@ -87,7 +76,6 @@ void main() {
   });
 
   test('throws InvalidResponseException if fails to read company counts map', () async {
-    when(() => mockCompany.id).thenReturn('companyIdForWhichCountIsNotPresent');
     mockNetworkAdapter.succeed(<String, dynamic>{});
 
     try {
