@@ -18,8 +18,6 @@ class Permissions {
             SelectedEmployeeProvider().getSelectedEmployeeForCurrentUser(),
         this._requestItems = [];
 
-  bool shouldShowFinancialWidgets() => false;
-
   bool canCreateTask() => _requestItems.contains(RequestItem.Task);
 
   bool canCreateExpenseRequest() =>
