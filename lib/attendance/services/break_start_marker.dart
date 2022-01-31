@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
+import 'package:wallpost/company_list/services/selected_employee_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance/constants/attendance_urls.dart';
 import 'package:wallpost/attendance/entities/attendance_details.dart';

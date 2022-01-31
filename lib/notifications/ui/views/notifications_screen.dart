@@ -8,7 +8,7 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/company_list/services/selected_company_provider.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
 import 'package:wallpost/notifications/services/all_notifications_reader.dart';
 import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';

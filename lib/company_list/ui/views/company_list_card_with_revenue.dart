@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
+import 'package:wallpost/company_list/entities/company_list_item.dart';
 
 class CompanyListCardWithRevenue extends StatelessWidget {
   final CompanyListItem company;
