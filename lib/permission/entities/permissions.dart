@@ -2,32 +2,33 @@ import 'package:wallpost/_wp_core/company_management/entities/company.dart';
 import 'package:wallpost/_wp_core/company_management/entities/employee.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
+import 'package:wallpost/permission/entities/request_item.dart';
 
 class Permissions {
   final Company _company;
   final Employee _employee;
+  final List<RequestItem> _requestItems;
 
-  Permissions.initWith(this._company, this._employee);
+  Permissions.initWith(this._company, this._employee, this._requestItems);
 
-  // Permissions.forSelectedCompany()
   Permissions()
-      : this._company = SelectedCompanyProvider().getSelectedCompanyForCurrentUser(),
-        this._employee = SelectedEmployeeProvider().getSelectedEmployeeForCurrentUser();
+      : this._company =
+            SelectedCompanyProvider().getSelectedCompanyForCurrentUser(),
+        this._employee =
+            SelectedEmployeeProvider().getSelectedEmployeeForCurrentUser(),
+        this._requestItems = [];
 
-  //?
   bool shouldShowFinancialWidgets() => false;
 
-  // company has task module and user role doesn't matter
-  bool canCreateTask() => false;
+  bool canCreateTask() => _requestItems.contains(RequestItem.Task);
 
-  //?
-  bool canRequestLeave() => false;
+  bool canCreateExpenseRequest() =>
+      _requestItems.contains(RequestItem.ExpenseRequest);
 
-  //?
-  bool canCreateHandover() => false;
+// bool canRequestLeave() => _requestItems.contains(RequestItem.LeaveRequest);
+// bool canCreateHandover() => false;
 
 // bool canApproveEmployeeHandover(handover)=> false;
-// bool canApproveExpense(expense)=> false;
 // bool canApproveTask(task)=> false;
 // bool canApproveLeave(leave)=> false;
 // bool canApproveAttendanceAdjustment(attendanceAdjustmentRequest)=> false;
