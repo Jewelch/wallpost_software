@@ -4,6 +4,7 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/company_list/constants/company_management_urls.dart';
 import 'package:wallpost/company_list/repositories/company_repository.dart';
 import 'package:wallpost/company_list/services/company_details_provider.dart';
+import 'package:wallpost/permission/services/request_itmes_provider.dart';
 
 import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_current_user_provider.dart';
@@ -14,27 +15,29 @@ import '../mocks.dart';
 
 class MockCompanyRepository extends Mock implements CompanyRepository {}
 
+class MockPermissionRequestItemsProvider extends Mock implements PermissionRequestItemsProvider {}
+
 void main() {
   Map<String, dynamic> successfulResponse = Mocks.companyDetailsResponse;
   var mockUser = MockUser();
   var mockUserProvider = MockCurrentUserProvider();
   var mockCompanyRepository = MockCompanyRepository();
   var mockNetworkAdapter = MockNetworkAdapter();
+  var mockPermissionProvider = MockPermissionRequestItemsProvider();
   var companyDetailsProvider = CompanyDetailsProvider.initWith(
-    mockUserProvider,
-    mockCompanyRepository,
-    mockNetworkAdapter,
-  );
+      mockUserProvider, mockCompanyRepository, mockNetworkAdapter, mockPermissionProvider);
 
   setUpAll(() {
     registerFallbackValue(MockUser());
     registerFallbackValue(MockCompany());
     registerFallbackValue(MockEmployee());
     when(() => mockUserProvider.getCurrentUser()).thenReturn(mockUser);
+    when(() => mockPermissionProvider.get(any())).thenAnswer((_) => Future.value(null));
   });
 
   setUp(() {
     reset(mockCompanyRepository);
+    clearInteractions(mockPermissionProvider);
   });
 
   test('api request is built and executed correctly', () async {
@@ -43,7 +46,8 @@ void main() {
 
     var _ = await companyDetailsProvider.getCompanyDetails('someCompanyId');
 
-    expect(mockNetworkAdapter.apiRequest.url, CompanyManagementUrls.getCompanyDetailsUrl('someCompanyId'));
+    expect(mockNetworkAdapter.apiRequest.url,
+        CompanyManagementUrls.getCompanyDetailsUrl('someCompanyId'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -115,7 +119,9 @@ void main() {
 
     try {
       var _ = await companyDetailsProvider.getCompanyDetails('someCompanyId');
-      verify(() => mockCompanyRepository.selectCompanyAndEmployeeForUser(any(), any(), any())).called(1);
+      verify(() => mockCompanyRepository.selectCompanyAndEmployeeForUser(any(), any(), any()))
+          .called(1);
+      verify(() => mockPermissionProvider.get(any())).called(1);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }

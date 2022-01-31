@@ -7,19 +7,23 @@ import 'package:wallpost/company_list/entities/employee.dart';
 import 'package:wallpost/company_list/repositories/company_repository.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
+import 'package:wallpost/permission/services/request_itmes_provider.dart';
 
 class CompanyDetailsProvider {
   final CurrentUserProvider _currentUserProvider;
   final CompanyRepository _companyRepository;
+  final PermissionRequestItemsProvider _permissionRequestItemsProvider;
   final NetworkAdapter _networkAdapter;
   bool isLoading = false;
   late String _sessionId;
 
-  CompanyDetailsProvider.initWith(this._currentUserProvider, this._companyRepository, this._networkAdapter);
+  CompanyDetailsProvider.initWith(this._currentUserProvider, this._companyRepository,
+      this._networkAdapter, this._permissionRequestItemsProvider);
 
   CompanyDetailsProvider()
       : _currentUserProvider = CurrentUserProvider(),
         _companyRepository = CompanyRepository(),
+        _permissionRequestItemsProvider = PermissionRequestItemsProvider(),
         _networkAdapter = WPAPI();
 
   Future<void> getCompanyDetails(String companyId) async {
@@ -48,8 +52,9 @@ class CompanyDetailsProvider {
     try {
       var company = Company.fromJson(responseMap);
       var employee = Employee.fromJson(responseMap);
-      //todo var permissions = Permissions.fromJson(responseMap);
-      _companyRepository.selectCompanyAndEmployeeForUser(company, employee, _currentUserProvider.getCurrentUser());
+      _companyRepository.selectCompanyAndEmployeeForUser(
+          company, employee, _currentUserProvider.getCurrentUser());
+      await _permissionRequestItemsProvider.get(company.id);
       //todo _permissionsRepo.savePermissionsForEmployeeOrEmployee(permissions, employee)
       return null;
     } catch (e) {
