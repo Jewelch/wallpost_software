@@ -4,22 +4,43 @@ import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 class AttendanceListItem extends JSONInitializable {
+  late num? _id;
   late DateTime _date;
   late DateTime? _punchInTime;
   late DateTime? _punchOutTime;
-  late String? _status;
+  late DateTime? _originalPunchInTime;
+  late DateTime? _originalPunchOutTime;
+  late String? _adjustedStatus;
+  late String? _workStatus;
+  late String? _attendanceId;
+  late String? _reason;
+  late String? _approvalStatus;
+  late String? _approverName;
+
 
   AttendanceListItem.fromJSon(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     try {
       var sift = Sift();
+      _id = sift.readNumberFromMapWithDefaultValue(jsonMap, 'id',null);
       _date = sift.readDateFromMap(jsonMap, 'date', 'yyyy-MM-dd');
       _punchInTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'punch_in_time', 'HH:mm', null);
       _punchOutTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'punch_out_time', 'HH:mm', null);
-      _status = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_status', null);
+      _originalPunchInTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'orig_punch_in_time', 'HH:mm', null);
+      _originalPunchOutTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'orig_punch_out_time', 'HH:mm', null);
+      _adjustedStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_status', null);
+      _workStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'work_status', null);
+      _attendanceId = sift.readStringFromMapWithDefaultValue(jsonMap, 'attendance_id', null);
+      _reason = sift.readStringFromMapWithDefaultValue(jsonMap, 'reason', null);
+      _approvalStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'approval_status', null);
+      _approverName = sift.readStringFromMapWithDefaultValue(jsonMap, 'approver_name', null);
+
+
     } on SiftException catch (e) {
       throw MappingException('Failed to cast AttendanceListItem response. Error message - ${e.errorMessage}');
     }
   }
+
+  num? get id => _id;
 
   String get date => _convertDateToString(_date);
 
@@ -27,15 +48,30 @@ class AttendanceListItem extends JSONInitializable {
 
   String get punchOutTime => _convertTimeToString(_punchOutTime);
 
-  String? get status => _status;
+  String get originalPunchInTime => _convertTimeToString(_originalPunchInTime);
+
+  String get originalPunchOutTime => _convertTimeToString(_originalPunchOutTime);
+
+  String? get adjustedStatus => _adjustedStatus;
+
+  String? get workStatus => _workStatus;
+
+  String? get approvalStatus => _approvalStatus;
+
+  String? get attendanceID => _attendanceId;
+
+  String? get reason => _reason;
+
+  String? get approverName => _approverName;
+
 
   String _convertTimeToString(DateTime? time) {
     if (time == null) return '';
     return DateFormat('hh:mm').format(time);
   }
 
-  String _convertDateToString(DateTime? time) {
-    if (time == null) return '';
-    return DateFormat('yyyy-MM-dd').format(time);
+  String _convertDateToString(DateTime? date) {
+    if (date == null) return '';
+    return DateFormat('yyyy-MM-dd').format(date);
   }
 }
