@@ -315,8 +315,8 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
     // }
   }
 
-  Future<AttendanceLocation> _getLocation() async {
-    Position position = await LocationProvider().getLocation();
-    return AttendanceLocation(position.latitude, position.longitude);
-  }
+  // Future<AttendanceLocation> _getLocation() async {
+  //   Position position = await LocationProvider().getLocation();
+  //   return AttendanceLocation(position.latitude, position.longitude);
+  // }
 }

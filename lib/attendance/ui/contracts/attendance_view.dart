@@ -7,16 +7,29 @@ abstract class AttendanceView {
 
   void showDisableButton();
 
-  void showFailedToGetLocation(String message);
+  void showFailedToGetLocation(String title, String message);
 
   void showLocationAddress(String address);
 
   void showPunchInButton();
 
-  void showFailedToGetPunchInFromAppPermission(String message);
+  void showPunchOutButton();
+
+  void showMessageToAllowPunchInFromAppPermission(String message);
 
   void hideBreakButton();
 
+  void showBreakButton();
+
+  void showResumeButton();
+
   void showSecondTillPunchIn(String number);
 
+  void showPunchInTime(String time);
+
+  void showPunchOutTime(String time);
+
+  void showAlertToVerifyLocation(String message);
+
+  void doPunchOut();
 }
