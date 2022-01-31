@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
+import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
 
 class AttendanceListItem extends JSONInitializable {
   late num? _id;
@@ -10,8 +11,8 @@ class AttendanceListItem extends JSONInitializable {
   late DateTime? _punchOutTime;
   late DateTime? _originalPunchInTime;
   late DateTime? _originalPunchOutTime;
-  late String? _adjustedStatus;
-  late String? _workStatus;
+  late AttendanceStatus? _adjustedStatus;
+  late AttendanceStatus? _workStatus;
   late String? _attendanceId;
   late String? _reason;
   late String? _approvalStatus;
@@ -27,8 +28,8 @@ class AttendanceListItem extends JSONInitializable {
       _punchOutTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'punch_out_time', 'HH:mm', null);
       _originalPunchInTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'orig_punch_in_time', 'HH:mm', null);
       _originalPunchOutTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'orig_punch_out_time', 'HH:mm', null);
-      _adjustedStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_status', null);
-      _workStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'work_status', null);
+      _adjustedStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_status', null) as AttendanceStatus?;
+      _workStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'work_status', null) as AttendanceStatus?;
       _attendanceId = sift.readStringFromMapWithDefaultValue(jsonMap, 'attendance_id', null);
       _reason = sift.readStringFromMapWithDefaultValue(jsonMap, 'reason', null);
       _approvalStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'approval_status', null);
@@ -52,9 +53,9 @@ class AttendanceListItem extends JSONInitializable {
 
   String get originalPunchOutTime => _convertTimeToString(_originalPunchOutTime);
 
-  String? get adjustedStatus => _adjustedStatus;
+  AttendanceStatus? get adjustedStatus => _adjustedStatus;
 
-  String? get workStatus => _workStatus;
+  AttendanceStatus? get workStatus => _workStatus;
 
   String? get approvalStatus => _approvalStatus;
 
