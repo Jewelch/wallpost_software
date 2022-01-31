@@ -1,37 +1,59 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/company_list/entities/company.dart';
+import 'package:wallpost/company_list/entities/employee.dart';
 import 'package:wallpost/permission/entities/permissions.dart';
-import 'package:wallpost/company_list/entities/role.dart';
+import 'package:wallpost/permission/entities/request_item.dart';
+
+class MockCompany extends Mock implements Company {}
+
+class MockEmployee extends Mock implements Employee {}
 
 main() {
-  // test("test initialize Permission from json successfully", () {
-  //   var roleMap = {'role': 'owner'};
-  //
-  //   Permission permission = Permission.fromJson(roleMap);
-  //
-  //   expect(permission.role, Role.Owner);
-  // });
-  //
-  // test("test initialize Permission with invalid data throws Mapping exception",
-  //     () {
-  //   var wrongRoleMap = {'rolee': 'employee'};
-  //
-  //   try {
-  //     Permission.fromJson(wrongRoleMap);
-  //     assert(false);
-  //   } catch (e) {
-  //     expect(e is MappingException, true);
-  //   }
-  // });
+  var mockCompany = MockCompany();
+  var mockEmployee = MockEmployee();
 
-  // test("test only financials can see financials widgets", () {
-  //   var ownerMap = {'role': 'owner'};
-  //   var managerMap = {'role': 'general_manager'};
-  //
-  //   var permission1 = Permission.fromJson(ownerMap);
-  //   var permission2 = Permission.fromJson(managerMap);
-  //
-  //   expect(permission1.shouldShowFinancialWidgets(), false);
-  //   expect(permission2.shouldShowFinancialWidgets(), true);
-  // });
+  group(
+      "test create task permission, only employees have task request item can request",
+      () {
+    test("employee don't have task request item", () {
+      var requestItems = <RequestItem>[];
+
+      var permissions =
+          Permissions.initWith(mockCompany, mockEmployee, requestItems);
+
+      expect(permissions.canCreateTask(), false);
+    });
+
+    test("employee do have task request item", () {
+      var requestItems = <RequestItem>[RequestItem.Task];
+
+      var permissions =
+          Permissions.initWith(mockCompany, mockEmployee, requestItems);
+
+      expect(permissions.canCreateTask(), true);
+    });
+  });
+
+  group(
+      "test create expense request, only employees have expense request item can request",
+      () {
+    test("employee don't have expense request item", () {
+      var requestItems = <RequestItem>[];
+
+      var permissions =
+          Permissions.initWith(mockCompany, mockEmployee, requestItems);
+
+      expect(permissions.canCreateTask(), false);
+    });
+
+    test("employee do have expense request item", () {
+      var requestItems = <RequestItem>[RequestItem.ExpenseRequest];
+
+      var permissions =
+          Permissions.initWith(mockCompany, mockEmployee, requestItems);
+
+      expect(permissions.canCreateExpenseRequest(), true);
+    });
+  });
 }
