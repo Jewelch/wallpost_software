@@ -1,7 +1,7 @@
-import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_adjustment_form.dart';
+import 'package:wallpost/company_list/services/selected_employee_provider.dart';
 
 class AttendanceAdjustmentSubmitter {
   final SelectedEmployeeProvider _selectedEmployeeProvider;
@@ -9,22 +9,17 @@ class AttendanceAdjustmentSubmitter {
   bool isLoading = false;
   late String _sessionId;
 
-  AttendanceAdjustmentSubmitter.initWith(
-      this._selectedEmployeeProvider, this._networkAdapter);
+  AttendanceAdjustmentSubmitter.initWith(this._selectedEmployeeProvider, this._networkAdapter);
 
   AttendanceAdjustmentSubmitter()
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
         _networkAdapter = WPAPI();
 
-  Future<void> submitAdjustment(
-      AttendanceAdjustmentForm attendanceAdjustmentForm) async {
+  Future<void> submitAdjustment(AttendanceAdjustmentForm attendanceAdjustmentForm) async {
     if (isLoading) return;
 
-    var employee =
-        _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-    var url = AttendanceAdjustmentUrls.submitAdjustmentUrl(
-        employee.companyId,
-        employee.v1Id);
+    var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
+    var url = AttendanceAdjustmentUrls.submitAdjustmentUrl(employee.companyId, employee.v1Id);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameters(attendanceAdjustmentForm.toJson());
