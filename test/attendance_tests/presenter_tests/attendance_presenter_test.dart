@@ -75,7 +75,7 @@ void main() {
     verifyNoMoreInteractions(mockPunchInNowPermissionProvider);
   }
 
-  test("loading attendance details successfully", () async {
+  test("loadingAttendanceDetailsSuccessfully", () async {
     //given
 
     var attendance = MockAttendanceDetails();
@@ -110,7 +110,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('failure to loading attendance details', () async {
+  test('failureToLoadingAttendanceDetails', () async {
     //given
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
     when(() => mockAttendanceDetailsProvider.getDetails())
@@ -132,7 +132,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("get location successfully", () async {
+  test("getLocationSuccessfully", () async {
     //given
     var attendance = MockAttendanceDetails();
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
@@ -166,7 +166,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('failure to get location', () async {
+  test('failureToGetLocation', () async {
     //given
     var attendance = MockAttendanceDetails();
     when(() => attendance.isPunchedIn).thenReturn(true);
@@ -194,7 +194,7 @@ void main() {
   });
 
   test(
-      "show punch in button when user not punch in and  allowed to punch in app permission also can punch in now",
+      "showPunchInButton_whenUseNotPunchIn_andAllowedToPunchInAppPermission_alsoCanPunchInNow",
       () async {
     //given
     var attendance = MockAttendanceDetails();
@@ -236,7 +236,7 @@ void main() {
   });
 
   test(
-      "show disable button when user not punch in and not allowed to punch in app permission ",
+      "showDisableButton_whenUserNotPunchIn_andNotAllowedToPunchInAppPermission ",
       () async {
     //given
 
@@ -273,7 +273,7 @@ void main() {
   });
 
   test(
-      "show remaining time to punch in when user not punch in and  allowed to punch in app permission but cannot punch in now",
+      "showRemainingTimeToPunchIn_whenUserNotPunchIn_andAllowedToPunchInAppPermission_butCannotPunchInNow",
       () async {
     //given
     var attendance = MockAttendanceDetails();
@@ -316,7 +316,7 @@ void main() {
 
   // IS PUNCH IN _YES
 
-  test("hide break button and show punch out time after user is punch out ",
+  test("hideBreakButtonAndShowPunchOutTime_afterUserIsPunchOut ",
       () async {
     //given
     var attendance = MockAttendanceDetails();
@@ -350,7 +350,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("show resume button when the user is on break", () async {
+  test("showResumeButton_whenTheUserIsOnBreak", () async {
     //given
     var attendance = MockAttendanceDetails();
 
@@ -386,7 +386,7 @@ void main() {
   });
 
   test(
-      "show enabled break button when the user is not on break and user is punch in",
+      "showEnabledBreakButton_whenTheUserIsPunchIn_andIsNotOnBreak",
       () async {
     //given
     var attendance = MockAttendanceDetails();
@@ -422,7 +422,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("show punch out button when the user is punch in and not punch out ",
+  test("showPunchOuButton_whenTheUserIsPunchIn_andNotPunchOut ",
       () async {
     //given
     var attendance = MockAttendanceDetails();

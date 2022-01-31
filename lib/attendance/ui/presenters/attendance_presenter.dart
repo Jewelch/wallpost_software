@@ -80,27 +80,36 @@ class AttendancePresenter {
   }
 
   Future<void> _getPunchInFromAppPermission() async {
-    var punchInFromAppPermission =
-        await _punchInFromAppPermissionProvider.canPunchInFromApp();
-    if (punchInFromAppPermission.isAllowed) {
-      await _loadPunchInDetails();
-    } else {
+    try {
+      var punchInFromAppPermission =
+          await _punchInFromAppPermissionProvider.canPunchInFromApp();
+      if (punchInFromAppPermission.isAllowed) {
+        await _loadPunchInDetails();
+      } else {
+        _view.showDisableButton();
+        _view.hideBreakButton();
+        _view
+            .showMessageToAllowPunchInFromAppPermission("Allow app permission");
+      }
+    } on WPException catch (e) {
       _view.showDisableButton();
-      _view.hideBreakButton();
-      _view.showMessageToAllowPunchInFromAppPermission("Allow app permission");
     }
   }
 
   Future<void> _loadPunchInDetails() async {
-    var punchInNowPermission =
-        await _punchInNowPermissionProvider.canPunchInNow();
-    if (punchInNowPermission.canPunchInNow) {
-      _view.showPunchInButton();
-    } else {
+    try {
+      var punchInNowPermission =
+          await _punchInNowPermissionProvider.canPunchInNow();
+      if (punchInNowPermission.canPunchInNow) {
+        _view.showPunchInButton();
+      } else {
+        _view.showDisableButton();
+        _view.hideBreakButton();
+        _view.showSecondTillPunchIn(
+            punchInNowPermission.secondsTillPunchIn.toString());
+      }
+    } on WPException catch (e) {
       _view.showDisableButton();
-      _view.hideBreakButton();
-      _view.showSecondTillPunchIn(
-          punchInNowPermission.secondsTillPunchIn.toString());
     }
   }
 
