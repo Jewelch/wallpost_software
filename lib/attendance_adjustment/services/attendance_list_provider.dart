@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_employee_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_list.dart';
+import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
+import 'package:wallpost/company_list/services/selected_employee_provider.dart';
 
 class AttendanceListsProvider {
   final SelectedEmployeeProvider _selectedEmployeeProvider;
@@ -12,21 +13,18 @@ class AttendanceListsProvider {
   late String _sessionId;
   bool isLoading = false;
 
-  AttendanceListsProvider.initWith(
-      this._selectedEmployeeProvider, this._networkAdapter);
+  AttendanceListsProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
 
   AttendanceListsProvider()
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
         _networkAdapter = WPAPI();
 
-  Future<AttendanceList> getLists() async {
-    var employee =
-        _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
+  Future<List<AttendanceListItem>> get() async {
+    var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
     var month = DateTime.now().month;
     var year = DateTime.now().year;
 
-    var url = AttendanceAdjustmentUrls.getAttendanceListsUrl(
-        employee.companyId, employee.v1Id, month, year);
+    var url = AttendanceAdjustmentUrls.getAttendanceListsUrl(employee.companyId, employee.v1Id, month, year);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
@@ -41,26 +39,28 @@ class AttendanceListsProvider {
     }
   }
 
-
-   _processResponse(APIResponse apiResponse) {
-
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<AttendanceList>().future;
-
+  Future<List<AttendanceListItem>> _processResponse(APIResponse apiResponse) async {
+    //returning if the response is from another session
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<AttendanceListItem>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-
-    if (apiResponse.data is! Map<String, dynamic>)
-      throw WrongResponseFormatException();
+    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
-    return _readItemsFromResponse(responseMap);
-  }
-
-  AttendanceList _readItemsFromResponse(Map<String, dynamic> responseMap) {
     try {
-      var attendanceList = AttendanceList.fromJson(responseMap);
-      return attendanceList;
+      return _readItemsFromResponse(responseMap);
     } catch (e) {
       throw InvalidResponseException();
     }
+  }
+
+  List<AttendanceListItem> _readItemsFromResponse(Map<String, dynamic> responseMap) {
+    List<AttendanceListItem> attendanceListItems = [];
+    var sift = Sift();
+    var dataMap = sift.readMapListFromMap(responseMap, "data");
+    for (var attendanceJson in dataMap) {
+      var listItem = AttendanceListItem.fromJSon(attendanceJson);
+      attendanceListItems.add(listItem);
+    }
+    return attendanceListItems;
   }
 }

@@ -7,21 +7,17 @@ class AttendanceListItem extends JSONInitializable {
   late DateTime _date;
   late DateTime? _punchInTime;
   late DateTime? _punchOutTime;
-  late String _status;
+  late String? _status;
 
-  AttendanceListItem.fromJSon(Map<String, dynamic> jsonMap)
-      : super.fromJson(jsonMap) {
+  AttendanceListItem.fromJSon(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     try {
       var sift = Sift();
       _date = sift.readDateFromMap(jsonMap, 'date', 'yyyy-MM-dd');
-      _punchInTime = sift.readDateFromMap(jsonMap, 'punch_in_time', 'HH:mm');
-      _punchOutTime = sift.readDateFromMapWithDefaultValue(
-          jsonMap, 'punch_out_time', 'HH:mm', null);
-      _status = sift.readStringFromMap(jsonMap, 'adjusted_status');
+      _punchInTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'punch_in_time', 'HH:mm', null);
+      _punchOutTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'punch_out_time', 'HH:mm', null);
+      _status = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_status', null);
     } on SiftException catch (e) {
-      print(e.errorMessage);
-      throw MappingException(
-          'Failed to cast AttendanceListItem response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast AttendanceListItem response. Error message - ${e.errorMessage}');
     }
   }
 
@@ -29,9 +25,9 @@ class AttendanceListItem extends JSONInitializable {
 
   String get punchInTime => _convertTimeToString(_punchInTime);
 
-  String get punchOutTime =>  _convertTimeToString(_punchOutTime);
+  String get punchOutTime => _convertTimeToString(_punchOutTime);
 
-  String get status => _status;
+  String? get status => _status;
 
   String _convertTimeToString(DateTime? time) {
     if (time == null) return '';
@@ -42,5 +38,4 @@ class AttendanceListItem extends JSONInitializable {
     if (time == null) return '';
     return DateFormat('yyyy-MM-dd').format(time);
   }
-
 }
