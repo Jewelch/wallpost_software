@@ -15,35 +15,16 @@ class AttendanceAdjustmentSubmitter {
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
         _networkAdapter = WPAPI();
 
-  Future<void> submitAdjustment(AttendanceAdjustmentForm attendanceAdjustmentForm) async {
+  Future<void> submitAdjustment(List<AttendanceAdjustmentForm> attendanceAdjustmentForms) async {
     if (isLoading) return;
 
     var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
     var url = AttendanceAdjustmentUrls.submitAdjustmentUrl(employee.companyId, employee.v1Id);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
-    apiRequest.addParameters(attendanceAdjustmentForm.toJson());
-    // apiRequest.addParameters({
-    //   'id':null,
-    //   'attendance_id':'abc',
-    //   'work_status': 'absent',
-    //   'punch_in_time': '',
-    //   'punch_out_time': '',
-    //   'approval_status': 'null',
-    //   'edit_mode': false,
-    //   'orig_punch_in_time': null,
-    //   'orig_punch_out_time': null,
-    //   'punch_in_time_error': false,
-    //   'punch_out_time_error': false,
-    //   'status_out_error': false,
-    //   'approver_name': null,
-    //   'attnce_reason_error': false,
-    //   'employee_id': employee.v1Id,
-    //   'company_id': employee.companyId,
-    //   'adjusted_status': 'present',
-    //  } );
-    isLoading = true;
+    apiRequest.addParameter("adjustments", _generatePayload(attendanceAdjustmentForms));
 
+    isLoading = true;
     try {
       var _ = await _networkAdapter.post(apiRequest);
       isLoading = false;
@@ -52,5 +33,13 @@ class AttendanceAdjustmentSubmitter {
       isLoading = false;
       throw exception;
     }
+  }
+
+  List<Map<String, dynamic>> _generatePayload(List<AttendanceAdjustmentForm> attendanceAdjustmentForms) {
+    List<Map<String, dynamic>> payload = [];
+    for (AttendanceAdjustmentForm form in attendanceAdjustmentForms) {
+      payload.add(form.toJson());
+    }
+    return payload;
   }
 }

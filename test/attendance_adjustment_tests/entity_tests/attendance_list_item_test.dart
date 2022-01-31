@@ -11,7 +11,7 @@ void main() {
     // expect(attendanceListItem.punchOutTime , '18:00' );
     expect(attendanceListItem.date , '2022-01-28' );
     expect(attendanceListItem.attendanceID , 'Q8pyUr23o8kuGJw' );
-    expect(attendanceListItem.reason , null );
+    expect(attendanceListItem.adjustmentReason , null );
     expect(attendanceListItem.approvalStatus , 'null' );
     expect(attendanceListItem.approverName , 'null' );
 

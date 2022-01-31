@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
@@ -49,16 +48,13 @@ class AdjustedAttendanceStatusProvider {
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! String) throw WrongResponseFormatException();
 
-    // try {
-    // var sift = Sift();
-    // var adjustedStatusString =
-    // return adjustedStatus;
-    //
-    // } on SiftException catch(e) {
-    //   throw InvalidResponseException();
-    // }
+    var adjustedStatusString = apiResponse.data as String;
+    var adjustedStatus = initializeAttendanceStatusFromString(adjustedStatusString);
 
-    //todo remove this
-    return Completer<AttendanceStatus>().future;
+    if (adjustedStatus != null) {
+      return adjustedStatus;
+    } else {
+      throw InvalidResponseException();
+    }
   }
 }

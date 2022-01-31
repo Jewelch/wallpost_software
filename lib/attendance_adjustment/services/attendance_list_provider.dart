@@ -7,15 +7,15 @@ import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_u
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
 import 'package:wallpost/company_list/services/selected_employee_provider.dart';
 
-class AttendanceListsProvider {
+class AttendanceListProvider {
   final SelectedEmployeeProvider _selectedEmployeeProvider;
   final NetworkAdapter _networkAdapter;
   late String _sessionId;
   bool isLoading = false;
 
-  AttendanceListsProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
+  AttendanceListProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
 
-  AttendanceListsProvider()
+  AttendanceListProvider()
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
         _networkAdapter = WPAPI();
 
@@ -61,6 +61,18 @@ class AttendanceListsProvider {
       var listItem = AttendanceListItem.fromJSon(attendanceJson);
       attendanceListItems.add(listItem);
     }
+    _removeTodaysAttendanceIfUserHasNotPunchedOutYet(attendanceListItems);
     return attendanceListItems;
+  }
+
+  void _removeTodaysAttendanceIfUserHasNotPunchedOutYet(List<AttendanceListItem> attendanceListItems) {
+    attendanceListItems.removeWhere((attendanceItem) {
+      var today = DateTime.now();
+      var attendanceDate = attendanceItem.date;
+      return attendanceDate.year == today.year &&
+          attendanceDate.month == today.month &&
+          attendanceDate.day == today.day &&
+          attendanceItem.punchOutTime == null;
+    });
   }
 }

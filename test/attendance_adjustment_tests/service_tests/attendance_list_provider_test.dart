@@ -14,7 +14,7 @@ void main() {
   var mockEmployeeProvider = MockEmployeeProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockEmployee = MockEmployee();
-  var attendanceListsProvider = AttendanceListsProvider.initWith(
+  var attendanceListsProvider = AttendanceListProvider.initWith(
       mockEmployeeProvider, mockNetworkAdapter);
   var month = DateTime.now().month;
   var year = DateTime.now().year;

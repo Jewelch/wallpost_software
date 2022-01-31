@@ -9,4 +9,8 @@ extension DateUtils on DateTime {
   String HHmmssString() {
     return DateFormat('HH:mm:ss').format(this);
   }
+
+  String HHmmString() {
+    return DateFormat('HH:mm').format(this);
+  }
 }

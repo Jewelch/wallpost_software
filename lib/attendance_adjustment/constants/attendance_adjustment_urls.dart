@@ -1,14 +1,32 @@
 import 'package:wallpost/_shared/constants/base_urls.dart';
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
 
 class AttendanceAdjustmentUrls {
-  static String getAttendanceListsUrl(
-      String companyId, String employeeId, int month, int year) {
+  static String getAttendanceListsUrl(String companyId, String employeeId, int month, int year) {
     return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance-adjustment?scope=my&perPage=50&employee_id=$employeeId&month=$month&year=$year';
   }
 
-  static String getAdjustedStatusUrl(String companyId, String employeeId,
-      String date, String punchInTime, String punchOutTime) {
-    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance-adjustment/work_status?date=$date&adjusted_punchin=$punchInTime&adjusted_punchout=$punchOutTime';
+  static String getAdjustedStatusUrl(
+    String companyId,
+    String employeeId,
+    DateTime date,
+    DateTime? adjustedPunchInTime,
+    DateTime? adjustedPunchOutTime,
+  ) {
+    var url = '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance-adjustment/work_status?';
+    url += 'date=${date.yyyyMMddString()}';
+
+    if (adjustedPunchInTime == null)
+      url += '&adjusted_punchin=null';
+    else
+      url += '&adjusted_punchin=${adjustedPunchInTime.yyyyMMddString()}';
+
+    if (adjustedPunchOutTime == null)
+      url += '&adjusted_punchout=null';
+    else
+      url += '&adjusted_punchout=${adjustedPunchOutTime.yyyyMMddString()}';
+
+    return url;
   }
 
   static String submitAdjustmentUrl(String companyId, String employeeId) {
