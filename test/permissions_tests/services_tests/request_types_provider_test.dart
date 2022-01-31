@@ -19,7 +19,7 @@ void main() {
     var _ = await requestItemsProvider.get(companyId);
 
     expect(mockNetworkAdapter.apiRequest.url,
-        PermissionsUrls.getRequestItems(companyId));
+        PermissionsUrls.getRequestItemsUrl(companyId));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
   });
 

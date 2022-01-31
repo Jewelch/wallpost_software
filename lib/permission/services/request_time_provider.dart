@@ -13,7 +13,7 @@ class RequestItemsProvider {
   RequestItemsProvider.initWith(this._networkAdapter);
 
   Future<List<RequestItem>> get(String companyId) async {
-    var url = PermissionsUrls.getRequestItems(companyId);
+    var url = PermissionsUrls.getRequestItemsUrl(companyId);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
