@@ -12,7 +12,7 @@ class WallPostApp extends StatefulWidget with WidgetsBindingObserver {
 class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
   final AppBadgeUpdater _appBadgeUpdater;
 
-  _WallPostAppState():this._appBadgeUpdater = AppBadgeUpdater();
+  _WallPostAppState() : this._appBadgeUpdater = AppBadgeUpdater();
 
   @override
   initState() {
@@ -25,6 +25,8 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         _appBadgeUpdater.updateBadgeCount();
+        break;
+      default:
         break;
     }
   }

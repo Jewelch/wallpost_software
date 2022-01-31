@@ -32,10 +32,8 @@ class AppBadgeUpdater {
 
   void _getUnreadNotificationsCount() async {
     try {
-      var unreadNotificationsCount =
-          await _notificationsCountProvider.getCount();
-      num _selectedCompanyUnreadNotificationsCount =
-          unreadNotificationsCount.totalUnreadNotifications;
+      var unreadNotificationsCount = await _notificationsCountProvider.getCount();
+      num _selectedCompanyUnreadNotificationsCount = unreadNotificationsCount.totalUnreadNotifications;
       if (_selectedCompanyUnreadNotificationsCount > 0) {
         _addBadge(_selectedCompanyUnreadNotificationsCount.toInt());
       } else {

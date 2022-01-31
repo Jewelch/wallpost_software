@@ -17,7 +17,7 @@ class MainPresenter {
       : _repositoryInitializer = RepositoryInitializer(),
         _currentUserProvider = CurrentUserProvider(),
         _selectedCompanyProvider = SelectedCompanyProvider(),
-  _appBadgeUpdater = AppBadgeUpdater();
+        _appBadgeUpdater = AppBadgeUpdater();
 
   MainPresenter.initWith(
     this._view,
@@ -27,7 +27,7 @@ class MainPresenter {
     this._appBadgeUpdater,
   );
 
-  Future<void> initializeReposAndShowLandingScreen() async {
+  Future<void> processLaunchTasksAndShowLandingScreen() async {
     await _repositoryInitializer.initializeRepos();
     _appBadgeUpdater.updateBadgeCount();
     var isLoggedIn = _currentUserProvider.isLoggedIn();
@@ -46,8 +46,6 @@ class MainPresenter {
       _view.goToCompaniesListScreen();
     }
   }
-
-
 }
 /*
   //   TODO: when app opens

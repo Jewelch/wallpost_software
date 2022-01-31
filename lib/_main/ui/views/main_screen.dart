@@ -21,7 +21,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   @override
   void initState() {
     presenter = MainPresenter(this);
-    presenter.initializeReposAndShowLandingScreen();
+    presenter.processLaunchTasksAndShowLandingScreen();
     super.initState();
   }
 
