@@ -11,9 +11,10 @@ import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
+import 'package:wallpost/company_list/entities/company_list_item.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dart';
+import 'package:wallpost/company_list/ui/views/company_list_card.dart';
 import 'package:wallpost/company_list/ui/views/company_list_card_with_revenue.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 
@@ -22,11 +23,13 @@ class CompanyListScreen extends StatefulWidget {
   _CompanyListScreenState createState() => _CompanyListScreenState();
 }
 
-class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
+class _CompanyListScreenState extends State<CompanyListScreen>
+    implements CompaniesListView {
   late CompaniesListPresenter presenter;
   var _searchBarVisibilityNotifier = ItemNotifier<bool>();
   var _showErrorNotifier = ItemNotifier<bool>();
   var _companiesListNotifier = ItemNotifier<List<CompanyListItem>?>();
+  var _selectedCompanyNotifier = ItemNotifier<CompanyListItem>();
   var _viewSelectorNotifier = ItemNotifier<int>();
   var _scrollController = ScrollController();
 
@@ -56,7 +59,10 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         appBar: SimpleAppBar(
           title: 'Group Dashboard',
           leadingButtons: [
-            CircularIconButton(iconName: 'assets/icons/menu_icon.svg', iconSize: 12, onPressed: () => presenter.logout()
+            CircularIconButton(
+                iconName: 'assets/icons/menu_icon.svg',
+                iconSize: 12,
+                onPressed: () => presenter.logout()
                 // ScreenPresenter.present(
                 //   LeftMenuScreen(),
                 //   context,
@@ -66,11 +72,12 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
           ],
         ),
         body: Column(children: <Widget>[
+          _summary(),
           Expanded(
               child: Container(
             margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             decoration: BoxDecoration(
-              color: AppColors.primaryContrastColor,
+              color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: Column(children: [
@@ -92,6 +99,135 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         ]),
       ),
     );
+  }
+
+  Widget _summary() {
+    return Card(
+      color: Colors.blue[800],
+      elevation: 2,
+      // Change this
+      shadowColor: Colors.blue,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(16), bottomRight: Radius.circular(16)),
+      ),
+      margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Row(children: [
+              Expanded(
+                  flex: 5,
+                  child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Text(
+                        "Summary",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          fontSize: 30.0,
+                        ),
+                      ))),
+              Expanded(
+                  flex: 5,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      droppedDownItem("YTD"),
+                      droppedDownItem("2022")
+                    ],
+                  ))
+            ]),
+            SizedBox(height: 8),
+            Row(children: [
+              Expanded(
+                  flex: 4,
+                  child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Text(
+                        "Profit & Loss",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey[400],
+                          fontSize: 16.0,
+                        ),
+                      ))),
+              Expanded(
+                  flex: 6,
+                  child: Center(
+                      child: Text(
+                    "180,000",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.green,
+                      fontSize: 28.0,
+                    ),
+                  ))),
+            ]),
+            SizedBox(height: 6),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          flex: 3, child: summaryElement("Fund Availability",Colors.green,"200,000")),
+                      SizedBox.fromSize(size: Size(10, 0)),
+                      Expanded(
+                          flex: 3, child: summaryElement("Receivables Overdue",Colors.red,"80,000")),
+                      SizedBox.fromSize(size: Size(10, 0)),
+                      Expanded(
+                          flex: 3, child: summaryElement("Payables Overdue",Colors.red,"50,000")),
+                    ])),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget summaryElement(String label,Color color,String value) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+        child: Column(
+          children: [
+            Divider(color: Colors.grey[400]),
+            Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: color,
+                fontSize: 18.0,
+              ),
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w300,
+                color: Colors.grey[400],
+                fontSize: 11.0,
+              ),
+            )
+          ],
+        ));
+  }
+
+  Widget droppedDownItem(String label) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+        child: Row(children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+              fontSize: 20.0,
+            ),
+          ),
+          CircularIconButton(
+            iconName: 'assets/icons/down_arrow_icon.svg',
+            iconSize: 12,
+          )
+        ]));
   }
 
   Widget _searchBar() {
@@ -117,15 +253,16 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         padding: EdgeInsets.only(top: 8, bottom: 8),
         child: RefreshIndicator(
           onRefresh: () => presenter.loadCompanies(),
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          child: ListView.separated(
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
             controller: _scrollController,
-            itemCount: value?.length,
+            itemCount: value!.length,
             itemBuilder: (context, index) {
-              if (value != null) {
-                return _getCompanyCard(index, value);
-              } else
-                return Container();
+              return _getCompanyCard(index, value);
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return Divider();
             },
           ),
         ),
@@ -188,11 +325,11 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
 
   Widget _getCompanyCard(int index, List<CompanyListItem> companyList) {
     //if (companyList[index].shouldShowRevenue) {
-    return CompanyListCardWithRevenue(
+    return CompanyListCard(
       company: companyList[index],
       onPressed: () => {
         presenter.selectCompanyAtIndex(index),
-      },
+      }
     );
     // need to check with specifications
     // } else
@@ -230,6 +367,13 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   @override
+  void showSelectedCompany(CompanyListItem? company) {
+    if (company != null) {
+      _selectedCompanyNotifier.notify(company);
+    }
+  }
+
+  @override
   void showCompanyList(List<CompanyListItem> companies) {
     _companiesListNotifier.notify(companies);
     _viewSelectorNotifier.notify(COMPANIES_VIEW);
@@ -256,7 +400,8 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
 
   @override
   void onCompanyDetailsLoadedSuccessfully() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(
+        DashboardScreen(), context);
   }
 
   @override

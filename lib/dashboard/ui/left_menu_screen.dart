@@ -7,7 +7,7 @@ import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/company_list/services/selected_company_provider.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 
 class LeftMenuScreen extends StatelessWidget {
@@ -82,13 +82,13 @@ class LeftMenuScreen extends StatelessWidget {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
-    if (selectedCompany == null) {
+    if (SelectedCompanyProvider().isCompanySelected()) {
       return SimpleAppBar(
         title: '',
         leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
       );
     } else {
+      var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
       return WPAppBar(
         title: selectedCompany.shortName,
         leading: CircularBackButton(onPressed: () => Navigator.pop(context)),

@@ -1,4 +1,4 @@
-import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
+import 'package:wallpost/company_list/entities/company_list_item.dart';
 
 abstract class CompaniesListView {
   void showLoader();

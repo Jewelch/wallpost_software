@@ -1,8 +1,8 @@
 import 'dart:core';
 
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/_wp_core/start_up/repository_initializer.dart';
+import 'package:wallpost/company_list/services/selected_company_provider.dart';
+import 'package:wallpost/_main/services/repository_initializer.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 
 class MainPresenter {

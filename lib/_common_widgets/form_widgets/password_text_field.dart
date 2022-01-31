@@ -3,6 +3,7 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
 class PasswordTextField extends StatefulWidget {
   final String label;
+  final String? errorText;
   final String placeholder;
   final Color tintColor;
   final TextInputType textInputType;
@@ -18,6 +19,7 @@ class PasswordTextField extends StatefulWidget {
   PasswordTextField({
     this.label = '',
     this.placeholder = '',
+    this.errorText,
     this.tintColor = Colors.grey,
     this.textInputType = TextInputType.text,
     this.validator,
@@ -64,6 +66,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
             borderSide: BorderSide(color: widget.tintColor),
           ),
           labelText: widget.label,
+          errorText: widget.errorText,
           labelStyle: TextStyles.titleTextStyle,
           suffixIcon: IconButton(
             icon: Icon(
