@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/_wp_core/company_management/entities/company.dart';
-import 'package:wallpost/_wp_core/company_management/entities/employee.dart';
+import 'package:wallpost/company_list/entities/company.dart';
+import 'package:wallpost/company_list/entities/employee.dart';
 import 'package:wallpost/permission/entities/permissions.dart';
 import 'package:wallpost/permission/entities/request_item.dart';
 
