@@ -2,39 +2,39 @@ import 'package:intl/intl.dart';
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
+import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
 
 class AttendanceListItem extends JSONInitializable {
   late num? _id;
+  late String? _attendanceId;
   late DateTime _date;
   late DateTime? _punchInTime;
   late DateTime? _punchOutTime;
   late DateTime? _originalPunchInTime;
   late DateTime? _originalPunchOutTime;
-  late String? _adjustedStatus;
-  late String? _workStatus;
-  late String? _attendanceId;
-  late String? _reason;
+  late AttendanceStatus? _workStatus;
+  late AttendanceStatus? _adjustedStatus;
+  late String? _adjustmentReason;
   late String? _approvalStatus;
   late String? _approverName;
-
 
   AttendanceListItem.fromJSon(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     try {
       var sift = Sift();
-      _id = sift.readNumberFromMapWithDefaultValue(jsonMap, 'id',null);
+      _id = sift.readNumberFromMapWithDefaultValue(jsonMap, 'id', null);
+      _attendanceId = sift.readStringFromMapWithDefaultValue(jsonMap, 'attendance_id', null);
       _date = sift.readDateFromMap(jsonMap, 'date', 'yyyy-MM-dd');
       _punchInTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'punch_in_time', 'HH:mm', null);
       _punchOutTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'punch_out_time', 'HH:mm', null);
       _originalPunchInTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'orig_punch_in_time', 'HH:mm', null);
       _originalPunchOutTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'orig_punch_out_time', 'HH:mm', null);
-      _adjustedStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_status', null);
-      _workStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'work_status', null);
-      _attendanceId = sift.readStringFromMapWithDefaultValue(jsonMap, 'attendance_id', null);
-      _reason = sift.readStringFromMapWithDefaultValue(jsonMap, 'reason', null);
+      var workStatusString = sift.readStringFromMapWithDefaultValue(jsonMap, 'work_status', null);
+      _workStatus = initializeAttendanceStatusFromString(workStatusString);
+      var adjustedStatusString = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_status', null);
+      _adjustedStatus = initializeAttendanceStatusFromString(adjustedStatusString);
+      _adjustmentReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'reason', null);
       _approvalStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'approval_status', null);
       _approverName = sift.readStringFromMapWithDefaultValue(jsonMap, 'approver_name', null);
-
-
     } on SiftException catch (e) {
       throw MappingException('Failed to cast AttendanceListItem response. Error message - ${e.errorMessage}');
     }
@@ -52,18 +52,16 @@ class AttendanceListItem extends JSONInitializable {
 
   String get originalPunchOutTime => _convertTimeToString(_originalPunchOutTime);
 
-  String? get adjustedStatus => _adjustedStatus;
-
-  String? get workStatus => _workStatus;
+  //TODO: use work status and adjusted status to return a single string
+  String get status => "";
 
   String? get approvalStatus => _approvalStatus;
 
   String? get attendanceID => _attendanceId;
 
-  String? get reason => _reason;
+  String? get reason => _adjustmentReason;
 
   String? get approverName => _approverName;
-
 
   String _convertTimeToString(DateTime? time) {
     if (time == null) return '';
