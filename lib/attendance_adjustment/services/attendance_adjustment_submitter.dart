@@ -15,14 +15,14 @@ class AttendanceAdjustmentSubmitter {
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
         _networkAdapter = WPAPI();
 
-  Future<void> submitAdjustment(List<AttendanceAdjustmentForm> attendanceAdjustmentForms) async {
+  Future<void> submitAdjustment(AttendanceAdjustmentForm attendanceAdjustmentForm) async {
     if (isLoading) return;
 
     var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
     var url = AttendanceAdjustmentUrls.submitAdjustmentUrl(employee.companyId, employee.v1Id);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
-    apiRequest.addParameter("adjustments", _generatePayload(attendanceAdjustmentForms));
+    apiRequest.addParameters(attendanceAdjustmentForm.toJson());
 
     isLoading = true;
     try {
@@ -33,13 +33,5 @@ class AttendanceAdjustmentSubmitter {
       isLoading = false;
       throw exception;
     }
-  }
-
-  List<Map<String, dynamic>> _generatePayload(List<AttendanceAdjustmentForm> attendanceAdjustmentForms) {
-    List<Map<String, dynamic>> payload = [];
-    for (AttendanceAdjustmentForm form in attendanceAdjustmentForms) {
-      payload.add(form.toJson());
-    }
-    return payload;
   }
 }
