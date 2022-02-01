@@ -7,19 +7,16 @@ import 'package:wallpost/notifications/services/unread_notifications_count_provi
 
 import '../../_mocks/mock_current_user_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
-import '../mocks.dart';
-import 'single_notification_reader_test.dart';
 
 class MockAppBadge extends Mock implements AppBadge {}
 
-class MockUnreadNotificationsCountProvider extends Mock
-    implements UnreadNotificationsCountProvider {}
+class MockUnreadNotificationsCount extends Mock implements UnreadNotificationsCount {}
+
+class MockUnreadNotificationsCountProvider extends Mock implements UnreadNotificationsCountProvider {}
 
 void main() {
   var currentUserProvider = MockCurrentUserProvider();
   var unreadNotificationsCountProvider = MockUnreadNotificationsCountProvider();
-  var mockUnreadNotificationsCount =
-      UnreadNotificationsCount.fromJson(Mocks.unreadNotificationsCount);
   var appBadge = MockAppBadge();
   var appBadgeUpdater = AppBadgeUpdater.initWith(
     currentUserProvider,
@@ -33,7 +30,7 @@ void main() {
     verifyNoMoreInteractions(appBadge);
   }
 
-  test('app count badge is not updated when user is not logged in', () async{
+  test('app count badge is not updated when user is not logged in', () async {
     when(() => currentUserProvider.isLoggedIn()).thenReturn(false);
     await appBadgeUpdater.updateBadgeCount();
 
@@ -44,14 +41,11 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('failure to get updated badge count is ignored', () async{
+  test('failure to get updated badge count is ignored', () async {
     when(() => currentUserProvider.isLoggedIn()).thenReturn(true);
-    when(() => unreadNotificationsCountProvider.getCount())
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
-    appBadgeUpdater.count = 444;
+    when(() => unreadNotificationsCountProvider.getCount()).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     await appBadgeUpdater.updateBadgeCount();
-    assert(appBadgeUpdater.count==444);
 
     verifyInOrder([
       () => currentUserProvider.isLoggedIn(),
@@ -62,16 +56,16 @@ void main() {
 
   test('app count badge is updated when user is logged in', () async {
     when(() => currentUserProvider.isLoggedIn()).thenReturn(true);
-    when(() => unreadNotificationsCountProvider.getCount())
-        .thenAnswer((_) => Future.value(mockUnreadNotificationsCount));
+    var mockCount = MockUnreadNotificationsCount();
+    when(() => mockCount.getTotalUnreadNotificationCount()).thenReturn(121);
+    when(() => unreadNotificationsCountProvider.getCount()).thenAnswer((_) => Future.value(mockCount));
 
     await appBadgeUpdater.updateBadgeCount();
-    assert(appBadgeUpdater.count>=1000);
 
     verifyInOrder([
       () => currentUserProvider.isLoggedIn(),
       () => unreadNotificationsCountProvider.getCount(),
-      () => appBadge.updateAppBadge(any()),
+      () => appBadge.updateAppBadge(121),
     ]);
 
     _verifyNoMoreInteractionsOnAllMocks();

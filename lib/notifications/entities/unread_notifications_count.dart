@@ -5,14 +5,12 @@ import 'package:wallpost/notifications/entities/company_unread_notifications_cou
 
 class UnreadNotificationsCount extends JSONInitializable {
   List<CompanyUnreadNotificationsCount> _allCompaniesUnreadNotificationsCount = [];
-  late num _totalUnreadNotificationsCount;
 
   UnreadNotificationsCount.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var companiesMap = sift.readMapFromMap(jsonMap, 'companies_count');
       _allCompaniesUnreadNotificationsCount = _readCompanyWiseNotificationCount(companiesMap);
-      _totalUnreadNotificationsCount = sift.readNumberFromMap(jsonMap, 'total_count');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast UnreadNotificationCount response. Error message - ${e.errorMessage}');
     }
@@ -28,8 +26,16 @@ class UnreadNotificationsCount extends JSONInitializable {
     return companyWiseCounts;
   }
 
-  num get totalUnreadNotifications => _totalUnreadNotificationsCount;
+  //MARK: Getters
 
   List<CompanyUnreadNotificationsCount> get allCompaniesUnreadNotificationsCount =>
       _allCompaniesUnreadNotificationsCount;
+
+  int getTotalUnreadNotificationCount() {
+    var count = 0;
+    for (CompanyUnreadNotificationsCount companyCount in _allCompaniesUnreadNotificationsCount) {
+      count += companyCount.totalUnreadNotificationsCount.toInt();
+    }
+    return count;
+  }
 }
