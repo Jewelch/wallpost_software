@@ -4,14 +4,20 @@ import 'package:wallpost/_wp_core/user_management/services/current_user_provider
 import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';
 
 class AppBadgeUpdater {
-  final AppBadge _appBadge;
-  final UnreadNotificationsCountProvider _notificationsCountProvider;
   final CurrentUserProvider _currentUserProvider;
+  final UnreadNotificationsCountProvider _notificationsCountProvider;
+  final AppBadge _appBadge;
 
   AppBadgeUpdater()
-      : _appBadge = AppBadge(),
+      : _currentUserProvider = CurrentUserProvider(),
         _notificationsCountProvider = UnreadNotificationsCountProvider(),
-        _currentUserProvider = CurrentUserProvider();
+        _appBadge = AppBadge();
+
+  AppBadgeUpdater.initWith(
+    this._currentUserProvider,
+    this._notificationsCountProvider,
+    this._appBadge,
+  );
 
   updateBadgeCount() async {
     if (!_currentUserProvider.isLoggedIn()) {
@@ -23,9 +29,6 @@ class AppBadgeUpdater {
       var unreadNotificationsCount = await _notificationsCountProvider.getCount();
       num count = unreadNotificationsCount.totalUnreadNotifications;
       _appBadge.updateAppBadge(count.toInt());
-    } on WPException catch (_) {
-      //think about this, ignore or set to 0
-      _appBadge.updateAppBadge(0);
-    }
+    } on WPException catch (_) {}
   }
 }
