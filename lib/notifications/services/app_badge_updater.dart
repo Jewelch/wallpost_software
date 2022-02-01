@@ -7,6 +7,7 @@ class AppBadgeUpdater {
   final CurrentUserProvider _currentUserProvider;
   final UnreadNotificationsCountProvider _notificationsCountProvider;
   final AppBadge _appBadge;
+  num count = 0;
 
   AppBadgeUpdater()
       : _currentUserProvider = CurrentUserProvider(),
@@ -27,8 +28,9 @@ class AppBadgeUpdater {
 
     try {
       var unreadNotificationsCount = await _notificationsCountProvider.getCount();
-      num count = unreadNotificationsCount.totalUnreadNotifications;
+      count = unreadNotificationsCount.totalUnreadNotifications;
       _appBadge.updateAppBadge(count.toInt());
     } on WPException catch (_) {}
   }
+
 }
