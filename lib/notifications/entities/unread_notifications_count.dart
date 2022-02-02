@@ -17,13 +17,13 @@ class UnreadNotificationsCount extends JSONInitializable {
   }
 
   List<CompanyUnreadNotificationsCount> _readCompanyWiseNotificationCount(Map<String, dynamic> companiesMap) {
-    List<CompanyUnreadNotificationsCount> companyWiseCounts = [];
+    _allCompaniesUnreadNotificationsCount = [];
     companiesMap.forEach((companyId, companyCountMap) {
       companyCountMap.putIfAbsent('company_id', () => companyId);
       var companyNotificationCount = CompanyUnreadNotificationsCount.fromJson(companyCountMap);
       _allCompaniesUnreadNotificationsCount.add(companyNotificationCount);
     });
-    return companyWiseCounts;
+    return _allCompaniesUnreadNotificationsCount;
   }
 
   //MARK: Getters
