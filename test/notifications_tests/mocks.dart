@@ -5,14 +5,14 @@ class Mocks {
     'total_count': randomBetween(1000, 5000),
     'companies_count': {
       'selectedCompanyId': {
-        "total_count": 85,
+        "total_count": 850,
         "modules": {
           "MYPORTAL": 12,
           "TASK": 73,
         },
       },
       'someOtherCompany': {
-        "total_count": 12,
+        "total_count": 120,
         "modules": {
           "MYPORTAL": 0,
           "TASK": 12,
