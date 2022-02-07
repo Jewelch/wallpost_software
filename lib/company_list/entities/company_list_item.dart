@@ -22,11 +22,12 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
     try {
       _id = '${sift.readNumberFromMap(jsonMap, 'company_id')}';
       _name = sift.readStringFromMap(jsonMap, 'company_name');
-      _currencyCode = sift.readStringFromMap(jsonMap, 'currency');
       _approvalCount = sift.readNumberFromMap(jsonMap, 'approval_count');
       _notificationCount = sift.readNumberFromMap(jsonMap, 'notifications');
-      _actualSalesAmount = sift.readStringFromMap(jsonMap, 'actual_revenue_display');
-      _achievedSalesPercent = sift.readNumberFromMap(jsonMap, 'overall_revenue');
+      var financialSummaryMap = sift.readMapFromMap(jsonMap, 'financial_summary');
+      _currencyCode = sift.readStringFromMap(financialSummaryMap, 'currency');
+      _actualSalesAmount = sift.readStringFromMap(financialSummaryMap, 'actual_revenue_display');
+      _achievedSalesPercent = sift.readNumberFromMap(financialSummaryMap, 'overall_revenue');
       _avatar = 'https://placeimg.com/640/480/any';
       _profitLoss = "180,000";
       _receivableOverdue = "80,000";

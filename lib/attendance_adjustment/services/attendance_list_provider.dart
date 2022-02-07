@@ -13,18 +13,24 @@ class AttendanceListProvider {
   late String _sessionId;
   bool isLoading = false;
 
-  AttendanceListProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
+  AttendanceListProvider.initWith(
+      this._selectedEmployeeProvider, this._networkAdapter);
 
   AttendanceListProvider()
       : _selectedEmployeeProvider = SelectedEmployeeProvider(),
         _networkAdapter = WPAPI();
 
-  Future<List<AttendanceListItem>> get() async {
-    var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-    var month = DateTime.now().month;
-    var year = DateTime.now().year;
+  void reset() {
+    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+    isLoading = false;
+  }
 
-    var url = AttendanceAdjustmentUrls.getAttendanceListsUrl(employee.companyId, employee.v1Id, month, year);
+  Future<List<AttendanceListItem>> get(int month, int year) async {
+    var employee =
+        _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
+
+    var url = AttendanceAdjustmentUrls.getAttendanceListsUrl(
+        employee.companyId, employee.v1Id, month, year);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
@@ -39,11 +45,14 @@ class AttendanceListProvider {
     }
   }
 
-  Future<List<AttendanceListItem>> _processResponse(APIResponse apiResponse) async {
+  Future<List<AttendanceListItem>> _processResponse(
+      APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<AttendanceListItem>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId)
+      return Completer<List<AttendanceListItem>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
+    if (apiResponse.data is! Map<String, dynamic>)
+      throw WrongResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
@@ -53,7 +62,8 @@ class AttendanceListProvider {
     }
   }
 
-  List<AttendanceListItem> _readItemsFromResponse(Map<String, dynamic> responseMap) {
+  List<AttendanceListItem> _readItemsFromResponse(
+      Map<String, dynamic> responseMap) {
     List<AttendanceListItem> attendanceListItems = [];
     var sift = Sift();
     var dataMap = sift.readMapListFromMap(responseMap, "data");
@@ -65,7 +75,8 @@ class AttendanceListProvider {
     return attendanceListItems;
   }
 
-  void _removeTodaysAttendanceIfUserHasNotPunchedOutYet(List<AttendanceListItem> attendanceListItems) {
+  void _removeTodaysAttendanceIfUserHasNotPunchedOutYet(
+      List<AttendanceListItem> attendanceListItems) {
     attendanceListItems.removeWhere((attendanceItem) {
       var today = DateTime.now();
       var attendanceDate = attendanceItem.date;

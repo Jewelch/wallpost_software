@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
@@ -10,20 +11,24 @@ import '../../_mocks/mock_network_adapter.dart';
 import 'attendance_adjustment_submitter_test.dart';
 
 void main() {
-  String successfulResponse = "attendanceStatus";
+  String successfulResponse = 'present';
   var mockEmployeeProvider = MockEmployeeProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockEmployee = MockEmployee();
   var adjustedAttendanceStatusProvider =
       AdjustedAttendanceStatusProvider.initWith(mockEmployeeProvider, mockNetworkAdapter);
   var mockAttendanceAdjustmentForm = MockAttendanceAdjustmentForm();
+  DateTime date = DateTime(22,01,2021);
+  DateTime adjustedPunchInTime = DateFormat('hh:mm').parse("09:00");
+  DateTime adjustedPunchOutTime = DateFormat('hh:mm').parse("06:00");
+
 
   setUpAll(() {
     when(() => mockEmployee.v1Id).thenReturn('v1EmpId');
     when(() => mockEmployee.companyId).thenReturn('someCompanyId');
-    when(() => mockAttendanceAdjustmentForm.date).thenReturn('date');
-    when(() => mockAttendanceAdjustmentForm.adjustedPunchInTime).thenReturn('09:00');
-    when(() => mockAttendanceAdjustmentForm.adjustedPunchOutTime).thenReturn('06:00');
+    when(() => mockAttendanceAdjustmentForm.date).thenReturn(date);
+    when(() => mockAttendanceAdjustmentForm.adjustedPunchInTime).thenReturn(adjustedPunchInTime);
+    when(() => mockAttendanceAdjustmentForm.adjustedPunchOutTime).thenReturn(adjustedPunchOutTime);
     when(() => mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
   });
 
@@ -34,10 +39,10 @@ void main() {
     var _ = await adjustedAttendanceStatusProvider.getAdjustedStatus(mockAttendanceAdjustmentForm);
 
     expect(mockNetworkAdapter.apiRequest.url,
-        AttendanceAdjustmentUrls.getAdjustedStatusUrl('someCompanyId', 'v1EmpId', 'date', '09:00', '06:00'));
+        AttendanceAdjustmentUrls.getAdjustedStatusUrl('someCompanyId', 'v1EmpId', date, adjustedPunchInTime, adjustedPunchOutTime));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
-  });
+   });
 
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);

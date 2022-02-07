@@ -19,16 +19,13 @@ void main() {
   var mockNetworkAdapter = MockNetworkAdapter();
   var attendanceAdjustmentSubmitter = AttendanceAdjustmentSubmitter.initWith(
       mockEmployeeProvider, mockNetworkAdapter);
+  List<AttendanceAdjustmentForm> attendanceAdjustmentForms = [];
+
 
   setUpAll(() {
     when(() => mockEmployee.companyId).thenReturn('someCompanyId');
     when(() => mockEmployee.v1Id).thenReturn('v1EmpId');
-    when(() => mockAttendanceAdjustmentForm.toJson()).thenReturn({
-      'date': 'date',
-      'reason': 'reason',
-      'adjusted_punchin': '08:00',
-      'adjusted_punchout': '06:00'
-    });
+    when(() => mockAttendanceAdjustmentForm.toJson()).thenReturn({'adjustments': []});
     when(() => mockEmployeeProvider.getSelectedEmployeeForCurrentUser())
         .thenReturn(mockEmployee);
   });
@@ -42,46 +39,21 @@ void main() {
     requestParams.addAll(mockAttendanceAdjustmentForm.toJson());
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await attendanceAdjustmentSubmitter
-        .submitAdjustment(mockAttendanceAdjustmentForm);
+    var _ = await attendanceAdjustmentSubmitter.submitAdjustment(attendanceAdjustmentForms);
 
     expect(
         mockNetworkAdapter.apiRequest.url,
         AttendanceAdjustmentUrls.submitAdjustmentUrl(
             'someCompanyId', 'v1EmpId'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
-    // expect(mockNetworkAdapter.apiRequest.parameters['id'], null);
-    // expect(mockNetworkAdapter.apiRequest.parameters['attendance_id'], 1);
-    // expect(mockNetworkAdapter.apiRequest.parameters['work_status'], 'status');
-    // expect(mockNetworkAdapter.apiRequest.parameters['punch_in_time'], '');
-    // expect(mockNetworkAdapter.apiRequest.parameters['punch_out_time'], '');
-    // expect(mockNetworkAdapter.apiRequest.parameters['approval_status'], 'null');
-    // expect(mockNetworkAdapter.apiRequest.parameters['edit_mode'], false);
-    // expect(
-    //     mockNetworkAdapter.apiRequest.parameters['orig_punch_in_time'], null);
-    // expect(
-    //     mockNetworkAdapter.apiRequest.parameters['orig_punch_out_time'], null);
-    // expect(
-    //     mockNetworkAdapter.apiRequest.parameters['punch_in_time_error'], false);
-    // expect(mockNetworkAdapter.apiRequest.parameters['punch_out_time_error'],
-    //     false);
-    // expect(mockNetworkAdapter.apiRequest.parameters['status_out_error'], false);
-    // expect(mockNetworkAdapter.apiRequest.parameters['approver_name'], ' ');
-    // expect(
-    //     mockNetworkAdapter.apiRequest.parameters['attnce_reason_error'], false);
-    // expect(mockNetworkAdapter.apiRequest.parameters['employee_id'], 'v1EmpId');
-    // expect(mockNetworkAdapter.apiRequest.parameters['company_id'],
-    //     'someCompanyId');
-    // expect(
-    //     mockNetworkAdapter.apiRequest.parameters['adjusted_status'], 'status');
-  });
+    });
 
   test('throws exception when network adapter fails', () async {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
       var _ = await attendanceAdjustmentSubmitter
-          .submitAdjustment(mockAttendanceAdjustmentForm);
+          .submitAdjustment(attendanceAdjustmentForms);
 
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
@@ -94,7 +66,7 @@ void main() {
 
     try {
       var _ = await attendanceAdjustmentSubmitter
-          .submitAdjustment(mockAttendanceAdjustmentForm);
+          .submitAdjustment(attendanceAdjustmentForms);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
@@ -105,7 +77,7 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     attendanceAdjustmentSubmitter
-        .submitAdjustment(mockAttendanceAdjustmentForm);
+        .submitAdjustment(attendanceAdjustmentForms);
 
     expect(attendanceAdjustmentSubmitter.isLoading, true);
   });

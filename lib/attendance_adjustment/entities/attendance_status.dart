@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
+
 const _PRESENT_STRING = "present";
 const _LATE_STRING = "late";
 const _ABSENT_STRING = "absent";
@@ -71,6 +74,41 @@ extension AttendanceStatusExtension on AttendanceStatus {
         return "Half Day";
       case AttendanceStatus.EarlyLeave:
         return "Early Leave";
+    }
+  }
+
+  Color statusColor() {
+    switch (this) {
+      case AttendanceStatus.Present:
+      case AttendanceStatus.NoAction:
+      case AttendanceStatus.Break:
+        return AppColors.presentColor;
+      case AttendanceStatus.Late:
+      case AttendanceStatus.HalfDay:
+      case AttendanceStatus.EarlyLeave:
+        return AppColors.lateColor;
+      case AttendanceStatus.Absent:
+        return AppColors.absentColor;
+    }
+  }
+
+  Color punchInLabelColor() {
+    switch (this) {
+      case AttendanceStatus.Late:
+        return AppColors.lateColor;
+      default:
+        return Colors.black;
+    }
+  }
+
+  Color punchOutLabelColor() {
+    switch (this) {
+      case AttendanceStatus.HalfDay:
+        return AppColors.lateColor;
+      case AttendanceStatus.Absent:
+        return AppColors.absentColor;
+      default:
+        return Colors.black;
     }
   }
 }
