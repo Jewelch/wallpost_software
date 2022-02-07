@@ -48,7 +48,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
 
   @override
   void goToCompaniesListScreen() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(CompanyListScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
   }
 
   @override
