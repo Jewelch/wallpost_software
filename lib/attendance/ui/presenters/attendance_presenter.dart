@@ -3,6 +3,9 @@ import 'package:wallpost/attendance/entities/attendance_details.dart';
 import 'package:wallpost/attendance/entities/attendance_location.dart';
 import 'package:wallpost/attendance/exception/location_acquisition_failed_exception.dart';
 import 'package:wallpost/attendance/exception/location_address_failed_exception.dart';
+import 'package:wallpost/attendance/exception/location_permission_denied_exception.dart';
+import 'package:wallpost/attendance/exception/location_permission_permanently_denied_exception.dart';
+import 'package:wallpost/attendance/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance/services/attendance_details_provider.dart';
 import 'package:wallpost/attendance/services/attendance_location_validator.dart';
 import 'package:wallpost/attendance/services/location_provider.dart';
@@ -54,12 +57,28 @@ class AttendancePresenter {
     try {
       _attendanceLocation = (await _locationProvider.getLocation())!;
       _view.hideLoader();
-      //  _getLocationAddress(_attendanceLocation);
+        _getLocationAddress(_attendanceLocation);
       if (attendanceDetails.isPunchedIn) {
         _loadPunchOutDetails(attendanceDetails);
       } else {
         await _getPunchInFromAppPermission();
       }
+    } on LocationServicesDisabledException catch (e) {
+      //turn on Gps
+      _view.hideLoader();
+      _view.showDisableButton();
+      _view.showAlertToTurnOnDeviceLocation(
+          "Please turn on device location", e.userReadableMessage);
+    } on LocationPermissionsDeniedException catch (e) {
+      // Show Location access permission alert
+      _view.hideLoader();
+      _view.showDisableButton();
+      _view.showAlertToDeniedLocationPermission(
+          "Please allow Location permission", e.userReadableMessage);
+    } on LocationPermissionsPermanentlyDeniedException catch (e) {
+      _view.hideLoader();
+      _view.showDisableButton();
+      _view.openAppSettings();
     } on LocationAcquisitionFailedException catch (e) {
       _view.hideLoader();
       _view.showDisableButton();
@@ -71,9 +90,7 @@ class AttendancePresenter {
   Future<void> _getLocationAddress(
       AttendanceLocation attendanceLocation) async {
     try {
-      var address =
           await _locationProvider.getLocationAddress(attendanceLocation);
-      _view.showLocationAddress(address.toString());
     } on LocationAddressFailedException catch (e) {
       _view.showLocationAddress("");
     }

@@ -6,6 +6,9 @@ import 'package:wallpost/attendance/entities/attendance_location.dart';
 import 'package:wallpost/attendance/entities/punch_in_from_app_permission.dart';
 import 'package:wallpost/attendance/entities/punch_in_now_permission.dart';
 import 'package:wallpost/attendance/exception/location_acquisition_failed_exception.dart';
+import 'package:wallpost/attendance/exception/location_permission_denied_exception.dart';
+import 'package:wallpost/attendance/exception/location_permission_permanently_denied_exception.dart';
+import 'package:wallpost/attendance/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance/services/attendance_details_provider.dart';
 import 'package:wallpost/attendance/services/attendance_location_validator.dart';
 import 'package:wallpost/attendance/services/location_provider.dart';
@@ -92,6 +95,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
 
     // when
     await presenter.loadAttendanceDetails();
@@ -103,6 +108,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => view.showPunchInTime(punchInTime),
       () => view.showBreakButton(),
       () => view.showPunchOutButton()
@@ -148,6 +154,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
 
     // when
     await presenter.loadAttendanceDetails();
@@ -159,6 +167,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => view.showPunchInTime(punchInTime),
       () => view.showBreakButton(),
       () => view.showPunchOutButton()
@@ -193,6 +202,88 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
+  test('showAlertToTurnOnGpsWhenLocationServiceDisabled', () async {
+    //given
+    var attendance = MockAttendanceDetails();
+    when(() => attendance.isPunchedIn).thenReturn(true);
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.error(LocationServicesDisabledException()));
+
+    //when
+    await presenter.loadAttendanceDetails();
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => mockLocationProvider.getLocation(),
+      () => view.hideLoader(),
+      () => view.showDisableButton(),
+      () => view.showAlertToTurnOnDeviceLocation(
+          "Please turn on device location",
+          LocationServicesDisabledException().userReadableMessage),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('showAlertWhenLocationPermissionsDenied', () async {
+    //given
+    var attendance = MockAttendanceDetails();
+    when(() => attendance.isPunchedIn).thenReturn(true);
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.error(LocationPermissionsDeniedException()));
+
+    //when
+    await presenter.loadAttendanceDetails();
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => mockLocationProvider.getLocation(),
+      () => view.hideLoader(),
+      () => view.showDisableButton(),
+      () => view.showAlertToDeniedLocationPermission(
+          "Please allow Location permission",
+          LocationPermissionsDeniedException().userReadableMessage),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('goToAppSettingWhenLocationPermissionsPermanentlyDenied', () async {
+    //given
+    var attendance = MockAttendanceDetails();
+    when(() => attendance.isPunchedIn).thenReturn(true);
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation()).thenAnswer(
+        (_) => Future.error(LocationPermissionsPermanentlyDeniedException()));
+
+    //when
+    await presenter.loadAttendanceDetails();
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => mockLocationProvider.getLocation(),
+      () => view.hideLoader(),
+      () => view.showDisableButton(),
+      () => view.openAppSettings()
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
   test(
       "showPunchInButton_whenUseNotPunchIn_andAllowedToPunchInAppPermission_alsoCanPunchInNow",
       () async {
@@ -213,6 +304,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
     when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp())
         .thenAnswer((_) => Future.value(appPermission));
     when(() => mockPunchInNowPermissionProvider.canPunchInNow())
@@ -228,6 +321,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
       () => mockPunchInNowPermissionProvider.canPunchInNow(),
       () => view.showPunchInButton()
@@ -250,6 +344,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
     when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp())
         .thenAnswer((_) => Future.value(appPermission));
 
@@ -263,6 +359,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
       () => view.showDisableButton(),
       () => view.hideBreakButton(),
@@ -290,6 +387,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
     when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp())
         .thenAnswer((_) => Future.value(appPermission));
     when(() => mockPunchInNowPermissionProvider.canPunchInNow())
@@ -305,6 +404,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
       () => mockPunchInNowPermissionProvider.canPunchInNow(),
       () => view.showDisableButton(),
@@ -316,8 +416,7 @@ void main() {
 
   // IS PUNCH IN _YES
 
-  test("hideBreakButtonAndShowPunchOutTime_afterUserIsPunchOut ",
-      () async {
+  test("hideBreakButtonAndShowPunchOutTime_afterUserIsPunchOut ", () async {
     //given
     var attendance = MockAttendanceDetails();
 
@@ -333,6 +432,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
 
     // when
     await presenter.loadAttendanceDetails();
@@ -344,6 +445,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => view.hideBreakButton(),
       () => view.showPunchOutTime(punchOutTime)
     ]);
@@ -367,6 +469,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
 
     // when
     await presenter.loadAttendanceDetails();
@@ -378,6 +482,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => view.showPunchInTime(punchInTime),
       () => view.showResumeButton(),
       () => view.showPunchOutButton(),
@@ -385,9 +490,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test(
-      "showEnabledBreakButton_whenTheUserIsPunchIn_andIsNotOnBreak",
-      () async {
+  test("showEnabledBreakButton_whenTheUserIsPunchIn_andIsNotOnBreak", () async {
     //given
     var attendance = MockAttendanceDetails();
 
@@ -404,6 +507,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
 
     // when
     await presenter.loadAttendanceDetails();
@@ -415,6 +520,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => view.showPunchInTime(punchInTime),
       () => view.showBreakButton(),
       () => view.showPunchOutButton(),
@@ -422,8 +528,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("showPunchOuButton_whenTheUserIsPunchIn_andNotPunchOut ",
-      () async {
+  test("showPunchOuButton_whenTheUserIsPunchIn_andNotPunchOut ", () async {
     //given
     var attendance = MockAttendanceDetails();
 
@@ -440,6 +545,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
 
     // when
     await presenter.loadAttendanceDetails();
@@ -451,6 +558,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => view.showPunchInTime(punchInTime),
       () => view.showBreakButton(),
       () => view.showPunchOutButton(),
@@ -476,6 +584,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
     when(() => mockAttendanceLocationValidator.validateLocation(any(),
         isForPunchIn: true)).thenAnswer((_) => Future.value(true));
     await presenter.loadAttendanceDetails();
@@ -489,6 +599,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => view.showPunchInTime(punchInTime),
       () => view.showBreakButton(),
       () => view.showPunchOutButton(),
@@ -517,6 +628,8 @@ void main() {
         .thenAnswer((_) => Future.value(attendance));
     when(() => mockLocationProvider.getLocation())
         .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
     when(() => mockAttendanceLocationValidator.validateLocation(any(),
         isForPunchIn: true)).thenAnswer((_) => Future.value(false));
     await presenter.loadAttendanceDetails();
@@ -530,6 +643,7 @@ void main() {
       () => mockAttendanceDetailsProvider.getDetails(),
       () => mockLocationProvider.getLocation(),
       () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
       () => view.showPunchInTime(punchInTime),
       () => view.showBreakButton(),
       () => view.showPunchOutButton(),

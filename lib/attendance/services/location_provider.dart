@@ -13,7 +13,8 @@ import 'package:wallpost/attendance/entities/attendance_location.dart';
 class LocationProvider {
   //Create a new class called Location in entities
   //catch all errors and return a custom error - eg LocationError() in new package called errors
-
+  late bool serviceEnabled;
+  late LocationPermission permission;
 
   Future<AttendanceLocation?> getLocation() async {
     try {

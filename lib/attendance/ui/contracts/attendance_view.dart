@@ -32,4 +32,12 @@ abstract class AttendanceView {
   void showAlertToVerifyLocation(String message);
 
   void doPunchOut();
+
+  void goToLocationSetting();
+
+  void showAlertToTurnOnDeviceLocation(String title,String message);
+
+  void showAlertToDeniedLocationPermission(String title,String message);
+
+  void openAppSettings();
 }
