@@ -1,9 +1,10 @@
+import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
+import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/company_list/constants/company_management_urls.dart';
 import 'package:wallpost/company_list/entities/company_list_item.dart';
 import 'package:wallpost/company_list/repositories/company_repository.dart';
-import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
-import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
 class CompaniesListProvider {
   final CurrentUserProvider _currentUserProvider;
@@ -12,7 +13,8 @@ class CompaniesListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  CompaniesListProvider.initWith(this._currentUserProvider, this._companyRepository, this._networkAdapter);
+  CompaniesListProvider.initWith(
+      this._currentUserProvider, this._companyRepository, this._networkAdapter);
 
   CompaniesListProvider()
       : _currentUserProvider = CurrentUserProvider(),
@@ -27,11 +29,16 @@ class CompaniesListProvider {
   Future<List<CompanyListItem>> get() async {
     var url = CompanyManagementUrls.getCompaniesUrl();
     var apiRequest = APIRequest.withId(url, _sessionId);
-    isLoading = true;
 
-    var apiResponse = await _networkAdapter.get(apiRequest);
-    isLoading = false;
-    return _processResponse(apiResponse);
+    isLoading = true;
+    try {
+      var apiResponse = await _networkAdapter.get(apiRequest);
+      isLoading = false;
+      return _processResponse(apiResponse);
+    } on APIException catch (exception) {
+      isLoading = false;
+      throw exception;
+    }
   }
 
   List<CompanyListItem> _processResponse(APIResponse apiResponse) {
@@ -40,16 +47,28 @@ class CompaniesListProvider {
 
     if (apiResponse.data == null) throw InvalidResponseException();
 
-    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>)
+      throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<CompanyListItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<CompanyListItem> _readItemsFromResponse(
+      List<Map<String, dynamic>> responseMapList) {
     try {
       var companies = <CompanyListItem>[];
-      for (var responseMap in responseMapList) {
+      var sift = Sift();
+      var companyList;
+      try {
+        var companyListMap =
+            sift.readMapFromListWithDefaultValue(responseMapList, 0, {});
+        companyList = sift.readMapListFromMap(companyListMap, 'companies');
+      } catch (e) {
+        throw InvalidResponseException();
+      }
+
+      for (var responseMap in companyList) {
         var companyListItem = CompanyListItem.fromJson(responseMap);
         companies.add(companyListItem);
       }

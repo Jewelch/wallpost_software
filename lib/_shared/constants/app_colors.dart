@@ -36,6 +36,11 @@ class AppColors {
   static final Color rejectedColor = getColorFromHex('#db544e');
   static final Color cancelledColor = getColorFromHex('#db544e');
 
+  //Attendance status colors
+  static final Color presentColor = Color.fromRGBO(43, 186, 104, 1.0);
+  static final Color absentColor = getColorFromHex('#FF0000');
+  static final Color lateColor = getColorFromHex('#ffa500');
+
   //MARK: Util function to convert hex string to color
   static Color getColorFromHex(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll('#', '');
