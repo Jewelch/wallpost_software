@@ -45,7 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _screens.add(MyPortalScreen());
     _screens.add(ModulesScreen());
     _screens.add(RequestsScreen());
-    // _screens.add(NotificationsScreen());
+    _screens.add(NotificationsScreen());
   }
 
   @override
