@@ -2,6 +2,7 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/_wp_core/company_management/constants/company_management_urls.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
 import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
+import 'package:wallpost/_wp_core/dashboard_management/entities/Dashboard.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
@@ -24,7 +25,7 @@ class CompaniesListProvider {
     isLoading = false;
   }
 
-  Future<List<CompanyListItem>> get() async {
+  Future<List<CompaniesGroup>?> get() async {
     var url = CompanyManagementUrls.getCompaniesUrl();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
@@ -34,7 +35,7 @@ class CompaniesListProvider {
     return _processResponse(apiResponse);
   }
 
-  List<CompanyListItem> _processResponse(APIResponse apiResponse) {
+  List<CompaniesGroup>? _processResponse(APIResponse apiResponse) {
     //returning empty list if the response is from another session
     if (apiResponse.apiRequest.requestId != _sessionId) return [];
 
@@ -43,19 +44,25 @@ class CompaniesListProvider {
     if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
+
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<CompanyListItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<CompaniesGroup>? _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var companies = <CompanyListItem>[];
+      List<Company> companies = <Company>[];
+      List<CompaniesGroup> companiesData = <CompaniesGroup>[];
+
       for (var responseMap in responseMapList) {
-        var companyListItem = CompanyListItem.fromJson(responseMap);
-        companies.add(companyListItem);
+        var companyListItem = CompaniesGroup.fromJson(responseMap);
+
+        companies.addAll(companyListItem.companies);
+        companiesData.add(companyListItem);
       }
+
       var currentUser = _currentUserProvider.getCurrentUser();
       _companyRepository.saveCompaniesForUser(companies, currentUser);
-      return companies;
+      return companiesData;
     } catch (e) {
       throw InvalidResponseException();
     }

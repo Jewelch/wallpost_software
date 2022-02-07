@@ -1,4 +1,5 @@
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
+import 'package:wallpost/_wp_core/dashboard_management/entities/Dashboard.dart';
 
 abstract class CompaniesListView {
   void showLoader();
@@ -9,7 +10,7 @@ abstract class CompaniesListView {
 
   void hideSearchBar();
 
-  void showCompanyList(List<CompanyListItem> companies);
+  void showCompanyList(List<Company>? companies);
 
   void showNoCompaniesMessage(String message);
 
@@ -21,7 +22,13 @@ abstract class CompaniesListView {
 
   void onCompanyDetailsLoadingFailed(String title, String message);
 
-  void showSelectedCompany(CompanyListItem? company);
+  void showSelectedCompany(Company? company);
 
   void showLogoutAlert(String title, String message);
+
+  void showProfileImage(String url);
+
+  void showSummary(GroupSummary groupSummary);
+
+  void showCompanyGroups(List<CompaniesGroup> companyGroups);
 }

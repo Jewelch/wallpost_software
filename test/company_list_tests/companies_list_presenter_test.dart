@@ -4,6 +4,8 @@ import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/_wp_core/company_management/entities/company_list_item.dart';
 import 'package:wallpost/_wp_core/company_management/services/companies_list_provider.dart';
 import 'package:wallpost/_wp_core/company_management/services/company_details_provider.dart';
+import 'package:wallpost/_wp_core/dashboard_management/entities/Dashboard.dart';
+import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
 import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
 import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dart';
@@ -15,9 +17,12 @@ class MockCompaniesListViewView extends Mock implements CompaniesListView {}
 
 class MockCompaniesListProvider extends Mock implements CompaniesListProvider {}
 
-class MockCompanyListItem extends Mock implements CompanyListItem {}
+class MockCompanyListItem extends Mock implements Company {}
 
-class MockCompanyDetailsProvider extends Mock implements CompanyDetailsProvider {}
+class MockCompanyDetailsProvider extends Mock
+    implements CompanyDetailsProvider {}
+
+class MockCurrentUserProvider extends Mock implements CurrentUserProvider {}
 
 class MockUserRemover extends Mock implements UserRemover {}
 
@@ -26,28 +31,29 @@ void main() {
   var mockCompaniesListProvider = MockCompaniesListProvider();
   var mockCompanyDetailsProvider = MockCompanyDetailsProvider();
   var mockSelectedCompanyProvider = MockSelectedCompanyProvider();
+  var mockCurrentUserProvider = MockCurrentUserProvider();
   late CompaniesListPresenter presenter;
 
   var company1 = MockCompanyListItem();
   var company2 = MockCompanyListItem();
   var mockCompany = MockCompany();
-  List<CompanyListItem> _companyList = [company1, company2];
+  List<Company> _companyList = [company1, company2];
 
   setUpAll(() {
-    when(() => company1.name).thenReturn("test1");
-    when(() => company1.id).thenReturn("id1");
-    when(() => company2.name).thenReturn("test2");
-    when(() => company2.id).thenReturn("id2");
+    when(() => company1.companyName).thenReturn("test1");
+    when(() => company1.companyId).thenReturn(1);
+    when(() => company2.companyName).thenReturn("test2");
+    when(() => company2.companyId).thenReturn(2);
     when(() => mockCompany.id).thenReturn("id1");
   });
 
   setUp(() {
     presenter = CompaniesListPresenter.initWith(
-      view,
-      mockCompaniesListProvider,
-      mockCompanyDetailsProvider,
-      mockSelectedCompanyProvider,
-    );
+        view,
+        mockCompaniesListProvider,
+        mockCompanyDetailsProvider,
+        mockSelectedCompanyProvider,
+        mockCurrentUserProvider);
   });
 
   void _verifyNoMoreInteractionsOnAllMocks() {
@@ -67,8 +73,10 @@ void main() {
   test('retrieving companies successfully', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
-    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser()).thenAnswer((_) => mockCompany);
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenAnswer((_) => mockCompany);
 
     //when
     await presenter.loadCompanies();
@@ -90,8 +98,10 @@ void main() {
   test('retrieving companies successfully with null selectedCompany', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
-    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser()).thenAnswer((_) => null);
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenAnswer((_) => null);
 
     //when
     await presenter.loadCompanies();
@@ -112,7 +122,8 @@ void main() {
   test('retrieving companies successfully with empty list', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(List.empty()));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(List.empty()));
 
     //when
     await presenter.loadCompanies();
@@ -123,7 +134,8 @@ void main() {
       () => view.showLoader(),
       () => mockCompaniesListProvider.get(),
       () => view.hideSearchBar(),
-      () => view.showNoCompaniesMessage("There are no companies.\n\nTap here to reload"),
+      () => view.showNoCompaniesMessage(
+          "There are no companies.\n\nTap here to reload"),
       () => view.hideLoader()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -145,7 +157,8 @@ void main() {
       () => view.showLoader(),
       () => mockCompaniesListProvider.get(),
       () => view.hideSearchBar(),
-      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
+      () => view.showErrorMessage(
+          "${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
       () => view.hideLoader(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -154,8 +167,10 @@ void main() {
   test('performing search successfully', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenReturn(mockCompany);
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
     await presenter.loadCompanies();
     _resetAllMockInteractions();
 
@@ -172,7 +187,8 @@ void main() {
   test('performing a search with no results', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value([]));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value([]));
     await presenter.loadCompanies();
     _resetAllMockInteractions();
 
@@ -181,7 +197,8 @@ void main() {
 
     //then
     verifyInOrder([
-      () => view.showNoSearchResultsMessage("There are no companies for the  given search criteria."),
+      () => view.showNoSearchResultsMessage(
+          "There are no companies for the  given search criteria."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -190,24 +207,27 @@ void main() {
     //given
     //step 1 - load companies
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
     //step 2 - perform search
     presenter.performSearch("c1");
 
     //when
-    when(() => mockCompaniesListProvider.get())
-        .thenAnswer((realInvocation) => Future.error(InvalidResponseException()));
+    when(() => mockCompaniesListProvider.get()).thenAnswer(
+        (realInvocation) => Future.error(InvalidResponseException()));
     await presenter.loadCompanies();
 
     //then
     expect(presenter.getSearchText(), "");
   });
 
-  test('refresh the list of companies', () async {
+  test('refresh the list of companies after failure to fetch data', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
-    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenReturn(mockCompany);
 
     await presenter.loadCompanies();
     _resetAllMockInteractions();
@@ -230,12 +250,41 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
+  test('refresh the list of companies ', () async {
+    //given
+    when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenReturn(mockCompany);
+
+    await presenter.loadCompanies();
+    _resetAllMockInteractions();
+
+    //when
+    await presenter.refreshCompanies();
+
+    //then
+    verifyInOrder([
+      () => mockCompaniesListProvider.isLoading,
+      () => mockCompaniesListProvider.get(),
+      () => view.showSearchBar(),
+      () => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser(),
+      () => view.showSelectedCompany(company1),
+      () => view.showCompanyList([company2]),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
   test('select company from company list successfully', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
-    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser()).thenAnswer((_) => mockCompany);
-    when(() => mockCompanyDetailsProvider.getCompanyDetails("id2")).thenAnswer((_) async {});
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenAnswer((_) => mockCompany);
+    when(() => mockCompanyDetailsProvider.getCompanyDetails("id2"))
+        .thenAnswer((_) async {});
     await presenter.loadCompanies();
     _resetAllMockInteractions();
 
@@ -255,8 +304,10 @@ void main() {
   test('select company from company list failed', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(_companyList));
-    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser()).thenAnswer((_) => mockCompany);
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(_companyList));
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenAnswer((_) => mockCompany);
     when(() => mockCompanyDetailsProvider.getCompanyDetails("id2"))
         .thenAnswer((invocation) => Future.error(InvalidResponseException()));
     await presenter.loadCompanies();
@@ -270,8 +321,8 @@ void main() {
       () => view.showLoader(),
       () => mockCompanyDetailsProvider.getCompanyDetails("id2"),
       () => view.hideLoader(),
-      () => view.onCompanyDetailsLoadingFailed(
-          'Failed To load company details', InvalidResponseException().userReadableMessage)
+      () => view.onCompanyDetailsLoadingFailed('Failed To load company details',
+          InvalidResponseException().userReadableMessage)
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });

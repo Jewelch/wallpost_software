@@ -68,7 +68,7 @@ class _TaskNotificationsListTileState extends State<TaskNotificationsListTile> {
 
   String _convertToDateFormat(DateTime date) {
     var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
-    final DateFormat formatter = DateFormat(selectedCompany!.dateFormat);
+    final DateFormat formatter = DateFormat();
     final String formatted = formatter.format(date);
     return formatted;
   }

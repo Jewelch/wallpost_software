@@ -38,7 +38,7 @@ dependencies:
   date_format: ^2.0.4
   file_picker: ^4.2.7
   collection: ^1.15.0-nullsafety.4
-
+  shimmer: ^2.0.0
 
 
 dev_dependencies:

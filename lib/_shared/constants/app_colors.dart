@@ -5,6 +5,10 @@ class AppColors {
   static final Color defaultColorDark = getColorFromHex('#0376a0');
   static final Color badgeColor = getColorFromHex('#db544e');
 
+  //Chip Backround colors
+
+  static final Color backGroundColor = getColorFromHex('#DFF0F7');
+
   //Button colors
   static final Color actionButtonColor = defaultColor;
   static final Color criticalButtonColor = getColorFromHex('#db544e');

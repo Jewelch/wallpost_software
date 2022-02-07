@@ -38,7 +38,7 @@ class _ExpenseRequestNotificationsListTileState extends State<ExpenseRequestNoti
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: SelectedCompanyProvider().getSelectedCompanyForCurrentUser()!.currency,
+                    text: SelectedCompanyProvider().getSelectedCompanyForCurrentUser()!.financialSummary.currency,
                     style: TextStyles.labelTextStyle.copyWith(color: AppColors.defaultColor),
                   ),
                   TextSpan(
@@ -99,7 +99,7 @@ class _ExpenseRequestNotificationsListTileState extends State<ExpenseRequestNoti
 
   String _convertToDateFormat(DateTime date) {
     var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
-    final DateFormat formatter = DateFormat(selectedCompany!.dateFormat);
+    final DateFormat formatter = DateFormat(); // company has no dateformat in new API
     final String formatted = formatter.format(date);
     return formatted;
   }

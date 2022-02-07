@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/constants/company_management_urls.dart';
-import 'package:wallpost/_wp_core/company_management/entities/company.dart';
 import 'package:wallpost/_wp_core/company_management/entities/employee.dart';
 import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
+import 'package:wallpost/_wp_core/dashboard_management/entities/Dashboard.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 

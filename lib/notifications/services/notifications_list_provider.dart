@@ -31,7 +31,7 @@ class NotificationsListProvider {
 
   Future<List<Notification>> getNext() async {
     var selectedCompany = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
-    var url = NotificationUrls.notificationsListUrl(selectedCompany!.id, _pageNumber, _perPage);
+    var url = NotificationUrls.notificationsListUrl(selectedCompany!.companyId.toString(), _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
