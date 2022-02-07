@@ -15,6 +15,8 @@ import 'package:wallpost/notifications/services/all_notifications_reader.dart';
 import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';
 import 'package:wallpost/notifications/ui/presenters/notifications_list_presenter.dart';
 
+import '../view_contracts/notifications_list_view.dart';
+
 class NotificationsScreen extends StatefulWidget {
   @override
   _NotificationsScreenState createState() => _NotificationsScreenState();

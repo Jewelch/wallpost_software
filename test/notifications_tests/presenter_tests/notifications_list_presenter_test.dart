@@ -7,6 +7,7 @@ import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
 import 'package:wallpost/notifications/entities/notification.dart';
 import 'package:wallpost/notifications/services/notifications_list_provider.dart';
 import 'package:wallpost/notifications/ui/presenters/notifications_list_presenter.dart';
+import 'package:wallpost/notifications/ui/view_contracts/notifications_list_view.dart';
 import 'package:wallpost/notifications/ui/views/leave_notifications_list_tile.dart';
 import 'package:wallpost/notifications/ui/views/task_notifications_list_tile.dart';
 
@@ -72,7 +73,7 @@ void main() {
     when(() => mockNotificationsListProvider.isLoading).thenReturn(false);
     when(() => mockNotificationsListProvider.didReachListEnd).thenReturn(false);
     when(() => mockNotificationsListProvider.getNext()).thenAnswer(
-          (realInvocation) => Future.error(InvalidResponseException()),
+      (realInvocation) => Future.error(InvalidResponseException()),
     );
 
     //when
@@ -80,14 +81,15 @@ void main() {
 
     expect(presenter.getNumberOfItems(), 1);
     expect(presenter.getViewAtIndex(0) is ErrorListTile, true);
-    expect((presenter.getViewAtIndex(0) as ErrorListTile).message , '${InvalidResponseException().userReadableMessage}\n\nTap here to reload.');
+    expect((presenter.getViewAtIndex(0) as ErrorListTile).message,
+        '${InvalidResponseException().userReadableMessage}\n\nTap here to reload.');
     //then
     verifyInOrder([
-          () => mockNotificationsListProvider.isLoading,
-          () => mockNotificationsListProvider.didReachListEnd,
-          () => view.reloadData(),
-          () => mockNotificationsListProvider.getNext(),
-          () => view.reloadData(),
+      () => mockNotificationsListProvider.isLoading,
+      () => mockNotificationsListProvider.didReachListEnd,
+      () => view.reloadData(),
+      () => mockNotificationsListProvider.getNext(),
+      () => view.reloadData(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -101,19 +103,17 @@ void main() {
     //when
     await presenter.loadNextListOfNotifications();
 
-
     //todo add expect
     //then
     verifyInOrder([
-          () => mockNotificationsListProvider.isLoading,
-          () => mockNotificationsListProvider.didReachListEnd,
-          () => view.reloadData(),
-          () => mockNotificationsListProvider.getNext(),
-          () => view.reloadData(),
+      () => mockNotificationsListProvider.isLoading,
+      () => mockNotificationsListProvider.didReachListEnd,
+      () => view.reloadData(),
+      () => mockNotificationsListProvider.getNext(),
+      () => view.reloadData(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
-
 
   test('retrieving notifications successfully with no more items', () async {
     //given
@@ -140,7 +140,6 @@ void main() {
   });
 
   //note are we really checking the message did appear?
-
 
 /*
 test('retrieving notifications successfully with  more items', () async {
@@ -179,6 +178,4 @@ test('retrieving notifications successfully with  failure on loading more items'
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
-
-
 }
