@@ -16,13 +16,16 @@ class AttendanceListPresenter {
   late int _selectedYear;
   late String _selectedMonth;
 
-  AttendanceListPresenter(this._view) : _attendanceListProvider = AttendanceListProvider();
+  AttendanceListPresenter(this._view)
+      : _attendanceListProvider = AttendanceListProvider(),
+        _selectedYear = AppYears.years().first,
+        _selectedMonth = AppYears.shortenedMonthNames()[DateTime.now().month - 1];
 
   AttendanceListPresenter.initWith(
     this._view,
     this._attendanceListProvider,
-  )   : _selectedYear = AppYears.years().last,
-        _selectedMonth = AppYears.shortenedMonthNames()[DateTime.now().month];
+  )   : _selectedYear = AppYears.years().first,
+        _selectedMonth = AppYears.shortenedMonthNames()[DateTime.now().month - 1];
 
   //MARK: Function to load the attendance list
 
@@ -32,14 +35,16 @@ class AttendanceListPresenter {
     _attendanceList.clear();
     _view.showLoader();
     try {
-      var monthNumber = AppYears.shortenedMonthNames().indexOf(_selectedMonth) + 1;
-      var attendanceList = await _attendanceListProvider.get(monthNumber, _selectedYear);
+      var monthNumber = AppYears.shortenedMonthNames().indexOf((_selectedMonth)) + 1;
+      var attendanceList =
+          await _attendanceListProvider.get(monthNumber, _selectedYear);
       _attendanceList.addAll(attendanceList);
 
       if (_attendanceList.isNotEmpty) {
         _view.showAttendanceList(_attendanceList);
       } else {
-        _view.showNoListMessage("There is no attendance for $_selectedMonth $_selectedYear.\n\nTap here to reload.");
+        _view.showNoListMessage(
+            "There is no attendance for $_selectedMonth $_selectedYear.\n\nTap here to reload.");
       }
       _view.hideLoader();
     } on WPException catch (e) {
@@ -48,7 +53,7 @@ class AttendanceListPresenter {
     }
   }
 
-  //MARK: Function to refresh the attendance list
+  //MARK: Function to refresh the attendance list//
 
   refresh() {
     _attendanceListProvider.reset();

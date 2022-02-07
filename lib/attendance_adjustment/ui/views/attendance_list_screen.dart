@@ -88,7 +88,8 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
                 }).toList(),
                 value: presenter.getSelectedMonth(),
                 icon: Icon(Icons.arrow_drop_down_sharp),
-                onChanged: (month) => presenter.selectMonth(month as String),
+                onChanged: (month) => setState(() => presenter.selectMonth(month as String)),
+
               ),
               SizedBox(width: 15),
               DropdownButton(
@@ -100,7 +101,7 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
                 }).toList(),
                 value: presenter.getSelectedYear(),
                 icon: Icon(Icons.arrow_drop_down_sharp),
-                onChanged: (year) => presenter.selectYear(year as int),
+                onChanged: (year) => setState(() => presenter.selectYear(year as int)),
               ),
             ],
           ),

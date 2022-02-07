@@ -47,10 +47,10 @@ void main() {
     expect(mockNetworkAdapter.apiRequest.url, AttendanceAdjustmentUrls.submitAdjustmentUrl('someCompanyId', 'v1EmpId'));
     expect(mockNetworkAdapter.apiRequest.parameters, {
       'attendance_id': null,
-      'date': '2020-08-01',
+      'date': '2022-02-07',
       'reason': "some work",
-      'adjusted_punchin': '08:00:00',
-      'adjusted_punchout': '17:00:00',
+      'adjusted_punchin': '08:00',
+      'adjusted_punchout': '17:00',
       'adjusted_status': 'present',
       'employee_id': 'v1EmpId',
       'company_id': 'someCompanyId',
