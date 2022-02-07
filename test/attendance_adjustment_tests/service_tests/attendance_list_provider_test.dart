@@ -30,7 +30,7 @@ void main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await attendanceListsProvider.get();
+    var _ = await attendanceListsProvider.get(month,year);
 
     expect(
         mockNetworkAdapter.apiRequest.url,
@@ -44,7 +44,7 @@ void main() {
       () {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    attendanceListsProvider.get();
+    attendanceListsProvider.get(month,year);
 
     expect(attendanceListsProvider.isLoading, true);
   });
@@ -53,13 +53,13 @@ void main() {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
-    attendanceListsProvider.get().then((_) {
+    attendanceListsProvider.get(month,year).then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
     mockNetworkAdapter.succeed(successfulResponse);
-    attendanceListsProvider.get().then((_) {
+    attendanceListsProvider.get(month,year).then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -71,7 +71,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await attendanceListsProvider.get();
+      var _ = await attendanceListsProvider.get(month,year);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -84,7 +84,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      var _ = await attendanceListsProvider.get();
+      var _ = await attendanceListsProvider.get(month,year);
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -95,7 +95,7 @@ void main() {
     mockNetworkAdapter.succeed(<String, dynamic>{});
 
     try {
-      var _ = await attendanceListsProvider.get();
+      var _ = await attendanceListsProvider.get(month,year);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);

@@ -12,8 +12,7 @@ class AttendanceListItem extends JSONInitializable {
   late DateTime? _punchOutTime;
   late DateTime? _originalPunchInTime;
   late DateTime? _originalPunchOutTime;
-  late AttendanceStatus? _workStatus;
-  late AttendanceStatus? _adjustedStatus;
+  late AttendanceStatus _status;
   late String? _adjustmentReason;
   late String? _approvalStatus;
   late String? _approverName;
@@ -28,10 +27,7 @@ class AttendanceListItem extends JSONInitializable {
       _punchOutTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'punch_out_time', 'HH:mm', null);
       _originalPunchInTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'orig_punch_in_time', 'HH:mm', null);
       _originalPunchOutTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'orig_punch_out_time', 'HH:mm', null);
-      var workStatusString = sift.readStringFromMapWithDefaultValue(jsonMap, 'work_status', null);
-      if (workStatusString != null) _workStatus = initializeAttendanceStatusFromString(workStatusString);
-      var adjustedStatusString = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_status', null);
-      if (adjustedStatusString != null) _adjustedStatus = initializeAttendanceStatusFromString(adjustedStatusString);
+      _status = _readStatus(jsonMap);
       _adjustmentReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'reason', null);
       _approvalStatus = sift.readStringFromMapWithDefaultValue(jsonMap, 'approval_status', null);
       _approverName = sift.readStringFromMapWithDefaultValue(jsonMap, 'approver_name', null);
@@ -39,6 +35,27 @@ class AttendanceListItem extends JSONInitializable {
       throw MappingException('Failed to cast AttendanceListItem response. Error message - ${e.errorMessage}');
     }
   }
+
+  AttendanceStatus _readStatus(Map<String, dynamic> jsonMap) {
+    var sift = Sift();
+    var workStatusString = sift.readStringFromMapWithDefaultValue(jsonMap, 'work_status', null);
+    var adjustedStatusString = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_status', null);
+    if (workStatusString == null && adjustedStatusString == null) {
+      throw MappingException(
+          "Failed to cast AttendanceListItem response. Error message - both work_status and adjusted_status are missing");
+    }
+
+    AttendanceStatus? _workStatus = initializeAttendanceStatusFromString(workStatusString!);
+    AttendanceStatus? _adjustedStatus = initializeAttendanceStatusFromString(adjustedStatusString!);
+    if (_workStatus == null && _adjustedStatus == null) {
+      throw MappingException(
+          "Failed to cast AttendanceListItem response. Error message - could not initialize both work status and adjustment status");
+    }
+
+    return _workStatus ?? _adjustedStatus!;
+  }
+
+  //MARK: Getters
 
   num? get id => _id;
 
@@ -54,17 +71,13 @@ class AttendanceListItem extends JSONInitializable {
 
   String get originalPunchOutTime => _convertTimeToString(_originalPunchOutTime);
 
+  AttendanceStatus get status => _status;
+
   String? get approvalStatus => _approvalStatus;
 
   String get adjustmentReason => _adjustmentReason ?? "";
 
   String? get approverName => _approverName;
-
-  String getStatus() {
-    if (_workStatus != null) return _workStatus!.toReadableString();
-    if (_adjustedStatus != null) return _adjustedStatus!.toReadableString();
-    return "";
-  }
 
   String getReadableDate() {
     return _convertDateToString(_date);
@@ -82,11 +95,11 @@ class AttendanceListItem extends JSONInitializable {
 
   String _convertTimeToString(DateTime? time) {
     if (time == null) return '';
-    return DateFormat('hh:mm').format(time);
+    return DateFormat('hh:mm a').format(time);
   }
 
   String _convertDateToString(DateTime? date) {
     if (date == null) return '';
-    return DateFormat('yyyy-MM-dd').format(date);
+    return DateFormat('dd.MM.yyyy - EEE').format(date);
   }
 }

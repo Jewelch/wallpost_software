@@ -1,5 +1,3 @@
-// @dart=2.9
-
 class CommonStringConstants {
   static final String back = "Back";
   static final String okay = "Okay";
