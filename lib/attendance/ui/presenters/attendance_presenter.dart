@@ -57,7 +57,7 @@ class AttendancePresenter {
     try {
       _attendanceLocation = (await _locationProvider.getLocation())!;
       _view.hideLoader();
-        _getLocationAddress(_attendanceLocation);
+      _getLocationAddress(_attendanceLocation);
       if (attendanceDetails.isPunchedIn) {
         _loadPunchOutDetails(attendanceDetails);
       } else {
@@ -90,7 +90,9 @@ class AttendancePresenter {
   Future<void> _getLocationAddress(
       AttendanceLocation attendanceLocation) async {
     try {
+      var address =
           await _locationProvider.getLocationAddress(attendanceLocation);
+      _view.showLocationAddress(address.toString());
     } on LocationAddressFailedException catch (e) {
       _view.showLocationAddress("");
     }

@@ -6,6 +6,7 @@ import 'package:wallpost/attendance/entities/attendance_location.dart';
 import 'package:wallpost/attendance/entities/punch_in_from_app_permission.dart';
 import 'package:wallpost/attendance/entities/punch_in_now_permission.dart';
 import 'package:wallpost/attendance/exception/location_acquisition_failed_exception.dart';
+import 'package:wallpost/attendance/exception/location_address_failed_exception.dart';
 import 'package:wallpost/attendance/exception/location_permission_denied_exception.dart';
 import 'package:wallpost/attendance/exception/location_permission_permanently_denied_exception.dart';
 import 'package:wallpost/attendance/exception/location_services_disabled_exception.dart';
@@ -284,6 +285,50 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
+  test('gettingPunchInAppPermissionWhenFailGettingLocationAddress', () async {
+    //given
+    var attendance = MockAttendanceDetails();
+    var appPermission = MockPunchInFromAppPermission();
+    var punchInNowPermission = MockPunchInNowPermission();
+
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+
+    when(() => attendance.isPunchedIn).thenReturn(false);
+
+    when(() => appPermission.isAllowed).thenReturn(true);
+
+    when(() => punchInNowPermission.canPunchInNow).thenReturn(true);
+
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(MockAttendanceLocation()));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.error(LocationAddressFailedException()));
+    when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp())
+        .thenAnswer((_) => Future.value(appPermission));
+    when(() => mockPunchInNowPermissionProvider.canPunchInNow())
+        .thenAnswer((_) => Future.value(punchInNowPermission));
+
+    // when
+    await presenter.loadAttendanceDetails();
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => mockLocationProvider.getLocation(),
+      () => view.hideLoader(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
+      () => view.showLocationAddress(""),
+      () => mockPunchInNowPermissionProvider.canPunchInNow(),
+      () => view.showPunchInButton(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
   test(
       "showPunchInButton_whenUseNotPunchIn_andAllowedToPunchInAppPermission_alsoCanPunchInNow",
       () async {
@@ -323,8 +368,9 @@ void main() {
       () => view.hideLoader(),
       () => mockLocationProvider.getLocationAddress(any()),
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
+      () => view.showLocationAddress("address"),
       () => mockPunchInNowPermissionProvider.canPunchInNow(),
-      () => view.showPunchInButton()
+      () => view.showPunchInButton(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -361,6 +407,7 @@ void main() {
       () => view.hideLoader(),
       () => mockLocationProvider.getLocationAddress(any()),
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
+      () => view.showLocationAddress("address"),
       () => view.showDisableButton(),
       () => view.hideBreakButton(),
       () => view
@@ -406,6 +453,7 @@ void main() {
       () => view.hideLoader(),
       () => mockLocationProvider.getLocationAddress(any()),
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
+      () => view.showLocationAddress("address"),
       () => mockPunchInNowPermissionProvider.canPunchInNow(),
       () => view.showDisableButton(),
       () => view.hideBreakButton(),
@@ -605,6 +653,7 @@ void main() {
       () => view.showPunchOutButton(),
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: true),
+      () => view.showLocationAddress("address"),
       () => view.doPunchOut()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -649,6 +698,7 @@ void main() {
       () => view.showPunchOutButton(),
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: true),
+      () => view.showLocationAddress("address"),
       () => view.showAlertToVerifyLocation("location is not valid")
     ]);
     _verifyNoMoreInteractionsOnAllMocks();

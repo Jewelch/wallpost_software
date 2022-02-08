@@ -3,19 +3,11 @@ abstract class AttendanceView {
 
   void hideLoader();
 
-  void showFailedToLoadAttendance(String title, String message);
-
-  void showDisableButton();
-
-  void showFailedToGetLocation(String title, String message);
-
-  void showLocationAddress(String address);
-
   void showPunchInButton();
 
   void showPunchOutButton();
 
-  void showMessageToAllowPunchInFromAppPermission(String message);
+  void showDisableButton();
 
   void hideBreakButton();
 
@@ -23,21 +15,27 @@ abstract class AttendanceView {
 
   void showResumeButton();
 
-  void showSecondTillPunchIn(String number);
-
   void showPunchInTime(String time);
 
   void showPunchOutTime(String time);
 
+  void showSecondTillPunchIn(String number);
+
+  void showLocationAddress(String address);
+
+  void showFailedToLoadAttendance(String title, String message);
+
+  void showFailedToGetLocation(String title, String message);
+
   void showAlertToVerifyLocation(String message);
 
+  void showAlertToTurnOnDeviceLocation(String title, String message);
+
+  void showAlertToDeniedLocationPermission(String title, String message);
+
+  void showMessageToAllowPunchInFromAppPermission(String message);
+
   void doPunchOut();
-
-  void goToLocationSetting();
-
-  void showAlertToTurnOnDeviceLocation(String title,String message);
-
-  void showAlertToDeniedLocationPermission(String title,String message);
 
   void openAppSettings();
 }
