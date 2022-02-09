@@ -6,7 +6,7 @@ import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_current_user_provider.dart';
 import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_user.dart';
-import 'companies_list_provider_test.dart';
+import 'company_list_provider_test.dart';
 
 void main() {
   var mockUser = MockUser();

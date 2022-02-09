@@ -22,12 +22,13 @@ void main() {
     when(() => mockEmployee.v1Id).thenReturn('v1EmpId');
     when(() => mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
 
+    var attendanceDate = DateTime(2020, 1, 1);
     var adjustedPunchInTime = DateTime(2020, 1, 1, 8, 0);
     var adjustedPunchOutTime = DateTime(2020, 1, 1, 17, 0);
     var adjustedStatus = AttendanceStatus.Present;
     adjustmentForm = AttendanceAdjustmentForm(
       mockEmployee,
-      DateTime.now(),
+      attendanceDate,
       "some work",
       adjustedPunchInTime,
       adjustedPunchOutTime,
@@ -47,7 +48,7 @@ void main() {
     expect(mockNetworkAdapter.apiRequest.url, AttendanceAdjustmentUrls.submitAdjustmentUrl('someCompanyId', 'v1EmpId'));
     expect(mockNetworkAdapter.apiRequest.parameters, {
       'attendance_id': null,
-      'date': '2022-02-07',
+      'date': '2020-01-01',
       'reason': "some work",
       'adjusted_punchin': '08:00',
       'adjusted_punchout': '17:00',

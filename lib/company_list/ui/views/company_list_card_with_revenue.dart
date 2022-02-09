@@ -45,10 +45,10 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Notification${company.notificationCount == 1 ? '' : 's'}',
+                              Text('Notification  TODO',
                                   style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
                               Text(
-                                company.notificationCount.toString(),
+                                "TODO",
                                 style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
                               ),
                             ],
@@ -65,12 +65,12 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                company.actualSalesAmount,
+                                "company.actualSalesAmount",
                                 style: TextStyles.titleTextStyle,
                               ),
                               SizedBox(width: 4),
                               Text(
-                                company.currencyCode,
+                                "company.currencyCode",
                                 style: TextStyles.labelTextStyle,
                               ),
                             ],
@@ -83,10 +83,10 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                           SizedBox(height: 16),
                           LinearPercentIndicator(
                             lineHeight: 14,
-                            percent: company.achievedSalesPercent / 100,
-                            progressColor: _getColorForPerformance(company.achievedSalesPercent.toInt()),
+                            percent: 100,
+                            progressColor: _getColorForPerformance(100),
                             center: Text(
-                              company.achievedSalesPercent.toString() + "%",
+                              "100%",
                               style: TextStyles.labelTextStyle.copyWith(color: Colors.white),
                             ),
                           ),

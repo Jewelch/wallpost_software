@@ -90,7 +90,7 @@ class LeftMenuScreen extends StatelessWidget {
     } else {
       var selectedCompany = SelectedCompanyProvider().getSelectedCompanyForCurrentUser();
       return WPAppBar(
-        title: selectedCompany.shortName,
+        title: selectedCompany.name,
         leading: CircularBackButton(onPressed: () => Navigator.pop(context)),
       );
     }

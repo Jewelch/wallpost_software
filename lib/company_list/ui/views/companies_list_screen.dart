@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/app_bars/company_list_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
@@ -11,11 +13,12 @@ import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/company_list/entities/company_group.dart';
 import 'package:wallpost/company_list/entities/company_list_item.dart';
-import 'package:wallpost/company_list/ui/contracts/company_list_view.dart';
+import 'package:wallpost/company_list/entities/financial_summary.dart';
 import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dart';
+import 'package:wallpost/company_list/ui/view_contracts/company_list_view.dart';
 import 'package:wallpost/company_list/ui/views/company_list_card.dart';
-import 'package:wallpost/company_list/ui/views/company_list_card_with_revenue.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 
 class CompanyListScreen extends StatefulWidget {
@@ -23,14 +26,17 @@ class CompanyListScreen extends StatefulWidget {
   _CompanyListScreenState createState() => _CompanyListScreenState();
 }
 
-class _CompanyListScreenState extends State<CompanyListScreen>
-    implements CompaniesListView {
+class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
   late CompaniesListPresenter presenter;
   var _searchBarVisibilityNotifier = ItemNotifier<bool>();
   var _showErrorNotifier = ItemNotifier<bool>();
-  var _companiesListNotifier = ItemNotifier<List<CompanyListItem>?>();
+  var _companiesListNotifier = ItemNotifier<List<CompanyListItem>>();
   var _selectedCompanyNotifier = ItemNotifier<CompanyListItem>();
+  var _groupSummary = ItemNotifier<FinancialSummary>();
   var _viewSelectorNotifier = ItemNotifier<int>();
+  var _viewAppBarSelectorNotifier = ItemNotifier<bool>();
+  var _profileImageUrl = ItemNotifier<String>();
+  var _companyGroups = ItemNotifier<List<CompanyGroup>>();
   var _scrollController = ScrollController();
 
   String _noCompaniesMessage = "";
@@ -40,13 +46,17 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   static const NO_COMPANIES_VIEW = 2;
   static const NO_SEARCH_RESULTS_VIEW = 3;
   static const ERROR_VIEW = 4;
+  static const SHIMMER_LOADING = 5;
   late Loader loader;
+  late int tappedIndex;
 
   @override
   void initState() {
     presenter = CompaniesListPresenter(this);
     presenter.loadCompanies();
+    presenter.getProfileImageUrl();
     loader = Loader(context);
+    tappedIndex = -1;
     super.initState();
   }
 
@@ -56,36 +66,28 @@ class _CompanyListScreenState extends State<CompanyListScreen>
       //  scrollController: _scrollController,
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: SimpleAppBar(
-          title: 'Group Dashboard',
-          leadingButtons: [
-            CircularIconButton(
-                iconName: 'assets/icons/menu_icon.svg',
-                iconSize: 12,
-                onPressed: () => presenter.logout()
-                // ScreenPresenter.present(
-                //   LeftMenuScreen(),
-                //   context,
-                //   slideDirection: SlideDirection.fromLeft,
-                // )
-                )
-          ],
-        ),
         body: Column(children: <Widget>[
+          ItemNotifiable<bool>(
+              notifier: _viewAppBarSelectorNotifier,
+              builder: (context, view) {
+                if (view == true) {
+                  return searchContainer();
+                }
+                return _appBar();
+              }),
           _summary(),
           Expanded(
               child: Container(
-            margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            margin: EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: Column(children: [
-              _searchBar(),
               ItemNotifiable<int>(
                   notifier: _viewSelectorNotifier,
                   builder: (context, value) {
-                    if (value == COMPANIES_VIEW) {
+                    if (value == COMPANIES_VIEW || value == SHIMMER_LOADING) {
                       return Expanded(child: _getCompanies());
                     } else if (value == NO_COMPANIES_VIEW) {
                       return Expanded(child: _noCompaniesMessageView());
@@ -101,25 +103,172 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     );
   }
 
-  Widget _summary() {
-    return Card(
-      color: Colors.blue[800],
-      elevation: 2,
-      // Change this
-      shadowColor: Colors.blue,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(16), bottomRight: Radius.circular(16)),
+  Widget _leadingButton() {
+    return Container(
+        child: ItemNotifiable<String>(
+            notifier: _profileImageUrl,
+            builder: (context, imageUrl) {
+              return FadeInImage.assetNetwork(
+                placeholder: 'assets/logo/logo.png',
+                image: imageUrl!,
+                fit: BoxFit.cover,
+              );
+            }));
+  }
+
+  searchContainer() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(8, 40, 8, 12),
+      child: Column(
+        children: [
+          Row(
+            children: <Widget>[
+              Expanded(flex: 8, child: _searchBar()),
+              Expanded(
+                flex: 2,
+                child: Center(
+                  child: GestureDetector(
+                      onTap: () => {_viewAppBarSelectorNotifier.notify(false), presenter.resetSearch()},
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.red, fontSize: 18),
+                      )),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Container(
+              height: 40,
+              child: ItemNotifiable<List<CompanyGroup>>(
+                  notifier: _companyGroups,
+                  builder: (context, companiesGroup) {
+                    return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: companiesGroup!.length,
+                        itemBuilder: (_, index) {
+                          return _groupElement(index, companiesGroup);
+                        });
+                  })),
+        ],
       ),
-      margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
-      child: Container(
-        child: Column(
+    );
+  }
+
+  Widget _groupElement(int index, List<CompanyGroup> companiesGroup) {
+    return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
+        child: ActionChip(
+          elevation: 2,
+          label: Text(companiesGroup[index].name),
+          labelStyle: TextStyle(color: Colors.blue[800]),
+          backgroundColor: AppColors.backGroundColor,
+          side: BorderSide(
+              color: tappedIndex == index ? Colors.blue.shade800 : Colors.transparent,
+              width: 1,
+              style: BorderStyle.solid),
+          onPressed: () {
+            setState(() {
+              tappedIndex = index;
+            });
+            presenter.showGroup(index);
+          },
+        ));
+  }
+
+  _appBar() {
+    return CompanyListAppBar(
+      //title: 'Group Dashboard',
+      leadingButton: _leadingButton(),
+      trailingButton: SvgPicture.asset(
+        'assets/icons/search_icon.svg',
+        color: Colors.white,
+        width: 14,
+        height: 14,
+      ),
+      onLeadingButtonPressed: () => presenter.logout(),
+      onTrailingButtonPressed: () => {_viewAppBarSelectorNotifier.notify(true)},
+      textButton1: TextButton(
+        onPressed: () {},
+        child: Text(
+          "Group Summary",
+          style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+      ),
+    );
+  }
+
+  Widget _summary() {
+    return ItemNotifiable<FinancialSummary>(
+        notifier: _groupSummary,
+        builder: (context, summary) {
+          if (summary != null) {
+            return Container(margin: EdgeInsets.fromLTRB(0, 0, 20, 0), child: card(summary));
+          } else
+            return Container();
+        });
+  }
+
+  Widget card(FinancialSummary summary) {
+    return Stack(
+      children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Container(
+            child: RotatedBox(
+                quarterTurns: 2,
+                child: Container(
+                  width: double.infinity,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.vertical(
+                      top: Radius.elliptical(150, 30),
+                    ),
+                  ),
+                )),
+            decoration: new BoxDecoration(
+                gradient: new LinearGradient(colors: [
+              Colors.blue.shade800,
+              Colors.transparent,
+            ], stops: [
+              0.0,
+              0.9
+            ], begin: FractionalOffset.centerLeft, end: FractionalOffset.centerRight, tileMode: TileMode.repeated)),
+          ),
+          ClipRRect(
+              borderRadius: BorderRadius.only(topRight: Radius.circular(26), bottomRight: Radius.circular(26)),
+              child: Container(
+                color: Colors.blue[800],
+                width: double.infinity,
+                height: 200,
+              )),
+          Container(
+            decoration: new BoxDecoration(
+                gradient: new LinearGradient(colors: [
+              Colors.blue.shade800,
+              Colors.transparent,
+            ], stops: [
+              0.0,
+              0.9
+            ], begin: FractionalOffset.centerLeft, end: FractionalOffset.centerRight, tileMode: TileMode.repeated)),
+            child: Container(
+                width: double.infinity,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: new BorderRadius.vertical(
+                    top: Radius.elliptical(150, 30),
+                  ),
+                )),
+          ),
+        ]),
+        Column(
           children: <Widget>[
             Row(children: [
               Expanded(
                   flex: 5,
                   child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 30, 0, 0),
                       child: Text(
                         "Summary",
                         style: const TextStyle(
@@ -132,10 +281,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                   flex: 5,
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      droppedDownItem("YTD"),
-                      droppedDownItem("2022")
-                    ],
+                    children: <Widget>[droppedDownItem("YTD"), droppedDownItem("2022")],
                   ))
             ]),
             SizedBox(height: 8),
@@ -156,36 +302,37 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                   flex: 6,
                   child: Center(
                       child: Text(
-                    "180,000",
+                    summary.overallRevenue.toString(),
                     style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.green,
-                      fontSize: 28.0,
-                    ),
+                        fontWeight: FontWeight.w700,
+                        color: Colors.green,
+                        fontSize: 28.0,
+                        overflow: TextOverflow.ellipsis),
                   ))),
             ]),
             SizedBox(height: 6),
             Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                          flex: 3, child: summaryElement("Fund Availability",Colors.green,"200,000")),
-                      SizedBox.fromSize(size: Size(10, 0)),
-                      Expanded(
-                          flex: 3, child: summaryElement("Receivables Overdue",Colors.red,"80,000")),
-                      SizedBox.fromSize(size: Size(10, 0)),
-                      Expanded(
-                          flex: 3, child: summaryElement("Payables Overdue",Colors.red,"50,000")),
-                    ])),
+                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Expanded(
+                      flex: 3,
+                      child: summaryElement("Fund Availability", Colors.green, summary.cashAvailability.toString())),
+                  SizedBox.fromSize(size: Size(10, 0)),
+                  Expanded(
+                      flex: 3,
+                      child: summaryElement("Receivables Overdue", Colors.red, summary.receivableOverdue.toString())),
+                  SizedBox.fromSize(size: Size(10, 0)),
+                  Expanded(
+                      flex: 3,
+                      child: summaryElement("Payables Overdue", Colors.red, summary.payableOverdue.toString())),
+                ])),
           ],
-        ),
-      ),
+        )
+      ],
     );
   }
 
-  Widget summaryElement(String label,Color color,String value) {
+  Widget summaryElement(String label, Color color, String value) {
     return Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
         child: Column(
@@ -197,6 +344,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                 fontWeight: FontWeight.w700,
                 color: color,
                 fontSize: 18.0,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             Text(
@@ -205,6 +353,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                 fontWeight: FontWeight.w300,
                 color: Colors.grey[400],
                 fontSize: 11.0,
+                overflow: TextOverflow.ellipsis,
               ),
             )
           ],
@@ -213,7 +362,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
 
   Widget droppedDownItem(String label) {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
         child: Row(children: [
           Text(
             label,
@@ -236,7 +385,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
       builder: (context, shouldShowSearchBar) {
         if (shouldShowSearchBar == true) {
           return SearchBarWithTitle(
-            title: 'Choose company',
+            title: 'Search',
             onChanged: (searchText) => presenter.performSearch(searchText),
           );
         } else {
@@ -246,28 +395,39 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     );
   }
 
+  Widget shimmerEffectUIWidget() => ListTile(
+        leading: MyShimmerEffectUI.rectangular(height: 60, width: 60),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: MyShimmerEffectUI.rectangular(height: 18, width: MediaQuery.of(context).size.width * 0.35),
+        ),
+        subtitle: MyShimmerEffectUI.rectangular(height: 16),
+      );
+
   Widget _getCompanies() {
     return ItemNotifiable<List<CompanyListItem>>(
-      notifier: _companiesListNotifier,
-      builder: (context, value) => Container(
-        padding: EdgeInsets.only(top: 8, bottom: 8),
-        child: RefreshIndicator(
-          onRefresh: () => presenter.loadCompanies(),
-          child: ListView.separated(
-            physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics()),
-            controller: _scrollController,
-            itemCount: value!.length,
-            itemBuilder: (context, index) {
-              return _getCompanyCard(index, value);
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return Divider();
-            },
-          ),
-        ),
-      ),
-    );
+        notifier: _companiesListNotifier,
+        builder: (context, value) {
+          if (value == null) {
+            return ListView.builder(itemBuilder: (_, __) => shimmerEffectUIWidget());
+          } else
+            return Container(
+              child: RefreshIndicator(
+                onRefresh: () => presenter.refreshCompanies(),
+                child: ListView.separated(
+                  physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                  controller: _scrollController,
+                  itemCount: value.length,
+                  itemBuilder: (context, index) {
+                    return _getCompanyCard(index, value);
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider();
+                  },
+                ),
+              ),
+            );
+        });
   }
 
   Widget _noCompaniesMessageView() {
@@ -326,11 +486,11 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   Widget _getCompanyCard(int index, List<CompanyListItem> companyList) {
     //if (companyList[index].shouldShowRevenue) {
     return CompanyListCard(
-      company: companyList[index],
-      onPressed: () => {
-        presenter.selectCompanyAtIndex(index),
-      }
-    );
+        company: companyList[index],
+        onPressed: ()  {
+          print("asdfas");
+              presenter.selectCompanyAtIndex(index);
+            });
     // need to check with specifications
     // } else
     //   return CompanyListCardWithOutRevenue(
@@ -346,14 +506,16 @@ class _CompanyListScreenState extends State<CompanyListScreen>
 
   @override
   void showLoader() {
-    SchedulerBinding.instance?.addPostFrameCallback((_) {
-      loader.showLoadingIndicator("Loading");
-    });
+    // SchedulerBinding.instance?.addPostFrameCallback((_) {
+    //   loader.showLoadingIndicator("Loading");
+    // });
+    // _shimmerLoading.notify(true);
+    _viewSelectorNotifier.notify(SHIMMER_LOADING);
   }
 
   @override
   void hideLoader() {
-    loader.hideOpenDialog();
+    // loader.hideOpenDialog();
   }
 
   @override
@@ -367,7 +529,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   }
 
   @override
-  void showSelectedCompany(CompanyListItem? company) {
+  void showSelectedCompany(CompanyListItem company) {
     if (company != null) {
       _selectedCompanyNotifier.notify(company);
     }
@@ -400,8 +562,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
 
   @override
   void onCompanyDetailsLoadedSuccessfully() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(
-        DashboardScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
   }
 
   @override
@@ -422,4 +583,47 @@ class _CompanyListScreenState extends State<CompanyListScreen>
       },
     );
   }
+
+  @override
+  void showProfileImage(String url) {
+    _profileImageUrl.notify(url);
+  }
+
+  @override
+  void showSummary(FinancialSummary groupSummary) {
+    _groupSummary.notify(groupSummary);
+  }
+
+  @override
+  void showCompanyGroups(List<CompanyGroup> companyGroups) {
+    _companyGroups.notify(companyGroups);
+  }
+}
+
+class MyShimmerEffectUI extends StatelessWidget {
+  final double width;
+  final double height;
+  final ShapeBorder shapeBorder;
+
+  const MyShimmerEffectUI.rectangular({this.width = double.infinity, required this.height})
+      : this.shapeBorder = const RoundedRectangleBorder();
+
+  const MyShimmerEffectUI.circular(
+      {this.width = double.infinity, required this.height, this.shapeBorder = const CircleBorder()});
+
+  @override
+  Widget build(BuildContext context) => Shimmer.fromColors(
+        enabled: false,
+        baseColor: Colors.grey,
+        highlightColor: Colors.grey,
+        period: Duration(seconds: 3),
+        child: Container(
+          width: width,
+          height: height,
+          decoration: ShapeDecoration(
+            color: Colors.grey,
+            shape: shapeBorder,
+          ),
+        ),
+      );
 }

@@ -41,7 +41,7 @@ class MainPresenter {
 
   void _showLandingScreenForLoggedInUser() {
     if (_selectedCompanyProvider.isCompanySelected()) {
-      _view.goToDashboardScreen();
+      _view.goToCompaniesListScreen();
     } else {
       _view.goToCompaniesListScreen();
     }

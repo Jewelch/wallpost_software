@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/company_list/constants/company_management_urls.dart';
-import 'package:wallpost/company_list/entities/company.dart';
-import 'package:wallpost/company_list/entities/employee.dart';
-import 'package:wallpost/company_list/repositories/company_repository.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
+import 'package:wallpost/company_list/constants/company_management_urls.dart';
+import 'package:wallpost/company_list/entities/employee.dart';
+import 'package:wallpost/company_list/repositories/company_repository.dart';
+
+import '../entities/company.dart';
 
 class CompanyDetailsProvider {
   final CurrentUserProvider _currentUserProvider;
@@ -48,9 +49,7 @@ class CompanyDetailsProvider {
     try {
       var company = Company.fromJson(responseMap);
       var employee = Employee.fromJson(responseMap);
-      //todo var permissions = Permissions.fromJson(responseMap);
       _companyRepository.selectCompanyAndEmployeeForUser(company, employee, _currentUserProvider.getCurrentUser());
-      //todo _permissionsRepo.savePermissionsForEmployeeOrEmployee(permissions, employee)
       return null;
     } catch (e) {
       throw InvalidResponseException();
