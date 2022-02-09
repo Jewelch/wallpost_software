@@ -56,9 +56,10 @@ class AttendancePresenter {
   Future<void> _getLocation(AttendanceDetails attendanceDetails) async {
     try {
       _attendanceLocation = (await _locationProvider.getLocation())!;
-      _view.hideLoader();
+
       _getLocationAddress(_attendanceLocation);
       if (attendanceDetails.isPunchedIn) {
+        _view.hideLoader();
         _loadPunchOutDetails(attendanceDetails);
       } else {
         await _getPunchInFromAppPermission();
@@ -105,12 +106,14 @@ class AttendancePresenter {
       if (punchInFromAppPermission.isAllowed) {
         await _loadPunchInDetails();
       } else {
+        _view.hideLoader();
         _view.showDisableButton();
         _view.hideBreakButton();
         _view
             .showMessageToAllowPunchInFromAppPermission("Allow app permission");
       }
     } on WPException catch (e) {
+      _view.hideLoader();
       _view.showDisableButton();
     }
   }
@@ -119,6 +122,7 @@ class AttendancePresenter {
     try {
       var punchInNowPermission =
           await _punchInNowPermissionProvider.canPunchInNow();
+      _view.hideLoader();
       if (punchInNowPermission.canPunchInNow) {
         _view.showPunchInButton();
       } else {
@@ -128,6 +132,7 @@ class AttendancePresenter {
             punchInNowPermission.secondsTillPunchIn.toString());
       }
     } on WPException catch (e) {
+      _view.hideLoader();
       _view.showDisableButton();
     }
   }
