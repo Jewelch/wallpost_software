@@ -16,7 +16,7 @@ class _LocationAddressViewState extends State<LocationAddressView> {
   @override
   void initState() {
     super.initState();
-    _getLocation();
+  //  _getLocation();
   }
 
   @override
@@ -40,9 +40,9 @@ class _LocationAddressViewState extends State<LocationAddressView> {
     );
   }
 
-  _getLocation() async {
-    Position position = await LocationProvider().getLocation();
-    address = await LocationProvider().getLocationAddress(position);
-    setState(() {});
-  }
+  // _getLocation() async {
+  //   Position position = await LocationProvider().getLocation();
+  //   address = await LocationProvider().getLocationAddress(position);
+  //   setState(() {});
+  // }
 }
