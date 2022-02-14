@@ -7,7 +7,6 @@ import 'package:wallpost/company_list/entities/company_list_item.dart';
 import 'package:wallpost/company_list/services/company_list_provider.dart';
 import 'package:wallpost/company_list/services/company_details_provider.dart';
 import 'package:wallpost/company_list/services/selected_company_provider.dart';
-import 'package:wallpost/_wp_core/dashboard_management/entities/Dashboard.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/company_list/ui/view_contracts/company_list_view.dart';
 
@@ -17,14 +16,12 @@ class CompaniesListPresenter {
   final CompanyDetailsProvider _companyDetailsProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
   final CurrentUserProvider _currentUserProvider;
-  late CompanyList companyList;
+  late CompanyList _companyList;
   List<CompanyListItem> _companies = [];
   List<CompanyListItem> _filterList = [];
-  List<CompanyGroup> _groups = [];
-  var _searchText = "";
 
-  // late CompaniesGroup? _selectedCompanyItem;
-  // late CompaniesGroup _defaultGroup;
+  //List<CompanyGroup> _groups = [];
+  var _searchText = "";
 
   CompaniesListPresenter(this._view)
       : _companyListProvider = CompanyListProvider(),
@@ -58,6 +55,7 @@ class CompaniesListPresenter {
     try {
       var companyList = await _companyListProvider.get();
       _handleResponse(companyList);
+      _companyList = companyList;
       _view.hideLoader();
     } on WPException catch (e) {
       _clearSearchTextAndHideSearchBar();
@@ -70,7 +68,6 @@ class CompaniesListPresenter {
 
   Future<void> refreshCompanies() async {
     if (_companyListProvider.isLoading) return;
-    _companies.clear();
     try {
       var companies = await _companyListProvider.get();
       _handleResponse(companies);
@@ -106,7 +103,8 @@ class CompaniesListPresenter {
   selectCompany(CompanyListItem companyListItem) async {
     _view.showLoader();
     try {
-      var _ = await _companyDetailsProvider.getCompanyDetails(companyListItem.id.toString());
+      var _ = await _companyDetailsProvider
+          .getCompanyDetails(companyListItem.id.toString());
       _view.hideLoader();
       _view.onCompanyDetailsLoadedSuccessfully();
     } on WPException catch (e) {
@@ -117,17 +115,15 @@ class CompaniesListPresenter {
   }
 
   void _handleResponse(CompanyList companyList) {
-    //don't select default group - show all companies whenever the companies are retrieved
-    // if (companies != null) {
-    //    _defaultGroup = companies.firstWhere((element) => element.isDefault ==0);
-    //   _companies.addAll(_defaultGroup.companies);
-    //   _groups.addAll(companies);
-    //   _view.showSummary(companies.first.groupSummary);
-    //   _view.showCompanyGroups(companies);
-    // }
-
-
     _companies = companyList.companies;
+
+    if (companyList.groups.isNotEmpty)
+      _view.showCompanyGroups(companyList.groups);
+
+    if (companyList.financialSummary != null) {
+      _view.showSummary(companyList.financialSummary!);
+    }
+
     if (_companies.isNotEmpty) {
       _view.showSearchBar();
       loadSelectedCompany();
@@ -152,8 +148,6 @@ class CompaniesListPresenter {
       _view.showNoSearchResultsMessage(
           "There are no companies for the  given search criteria.");
     } else {
-      // _filterList.remove(_selectedCompanyItem);
-      // _companies.remove(_selectedCompanyItem);
       _view.showCompanyList(_filterList);
     }
   }
@@ -192,18 +186,26 @@ class CompaniesListPresenter {
   }
 
   void showGroup(int index) {
-    // _companies.clear();
-    // var selectedGroup = _groups[index];
-    // _companies.addAll(selectedGroup.companies);
-    // _showFilteredCompanies();
-    // _view.showSummary(selectedGroup.groupSummary);
+    List<CompanyListItem> _groupCompanies = [];
+
+    if (_companyList.groups[index].financialSummary != null) {
+      _view.showSummary(_companyList.groups[index].financialSummary!);
+    }
+
+    var companyIds = _companyList.groups[index].companyIds;
+    _companies.forEach((element) {
+      companyIds.forEach((value) {
+        if (value == element.id) _groupCompanies.add(element);
+      });
+    });
+
+    if (_groupCompanies.isNotEmpty) {
+      _view.showCompanyList(_groupCompanies);
+    }
   }
 
   resetSearch() {
-    // performSearch("");
-    // _companies.addAll(_defaultGroup.companies);
-    // _showFilteredCompanies();
-    // _view.showSummary(_defaultGroup.groupSummary);
-    // _view.showCompanyList(_defaultGroup.companies);
+    performSearch("");
+    _handleResponse(_companyList);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/company_list_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
@@ -18,6 +17,7 @@ import 'package:wallpost/company_list/entities/company_list_item.dart';
 import 'package:wallpost/company_list/entities/financial_summary.dart';
 import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dart';
 import 'package:wallpost/company_list/ui/view_contracts/company_list_view.dart';
+import 'package:wallpost/company_list/ui/views/ShimmerEffect.dart';
 import 'package:wallpost/company_list/ui/views/company_list_card.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 
@@ -26,7 +26,8 @@ class CompanyListScreen extends StatefulWidget {
   _CompanyListScreenState createState() => _CompanyListScreenState();
 }
 
-class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
+class _CompanyListScreenState extends State<CompanyListScreen>
+    implements CompaniesListView {
   late CompaniesListPresenter presenter;
   var _searchBarVisibilityNotifier = ItemNotifier<bool>();
   var _showErrorNotifier = ItemNotifier<bool>();
@@ -37,6 +38,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   var _viewAppBarSelectorNotifier = ItemNotifier<bool>();
   var _profileImageUrl = ItemNotifier<String>();
   var _companyGroups = ItemNotifier<List<CompanyGroup>>();
+  var _tappedIndexNotifier = ItemNotifier<int>();
   var _scrollController = ScrollController();
 
   String _noCompaniesMessage = "";
@@ -48,7 +50,6 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   static const ERROR_VIEW = 4;
   static const SHIMMER_LOADING = 5;
   late Loader loader;
-  late int tappedIndex;
 
   @override
   void initState() {
@@ -56,7 +57,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     presenter.loadCompanies();
     presenter.getProfileImageUrl();
     loader = Loader(context);
-    tappedIndex = -1;
+
     super.initState();
   }
 
@@ -78,26 +79,27 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
           _summary(),
           Expanded(
               child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Column(children: [
-              ItemNotifiable<int>(
-                  notifier: _viewSelectorNotifier,
-                  builder: (context, value) {
-                    if (value == COMPANIES_VIEW || value == SHIMMER_LOADING) {
-                      return Expanded(child: _getCompanies());
-                    } else if (value == NO_COMPANIES_VIEW) {
-                      return Expanded(child: _noCompaniesMessageView());
-                    } else if (value == NO_SEARCH_RESULTS_VIEW) {
-                      return Expanded(child: _noSearchResultsMessageView());
-                    }
-                    return Expanded(child: _buildErrorAndRetryView());
-                  })
-            ]),
-          )),
+                margin: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: Column(children: [
+                  ItemNotifiable<int>(
+                      notifier: _viewSelectorNotifier,
+                      builder: (context, value) {
+                        if (value == COMPANIES_VIEW ||
+                            value == SHIMMER_LOADING) {
+                          return Expanded(child: _getCompanies());
+                        } else if (value == NO_COMPANIES_VIEW) {
+                          return Expanded(child: _noCompaniesMessageView());
+                        } else if (value == NO_SEARCH_RESULTS_VIEW) {
+                          return Expanded(child: _noSearchResultsMessageView());
+                        }
+                        return Expanded(child: _buildErrorAndRetryView());
+                      })
+                ]),
+              )),
         ]),
       ),
     );
@@ -120,82 +122,115 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     return Padding(
       padding: EdgeInsets.fromLTRB(8, 40, 8, 12),
       child: Column(
-        children: [
-          Row(
-            children: <Widget>[
-              Expanded(flex: 8, child: _searchBar()),
-              Expanded(
-                flex: 2,
-                child: Center(
-                  child: GestureDetector(
-                      onTap: () => {_viewAppBarSelectorNotifier.notify(false), presenter.resetSearch()},
-                      child: Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.red, fontSize: 18),
-                      )),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Container(
-              height: 40,
-              child: ItemNotifiable<List<CompanyGroup>>(
-                  notifier: _companyGroups,
-                  builder: (context, companiesGroup) {
-                    return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: companiesGroup!.length,
-                        itemBuilder: (_, index) {
-                          return _groupElement(index, companiesGroup);
-                        });
-                  })),
-        ],
+          mainAxisSize: MainAxisSize.max,
+          children: [
+      Row(
+      children: <Widget>[
+      Expanded(flex: 8, child: _searchBar()),
+      Expanded(
+        flex: 2,
+        child: Center(
+            child: GestureDetector(
+                onTap: () => {
+                _viewAppBarSelectorNotifier.notify(false),
+                _tappedIndexNotifier.notify(null),
+                presenter.resetSearch()
+            },
+            child: Text(
+              "Cancel",
+              style: TextStyle(color: Colors.red, fontSize: 18),
+            )),
       ),
+    ),
+    ],
+    ),
+    SizedBox(height: 8),
+    Container(
+    child: ItemNotifiable<List<CompanyGroup>>(
+    notifier: _companyGroups,
+    builder: (context, companiesGroup) {
+    if ((companiesGroup != null) &&
+    (companiesGroup.isNotEmpty)) {
+    return Container(
+    height: 40,
+    child: ItemNotifiable<int>(
+    notifier: _tappedIndexNotifier,
+    builder: (context, tappedIndex) {
+    return ListView.builder(
+    itemBuilder: (context, index) {
+    return _groupElement(
+    index, tappedIndex, companiesGroup);
+    },
+    shrinkWrap: true,
+    scrollDirection: Axis.horizontal,
+    itemCount: companiesGroup.length,
     );
-  }
+    }));
+    } else
+    return Container();
+    })),
+    ],
+    ),
+    );
+    }
 
-  Widget _groupElement(int index, List<CompanyGroup> companiesGroup) {
+  Widget _groupElement(int index, int? tappedIndex,
+      List<CompanyGroup> companiesGroup) {
     return Container(
         margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
-        child: ActionChip(
-          elevation: 2,
-          label: Text(companiesGroup[index].name),
-          labelStyle: TextStyle(color: Colors.blue[800]),
-          backgroundColor: AppColors.backGroundColor,
-          side: BorderSide(
-              color: tappedIndex == index ? Colors.blue.shade800 : Colors.transparent,
-              width: 1,
-              style: BorderStyle.solid),
-          onPressed: () {
-            setState(() {
-              tappedIndex = index;
-            });
-            presenter.showGroup(index);
-          },
-        ));
+        child: ItemNotifiable<String>(
+            notifier: _profileImageUrl,
+            builder: (context, imageUrl) {
+              return ActionChip(
+                elevation: 2,
+                label: Text(companiesGroup[index].name),
+                labelStyle: TextStyle(color: Colors.blue[800]),
+                backgroundColor: AppColors.backGroundColor,
+                side: BorderSide(
+                    color: tappedIndex == index
+                        ? Colors.blue.shade800
+                        : Colors.transparent,
+                    width: 1,
+                    style: BorderStyle.solid),
+                onPressed: () {
+                  _tappedIndexNotifier.notify(index);
+                  presenter.showGroup(index);
+                },
+              );
+            }));
   }
 
   _appBar() {
-    return CompanyListAppBar(
-      //title: 'Group Dashboard',
-      leadingButton: _leadingButton(),
-      trailingButton: SvgPicture.asset(
-        'assets/icons/search_icon.svg',
-        color: Colors.white,
-        width: 14,
-        height: 14,
-      ),
-      onLeadingButtonPressed: () => presenter.logout(),
-      onTrailingButtonPressed: () => {_viewAppBarSelectorNotifier.notify(true)},
-      textButton1: TextButton(
-        onPressed: () {},
-        child: Text(
-          "Group Summary",
-          style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.w700),
-        ),
-      ),
-    );
+    return ItemNotifiable<bool>(
+        notifier: _searchBarVisibilityNotifier,
+        builder: (context, showSearchBar) {
+          return CompanyListAppBar(
+            //title: 'Group Dashboard',
+            leadingButton: _leadingButton(),
+            trailingButton: SvgPicture.asset(
+              'assets/icons/search_icon.svg',
+              color: Colors.white,
+              width: 14,
+              height: 14,
+            ),
+            onLeadingButtonPressed: () => presenter.logout(),
+            onTrailingButtonPressed: () =>
+            {
+              if (showSearchBar == true)
+                _viewAppBarSelectorNotifier.notify(true)
+            },
+            textButton1: TextButton(
+              onPressed: () {},
+              child: Text(
+                "Group Summary",
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+          );
+        });
   }
 
   Widget _summary() {
@@ -203,7 +238,8 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         notifier: _groupSummary,
         builder: (context, summary) {
           if (summary != null) {
-            return Container(margin: EdgeInsets.fromLTRB(0, 0, 20, 0), child: card(summary));
+            return Container(
+                margin: EdgeInsets.fromLTRB(0, 0, 20, 0), child: card(summary));
           } else
             return Container();
         });
@@ -227,16 +263,23 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                   ),
                 )),
             decoration: new BoxDecoration(
-                gradient: new LinearGradient(colors: [
-              Colors.blue.shade800,
-              Colors.transparent,
-            ], stops: [
-              0.0,
-              0.9
-            ], begin: FractionalOffset.centerLeft, end: FractionalOffset.centerRight, tileMode: TileMode.repeated)),
+                gradient: new LinearGradient(
+                    colors: [
+                      Colors.blue.shade800,
+                      Colors.transparent,
+                    ],
+                    stops: [
+                      0.0,
+                      0.9
+                    ],
+                    begin: FractionalOffset.centerLeft,
+                    end: FractionalOffset.centerRight,
+                    tileMode: TileMode.repeated)),
           ),
           ClipRRect(
-              borderRadius: BorderRadius.only(topRight: Radius.circular(26), bottomRight: Radius.circular(26)),
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(26),
+                  bottomRight: Radius.circular(26)),
               child: Container(
                 color: Colors.blue[800],
                 width: double.infinity,
@@ -244,13 +287,18 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
               )),
           Container(
             decoration: new BoxDecoration(
-                gradient: new LinearGradient(colors: [
-              Colors.blue.shade800,
-              Colors.transparent,
-            ], stops: [
-              0.0,
-              0.9
-            ], begin: FractionalOffset.centerLeft, end: FractionalOffset.centerRight, tileMode: TileMode.repeated)),
+                gradient: new LinearGradient(
+                    colors: [
+                      Colors.blue.shade800,
+                      Colors.transparent,
+                    ],
+                    stops: [
+                      0.0,
+                      0.9
+                    ],
+                    begin: FractionalOffset.centerLeft,
+                    end: FractionalOffset.centerRight,
+                    tileMode: TileMode.repeated)),
             child: Container(
                 width: double.infinity,
                 height: 20,
@@ -281,7 +329,10 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                   flex: 5,
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[droppedDownItem("YTD"), droppedDownItem("2022")],
+                    children: <Widget>[
+                      droppedDownItem("YTD"),
+                      droppedDownItem("2022")
+                    ],
                   ))
             ]),
             SizedBox(height: 8),
@@ -302,30 +353,39 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                   flex: 6,
                   child: Center(
                       child: Text(
-                    summary.overallRevenue.toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.green,
-                        fontSize: 28.0,
-                        overflow: TextOverflow.ellipsis),
-                  ))),
+                        summary.overallRevenue.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.green,
+                            fontSize: 28.0,
+                            overflow: TextOverflow.ellipsis),
+                      ))),
             ]),
             SizedBox(height: 6),
             Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Expanded(
-                      flex: 3,
-                      child: summaryElement("Fund Availability", Colors.green, summary.cashAvailability.toString())),
-                  SizedBox.fromSize(size: Size(10, 0)),
-                  Expanded(
-                      flex: 3,
-                      child: summaryElement("Receivables Overdue", Colors.red, summary.receivableOverdue.toString())),
-                  SizedBox.fromSize(size: Size(10, 0)),
-                  Expanded(
-                      flex: 3,
-                      child: summaryElement("Payables Overdue", Colors.red, summary.payableOverdue.toString())),
-                ])),
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          flex: 3,
+                          child: summaryElement(
+                              "Fund Availability",
+                              Colors.green,
+                              summary.cashAvailability.toString())),
+                      SizedBox.fromSize(size: Size(10, 0)),
+                      Expanded(
+                          flex: 3,
+                          child: summaryElement(
+                              "Receivables Overdue",
+                              Colors.red,
+                              summary.receivableOverdue.toString())),
+                      SizedBox.fromSize(size: Size(10, 0)),
+                      Expanded(
+                          flex: 3,
+                          child: summaryElement("Payables Overdue", Colors.red,
+                              summary.payableOverdue.toString())),
+                    ])),
           ],
         )
       ],
@@ -395,13 +455,18 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     );
   }
 
-  Widget shimmerEffectUIWidget() => ListTile(
-        leading: MyShimmerEffectUI.rectangular(height: 60, width: 60),
+  Widget shimmerEffectUIWidget() =>
+      ListTile(
+        leading: ListShimmerEffect.rectangular(height: 60, width: 60),
         title: Align(
           alignment: Alignment.centerLeft,
-          child: MyShimmerEffectUI.rectangular(height: 18, width: MediaQuery.of(context).size.width * 0.35),
+          child: ListShimmerEffect.rectangular(
+              height: 18, width: MediaQuery
+              .of(context)
+              .size
+              .width * 0.35),
         ),
-        subtitle: MyShimmerEffectUI.rectangular(height: 16),
+        subtitle: ListShimmerEffect.rectangular(height: 16),
       );
 
   Widget _getCompanies() {
@@ -409,13 +474,15 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         notifier: _companiesListNotifier,
         builder: (context, value) {
           if (value == null) {
-            return ListView.builder(itemBuilder: (_, __) => shimmerEffectUIWidget());
+            return ListView.builder(
+                itemBuilder: (_, __) => shimmerEffectUIWidget());
           } else
             return Container(
               child: RefreshIndicator(
                 onRefresh: () => presenter.refreshCompanies(),
                 child: ListView.separated(
-                  physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
                   controller: _scrollController,
                   itemCount: value.length,
                   itemBuilder: (context, index) {
@@ -436,10 +503,10 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
       child: Container(
         child: Center(
             child: Text(
-          _noCompaniesMessage,
-          textAlign: TextAlign.center,
-          style: TextStyles.failureMessageTextStyle,
-        )),
+              _noCompaniesMessage,
+              textAlign: TextAlign.center,
+              style: TextStyles.failureMessageTextStyle,
+            )),
       ),
     );
   }
@@ -448,10 +515,10 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     return Container(
       child: Center(
           child: Text(
-        _noSearchResultsMessage,
-        textAlign: TextAlign.center,
-        style: TextStyles.failureMessageTextStyle,
-      )),
+            _noSearchResultsMessage,
+            textAlign: TextAlign.center,
+            style: TextStyles.failureMessageTextStyle,
+          )),
     );
   }
 
@@ -484,39 +551,22 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   Widget _getCompanyCard(int index, List<CompanyListItem> companyList) {
-    //if (companyList[index].shouldShowRevenue) {
     return CompanyListCard(
         company: companyList[index],
-        onPressed: ()  {
-          print("asdfas");
-              presenter.selectCompanyAtIndex(index);
-            });
-    // need to check with specifications
-    // } else
-    //   return CompanyListCardWithOutRevenue(
-    //     company: companyList[index],
-    //     onPressed: () =>
-    //     {
-    //       presenter.selectCompanyAtIndex(index),
-    //     },
-    //   );
+        onPressed: () {
+          presenter.selectCompanyAtIndex(index);
+        });
   }
 
   //MARK: View functions
 
   @override
   void showLoader() {
-    // SchedulerBinding.instance?.addPostFrameCallback((_) {
-    //   loader.showLoadingIndicator("Loading");
-    // });
-    // _shimmerLoading.notify(true);
     _viewSelectorNotifier.notify(SHIMMER_LOADING);
   }
 
   @override
-  void hideLoader() {
-    // loader.hideOpenDialog();
-  }
+  void hideLoader() {}
 
   @override
   void showSearchBar() {
@@ -530,9 +580,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
 
   @override
   void showSelectedCompany(CompanyListItem company) {
-    if (company != null) {
-      _selectedCompanyNotifier.notify(company);
-    }
+    _selectedCompanyNotifier.notify(company);
   }
 
   @override
@@ -562,7 +610,8 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
 
   @override
   void onCompanyDetailsLoadedSuccessfully() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(
+        DashboardScreen(), context);
   }
 
   @override
@@ -598,32 +647,4 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   void showCompanyGroups(List<CompanyGroup> companyGroups) {
     _companyGroups.notify(companyGroups);
   }
-}
-
-class MyShimmerEffectUI extends StatelessWidget {
-  final double width;
-  final double height;
-  final ShapeBorder shapeBorder;
-
-  const MyShimmerEffectUI.rectangular({this.width = double.infinity, required this.height})
-      : this.shapeBorder = const RoundedRectangleBorder();
-
-  const MyShimmerEffectUI.circular(
-      {this.width = double.infinity, required this.height, this.shapeBorder = const CircleBorder()});
-
-  @override
-  Widget build(BuildContext context) => Shimmer.fromColors(
-        enabled: false,
-        baseColor: Colors.grey,
-        highlightColor: Colors.grey,
-        period: Duration(seconds: 3),
-        child: Container(
-          width: width,
-          height: height,
-          decoration: ShapeDecoration(
-            color: Colors.grey,
-            shape: shapeBorder,
-          ),
-        ),
-      );
 }
