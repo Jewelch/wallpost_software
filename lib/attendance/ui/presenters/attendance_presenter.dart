@@ -56,8 +56,8 @@ class AttendancePresenter {
   Future<void> _getLocation(AttendanceDetails attendanceDetails) async {
     try {
       _attendanceLocation = (await _locationProvider.getLocation())!;
-
       _getLocationAddress(_attendanceLocation);
+
       if (attendanceDetails.isPunchedIn) {
         _view.hideLoader();
         _loadPunchOutDetails(attendanceDetails);
@@ -115,6 +115,8 @@ class AttendancePresenter {
     } on WPException catch (e) {
       _view.hideLoader();
       _view.showDisableButton();
+      _view.showFailedToGetPunchInFromAppPermission(
+          "Loading punch in app permission failed", e.userReadableMessage);
     }
   }
 
@@ -134,6 +136,8 @@ class AttendancePresenter {
     } on WPException catch (e) {
       _view.hideLoader();
       _view.showDisableButton();
+      _view.showFailedToGetPunchInPermission(
+          "Loading punch in permission failed", e.userReadableMessage);
     }
   }
 

@@ -27,6 +27,10 @@ abstract class AttendanceView {
 
   void showFailedToGetLocation(String title, String message);
 
+  void showFailedToGetPunchInFromAppPermission(String title, String message);
+
+  void showFailedToGetPunchInPermission(String title,String message);
+
   void showAlertToVerifyLocation(String message);
 
   void showAlertToTurnOnDeviceLocation(String title, String message);
