@@ -79,27 +79,26 @@ class _CompanyListScreenState extends State<CompanyListScreen>
           _summary(),
           Expanded(
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Column(children: [
-                  ItemNotifiable<int>(
-                      notifier: _viewSelectorNotifier,
-                      builder: (context, value) {
-                        if (value == COMPANIES_VIEW ||
-                            value == SHIMMER_LOADING) {
-                          return Expanded(child: _getCompanies());
-                        } else if (value == NO_COMPANIES_VIEW) {
-                          return Expanded(child: _noCompaniesMessageView());
-                        } else if (value == NO_SEARCH_RESULTS_VIEW) {
-                          return Expanded(child: _noSearchResultsMessageView());
-                        }
-                        return Expanded(child: _buildErrorAndRetryView());
-                      })
-                ]),
-              )),
+            margin: EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Column(children: [
+              ItemNotifiable<int>(
+                  notifier: _viewSelectorNotifier,
+                  builder: (context, value) {
+                    if (value == COMPANIES_VIEW || value == SHIMMER_LOADING) {
+                      return Expanded(child: _getCompanies());
+                    } else if (value == NO_COMPANIES_VIEW) {
+                      return Expanded(child: _noCompaniesMessageView());
+                    } else if (value == NO_SEARCH_RESULTS_VIEW) {
+                      return Expanded(child: _noSearchResultsMessageView());
+                    }
+                    return Expanded(child: _buildErrorAndRetryView());
+                  })
+            ]),
+          )),
         ]),
       ),
     );
@@ -122,60 +121,60 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     return Padding(
       padding: EdgeInsets.fromLTRB(8, 40, 8, 12),
       child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-      Row(
-      children: <Widget>[
-      Expanded(flex: 8, child: _searchBar()),
-      Expanded(
-        flex: 2,
-        child: Center(
-            child: GestureDetector(
-                onTap: () => {
-                _viewAppBarSelectorNotifier.notify(false),
-                _tappedIndexNotifier.notify(null),
-                presenter.resetSearch()
-            },
-            child: Text(
-              "Cancel",
-              style: TextStyle(color: Colors.red, fontSize: 18),
-            )),
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Row(
+            children: <Widget>[
+              Expanded(flex: 8, child: _searchBar()),
+              Expanded(
+                flex: 2,
+                child: Center(
+                  child: GestureDetector(
+                      onTap: () => {
+                            _viewAppBarSelectorNotifier.notify(false),
+                            _tappedIndexNotifier.notify(null),
+                            presenter.resetSearch()
+                          },
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.red, fontSize: 18),
+                      )),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Container(
+              child: ItemNotifiable<List<CompanyGroup>>(
+                  notifier: _companyGroups,
+                  builder: (context, companiesGroup) {
+                    if ((companiesGroup != null) &&
+                        (companiesGroup.isNotEmpty)) {
+                      return Container(
+                          height: 40,
+                          child: ItemNotifiable<int>(
+                              notifier: _tappedIndexNotifier,
+                              builder: (context, tappedIndex) {
+                                return ListView.builder(
+                                  itemBuilder: (context, index) {
+                                    return _groupElement(
+                                        index, tappedIndex, companiesGroup);
+                                  },
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: companiesGroup.length,
+                                );
+                              }));
+                    } else
+                      return Container();
+                  })),
+        ],
       ),
-    ),
-    ],
-    ),
-    SizedBox(height: 8),
-    Container(
-    child: ItemNotifiable<List<CompanyGroup>>(
-    notifier: _companyGroups,
-    builder: (context, companiesGroup) {
-    if ((companiesGroup != null) &&
-    (companiesGroup.isNotEmpty)) {
-    return Container(
-    height: 40,
-    child: ItemNotifiable<int>(
-    notifier: _tappedIndexNotifier,
-    builder: (context, tappedIndex) {
-    return ListView.builder(
-    itemBuilder: (context, index) {
-    return _groupElement(
-    index, tappedIndex, companiesGroup);
-    },
-    shrinkWrap: true,
-    scrollDirection: Axis.horizontal,
-    itemCount: companiesGroup.length,
     );
-    }));
-    } else
-    return Container();
-    })),
-    ],
-    ),
-    );
-    }
+  }
 
-  Widget _groupElement(int index, int? tappedIndex,
-      List<CompanyGroup> companiesGroup) {
+  Widget _groupElement(
+      int index, int? tappedIndex, List<CompanyGroup> companiesGroup) {
     return Container(
         margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
         child: ItemNotifiable<String>(
@@ -214,8 +213,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
               height: 14,
             ),
             onLeadingButtonPressed: () => presenter.logout(),
-            onTrailingButtonPressed: () =>
-            {
+            onTrailingButtonPressed: () => {
               if (showSearchBar == true)
                 _viewAppBarSelectorNotifier.notify(true)
             },
@@ -265,13 +263,13 @@ class _CompanyListScreenState extends State<CompanyListScreen>
             decoration: new BoxDecoration(
                 gradient: new LinearGradient(
                     colors: [
-                      Colors.blue.shade800,
-                      Colors.transparent,
-                    ],
+                  Colors.blue.shade800,
+                  Colors.transparent,
+                ],
                     stops: [
-                      0.0,
-                      0.9
-                    ],
+                  0.0,
+                  0.9
+                ],
                     begin: FractionalOffset.centerLeft,
                     end: FractionalOffset.centerRight,
                     tileMode: TileMode.repeated)),
@@ -289,13 +287,13 @@ class _CompanyListScreenState extends State<CompanyListScreen>
             decoration: new BoxDecoration(
                 gradient: new LinearGradient(
                     colors: [
-                      Colors.blue.shade800,
-                      Colors.transparent,
-                    ],
+                  Colors.blue.shade800,
+                  Colors.transparent,
+                ],
                     stops: [
-                      0.0,
-                      0.9
-                    ],
+                  0.0,
+                  0.9
+                ],
                     begin: FractionalOffset.centerLeft,
                     end: FractionalOffset.centerRight,
                     tileMode: TileMode.repeated)),
@@ -353,13 +351,13 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                   flex: 6,
                   child: Center(
                       child: Text(
-                        summary.overallRevenue.toString(),
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.green,
-                            fontSize: 28.0,
-                            overflow: TextOverflow.ellipsis),
-                      ))),
+                    summary.overallRevenue.toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.green,
+                        fontSize: 28.0,
+                        overflow: TextOverflow.ellipsis),
+                  ))),
             ]),
             SizedBox(height: 6),
             Padding(
@@ -455,19 +453,6 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     );
   }
 
-  Widget shimmerEffectUIWidget() =>
-      ListTile(
-        leading: ListShimmerEffect.rectangular(height: 60, width: 60),
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: ListShimmerEffect.rectangular(
-              height: 18, width: MediaQuery
-              .of(context)
-              .size
-              .width * 0.35),
-        ),
-        subtitle: ListShimmerEffect.rectangular(height: 16),
-      );
 
   Widget _getCompanies() {
     return ItemNotifiable<List<CompanyListItem>>(
@@ -475,7 +460,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
         builder: (context, value) {
           if (value == null) {
             return ListView.builder(
-                itemBuilder: (_, __) => shimmerEffectUIWidget());
+                itemBuilder: (_, __) => _shimmerList());
           } else
             return Container(
               child: RefreshIndicator(
@@ -503,10 +488,10 @@ class _CompanyListScreenState extends State<CompanyListScreen>
       child: Container(
         child: Center(
             child: Text(
-              _noCompaniesMessage,
-              textAlign: TextAlign.center,
-              style: TextStyles.failureMessageTextStyle,
-            )),
+          _noCompaniesMessage,
+          textAlign: TextAlign.center,
+          style: TextStyles.failureMessageTextStyle,
+        )),
       ),
     );
   }
@@ -515,10 +500,10 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     return Container(
       child: Center(
           child: Text(
-            _noSearchResultsMessage,
-            textAlign: TextAlign.center,
-            style: TextStyles.failureMessageTextStyle,
-          )),
+        _noSearchResultsMessage,
+        textAlign: TextAlign.center,
+        style: TextStyles.failureMessageTextStyle,
+      )),
     );
   }
 
@@ -556,6 +541,61 @@ class _CompanyListScreenState extends State<CompanyListScreen>
         onPressed: () {
           presenter.selectCompanyAtIndex(index);
         });
+  }
+
+
+  Widget _shimmerList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 16.0, 0.0, 16.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(flex: 2, child: _shimmerAvatar()),
+                SizedBox(width: 20),
+                Expanded(flex: 3, child: _shimmerTileElement()),
+                SizedBox(width: 20),
+                Expanded(flex: 3, child: _shimmerTileElement()),
+              ],
+            )),
+      ],
+    );
+  }
+
+  Widget _shimmerTileElement() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ListShimmerEffect(
+              height: 12,
+              width: MediaQuery.of(context).size.width * 0.35,
+              widget: Container(color: Colors.black)),
+          SizedBox(height: 10),
+          ListShimmerEffect(
+              height: 12,
+              width: MediaQuery.of(context).size.width * 0.35,
+              widget: Container(color: Colors.black))
+        ]);
+  }
+
+  Widget _shimmerAvatar() {
+    return ListShimmerEffect(
+        height: 80,
+        width: 70,
+        widget: Container(
+          padding: EdgeInsets.all(2), // Border width
+          decoration: BoxDecoration(
+              color: AppColors.primaryContrastColor,
+              borderRadius: BorderRadius.circular(20)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: SizedBox.fromSize(
+              size: Size.fromRadius(44), // Image radius
+            ),
+          ),
+        ));
   }
 
   //MARK: View functions
