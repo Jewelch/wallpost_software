@@ -1,32 +1,36 @@
 import 'dart:core';
 
-import 'package:wallpost/_main/ui/contracts/main_view.dart';
-import 'package:wallpost/company_list/services/selected_company_provider.dart';
 import 'package:wallpost/_main/services/repository_initializer.dart';
+import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
+import 'package:wallpost/company_list/services/selected_company_provider.dart';
+import 'package:wallpost/notifications/services/app_badge_updater.dart';
 
 class MainPresenter {
   final MainView _view;
   final RepositoryInitializer _repositoryInitializer;
   final CurrentUserProvider _currentUserProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
+  final AppBadgeUpdater _appBadgeUpdater;
 
   MainPresenter(this._view)
       : _repositoryInitializer = RepositoryInitializer(),
         _currentUserProvider = CurrentUserProvider(),
-        _selectedCompanyProvider = SelectedCompanyProvider();
+        _selectedCompanyProvider = SelectedCompanyProvider(),
+        _appBadgeUpdater = AppBadgeUpdater();
 
   MainPresenter.initWith(
     this._view,
     this._repositoryInitializer,
     this._currentUserProvider,
     this._selectedCompanyProvider,
+    this._appBadgeUpdater,
   );
 
-  Future<void> initializeReposAndShowLandingScreen() async {
+  Future<void> processLaunchTasksAndShowLandingScreen() async {
     await _repositoryInitializer.initializeRepos();
+    _appBadgeUpdater.updateBadgeCount();
     var isLoggedIn = _currentUserProvider.isLoggedIn();
-
     _view.setStatusBarColor(isLoggedIn);
     if (isLoggedIn == false) {
       _view.goToLoginScreen();
@@ -36,14 +40,13 @@ class MainPresenter {
   }
 
   void _showLandingScreenForLoggedInUser() {
-    if ((_selectedCompanyProvider.isCompanySelected() == true)) {
-      _view.goToDashboardScreen();
+    if (_selectedCompanyProvider.isCompanySelected()) {
+      _view.goToCompaniesListScreen();
     } else {
       _view.goToCompaniesListScreen();
     }
   }
 }
-
 /*
   //   TODO: when app opens
 //    1. reload companies

@@ -8,9 +8,7 @@ import 'package:wallpost/notifications/ui/views/handover_notifications_list_tile
 import 'package:wallpost/notifications/ui/views/leave_notifications_list_tile.dart';
 import 'package:wallpost/notifications/ui/views/task_notifications_list_tile.dart';
 
-abstract class NotificationsListView {
-  void reloadData();
-}
+import '../view_contracts/notifications_list_view.dart';
 
 class NotificationsListPresenter {
   final NotificationsListView view;

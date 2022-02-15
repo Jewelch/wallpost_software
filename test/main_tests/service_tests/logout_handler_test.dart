@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
-import 'package:wallpost/company_list/services/user_companies_remover.dart';
+import 'package:wallpost/company_list/services/company_list_remover.dart';
 import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
 import 'package:wallpost/permission/services/permissions_remover.dart';
 
@@ -10,7 +10,7 @@ import '../../_mocks/mock_user.dart';
 
 class MockUserRemover extends Mock implements UserRemover {}
 
-class MockUserCompaniesRemover extends Mock implements UserCompaniesRemover {}
+class MockUserCompaniesRemover extends Mock implements CompanyListRemover {}
 
 class MockPermissionRemover extends Mock implements PermissionRemover {}
 

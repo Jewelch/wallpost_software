@@ -1,25 +1,32 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/_main/services/repository_initializer.dart';
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
-import 'package:wallpost/company_list/services/selected_company_provider.dart';
-import 'package:wallpost/_main/services/repository_initializer.dart';
-import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
+import 'package:wallpost/notifications/services/app_badge_updater.dart';
+
+import '../../_mocks/mock_company_provider.dart';
+import '../../_mocks/mock_current_user_provider.dart';
 
 class MockMainView extends Mock implements MainView {}
 
 class MockRepositoryInitializer extends Mock implements RepositoryInitializer {}
 
-class MockCurrentUserProvider extends Mock implements CurrentUserProvider {}
-
-class MockSelectedCompanyProvider extends Mock implements SelectedCompanyProvider {}
+class MockAppBadgeUpdater extends Mock implements AppBadgeUpdater {}
 
 void main() {
   var view = MockMainView();
   var repositoryInitializer = MockRepositoryInitializer();
   var currentUserProvider = MockCurrentUserProvider();
-  var selectedCompanyProvider = MockSelectedCompanyProvider();
-  var presenter = MainPresenter.initWith(view, repositoryInitializer, currentUserProvider, selectedCompanyProvider);
+  var selectedCompanyProvider = MockCompanyProvider();
+  var appBadgeUpdater = MockAppBadgeUpdater();
+  var presenter = MainPresenter.initWith(
+    view,
+    repositoryInitializer,
+    currentUserProvider,
+    selectedCompanyProvider,
+    appBadgeUpdater,
+  );
 
   setUpAll(() {
     when(() => repositoryInitializer.initializeRepos()).thenAnswer((invocation) => Future.value(null));
@@ -30,6 +37,7 @@ void main() {
     verifyNoMoreInteractions(repositoryInitializer);
     verifyNoMoreInteractions(currentUserProvider);
     verifyNoMoreInteractions(selectedCompanyProvider);
+    verifyNoMoreInteractions(appBadgeUpdater);
   }
 
   test('navigates to login screen if a user is not logged in', () async {
@@ -37,11 +45,12 @@ void main() {
     when(() => currentUserProvider.isLoggedIn()).thenReturn(false);
 
     //when
-    await presenter.initializeReposAndShowLandingScreen();
+    await presenter.processLaunchTasksAndShowLandingScreen();
 
     //then
     verifyInOrder([
       () => repositoryInitializer.initializeRepos(),
+      () => appBadgeUpdater.updateBadgeCount(),
       () => currentUserProvider.isLoggedIn(),
       () => view.setStatusBarColor(false),
       () => view.goToLoginScreen(),
@@ -55,11 +64,12 @@ void main() {
     when(() => selectedCompanyProvider.isCompanySelected()).thenReturn(false);
 
     //when
-    await presenter.initializeReposAndShowLandingScreen();
+    await presenter.processLaunchTasksAndShowLandingScreen();
 
     //then
     verifyInOrder([
       () => repositoryInitializer.initializeRepos(),
+      () => appBadgeUpdater.updateBadgeCount(),
       () => currentUserProvider.isLoggedIn(),
       () => view.setStatusBarColor(true),
       () => selectedCompanyProvider.isCompanySelected(),
@@ -74,11 +84,12 @@ void main() {
     when(() => selectedCompanyProvider.isCompanySelected()).thenReturn(true);
 
     //when
-    await presenter.initializeReposAndShowLandingScreen();
+    await presenter.processLaunchTasksAndShowLandingScreen();
 
     //then
     verifyInOrder([
       () => repositoryInitializer.initializeRepos(),
+      () => appBadgeUpdater.updateBadgeCount(),
       () => currentUserProvider.isLoggedIn(),
       () => view.setStatusBarColor(true),
       () => selectedCompanyProvider.isCompanySelected(),

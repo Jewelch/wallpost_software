@@ -1,8 +1,9 @@
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
+import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/company_list/entities/company.dart';
+import 'package:wallpost/company_list/entities/company_list.dart';
 import 'package:wallpost/company_list/entities/company_list_item.dart';
 import 'package:wallpost/company_list/entities/employee.dart';
-import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 
 class CompanyRepository {
   late SecureSharedPrefs _sharedPrefs;
@@ -24,11 +25,13 @@ class CompanyRepository {
 
   //MARK: Functions to save companies for a user
 
-  void saveCompaniesForUser(List<CompanyListItem> companies, User user) {
+  void saveCompanyListForUser(CompanyList companyList, User user) {
     _userCompanies[user.username] = {
-      'companies': companies,
-      'selectedCompany': _shouldRetainCompanySelection(user, companies) ? getSelectedCompanyForUser(user) : null,
-      'selectedEmployee': _shouldRetainEmployeeSelection(user, companies) ? getSelectedEmployeeForUser(user) : null,
+      'companyList': companyList,
+      'selectedCompany':
+          _shouldRetainCompanySelection(user, companyList.companies) ? getSelectedCompanyForUser(user) : null,
+      'selectedEmployee':
+          _shouldRetainEmployeeSelection(user, companyList.companies) ? getSelectedEmployeeForUser(user) : null,
     };
 
     _saveCompaniesData();
@@ -48,10 +51,10 @@ class CompanyRepository {
 
   //MARK: Function to get companies list for a user
 
-  List<CompanyListItem> getCompaniesForUser(User user) {
-    if (_isCompaniesDataAvailableForUser(user) == false) return [];
+  CompanyList? getCompanyListForUser(User user) {
+    if (_isCompaniesDataAvailableForUser(user) == false) return null;
 
-    return _userCompanies[user.username]!['companies'];
+    return _userCompanies[user.username]!['companyList'];
   }
 
   //MARK: Functions to set and get selected company and employee
@@ -59,9 +62,9 @@ class CompanyRepository {
   void selectCompanyAndEmployeeForUser(Company company, Employee employee, User user) {
     if (_isCompaniesDataAvailableForUser(user) == false) return;
 
-    List<CompanyListItem> companies = _userCompanies[user.username]!['companies'];
-    if (_doesListContainCompanyWithId(companies, company.id) == false) return;
-    if (_doesListContainCompanyWithId(companies, employee.companyId) == false) return;
+    CompanyList companyList = _userCompanies[user.username]!['companyList'];
+    if (_doesListContainCompanyWithId(companyList.companies, company.id) == false) return;
+    if (_doesListContainCompanyWithId(companyList.companies, employee.companyId) == false) return;
 
     _userCompanies[user.username]!['selectedCompany'] = company;
     _userCompanies[user.username]!['selectedEmployee'] = employee;
@@ -112,9 +115,8 @@ class CompanyRepository {
   }
 
   Map _readCompaniesFromMap(String username, Map companiesData) {
-    List companyListItemsMapList = companiesData['companies'];
-    List<CompanyListItem> companyListItems = [];
-    companyListItemsMapList.forEach((map) => companyListItems.add(CompanyListItem.fromJson(map)));
+    Map<String, dynamic> companyListMap = companiesData['companyList'];
+    var companyList = CompanyList.fromJson(companyListMap);
 
     Map<String, dynamic>? selectedCompanyMap = companiesData['selectedCompany'];
     var selectedCompany = selectedCompanyMap == null ? null : Company.fromJson(selectedCompanyMap);
@@ -123,7 +125,7 @@ class CompanyRepository {
     var selectedEmployee = selectedEmployeeMap == null ? null : Employee.fromJson(selectedEmployeeMap);
 
     return {
-      'companies': companyListItems,
+      'companyList': companyList,
       'selectedCompany': selectedCompany,
       'selectedEmployee': selectedEmployee,
     };
@@ -136,25 +138,23 @@ class CompanyRepository {
 
     for (String key in _userCompanies.keys) {
       var username = key;
-      Map userCompaniesMap = _userCompanies[key]!;
-      allUsersCompaniesMap[username] = _convertCompaniesToMap(userCompaniesMap);
+      Map userCompanyListMap = _userCompanies[key]!;
+      allUsersCompaniesMap[username] = _convertCompanyListToMap(userCompanyListMap);
     }
     _sharedPrefs.saveMap('allUsersCompanies', allUsersCompaniesMap);
   }
 
-  Map _convertCompaniesToMap(Map userCompaniesMap) {
-    List<CompanyListItem> companyListItems = userCompaniesMap['companies'];
-    List<Map> companyListItemsMapList = [];
-    companyListItems.forEach((companyListItem) => companyListItemsMapList.add(companyListItem.toJson()));
+  Map _convertCompanyListToMap(Map userCompanyListMap) {
+    CompanyList companyList = userCompanyListMap['companyList'];
 
-    Company? selectedCompany = userCompaniesMap['selectedCompany'];
+    Company? selectedCompany = userCompanyListMap['selectedCompany'];
     Map? selectedCompanyMap = selectedCompany == null ? null : selectedCompany.toJson();
 
-    Employee? selectedEmployee = userCompaniesMap['selectedEmployee'];
+    Employee? selectedEmployee = userCompanyListMap['selectedEmployee'];
     Map? selectedEmployeeMap = selectedEmployee == null ? null : selectedEmployee.toJson();
 
     return {
-      'companies': companyListItemsMapList,
+      'companyList': companyList.toJson(),
       'selectedCompany': selectedCompanyMap,
       'selectedEmployee': selectedEmployeeMap,
     };

@@ -1,35 +1,170 @@
 import 'package:random_string/random_string.dart';
 
 class Mocks {
-  static List<Map<String, dynamic>> companiesListResponse = [
-    {
-      "company_id": randomBetween(1000, 5000),
-      "company_name": randomString(10),
-      "currency": randomString(10),
-      "notifications": randomBetween(1000, 5000),
-      "actual_revenue_display": randomString(10),
-      "overall_revenue": randomBetween(1000, 5000),
-      "approval_count": randomBetween(1000, 5000),
-    },
-    {
-      "company_id": randomBetween(1000, 5000),
-      "company_name": randomString(10),
-      "currency": randomString(10),
-      "notifications": randomBetween(1000, 5000),
-      "actual_revenue_display": randomString(10),
-      "overall_revenue": randomBetween(1000, 5000),
-      "approval_count": randomBetween(1000, 5000),
-    },
-    {
-      "company_id": randomBetween(1000, 5000),
-      "company_name": randomString(10),
-      "currency": randomString(10),
-      "notifications": randomBetween(1000, 5000),
-      "actual_revenue_display": randomString(10),
-      "overall_revenue": randomBetween(1000, 5000),
-      "approval_count": randomBetween(1000, 5000),
-    },
-  ];
+  static Map<String, dynamic> companiesListResponse = {
+    "groups": [
+      {
+        "group_id": 0,
+        "name": "Group Summary",
+        "default_currency": "USD",
+        "is_default": 0,
+        "group_companies": ["2", " 6", " 3", " 7", " 5", " 4", " 1"],
+        "group_summary": {
+          "cashAvailability": 617100.12,
+          "receivableOverdue": 2117666.3144,
+          "payableOverdue": 644238.1764000001,
+          "profitLoss": 0
+        }
+      },
+      {
+        "group_id": 1,
+        "name": "Partial Company",
+        "default_currency": "USD",
+        "is_default": 0,
+        "group_companies": ["5", "6"],
+        "group_summary": {
+          "cashAvailability": 0,
+          "receivableOverdue": 444.08000000000004,
+          "payableOverdue": 0,
+          "profitLoss": 0
+        }
+      },
+      {
+        "group_id": 2,
+        "name": "Test Group",
+        "default_currency": "USD",
+        "is_default": 1,
+        "group_companies": ["2", "3", "5"],
+        "group_summary": {
+          "cashAvailability": 362300.12,
+          "receivableOverdue": 2090755.7944,
+          "payableOverdue": 644165.3764000001,
+          "profitLoss": 0
+        }
+      }
+    ],
+    "companies": [
+      {
+        "company_id": 2,
+        "company_name": "B+Company (Test)",
+        "notifications": 84,
+        "approval_count": 16,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/2/DOC328_logo.jpg",
+        "financial_summary": {
+          "currency": "QAR",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": 99533,
+          "receivableOverdue": 574261.46,
+          "payableOverdue": 176968.51,
+          "profitLoss": 0,
+          "profitLossPerc": 0
+        }
+      },
+      {
+        "company_id": 6,
+        "company_name": "Construction- & Co",
+        "notifications": 0,
+        "approval_count": 0,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/6/DOC371_nologo.jpg",
+        "financial_summary": {
+          "currency": "QAR",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": 0,
+          "receivableOverdue": 0,
+          "payableOverdue": 0,
+          "profitLoss": 0,
+          "profitLossPerc": 0
+        }
+      },
+      {
+        "company_id": 3,
+        "company_name": "Construction-Company (Test)",
+        "notifications": 0,
+        "approval_count": 0,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/3/DOC15_nologo.jpg",
+        "financial_summary": {
+          "currency": "QAR",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": 0,
+          "receivableOverdue": 0,
+          "payableOverdue": 0,
+          "profitLoss": 0,
+          "profitLossPerc": 0
+        }
+      },
+      {
+        "company_id": 7,
+        "company_name": "Contracting Co (Test)",
+        "notifications": 0,
+        "approval_count": 0,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/7/DOC78_nologo.jpg",
+        "financial_summary": {
+          "currency": "QAR",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": 0,
+          "receivableOverdue": 0,
+          "payableOverdue": 0,
+          "profitLoss": 0,
+          "profitLossPerc": 0
+        }
+      },
+      {
+        "company_id": 5,
+        "company_name": "Ne Company[Test]",
+        "notifications": 0,
+        "approval_count": 0,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/5/DOC368_nologo.jpg",
+        "financial_summary": {
+          "currency": "QAR",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": 0,
+          "receivableOverdue": 122,
+          "payableOverdue": 0,
+          "profitLoss": 0,
+          "profitLossPerc": 0
+        }
+      },
+      {
+        "company_id": 4,
+        "company_name": "Real Estate[Test]",
+        "notifications": 0,
+        "approval_count": 0,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/4/DOC15_nologo.jpg",
+        "financial_summary": {
+          "currency": "QAR",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": 0,
+          "receivableOverdue": 0,
+          "payableOverdue": 0,
+          "profitLoss": 0,
+          "profitLossPerc": 0
+        }
+      },
+      {
+        "company_id": 1,
+        "company_name": "Test-company[Advisory]",
+        "notifications": 36,
+        "approval_count": 20,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/1/DOC1_nologo.jpg",
+        "financial_summary": {
+          "currency": "QAR",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": 70000,
+          "receivableOverdue": 7393,
+          "payableOverdue": 20,
+          "profitLoss": 0,
+          "profitLossPerc": 0
+        }
+      }
+    ]
+  };
 
   static Map<String, dynamic> companyDetailsResponse = {
     "absolute_upload_path": randomString(10),

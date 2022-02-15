@@ -1,14 +1,14 @@
 import 'package:wallpost/company_list/repositories/company_repository.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 
-class UserCompaniesRemover {
+class CompanyListRemover {
   late CompanyRepository _companyRepository;
 
-  UserCompaniesRemover() {
+  CompanyListRemover() {
     _companyRepository = CompanyRepository();
   }
 
-  UserCompaniesRemover.initWith(CompanyRepository companyRepository) {
+  CompanyListRemover.initWith(CompanyRepository companyRepository) {
     _companyRepository = companyRepository;
   }
 

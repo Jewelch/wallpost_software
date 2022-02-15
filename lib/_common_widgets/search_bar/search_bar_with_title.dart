@@ -29,6 +29,9 @@ class _SearchBarWithTitleState extends State<SearchBarWithTitle> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+          color: AppColors.backGroundColor,
+          borderRadius: BorderRadius.circular(15)),
       padding: EdgeInsets.only(left: 12),
       child: TextField(
         controller: _controller,
@@ -39,7 +42,7 @@ class _SearchBarWithTitleState extends State<SearchBarWithTitle> {
         decoration: InputDecoration(
           hintText: widget.title,
           hintStyle: TextStyles.titleTextStyle,
-          suffixIcon: _suffixIcon(),
+          prefixIcon: _suffixIcon(),
           border: InputBorder.none,
         ),
         onChanged: (text) {

@@ -5,6 +5,10 @@ class AppColors {
   static final Color defaultColorDark = getColorFromHex('#0376a0');
   static final Color badgeColor = getColorFromHex('#db544e');
 
+  //Chip Backround colors
+
+  static final Color backGroundColor = getColorFromHex('#DFF0F7');
+
   //Button colors
   static final Color actionButtonColor = defaultColor;
   static final Color criticalButtonColor = getColorFromHex('#db544e');
@@ -35,6 +39,11 @@ class AppColors {
   static final Color approvedColor = getColorFromHex('#2bba68');
   static final Color rejectedColor = getColorFromHex('#db544e');
   static final Color cancelledColor = getColorFromHex('#db544e');
+
+  //Attendance status colors
+  static final Color presentColor = Color.fromRGBO(43, 186, 104, 1.0);
+  static final Color absentColor = getColorFromHex('#FF0000');
+  static final Color lateColor = getColorFromHex('#ffa500');
 
   //MARK: Util function to convert hex string to color
   static Color getColorFromHex(String hexColor) {

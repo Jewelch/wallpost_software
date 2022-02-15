@@ -50,11 +50,11 @@ class CompanyListCardWithOutRevenue extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            company.notificationCount.toString(),
+                            "TODO",
                             style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColor),
                           ),
                           SizedBox(height: 6),
-                          Text('Notification${company.notificationCount == 1 ? '' : 's'}',
+                          Text('Notification TODO',
                               style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
                         ],
                       ),

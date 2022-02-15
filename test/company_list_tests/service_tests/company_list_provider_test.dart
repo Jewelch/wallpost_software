@@ -3,7 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/company_list/constants/company_management_urls.dart';
 import 'package:wallpost/company_list/repositories/company_repository.dart';
-import 'package:wallpost/company_list/services/companies_list_provider.dart';
+import 'package:wallpost/company_list/services/company_list_provider.dart';
 
 import '../../_mocks/mock_current_user_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
@@ -17,7 +17,7 @@ void main() {
   var mockCurrentUserProvider = MockCurrentUserProvider();
   var mockCompanyRepository = MockCompanyRepository();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var companyListProvider = CompaniesListProvider.initWith(
+  var companyListProvider = CompanyListProvider.initWith(
     mockCurrentUserProvider,
     mockCompanyRepository,
     mockNetworkAdapter,
@@ -82,7 +82,7 @@ void main() {
   });
 
   test('throws InvalidResponseException when entity mapping fails', () async {
-    mockNetworkAdapter.succeed([<String, dynamic>{}]);
+    mockNetworkAdapter.succeed(<String, dynamic>{});
 
     try {
       var _ = await companyListProvider.get();
@@ -96,11 +96,12 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var companies = await companyListProvider.get();
-      expect(companies, isNotEmpty);
+      var companyList = await companyListProvider.get();
+      expect(companyList.groups.length, 2);
+      expect(companyList.companies.length, 7);
       verifyInOrder([
         () => mockCurrentUserProvider.getCurrentUser(),
-        () => mockCompanyRepository.saveCompaniesForUser(any(), any())
+        () => mockCompanyRepository.saveCompanyListForUser(companyList, any())
       ]);
       _verifyNoMoreInteractions();
     } catch (e) {

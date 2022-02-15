@@ -65,6 +65,10 @@ class AttendanceDetails {
     return _punchInTime != null && _punchOutTime == null;
   }
 
+  bool get isPunchedOut {
+    return _punchOutTime != null;
+  }
+
   bool get isOnBreak {
     return isPunchedIn == true && _getActiveBreak() != null;
   }

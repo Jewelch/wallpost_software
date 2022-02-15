@@ -1,6 +1,6 @@
+import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/company_list/entities/company.dart';
 import 'package:wallpost/company_list/repositories/company_repository.dart';
-import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 
 class SelectedCompanyProvider {
   final CurrentUserProvider _currentUserProvider;
@@ -19,7 +19,7 @@ class SelectedCompanyProvider {
 
   //NOTE: Should only call this function once a company
   //has already be selected. Returning null from this function
-  //will mean using the force unwrap operator (!) througout
+  //will mean using the force unwrap operator (!) throughout
   //the app
   Company getSelectedCompanyForCurrentUser() {
     var currentUser = _currentUserProvider.getCurrentUser();

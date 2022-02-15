@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance/entities/attendance_details.dart';
-import 'package:wallpost/attendance/entities/attendance_location.dart';
 import 'package:wallpost/attendance/entities/punch_in_from_app_permission.dart';
 import 'package:wallpost/attendance/entities/punch_in_now_permission.dart';
 import 'package:wallpost/attendance/services/attendance_details_provider.dart';
-import 'package:wallpost/attendance/services/location_provider.dart';
 import 'package:wallpost/attendance/services/punch_in_from_app_permission_provider.dart';
-import 'package:wallpost/attendance/services/punch_in_marker.dart';
 import 'package:wallpost/attendance/services/punch_in_now_permission_provider.dart';
-import 'package:wallpost/attendance/services/punch_out_marker.dart';
 import 'package:wallpost/attendance/ui/location_address_view.dart';
 
 import 'attendance_button_view.dart';
@@ -32,12 +26,10 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
   late PunchInFromAppPermission _punchInFromAppPermission;
   late PunchInNowPermission _punchInNowPermission;
   late AttendanceDetails attendanceDetail;
-  late Loader _loader;
 
   @override
   void initState() {
     super.initState();
-    _loader = Loader(context);
     _initAPICall();
   }
 
@@ -315,8 +307,8 @@ class _AttendanceBaseViewState extends State<AttendanceBaseView> {
     // }
   }
 
-  Future<AttendanceLocation> _getLocation() async {
-    Position position = await LocationProvider().getLocation();
-    return AttendanceLocation(position.latitude, position.longitude);
-  }
+// Future<AttendanceLocation> _getLocation() async {
+//   Position position = await LocationProvider().getLocation();
+//   return AttendanceLocation(position.latitude, position.longitude);
+// }
 }
