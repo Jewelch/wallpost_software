@@ -3,7 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/company_list/entities/company.dart';
 import 'package:wallpost/company_list/entities/employee.dart';
 import 'package:wallpost/permission/entities/permissions.dart';
-import 'package:wallpost/permission/entities/request_item.dart';
+import 'package:wallpost/permission/entities/wp_action.dart';
 
 class MockCompany extends Mock implements Company {}
 
@@ -13,45 +13,37 @@ main() {
   var mockCompany = MockCompany();
   var mockEmployee = MockEmployee();
 
-  group(
-      "test create task permission, only employees have task request item can request",
-      () {
+  group("test create task permission, only employees have task request item can request", () {
     test("employee don't have task request item", () {
-      var requestItems = <RequestItem>[];
+      var requestItems = <WPAction>[];
 
-      var permissions =
-          Permissions.initWith(mockCompany, mockEmployee, requestItems);
+      var permissions = Permissions.initWith(mockCompany, mockEmployee, requestItems);
 
       expect(permissions.canCreateTask(), false);
     });
 
     test("employee do have task request item", () {
-      var requestItems = <RequestItem>[RequestItem.Task];
+      var requestItems = <WPAction>[WPAction.Task];
 
-      var permissions =
-          Permissions.initWith(mockCompany, mockEmployee, requestItems);
+      var permissions = Permissions.initWith(mockCompany, mockEmployee, requestItems);
 
       expect(permissions.canCreateTask(), true);
     });
   });
 
-  group(
-      "test create expense request, only employees have expense request item can request",
-      () {
+  group("test create expense request, only employees have expense request item can request", () {
     test("employee don't have expense request item", () {
-      var requestItems = <RequestItem>[];
+      var requestItems = <WPAction>[];
 
-      var permissions =
-          Permissions.initWith(mockCompany, mockEmployee, requestItems);
+      var permissions = Permissions.initWith(mockCompany, mockEmployee, requestItems);
 
       expect(permissions.canCreateTask(), false);
     });
 
     test("employee do have expense request item", () {
-      var requestItems = <RequestItem>[RequestItem.ExpenseRequest];
+      var requestItems = <WPAction>[WPAction.ExpenseRequest];
 
-      var permissions =
-          Permissions.initWith(mockCompany, mockEmployee, requestItems);
+      var permissions = Permissions.initWith(mockCompany, mockEmployee, requestItems);
 
       expect(permissions.canCreateExpenseRequest(), true);
     });

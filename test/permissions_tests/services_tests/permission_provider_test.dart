@@ -4,7 +4,7 @@ import 'package:wallpost/company_list/entities/company.dart';
 import 'package:wallpost/company_list/entities/employee.dart';
 import 'package:wallpost/company_list/services/selected_company_provider.dart';
 import 'package:wallpost/company_list/services/selected_employee_provider.dart';
-import 'package:wallpost/permission/entities/request_item.dart';
+import 'package:wallpost/permission/entities/wp_action.dart';
 import 'package:wallpost/permission/repositories/request_items_repository.dart';
 import 'package:wallpost/permission/services/permission_provider.dart';
 
@@ -24,7 +24,7 @@ main() {
   var requestItemsProvider = MockRequestItemsRepository();
   var mockCompany = MockCompany();
   var mockEmployee = MockEmployee();
-  var mockRequestItems = [RequestItem.OvertimeRequest, RequestItem.LeaveRequest];
+  var mockRequestItems = [WPAction.OvertimeRequest, WPAction.LeaveRequest];
   setUp(() {
     when(() => mockCompany.id).thenReturn("1");
     when(companyProvider.getSelectedCompanyForCurrentUser).thenReturn(mockCompany);

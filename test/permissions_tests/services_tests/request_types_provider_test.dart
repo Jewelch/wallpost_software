@@ -3,10 +3,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/permission/constants/permissions_urls.dart';
 import 'package:wallpost/permission/repositories/request_items_repository.dart';
-import 'package:wallpost/permission/services/request_itmes_provider.dart';
+import 'package:wallpost/permission/services/allowed_wp_actions_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
-import '../_mocks/mock_permission.dart' as Mocks;
+import '../_mocks/mocks.dart' as Mocks;
 
 class MockRequestItemsRepository extends Mock implements RequestItemsRepository {}
 
@@ -15,7 +15,7 @@ void main() {
   var mockNetworkAdapter = MockNetworkAdapter();
   var repository = MockRequestItemsRepository();
   var requestItemsProvider =
-      PermissionRequestItemsProvider.initWith(mockNetworkAdapter, repository);
+      AllowedWPActionsProvider.initWith(mockNetworkAdapter, repository);
   var companyId = "13";
 
   test('api request is built correctly', () async {

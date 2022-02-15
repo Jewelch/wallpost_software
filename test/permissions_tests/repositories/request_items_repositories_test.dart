@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
-import 'package:wallpost/permission/entities/request_item.dart';
+import 'package:wallpost/permission/entities/wp_action.dart';
 import 'package:wallpost/permission/repositories/request_items_repository.dart';
 
 class MockSharedPrefs extends Mock implements SecureSharedPrefs {}
@@ -36,10 +36,10 @@ void main() {
     var items = await requestRepo.getRequestItemsOfCompany(companyId);
 
     expect(items.length, 2);
-    expect(items.contains(RequestItem.LeaveRequest), true);
-    expect(items.contains(RequestItem.ExpenseRequest), true);
-    expect(items.contains(RequestItem.Task), false);
-    expect(items.contains(RequestItem.OvertimeRequest), false);
+    expect(items.contains(WPAction.LeaveRequest), true);
+    expect(items.contains(WPAction.ExpenseRequest), true);
+    expect(items.contains(WPAction.Task), false);
+    expect(items.contains(WPAction.OvertimeRequest), false);
   });
 
   test('saving new request items, saves items in memory as well as locally', () async {

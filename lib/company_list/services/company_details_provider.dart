@@ -7,12 +7,12 @@ import 'package:wallpost/company_list/entities/employee.dart';
 import 'package:wallpost/company_list/repositories/company_repository.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/permission/services/request_itmes_provider.dart';
+import 'package:wallpost/permission/services/allowed_wp_actions_provider.dart';
 
 class CompanyDetailsProvider {
   final CurrentUserProvider _currentUserProvider;
   final CompanyRepository _companyRepository;
-  final PermissionRequestItemsProvider _permissionRequestItemsProvider;
+  final AllowedWPActionsProvider _permissionRequestItemsProvider;
   final NetworkAdapter _networkAdapter;
   bool isLoading = false;
   late String _sessionId;
@@ -23,7 +23,7 @@ class CompanyDetailsProvider {
   CompanyDetailsProvider()
       : _currentUserProvider = CurrentUserProvider(),
         _companyRepository = CompanyRepository(),
-        _permissionRequestItemsProvider = PermissionRequestItemsProvider(),
+        _permissionRequestItemsProvider = AllowedWPActionsProvider(),
         _networkAdapter = WPAPI();
 
   Future<void> getCompanyDetails(String companyId) async {

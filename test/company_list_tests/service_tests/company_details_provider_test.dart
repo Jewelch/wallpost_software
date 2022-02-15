@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/company_list/constants/company_management_urls.dart';
 import 'package:wallpost/company_list/repositories/company_repository.dart';
 import 'package:wallpost/company_list/services/company_details_provider.dart';
-import 'package:wallpost/permission/services/request_itmes_provider.dart';
+import 'package:wallpost/permission/services/allowed_wp_actions_provider.dart';
 
 import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_current_user_provider.dart';
@@ -15,7 +15,7 @@ import '../mocks.dart';
 
 class MockCompanyRepository extends Mock implements CompanyRepository {}
 
-class MockPermissionRequestItemsProvider extends Mock implements PermissionRequestItemsProvider {}
+class MockPermissionRequestItemsProvider extends Mock implements AllowedWPActionsProvider {}
 
 void main() {
   Map<String, dynamic> successfulResponse = Mocks.companyDetailsResponse;

@@ -8,8 +8,7 @@ class PermissionProvider {
   SelectedEmployeeProvider _employeeProvider;
   RequestItemsRepository _requestItemsRepository;
 
-  PermissionProvider.initWith(
-      this._companyProvider, this._employeeProvider, this._requestItemsRepository);
+  PermissionProvider.initWith(this._companyProvider, this._employeeProvider, this._requestItemsRepository);
 
   PermissionProvider()
       : _employeeProvider = SelectedEmployeeProvider(),
@@ -19,7 +18,7 @@ class PermissionProvider {
   Future<Permissions> getPermissions() async {
     var company = _companyProvider.getSelectedCompanyForCurrentUser();
     var employee = _employeeProvider.getSelectedEmployeeForCurrentUser();
-    var requestItems = await _requestItemsRepository.getRequestItemsOfCompany(company.id);
+    var allowed = await _requestItemsRepository.getRequestItemsOfCompany(company.id);
     return Permissions.initWith(company, employee, requestItems);
   }
 }

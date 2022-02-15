@@ -4,21 +4,21 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/permission/constants/permissions_urls.dart';
-import 'package:wallpost/permission/entities/request_item.dart';
+import 'package:wallpost/permission/entities/wp_action.dart';
 import 'package:wallpost/permission/repositories/request_items_repository.dart';
 
-class PermissionRequestItemsProvider {
+class AllowedWPActionsProvider {
   final NetworkAdapter _networkAdapter;
   final RequestItemsRepository _repository;
   late String _sessionId;
 
   bool isLoading = false;
 
-  PermissionRequestItemsProvider()
+  AllowedWPActionsProvider()
       : _networkAdapter = WPAPI(),
         _repository = RequestItemsRepository();
 
-  PermissionRequestItemsProvider.initWith(this._networkAdapter, this._repository);
+  AllowedWPActionsProvider.initWith(this._networkAdapter, this._repository);
 
   Future<void> get(String companyId) async {
     var url = PermissionsUrls.getRequestItemsUrl(companyId);
@@ -39,9 +39,7 @@ class PermissionRequestItemsProvider {
   Future<void> _processResponse(APIResponse apiResponse, String companyId) async {
     //returning empty list if the response is from another session
     if (apiResponse.apiRequest.requestId != _sessionId) return Completer<void>().future;
-
     if (apiResponse.data == null) throw InvalidResponseException();
-
     if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
@@ -49,11 +47,10 @@ class PermissionRequestItemsProvider {
     await _repository.saveRequestItemsForEmployee(companyId, requestItems);
   }
 
-  List<RequestItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<WPAction> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var requestItems = <RequestItem>[];
-      var eligibleItemsList =
-          responseMapList.where((element) => element['visibility']! == true).toList();
+      var requestItems = <WPAction>[];
+      var eligibleItemsList = responseMapList.where((element) => element['visibility']! == true).toList();
       for (var responseMap in eligibleItemsList) {
         var item = initializeRequestFromString(responseMap['name']!);
         if (item != null) requestItems.add(item);
