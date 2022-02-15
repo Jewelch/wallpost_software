@@ -2,13 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/permission/constants/permissions_urls.dart';
-import 'package:wallpost/permission/repositories/request_items_repository.dart';
+import 'package:wallpost/permission/repositories/wp_actions_repository.dart';
 import 'package:wallpost/permission/services/allowed_wp_actions_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 import '../_mocks/mocks.dart' as Mocks;
 
-class MockRequestItemsRepository extends Mock implements RequestItemsRepository {}
+class MockRequestItemsRepository extends Mock implements WpActionsRepository {}
 
 void main() {
   var successfulResponse = Mocks.requestItemsListResponse;

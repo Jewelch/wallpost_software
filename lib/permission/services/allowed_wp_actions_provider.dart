@@ -5,18 +5,18 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/permission/constants/permissions_urls.dart';
 import 'package:wallpost/permission/entities/wp_action.dart';
-import 'package:wallpost/permission/repositories/request_items_repository.dart';
+import 'package:wallpost/permission/repositories/wp_actions_repository.dart';
 
 class AllowedWPActionsProvider {
   final NetworkAdapter _networkAdapter;
-  final RequestItemsRepository _repository;
+  final WpActionsRepository _repository;
   late String _sessionId;
 
   bool isLoading = false;
 
   AllowedWPActionsProvider()
       : _networkAdapter = WPAPI(),
-        _repository = RequestItemsRepository();
+        _repository = WpActionsRepository();
 
   AllowedWPActionsProvider.initWith(this._networkAdapter, this._repository);
 

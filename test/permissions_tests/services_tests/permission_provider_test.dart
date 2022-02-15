@@ -5,14 +5,14 @@ import 'package:wallpost/company_list/entities/employee.dart';
 import 'package:wallpost/company_list/services/selected_company_provider.dart';
 import 'package:wallpost/company_list/services/selected_employee_provider.dart';
 import 'package:wallpost/permission/entities/wp_action.dart';
-import 'package:wallpost/permission/repositories/request_items_repository.dart';
+import 'package:wallpost/permission/repositories/wp_actions_repository.dart';
 import 'package:wallpost/permission/services/permission_provider.dart';
 
 class MockSelectedCompanyProvider extends Mock implements SelectedCompanyProvider {}
 
 class MockSelectedEmployeeProvider extends Mock implements SelectedEmployeeProvider {}
 
-class MockRequestItemsRepository extends Mock implements RequestItemsRepository {}
+class MockWpActionsRepository extends Mock implements WpActionsRepository {}
 
 class MockEmployee extends Mock implements Employee {}
 
@@ -21,7 +21,7 @@ class MockCompany extends Mock implements Company {}
 main() {
   var companyProvider = MockSelectedCompanyProvider();
   var employeeProvider = MockSelectedEmployeeProvider();
-  var requestItemsProvider = MockRequestItemsRepository();
+  var requestItemsProvider = MockWpActionsRepository();
   var mockCompany = MockCompany();
   var mockEmployee = MockEmployee();
   var mockRequestItems = [WPAction.OvertimeRequest, WPAction.LeaveRequest];
@@ -29,7 +29,7 @@ main() {
     when(() => mockCompany.id).thenReturn("1");
     when(companyProvider.getSelectedCompanyForCurrentUser).thenReturn(mockCompany);
     when(employeeProvider.getSelectedEmployeeForCurrentUser).thenReturn(mockEmployee);
-    when(() => requestItemsProvider.getRequestItemsOfCompany(any()))
+    when(() => requestItemsProvider.getActionsForEmployee(any()))
         .thenAnswer((_) => Future.value(mockRequestItems));
   });
 
@@ -41,7 +41,7 @@ main() {
 
     verify(() => companyProvider.getSelectedCompanyForCurrentUser()).called(1);
     verify(() => employeeProvider.getSelectedEmployeeForCurrentUser()).called(1);
-    verify(() => requestItemsProvider.getRequestItemsOfCompany(mockCompany.id)).called(1);
+    verify(() => requestItemsProvider.getActionsForEmployee(mockCompany.id)).called(1);
     expect(permissions.canCreateExpenseRequest(), false);
   });
 }

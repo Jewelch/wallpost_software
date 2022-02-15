@@ -54,7 +54,7 @@ class CompanyDetailsProvider {
       var employee = Employee.fromJson(responseMap);
       _companyRepository.selectCompanyAndEmployeeForUser(
           company, employee, _currentUserProvider.getCurrentUser());
-      await _permissionRequestItemsProvider.get(company.id);
+      await _permissionRequestItemsProvider.get(employee.v1Id);
       //todo _permissionsRepo.savePermissionsForEmployeeOrEmployee(permissions, employee)
       return null;
     } catch (e) {

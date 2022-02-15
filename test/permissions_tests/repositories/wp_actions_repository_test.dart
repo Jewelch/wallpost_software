@@ -2,14 +2,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
 import 'package:wallpost/permission/entities/wp_action.dart';
-import 'package:wallpost/permission/repositories/request_items_repository.dart';
+import 'package:wallpost/permission/repositories/wp_actions_repository.dart';
 
 class MockSharedPrefs extends Mock implements SecureSharedPrefs {}
 
 void main() {
   var mockRequestItems = ["leave_request", "expense_request"];
   var mockSharedPrefs = MockSharedPrefs();
-  RequestItemsRepository requestRepo = RequestItemsRepository.initWith(mockSharedPrefs);
+  WpActionsRepository requestRepo = WpActionsRepository.initWith(mockSharedPrefs);
 
   setUp(() {
     reset(mockSharedPrefs);
@@ -18,22 +18,22 @@ void main() {
   test('reading requestItems data when no data is available', () async {
     when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
 
-    var items = await requestRepo.getRequestItemsOfCompany("companyId");
+    var items = await requestRepo.getActionsForEmployee("companyId");
 
     expect(items, isEmpty);
     verifyInOrder([
-      () => mockSharedPrefs.getMap("request_items"),
+      () => mockSharedPrefs.getMap("wp_actions"),
     ]);
     verifyNoMoreInteractions(mockSharedPrefs);
   });
 
-  test('reading requestItems data  when data is available', () async {
+  test('reading requestItems data when data is available', () async {
     var companyId = "1";
-    when(() => mockSharedPrefs.getMap('request_items')).thenAnswer(
+    when(() => mockSharedPrefs.getMap('wp_actions')).thenAnswer(
       (_) => Future.value({companyId: mockRequestItems}),
     );
 
-    var items = await requestRepo.getRequestItemsOfCompany(companyId);
+    var items = await requestRepo.getActionsForEmployee(companyId);
 
     expect(items.length, 2);
     expect(items.contains(WPAction.LeaveRequest), true);
@@ -51,13 +51,13 @@ void main() {
     var verificationResult = verify(() => mockSharedPrefs.saveMap(captureAny(), captureAny()));
 
     verificationResult.called(1);
-    expect(verificationResult.captured[0], 'request_items');
+    expect(verificationResult.captured[0], 'wp_actions');
     expect(verificationResult.captured[1], {companyId: mockRequestItems});
-    expect(await requestRepo.getRequestItemsOfCompany(companyId), items);
+    expect(await requestRepo.getActionsForEmployee(companyId), items);
   });
 
   test('removing request items', () async {
-    when(() => mockSharedPrefs.getMap('request_items')).thenAnswer(
+    when(() => mockSharedPrefs.getMap('wp_actions')).thenAnswer(
       (_) => Future.value(null),
     );
 
@@ -66,6 +66,6 @@ void main() {
     var verificationResult = verify(() => mockSharedPrefs.removeMap(captureAny()));
 
     verificationResult.called(1);
-    expect(verificationResult.captured[0], 'request_items');
+    expect(verificationResult.captured[0], 'wp_actions');
   });
 }

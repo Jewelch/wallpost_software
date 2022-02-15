@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/permission/repositories/request_items_repository.dart';
+import 'package:wallpost/permission/repositories/wp_actions_repository.dart';
 import 'package:wallpost/permission/services/permissions_remover.dart';
 
-class MockRequestItemsRepository extends Mock implements RequestItemsRepository {}
+class MockRequestItemsRepository extends Mock implements WpActionsRepository {}
 
 main() {
   var repository = MockRequestItemsRepository();
