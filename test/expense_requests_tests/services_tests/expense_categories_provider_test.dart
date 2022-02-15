@@ -18,8 +18,7 @@ void main() {
 
     var _ = await expenseCategoriesProvider.get(companyId);
 
-    expect(mockNetworkAdapter.apiRequest.url,
-        RequestsUrls.getExpenseRequestUrl(companyId));
+    expect(mockNetworkAdapter.apiRequest.url, RequestsUrls.getExpenseRequestUrl(companyId));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
   });
 
@@ -33,6 +32,50 @@ void main() {
       expect(e is NetworkFailureException, true);
     }
   });
+  test('test loading flag is set to true when the service is executed', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    expenseCategoriesProvider.get('someCompanyId');
+
+    expect(expenseCategoriesProvider.isLoading, true);
+  });
+
+  test('test loading flag is reset after success', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await expenseCategoriesProvider.get('someCompanyId');
+
+    expect(expenseCategoriesProvider.isLoading, false);
+  });
+
+  test('test loading flag is reset after failure', () async {
+    mockNetworkAdapter.fail(NetworkFailureException());
+
+    try {
+      var _ = await expenseCategoriesProvider.get('someCompanyId');
+      fail('failed to throw exception');
+    } catch (_) {
+      expect(expenseCategoriesProvider.isLoading, false);
+    }
+  });
+
+  test('response is ignored if it is from another session', () async {
+    var didReceiveResponseForTheSecondRequest = false;
+
+    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
+    expenseCategoriesProvider.get('someCompanyId').then((_) {
+      fail('Received the response for the first request. '
+          'This response should be ignored as the session id has changed');
+    });
+
+    mockNetworkAdapter.succeed(successfulResponse);
+    expenseCategoriesProvider.get('someCompanyId').then((_) {
+      didReceiveResponseForTheSecondRequest = true;
+    });
+
+    await Future.delayed(Duration(milliseconds: 100));
+    expect(didReceiveResponseForTheSecondRequest, true);
+  });
 
   test('throws InvalidResponseException when response is null', () async {
     mockNetworkAdapter.succeed(null);
@@ -45,9 +88,7 @@ void main() {
     }
   });
 
-  test(
-      'throws WrongResponseFormatException when response is of the wrong format',
-      () async {
+  test('throws WrongResponseFormatException when response is of the wrong format', () async {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
@@ -59,9 +100,9 @@ void main() {
   });
 
   test('throws InvalidResponseException when entity mapping fails', () async {
-    mockNetworkAdapter.succeed([<String, dynamic>{
-      "miss_data":"anyWrongData"
-    }]);
+    mockNetworkAdapter.succeed([
+      <String, dynamic>{"miss_data": "anyWrongData"}
+    ]);
 
     try {
       var _ = await expenseCategoriesProvider.get(companyId);

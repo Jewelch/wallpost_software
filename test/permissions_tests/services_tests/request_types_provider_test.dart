@@ -53,6 +53,33 @@ void main() {
     }
   });
 
+  test('test loading flag is set to true when the service is executed', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    requestItemsProvider.get('someCompanyId');
+
+    expect(requestItemsProvider.isLoading, true);
+  });
+
+  test('test loading flag is reset after success', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await requestItemsProvider.get('someCompanyId');
+
+    expect(requestItemsProvider.isLoading, false);
+  });
+
+  test('test loading flag is reset after failure', () async {
+    mockNetworkAdapter.fail(NetworkFailureException());
+
+    try {
+      var _ = await requestItemsProvider.get('someCompanyId');
+      fail('failed to throw exception');
+    } catch (_) {
+      expect(requestItemsProvider.isLoading, false);
+    }
+  });
+
   test('response is ignored if it is from another session', () async {
     when(() => repository.saveRequestItemsForEmployee(any(), any()))
         .thenAnswer((_) => Future.value(null));
@@ -112,30 +139,5 @@ void main() {
     }
   });
 
-  test('test loading flag is set to true when the service is executed', () async {
-    mockNetworkAdapter.succeed(successfulResponse);
 
-    requestItemsProvider.get('someCompanyId');
-
-    expect(requestItemsProvider.isLoading, true);
-  });
-
-  test('test loading flag is reset after success', () async {
-    mockNetworkAdapter.succeed(successfulResponse);
-
-    var _ = await requestItemsProvider.get('someCompanyId');
-
-    expect(requestItemsProvider.isLoading, false);
-  });
-
-  test('test loading flag is reset after failure', () async {
-    mockNetworkAdapter.fail(NetworkFailureException());
-
-    try {
-      var _ = await requestItemsProvider.get('someCompanyId');
-      fail('failed to throw exception');
-    } catch (_) {
-      expect(requestItemsProvider.isLoading, false);
-    }
-  });
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/permission/constants/permissions_urls.dart';
@@ -29,7 +30,7 @@ class PermissionRequestItemsProvider {
       var apiResponse = await _networkAdapter.get(apiRequest);
       isLoading = false;
       await _processResponse(apiResponse, companyId);
-    } on APIException {
+    } on WPException {
       isLoading = false;
       rethrow;
     }

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/expense_requests/constants/requests_urls.dart';
@@ -5,7 +8,8 @@ import 'package:wallpost/expense_requests/entities/expense_category.dart';
 
 class ExpenseCategoriesProvider {
   final NetworkAdapter _networkAdapter;
-  String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+  late String _sessionId;
+
   bool isLoading = false;
 
   ExpenseCategoriesProvider() : _networkAdapter = WPAPI();
@@ -13,18 +17,24 @@ class ExpenseCategoriesProvider {
   ExpenseCategoriesProvider.initWith(this._networkAdapter);
 
   Future<List<ExpenseCategory>> get(String companyId) async {
+    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var url = RequestsUrls.getExpenseRequestUrl(companyId);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
-
-    var apiResponse = await _networkAdapter.get(apiRequest);
-    isLoading = false;
-    return _processResponse(apiResponse);
+    try {
+      var apiResponse = await _networkAdapter.get(apiRequest);
+      isLoading = false;
+      return await _processResponse(apiResponse);
+    } on WPException {
+      isLoading = false;
+      rethrow;
+    }
   }
 
-  List<ExpenseCategory> _processResponse(APIResponse apiResponse) {
+  Future<List<ExpenseCategory>> _processResponse(APIResponse apiResponse) async {
     //returning empty list if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return [];
+    if (apiResponse.apiRequest.requestId != _sessionId)
+      return Completer<List<ExpenseCategory>>().future;
 
     if (apiResponse.data == null) throw InvalidResponseException();
 
