@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
-import 'package:wallpost/requests/entities/expense_category.dart';
+import 'package:wallpost/expense_requests/entities/expense_category.dart';
 
 import '../_mocks/expense_categories_mock.dart';
 

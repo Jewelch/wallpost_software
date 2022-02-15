@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/requests/constants/requests_urls.dart';
-import 'package:wallpost/requests/services/expense_categories_provider.dart';
+import 'package:wallpost/expense_requests/constants/requests_urls.dart';
+import 'package:wallpost/expense_requests/services/expense_categories_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 import '../_mocks/expense_categories_mock.dart';
