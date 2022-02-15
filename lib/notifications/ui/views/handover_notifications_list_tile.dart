@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/company_list/services/selected_company_provider.dart';
+import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/notifications/entities/handover_notification.dart';
 import 'package:wallpost/notifications/services/single_notification_reader.dart';
 

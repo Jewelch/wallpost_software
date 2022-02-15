@@ -5,7 +5,7 @@ import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_adjustment_form.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
-import 'package:wallpost/company_list/services/selected_employee_provider.dart';
+import 'package:wallpost/company_core/services/selected_employee_provider.dart';
 
 class AdjustedAttendanceStatusProvider {
   final SelectedEmployeeProvider _selectedEmployeeProvider;
