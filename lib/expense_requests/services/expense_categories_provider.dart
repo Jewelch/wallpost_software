@@ -1,7 +1,7 @@
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/requests/constants/requests_urls.dart';
-import 'package:wallpost/requests/entities/expense_category.dart';
+import 'package:wallpost/expense_requests/constants/requests_urls.dart';
+import 'package:wallpost/expense_requests/entities/expense_category.dart';
 
 class ExpenseCategoriesProvider {
   final NetworkAdapter _networkAdapter;
