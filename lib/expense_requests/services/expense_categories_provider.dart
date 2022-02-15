@@ -28,21 +28,16 @@ class ExpenseCategoriesProvider {
 
     if (apiResponse.data == null) throw InvalidResponseException();
 
-    if (apiResponse.data is! List<Map<String, dynamic>>)
-      throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<ExpenseCategory> _readItemsFromResponse(
-      List<Map<String, dynamic>> responseMapList) {
+  List<ExpenseCategory> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
       var categories = <ExpenseCategory>[];
-      var eligibleItemsList = responseMapList
-          .where((element) => element['disable']! == false)
-          .toList();
-      for (var responseMap in eligibleItemsList) {
+      for (var responseMap in responseMapList) {
         var item = ExpenseCategory.fromJson(responseMap);
         categories.add(item);
       }
