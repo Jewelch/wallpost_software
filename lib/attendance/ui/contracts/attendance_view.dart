@@ -7,7 +7,7 @@ abstract class AttendanceView {
 
   void showPunchOutButton();
 
-  void showDisableButton();
+  void showDisabledButton();
 
   void hideBreakButton();
 
@@ -19,7 +19,7 @@ abstract class AttendanceView {
 
   void showPunchOutTime(String time);
 
-  void showSecondTillPunchIn(String number);
+  void showTimeTillPunchIn(num seconds);
 
   void showLocationAddress(String address);
 

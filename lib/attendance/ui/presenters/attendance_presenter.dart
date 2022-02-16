@@ -54,7 +54,7 @@ class AttendancePresenter {
       }
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.showDisableButton();
+      _view.showDisabledButton();
       _view.showErrorMessage(
           "Loading attendance details failed", e.userReadableMessage);
     }
@@ -108,14 +108,14 @@ class AttendancePresenter {
         await _loadPunchInDetails();
       } else {
         _view.hideLoader();
-        _view.showDisableButton();
+        _view.showDisabledButton();
         _view.hideBreakButton();
         _view.showError("Punch in from app disabled",
             "Looks like you are not allowed to punch in from the app. Please contact your HR to resolve this issue.");
       }
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.showDisableButton();
+      _view.showDisabledButton();
       _view.showErrorMessage(
           "Failed to load punch in from app permission", e.userReadableMessage);
     }
@@ -129,14 +129,13 @@ class AttendancePresenter {
       if (punchInNowPermission.canPunchInNow) {
         _view.showPunchInButton();
       } else {
-        _view.showDisableButton();
+        _view.showDisabledButton();
         _view.hideBreakButton();
-        _view.showSecondTillPunchIn(
-            punchInNowPermission.secondsTillPunchIn.toString());
+        _view.showTimeTillPunchIn(punchInNowPermission.secondsTillPunchIn);
       }
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.showDisableButton();
+      _view.showDisabledButton();
       _view.showErrorMessage(
           "Failed to load punch in permission", e.userReadableMessage);
     }
