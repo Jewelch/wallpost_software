@@ -17,8 +17,8 @@ class CompanyDetailsProvider {
   bool isLoading = false;
   late String _sessionId;
 
-  CompanyDetailsProvider.initWith(
-      this._currentUserProvider, this._companyRepository, this._networkAdapter, this._allowedActionsProvider);
+  CompanyDetailsProvider.initWith(this._currentUserProvider, this._companyRepository,
+      this._networkAdapter, this._allowedActionsProvider);
 
   CompanyDetailsProvider()
       : _currentUserProvider = CurrentUserProvider(),
@@ -52,8 +52,9 @@ class CompanyDetailsProvider {
     try {
       var company = Company.fromJson(responseMap);
       var employee = Employee.fromJson(responseMap);
-      _companyRepository.selectCompanyAndEmployeeForUser(company, employee, _currentUserProvider.getCurrentUser());
-      // await _allowedActionsProvider.get(employee.v1Id);
+      _companyRepository.selectCompanyAndEmployeeForUser(
+          company, employee, _currentUserProvider.getCurrentUser());
+      await _allowedActionsProvider.get(employee.v1Id);
       return null;
     } catch (e) {
       throw InvalidResponseException();
