@@ -15,7 +15,7 @@ import '../mocks.dart';
 
 class MockCompanyRepository extends Mock implements CompanyRepository {}
 
-class MockPermissionRequestItemsProvider extends Mock implements AllowedWPActionsProvider {}
+class MockAllowedWpActionsProvider extends Mock implements AllowedWPActionsProvider {}
 
 void main() {
   Map<String, dynamic> successfulResponse = Mocks.companyDetailsResponse;
@@ -23,21 +23,21 @@ void main() {
   var mockUserProvider = MockCurrentUserProvider();
   var mockCompanyRepository = MockCompanyRepository();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var mockPermissionProvider = MockPermissionRequestItemsProvider();
+  var mockAllowedWpActions = MockAllowedWpActionsProvider();
   var companyDetailsProvider = CompanyDetailsProvider.initWith(
-      mockUserProvider, mockCompanyRepository, mockNetworkAdapter, mockPermissionProvider);
+      mockUserProvider, mockCompanyRepository, mockNetworkAdapter, mockAllowedWpActions);
 
   setUpAll(() {
     registerFallbackValue(MockUser());
     registerFallbackValue(MockCompany());
     registerFallbackValue(MockEmployee());
     when(() => mockUserProvider.getCurrentUser()).thenReturn(mockUser);
-    when(() => mockPermissionProvider.get(any())).thenAnswer((_) => Future.value(null));
+    when(() => mockAllowedWpActions.get(any())).thenAnswer((_) => Future.value(null));
   });
 
   setUp(() {
     reset(mockCompanyRepository);
-    clearInteractions(mockPermissionProvider);
+    clearInteractions(mockAllowedWpActions);
   });
 
   test('api request is built and executed correctly', () async {
@@ -121,7 +121,7 @@ void main() {
       var _ = await companyDetailsProvider.getCompanyDetails('someCompanyId');
       verify(() => mockCompanyRepository.selectCompanyAndEmployeeForUser(any(), any(), any()))
           .called(1);
-      verify(() => mockPermissionProvider.get(any())).called(1);
+      verify(() => mockAllowedWpActions.get(any())).called(1);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }

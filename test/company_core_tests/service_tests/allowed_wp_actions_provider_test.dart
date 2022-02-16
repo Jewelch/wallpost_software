@@ -25,6 +25,7 @@ void main() {
   late AllowedWPActionsProvider allowedActionsProvider;
 
   setUpAll(() {
+    registerFallbackValue(MockEmployee());
     when(mockSelectedEmployeeProvider.getSelectedEmployeeForCurrentUser).thenReturn(mockEmployee);
     allowedActionsProvider = AllowedWPActionsProvider.initWith(
         mockNetworkAdapter, mockSelectedEmployeeProvider, repository);
