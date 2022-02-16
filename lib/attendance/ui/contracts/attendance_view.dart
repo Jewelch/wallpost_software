@@ -7,7 +7,7 @@ abstract class AttendanceView {
 
   void showPunchOutButton();
 
-  void showDisableButton();
+  void showDisabledButton();
 
   void hideBreakButton();
 
@@ -19,20 +19,22 @@ abstract class AttendanceView {
 
   void showPunchOutTime(String time);
 
-  void showSecondTillPunchIn(String number);
+  void showTimeTillPunchIn(num seconds);
 
   void showLocationAddress(String address);
 
 
   //TODO: We don't need so many failure functions - use single function showErrorMessage(String title, String message)
 
-  void showFailedToLoadAttendance(String title, String message);
+  void showErrorMessage(String title, String message);
+
+  //void showFailedToLoadAttendance(String title, String message);
 
   void showFailedToGetLocation(String title, String message);
 
-  void showFailedToGetPunchInFromAppPermission(String title, String message);
+  //void showFailedToGetPunchInFromAppPermission(String title, String message);
 
-  void showFailedToGetPunchInPermission(String title, String message);
+  //void showFailedToGetPunchInPermission(String title, String message);
 
   void showMessageToAllowPunchInFromAppPermission(String message);
 
