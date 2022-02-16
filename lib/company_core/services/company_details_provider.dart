@@ -53,7 +53,7 @@ class CompanyDetailsProvider {
       var company = Company.fromJson(responseMap);
       var employee = Employee.fromJson(responseMap);
       _companyRepository.selectCompanyAndEmployeeForUser(company, employee, _currentUserProvider.getCurrentUser());
-      await _allowedActionsProvider.get(employee.companyId);
+      // await _allowedActionsProvider.get(employee.companyId);
       return null;
     } catch (e) {
       throw InvalidResponseException();
