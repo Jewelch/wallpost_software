@@ -3,8 +3,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/company_core/constants/company_management_urls.dart';
 import 'package:wallpost/company_core/repositories/company_repository.dart';
-import 'package:wallpost/company_core/services/company_details_provider.dart';
 import 'package:wallpost/company_core/services/allowed_wp_actions_provider.dart';
+import 'package:wallpost/company_core/services/company_details_provider.dart';
 
 import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_current_user_provider.dart';
@@ -46,8 +46,7 @@ void main() {
 
     var _ = await companyDetailsProvider.getCompanyDetails('someCompanyId');
 
-    expect(mockNetworkAdapter.apiRequest.url,
-        CompanyManagementUrls.getCompanyDetailsUrl('someCompanyId'));
+    expect(mockNetworkAdapter.apiRequest.url, CompanyManagementUrls.getCompanyDetailsUrl('someCompanyId'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -118,10 +117,9 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var _ = await companyDetailsProvider.getCompanyDetails('someCompanyId');
-      verify(() => mockCompanyRepository.selectCompanyAndEmployeeForUser(any(), any(), any()))
-          .called(1);
-      verify(() => mockAllowedWpActions.get(any())).called(1);
+      var _ = await companyDetailsProvider.getCompanyDetails('1234');
+      verify(() => mockCompanyRepository.selectCompanyAndEmployeeForUser(any(), any(), any())).called(1);
+      verify(() => mockAllowedWpActions.get("1234")).called(1);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }

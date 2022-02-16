@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/company_core/entities/company.dart';
 import 'package:wallpost/company_core/entities/employee.dart';
-
 import 'package:wallpost/company_core/entities/wp_action.dart';
 import 'package:wallpost/permission/permissions.dart';
 
@@ -10,7 +9,6 @@ class MockCompany extends Mock implements Company {}
 
 class MockEmployee extends Mock implements Employee {}
 
-//TODO ABDO
 main() {
   var mockCompany = MockCompany();
   var mockEmployee = MockEmployee();

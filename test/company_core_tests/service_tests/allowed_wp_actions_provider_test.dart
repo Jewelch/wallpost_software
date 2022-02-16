@@ -6,6 +6,7 @@ import 'package:wallpost/company_core/entities/employee.dart';
 import 'package:wallpost/company_core/repositories/allowed_actions_repository.dart';
 import 'package:wallpost/company_core/services/allowed_wp_actions_provider.dart';
 import 'package:wallpost/company_core/services/selected_employee_provider.dart';
+
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
@@ -16,7 +17,6 @@ class MockSelectedEmployeeProvider extends Mock implements SelectedEmployeeProvi
 class MockEmployee extends Mock implements Employee {}
 
 void main() {
-  //TODO ABDO
   var successfulResponse = Mocks.wpActionsListResponse;
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockEmployee = MockEmployee();
@@ -27,22 +27,20 @@ void main() {
   setUpAll(() {
     registerFallbackValue(MockEmployee());
     when(mockSelectedEmployeeProvider.getSelectedEmployeeForCurrentUser).thenReturn(mockEmployee);
-    allowedActionsProvider = AllowedWPActionsProvider.initWith(
-        mockNetworkAdapter, mockSelectedEmployeeProvider, repository);
+    allowedActionsProvider =
+        AllowedWPActionsProvider.initWith(mockNetworkAdapter, mockSelectedEmployeeProvider, repository);
   });
 
   var companyId = "13";
 
   test('api request is built correctly', () async {
-    when(() => repository.saveActionsForEmployee(any(), any()))
-        .thenAnswer((_) => Future.value(null));
+    when(() => repository.saveActionsForEmployee(any(), any())).thenAnswer((_) => Future.value(null));
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
     var _ = await allowedActionsProvider.get(companyId);
 
-    expect(
-        mockNetworkAdapter.apiRequest.url, CompanyManagementUrls.getAllowedActionsUrl(companyId));
+    expect(mockNetworkAdapter.apiRequest.url, CompanyManagementUrls.getAllowedActionsUrl(companyId));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     clearInteractions(repository);
   });
@@ -97,8 +95,7 @@ void main() {
   });
 
   test('response is ignored if it is from another session', () async {
-    when(() => repository.saveActionsForEmployee(any(), any()))
-        .thenAnswer((_) => Future.value(null));
+    when(() => repository.saveActionsForEmployee(any(), any())).thenAnswer((_) => Future.value(null));
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
@@ -128,8 +125,7 @@ void main() {
   });
 
   test('throws InvalidResponseException when entity mapping fails', () async {
-    when(() => repository.saveActionsForEmployee(any(), any()))
-        .thenAnswer((_) => Future.value(null));
+    when(() => repository.saveActionsForEmployee(any(), any())).thenAnswer((_) => Future.value(null));
     mockNetworkAdapter.succeed([
       <String, dynamic>{"miss_data": "anyWrongData"}
     ]);
