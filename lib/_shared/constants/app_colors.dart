@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  static const Color darkBlue = Color.fromRGBO(0, 60, 129, 1.0);
+  static const Color blue = Color.fromRGBO(0, 105, 178, 1.0);
+  static const Color lightBlue = Color.fromRGBO(0, 150, 227, 1.0);
+
   static final Color defaultColor = getColorFromHex('#008cbf');
   static final Color defaultColorDark = getColorFromHex('#0376a0');
   static final Color badgeColor = getColorFromHex('#db544e');
 
-  //Chip Backround colors
+  //Chip Background colors
 
   static final Color backGroundColor = getColorFromHex('#DFF0F7');
 
