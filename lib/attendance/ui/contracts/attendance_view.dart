@@ -26,13 +26,15 @@ abstract class AttendanceView {
 
   //TODO: We don't need so many failure functions - use single function showErrorMessage(String title, String message)
 
-  void showFailedToLoadAttendance(String title, String message);
+  void showErrorMessage(String title, String message);
+
+  //void showFailedToLoadAttendance(String title, String message);
 
   void showFailedToGetLocation(String title, String message);
 
-  void showFailedToGetPunchInFromAppPermission(String title, String message);
+  //void showFailedToGetPunchInFromAppPermission(String title, String message);
 
-  void showFailedToGetPunchInPermission(String title, String message);
+  //void showFailedToGetPunchInPermission(String title, String message);
 
   void showMessageToAllowPunchInFromAppPermission(String message);
 
