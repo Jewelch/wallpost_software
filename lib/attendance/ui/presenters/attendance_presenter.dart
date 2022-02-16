@@ -128,6 +128,7 @@ class AttendancePresenter {
       _view.hideLoader();
       if (punchInNowPermission.canPunchInNow) {
         _view.showPunchInButton();
+        _view.hideBreakButton();
       } else {
         _view.showDisabledButton();
         _view.hideBreakButton();
@@ -143,12 +144,14 @@ class AttendancePresenter {
 
   void _loadPunchOutDetails(AttendanceDetails attendanceDetails) {
     if (attendanceDetails.isPunchedOut) {
-      _view.hideBreakButton();
+      _showPunchInTime(attendanceDetails);
       _showPunchOutTime(attendanceDetails);
+      _view.showDisabledButton();
+      _view.hideBreakButton();
     } else {
       _showPunchInTime(attendanceDetails);
-      _isOnBreak(attendanceDetails);
       _view.showPunchOutButton();
+      _isOnBreak(attendanceDetails);
     }
   }
 
