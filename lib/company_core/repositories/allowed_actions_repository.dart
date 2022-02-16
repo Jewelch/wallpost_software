@@ -56,7 +56,7 @@ class AllowedActionsRepository {
 
     itemsMap.keys.forEach((key) {
       var employeeId = key;
-      var actions = itemsMap[key].map<WPAction>((item) => initializeRequestFromString(item)!).toList();
+      var actions = itemsMap[key].map<WPAction>((item) => initializeWpActionFromString(item)!).toList();
       _allowedActions[employeeId] = actions;
     });
   }

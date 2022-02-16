@@ -56,7 +56,7 @@ class AllowedWPActionsProvider {
       var requestItems = <WPAction>[];
       var eligibleItemsList = responseMapList.where((element) => element['visibility']! == true).toList();
       for (var responseMap in eligibleItemsList) {
-        var item = initializeRequestFromString(responseMap['name']!);
+        var item = initializeWpActionFromString(responseMap['name']!);
         if (item != null) requestItems.add(item);
       }
       return requestItems;

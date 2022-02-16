@@ -12,7 +12,7 @@ enum WPAction {
   TimesheetAdjustment,
 }
 
-WPAction? initializeRequestFromString(String itemName) {
+WPAction? initializeWpActionFromString(String itemName) {
   if (itemName == taskString) return WPAction.Task;
   if (itemName == leaveString) return WPAction.LeaveRequest;
   if (itemName == expenseString) return WPAction.ExpenseRequest;
