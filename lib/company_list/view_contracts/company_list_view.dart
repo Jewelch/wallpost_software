@@ -2,9 +2,9 @@ import 'package:wallpost/company_core/entities/company_group.dart';
 import 'package:wallpost/company_core/entities/company_list_item.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 
-import '../../company_core/entities/company.dart';
-
 abstract class CompaniesListView {
+  void showProfileImage(String url);
+
   void showLoader();
 
   void hideLoader();
@@ -13,25 +13,25 @@ abstract class CompaniesListView {
 
   void hideSearchBar();
 
+  void showCompanyGroups(List<CompanyGroup> companyGroups);
+
+  void hideCompanyGroups();
+
+  void showFinancialSummary(FinancialSummary groupSummary);
+
+  void hideFinancialSummary();
+
   void showCompanyList(List<CompanyListItem> companies);
 
-  void showNoCompaniesMessage(String message);
-
-  void showNoSearchResultsMessage(String message);
+  void hideCompanyList();
 
   void showErrorMessage(String message);
 
-  void onCompanyDetailsLoadedSuccessfully();
+  void showNoSearchResultsMessage(String message);
+
+  void goToCompanyDetailScreen();
 
   void onCompanyDetailsLoadingFailed(String title, String message);
 
-  void showSelectedCompany(CompanyListItem company);
-
   void showLogoutAlert(String title, String message);
-
-  void showProfileImage(String url);
-
-  void showSummary(FinancialSummary groupSummary);
-
-  void showCompanyGroups(List<CompanyGroup> companyGroups);
 }

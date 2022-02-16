@@ -6,7 +6,7 @@ import 'package:wallpost/company_core/repositories/allowed_actions_repository.da
 import 'package:wallpost/company_core/services/allowed_wp_actions_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
-import '../../permission_tests/_mocks/mocks.dart' as Mocks;
+// import '../../permission_tests/_mocks/mocks.dart' as Mocks;
 
 class MockRequestItemsRepository extends Mock implements AllowedActionsRepository {}
 

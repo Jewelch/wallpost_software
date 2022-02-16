@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/dashboard_management/entities/Dashboard.dart';
@@ -70,10 +71,10 @@ class CompanyListCard extends StatelessWidget {
         borderRadius: borderRadius,
         child: SizedBox.fromSize(
           size: Size.fromRadius(44), // Image radius
-          child: FadeInImage.assetNetwork(
-              placeholder: 'assets/logo/placeholder.jpg',
-              image:company.logoUrl,
-              fit: BoxFit.cover,
+          child:CachedNetworkImage(
+            imageUrl: company.logoUrl,
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),
       ),

@@ -84,4 +84,5 @@ class CompanyList extends JSONInitializable implements JSONConvertible {
   List<CompanyGroup> get groups => _groups;
 
   FinancialSummary? get financialSummary => _financialSummary;
+
 }
