@@ -3,7 +3,7 @@ import 'dart:core';
 import 'package:wallpost/_main/services/repository_initializer.dart';
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
-import 'package:wallpost/company_list/services/selected_company_provider.dart';
+import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/notifications/services/app_badge_updater.dart';
 
 class MainPresenter {
@@ -41,7 +41,7 @@ class MainPresenter {
 
   void _showLandingScreenForLoggedInUser() {
     if (_selectedCompanyProvider.isCompanySelected()) {
-      _view.goToDashboardScreen();
+      _view.goToCompaniesListScreen();
     } else {
       _view.goToCompaniesListScreen();
     }

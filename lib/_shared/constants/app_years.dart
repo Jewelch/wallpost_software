@@ -1,5 +1,3 @@
-// @dart=2.9
-
 class AppYears {
   static int _startYear = 2015;
 
@@ -10,5 +8,16 @@ class AppYears {
       years.add(i);
     }
     return years;
+  }
+
+  static List<String> shortenedMonthNames() {
+    return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  }
+
+  static List<String> shortenedMonthNamesForYear(int year) {
+    //TODO Ameena
+    //if year == current year = return months till the current month
+    //else return shortenedMonthNames();
+    return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   }
 }

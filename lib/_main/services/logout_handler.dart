@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_main/ui/views/main_screen.dart';
-import 'package:wallpost/company_list/services/user_companies_remover.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
+import 'package:wallpost/company_core/services/user_companies_remover.dart';
 
 class LogoutHandler {
   final CurrentUserProvider _currentUserProvider;

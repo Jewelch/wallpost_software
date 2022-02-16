@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="431" height="319" viewBox="0 0 431 319">
+  <defs>
+    <filter id="Path_101" x="0" y="0" width="431" height="319" filterUnits="userSpaceOnUse">
+      <feOffset dx="4" />
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feFlood flood-color="#008cbf" flood-opacity="0.271"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="decorative-bar" transform="translate(32 36)">
+    <g transform="matrix(1, 0, 0, 1, -32, -36)" filter="url(#Path_101)">
+      <path id="Path_101-2" d="M668,413H357a24,24,0,0,1-24-24V636a24,24,0,0,1,24-24H668a24.006,24.006,0,0,0,24-24V437A24.006,24.006,0,0,0,668,413Z" transform="translate(-301 -353)" fill="#003c81"/>
+    </g>
+  </g>
+</svg>

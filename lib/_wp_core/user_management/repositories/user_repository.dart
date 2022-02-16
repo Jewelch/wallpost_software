@@ -8,6 +8,9 @@ class UserRepository {
 
   static UserRepository? _singleton;
 
+  //ignore: unused_element
+  UserRepository._();
+
   static Future<void> initRepo() async {
     await getInstance()._readUserData();
   }
