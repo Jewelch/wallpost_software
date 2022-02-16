@@ -1,12 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
-import 'package:wallpost/company_list/entities/company_list_item.dart';
-import 'package:wallpost/company_list/services/company_details_provider.dart';
 import 'package:wallpost/_wp_core/user_management/services/user_remover.dart';
 import 'package:wallpost/notifications/entities/notification.dart';
 import 'package:wallpost/notifications/services/notifications_list_provider.dart';
 import 'package:wallpost/notifications/ui/presenters/notifications_list_presenter.dart';
+import 'package:wallpost/notifications/ui/view_contracts/notifications_list_view.dart';
 
 class MockNotificationsListView extends Mock implements NotificationsListView {}
 
