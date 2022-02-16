@@ -3,14 +3,14 @@ import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_adjustment_form.dart';
+import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
 import 'package:wallpost/attendance_adjustment/services/adjusted_status_provider.dart';
 
 import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_employee_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 
-class MockAttendanceAdjustmentForm extends Mock implements AttendanceAdjustmentForm {}
+class MockAdjustedStatusForm extends Mock implements AdjustedStatusForm {}
 
 void main() {
   String successfulResponse = 'present';
@@ -18,8 +18,8 @@ void main() {
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockEmployee = MockEmployee();
   var adjustedAttendanceStatusProvider =
-      AdjustedAttendanceStatusProvider.initWith(mockEmployeeProvider, mockNetworkAdapter);
-  var mockAttendanceAdjustmentForm = MockAttendanceAdjustmentForm();
+      AdjustedStatusProvider.initWith(mockEmployeeProvider, mockNetworkAdapter);
+  var mockAdjustedStatusForm = MockAdjustedStatusForm();
   DateTime date = DateTime(22, 01, 2021);
   DateTime adjustedPunchInTime = DateFormat('hh:mm').parse("09:00");
   DateTime adjustedPunchOutTime = DateFormat('hh:mm').parse("06:00");
@@ -27,9 +27,9 @@ void main() {
   setUpAll(() {
     when(() => mockEmployee.v1Id).thenReturn('v1EmpId');
     when(() => mockEmployee.companyId).thenReturn('someCompanyId');
-    when(() => mockAttendanceAdjustmentForm.date).thenReturn(date);
-    when(() => mockAttendanceAdjustmentForm.adjustedPunchInTime).thenReturn(adjustedPunchInTime);
-    when(() => mockAttendanceAdjustmentForm.adjustedPunchOutTime).thenReturn(adjustedPunchOutTime);
+    when(() => mockAdjustedStatusForm.date).thenReturn(date);
+    when(() => mockAdjustedStatusForm.adjustedPunchInTime).thenReturn(adjustedPunchInTime);
+    when(() => mockAdjustedStatusForm.adjustedPunchOutTime).thenReturn(adjustedPunchOutTime);
     when(() => mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
   });
 
@@ -37,7 +37,7 @@ void main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await adjustedAttendanceStatusProvider.getAdjustedStatus(mockAttendanceAdjustmentForm);
+    var _ = await adjustedAttendanceStatusProvider.getAdjustedStatus(mockAdjustedStatusForm);
 
     expect(
         mockNetworkAdapter.apiRequest.url,
@@ -50,22 +50,22 @@ void main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    adjustedAttendanceStatusProvider.getAdjustedStatus(mockAttendanceAdjustmentForm);
+    adjustedAttendanceStatusProvider.getAdjustedStatus(mockAdjustedStatusForm);
 
     expect(adjustedAttendanceStatusProvider.isLoading, true);
-  });
+   });
 
   test('response is ignored if it is from another session', () async {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
-    adjustedAttendanceStatusProvider.getAdjustedStatus(mockAttendanceAdjustmentForm).then((_) {
+    adjustedAttendanceStatusProvider.getAdjustedStatus(mockAdjustedStatusForm).then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
     mockNetworkAdapter.succeed(successfulResponse);
-    adjustedAttendanceStatusProvider.getAdjustedStatus(mockAttendanceAdjustmentForm).then((_) {
+    adjustedAttendanceStatusProvider.getAdjustedStatus(mockAdjustedStatusForm).then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -77,7 +77,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await adjustedAttendanceStatusProvider.getAdjustedStatus(mockAttendanceAdjustmentForm);
+      var _ = await adjustedAttendanceStatusProvider.getAdjustedStatus(mockAdjustedStatusForm);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -88,7 +88,7 @@ void main() {
     mockNetworkAdapter.succeed(<String, dynamic>{});
 
     try {
-      var _ = await adjustedAttendanceStatusProvider.getAdjustedStatus(mockAttendanceAdjustmentForm);
+      var _ = await adjustedAttendanceStatusProvider.getAdjustedStatus(mockAdjustedStatusForm);
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);

@@ -3,11 +3,13 @@ import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_list_view.dart';
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_list_presenter.dart';
+import 'package:wallpost/attendance_adjustment/ui/views/attendance_adjustment_screen.dart';
 import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_card.dart';
 
 class AttendanceListScreen extends StatefulWidget {
@@ -116,7 +118,7 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
       builder: (context, value) => RefreshIndicator(
         onRefresh: () => presenter.loadAttendanceList(),
         child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           itemCount: value!.length,
           itemBuilder: (context, index) {
             return _attendanceCardView(index, value);
@@ -130,7 +132,7 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
     return AttendanceListCard(
       presenter: presenter,
       attendanceListItem: attendanceList[index],
-      onPressed: () => goToAdjustmentScreen(),
+      onPressed: () => goToAdjustmentScreen(index,attendanceList[index]),
     );
   }
 
@@ -146,7 +148,7 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
               children: [
                 TextButton(
                   child: Text(
-                    message!,
+                    message ?? ' ',
                     textAlign: TextAlign.center,
                     style: TextStyles.failureMessageTextStyle,
                   ),
@@ -189,8 +191,8 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
   }
 
   @override
-  void goToAdjustmentScreen() {
-    // ScreenPresenter.presentAndRemoveAllPreviousScreens(
-    //     AttendanceAdjustmentScreen(), context);
+  void goToAdjustmentScreen(int index,AttendanceListItem attendanceList) {
+    ScreenPresenter.present(
+        AttendanceAdjustmentScreen(attendanceListPresenter: presenter, attendanceListItem: attendanceList,), context);
   }
 }

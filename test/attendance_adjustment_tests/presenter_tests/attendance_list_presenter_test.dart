@@ -134,11 +134,14 @@ void main() {
   });
 
   test('selecting month and year', () {
+    year = 2022;
+    String month = 'jan';
+
     presenter.selectYear(year);
-    presenter.selectMonth(selectedMonth);
+    presenter.selectMonth(month);
 
     expect(presenter.getSelectedYear(), year);
-    expect(presenter.getSelectedMonth(), selectedMonth);
+    expect(presenter.getSelectedMonth(), month);
   });
 
   test('get status color', () {

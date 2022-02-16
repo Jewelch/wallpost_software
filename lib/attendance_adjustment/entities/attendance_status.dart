@@ -5,6 +5,7 @@ const _NO_ACTION_STRING = "noaction";
 const _BREAK_STRING = "break";
 const _HALF_DAY_STRING = "halfday";
 const _EARLY_LEAVE_STRING = "earlyleave";
+const _ON_TIME_STRING = "ontime";
 
 enum AttendanceStatus {
   Present,
@@ -14,6 +15,7 @@ enum AttendanceStatus {
   Break,
   HalfDay,
   EarlyLeave,
+  OnTime
 }
 
 AttendanceStatus? initializeAttendanceStatusFromString(String string) {
@@ -31,6 +33,8 @@ AttendanceStatus? initializeAttendanceStatusFromString(String string) {
     return AttendanceStatus.HalfDay;
   } else if (string.toLowerCase() == _EARLY_LEAVE_STRING) {
     return AttendanceStatus.EarlyLeave;
+  } else if (string.toLowerCase() == _ON_TIME_STRING) {
+    return AttendanceStatus.OnTime;
   }
   return null;
 }
@@ -52,6 +56,8 @@ extension AttendanceStatusExtension on AttendanceStatus {
         return _HALF_DAY_STRING;
       case AttendanceStatus.EarlyLeave:
         return _EARLY_LEAVE_STRING;
+      case AttendanceStatus.OnTime:
+        return _ON_TIME_STRING;
     }
   }
 
@@ -71,6 +77,8 @@ extension AttendanceStatusExtension on AttendanceStatus {
         return "Half Day";
       case AttendanceStatus.EarlyLeave:
         return "Early Leave";
+      case AttendanceStatus.OnTime:
+        return "On Time";
     }
   }
 }

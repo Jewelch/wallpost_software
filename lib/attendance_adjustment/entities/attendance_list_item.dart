@@ -61,7 +61,7 @@ class AttendanceListItem extends JSONInitializable {
 
   DateTime get date => _date;
 
-  String get punchInTime => _convertTimeToString(_punchInTime);
+  DateTime? get punchInTime => _punchInTime;
 
   DateTime? get punchOutTime => _punchOutTime;
 

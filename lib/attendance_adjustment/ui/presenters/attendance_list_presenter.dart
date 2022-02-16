@@ -92,6 +92,7 @@ class AttendanceListPresenter {
     switch (attendanceItem.status) {
       case AttendanceStatus.Present:
       case AttendanceStatus.NoAction:
+      case AttendanceStatus.OnTime:
       case AttendanceStatus.Break:
         return AppColors.presentColor;
       case AttendanceStatus.Late:
