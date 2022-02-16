@@ -21,6 +21,8 @@ class AppColors {
   //Text colors
   static final Color labelColor = getColorFromHex('#777777');
   static final Color placeholderColor = getColorFromHex('#AAAAAA');
+  static final Color greyColor = getColorFromHex('#DCDCDC');
+  static final Color lightBlueColor = getColorFromHex('#C3E4ED');
 
   //Chart colors
   static final Color chartLineColor = getColorFromHex('#5dd2a9');

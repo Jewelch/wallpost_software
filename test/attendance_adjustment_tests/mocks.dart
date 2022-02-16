@@ -69,7 +69,7 @@ class Mocks {
     ],
   };
 
-  static Map<String, dynamic> attendanceListItemResponse = {
+  static Map<String, dynamic> attendanceListItemResponse1 = {
     "id": null,
     "company_id": 42,
     "attendance_id": "Q8pyUr23o8kuGJw",
@@ -84,29 +84,104 @@ class Mocks {
     "approver_name": "null"
   };
 
-  static var submitAdjustmentHeader = [
-    {
-      "id": null,
-      "company_id": 15,
-      "attendance_id": "qpxroNBXQKgL7QW",
-      "date": "2022-01-31",
-      "adjusted_status": "PRESENT",
-      "punch_in_time": "09:05",
-      "punch_out_time": "17:30",
-      "orig_punch_in_time": "11:05",
-      "orig_punch_out_time": "11:13",
-      "reason": "reasonnnn",
-      "approval_status": "null",
-      "approver_name": "null",
-      "edit_mode": false,
-      "punch_in_time_error": false,
-      "punch_out_time_error": false,
-      "status_out_error": false,
-      "attnce_reason_error": false,
-      "employee_id": 1254,
-      "work_status": "PRESENT",
-      "adjusted_punchin": "9:05",
-      "adjusted_punchout": "17:30"
-    }
-  ];
+  static Map<String, dynamic> attendanceListItemResponse2 = {
+    "id": "404",
+    "company_id": 15,
+    "attendance_id": "GAlgrqH5NsHqLaH",
+    "date": "2022-01-21",
+    "adjusted_status": "EARLYLEAVE",
+    "punch_in_time": "11:00",
+    "punch_out_time": "15:30",
+    "orig_punch_in_time": null,
+    "orig_punch_out_time": null,
+    "reason": "llllll",
+    "approval_status": "Pending",
+    "approver_name": "Jayden Mathew"
+  };
+
+  static Map<String, dynamic> attendanceListItemResponse3 = {
+    "attendance_id": null,
+    "date": "2022-01-03",
+    "work_status": "ABSENT",
+    "punch_in_time": null,
+    "punch_out_time": null,
+    "reason": null,
+    "approval_status": "null"
+  };
+
+  static Map<String, dynamic> attendanceListItemResponse4 = {
+    "id": "404",
+    "company_id": 15,
+    "attendance_id": "GAlgrqH5NsHqLaH",
+    "date": "2022-01-21",
+    "adjusted_status": "LATE",
+    "punch_in_time": "11:00",
+    "punch_out_time": "15:30",
+    "orig_punch_in_time": null,
+    "orig_punch_out_time": null,
+    "reason": "llllll",
+    "approval_status": "Pending",
+    "approver_name": "Jayden Mathew"
+  };
+
+  static Map<String, dynamic> attendanceListItemResponse5 = {
+    "id": "404",
+    "company_id": 15,
+    "attendance_id": "GAlgrqH5NsHqLaH",
+    "date": "2022-01-21",
+    "adjusted_status": "HALFDAY",
+    "punch_in_time": "11:00",
+    "punch_out_time": "15:30",
+    "orig_punch_in_time": null,
+    "orig_punch_out_time": null,
+    "reason": "llllll",
+    "approval_status": "Pending",
+    "approver_name": "Jayden Mathew"
+  };
+
+  static Map<String, dynamic> attendanceListItemResponse6 = {
+    "id": "404",
+    "company_id": 15,
+    "attendance_id": "GAlgrqH5NsHqLaH",
+    "date": "2022-01-21",
+    "adjusted_status": "NOACTION",
+    "punch_in_time": "11:00",
+    "punch_out_time": "15:30",
+    "orig_punch_in_time": null,
+    "orig_punch_out_time": null,
+    "reason": "llllll",
+    "approval_status": "Pending",
+    "approver_name": "Jayden Mathew"
+  };
+
+  static Map<String, dynamic> attendanceListItemResponse7 = {
+    "id": "404",
+    "company_id": 15,
+    "attendance_id": "GAlgrqH5NsHqLaH",
+    "date": "2022-01-21",
+    "adjusted_status": "BREAK",
+    "punch_in_time": "11:00",
+    "punch_out_time": "15:30",
+    "orig_punch_in_time": null,
+    "orig_punch_out_time": null,
+    "reason": "llllll",
+    "approval_status": "Pending",
+    "approver_name": "Jayden Mathew"
+  };
+
+  static Map<String, dynamic> attendanceListItemResponse8 = {
+    "id": "404",
+    "company_id": 15,
+    "attendance_id": "GAlgrqH5NsHqLaH",
+    "date": "2022-01-21",
+    "adjusted_status": "ONTIME",
+    "punch_in_time": "11:00",
+    "punch_out_time": "15:30",
+    "orig_punch_in_time": null,
+    "orig_punch_out_time": null,
+    "reason": "llllll",
+    "approval_status": "Pending",
+    "approver_name": "Jayden Mathew"
+  };
+
 }

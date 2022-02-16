@@ -11,5 +11,5 @@ abstract class AttendanceListView {
 
   void showErrorMessage(String errorMessage);
 
-  void goToAdjustmentScreen();
+  void goToAdjustmentScreen(int index,AttendanceListItem attendanceList);
 }
