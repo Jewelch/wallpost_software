@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
@@ -10,12 +8,10 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
-import 'package:wallpost/notifications/entities/company_unread_notifications_count.dart';
 import 'package:wallpost/notifications/services/all_notifications_reader.dart';
 import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';
 import 'package:wallpost/notifications/ui/presenters/notifications_list_presenter.dart';
-
-import '../view_contracts/notifications_list_view.dart';
+import 'package:wallpost/notifications/ui/view_contracts/notifications_list_view.dart';
 
 class NotificationsScreen extends StatefulWidget {
   @override
@@ -28,7 +24,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
   late NotificationsListPresenter _presenter;
   late ScrollController _scrollController;
   num _unreadNotificationsCount = 0;
-  late List<CompanyUnreadNotificationsCount> _allCompaniesUnreadNotificationsCount;
 
   @override
   void initState() {
@@ -53,7 +48,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
       var unreadNotificationsCount = await _unreadNotificationsCountProvider.getCount();
       setStateIfMounted(() {
         _unreadNotificationsCount = unreadNotificationsCount.getTotalUnreadNotificationCount();
-        _allCompaniesUnreadNotificationsCount = unreadNotificationsCount.allCompaniesUnreadNotificationsCount;
       });
     } on WPException catch (_) {
       setStateIfMounted(() => {});
@@ -93,8 +87,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
                   Container(
                     height: 40,
                     width: 50,
-                    child: FlatButton(
-                      padding: EdgeInsets.zero,
+                    child: TextButton(
                       onPressed: () => _showReadAllConfirmationAlert(),
                       child: Text(
                         'Read All',
