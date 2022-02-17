@@ -8,7 +8,7 @@ class CompanyListLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShimmerEffect(
-      widget: SingleChildScrollView(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

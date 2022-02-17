@@ -13,10 +13,10 @@ class FinancialSummary extends JSONInitializable implements JSONConvertible {
   FinancialSummary.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
-      profitLoss = "${sift.readNumberFromMap(jsonMap, 'profitLoss')}";
-      _fundAvailability = "${sift.readNumberFromMap(jsonMap, 'cashAvailability')}";
-      _receivableOverdue = "${sift.readNumberFromMap(jsonMap, 'receivableOverdue')}";
-      _payableOverdue = "${sift.readNumberFromMap(jsonMap, 'payableOverdue')}";
+      profitLoss = "11";
+      _fundAvailability = "11";
+      _receivableOverdue = "11";
+      _payableOverdue = "11";
     } on SiftException catch (e) {
       print(e.errorMessage);
       throw MappingException('Failed to cast Financial Summary response. Error message - ${e.errorMessage}');

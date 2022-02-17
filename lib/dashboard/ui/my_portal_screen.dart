@@ -5,6 +5,8 @@ import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_screen.dart';
 import 'package:wallpost/password_management/ui/views/change_password_screen.dart';
 
+import '../../leave/ui/views/leave_list_screen.dart';
+
 class MyPortalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,13 @@ class MyPortalScreen extends StatelessWidget {
                 child: Text('Show file picker'),
                 onPressed: () {
                   FilePickerScreen.present(context);
+                },
+              ),
+              FlatButton(
+                color: Colors.greenAccent,
+                child: Text('Go to leave  list'),
+                onPressed: () {
+                  ScreenPresenter.present(LeaveListScreen(), context);
                 },
               ),
             ],

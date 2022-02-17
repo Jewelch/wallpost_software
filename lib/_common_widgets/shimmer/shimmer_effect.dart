@@ -4,9 +4,9 @@ import 'package:shimmer/shimmer.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class ShimmerEffect extends StatelessWidget {
-  final Widget widget;
+  final Widget child;
 
-  const ShimmerEffect({Key? key, required this.widget}) : super(key: key);
+  const ShimmerEffect({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Shimmer.fromColors(
@@ -14,7 +14,7 @@ class ShimmerEffect extends StatelessWidget {
         baseColor: AppColors.primaryContrastColor,
         highlightColor: Colors.white,
         child: Container(
-          child: widget,
+          child: child,
         ),
       );
 }
