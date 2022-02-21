@@ -61,8 +61,12 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
   }
 
   Widget _buildErrorView() {
-    return Container(
-      child: Text("Error"),
+    return GestureDetector(
+      onTap: () => _presenter.getNext(),
+      child: Container(
+        height: 100,
+        child: Text("Error. Tap to reload"),
+      ),
     );
   }
 
@@ -81,8 +85,12 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
                 child: CircularProgressIndicator(),
               );
             case LeaveListItemType.ErrorMessage:
-              return Container(
-                child: Text("leave list error"),
+              return GestureDetector(
+                onTap: () => _presenter.getNext(),
+                child: Container(
+                  height: 100,
+                  child: Text("leave list error. Tap to reload"),
+                ),
               );
             case LeaveListItemType.EmptySpace:
               return Container();
@@ -105,7 +113,7 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
   }
 
   @override
-  void showLeaveList() {
+  void updateLeaveList() {
     _viewTypeNotifier.notify(viewTypeLeaveList);
   }
 }

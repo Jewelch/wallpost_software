@@ -3,5 +3,5 @@ abstract class LeaveListView {
 
   void showErrorMessage(String message);
 
-  void showLeaveList();
+  void updateLeaveList();
 }

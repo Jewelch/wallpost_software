@@ -56,57 +56,25 @@ class LeaveListProvider {
     return _readItemsFromResponse(responseMapList);
   }
 
-  var fList = [
-    LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-    // LeaveListItem(),
-  ];
-  var sList = [LeaveListItem()];
-  List<LeaveListItem> tList = [];
-
-  var run = 1;
-
   List<LeaveListItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
-    List<LeaveListItem> list = [];
-    if (run == 1)
-      list = fList;
-    else if (run == 2)
-      list = sList;
-    else
-      list = tList;
-
-    run++;
-    // try {
-    //   var leaveListItemList = <LeaveListItem>[];
-    //   for (var responseMap in responseMapList) {
-    //     var leaveListItem = LeaveListItem.fromJson(responseMap);
-    //     leaveListItemList.add(leaveListItem);
-    //   }
-    _updatePaginationRelatedData(list.length);
-    return list;
-    //   return leaveListItemList;
-    // } catch (e) {
-    //   throw InvalidResponseException();
-    // }
+    try {
+      var leaveListItemList = <LeaveListItem>[];
+      for (var responseMap in responseMapList) {
+        var leaveListItem = LeaveListItem.fromJson(responseMap);
+        leaveListItemList.add(leaveListItem);
+      }
+      _updatePaginationRelatedData(leaveListItemList.length);
+      return leaveListItemList;
+    } catch (e) {
+      throw InvalidResponseException();
+    }
   }
 
   void _updatePaginationRelatedData(int noOfItemsReceived) {
     if (noOfItemsReceived > 0) {
       _pageNumber += 1;
     }
-    if (noOfItemsReceived < 1) {
+    if (noOfItemsReceived < _perPage) {
       _didReachListEnd = true;
     }
   }

@@ -10,7 +10,7 @@ class LeaveListPresenter {
   final LeaveListView _view;
   final LeaveListProvider _leaveListProvider;
   final List<LeaveListItem> _leaveItems = [];
-
+  String _errorMessage = "";
   final filters = LeaveListFilters();
 
   LeaveListPresenter(this._view) : _leaveListProvider = LeaveListProvider();
@@ -18,41 +18,61 @@ class LeaveListPresenter {
   LeaveListPresenter.initWith(this._view, this._leaveListProvider);
 
   Future<void> getNext() async {
-    if (_leaveItems.isEmpty) _view.showLoader();
+    _leaveItems.isEmpty ? _view.showLoader() : _view.updateLeaveList();
+    _resetErrors();
 
     try {
-      var leaveList = await _leaveListProvider.getNext(filters);
-      _leaveItems.addAll(leaveList);
-
-      if (_leaveItems.isNotEmpty) {
-        _view.showLeaveList();
-      } else {
-        print("empty!");
-        _view.showErrorMessage("There are no leaves to show.\n\nTap here to reload.");
-      }
+      var newListItems = await _leaveListProvider.getNext(filters);
+      _handleResponse(newListItems);
     } on WPException catch (e) {
-      print(e.internalErrorMessage);
-      _view.showErrorMessage('${e.userReadableMessage}\n\nTap here to reload.');
+      setError('${e.userReadableMessage}\n\nTap here to reload.');
     }
   }
 
+  void _handleResponse(List<LeaveListItem> newListItems) {
+    _leaveItems.addAll(newListItems);
+
+    if (_leaveItems.isNotEmpty) {
+      _view.updateLeaveList();
+    } else {
+      setError("There are no leaves to show.\n\nTap here to reload.");
+    }
+  }
+
+  void setError(String errorMessage) {
+    _errorMessage = errorMessage;
+    if (_leaveItems.isEmpty)
+      _view.showErrorMessage(_errorMessage);
+    else
+      _view.updateLeaveList();
+  }
+
+  void _resetErrors() {
+    _errorMessage = "";
+  }
+
+  //MARK: Functions to get the list details
+
   int getNumberOfListItems() {
     if (_leaveItems.isEmpty) return 0;
-
     return _leaveItems.length + 1;
   }
 
   LeaveListItemType getItemTypeAtIndex(int index) {
     if (index < _leaveItems.length) return LeaveListItemType.LeaveListItem;
 
-    if (_leaveListProvider.isLoading) return LeaveListItemType.Loader;
+    if (_errorMessage.isNotEmpty) return LeaveListItemType.ErrorMessage;
 
-    if (_leaveListProvider.didReachListEnd) return LeaveListItemType.EmptySpace;
+    if (_leaveListProvider.isLoading || _leaveListProvider.didReachListEnd == false) return LeaveListItemType.Loader;
 
-    return LeaveListItemType.ErrorMessage;
+    return LeaveListItemType.EmptySpace;
   }
 
   LeaveListItem getLeaveListItemAtIndex(int index) {
     return _leaveItems[index];
   }
+
+  //MARK: Getters
+
+  String get errorMessage => _errorMessage;
 }

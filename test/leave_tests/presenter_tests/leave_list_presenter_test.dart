@@ -38,6 +38,8 @@ void main() {
     presenter = LeaveListPresenter.initWith(view, leaveListProvider);
   });
 
+  //MARK: Tests for loading the list
+
   test('failure to load leave list', () async {
     //given
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.error(InvalidResponseException()));
@@ -46,6 +48,7 @@ void main() {
     await presenter.getNext();
 
     //then
+    expect(presenter.errorMessage, "${InvalidResponseException().userReadableMessage}\n\nTap here to reload.");
     verifyInOrder([
       () => view.showLoader(),
       () => leaveListProvider.getNext(any()),
@@ -84,7 +87,7 @@ void main() {
     verifyInOrder([
       () => view.showLoader(),
       () => leaveListProvider.getNext(any()),
-      () => view.showLeaveList(),
+      () => view.updateLeaveList(),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -102,10 +105,12 @@ void main() {
     //when
     await presenter.getNext();
 
+    expect(presenter.errorMessage, "${InvalidResponseException().userReadableMessage}\n\nTap here to reload.");
     //then
     verifyInOrder([
+      () => view.updateLeaveList(),
       () => leaveListProvider.getNext(any()),
-      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
+      () => view.updateLeaveList(),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -129,11 +134,32 @@ void main() {
 
     //then
     verifyInOrder([
+          () => view.updateLeaveList(),
       () => leaveListProvider.getNext(any()),
-      () => view.showLeaveList(),
+      () => view.updateLeaveList(),
     ]);
     _verifyNoMoreInteractions();
   });
+
+  test('resets the error message before loading the next list of items', () async {
+    //given
+    when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.error(InvalidResponseException()));
+    await presenter.getNext();
+    when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
+          MockLeaveListItem(),
+          MockLeaveListItem(),
+          MockLeaveListItem(),
+        ]));
+    _clearAllInteractions();
+
+    //when
+    await presenter.getNext();
+
+    //then
+    expect(presenter.errorMessage, "");
+  });
+
+  //MARK: Tests for getting the list details
 
   test('get number of leave list items when there are no items', () async {
     expect(presenter.getNumberOfListItems(), 0);
@@ -148,7 +174,26 @@ void main() {
     expect(presenter.getNumberOfListItems(), 0);
   });
 
-  test('get number of list items when there are some items and the provider has more items and is loading', () async {
+  test('get number of list items when there are some items and the provider is loading', () async {
+    //when
+    when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
+          MockLeaveListItem(),
+          MockLeaveListItem(),
+          MockLeaveListItem(),
+        ]));
+    await presenter.getNext();
+    when(() => leaveListProvider.didReachListEnd).thenReturn(false);
+    when(() => leaveListProvider.isLoading).thenReturn(true);
+
+    //then
+    expect(presenter.getNumberOfListItems(), 4);
+    expect(presenter.getItemTypeAtIndex(0), LeaveListItemType.LeaveListItem);
+    expect(presenter.getItemTypeAtIndex(1), LeaveListItemType.LeaveListItem);
+    expect(presenter.getItemTypeAtIndex(2), LeaveListItemType.LeaveListItem);
+    expect(presenter.getItemTypeAtIndex(3), LeaveListItemType.Loader);
+  });
+
+  test('get number of list items when there are some items and the provider has more items', () async {
     //when
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
           MockLeaveListItem(),
@@ -169,7 +214,7 @@ void main() {
 
   test('get number of list items when there are some items and the provider has more items but fails to load them',
       () async {
-    //when
+    //given
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
           MockLeaveListItem(),
           MockLeaveListItem(),
@@ -178,6 +223,10 @@ void main() {
     await presenter.getNext();
     when(() => leaveListProvider.didReachListEnd).thenReturn(false);
     when(() => leaveListProvider.isLoading).thenReturn(false);
+
+    //when
+    when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.error(InvalidResponseException()));
+    await presenter.getNext();
 
     //then
     expect(presenter.getNumberOfListItems(), 4);
