@@ -20,7 +20,7 @@ class CompanyListCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
                   child: Text(
                     company.name,
                     style: const TextStyle(
@@ -31,7 +31,7 @@ class CompanyListCard extends StatelessWidget {
                   )),
               SizedBox(height: 2),
               Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
@@ -42,7 +42,7 @@ class CompanyListCard extends StatelessWidget {
                             padding:
                                 const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                             alignment: Alignment.centerLeft,
-                            child: tile(company.financialSummary?.profitLoss ?? "NO FINANCES", "Profit & Loss", Colors.green,
+                            child: tile(company.financialSummary?.profitLoss?? "NO FINANCES", "Profit & Loss", Colors.green,
                                 company.financialSummary?.receivableOverdue  ?? "NO FINANCES", "Receivable Overdue", Colors.red),
                           )),
                       Expanded(
@@ -73,7 +73,7 @@ class CompanyListCard extends StatelessWidget {
           size: Size.fromRadius(44), // Image radius
           child:CachedNetworkImage(
             imageUrl: company.logoUrl,
-            placeholder: (context, url) => CircularProgressIndicator(),
+            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
             errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),
@@ -106,13 +106,13 @@ class CompanyListCard extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: color,
               overflow: TextOverflow.ellipsis,
-              fontSize: 17.0,
+              fontSize: 18.0,
             ),
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
           Text(
             label,
-            style: const TextStyle(fontSize: 11.0, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.w500),
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
         ],

@@ -13,10 +13,10 @@ class FinancialSummary extends JSONInitializable implements JSONConvertible {
   FinancialSummary.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
-      profitLoss = "${sift.readNumberFromMap(jsonMap, 'profitLoss')}";
-      _fundAvailability = "${sift.readNumberFromMap(jsonMap, 'cashAvailability')}";
-      _receivableOverdue = "${sift.readNumberFromMap(jsonMap, 'receivableOverdue')}";
-      _payableOverdue = "${sift.readNumberFromMap(jsonMap, 'payableOverdue')}";
+      profitLoss = sift.readStringFromMap(jsonMap, 'profitLoss');
+      _fundAvailability = sift.readStringFromMap(jsonMap, 'cashAvailability');
+      _receivableOverdue = sift.readStringFromMap(jsonMap, 'receivableOverdue');
+      _payableOverdue = sift.readStringFromMap(jsonMap, 'payableOverdue');
     } on SiftException catch (e) {
       print(e.errorMessage);
       throw MappingException('Failed to cast Financial Summary response. Error message - ${e.errorMessage}');
@@ -26,10 +26,10 @@ class FinancialSummary extends JSONInitializable implements JSONConvertible {
   @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> jsonMap = {
-      'profitLoss':  double.parse(profitLoss),
-      'cashAvailability': double.parse(_fundAvailability),
-      'receivableOverdue': double.parse(_receivableOverdue),
-      'payableOverdue': double.parse(_payableOverdue),
+      'profitLoss':  profitLoss,
+      'cashAvailability': _fundAvailability,
+      'receivableOverdue': _receivableOverdue,
+      'payableOverdue': _payableOverdue,
     };
     return jsonMap;
   }

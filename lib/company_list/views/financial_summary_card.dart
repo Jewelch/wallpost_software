@@ -18,7 +18,7 @@ class FinancialSummaryCard extends StatelessWidget {
             Expanded(
                 flex: 5,
                 child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 30, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 40, 0, 0),
                     child: Text(
                       "Summary",
                       style: const TextStyle(
@@ -29,9 +29,15 @@ class FinancialSummaryCard extends StatelessWidget {
                     ))),
             Expanded(
                 flex: 5,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[_financialSummaryFilterDropdown("YTD"), _financialSummaryFilterDropdown("2022")],
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      _financialSummaryFilterDropdown("YTD"),
+                      _financialSummaryFilterDropdown("2022")
+                    ],
+                  ),
                 ))
           ]),
           SizedBox(height: 8),
@@ -63,21 +69,28 @@ class FinancialSummaryCard extends StatelessWidget {
           SizedBox(height: 6),
           Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              child:
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(
                     flex: 3,
                     child: _financialSummaryElement(
-                        "Fund Availability", Colors.green, _financialSummary.cashAvailability.toString())),
+                        "Fund Availability",
+                        Colors.green,
+                        _financialSummary.cashAvailability.toString())),
                 SizedBox.fromSize(size: Size(10, 0)),
                 Expanded(
                     flex: 3,
                     child: _financialSummaryElement(
-                        "Receivables Overdue", Colors.red, _financialSummary.receivableOverdue.toString())),
+                        "Receivables Overdue",
+                        Colors.red,
+                        _financialSummary.receivableOverdue.toString())),
                 SizedBox.fromSize(size: Size(10, 0)),
                 Expanded(
                     flex: 3,
                     child: _financialSummaryElement(
-                        "Payables Overdue", Colors.red, _financialSummary.payableOverdue.toString())),
+                        "Payables Overdue",
+                        Colors.red,
+                        _financialSummary.payableOverdue.toString())),
               ])),
         ],
       ),
@@ -99,6 +112,7 @@ class FinancialSummaryCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
+            SizedBox.fromSize(size: Size(0,10)),
             Text(
               label,
               style: TextStyle(
@@ -113,21 +127,19 @@ class FinancialSummaryCard extends StatelessWidget {
   }
 
   Widget _financialSummaryFilterDropdown(String label) {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-        child: Row(children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-              fontSize: 20.0,
-            ),
-          ),
-          CircularIconButton(
-            iconName: 'assets/icons/down_arrow_icon.svg',
-            iconSize: 12,
-          )
-        ]));
+    return Row(children: [
+      Text(
+        label,
+        style: TextStyle(
+          fontWeight: FontWeight.w400,
+          color: Colors.white,
+          fontSize: 20.0,
+        ),
+      ),
+      CircularIconButton(
+        iconName: 'assets/icons/down_arrow_icon.svg',
+        iconSize: 12,
+      )
+    ]);
   }
 }
