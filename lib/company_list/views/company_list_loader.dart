@@ -8,52 +8,55 @@ class CompanyListLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShimmerEffect(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 150,
+      child: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+            child: Container(
+              height: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: AppColors.primaryContrastColor,
               ),
             ),
-            SizedBox(height: 20),
-            _tile(context),
-            SizedBox(height: 20),
-            _tile(context),
-            SizedBox(height: 20),
-            _tile(context),
-            SizedBox(height: 20),
-            _tile(context),
-            SizedBox(height: 20),
-            _tile(context),
-            SizedBox(height: 20),
-            _tile(context),
-            SizedBox(height: 20),
-            _tile(context),
-          ],
-        ),
+          ),
+          SizedBox(height: 12),
+          _tile(context),
+          SizedBox(height: 12),
+          _tile(context),
+          SizedBox(height: 12),
+          _tile(context),
+          SizedBox(height: 12),
+          _tile(context),
+          SizedBox(height: 12),
+          _tile(context),
+          SizedBox(height: 12),
+          _tile(context),
+          SizedBox(height: 12),
+          _tile(context),
+        ],
       ),
     );
   }
 
   Widget _tile(BuildContext context) {
-    return Row(
-      children: [
-        _emptyContainer(height: 80, width: 80, cornerRadius: 20),
-        SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            children: [
-              _emptyContainer(height: 18, cornerRadius: 6),
-              SizedBox(height: 16),
-              _emptyContainer(height: 18, cornerRadius: 6),
-            ],
-          ),
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          _emptyContainer(height: 80, width: 80, cornerRadius: 20),
+          SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              children: [
+                _emptyContainer(height: 18, cornerRadius: 6),
+                SizedBox(height: 16),
+                _emptyContainer(height: 18, cornerRadius: 6),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 

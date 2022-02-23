@@ -24,7 +24,8 @@ class CompanyListScreen extends StatefulWidget {
   _CompanyListScreenState createState() => _CompanyListScreenState();
 }
 
-class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
+class _CompanyListScreenState extends State<CompanyListScreen>
+    implements CompaniesListView {
   late CompaniesListPresenter presenter;
   var _scrollController = ScrollController();
   var _viewSelectorNotifier = ItemNotifier<int>();
@@ -113,12 +114,18 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
               height: 14,
             ),
             onLeadingButtonPressed: () => presenter.logout(),
-            onTrailingButtonPressed: () => {if (showSearchBar == true) _viewAppBarSelectorNotifier.notify(true)},
+            onTrailingButtonPressed: () => {
+              if (showSearchBar == true)
+                _viewAppBarSelectorNotifier.notify(true)
+            },
             textButton1: TextButton(
               onPressed: () {},
               child: Text(
                 "Group Summary",
-                style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700),
               ),
             ),
           );
@@ -171,7 +178,8 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
               child: ItemNotifiable<List<CompanyGroup>>(
                   notifier: _companyGroupsNotifier,
                   builder: (context, companiesGroup) {
-                    if ((companiesGroup != null) && (companiesGroup.isNotEmpty)) {
+                    if ((companiesGroup != null) &&
+                        (companiesGroup.isNotEmpty)) {
                       return Container(
                           height: 40,
                           child: ItemNotifiable<int>(
@@ -179,7 +187,8 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                               builder: (context, tappedIndex) {
                                 return ListView.builder(
                                   itemBuilder: (context, index) {
-                                    return _groupElement(index, tappedIndex, companiesGroup);
+                                    return _groupElement(
+                                        index, tappedIndex, companiesGroup);
                                   },
                                   shrinkWrap: true,
                                   scrollDirection: Axis.horizontal,
@@ -210,7 +219,8 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     );
   }
 
-  Widget _groupElement(int index, int? tappedIndex, List<CompanyGroup> companiesGroup) {
+  Widget _groupElement(
+      int index, int? tappedIndex, List<CompanyGroup> companiesGroup) {
     return Container(
       margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
       child: ItemNotifiable<String>(
@@ -222,7 +232,9 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
             labelStyle: TextStyle(color: Colors.blue[800]),
             backgroundColor: AppColors.backGroundColor,
             side: BorderSide(
-                color: tappedIndex == index ? Colors.blue.shade800 : Colors.transparent,
+                color: tappedIndex == index
+                    ? Colors.blue.shade800
+                    : Colors.transparent,
                 width: 1,
                 style: BorderStyle.solid),
             onPressed: () {
@@ -258,16 +270,21 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         return Container(
           child: RefreshIndicator(
             onRefresh: () => presenter.refresh(),
-            child: ListView.separated(
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              controller: _scrollController,
-              itemCount: companyList!.length,
-              itemBuilder: (context, index) {
-                return _getCompanyCard(index, companyList);
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Divider();
-              },
+            child: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: ListView.separated(
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                controller: _scrollController,
+                itemCount: companyList!.length,
+                itemBuilder: (context, index) {
+                  return _getCompanyCard(index, companyList);
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Divider();
+                },
+              ),
             ),
           ),
         );
@@ -279,7 +296,6 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     return CompanyListCard(
         company: companyList[index],
         onPressed: () {
-          print("asdfasdf");
           presenter.selectCompanyAtIndex(index);
         });
   }
@@ -361,7 +377,9 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   @override
-  void hideFinancialSummary() {}
+  void hideFinancialSummary() {
+    _financialSummaryNotifier.notify(null);
+  }
 
   @override
   void showCompanyList(List<CompanyListItem> companies) {
@@ -387,7 +405,8 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
 
   @override
   void goToCompanyDetailScreen() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(
+        DashboardScreen(), context);
   }
 
   @override
@@ -407,5 +426,15 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         LogoutHandler().logout(context);
       },
     );
+  }
+
+  @override
+  void showAppBar(bool visibility) {
+    _viewAppBarSelectorNotifier.notify(visibility);
+  }
+
+  @override
+  void selectGroupItem(int? index) {
+    _groupItemTapNotifier.notify(index);
   }
 }

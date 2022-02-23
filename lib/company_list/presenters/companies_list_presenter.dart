@@ -13,6 +13,7 @@ class CompaniesListPresenter {
   final CompanyDetailsProvider _companyDetailsProvider;
   late CompanyList _companyList;
   List<CompanyListItem> _companies = [];
+  List<CompanyListItem> _groupCompanies = [];
   List<CompanyListItem> _filterList = [];
   var _searchText = "";
 
@@ -56,6 +57,7 @@ class CompaniesListPresenter {
   void _handleResponse(CompanyList companyList) {
     _companies = companyList.companies;
 
+
     if (_companies.isNotEmpty) {
       _setupFilterViews(companyList);
       _showFilteredCompanies();
@@ -89,12 +91,22 @@ class CompaniesListPresenter {
 
   void _showFilteredCompanies() {
     _filterList.clear();
-    for (int i = 0; i < _companies.length; i++) {
-      var item = _companies[i];
-      if (item.name.toLowerCase().contains(_searchText.toLowerCase())) {
-        _filterList.add(item);
+    if(_groupCompanies.isNotEmpty){
+      for (int i = 0; i < _groupCompanies.length; i++) {
+        var item = _groupCompanies[i];
+        if (item.name.toLowerCase().contains(_searchText.toLowerCase())) {
+          _filterList.add(item);
+        }
+      }
+    } else {
+      for (int i = 0; i < _companies.length; i++) {
+        var item = _companies[i];
+        if (item.name.toLowerCase().contains(_searchText.toLowerCase())) {
+          _filterList.add(item);
+        }
       }
     }
+
 
     if (_filterList.isEmpty) {
       _view.showNoSearchResultsMessage("There are no companies for the  given search criteria.");
@@ -106,7 +118,12 @@ class CompaniesListPresenter {
   //MARK: Function to refresh the company list
 
   refresh() {
+    _view.hideFinancialSummary();
+    _view.showAppBar(false);
+    _view.selectGroupItem(null);
     _companyListProvider.reset();
+    _searchText = "";
+    _groupCompanies.clear();
     loadCompanies();
   }
 
@@ -119,13 +136,15 @@ class CompaniesListPresenter {
 
   resetSearch() {
     performSearch("");
+    _groupCompanies.clear();
     _handleResponse(_companyList);
   }
 
   //MARK: Function to select group filter
 
   void showGroup(int index) {
-    List<CompanyListItem> _groupCompanies = [];
+
+    _groupCompanies.clear();
 
     if (_companyList.groups[index].financialSummary != null) {
       _view.showFinancialSummary(_companyList.groups[index].financialSummary!);
@@ -139,7 +158,7 @@ class CompaniesListPresenter {
     });
 
     if (_groupCompanies.isNotEmpty) {
-      _view.showCompanyList(_groupCompanies);
+      _showFilteredCompanies();
     }
   }
 

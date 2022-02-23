@@ -26,7 +26,8 @@ class MockFinancialSummary extends Mock implements FinancialSummary {}
 
 class MockCompanyGroup extends Mock implements CompanyGroup {}
 
-class MockCompanyDetailsProvider extends Mock implements CompanyDetailsProvider {}
+class MockCompanyDetailsProvider extends Mock
+    implements CompanyDetailsProvider {}
 
 void main() {
   var view = MockCompaniesListView();
@@ -50,6 +51,7 @@ void main() {
     when(() => company1.id).thenReturn("1");
     when(() => company2.name).thenReturn("test2");
     when(() => company2.id).thenReturn("2");
+    when(() => companyGroup.companyIds).thenReturn(["1"]);
     when(() => mockCompany.id).thenReturn("id1");
     when(() => financialSummary.payableOverdue).thenReturn("po");
     when(() => financialSummary.receivableOverdue).thenReturn("ro");
@@ -80,6 +82,7 @@ void main() {
       mockCompanyDetailsProvider,
     );
   });
+
 
   test('load user details', () async {
     var mockUser = MockUser();
@@ -115,15 +118,19 @@ void main() {
       () => view.hideCompanyGroups(),
       () => view.hideFinancialSummary(),
       () => view.hideCompanyList(),
-      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
+      () => view.showErrorMessage(
+          "${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('retrieving companies successfully with no companies, no financial data, and no groups', () async {
+  test(
+      'retrieving companies successfully with no companies, no financial data, and no groups',
+      () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
     when(() => companyList.companies).thenReturn([]);
     when(() => companyList.financialSummary).thenReturn(null);
     when(() => companyList.groups).thenReturn([]);
@@ -141,15 +148,19 @@ void main() {
       () => view.hideCompanyGroups(),
       () => view.hideFinancialSummary(),
       () => view.hideCompanyList(),
-      () => view.showErrorMessage("There are no companies.\n\nTap here to reload."),
+      () => view
+          .showErrorMessage("There are no companies.\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('retrieving companies successfully with no financial summary and no company groups ', () async {
+  test(
+      'retrieving companies successfully with no financial summary and no company groups ',
+      () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
     when(() => companyList.companies).thenReturn(_companyList);
     when(() => companyList.financialSummary).thenReturn(null);
     when(() => companyList.groups).thenReturn([]);
@@ -174,7 +185,8 @@ void main() {
   test('retrieving companies successfully with no financial summary', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
     when(() => companyList.companies).thenReturn(_companyList);
     when(() => companyList.financialSummary).thenReturn(null);
     when(() => companyList.groups).thenReturn(_companyGroupList);
@@ -196,10 +208,13 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('retrieving companies successfully with financial summary and company groups', () async {
+  test(
+      'retrieving companies successfully with financial summary and company groups',
+      () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
     when(() => companyList.companies).thenReturn(_companyList);
     when(() => companyList.financialSummary).thenReturn(financialSummary);
     when(() => companyList.groups).thenReturn(_companyGroupList);
@@ -225,7 +240,8 @@ void main() {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
     when(() => companyList.companies).thenReturn(_companyList);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
     when(() => companyList.groups).thenReturn(_companyGroupList);
     await presenter.loadCompanies();
     _resetAllMockInteractions();
@@ -244,7 +260,8 @@ void main() {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
     when(() => companyList.companies).thenReturn([]);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
     when(() => companyList.groups).thenReturn(_companyGroupList);
     await presenter.loadCompanies();
     _resetAllMockInteractions();
@@ -254,7 +271,8 @@ void main() {
 
     //then
     verifyInOrder([
-      () => view.showNoSearchResultsMessage("There are no companies for the  given search criteria."),
+      () => view.showNoSearchResultsMessage(
+          "There are no companies for the  given search criteria."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -263,18 +281,20 @@ void main() {
     //given
     //step 1 - load companies
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
     //step 2 - perform search
     presenter.performSearch("c1");
 
     //when - hide search bar by causing an error
-    when(() => mockCompaniesListProvider.get())
-        .thenAnswer((realInvocation) => Future.error(InvalidResponseException()));
+    when(() => mockCompaniesListProvider.get()).thenAnswer(
+        (realInvocation) => Future.error(InvalidResponseException()));
     await presenter.loadCompanies();
 
     //then
     expect(presenter.getSearchText(), "");
   });
+
 
   test('refreshing the list of companies', () async {
     //given
@@ -287,7 +307,8 @@ void main() {
     await presenter.loadCompanies();
     _resetAllMockInteractions();
 
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
     when(() => companyList.companies).thenReturn(_companyList);
     when(() => companyList.financialSummary).thenReturn(financialSummary);
     when(() => companyList.groups).thenReturn(_companyGroupList);
@@ -297,6 +318,9 @@ void main() {
 
     //then
     verifyInOrder([
+      () => view.hideFinancialSummary(),
+      () => view.showAppBar(false),
+      () => view.selectGroupItem(null),
       () => mockCompaniesListProvider.reset(),
       () => mockCompaniesListProvider.isLoading,
       () => view.showLoader(),
@@ -313,7 +337,8 @@ void main() {
   test('select company from company list failed', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
     when(() => companyList.companies).thenReturn(_companyList);
     when(() => companyList.groups).thenReturn(_companyGroupList);
     when(() => mockCompanyDetailsProvider.getCompanyDetails("1"))
@@ -330,8 +355,8 @@ void main() {
       () => view.showLoader(),
       () => mockCompanyDetailsProvider.getCompanyDetails("1"),
       () => view.hideLoader(),
-      () => view.onCompanyDetailsLoadingFailed(
-          'Failed To load company details', InvalidResponseException().userReadableMessage)
+      () => view.onCompanyDetailsLoadingFailed('Failed To load company details',
+          InvalidResponseException().userReadableMessage)
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -339,10 +364,12 @@ void main() {
   test('select company from company list successfully', () async {
     //given
     when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-    when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
     when(() => companyList.companies).thenReturn(_companyList);
     when(() => companyList.groups).thenReturn(_companyGroupList);
-    when(() => mockCompanyDetailsProvider.getCompanyDetails("1")).thenAnswer((invocation) => Future.value(null));
+    when(() => mockCompanyDetailsProvider.getCompanyDetails("1"))
+        .thenAnswer((invocation) => Future.value(null));
 
     await presenter.loadCompanies();
     _resetAllMockInteractions();
@@ -359,6 +386,31 @@ void main() {
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
+
+
+  test('select company group from companiesGroup list with no search', () async {
+    //given
+    //step 1 - load companies
+    when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+    when(() => companyList.companies).thenReturn(_companyList);
+    when(() => mockCompaniesListProvider.get())
+        .thenAnswer((_) => Future.value(companyList));
+    when(() => companyList.groups).thenReturn(_companyGroupList);
+
+
+    await presenter.loadCompanies();
+    _resetAllMockInteractions();
+
+    //step 2 - select 1st group
+    presenter.showGroup(0);
+
+    verifyInOrder([
+          () => view.showFinancialSummary(_companyGroupList[0].financialSummary!),
+          () => view.showCompanyList([_companyList.first]),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
 
   test('test logout', () async {
     presenter.logout();
