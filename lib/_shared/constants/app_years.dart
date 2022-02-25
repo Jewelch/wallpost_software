@@ -10,14 +10,13 @@ class AppYears {
     return years;
   }
 
-  static List<String> shortenedMonthNames() {
-    return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  }
+  static List<String> shortenedMonthNames(int year) {
+    List<String> months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  static List<String> shortenedMonthNamesForYear(int year) {
-    //TODO Ameena
-    //if year == current year = return months till the current month
-    //else return shortenedMonthNames();
-    return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    if(year == DateTime.now().year) {
+      return months.sublist(0, DateTime.now().month);
+    }
+    else
+      return months;
   }
 }

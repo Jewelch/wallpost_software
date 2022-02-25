@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_adjustment_form.dart';
@@ -11,9 +8,10 @@ import 'package:wallpost/attendance_adjustment/services/adjusted_status_provider
 import 'package:wallpost/attendance_adjustment/services/attendance_adjustment_submitter.dart';
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_adjustment_presenter.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_adjustment_view.dart';
-import 'package:wallpost/company_core/services/selected_employee_provider.dart';
 
 import '../../_mocks/mock_employee.dart';
+import '../../_mocks/mock_employee_provider.dart';
+import 'attendance_list_presenter_test.dart';
 
 class MockAttendanceAdjustmentView extends Mock implements AttendanceAdjustmentView {}
 
@@ -25,42 +23,26 @@ class MockAttendanceAdjustmentForm extends Mock implements AttendanceAdjustmentF
 
 class MockAdjustedStatusForm extends Mock implements AdjustedStatusForm {}
 
-class MockSelectedEmployeeProvider extends Mock implements SelectedEmployeeProvider {}
-
 void main() {
   var view = MockAttendanceAdjustmentView();
+  var attendanceListItem = MockAttendanceListItem();
   var adjustedStatusProvider = MockAdjustedStatusProvider();
   var attendanceAdjustmentSubmitter = MockAttendanceAdjustmentSubmitter();
-  var selectedEmployeeProvider = MockSelectedEmployeeProvider();
-  var mockEmployee = MockEmployee();
-
+  var selectedEmployeeProvider = MockEmployeeProvider();
   late AttendanceAdjustmentPresenter presenter;
-  late AdjustedStatusForm adjustedStatusForm;
-  late AttendanceAdjustmentForm attendanceAdjustmentForm;
 
-  DateTime date = DateTime(22, 01, 2021);
-  DateTime adjustedPunchInTime = DateFormat('hh:mm').parse("09:00");
-  DateTime adjustedPunchOutTime = DateFormat('hh:mm').parse("06:00");
-  String reason = 'some work';
-  var adjustedStatus = AttendanceStatus.Present;
+  void _resetAllMocksAndSetupEmployeeProvider() {
+    reset(view);
+    reset(selectedEmployeeProvider);
+    reset(adjustedStatusProvider);
+    reset(attendanceAdjustmentSubmitter);
 
-  adjustedStatusForm = AdjustedStatusForm(
-    date,
-    adjustedPunchInTime,
-    adjustedPunchOutTime,
-  );
-
-  attendanceAdjustmentForm = AttendanceAdjustmentForm(
-    mockEmployee,
-    date,
-    "some work",
-    adjustedPunchInTime,
-    adjustedPunchOutTime,
-    adjustedStatus,
-  );
+    when(() => selectedEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(MockEmployee());
+  }
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
+    verifyNoMoreInteractions(selectedEmployeeProvider);
     verifyNoMoreInteractions(adjustedStatusProvider);
     verifyNoMoreInteractions(attendanceAdjustmentSubmitter);
   }
@@ -71,44 +53,30 @@ void main() {
   });
 
   setUp(() {
-    clearInteractions(view);
-    clearInteractions(adjustedStatusProvider);
-    clearInteractions(attendanceAdjustmentSubmitter);
+    _resetAllMocksAndSetupEmployeeProvider();
+    when(() => attendanceListItem.date).thenReturn(DateTime.now());
+
+    presenter = AttendanceAdjustmentPresenter.initWith(
+      view,
+      attendanceListItem,
+      adjustedStatusProvider,
+      attendanceAdjustmentSubmitter,
+      selectedEmployeeProvider,
+    );
   });
+
+  //MARK: Tests for loading adjusted status
 
   test('getting adjusted status when adjustedStatusProvider loading does nothing ', () async {
     //given
     when(() => adjustedStatusProvider.isLoading).thenReturn(true);
-    presenter = AttendanceAdjustmentPresenter.initWith(
-        view, attendanceAdjustmentSubmitter, adjustedStatusProvider, selectedEmployeeProvider);
 
     //when
-    await presenter.loadAdjustedStatus(date);
+    await presenter.loadAdjustedStatus();
 
     //then
     verifyInOrder([
       () => adjustedStatusProvider.isLoading,
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-  test('get adjusted status successful', () async {
-    //given
-    when(() => adjustedStatusProvider.isLoading).thenReturn(false);
-    when(() => adjustedStatusProvider.getAdjustedStatus(adjustedStatusForm))
-        .thenAnswer((_) => Future.value(adjustedStatus));
-    presenter = AttendanceAdjustmentPresenter.initWith(
-        view, attendanceAdjustmentSubmitter, adjustedStatusProvider, selectedEmployeeProvider);
-
-    //when
-    await presenter.loadAdjustedStatus(date);
-
-    //then
-    verifyInOrder([
-      () => adjustedStatusProvider.isLoading,
-      () => view.showLoader(),
-      () => adjustedStatusProvider.getAdjustedStatus(adjustedStatusForm),
-      () => view.hideLoader(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -116,19 +84,17 @@ void main() {
   test('failed to get adjusted status', () async {
     //given
     when(() => adjustedStatusProvider.isLoading).thenReturn(false);
-    when(() => adjustedStatusProvider.getAdjustedStatus(adjustedStatusForm))
+    when(() => adjustedStatusProvider.getAdjustedStatus(any()))
         .thenAnswer((_) => Future.error(InvalidResponseException()));
-    presenter = AttendanceAdjustmentPresenter.initWith(
-        view, attendanceAdjustmentSubmitter, adjustedStatusProvider, selectedEmployeeProvider);
 
     //when
-    await presenter.loadAdjustedStatus(date);
+    await presenter.loadAdjustedStatus();
 
     //then
     verifyInOrder([
       () => adjustedStatusProvider.isLoading,
       () => view.showLoader(),
-      () => adjustedStatusProvider.getAdjustedStatus(adjustedStatusForm),
+      () => adjustedStatusProvider.getAdjustedStatus(any()),
       () => view.hideLoader(),
       () => view.onGetAdjustedStatusFailed(
           'Getting adjusted status failed', InvalidResponseException().userReadableMessage),
@@ -136,85 +102,99 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('submitting adjusted attendance when attendanceAdjustmentSubmitter loading does nothing ', () async {
+  test('get adjusted status successful', () async {
     //given
-    when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(true);
-    presenter = AttendanceAdjustmentPresenter.initWith(
-        view, attendanceAdjustmentSubmitter, adjustedStatusProvider, selectedEmployeeProvider);
+    when(() => adjustedStatusProvider.isLoading).thenReturn(false);
+    when(() => adjustedStatusProvider.getAdjustedStatus(any()))
+        .thenAnswer((_) => Future.value(AttendanceStatus.Present));
 
     //when
-    presenter.adjustedStatus = AttendanceStatus.Present;
-    await presenter.submitAdjustment(date, reason);
+    await presenter.loadAdjustedStatus();
 
     //then
     verifyInOrder([
-      () => view.clearError(),
-      () => attendanceAdjustmentSubmitter.isLoading,
+      () => adjustedStatusProvider.isLoading,
+      () => view.showLoader(),
+      () => adjustedStatusProvider.getAdjustedStatus(any()),
+      () => view.hideLoader(),
     ]);
-
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
+  //MARK: Tests for submitting adjusted attendance
+
+  Future<void> _loadAdjustedStatusAndResetAllMocks() async {
+    when(() => adjustedStatusProvider.isLoading).thenReturn(false);
+    when(() => adjustedStatusProvider.getAdjustedStatus(any()))
+        .thenAnswer((_) => Future.value(AttendanceStatus.Present));
+    await presenter.loadAdjustedStatus();
+    _resetAllMocksAndSetupEmployeeProvider();
+  }
+
   test('notifies view if reason is empty', () async {
     //given
+    await _loadAdjustedStatusAndResetAllMocks();
     when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(false);
-    presenter = AttendanceAdjustmentPresenter.initWith(
-        view, attendanceAdjustmentSubmitter, adjustedStatusProvider, selectedEmployeeProvider);
 
     //when
-    await presenter.submitAdjustment(date, '');
+    await presenter.submitAdjustment('');
 
     //then
     verifyInOrder([
       () => view.clearError(),
       () => view.notifyInvalidReason('Invalid reason'),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('notifies view if attendance not adjusted', () async {
+    //given
+    when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(false);
+
+    //when
+    await presenter.submitAdjustment('some work');
+
+    //then
+    verifyInOrder([
+      () => view.clearError(),
       () => view.notifyInvalidAdjustedStatus("Failed", "Attendance not adjusted"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('attendance adjustment submission successful', () async {
+  test('submitting adjusted attendance when the adjustment submitter is loading does nothing ', () async {
     //given
-    when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(false);
-    when(() => attendanceAdjustmentSubmitter.submitAdjustment(attendanceAdjustmentForm))
-        .thenAnswer((_) => Future.value(null));
-    presenter = AttendanceAdjustmentPresenter.initWith(
-        view, attendanceAdjustmentSubmitter, adjustedStatusProvider, selectedEmployeeProvider);
+    await _loadAdjustedStatusAndResetAllMocks();
+    when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(true);
 
     //when
-    presenter.adjustedStatus = AttendanceStatus.Present;
-    await presenter.submitAdjustment(date, reason);
+    await presenter.submitAdjustment('some work');
 
     //then
     verifyInOrder([
       () => view.clearError(),
       () => attendanceAdjustmentSubmitter.isLoading,
-      () => view.showLoader(),
-      () => attendanceAdjustmentSubmitter.submitAdjustment(attendanceAdjustmentForm),
-      () => view.hideLoader(),
-      () => view.onAdjustAttendanceSuccess('Done', 'Adjustment submitted successfully'),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
   test('failed to submit adjusted attendance', () async {
     //given
+    await _loadAdjustedStatusAndResetAllMocks();
     when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(false);
-    when(() => attendanceAdjustmentSubmitter.submitAdjustment(attendanceAdjustmentForm))
+    when(() => attendanceAdjustmentSubmitter.submitAdjustment(any()))
         .thenAnswer((_) => Future.error(InvalidResponseException()));
-    presenter = AttendanceAdjustmentPresenter.initWith(
-        view, attendanceAdjustmentSubmitter, adjustedStatusProvider, selectedEmployeeProvider);
 
     //when
-    presenter.adjustedStatus = AttendanceStatus.Present;
-    await presenter.submitAdjustment(date, reason);
+    await presenter.submitAdjustment('some work');
 
     //then
     verifyInOrder([
       () => view.clearError(),
       () => attendanceAdjustmentSubmitter.isLoading,
       () => view.showLoader(),
-      () => attendanceAdjustmentSubmitter.submitAdjustment(attendanceAdjustmentForm),
+      () => selectedEmployeeProvider.getSelectedEmployeeForCurrentUser(),
+      () => attendanceAdjustmentSubmitter.submitAdjustment(any()),
       () => view.hideLoader(),
       () =>
           view.onAdjustAttendanceFailed("Attendance adjustment failed", InvalidResponseException().userReadableMessage),
@@ -222,9 +202,75 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
+  test('attendance adjustment submission successful', () async {
+    //given
+    await _loadAdjustedStatusAndResetAllMocks();
+    when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(false);
+    when(() => attendanceAdjustmentSubmitter.submitAdjustment(any())).thenAnswer((_) => Future.value(null));
+
+    //when
+    await presenter.submitAdjustment('some work');
+
+    //then
+    verifyInOrder([
+      () => view.clearError(),
+      () => attendanceAdjustmentSubmitter.isLoading,
+      () => view.showLoader(),
+      () => selectedEmployeeProvider.getSelectedEmployeeForCurrentUser(),
+      () => attendanceAdjustmentSubmitter.submitAdjustment(any()),
+      () => view.hideLoader(),
+      () => view.onAdjustAttendanceSuccess('success', 'Adjustment submitted successfully'),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+/*
+  // MARK: Test for change ui elements when attendance adjusted
+
+  test('change status when attendance adjusted', () {
+    presenter.status = 'Absent';
+    presenter.adjustedStatus = AttendanceStatus.EarlyLeave;
+    presenter.updateStatus();
+
+    expect(presenter.status, 'Early Leave');
+  });
+
+  test('change color and text after punch in adjusted ', () {
+    presenter.adjustedStatus = adjustedStatus;
+    presenter.adjustedTime = TimeOfDay(hour: 9, minute: 00);
+    presenter.changePropertiesOfPunchInContainer();
+
+    expect(presenter.punchInAdjusted, ' - Adjusted');
+    expect(presenter.adjustedPunchInColor, AppColors.lightBlueColor);
+  });
+
+  test('change color and text after punch out adjusted ', () {
+    presenter.adjustedStatus = AttendanceStatus.HalfDay;
+    presenter.adjustedTime = TimeOfDay(hour: 9, minute: 00);
+    presenter.changePropertiesOfPunchOutContainer();
+
+    expect(presenter.status, 'Half Day');
+    expect(presenter.statusColor, AppColors.lateColor);
+    expect(presenter.punchOutAdjusted, ' - Adjusted');
+    expect(presenter.adjustedPunchOutColor, AppColors.lightBlueColor);
+  });
+
+  test('set default color if attendance adjustment failed', () {
+    presenter.adjustedStatus = null;
+    presenter.adjustedTime = TimeOfDay(hour: 00, minute: 00);
+
+    presenter.changePropertiesOfPunchInContainer();
+    expect(presenter.punchInAdjusted, '');
+    expect(presenter.adjustedPunchInColor, Colors.white);
+
+    presenter.changePropertiesOfPunchOutContainer();
+    expect(presenter.punchOutAdjusted, '');
+    expect(presenter.adjustedPunchOutColor, Colors.white);
+  });
+
+  // MARK: Test for getters
+
   test('getting time period', () {
-    presenter = AttendanceAdjustmentPresenter.initWith(
-        view, attendanceAdjustmentSubmitter, adjustedStatusProvider, selectedEmployeeProvider);
     TimeOfDay time1 = TimeOfDay(hour: 9, minute: 30);
     TimeOfDay time2 = TimeOfDay(hour: 15, minute: 30);
 
@@ -232,17 +278,20 @@ void main() {
     expect(presenter.getPeriod(time2), 'PM');
   });
 
-  test('change color of time picker after adjustment', () {
-    presenter = AttendanceAdjustmentPresenter.initWith(
-        view, attendanceAdjustmentSubmitter, adjustedStatusProvider, selectedEmployeeProvider);
-    presenter.punchInTime = TimeOfDay(hour: 9, minute: 30);
-    presenter.adjustedTime = TimeOfDay(hour: 10, minute: 30);
-    presenter.punchOutTime = TimeOfDay(hour: 11, minute: 30);
+  test('getting adjusted status', () {
+    presenter.adjustedStatus = null;
+    expect(presenter.getAdjustedStatus(), null);
 
-    presenter.changePropertiesOfPunchInContainer();
-    presenter.changePropertiesOfPunchOutContainer();
-
-    expect(presenter.adjustedPunchInColor, AppColors.lightBlueColor);
-    expect(presenter.adjustedPunchOutColor, AppColors.lightBlueColor);
+    presenter.adjustedStatus = AttendanceStatus.Present;
+    expect(presenter.getAdjustedStatus(), 'Present');
   });
+
+  test('get status color', () {
+    expect(presenter.getStatusColor(AttendanceStatus.Present), AppColors.presentColor);
+    expect(presenter.getStatusColor(AttendanceStatus.Late), AppColors.lateColor);
+    expect(presenter.getStatusColor(AttendanceStatus.Absent), AppColors.absentColor);
+  });
+
+
+ */
 }

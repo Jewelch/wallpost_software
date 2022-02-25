@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
-import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
@@ -11,13 +10,15 @@ import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_list
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_list_presenter.dart';
 import 'package:wallpost/attendance_adjustment/ui/views/attendance_adjustment_screen.dart';
 import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_card.dart';
+import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_loader.dart';
 
 class AttendanceListScreen extends StatefulWidget {
   @override
   State<AttendanceListScreen> createState() => _AttendanceListScreenState();
 }
 
-class _AttendanceListScreenState extends State<AttendanceListScreen> implements AttendanceListView {
+class _AttendanceListScreenState extends State<AttendanceListScreen>
+    implements AttendanceListView {
   late AttendanceListPresenter presenter;
 
   var _attendanceListNotifier = ItemNotifier<List<AttendanceListItem>?>();
@@ -26,13 +27,13 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
 
   static const ATTENDANCE_LIST_VIEW = 1;
   static const ERROR_VIEW = 2;
-  late Loader loader;
+  static const LOADER_VIEW = 3;
 
   @override
   void initState() {
-    loader = Loader(context);
     presenter = AttendanceListPresenter(this);
-    WidgetsBinding.instance?.addPostFrameCallback((_) => presenter.loadAttendanceList());
+    WidgetsBinding.instance
+        ?.addPostFrameCallback((_) => presenter.loadAttendanceList());
     super.initState();
   }
 
@@ -59,7 +60,9 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
           ItemNotifiable<int>(
             notifier: _viewTypeNotifier,
             builder: (context, value) {
-              if (value == ATTENDANCE_LIST_VIEW) {
+              if (value == LOADER_VIEW) {
+                return Expanded(child: AttendanceListLoader());
+              } else if (value == ATTENDANCE_LIST_VIEW) {
                 return Expanded(child: _attendanceListView());
               } else
                 return Expanded(child: _errorAndRetryView());
@@ -76,7 +79,8 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Month/Year', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+          Text('Month/Year',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
           Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -90,8 +94,8 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
                 }).toList(),
                 value: presenter.getSelectedMonth(),
                 icon: Icon(Icons.arrow_drop_down_sharp),
-                onChanged: (month) => setState(() => presenter.selectMonth(month as String)),
-
+                onChanged: (month) =>
+                    setState(() => presenter.selectMonth(month as String)),
               ),
               SizedBox(width: 15),
               DropdownButton(
@@ -103,8 +107,13 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
                 }).toList(),
                 value: presenter.getSelectedYear(),
                 icon: Icon(Icons.arrow_drop_down_sharp),
-                onChanged: (year) => setState(() => presenter.selectYear(year as int)),
-              ),
+                onChanged: (year) {
+                  setState(() {
+                    presenter.selectYear(year as int);
+                    if(!presenter.getMonthsList().contains(presenter.getSelectedMonth()))
+                      presenter.selectMonth(presenter.getMonthsList().last);
+                  });
+                }),
             ],
           ),
         ],
@@ -118,7 +127,8 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
       builder: (context, value) => RefreshIndicator(
         onRefresh: () => presenter.loadAttendanceList(),
         child: ListView.builder(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
           itemCount: value!.length,
           itemBuilder: (context, index) {
             return _attendanceCardView(index, value);
@@ -128,11 +138,12 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
     );
   }
 
-  Widget _attendanceCardView(int index, List<AttendanceListItem> attendanceList) {
+  Widget _attendanceCardView(
+      int index, List<AttendanceListItem> attendanceList) {
     return AttendanceListCard(
       presenter: presenter,
       attendanceListItem: attendanceList[index],
-      onPressed: () => goToAdjustmentScreen(index,attendanceList[index]),
+      onPressed: () => goToAdjustmentScreen(index, attendanceList[index]),
     );
   }
 
@@ -164,12 +175,11 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
 
   @override
   void showLoader() {
-    loader.showLoadingIndicator("Loading");
+    _viewTypeNotifier.notify(LOADER_VIEW);
   }
 
   @override
   void hideLoader() {
-    loader.hideOpenDialog();
   }
 
   @override
@@ -191,8 +201,10 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
   }
 
   @override
-  void goToAdjustmentScreen(int index,AttendanceListItem attendanceList) {
+  void goToAdjustmentScreen(int index, AttendanceListItem attendanceList) {
     ScreenPresenter.present(
-        AttendanceAdjustmentScreen(attendanceListPresenter: presenter, attendanceListItem: attendanceList,), context);
+            AttendanceAdjustmentScreen(
+              attendanceListItem: attendanceList,
+            ), context);
   }
 }

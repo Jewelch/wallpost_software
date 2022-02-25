@@ -7,8 +7,11 @@ class AttendanceAdjustmentForm implements JSONConvertible {
   final Employee employee;
   final DateTime date;
   final String reason;
+  //TODO: change to time of day
   final DateTime? adjustedPunchInTime;
   final DateTime? adjustedPunchOutTime;
+
+
   final AttendanceStatus adjustedStatus;
 
   AttendanceAdjustmentForm(
