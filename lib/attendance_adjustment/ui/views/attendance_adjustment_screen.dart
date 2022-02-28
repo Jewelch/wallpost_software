@@ -14,16 +14,13 @@ import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_screen.d
 class AttendanceAdjustmentScreen extends StatefulWidget {
   final AttendanceListItem attendanceListItem;
 
-  const AttendanceAdjustmentScreen({Key? key, required this.attendanceListItem})
-      : super(key: key);
+  const AttendanceAdjustmentScreen({Key? key, required this.attendanceListItem}) : super(key: key);
 
   @override
-  _AttendanceAdjustmentScreenState createState() =>
-      _AttendanceAdjustmentScreenState();
+  _AttendanceAdjustmentScreenState createState() => _AttendanceAdjustmentScreenState();
 }
 
-class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
-    implements AttendanceAdjustmentView {
+class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen> implements AttendanceAdjustmentView {
   var _reasonErrorNotifier = ItemNotifier<String>();
   var _reasonTextController = TextEditingController();
   late AttendanceAdjustmentPresenter presenter;
@@ -32,7 +29,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   @override
   void initState() {
     loader = Loader(context);
-    presenter = AttendanceAdjustmentPresenter(this,widget.attendanceListItem);
+    presenter = AttendanceAdjustmentPresenter(this, widget.attendanceListItem);
     super.initState();
   }
 
@@ -122,9 +119,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
         children: [
           Text(
             'Punched In',
-            style: TextStyle(
-                color: presenter
-                    .getLabelColorForItem(widget.attendanceListItem)),
+            style: TextStyle(color: presenter.getLabelColorForItem(widget.attendanceListItem)),
           ),
           Text(
             widget.attendanceListItem.originalPunchInTime,
@@ -167,14 +162,14 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    '${presenter.punchInTime.hour}',
+                    '${presenter.punchInTime.hour.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
                     ':',
                   ),
                   Text(
-                    '${presenter.punchInTime.minute}',
+                    '${presenter.punchInTime.minute.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
@@ -199,9 +194,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
         children: [
           Text(
             'Punched Out',
-            style: TextStyle(
-                color: presenter
-                    .getLabelColorForItem(widget.attendanceListItem)),
+            style: TextStyle(color: presenter.getLabelColorForItem(widget.attendanceListItem)),
           ),
           Text(
             widget.attendanceListItem.originalPunchOutTime,
@@ -244,14 +237,14 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    '${presenter.punchOutTime.hour}',
+                    '${presenter.punchOutTime.hour.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
                     ':',
                   ),
                   Text(
-                    '${presenter.punchOutTime.minute}',
+                    '${presenter.punchOutTime.minute.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
@@ -272,14 +265,11 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-            padding: EdgeInsets.only(bottom: 12.0, top: 20),
-            child: Text('Reason of adjustment')),
+        Container(padding: EdgeInsets.only(bottom: 12.0, top: 20), child: Text('Reason of adjustment')),
         ItemNotifiable<String>(
           notifier: _reasonErrorNotifier,
           builder: (context, value) => Container(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: TextField(
               controller: _reasonTextController,
               minLines: 4,
@@ -287,8 +277,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
               maxLines: 8,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: AppColors.greyColor, width: 1.0),
+                  borderSide: BorderSide(color: AppColors.greyColor, width: 1.0),
                 ),
                 hintText: 'write your reason here',
                 errorText: value,
@@ -301,28 +290,17 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   }
 
   void _pickPunchInTime() async {
-    presenter.adjustedTime = (await showTimePicker(
-      context: context,
-      initialTime: presenter.punchInTime,
-    ))!;
-    presenter.getAdjustedPunchInAsDateTime();
-    await presenter.loadAdjustedStatus();
-     setState(() {
-       presenter.changePropertiesOfPunchInContainer();
-      });
+    TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.punchInTime);
+    if(adjustedTime != null) {
+      presenter.adjustPunchInTime(adjustedTime);
+    }
   }
 
-
   void _pickPunchOutTime() async {
-    presenter.adjustedTime = (await showTimePicker(
-      context: context,
-      initialTime: presenter.punchOutTime,
-    ))!;
-    presenter.getAdjustedPunchOutAsDateTime();
-    await presenter.loadAdjustedStatus();
-    setState(() {
-     presenter.changePropertiesOfPunchOutContainer();
-    });
+    TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.punchInTime);
+    if(adjustedTime != null) {
+      presenter.adjustPunchOutTime(adjustedTime);
+    }
   }
 
   void _submitAdjustment() {
@@ -372,4 +350,10 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   void onAdjustAttendanceFailed(String title, String message) {
     Alert.showSimpleAlert(context: context, title: title, message: message);
   }
+
+  @override
+  void onDidLoadAdjustedStatus() {
+    setState(() {});
+  }
+
 }

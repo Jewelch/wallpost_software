@@ -1,5 +1,5 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
@@ -21,8 +21,8 @@ void main() {
       AdjustedStatusProvider.initWith(mockEmployeeProvider, mockNetworkAdapter);
   var mockAdjustedStatusForm = MockAdjustedStatusForm();
   DateTime date = DateTime(22, 01, 2021);
-  DateTime adjustedPunchInTime = DateFormat('hh:mm').parse("09:00");
-  DateTime adjustedPunchOutTime = DateFormat('hh:mm').parse("06:00");
+  TimeOfDay adjustedPunchInTime = TimeOfDay(hour: 09, minute: 00);
+  TimeOfDay adjustedPunchOutTime =  TimeOfDay(hour: 06, minute: 00);
 
   setUpAll(() {
     when(() => mockEmployee.v1Id).thenReturn('v1EmpId');

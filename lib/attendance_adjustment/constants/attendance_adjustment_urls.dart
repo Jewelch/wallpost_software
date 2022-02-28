@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/base_urls.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 
@@ -11,8 +12,8 @@ class AttendanceAdjustmentUrls {
     String companyId,
     String employeeId,
     DateTime date,
-    DateTime? adjustedPunchInTime,
-    DateTime? adjustedPunchOutTime,
+    TimeOfDay? adjustedPunchInTime,
+    TimeOfDay? adjustedPunchOutTime,
   ) {
     var url =
         '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance-adjustment/work_status?';
