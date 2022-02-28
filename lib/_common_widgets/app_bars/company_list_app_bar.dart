@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 
 import 'app_bar_divider.dart';
 
@@ -66,14 +67,16 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget _constraintTrailingWidgetToSize(Widget widget) {
     return ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: Container(
-          color: Colors.blue,
-          child: SizedBox(
-            width: 44,
-            height: 38,
-            child: Container(
-              alignment: Alignment.center,
-              child: widget,
+        child: Center(
+          child: Container(
+            color: Colors.blue,
+            child: SizedBox(
+              width: 54,
+              height: 38,
+              child: Container(
+                alignment: Alignment.center,
+                child: widget,
+              ),
             ),
           ),
         ));
@@ -97,20 +100,31 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
         Positioned(
             bottom: -2,
             right: -10,
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                    width: 30,
-                    height: 24,
-                    alignment: Alignment.center,
-                    color: Colors.blue,
-                    child: SizedBox(
-                        width: 12,
-                        height: 10,
-                        child: SvgPicture.asset(
-                      'assets/icons/menu_icon.svg',
+            child: Container(
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                        width: 30,
+                        height: 24,
+                        alignment: Alignment.center,
+                        color: Colors.blue,
+                        child: SizedBox(
+                            width: 12,
+                            height: 10,
+                            child: SvgPicture.asset(
+                              'assets/icons/menu_icon.svg',
+                              color: Colors.white,
+                            )))),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
                       color: Colors.white,
-                    )))))
+                      blurRadius: 3,
+                      spreadRadius: 3,
+                    )
+                  ],
+                )))
       ],
     );
   }

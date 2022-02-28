@@ -31,6 +31,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   var _viewSelectorNotifier = ItemNotifier<int>();
   var _viewAppBarSelectorNotifier = ItemNotifier<bool>();
   var _searchBarVisibilityNotifier = ItemNotifier<bool>();
+  var _appBarVisibilityNotifier = ItemNotifier<bool>();
   var _companyGroupsNotifier = ItemNotifier<List<CompanyGroup>>();
   var _financialSummaryNotifier = ItemNotifier<FinancialSummary>();
   var _companiesListNotifier = ItemNotifier<List<CompanyListItem>>();
@@ -63,9 +64,15 @@ class _CompanyListScreenState extends State<CompanyListScreen>
         body: Column(
           children: <Widget>[
             ItemNotifiable<bool>(
-              notifier: _viewAppBarSelectorNotifier,
-              builder: (context, showSearch) {
-                return (showSearch == true) ? _filtersView() : _appBar();
+              notifier: _appBarVisibilityNotifier,
+              builder: (context, showAppBar) {
+                return (showAppBar == true) ?
+                ItemNotifiable<bool>(
+                  notifier: _viewAppBarSelectorNotifier,
+                  builder: (context, showSearch) {
+                    return (showSearch == true) ? _filtersView() : _appBar();
+                  },
+                ) : Container();
               },
             ),
             _financialSummaryView(),
@@ -123,7 +130,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
               child: Text(
                 "Group Summary",
                 style: TextStyle(
-                    color: Colors.blue,
+                    color: Color(0xff0096E3),
                     fontSize: 18,
                     fontWeight: FontWeight.w700),
               ),
@@ -138,7 +145,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
             notifier: _profileImageNotifier,
             builder: (context, imageUrl) {
               return FadeInImage.assetNetwork(
-                placeholder: 'assets/logo/logo.png',
+                placeholder: 'assets/logo/placeholder.jpg',
                 image: imageUrl!,
                 fit: BoxFit.cover,
               );
@@ -229,11 +236,11 @@ class _CompanyListScreenState extends State<CompanyListScreen>
           return ActionChip(
             elevation: 2,
             label: Text(companiesGroup[index].name),
-            labelStyle: TextStyle(color: Colors.blue[800]),
+            labelStyle: TextStyle(color: Color(0xff003C81)),
             backgroundColor: AppColors.backGroundColor,
             side: BorderSide(
                 color: tappedIndex == index
-                    ? Colors.blue.shade800
+                    ? Color(0xff003C81)
                     : Colors.transparent,
                 width: 1,
                 style: BorderStyle.solid),
@@ -348,10 +355,14 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   @override
   void showLoader() {
     _viewSelectorNotifier.notify(LOADER_VIEW);
+    _appBarVisibilityNotifier.notify(false);
   }
 
   @override
-  void hideLoader() {}
+  void hideLoader() {
+    _appBarVisibilityNotifier.notify(true);
+
+  }
 
   @override
   void showSearchBar() {
