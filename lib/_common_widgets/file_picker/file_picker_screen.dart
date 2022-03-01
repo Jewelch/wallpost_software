@@ -1,5 +1,6 @@
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-
 import '../screen_presenter/modal_sheet_presenter.dart';
 
 class FilePickerScreen extends StatelessWidget {
@@ -21,22 +22,43 @@ class FilePickerScreen extends StatelessWidget {
         children: [
           ListTile(
             title: Text("Image"),
-            onTap: () {},
+            onTap: () async {
+              var images = await _pickFiles(FileType.image);
+            },
           ),
           ListTile(
             title: Text("Video"),
-            onTap: () {},
+            onTap: () async {
+              var videos = await _pickFiles(FileType.video);
+            },
           ),
           ListTile(
             title: Text("Document"),
-            onTap: () {},
+            onTap: () async {
+              var document = await _pickFiles(FileType.custom, allowedExtensions: ['pdf', 'doc']);
+            },
           ),
           ListTile(
             title: Text("Audio"),
-            onTap: () {},
+            onTap: () async {
+              var audios = await _pickFiles(FileType.audio);
+            },
           ),
         ],
       ),
     );
+  }
+
+  Future<List<File>?> _pickFiles(FileType filesType, {List<String>? allowedExtensions}) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform
+          .pickFiles(allowMultiple: true, type: filesType, allowedExtensions: allowedExtensions);
+      if (result != null) {
+        List<File> files = result.paths.map((path) => File(path!)).toList();
+        return files;
+      }
+    } catch (e) {
+      //ignore: usually, error is not thrown
+    }
   }
 }

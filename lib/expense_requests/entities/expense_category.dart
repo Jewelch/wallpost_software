@@ -6,20 +6,31 @@ class ExpenseCategory extends JSONInitializable {
   late final String id;
   late final String name;
   late final List<ExpenseCategory> subCategories;
-  late final List<String> projects;
+  late final List<ExpenseCategory> projects;
 
   ExpenseCategory.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     try {
       var sift = Sift();
       id = sift.readNumberFromMap(jsonMap, 'id').toString();
       name = sift.readStringFromMap(jsonMap, 'name');
-      subCategories = sift
-          .readMapListFromMap(jsonMap, 'sub_categories')
-          .map((e) => ExpenseCategory.fromJson(e))
-          .toList();
-      projects = sift.readStringListFromMap(jsonMap, 'projects');
+      subCategories = _readSubCategories(jsonMap);
+      projects = _readProjects(jsonMap);
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast Company response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast expense category response. Error message - ${e.errorMessage}');
     }
+  }
+
+  List<ExpenseCategory> _readSubCategories(Map<String, dynamic> jsonMap) {
+    return Sift()
+        .readMapListFromMapWithDefaultValue(jsonMap, 'sub_categories', [])!
+        .map((e) => ExpenseCategory.fromJson(e))
+        .toList();
+  }
+
+  List<ExpenseCategory> _readProjects(Map<String, dynamic> jsonMap) {
+    return Sift()
+        .readMapListFromMapWithDefaultValue(jsonMap, 'projects', [])!
+        .map((e) => ExpenseCategory.fromJson(e))
+        .toList();
   }
 }

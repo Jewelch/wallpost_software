@@ -35,7 +35,7 @@ class Notifiable extends StatefulWidget {
   State<StatefulWidget> createState() => _NotifiableState();
 }
 
-class _NotifiableState<T> extends State<Notifiable> {
+class _NotifiableState extends State<Notifiable> {
   @override
   void initState() {
     super.initState();

@@ -5,3 +5,8 @@ var expenseCategoriesListResponse = [
 
 var validExpenseCategoryMap = expenseCategoriesListResponse[0];
 var unValidExpenseCategoryMap = <String, dynamic>{};
+
+var successFullAddingExpenseRequestResponse = {
+  "status": "success",
+  "data": {"id": "24", "status": "success", "message": "Approval Sent."}
+};

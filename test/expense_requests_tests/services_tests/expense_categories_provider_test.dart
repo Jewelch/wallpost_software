@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/expense_requests/constants/requests_urls.dart';
+import 'package:wallpost/expense_requests/constants/expense_requests_urls.dart';
 import 'package:wallpost/expense_requests/services/expense_categories_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
@@ -18,7 +18,7 @@ void main() {
 
     var _ = await expenseCategoriesProvider.get(companyId);
 
-    expect(mockNetworkAdapter.apiRequest.url, RequestsUrls.getExpenseRequestUrl(companyId));
+    expect(mockNetworkAdapter.apiRequest.url, ExpenseRequestsUrls.getExpenseCategoriesUrl(companyId));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
   });
 
@@ -32,6 +32,7 @@ void main() {
       expect(e is NetworkFailureException, true);
     }
   });
+
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 

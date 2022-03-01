@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/expense_requests/constants/requests_urls.dart';
+import 'package:wallpost/expense_requests/constants/expense_requests_urls.dart';
 import 'package:wallpost/expense_requests/entities/expense_category.dart';
 
 class ExpenseCategoriesProvider {
@@ -18,7 +18,7 @@ class ExpenseCategoriesProvider {
 
   Future<List<ExpenseCategory>> get(String companyId) async {
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
-    var url = RequestsUrls.getExpenseRequestUrl(companyId);
+    var url = ExpenseRequestsUrls.getExpenseCategoriesUrl(companyId);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
     try {
