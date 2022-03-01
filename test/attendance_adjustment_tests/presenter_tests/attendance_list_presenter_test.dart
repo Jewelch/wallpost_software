@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/constants/app_years.dart';
@@ -23,7 +22,6 @@ void main() {
   late AttendanceListPresenter presenter;
   var month = DateTime.now().month;
   var year = DateTime.now().year;
-  var selectedMonth = DateFormat.MMM().format(DateTime.now());
 
   var attendanceListItem1 = MockAttendanceListItem();
   var attendanceListItem2 = MockAttendanceListItem();
@@ -48,10 +46,12 @@ void main() {
   test('selected month and year is initialized successfully', () async {
     presenter = AttendanceListPresenter.initWith(view, mockAttendanceListProvider);
 
-    expect(presenter.getSelectedMonth(), AppYears.shortenedMonthNames()[DateTime.now().month - 1]);
+    expect(presenter.getSelectedMonth(), AppYears.shortenedMonthNames(year)[DateTime.now().month - 1]);
     expect(presenter.getSelectedYear(), AppYears.years().first);
     _verifyNoMoreInteractionsOnAllMocks();
   });
+
+  //MARK: Test for loading list
 
   test('retrieving attendance list successfully', () async {
     when(() => mockAttendanceListProvider.isLoading).thenReturn(false);
@@ -134,8 +134,10 @@ void main() {
   });
 
   test('selecting month and year', () {
-    year = 2022;
-    String month = 'jan';
+    when(() => mockAttendanceListProvider.isLoading).thenReturn(false);
+    when(() => mockAttendanceListProvider.get(any(), any())).thenAnswer((_) => Future.value(_attendanceList));
+    var year = 2020;
+    String month = 'Jan';
 
     presenter.selectYear(year);
     presenter.selectMonth(month);
@@ -143,6 +145,8 @@ void main() {
     expect(presenter.getSelectedYear(), year);
     expect(presenter.getSelectedMonth(), month);
   });
+
+  //MARK: Test for getters.
 
   test('get status color', () {
     when(() => attendanceListItem1.status).thenReturn(AttendanceStatus.Present);

@@ -34,4 +34,8 @@ abstract class CompaniesListView {
   void onCompanyDetailsLoadingFailed(String title, String message);
 
   void showLogoutAlert(String title, String message);
+
+  void showAppBar(bool visibility);
+
+  void selectGroupItem(int? index);
 }

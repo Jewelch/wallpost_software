@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
@@ -13,48 +12,112 @@ import 'package:wallpost/company_core/services/selected_employee_provider.dart';
 
 class AttendanceAdjustmentPresenter {
   final AttendanceAdjustmentView _view;
+  final AttendanceListItem _attendanceListItem;
   final AdjustedStatusProvider _adjustedStatusProvider;
   final AttendanceAdjustmentSubmitter _adjustmentSubmitter;
   final SelectedEmployeeProvider _selectedEmployeeProvider;
 
-  late TimeOfDay punchInTime = TimeOfDay(hour: 00, minute: 00);
-  late TimeOfDay punchOutTime = TimeOfDay(hour: 00, minute: 00);
-  late TimeOfDay adjustedTime = TimeOfDay(hour: 00, minute: 00);
-  late DateTime? adjustedPunchInTime = null;
-  late DateTime? adjustedPunchOutTime = null;
+  late TimeOfDay _punchInTime = TimeOfDay(hour: 00, minute: 00);
+  late TimeOfDay _punchOutTime = TimeOfDay(hour: 00, minute: 00);
+  TimeOfDay? _adjustedPunchInTime;
+  TimeOfDay? _adjustedPunchOutTime;
+  AttendanceStatus? _adjustedStatus;
 
-  var adjustedStatus;
-  String? punchInAdjusted;
-  String? punchOutAdjusted;
-  Color adjustedPunchInColor = Colors.white;
-  Color adjustedPunchOutColor = Colors.white;
+  // String? punchInAdjusted;
+  // String? punchOutAdjusted;
+  // Color adjustedPunchInColor = Colors.white;
+  // Color adjustedPunchOutColor = Colors.white;
+  // late String status = _attendanceListItem.status.toReadableString();
+  // late Color statusColor = getStatusColor(_attendanceListItem.status);
 
-  AttendanceAdjustmentPresenter(this._view)
+
+
+  AttendanceAdjustmentPresenter(this._view, this._attendanceListItem)
       : _adjustmentSubmitter = AttendanceAdjustmentSubmitter(),
         _adjustedStatusProvider = AdjustedStatusProvider(),
-        _selectedEmployeeProvider = SelectedEmployeeProvider();
-
-  AttendanceAdjustmentPresenter.initWith(this._view, this._adjustmentSubmitter,
-      this._adjustedStatusProvider, this._selectedEmployeeProvider);
-
-  Future<dynamic> loadAdjustedStatus(DateTime date) async {
-    if (_adjustedStatusProvider.isLoading) return;
-    try {
-      _view.showLoader();
-      var adjustedStatusForm =
-          AdjustedStatusForm(date, adjustedPunchInTime, adjustedPunchOutTime);
-      adjustedStatus =
-          await _adjustedStatusProvider.getAdjustedStatus(adjustedStatusForm);
-      _view.hideLoader();
-    } on WPException catch (e) {
-      _view.hideLoader();
-      _view.onGetAdjustedStatusFailed(
-          "Getting adjusted status failed", e.userReadableMessage);
-    }
-    return adjustedStatus;
+        _selectedEmployeeProvider = SelectedEmployeeProvider() {
+    _initPunchInAndOutTime();
   }
 
-  Future<void> submitAdjustment(DateTime date,String reason) async {
+  AttendanceAdjustmentPresenter.initWith(
+    this._view,
+    this._attendanceListItem,
+    this._adjustedStatusProvider,
+    this._adjustmentSubmitter,
+    this._selectedEmployeeProvider,
+  ) {
+    _initPunchInAndOutTime();
+  }
+
+  void _initPunchInAndOutTime() {
+    if (_attendanceListItem.punchInTime != null)
+      _punchInTime = TimeOfDay.fromDateTime(_attendanceListItem.punchInTime!);
+    if (_attendanceListItem.punchOutTime != null)
+      _punchOutTime = TimeOfDay.fromDateTime(_attendanceListItem.punchOutTime!);
+  }
+
+  //MARK: Function to get adjusted status of attendance.
+
+  Future<void> adjustPunchInTime(TimeOfDay adjustedPunchInTime) async {
+    await _loadAdjustedStatus(adjustedPunchInTime: adjustedPunchInTime);
+
+    //if status was adjusted - set the adjusted time
+
+    // if (_adjustedStatus != null) {
+    //   punchInTime = adjustedPunchInTime;
+    // } else {
+    //   punchInAdjusted = '';
+    //   adjustedPunchInColor = Colors.white;
+    //   punchInTime = TimeOfDay(hour: 00, minute: 00);
+    // }
+  }
+
+  Future<void> adjustPunchOutTime(TimeOfDay adjustedPunchOutTime) async {
+    await _loadAdjustedStatus(adjustedPunchOutTime: adjustedPunchOutTime);
+
+    // this.adjustedPunchOutTime = adjustedPunchOutTime;
+    // await _loadAdjustedStatus();
+    // if (_adjustedStatus != null) {
+    //   status = getAdjustedStatus()!;
+    //   statusColor = getStatusColor(_adjustedStatus!);
+    //   punchOutAdjusted = ' - Adjusted';
+    //   adjustedPunchOutColor = AppColors.lightBlueColor;
+    //   punchOutTime = adjustedPunchOutTime;
+    // } else {
+    //   punchOutAdjusted = '';
+    //   adjustedPunchOutColor = Colors.white;
+    //   punchOutTime = TimeOfDay(hour: 00, minute: 00);
+    // }
+  }
+
+  Future<void> _loadAdjustedStatus({TimeOfDay? adjustedPunchInTime, TimeOfDay? adjustedPunchOutTime}) async {
+    if (_adjustedStatusProvider.isLoading) return;
+
+    try {
+      _view.showLoader();
+      var adjustedStatusForm = AdjustedStatusForm(_attendanceListItem.date, adjustedPunchInTime, adjustedPunchOutTime);
+      _adjustedStatus = await _adjustedStatusProvider.getAdjustedStatus(adjustedStatusForm);
+
+      if (adjustedPunchInTime != null) this._adjustedPunchInTime = adjustedPunchInTime;
+      if (adjustedPunchOutTime != null) this._adjustedPunchOutTime = adjustedPunchOutTime;
+
+      _view.hideLoader();
+      _view.onDidLoadAdjustedStatus();
+    } on WPException catch (e) {
+      _view.hideLoader();
+      _adjustedStatus = null;
+      _view.onDidLoadAdjustedStatus();
+      _view.onGetAdjustedStatusFailed("Getting adjusted status failed", e.userReadableMessage);
+    }
+  }
+
+
+
+
+
+  //MARK: Function to submit adjusted attendance.
+
+  Future<void> submitAdjustment(String reason) async {
     _view.clearError();
 
     if (!_isArgumentsValid(reason)) return;
@@ -63,18 +126,21 @@ class AttendanceAdjustmentPresenter {
 
     try {
       _view.showLoader();
-      var employee =
-          _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-      var attendanceAdjustmentForm = AttendanceAdjustmentForm(employee, date,
-          reason, adjustedPunchInTime, adjustedPunchOutTime, adjustedStatus);
+      var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
+      var attendanceAdjustmentForm = AttendanceAdjustmentForm(
+        employee,
+        _attendanceListItem.date,
+        reason,
+        _adjustedPunchInTime,
+        _adjustedPunchOutTime,
+        _adjustedStatus!,
+      );
       await _adjustmentSubmitter.submitAdjustment(attendanceAdjustmentForm);
       _view.hideLoader();
-      _view.onAdjustAttendanceSuccess(
-          'success', 'Adjustment submitted successfully');
+      _view.onAdjustAttendanceSuccess('success', 'Adjustment submitted successfully');
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.onAdjustAttendanceFailed(
-          "Attendance adjustment failed", e.userReadableMessage);
+      _view.onAdjustAttendanceFailed("Attendance adjustment failed", e.userReadableMessage);
     }
   }
 
@@ -85,14 +151,14 @@ class AttendanceAdjustmentPresenter {
       isValid = false;
       _view.notifyInvalidReason("Invalid reason");
     }
-
-    if (adjustedStatus == null) {
+    if (_adjustedStatus == null) {
       isValid = false;
       _view.notifyInvalidAdjustedStatus("Failed", "Attendance not adjusted");
     }
-
     return isValid;
   }
+
+  //MARK: Getters
 
   String getPeriod(TimeOfDay time) {
     if (time.period == DayPeriod.am) {
@@ -101,17 +167,30 @@ class AttendanceAdjustmentPresenter {
       return 'PM';
   }
 
-  DateTime getAdjustedPunchIn() {
-    return adjustedPunchInTime = DateFormat("hh:mm").parse(
-        adjustedTime.hour.toString() + ":" + adjustedTime.minute.toString());
+  String? getAdjustedStatus() {
+    if (_adjustedStatus != null)
+      return _adjustedStatus?.toReadableString();
+    else
+      return null;
   }
 
-  DateTime getAdjustedPunchOut() {
-    return adjustedPunchOutTime = DateFormat("hh:mm").parse(
-        adjustedTime.hour.toString() + ":" + adjustedTime.minute.toString());
+  Color getStatusColor(AttendanceStatus attendanceStatus) {
+    switch (attendanceStatus) {
+      case AttendanceStatus.Present:
+      case AttendanceStatus.NoAction:
+      case AttendanceStatus.OnTime:
+      case AttendanceStatus.Break:
+        return AppColors.presentColor;
+      case AttendanceStatus.Late:
+      case AttendanceStatus.HalfDay:
+      case AttendanceStatus.EarlyLeave:
+        return AppColors.lateColor;
+      case AttendanceStatus.Absent:
+        return AppColors.absentColor;
+    }
   }
 
-  Color punchInOutLabelColorForItem(AttendanceListItem attendanceItem) {
+  Color getLabelColorForItem(AttendanceListItem attendanceItem) {
     switch (attendanceItem.status) {
       case AttendanceStatus.Late:
         return AppColors.lateColor;
@@ -119,20 +198,4 @@ class AttendanceAdjustmentPresenter {
         return AppColors.labelColor;
     }
   }
-
-  void changePropertiesOfPunchInContainer(){
-    if(punchInTime != adjustedTime){
-      punchInAdjusted = ' - Adjusted';
-      adjustedPunchInColor = AppColors.lightBlueColor;
-    }
-    punchInTime = adjustedTime;
-   }
-
-  void changePropertiesOfPunchOutContainer(){
-    if(punchOutTime != adjustedTime){
-      punchOutAdjusted = ' - Adjusted';
-      adjustedPunchOutColor = AppColors.lightBlueColor;
-    }
-    punchOutTime = adjustedTime;
-    }
 }

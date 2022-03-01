@@ -13,19 +13,17 @@ class AttendanceListPresenter {
   final AttendanceListProvider _attendanceListProvider;
   List<AttendanceListItem> _attendanceList = [];
 
-  late int _selectedYear;
-  late String _selectedMonth;
+  late int _selectedYear = DateTime.now().year;
+  late String _selectedMonth  = AppYears.shortenedMonthNames(_selectedYear).last;
 
   AttendanceListPresenter(this._view)
       : _attendanceListProvider = AttendanceListProvider(),
-        _selectedYear = AppYears.years().first,
-        _selectedMonth = AppYears.shortenedMonthNames()[DateTime.now().month - 1];
+        _selectedYear = AppYears.years().first;
 
   AttendanceListPresenter.initWith(
-    this._view,
-    this._attendanceListProvider,
-  )   : _selectedYear = AppYears.years().first,
-        _selectedMonth = AppYears.shortenedMonthNames()[DateTime.now().month - 1];
+      this._view,
+      this._attendanceListProvider,
+      )   : _selectedYear = AppYears.years().first;
 
   //MARK: Function to load the attendance list
 
@@ -35,7 +33,7 @@ class AttendanceListPresenter {
     _attendanceList.clear();
     _view.showLoader();
     try {
-      var monthNumber = AppYears.shortenedMonthNames().indexOf((_selectedMonth)) + 1;
+      var monthNumber = AppYears.shortenedMonthNames(_selectedYear).indexOf((_selectedMonth)) + 1;
       var attendanceList = await _attendanceListProvider.get(monthNumber, _selectedYear);
       _attendanceList.addAll(attendanceList);
 
@@ -51,7 +49,7 @@ class AttendanceListPresenter {
     }
   }
 
-  //MARK: Function to refresh the attendance list//
+  //MARK: Function to refresh the attendance list
 
   refresh() {
     _attendanceListProvider.reset();
@@ -77,7 +75,7 @@ class AttendanceListPresenter {
   }
 
   List<String> getMonthsList() {
-    return AppYears.shortenedMonthNames();
+    return AppYears.shortenedMonthNames(_selectedYear);
   }
 
   String getSelectedMonth() {
