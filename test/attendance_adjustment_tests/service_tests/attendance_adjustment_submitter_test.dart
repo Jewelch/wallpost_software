@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
@@ -23,8 +24,8 @@ void main() {
     when(() => mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
 
     var attendanceDate = DateTime(2020, 1, 1);
-    var adjustedPunchInTime = DateTime(2020, 1, 1, 8, 0);
-    var adjustedPunchOutTime = DateTime(2020, 1, 1, 17, 0);
+    TimeOfDay adjustedPunchInTime = TimeOfDay(hour: 8, minute: 0);
+    TimeOfDay adjustedPunchOutTime =  TimeOfDay(hour: 17, minute: 0);
     var adjustedStatus = AttendanceStatus.Present;
     adjustmentForm = AttendanceAdjustmentForm(
       mockEmployee,

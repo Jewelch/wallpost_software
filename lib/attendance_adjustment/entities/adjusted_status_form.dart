@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 
 class AdjustedStatusForm implements JSONConvertible {
   final DateTime date;
-  final DateTime? adjustedPunchInTime;
-  final DateTime? adjustedPunchOutTime;
+  final TimeOfDay? adjustedPunchInTime;
+  final TimeOfDay? adjustedPunchOutTime;
 
   AdjustedStatusForm(
       this.date,

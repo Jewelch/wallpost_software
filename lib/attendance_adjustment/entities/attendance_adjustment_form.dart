@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
@@ -7,9 +8,8 @@ class AttendanceAdjustmentForm implements JSONConvertible {
   final Employee employee;
   final DateTime date;
   final String reason;
-  //TODO: change to time of day
-  final DateTime? adjustedPunchInTime;
-  final DateTime? adjustedPunchOutTime;
+  final TimeOfDay? adjustedPunchInTime;
+  final TimeOfDay? adjustedPunchOutTime;
 
 
   final AttendanceStatus adjustedStatus;

@@ -162,14 +162,14 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    '${presenter.punchInTime.hour}',
+                    '${presenter.punchInTime.hour.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
                     ':',
                   ),
                   Text(
-                    '${presenter.punchInTime.minute}',
+                    '${presenter.punchInTime.minute.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
@@ -237,14 +237,14 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    '${presenter.punchOutTime.hour}',
+                    '${presenter.punchOutTime.hour.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
                     ':',
                   ),
                   Text(
-                    '${presenter.punchOutTime.minute}',
+                    '${presenter.punchOutTime.minute.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
@@ -294,27 +294,13 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
     if(adjustedTime != null) {
       presenter.adjustPunchInTime(adjustedTime);
     }
-    // presenter.getAdjustedPunchInAsDateTime();
-    // await presenter.loadAdjustedStatus();
-    // setState(() {
-    //   presenter.changePropertiesOfPunchInContainer();
-    // });
   }
 
   void _pickPunchOutTime() async {
     TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.punchInTime);
     if(adjustedTime != null) {
-      presenter.adjustPunchInTime(adjustedTime);
+      presenter.adjustPunchOutTime(adjustedTime);
     }
-    // presenter.adjustedTime = (await showTimePicker(
-    //   context: context,
-    //   initialTime: presenter.punchOutTime,
-    // ))!;
-    // presenter.getAdjustedPunchOutAsDateTime();
-    // await presenter.loadAdjustedStatus();
-    // setState(() {
-    //   presenter.changePropertiesOfPunchOutContainer();
-    // });
   }
 
   void _submitAdjustment() {
@@ -364,4 +350,10 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   void onAdjustAttendanceFailed(String title, String message) {
     Alert.showSimpleAlert(context: context, title: title, message: message);
   }
+
+  @override
+  void onDidLoadAdjustedStatus() {
+    setState(() {});
+  }
+
 }
