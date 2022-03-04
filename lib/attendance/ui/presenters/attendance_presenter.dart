@@ -69,7 +69,7 @@ class AttendancePresenter {
       _attendanceLocation = (await _locationProvider.getLocation())!;
       await _getLocationAddress(_attendanceLocation);
        if (_attendanceDetails.isPunchedIn) {
-         validateLocationForPunchOut();
+        await _validateLocationForPunchOut();
        } else {
         _view.showPunchInButton();
         _view.hideBreakButton();
@@ -170,19 +170,18 @@ class AttendancePresenter {
     await _getLocation();
   }
 
-  Future<void> validateLocationForPunchOut() async {
+  Future<void> _validateLocationForPunchOut() async {
     try {
-
       var isLocationValid= await _attendanceLocationValidator
           .validateLocation(_attendanceLocation, isForPunchIn: true);
     if (isLocationValid) {
         await _doPunchOut();
       } else {
-        _view.showError("Location validation error", "Invalid location");
+        _view.showError("Invalid location", "You are not allowed to punch out on this location");
       }
     } on WPException catch (e) {
       _view.showErrorMessage(
-          "Failed to location validation", e.userReadableMessage);
+          "Failed to validate your location", e.userReadableMessage);
     }
   }
 
