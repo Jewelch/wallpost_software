@@ -172,10 +172,11 @@ class AttendancePresenter {
 
   Future<void> validateLocationForPunchOut() async {
     try {
-      var isLocationValid = await _attendanceLocationValidator
+
+      var isLocationValid= await _attendanceLocationValidator
           .validateLocation(_attendanceLocation, isForPunchIn: true);
-      if (isLocationValid) {
-         await _doPunchOut();
+    if (isLocationValid) {
+        await _doPunchOut();
       } else {
         _view.showError("Location validation error", "Invalid location");
       }
@@ -187,12 +188,9 @@ class AttendancePresenter {
 
   Future<void> _doPunchOut() async {
     try {
-      _view.showLoader();
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation,
           isLocationValid: true);
-      _view.hideLoader();
     } on WPException catch (e) {
-      _view.hideLoader();
       _view.showErrorMessage("Punch out failed", e.userReadableMessage);
     }
   }
