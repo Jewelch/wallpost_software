@@ -140,7 +140,7 @@ void main() {
   });
 
   test(
-      'shows disabled button when the user not punched in and getting the punch in from app permission fails',
+      'shows disabled button when the user is not punched in and getting the punch in from app permission fails',
       () async {
     //given
     var attendance = MockAttendanceDetails();
