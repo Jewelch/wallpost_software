@@ -58,10 +58,10 @@ class FinancialSummaryCard extends StatelessWidget {
                 flex: 6,
                 child: Center(
                     child: Text(
-                  _financialSummary.overallRevenue.toString(),
+                  _financialSummary.profitLoss.toString(),
                   style: TextStyle(
                       fontWeight: FontWeight.w700,
-                      color: Colors.green,
+                      color: Color(0xff4AF091),
                       fontSize: 28.0,
                       overflow: TextOverflow.ellipsis),
                 ))),
@@ -75,21 +75,21 @@ class FinancialSummaryCard extends StatelessWidget {
                     flex: 3,
                     child: _financialSummaryElement(
                         "Fund Availability",
-                        Colors.green,
+                        Color(0xff4AF091),
                         _financialSummary.cashAvailability.toString())),
                 SizedBox.fromSize(size: Size(10, 0)),
                 Expanded(
                     flex: 3,
                     child: _financialSummaryElement(
                         "Receivables Overdue",
-                        Colors.red,
+                       Color(0xffFC6760) ,
                         _financialSummary.receivableOverdue.toString())),
                 SizedBox.fromSize(size: Size(10, 0)),
                 Expanded(
                     flex: 3,
                     child: _financialSummaryElement(
                         "Payables Overdue",
-                        Colors.red,
+                        Color(0xffFC6760) ,
                         _financialSummary.payableOverdue.toString())),
               ])),
         ],
@@ -117,7 +117,7 @@ class FinancialSummaryCard extends StatelessWidget {
               label,
               style: TextStyle(
                 fontWeight: FontWeight.w300,
-                color: Colors.grey[400],
+                color:Color(0xffDFF0F7),
                 fontSize: 11.0,
                 overflow: TextOverflow.ellipsis,
               ),

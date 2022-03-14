@@ -13,7 +13,7 @@ class CompanyListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:  onPressed,
+      onTap: onPressed,
       child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 2.0),
           child: Column(
@@ -42,8 +42,15 @@ class CompanyListCard extends StatelessWidget {
                             padding:
                                 const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                             alignment: Alignment.centerLeft,
-                            child: tile(company.financialSummary?.overallRevenue?? "NO FINANCES", "Profit & Loss", Colors.green,
-                                company.financialSummary?.receivableOverdue  ?? "NO FINANCES", "Receivable Overdue", Colors.red),
+                            child: tile(
+                                company.financialSummary?.profitLoss ??
+                                    "NO FINANCES",
+                                "Profit & Loss",
+                                Color(0xff25D06E),
+                                company.financialSummary?.receivableOverdue ??
+                                    "NO FINANCES",
+                                "Receivable Overdue",
+                                Color(0xffF62A20)),
                           )),
                       Expanded(
                           flex: 3,
@@ -51,8 +58,15 @@ class CompanyListCard extends StatelessWidget {
                             padding:
                                 const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                             alignment: Alignment.centerLeft,
-                            child: tile(company.financialSummary?.cashAvailability ?? "NO FINANCES", "Fund Availability", Colors.green,
-                                company.financialSummary?.payableOverdue ?? "NO FINANCES", "Payable Overdue", Colors.red),
+                            child: tile(
+                                company.financialSummary?.cashAvailability ??
+                                    "NO FINANCES",
+                                "Fund Availability",
+                                Color(0xff25D06E),
+                                company.financialSummary?.payableOverdue ??
+                                    "NO FINANCES",
+                                "Payable Overdue",
+                                Color(0xffF62A20)),
                           )),
                     ],
                   )),
@@ -65,15 +79,21 @@ class CompanyListCard extends StatelessWidget {
     final borderRadius = BorderRadius.circular(20);
     return Container(
       padding: EdgeInsets.all(2), // Border width
-      decoration: BoxDecoration(
-          color: AppColors.primaryContrastColor, borderRadius: borderRadius),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+          color: AppColors.darkGreyIconColor,
+          blurRadius: 4,
+          offset: Offset(1, 1), // Shadow position
+        ),
+      ], color: AppColors.primaryContrastColor, borderRadius: borderRadius),
       child: ClipRRect(
         borderRadius: borderRadius,
         child: SizedBox.fromSize(
           size: Size.fromRadius(44), // Image radius
-          child:CachedNetworkImage(
+          child: CachedNetworkImage(
             imageUrl: company.logoUrl,
-            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+            placeholder: (context, url) =>
+                Center(child: Icon(Icons.camera_alt)),
             errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),

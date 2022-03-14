@@ -34,7 +34,7 @@ class FinancialSummary extends JSONInitializable implements JSONConvertible {
     return jsonMap;
   }
 
-  String get overallRevenue => _profitLoss;
+  String get profitLoss => _profitLoss;
 
   String get cashAvailability => _fundAvailability;
 

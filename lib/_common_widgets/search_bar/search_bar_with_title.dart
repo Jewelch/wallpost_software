@@ -41,7 +41,7 @@ class _SearchBarWithTitleState extends State<SearchBarWithTitle> {
         style: TextStyles.titleTextStyle,
         decoration: InputDecoration(
           hintText: widget.title,
-          hintStyle: TextStyles.titleTextStyle,
+          hintStyle: TextStyle(fontSize: 16, color: Color(0xff3C3C4399)) ,
           prefixIcon: _suffixIcon(),
           border: InputBorder.none,
         ),
