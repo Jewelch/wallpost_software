@@ -162,18 +162,18 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    '${presenter.punchInTime.hour.toString().padLeft(2, "0")}',
+                    '${presenter.getPunchInTime().hourOfPeriod.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
                     ':',
                   ),
                   Text(
-                    '${presenter.punchInTime.minute.toString().padLeft(2, "0")}',
+                    '${presenter.getPunchInTime().minute.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
-                    presenter.getPeriod(presenter.punchInTime),
+                    presenter.getPeriod(presenter.getPunchInTime()),
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                 ],
@@ -237,18 +237,18 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    '${presenter.punchOutTime.hour.toString().padLeft(2, "0")}',
+                    '${presenter.getPunchOutTime().hourOfPeriod.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
                     ':',
                   ),
                   Text(
-                    '${presenter.punchOutTime.minute.toString().padLeft(2, "0")}',
+                    '${presenter.getPunchOutTime().minute.toString().padLeft(2, "0")}',
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                   Text(
-                    presenter.getPeriod(presenter.punchOutTime),
+                    presenter.getPeriod(presenter.getPunchOutTime()),
                     style: TextStyle(color: AppColors.defaultColorDark),
                   ),
                 ],
@@ -290,14 +290,14 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   }
 
   void _pickPunchInTime() async {
-    TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.punchInTime);
+    TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.getPunchInTime());
     if(adjustedTime != null) {
       presenter.adjustPunchInTime(adjustedTime);
     }
   }
 
   void _pickPunchOutTime() async {
-    TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.punchInTime);
+    TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.getPunchOutTime());
     if(adjustedTime != null) {
       presenter.adjustPunchOutTime(adjustedTime);
     }

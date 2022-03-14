@@ -23,12 +23,12 @@ class AttendanceAdjustmentPresenter {
   TimeOfDay? _adjustedPunchOutTime;
   AttendanceStatus? _adjustedStatus;
 
-  // String? punchInAdjusted;
-  // String? punchOutAdjusted;
-  // Color adjustedPunchInColor = Colors.white;
-  // Color adjustedPunchOutColor = Colors.white;
-  // late String status = _attendanceListItem.status.toReadableString();
-  // late Color statusColor = getStatusColor(_attendanceListItem.status);
+  String? punchInAdjusted;
+  String? punchOutAdjusted;
+  Color adjustedPunchInColor = Colors.white;
+  Color adjustedPunchOutColor = Colors.white;
+  late String status = _attendanceListItem.status.toReadableString();
+  late Color statusColor = getStatusColor(_attendanceListItem.status);
 
 
 
@@ -54,17 +54,21 @@ class AttendanceAdjustmentPresenter {
       _punchInTime = TimeOfDay.fromDateTime(_attendanceListItem.punchInTime!);
     if (_attendanceListItem.punchOutTime != null)
       _punchOutTime = TimeOfDay.fromDateTime(_attendanceListItem.punchOutTime!);
+    _adjustedPunchInTime = _punchInTime;
+    _adjustedPunchOutTime = _punchOutTime;
   }
 
   //MARK: Function to get adjusted status of attendance.
 
   Future<void> adjustPunchInTime(TimeOfDay adjustedPunchInTime) async {
-    await _loadAdjustedStatus(adjustedPunchInTime: adjustedPunchInTime);
+    await _loadAdjustedStatus(adjustedPunchInTime: adjustedPunchInTime,adjustedPunchOutTime: _adjustedPunchOutTime);
 
     //if status was adjusted - set the adjusted time
 
-    // if (_adjustedStatus != null) {
-    //   punchInTime = adjustedPunchInTime;
+    if (_adjustedStatus != null) {
+      _punchInTime = adjustedPunchInTime;
+      status = getAdjustedStatus()!;
+    }
     // } else {
     //   punchInAdjusted = '';
     //   adjustedPunchInColor = Colors.white;
@@ -73,7 +77,7 @@ class AttendanceAdjustmentPresenter {
   }
 
   Future<void> adjustPunchOutTime(TimeOfDay adjustedPunchOutTime) async {
-    await _loadAdjustedStatus(adjustedPunchOutTime: adjustedPunchOutTime);
+    await _loadAdjustedStatus(adjustedPunchInTime: _adjustedPunchInTime, adjustedPunchOutTime: adjustedPunchOutTime);
 
     // this.adjustedPunchOutTime = adjustedPunchOutTime;
     // await _loadAdjustedStatus();
@@ -159,6 +163,14 @@ class AttendanceAdjustmentPresenter {
   }
 
   //MARK: Getters
+
+  TimeOfDay getPunchInTime(){
+    return _punchInTime;
+  }
+
+  TimeOfDay getPunchOutTime(){
+    return _punchOutTime;
+  }
 
   String getPeriod(TimeOfDay time) {
     if (time.period == DayPeriod.am) {
