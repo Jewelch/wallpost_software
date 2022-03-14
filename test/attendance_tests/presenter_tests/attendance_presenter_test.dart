@@ -514,7 +514,7 @@ void main() {
     await presenter.loadAttendanceDetails();
 
     //when
-    await presenter.validateLocationForPunchIn();
+    await presenter.validateLocation(true);
 
     //then
     verifyInOrder([
@@ -565,7 +565,7 @@ void main() {
     await presenter.loadAttendanceDetails();
 
     //when
-    await presenter.validateLocationForPunchIn();
+    await presenter.validateLocation(true);
 
     //then
     verifyInOrder([
@@ -615,7 +615,7 @@ void main() {
     when(() => mockPunchInMarker.punchIn(any(), isLocationValid: false))
         .thenAnswer((_) => Future.value());
     await presenter.loadAttendanceDetails();
-    await presenter.validateLocationForPunchIn();
+    await presenter.validateLocation(true);
 
     //when
     await presenter.doPunchIn(false);
@@ -672,7 +672,7 @@ void main() {
     await presenter.loadAttendanceDetails();
 
     //when
-    await presenter.validateLocationForPunchIn();
+    await presenter.validateLocation(true);
 
     //then
     verifyInOrder([
@@ -836,7 +836,7 @@ void main() {
     await presenter.loadAttendanceDetails();
 
     // when
-    await presenter.validateLocationForPunchOut();
+    await presenter.validateLocation(false);
 
     //then
     verifyInOrder([
@@ -882,7 +882,7 @@ void main() {
     await presenter.loadAttendanceDetails();
 
     // when
-    await presenter.validateLocationForPunchOut();
+    await presenter.validateLocation(false);
 
     //then
     verifyInOrder([
@@ -928,7 +928,7 @@ void main() {
             mockPunchOutMarker.punchOut(any(), any(), isLocationValid: false))
         .thenAnswer((_) => Future.value());
     await presenter.loadAttendanceDetails();
-    await presenter.validateLocationForPunchOut();
+    await presenter.validateLocation(false);
 
     // when
     await presenter.doPunchOut(false);
@@ -980,7 +980,7 @@ void main() {
     await presenter.loadAttendanceDetails();
 
     // when
-    await presenter.validateLocationForPunchOut();
+    await presenter.validateLocation(false);
 
     //then
     verifyInOrder([

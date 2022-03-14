@@ -54,6 +54,7 @@ class AttendancePresenter {
     try {
       _view.showLoader();
       _attendanceDetails = await _attendanceDetailsProvider.getDetails();
+
       if (_attendanceDetails.isPunchedIn) {
         _view.hideLoader();
         await _loadPunchOutDetails(_attendanceDetails);
@@ -93,7 +94,8 @@ class AttendancePresenter {
   Future<void> _getLocationAddress(
       AttendanceLocation attendanceLocation) async {
     try {
-      var address = await _locationProvider.getLocationAddress(attendanceLocation);
+      var address =
+          await _locationProvider.getLocationAddress(attendanceLocation);
       _view.showLocationAddress(address.toString());
     } on LocationReverseGeocodingException {
       _view.showLocationAddress("");
@@ -102,7 +104,8 @@ class AttendancePresenter {
 
   Future<void> _getPunchInFromAppPermission() async {
     try {
-      var punchInFromAppPermission = await _punchInFromAppPermissionProvider.canPunchInFromApp();
+      var punchInFromAppPermission =
+          await _punchInFromAppPermissionProvider.canPunchInFromApp();
       if (punchInFromAppPermission.isAllowed) {
         await _loadPunchInDetails();
       } else {
@@ -122,7 +125,8 @@ class AttendancePresenter {
 
   Future<void> _loadPunchInDetails() async {
     try {
-      var punchInNowPermission = await _punchInNowPermissionProvider.canPunchInNow();
+      var punchInNowPermission =
+          await _punchInNowPermissionProvider.canPunchInNow();
       _view.hideLoader();
       if (punchInNowPermission.canPunchInNow) {
         _view.showPunchInButton();
@@ -175,27 +179,9 @@ class AttendancePresenter {
         }
       } else {
         _view.showError(
-            "Invalid punch location",
-            "You are not allowed to punch in outside the office location. " +
-                "Doing so will affect your performance. Would you still like to punch in?");
-      }
-    } on WPException catch (e) {
-      _view.showErrorMessage(
-          "Failed to validate your location", e.userReadableMessage);
-    }
-  }
-
-  Future<void> validateLocationForPunchIn() async {
-    try {
-      var isLocationValid = await _attendanceLocationValidator
-          .validateLocation(_attendanceLocation, isForPunchIn: true);
-      if (isLocationValid) {
-        await doPunchIn(true);
-      } else {
-        _view.showError(
-            "Invalid punch in location",
-            "You are not allowed to punch in outside the office location. " +
-                "Doing so will affect your performance. Would you still like to punch in?");
+            "Invalid punch ${isForPunchIn ? 'in' : 'out'} location",
+            "You are not allowed to punch ${isForPunchIn ? 'in' : 'out'} outside the office location. " +
+                "Doing so will affect your performance. Would you still like to punch ${isForPunchIn ? 'in' : 'out'}?");
       }
     } on WPException catch (e) {
       _view.showErrorMessage(
@@ -209,24 +195,6 @@ class AttendancePresenter {
           isLocationValid: isValid);
     } on WPException catch (e) {
       _view.showErrorMessage("Punch in failed", e.userReadableMessage);
-    }
-  }
-
-  Future<void> validateLocationForPunchOut() async {
-    try {
-      var isLocationValid = await _attendanceLocationValidator
-          .validateLocation(_attendanceLocation, isForPunchIn: false);
-      if (isLocationValid) {
-        await doPunchOut(true);
-      } else {
-        _view.showError(
-            "Invalid punch out location",
-            "You are not allowed to punch out outside the office location. " +
-                "Doing so will affect your performance. Would you still like to punch out?");
-      }
-    } on WPException catch (e) {
-      _view.showErrorMessage(
-          "Failed to validate your location", e.userReadableMessage);
     }
   }
 
