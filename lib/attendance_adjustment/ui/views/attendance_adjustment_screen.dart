@@ -27,384 +27,333 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   late Loader loader;
 
   @override
+  void initState() {
+    loader = Loader(context);
+    presenter = AttendanceAdjustmentPresenter(this, widget.attendanceListItem);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: SimpleAppBar(
+        title: 'Adjust Attendance',
+        showDivider: true,
+        leadingButtons: [
+          CircularIconButton(
+            color: Colors.white,
+            iconColor: AppColors.defaultColor,
+            iconName: 'assets/icons/close_icon.svg',
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+        trailingButtons: [
+          CircularIconButton(
+            color: Colors.white,
+            iconColor: AppColors.defaultColor,
+            iconName: 'assets/icons/check_mark_icon.svg',
+            onPressed: _submitAdjustment,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        reverse: true,
+        child: Container(
+          color: Colors.white,
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _dateAndStatus(),
+              _dottedLineDivider(),
+              _punchInTime(),
+              _adjustPunchInTime(),
+              _punchOutTime(),
+              _adjustPunchOutTime(),
+              _reasonForAdjustment(),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
-  @override
-  void clearError() {
-    // TODO: implement clearError
+  Widget _dateAndStatus() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          widget.attendanceListItem.getReadableDate(),
+          style: TextStyle(color: AppColors.defaultColorDark),
+        ),
+        Text(
+          presenter.status,
+          style: TextStyle(color: presenter.statusColor),
+        ),
+      ],
+    );
   }
 
-  @override
-  void hideLoader() {
-    // TODO: implement hideLoader
+  Widget _dottedLineDivider() {
+    return Container(
+      height: 24,
+      child: Row(
+        children: List.generate(
+            150 ~/ 2,
+            (index) => Expanded(
+                  child: Container(
+                    color: index % 2 == 0 ? Colors.grey : Colors.transparent,
+                    height: 1,
+                  ),
+                )),
+      ),
+    );
   }
 
-  @override
-  void notifyInvalidAdjustedStatus(String title, String userReadableMessage) {
-    // TODO: implement notifyInvalidAdjustedStatus
+  Widget _punchInTime() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Punched In',
+            style: TextStyle(color: presenter.getLabelColorForItem(widget.attendanceListItem)),
+          ),
+          Text(
+            widget.attendanceListItem.originalPunchInTime,
+            style: TextStyle(color: AppColors.labelColor),
+          ),
+        ],
+      ),
+    );
   }
 
-  @override
-  void notifyInvalidReason(String message) {
-    // TODO: implement notifyInvalidReason
+  Widget _adjustPunchInTime() {
+    return Container(
+      padding: EdgeInsets.only(top: 4.0, left: 4, right: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        color: presenter.adjustedPunchInColor,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(children: [
+              TextSpan(
+                text: 'Adjust Punch In',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              TextSpan(
+                text: presenter.punchInAdjusted ?? '',
+                style: TextStyle(color: AppColors.defaultColor, fontSize: 12),
+              ),
+            ]),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 12.0),
+            child: InkWell(
+              onTap: _pickPunchInTime,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    '${presenter.getPunchInTime().hourOfPeriod.toString().padLeft(2, "0")}',
+                    style: TextStyle(color: AppColors.defaultColorDark),
+                  ),
+                  Text(
+                    ':',
+                  ),
+                  Text(
+                    '${presenter.getPunchInTime().minute.toString().padLeft(2, "0")}',
+                    style: TextStyle(color: AppColors.defaultColorDark),
+                  ),
+                  Text(
+                    presenter.getPeriod(presenter.getPunchInTime()),
+                    style: TextStyle(color: AppColors.defaultColorDark),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Divider(),
+        ],
+      ),
+    );
   }
 
-  @override
-  void onAdjustAttendanceFailed(String title, String userReadableMessage) {
-    // TODO: implement onAdjustAttendanceFailed
+  Widget _punchOutTime() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 8.0, top: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Punched Out',
+            style: TextStyle(color: presenter.getLabelColorForItem(widget.attendanceListItem)),
+          ),
+          Text(
+            widget.attendanceListItem.originalPunchOutTime,
+            style: TextStyle(color: AppColors.labelColor),
+          ),
+        ],
+      ),
+    );
   }
 
-  @override
-  void onAdjustAttendanceSuccess(String title, String message) {
-    // TODO: implement onAdjustAttendanceSuccess
+  Widget _adjustPunchOutTime() {
+    return Container(
+      padding: EdgeInsets.only(top: 4.0, left: 4, right: 4),
+      decoration: BoxDecoration(
+        color: presenter.adjustedPunchOutColor,
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(children: [
+              TextSpan(
+                text: 'Adjust Punch Out',
+                style: TextStyle(color: Colors.black),
+              ),
+              TextSpan(
+                text: presenter.punchOutAdjusted ?? '',
+                style: TextStyle(color: AppColors.defaultColor, fontSize: 12),
+              ),
+            ]),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 12.0),
+            child: InkWell(
+              onTap: _pickPunchOutTime,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    '${presenter.getPunchOutTime().hourOfPeriod.toString().padLeft(2, "0")}',
+                    style: TextStyle(color: AppColors.defaultColorDark),
+                  ),
+                  Text(
+                    ':',
+                  ),
+                  Text(
+                    '${presenter.getPunchOutTime().minute.toString().padLeft(2, "0")}',
+                    style: TextStyle(color: AppColors.defaultColorDark),
+                  ),
+                  Text(
+                    presenter.getPeriod(presenter.getPunchOutTime()),
+                    style: TextStyle(color: AppColors.defaultColorDark),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Divider(),
+        ],
+      ),
+    );
   }
 
-  @override
-  void onDidLoadAdjustedStatus() {
-    // TODO: implement onDidLoadAdjustedStatus
+  Widget _reasonForAdjustment() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(padding: EdgeInsets.only(bottom: 12.0, top: 20), child: Text('Reason of adjustment')),
+        ItemNotifiable<String>(
+          notifier: _reasonErrorNotifier,
+          builder: (context, value) => Container(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: TextField(
+              controller: _reasonTextController,
+              minLines: 4,
+              keyboardType: TextInputType.multiline,
+              maxLines: 8,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.greyColor, width: 1.0),
+                ),
+                hintText: 'write your reason here',
+                errorText: value,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
   }
 
-  @override
-  void onGetAdjustedStatusFailed(String title, String userReadableMessage) {
-    // TODO: implement onGetAdjustedStatusFailed
+  void _pickPunchInTime() async {
+    TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.getPunchInTime());
+    if(adjustedTime != null) {
+      presenter.adjustPunchInTime(adjustedTime);
+    }
+  }
+
+  void _pickPunchOutTime() async {
+    TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.getPunchOutTime());
+    if(adjustedTime != null) {
+      presenter.adjustPunchOutTime(adjustedTime);
+    }
+  }
+
+  void _submitAdjustment() {
+    presenter.submitAdjustment(_reasonTextController.text);
   }
 
   @override
   void showLoader() {
-    // TODO: implement showLoader
+    loader.showLoadingIndicator("Loading...");
   }
 
-  // @override
-  // void initState() {
-  //   loader = Loader(context);
-  //   presenter = AttendanceAdjustmentPresenter(this, widget.attendanceListItem);
-  //   super.initState();
-  // }
-  //
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     resizeToAvoidBottomInset: false,
-  //     appBar: SimpleAppBar(
-  //       title: 'Adjust Attendance',
-  //       showDivider: true,
-  //       leadingButtons: [
-  //         CircularIconButton(
-  //           color: Colors.white,
-  //           iconColor: AppColors.defaultColor,
-  //           iconName: 'assets/icons/close_icon.svg',
-  //           onPressed: () => Navigator.pop(context),
-  //         ),
-  //       ],
-  //       trailingButtons: [
-  //         CircularIconButton(
-  //           color: Colors.white,
-  //           iconColor: AppColors.defaultColor,
-  //           iconName: 'assets/icons/check_mark_icon.svg',
-  //           onPressed: _submitAdjustment,
-  //         ),
-  //       ],
-  //     ),
-  //     body: SingleChildScrollView(
-  //       reverse: true,
-  //       child: Container(
-  //         color: Colors.white,
-  //         padding: EdgeInsets.all(16.0),
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             _dateAndStatus(),
-  //             _dottedLineDivider(),
-  //             _punchInTime(),
-  //             _adjustPunchInTime(),
-  //             _punchOutTime(),
-  //             _adjustPunchOutTime(),
-  //             _reasonForAdjustment(),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-  //
-  // Widget _dateAndStatus() {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //     children: [
-  //       Text(
-  //         widget.attendanceListItem.getReadableDate(),
-  //         style: TextStyle(color: AppColors.defaultColorDark),
-  //       ),
-  //       Text(
-  //         presenter.status,
-  //         style: TextStyle(color: presenter.statusColor),
-  //       ),
-  //     ],
-  //   );
-  // }
-  //
-  // Widget _dottedLineDivider() {
-  //   return Container(
-  //     height: 24,
-  //     child: Row(
-  //       children: List.generate(
-  //           150 ~/ 2,
-  //           (index) => Expanded(
-  //                 child: Container(
-  //                   color: index % 2 == 0 ? Colors.grey : Colors.transparent,
-  //                   height: 1,
-  //                 ),
-  //               )),
-  //     ),
-  //   );
-  // }
-  //
-  // Widget _punchInTime() {
-  //   return Container(
-  //     padding: EdgeInsets.only(bottom: 8.0),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: [
-  //         Text(
-  //           'Punched In',
-  //           style: TextStyle(color: presenter.getLabelColorForItem(widget.attendanceListItem)),
-  //         ),
-  //         Text(
-  //           widget.attendanceListItem.originalPunchInTime,
-  //           style: TextStyle(color: AppColors.labelColor),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-  //
-  // Widget _adjustPunchInTime() {
-  //   return Container(
-  //     padding: EdgeInsets.only(top: 4.0, left: 4, right: 4),
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-  //       color: presenter.adjustedPunchInColor,
-  //     ),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         RichText(
-  //           text: TextSpan(children: [
-  //             TextSpan(
-  //               text: 'Adjust Punch In',
-  //               style: TextStyle(
-  //                 color: Colors.black,
-  //               ),
-  //             ),
-  //             TextSpan(
-  //               text: presenter.punchInAdjusted ?? '',
-  //               style: TextStyle(color: AppColors.defaultColor, fontSize: 12),
-  //             ),
-  //           ]),
-  //         ),
-  //         Container(
-  //           padding: EdgeInsets.only(top: 12.0),
-  //           child: InkWell(
-  //             onTap: _pickPunchInTime,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //               children: [
-  //                 Text(
-  //                   '${presenter.punchInTime.hour.toString().padLeft(2, "0")}',
-  //                   style: TextStyle(color: AppColors.defaultColorDark),
-  //                 ),
-  //                 Text(
-  //                   ':',
-  //                 ),
-  //                 Text(
-  //                   '${presenter.punchInTime.minute.toString().padLeft(2, "0")}',
-  //                   style: TextStyle(color: AppColors.defaultColorDark),
-  //                 ),
-  //                 Text(
-  //                   presenter.getPeriod(presenter.punchInTime),
-  //                   style: TextStyle(color: AppColors.defaultColorDark),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         Divider(),
-  //       ],
-  //     ),
-  //   );
-  // }
-  //
-  // Widget _punchOutTime() {
-  //   return Container(
-  //     padding: EdgeInsets.only(bottom: 8.0, top: 16),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: [
-  //         Text(
-  //           'Punched Out',
-  //           style: TextStyle(color: presenter.getLabelColorForItem(widget.attendanceListItem)),
-  //         ),
-  //         Text(
-  //           widget.attendanceListItem.originalPunchOutTime,
-  //           style: TextStyle(color: AppColors.labelColor),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-  //
-  // Widget _adjustPunchOutTime() {
-  //   return Container(
-  //     padding: EdgeInsets.only(top: 4.0, left: 4, right: 4),
-  //     decoration: BoxDecoration(
-  //       color: presenter.adjustedPunchOutColor,
-  //       borderRadius: BorderRadius.all(
-  //         Radius.circular(10.0),
-  //       ),
-  //     ),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         RichText(
-  //           text: TextSpan(children: [
-  //             TextSpan(
-  //               text: 'Adjust Punch Out',
-  //               style: TextStyle(color: Colors.black),
-  //             ),
-  //             TextSpan(
-  //               text: presenter.punchOutAdjusted ?? '',
-  //               style: TextStyle(color: AppColors.defaultColor, fontSize: 12),
-  //             ),
-  //           ]),
-  //         ),
-  //         Container(
-  //           padding: EdgeInsets.only(top: 12.0),
-  //           child: InkWell(
-  //             onTap: _pickPunchOutTime,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //               children: [
-  //                 Text(
-  //                   '${presenter.punchOutTime.hour.toString().padLeft(2, "0")}',
-  //                   style: TextStyle(color: AppColors.defaultColorDark),
-  //                 ),
-  //                 Text(
-  //                   ':',
-  //                 ),
-  //                 Text(
-  //                   '${presenter.punchOutTime.minute.toString().padLeft(2, "0")}',
-  //                   style: TextStyle(color: AppColors.defaultColorDark),
-  //                 ),
-  //                 Text(
-  //                   presenter.getPeriod(presenter.punchOutTime),
-  //                   style: TextStyle(color: AppColors.defaultColorDark),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         Divider(),
-  //       ],
-  //     ),
-  //   );
-  // }
-  //
-  // Widget _reasonForAdjustment() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Container(padding: EdgeInsets.only(bottom: 12.0, top: 20), child: Text('Reason of adjustment')),
-  //       ItemNotifiable<String>(
-  //         notifier: _reasonErrorNotifier,
-  //         builder: (context, value) => Container(
-  //           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-  //           child: TextField(
-  //             controller: _reasonTextController,
-  //             minLines: 4,
-  //             keyboardType: TextInputType.multiline,
-  //             maxLines: 8,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(
-  //                 borderSide: BorderSide(color: AppColors.greyColor, width: 1.0),
-  //               ),
-  //               hintText: 'write your reason here',
-  //               errorText: value,
-  //             ),
-  //           ),
-  //         ),
-  //       )
-  //     ],
-  //   );
-  // }
-  //
-  // void _pickPunchInTime() async {
-  //   TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.punchInTime);
-  //   if(adjustedTime != null) {
-  //     presenter.adjustPunchInTime(adjustedTime);
-  //   }
-  // }
-  //
-  // void _pickPunchOutTime() async {
-  //   TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.punchInTime);
-  //   if(adjustedTime != null) {
-  //     presenter.adjustPunchOutTime(adjustedTime);
-  //   }
-  // }
-  //
-  // void _submitAdjustment() {
-  //   presenter.submitAdjustment(_reasonTextController.text);
-  // }
-  //
-  // @override
-  // void showLoader() {
-  //   loader.showLoadingIndicator("Loading...");
-  // }
-  //
-  // @override
-  // void hideLoader() {
-  //   loader.hideOpenDialog();
-  // }
-  //
-  // @override
-  // void clearError() {
-  //   _reasonErrorNotifier.notify(null);
-  // }
-  //
-  // @override
-  // void notifyInvalidReason(String message) {
-  //   _reasonErrorNotifier.notify(message);
-  // }
-  //
-  // @override
-  // void notifyInvalidAdjustedStatus(String title, String message) {
-  //   Alert.showSimpleAlert(context: context, title: title, message: message);
-  // }
-  //
-  // @override
-  // void onGetAdjustedStatusFailed(String title, String message) {
-  //   Alert.showSimpleAlert(context: context, title: title, message: message);
-  // }
-  //
-  // @override
-  // void onAdjustAttendanceSuccess(String title, String message) {
-  //   Alert.showSimpleAlert(
-  //       context: context,
-  //       title: title,
-  //       message: message,
-  //       onPressed: () => ScreenPresenter.present(AttendanceListScreen(), context));
-  // }
-  //
-  // @override
-  // void onAdjustAttendanceFailed(String title, String message) {
-  //   Alert.showSimpleAlert(context: context, title: title, message: message);
-  // }
-  //
-  // @override
-  // void onDidLoadAdjustedStatus() {
-  //   setState(() {});
-  // }
+  @override
+  void hideLoader() {
+    loader.hideOpenDialog();
+  }
+
+  @override
+  void clearError() {
+    _reasonErrorNotifier.notify(null);
+  }
+
+  @override
+  void notifyInvalidReason(String message) {
+    _reasonErrorNotifier.notify(message);
+  }
+
+  @override
+  void notifyInvalidAdjustedStatus(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
+  void onGetAdjustedStatusFailed(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
+  void onAdjustAttendanceSuccess(String title, String message) {
+    Alert.showSimpleAlert(
+        context: context,
+        title: title,
+        message: message,
+        onPressed: () => ScreenPresenter.present(AttendanceListScreen(), context));
+  }
+
+  @override
+  void onAdjustAttendanceFailed(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
+  void onDidLoadAdjustedStatus() {
+    setState(() {});
+  }
 
 }
