@@ -1,7 +1,11 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance/entities/attendance_details.dart';
 import 'package:wallpost/attendance/entities/attendance_location.dart';
+import 'package:wallpost/attendance/exception/location_acquisition_failed_exception.dart';
 import 'package:wallpost/attendance/exception/location_address_failed_exception.dart';
+import 'package:wallpost/attendance/exception/location_permission_denied_exception.dart';
+import 'package:wallpost/attendance/exception/location_permission_permanently_denied_exception.dart';
+import 'package:wallpost/attendance/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance/services/attendance_details_provider.dart';
 import 'package:wallpost/attendance/services/attendance_location_validator.dart';
 import 'package:wallpost/attendance/services/location_provider.dart';
@@ -60,40 +64,40 @@ class AttendancePresenter {
     }
   }
 
-  // Future<void> getLocation() async {
-  //   try {
-  //   _attendanceLocation = (await _locationProvider.getLocation())!;
-  //   _getLocationAddress(_attendanceLocation);
-  //
-  //   } on LocationServicesDisabledException catch (e) {
-  //     //turn on Gps
-  //     _view.hideLoader();
-  //     _view.showDisableButton();
-  //     _view.showAlertToTurnOnDeviceLocation(
-  //         "Please turn on device location", e.userReadableMessage);
-  //   } on LocationPermissionsDeniedException catch (e) {
-  //     // Show Location access permission alert
-  //     _view.hideLoader();
-  //     _view.showDisableButton();
-  //     _view.showAlertToDeniedLocationPermission(
-  //         "Please allow Location permission", e.userReadableMessage);
-  //   } on LocationPermissionsPermanentlyDeniedException catch (e) {
-  //     _view.hideLoader();
-  //     _view.showDisableButton();
-  //     _view.openAppSettings();
-  //   } on LocationAcquisitionFailedException catch (e) {
-  //     _view.hideLoader();
-  //     _view.showDisableButton();
-  //     _view.showFailedToGetLocation(
-  //         "Getting location failed", e.userReadableMessage);
-  //   }
-  // }
+  Future<void> _getLocation() async {
+    try {
+      _attendanceLocation = (await _locationProvider.getLocation())!;
+      await _getLocationAddress(_attendanceLocation);
+       if (_attendanceDetails.isPunchedIn) {
+         validateLocationForPunchOut();
+       } else {
+        _view.showPunchInButton();
+        _view.hideBreakButton();
+      }
+    } on LocationServicesDisabledException catch (e) {
+      _view.showDisabledButton();
+      _view.showAlertToTurnOnDeviceLocation(
+          "Please make sure you enable GPS", e.userReadableMessage);
+    } on LocationPermissionsDeniedException catch (e) {
+      _view.showDisabledButton();
+      _view.showAlertToDeniedLocationPermission(
+          "Please allow to access device location", e.userReadableMessage);
+    } on LocationPermissionsPermanentlyDeniedException catch (e) {
+      _view.showDisabledButton();
+      _view.openAppSettings();
+    } on LocationAcquisitionFailedException catch (e) {
+      _view.showDisabledButton();
+      _view.showFailedToGetLocation(
+          "Getting location failed", e.userReadableMessage);
+    }
+  }
 
   Future<void> _getLocationAddress(
       AttendanceLocation attendanceLocation) async {
     try {
       var address =
           await _locationProvider.getLocationAddress(attendanceLocation);
+
       _view.showLocationAddress(address.toString());
     } on LocationReverseGeocodingException catch (e) {
       _view.showLocationAddress("");
@@ -127,8 +131,7 @@ class AttendancePresenter {
           await _punchInNowPermissionProvider.canPunchInNow();
       _view.hideLoader();
       if (punchInNowPermission.canPunchInNow) {
-        _view.showPunchInButton();
-        _view.hideBreakButton();
+        await _getLocation();
       } else {
         _view.showDisabledButton();
         _view.hideBreakButton();
@@ -163,19 +166,20 @@ class AttendancePresenter {
     }
   }
 
+  Future<void> getLocationForPunchOut() async {
+    await _getLocation();
+  }
+
   Future<void> validateLocationForPunchOut() async {
     try {
-      _view.showLoader();
       var isLocationValid = await _attendanceLocationValidator
           .validateLocation(_attendanceLocation, isForPunchIn: true);
       if (isLocationValid) {
-        _doPunchOut();
+         await _doPunchOut();
       } else {
-        _view.hideLoader();
         _view.showError("Location validation error", "Invalid location");
       }
     } on WPException catch (e) {
-      _view.hideLoader();
       _view.showErrorMessage(
           "Failed to location validation", e.userReadableMessage);
     }
@@ -183,7 +187,8 @@ class AttendancePresenter {
 
   Future<void> _doPunchOut() async {
     try {
-      _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation,
+      _view.showLoader();
+      await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation,
           isLocationValid: true);
       _view.hideLoader();
     } on WPException catch (e) {
