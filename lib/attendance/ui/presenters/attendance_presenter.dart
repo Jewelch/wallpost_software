@@ -10,9 +10,10 @@ import 'package:wallpost/attendance/services/attendance_details_provider.dart';
 import 'package:wallpost/attendance/services/attendance_location_validator.dart';
 import 'package:wallpost/attendance/services/location_provider.dart';
 import 'package:wallpost/attendance/services/punch_in_from_app_permission_provider.dart';
+import 'package:wallpost/attendance/services/punch_in_marker.dart';
 import 'package:wallpost/attendance/services/punch_in_now_permission_provider.dart';
 import 'package:wallpost/attendance/services/punch_out_marker.dart';
-import 'package:wallpost/attendance/ui/contracts/attendance_view.dart';
+import 'package:wallpost/attendance/ui/view_contracts/attendance_view.dart';
 
 class AttendancePresenter {
   final AttendanceView _view;
@@ -22,6 +23,7 @@ class AttendancePresenter {
   final PunchInNowPermissionProvider _punchInNowPermissionProvider;
   final AttendanceLocationValidator _attendanceLocationValidator;
   final PunchOutMarker _punchOutMarker;
+  final PunchInMarker _punchInMarker;
 
   late AttendanceDetails _attendanceDetails;
   late AttendanceLocation _attendanceLocation;
@@ -33,6 +35,7 @@ class AttendancePresenter {
         _punchInFromAppPermissionProvider = PunchInFromAppPermissionProvider(),
         _punchInNowPermissionProvider = PunchInNowPermissionProvider(),
         _attendanceLocationValidator = AttendanceLocationValidator(),
+        _punchInMarker = PunchInMarker(),
         _punchOutMarker = PunchOutMarker();
 
   AttendancePresenter.initWith(
@@ -42,6 +45,7 @@ class AttendancePresenter {
       this._punchInFromAppPermissionProvider,
       this._punchInNowPermissionProvider,
       this._attendanceLocationValidator,
+      this._punchInMarker,
       this._punchOutMarker);
 
   Future<void> loadAttendanceDetails() async {
@@ -50,9 +54,10 @@ class AttendancePresenter {
     try {
       _view.showLoader();
       _attendanceDetails = await _attendanceDetailsProvider.getDetails();
+
       if (_attendanceDetails.isPunchedIn) {
         _view.hideLoader();
-        _loadPunchOutDetails(_attendanceDetails);
+        await _loadPunchOutDetails(_attendanceDetails);
       } else {
         await _getPunchInFromAppPermission();
       }
@@ -68,12 +73,6 @@ class AttendancePresenter {
     try {
       _attendanceLocation = (await _locationProvider.getLocation())!;
       await _getLocationAddress(_attendanceLocation);
-       if (_attendanceDetails.isPunchedIn) {
-         validateLocationForPunchOut();
-       } else {
-        _view.showPunchInButton();
-        _view.hideBreakButton();
-      }
     } on LocationServicesDisabledException catch (e) {
       _view.showDisabledButton();
       _view.showAlertToTurnOnDeviceLocation(
@@ -82,7 +81,7 @@ class AttendancePresenter {
       _view.showDisabledButton();
       _view.showAlertToDeniedLocationPermission(
           "Please allow to access device location", e.userReadableMessage);
-    } on LocationPermissionsPermanentlyDeniedException catch (e) {
+    } on LocationPermissionsPermanentlyDeniedException {
       _view.showDisabledButton();
       _view.openAppSettings();
     } on LocationAcquisitionFailedException catch (e) {
@@ -97,9 +96,8 @@ class AttendancePresenter {
     try {
       var address =
           await _locationProvider.getLocationAddress(attendanceLocation);
-
       _view.showLocationAddress(address.toString());
-    } on LocationReverseGeocodingException catch (e) {
+    } on LocationReverseGeocodingException {
       _view.showLocationAddress("");
     }
   }
@@ -131,6 +129,8 @@ class AttendancePresenter {
           await _punchInNowPermissionProvider.canPunchInNow();
       _view.hideLoader();
       if (punchInNowPermission.canPunchInNow) {
+        _view.showPunchInButton();
+        _view.hideBreakButton();
         await _getLocation();
       } else {
         _view.showDisabledButton();
@@ -145,16 +145,17 @@ class AttendancePresenter {
     }
   }
 
-  void _loadPunchOutDetails(AttendanceDetails attendanceDetails) {
+  Future<void> _loadPunchOutDetails(AttendanceDetails attendanceDetails) async {
     if (attendanceDetails.isPunchedOut) {
       _showPunchInTime(attendanceDetails);
       _showPunchOutTime(attendanceDetails);
       _view.showDisabledButton();
       _view.hideBreakButton();
     } else {
-      _showPunchInTime(attendanceDetails);
+      _showPunchInTime(_attendanceDetails);
       _view.showPunchOutButton();
-      _isOnBreak(attendanceDetails);
+      _isOnBreak(_attendanceDetails);
+      await _getLocation();
     }
   }
 
@@ -166,33 +167,42 @@ class AttendancePresenter {
     }
   }
 
-  Future<void> getLocationForPunchOut() async {
-    await _getLocation();
-  }
-
-  Future<void> validateLocationForPunchOut() async {
+  Future<void> validateLocation(bool isForPunchIn) async {
     try {
       var isLocationValid = await _attendanceLocationValidator
-          .validateLocation(_attendanceLocation, isForPunchIn: true);
+          .validateLocation(_attendanceLocation, isForPunchIn: isForPunchIn);
       if (isLocationValid) {
-         await _doPunchOut();
+        if (isForPunchIn) {
+          await doPunchIn(true);
+        } else {
+          await doPunchOut(true);
+        }
       } else {
-        _view.showError("Location validation error", "Invalid location");
+        _view.showError(
+            "Invalid punch ${isForPunchIn ? 'in' : 'out'} location",
+            "You are not allowed to punch ${isForPunchIn ? 'in' : 'out'} outside the office location. " +
+                "Doing so will affect your performance. Would you still like to punch ${isForPunchIn ? 'in' : 'out'}?");
       }
     } on WPException catch (e) {
       _view.showErrorMessage(
-          "Failed to location validation", e.userReadableMessage);
+          "Failed to validate your location", e.userReadableMessage);
     }
   }
 
-  Future<void> _doPunchOut() async {
+  Future<void> doPunchIn(bool isValid) async {
     try {
-      _view.showLoader();
-      await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation,
-          isLocationValid: true);
-      _view.hideLoader();
+      await _punchInMarker.punchIn(_attendanceLocation,
+          isLocationValid: isValid);
     } on WPException catch (e) {
-      _view.hideLoader();
+      _view.showErrorMessage("Punch in failed", e.userReadableMessage);
+    }
+  }
+
+  Future<void> doPunchOut(bool isValid) async {
+    try {
+      await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation,
+          isLocationValid: isValid);
+    } on WPException catch (e) {
       _view.showErrorMessage("Punch out failed", e.userReadableMessage);
     }
   }

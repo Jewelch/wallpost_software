@@ -13,9 +13,10 @@ import 'package:wallpost/attendance/services/attendance_details_provider.dart';
 import 'package:wallpost/attendance/services/attendance_location_validator.dart';
 import 'package:wallpost/attendance/services/location_provider.dart';
 import 'package:wallpost/attendance/services/punch_in_from_app_permission_provider.dart';
+import 'package:wallpost/attendance/services/punch_in_marker.dart';
 import 'package:wallpost/attendance/services/punch_in_now_permission_provider.dart';
 import 'package:wallpost/attendance/services/punch_out_marker.dart';
-import 'package:wallpost/attendance/ui/contracts/attendance_view.dart';
+import 'package:wallpost/attendance/ui/view_contracts/attendance_view.dart';
 import 'package:wallpost/attendance/ui/presenters/attendance_presenter.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
@@ -45,6 +46,8 @@ class MockAttendanceLocation extends Mock implements AttendanceLocation {}
 class MockAttendanceLocationValidator extends Mock
     implements AttendanceLocationValidator {}
 
+class MockPunchInMarker extends Mock implements PunchInMarker {}
+
 class MockPunchOutMarker extends Mock implements PunchOutMarker {}
 
 void main() {
@@ -55,6 +58,7 @@ void main() {
       MockPunchInFromAppPermissionProvider();
   var mockPunchInNowPermissionProvider = MockPunchInNowPermissionProvider();
   var mockAttendanceLocationValidator = MockAttendanceLocationValidator();
+  var mockPunchInMarker = MockPunchInMarker();
   var mockPunchOutMarker = MockPunchOutMarker();
 
   AttendancePresenter presenter = AttendancePresenter.initWith(
@@ -64,6 +68,7 @@ void main() {
       mockPunchInFromAppPermissionProvider,
       mockPunchInNowPermissionProvider,
       mockAttendanceLocationValidator,
+      mockPunchInMarker,
       mockPunchOutMarker);
 
   setUp(() {
@@ -72,6 +77,7 @@ void main() {
     //  reset(mockLocationProvider);
     reset(mockPunchInFromAppPermissionProvider);
     reset(mockPunchInNowPermissionProvider);
+    reset(mockAttendanceLocationValidator);
     reset(mockPunchOutMarker);
     registerFallbackValue(MockAttendanceDetails());
     registerFallbackValue(MockAttendanceLocation());
@@ -83,6 +89,7 @@ void main() {
     verifyNoMoreInteractions(mockLocationProvider);
     verifyNoMoreInteractions(mockPunchInFromAppPermissionProvider);
     verifyNoMoreInteractions(mockPunchInNowPermissionProvider);
+    verifyNoMoreInteractions(mockAttendanceLocationValidator);
     verifyNoMoreInteractions(mockPunchOutMarker);
   }
 
@@ -111,6 +118,7 @@ void main() {
   test("loading attendance details successfully", () async {
     //given
     var attendance = MockAttendanceDetails();
+    var attendanceLocation = MockAttendanceLocation();
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
     when(() => attendance.isPunchedIn).thenReturn(true);
     when(() => attendance.isPunchedOut).thenReturn(false);
@@ -120,7 +128,10 @@ void main() {
     when(() => attendance.punchInTimeString).thenReturn(punchInTime);
     when(() => mockAttendanceDetailsProvider.getDetails())
         .thenAnswer((_) => Future.value(attendance));
-
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
     // when
     await presenter.loadAttendanceDetails();
 
@@ -132,13 +143,16 @@ void main() {
       () => view.hideLoader(),
       () => view.showPunchInTime(punchInTime),
       () => view.showPunchOutButton(),
-      () => view.showBreakButton()
+      () => view.showBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
   test(
-      'shows disabled button when the user not punched in and getting the punch in from app permission fails',
+      'shows disabled button when the user is not punched in and getting the punch in from app permission fails',
       () async {
     //given
     var attendance = MockAttendanceDetails();
@@ -274,7 +288,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('show alert if gps is not enabled', () async {
+  test('shows alert if gps is not enabled', () async {
     //given
     var attendance = MockAttendanceDetails();
     var appPermission = MockPunchInFromAppPermission();
@@ -303,6 +317,8 @@ void main() {
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
       () => mockPunchInNowPermissionProvider.canPunchInNow(),
       () => view.hideLoader(),
+      () => view.showPunchInButton(),
+      () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
       () => view.showDisabledButton(),
       () => view.showAlertToTurnOnDeviceLocation(
@@ -312,7 +328,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('show alert when the location permission denied', () async {
+  test('shows alert when the location permission is denied', () async {
     //given
     var attendance = MockAttendanceDetails();
     var appPermission = MockPunchInFromAppPermission();
@@ -341,6 +357,8 @@ void main() {
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
       () => mockPunchInNowPermissionProvider.canPunchInNow(),
       () => view.hideLoader(),
+      () => view.showPunchInButton(),
+      () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
       () => view.showDisabledButton(),
       () => view.showAlertToDeniedLocationPermission(
@@ -350,7 +368,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('go to app settings when the location permission permanently denied',
+  test('go to app settings when the location permission is permanently denied',
       () async {
     //given
     var attendance = MockAttendanceDetails();
@@ -380,6 +398,8 @@ void main() {
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
       () => mockPunchInNowPermissionProvider.canPunchInNow(),
       () => view.hideLoader(),
+      () => view.showPunchInButton(),
+      () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
       () => view.showDisabledButton(),
       () => view.openAppSettings(),
@@ -416,6 +436,8 @@ void main() {
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
       () => mockPunchInNowPermissionProvider.canPunchInNow(),
       () => view.hideLoader(),
+      () => view.showPunchInButton(),
+      () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
       () => view.showDisabledButton(),
       () => view.showFailedToGetLocation("Getting location failed",
@@ -457,51 +479,232 @@ void main() {
       () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
       () => mockPunchInNowPermissionProvider.canPunchInNow(),
       () => view.hideLoader(),
+      () => view.showPunchInButton(),
+      () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
-      () => view.showPunchInButton(),
-      () => view.hideBreakButton(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("shows punch out button when the user is punched in and not punched out",
-      () async {
+  test("show alert when failed to validate location for punch in", () async {
     //given
-
     var attendance = MockAttendanceDetails();
+    var appPermission = MockPunchInFromAppPermission();
+    var punchInNowPermission = MockPunchInNowPermission();
+    var attendanceLocation = MockAttendanceLocation();
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-    when(() => attendance.isPunchedIn).thenReturn(true);
-    when(() => attendance.isPunchedOut).thenReturn(false);
-    when(() => attendance.isOnBreak).thenReturn(false);
-    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
-    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
+    when(() => attendance.isPunchedIn).thenReturn(false);
+    when(() => appPermission.isAllowed).thenReturn(true);
+    when(() => punchInNowPermission.canPunchInNow).thenReturn(true);
     when(() => mockAttendanceDetailsProvider.getDetails())
         .thenAnswer((_) => Future.value(attendance));
-
-    // when
+    when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp())
+        .thenAnswer((_) => Future.value(appPermission));
+    when(() => mockPunchInNowPermissionProvider.canPunchInNow())
+        .thenAnswer((_) => Future.value(punchInNowPermission));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+    when(() => mockAttendanceLocationValidator.validateLocation(any(),
+            isForPunchIn: true))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
     await presenter.loadAttendanceDetails();
+
+    //when
+    await presenter.validateLocation(true);
 
     //then
     verifyInOrder([
       () => mockAttendanceDetailsProvider.isLoading,
       () => view.showLoader(),
       () => mockAttendanceDetailsProvider.getDetails(),
+      () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
+      () => mockPunchInNowPermissionProvider.canPunchInNow(),
       () => view.hideLoader(),
-      () => view.showPunchInTime(punchInTime),
-      () => view.showPunchOutButton(),
-      () => view.showBreakButton(),
+      () => view.showPunchInButton(),
+      () => view.hideBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+      () => mockAttendanceLocationValidator.validateLocation(any(),
+          isForPunchIn: true),
+      () => view.showErrorMessage("Failed to validate your location",
+          InvalidResponseException().userReadableMessage),
     ]);
+
     _verifyNoMoreInteractionsOnAllMocks();
   });
+
+  test("failure to punch in", () async {
+    //given
+    var attendance = MockAttendanceDetails();
+    var appPermission = MockPunchInFromAppPermission();
+    var punchInNowPermission = MockPunchInNowPermission();
+    var attendanceLocation = MockAttendanceLocation();
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => attendance.isPunchedIn).thenReturn(false);
+    when(() => appPermission.isAllowed).thenReturn(true);
+    when(() => punchInNowPermission.canPunchInNow).thenReturn(true);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp())
+        .thenAnswer((_) => Future.value(appPermission));
+    when(() => mockPunchInNowPermissionProvider.canPunchInNow())
+        .thenAnswer((_) => Future.value(punchInNowPermission));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+    when(() => mockAttendanceLocationValidator.validateLocation(any(),
+        isForPunchIn: true)).thenAnswer((_) => Future.value(true));
+    when(() => mockPunchInMarker.punchIn(any(), isLocationValid: true))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    await presenter.loadAttendanceDetails();
+
+    //when
+    await presenter.validateLocation(true);
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
+      () => mockPunchInNowPermissionProvider.canPunchInNow(),
+      () => view.hideLoader(),
+      () => view.showPunchInButton(),
+      () => view.hideBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+      () => mockAttendanceLocationValidator.validateLocation(any(),
+          isForPunchIn: true),
+      () => mockPunchInMarker.punchIn(any(), isLocationValid: true),
+      () => view.showErrorMessage(
+          "Punch in failed", InvalidResponseException().userReadableMessage),
+    ]);
+
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("successfully punched in with invalid location", () async {
+    //given
+    var attendance = MockAttendanceDetails();
+    var appPermission = MockPunchInFromAppPermission();
+    var punchInNowPermission = MockPunchInNowPermission();
+    var attendanceLocation = MockAttendanceLocation();
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => attendance.isPunchedIn).thenReturn(false);
+    when(() => appPermission.isAllowed).thenReturn(true);
+    when(() => punchInNowPermission.canPunchInNow).thenReturn(true);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp())
+        .thenAnswer((_) => Future.value(appPermission));
+    when(() => mockPunchInNowPermissionProvider.canPunchInNow())
+        .thenAnswer((_) => Future.value(punchInNowPermission));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+    when(() => mockAttendanceLocationValidator.validateLocation(any(),
+        isForPunchIn: true)).thenAnswer((_) => Future.value(false));
+    when(() => mockPunchInMarker.punchIn(any(), isLocationValid: false))
+        .thenAnswer((_) => Future.value());
+    await presenter.loadAttendanceDetails();
+    await presenter.validateLocation(true);
+
+    //when
+    await presenter.doPunchIn(false);
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
+      () => mockPunchInNowPermissionProvider.canPunchInNow(),
+      () => view.hideLoader(),
+      () => view.showPunchInButton(),
+      () => view.hideBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+      () => mockAttendanceLocationValidator.validateLocation(any(),
+          isForPunchIn: true),
+      () => view.showError(
+          "Invalid punch in location",
+          "You are not allowed to punch in outside the office location. "
+              "Doing so will affect your performance. Would you still like to punch in?"),
+      () => mockPunchInMarker.punchIn(any(), isLocationValid: false),
+    ]);
+
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("successfully punched in with valid location", () async {
+    //given
+    var attendance = MockAttendanceDetails();
+    var appPermission = MockPunchInFromAppPermission();
+    var punchInNowPermission = MockPunchInNowPermission();
+    var attendanceLocation = MockAttendanceLocation();
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => attendance.isPunchedIn).thenReturn(false);
+    when(() => appPermission.isAllowed).thenReturn(true);
+    when(() => punchInNowPermission.canPunchInNow).thenReturn(true);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp())
+        .thenAnswer((_) => Future.value(appPermission));
+    when(() => mockPunchInNowPermissionProvider.canPunchInNow())
+        .thenAnswer((_) => Future.value(punchInNowPermission));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+    when(() => mockAttendanceLocationValidator.validateLocation(any(),
+        isForPunchIn: true)).thenAnswer((_) => Future.value(true));
+    when(() => mockPunchInMarker.punchIn(any(), isLocationValid: true))
+        .thenAnswer((_) => Future.value());
+    await presenter.loadAttendanceDetails();
+
+    //when
+    await presenter.validateLocation(true);
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
+      () => mockPunchInNowPermissionProvider.canPunchInNow(),
+      () => view.hideLoader(),
+      () => view.showPunchInButton(),
+      () => view.hideBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+      () => mockAttendanceLocationValidator.validateLocation(any(),
+          isForPunchIn: true),
+      () => mockPunchInMarker.punchIn(any(), isLocationValid: true),
+    ]);
+
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test(
+      "show punch in button when the user is not punched in if location is invalid",
+      () async {});
 
   test(
       "shows enabled break button when the user is punched in and is not on break",
       () async {
     //given
     var attendance = MockAttendanceDetails();
+    var attendanceLocation = MockAttendanceLocation();
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
     when(() => attendance.isPunchedIn).thenReturn(true);
     when(() => attendance.isPunchedOut).thenReturn(false);
@@ -511,6 +714,10 @@ void main() {
     when(() => attendance.punchInTimeString).thenReturn(punchInTime);
     when(() => mockAttendanceDetailsProvider.getDetails())
         .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
 
     // when
     await presenter.loadAttendanceDetails();
@@ -524,6 +731,9 @@ void main() {
       () => view.showPunchInTime(punchInTime),
       () => view.showPunchOutButton(),
       () => view.showBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -531,6 +741,7 @@ void main() {
   test("shows resume button when the user is on break", () async {
     //given
     var attendance = MockAttendanceDetails();
+    var attendanceLocation = MockAttendanceLocation();
     when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
     when(() => attendance.isPunchedIn).thenReturn(true);
     when(() => attendance.isPunchedOut).thenReturn(false);
@@ -540,6 +751,10 @@ void main() {
     when(() => attendance.punchInTimeString).thenReturn(punchInTime);
     when(() => mockAttendanceDetailsProvider.getDetails())
         .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
 
     // when
     await presenter.loadAttendanceDetails();
@@ -553,12 +768,241 @@ void main() {
       () => view.showPunchInTime(punchInTime),
       () => view.showPunchOutButton(),
       () => view.showResumeButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("shows punch out button when the user is punched in and not punched out",
+      () async {
+    //given
+    var attendance = MockAttendanceDetails();
+    var attendanceLocation = MockAttendanceLocation();
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => attendance.isPunchedIn).thenReturn(true);
+    when(() => attendance.isPunchedOut).thenReturn(false);
+    when(() => attendance.isOnBreak).thenReturn(false);
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
+    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+
+    // when
+    await presenter.loadAttendanceDetails();
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => view.hideLoader(),
+      () => view.showPunchInTime(punchInTime),
+      () => view.showPunchOutButton(),
+      () => view.showBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("show alert when failed to validate location for punch out", () async {
+    //given
+    var attendanceLocation = MockAttendanceLocation();
+    var attendance = MockAttendanceDetails();
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => attendance.isPunchedIn).thenReturn(true);
+    when(() => attendance.isPunchedOut).thenReturn(false);
+    when(() => attendance.isOnBreak).thenReturn(false);
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
+    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+    when(() => mockAttendanceLocationValidator.validateLocation(any(),
+            isForPunchIn: false))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    await presenter.loadAttendanceDetails();
+
+    // when
+    await presenter.validateLocation(false);
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => view.hideLoader(),
+      () => view.showPunchInTime(punchInTime),
+      () => view.showPunchOutButton(),
+      () => view.showBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+      () => mockAttendanceLocationValidator.validateLocation(any(),
+          isForPunchIn: false),
+      () => view.showErrorMessage("Failed to validate your location",
+          InvalidResponseException().userReadableMessage),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("failure to punch out", () async {
+    //given
+    var attendanceLocation = MockAttendanceLocation();
+    var attendance = MockAttendanceDetails();
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => attendance.isPunchedIn).thenReturn(true);
+    when(() => attendance.isPunchedOut).thenReturn(false);
+    when(() => attendance.isOnBreak).thenReturn(false);
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
+    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+    when(() => mockAttendanceLocationValidator.validateLocation(any(),
+        isForPunchIn: false)).thenAnswer((_) => Future.value(true));
+    when(() => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: true))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    await presenter.loadAttendanceDetails();
+
+    // when
+    await presenter.validateLocation(false);
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => view.hideLoader(),
+      () => view.showPunchInTime(punchInTime),
+      () => view.showPunchOutButton(),
+      () => view.showBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+      () => mockAttendanceLocationValidator.validateLocation(any(),
+          isForPunchIn: false),
+      () => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: true),
+      () => view.showErrorMessage(
+          "Punch out failed", InvalidResponseException().userReadableMessage),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("successfully punched out with invalid location", () async {
+    //given
+    var attendanceLocation = MockAttendanceLocation();
+    var attendance = MockAttendanceDetails();
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => attendance.isPunchedIn).thenReturn(true);
+    when(() => attendance.isPunchedOut).thenReturn(false);
+    when(() => attendance.isOnBreak).thenReturn(false);
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
+    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+    when(() => mockAttendanceLocationValidator.validateLocation(any(),
+        isForPunchIn: false)).thenAnswer((_) => Future.value(false));
+    when(() =>
+            mockPunchOutMarker.punchOut(any(), any(), isLocationValid: false))
+        .thenAnswer((_) => Future.value());
+    await presenter.loadAttendanceDetails();
+    await presenter.validateLocation(false);
+
+    // when
+    await presenter.doPunchOut(false);
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => view.hideLoader(),
+      () => view.showPunchInTime(punchInTime),
+      () => view.showPunchOutButton(),
+      () => view.showBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+      () => mockAttendanceLocationValidator.validateLocation(any(),
+          isForPunchIn: false),
+      () => view.showError(
+          "Invalid punch out location",
+          "You are not allowed to punch out outside the office location. "
+              "Doing so will affect your performance. Would you still like to punch out?"),
+      () => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: false),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("successfully punched out when the location is valid", () async {
+    //given
+    var attendanceLocation = MockAttendanceLocation();
+    var attendance = MockAttendanceDetails();
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => attendance.isPunchedIn).thenReturn(true);
+    when(() => attendance.isPunchedOut).thenReturn(false);
+    when(() => attendance.isOnBreak).thenReturn(false);
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
+    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+    when(() => mockAttendanceLocationValidator.validateLocation(any(),
+        isForPunchIn: false)).thenAnswer((_) => Future.value(true));
+    when(() => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: true))
+        .thenAnswer((_) => Future.value());
+    await presenter.loadAttendanceDetails();
+
+    // when
+    await presenter.validateLocation(false);
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => view.hideLoader(),
+      () => view.showPunchInTime(punchInTime),
+      () => view.showPunchOutButton(),
+      () => view.showBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+      () => mockAttendanceLocationValidator.validateLocation(any(),
+          isForPunchIn: false),
+      () => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: true),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
   test(
-      "shows disabled button with punch in and out time when the user is punched out",
+      "shows disabled button with punch in and punch out time after the user is punched out",
       () async {
     //given
     var attendance = MockAttendanceDetails();
@@ -589,219 +1033,6 @@ void main() {
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
-
-  test("successfully punched out when the location is valid", () async {
-    //given
-
-    var attendanceLocation = MockAttendanceLocation();
-    var attendance = MockAttendanceDetails();
-    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-    when(() => attendance.isPunchedIn).thenReturn(true);
-    when(() => attendance.isPunchedOut).thenReturn(false);
-    when(() => attendance.isOnBreak).thenReturn(false);
-    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
-    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
-    when(() => mockAttendanceDetailsProvider.getDetails())
-        .thenAnswer((_) => Future.value(attendance));
-    when(() => mockLocationProvider.getLocation())
-        .thenAnswer((_) => Future.value(attendanceLocation));
-    when(() => mockLocationProvider.getLocationAddress(any()))
-        .thenAnswer((_) => Future.value("address"));
-    when(() => mockAttendanceLocationValidator.validateLocation(any(),
-        isForPunchIn: true)).thenAnswer((_) => Future.value(true));
-    when(
-        () => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: true));
-
-    await presenter.loadAttendanceDetails();
-
-    // when
-    await presenter.getLocationForPunchOut();
-
-    //then
-
-    verifyInOrder([
-      () => mockAttendanceDetailsProvider.isLoading,
-      () => view.showLoader(),
-      () => mockAttendanceDetailsProvider.getDetails(),
-      () => view.hideLoader(),
-      () => view.showPunchInTime(punchInTime),
-      () => view.showPunchOutButton(),
-      () => view.showBreakButton(),
-      () => mockLocationProvider.getLocation(),
-          () => mockLocationProvider.getLocationAddress(any()),
-          () => view.showLocationAddress("address"),
-      () => mockAttendanceLocationValidator.validateLocation(any(),
-          isForPunchIn: true),
-      //  () => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: true)
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-  /*
-
-  //--------------------------------------------
-
-
-
-  test("getLocationSuccessfully", () async {
-    //given
-    var attendance = MockAttendanceDetails();
-    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-    when(() => attendance.isPunchedIn).thenReturn(true);
-    when(() => attendance.isPunchedOut).thenReturn(false);
-    when(() => attendance.isOnBreak).thenReturn(false);
-
-    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
-    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
-
-    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(attendance));
-    when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.value(MockAttendanceLocation()));
-    when(() => mockLocationProvider.getLocationAddress(any())).thenAnswer((_) => Future.value("address"));
-
-    // when
-    await presenter.loadAttendanceDetails();
-
-    //then
-    verifyInOrder([
-      () => mockAttendanceDetailsProvider.isLoading,
-      () => view.showLoader(),
-      () => mockAttendanceDetailsProvider.getDetails(),
-      () => mockLocationProvider.getLocation(),
-      () => mockLocationProvider.getLocationAddress(any()),
-      () => view.hideLoader(),
-      () => view.showPunchInTime(punchInTime),
-      () => view.showBreakButton(),
-      () => view.showPunchOutButton()
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-
-  test('gettingPunchInAppPermission_whenFailGettingLocationAddress', () async {
-    //given
-    var attendance = MockAttendanceDetails();
-    var appPermission = MockPunchInFromAppPermission();
-    var punchInNowPermission = MockPunchInNowPermission();
-
-    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-
-    when(() => attendance.isPunchedIn).thenReturn(false);
-
-    when(() => appPermission.isAllowed).thenReturn(true);
-
-    when(() => punchInNowPermission.canPunchInNow).thenReturn(true);
-
-    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(attendance));
-    when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.value(MockAttendanceLocation()));
-    when(() => mockLocationProvider.getLocationAddress(any()))
-        .thenAnswer((_) => Future.error(LocationReverseGeocodingException()));
-    when(() => mockPunchInFromAppPermissionProvider.canPunchInFromApp()).thenAnswer((_) => Future.value(appPermission));
-    when(() => mockPunchInNowPermissionProvider.canPunchInNow()).thenAnswer((_) => Future.value(punchInNowPermission));
-
-    // when
-    await presenter.loadAttendanceDetails();
-
-    //then
-    verifyInOrder([
-      () => mockAttendanceDetailsProvider.isLoading,
-      () => view.showLoader(),
-      () => mockAttendanceDetailsProvider.getDetails(),
-      () => mockLocationProvider.getLocation(),
-      () => mockLocationProvider.getLocationAddress(any()),
-      () => mockPunchInFromAppPermissionProvider.canPunchInFromApp(),
-      () => view.showLocationAddress(""),
-      () => mockPunchInNowPermissionProvider.canPunchInNow(),
-      () => view.hideLoader(),
-      () => view.showPunchInButton(),
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-  test("canPunchOut_WhenLocationIsValid_UserIsPunchIn_NotPunchOut", () async {
-    //given
-
-    var attendance = MockAttendanceDetails();
-
-    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-    when(() => attendance.isPunchedIn).thenReturn(true);
-    when(() => attendance.isPunchedOut).thenReturn(false);
-    when(() => attendance.isOnBreak).thenReturn(false);
-
-    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
-    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
-
-    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(attendance));
-    when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.value(MockAttendanceLocation()));
-    when(() => mockLocationProvider.getLocationAddress(any())).thenAnswer((_) => Future.value("address"));
-    when(() => mockAttendanceLocationValidator.validateLocation(any(), isForPunchIn: true))
-        .thenAnswer((_) => Future.value(true));
-    await presenter.loadAttendanceDetails();
-    // when
-    await presenter.doPunchOut();
-
-    //then
-    verifyInOrder([
-      () => mockAttendanceDetailsProvider.isLoading,
-      () => view.showLoader(),
-      () => mockAttendanceDetailsProvider.getDetails(),
-      () => mockLocationProvider.getLocation(),
-      () => mockLocationProvider.getLocationAddress(any()),
-      () => view.hideLoader(),
-      () => view.showPunchInTime(punchInTime),
-      () => view.showBreakButton(),
-      () => view.showPunchOutButton(),
-      () => mockAttendanceLocationValidator.validateLocation(any(), isForPunchIn: true),
-      () => view.showLocationAddress("address"),
-      () => view.doPunchOut()
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
- test("showAlert_WhenLocationIsNotValid_UserIsPunchIn_NotPunchOut", () async {
-    //given
-
-    var attendance = MockAttendanceDetails();
-
-    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-    when(() => attendance.isPunchedIn).thenReturn(true);
-    when(() => attendance.isPunchedOut).thenReturn(false);
-    when(() => attendance.isOnBreak).thenReturn(false);
-
-    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
-    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
-
-    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(attendance));
-    when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.value(MockAttendanceLocation()));
-    when(() => mockLocationProvider.getLocationAddress(any())).thenAnswer((_) => Future.value("address"));
-    when(() => mockAttendanceLocationValidator.validateLocation(any(), isForPunchIn: true))
-        .thenAnswer((_) => Future.value(false));
-    await presenter.loadAttendanceDetails();
-    // when
-    await presenter.validateLocationForPunchOut();
-
-    //then
-    verifyInOrder([
-          () => mockAttendanceDetailsProvider.isLoading,
-          () => view.showLoader(),
-          () => mockAttendanceDetailsProvider.getDetails(),
-          () => mockLocationProvider.getLocation(),
-          () => mockLocationProvider.getLocationAddress(any()),
-          () => view.hideLoader(),
-          () => view.showPunchInTime(punchInTime),
-          () => view.showBreakButton(),
-          () => view.showPunchOutButton(),
-          () => mockAttendanceLocationValidator.validateLocation(any(), isForPunchIn: true),
-          () => view.showLocationAddress("address"),
-          () => view.showAlertToVerifyLocation("location is not valid")
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-   */
 }
 
 //When to get the location first
