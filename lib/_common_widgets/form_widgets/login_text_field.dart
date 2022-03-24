@@ -27,35 +27,43 @@ class LoginTextField extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(color: Colors.transparent),
       child: TextFormField(
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
         obscureText: obscureText,
         keyboardType: keyboardType,
         controller: controller,
         textInputAction: textInputAction,
         onFieldSubmitted: onFieldSubmitted,
         decoration: InputDecoration(
-          fillColor: Colors.white,
+          isDense: true,
+          fillColor: AppColors.lightGreyColor,
           filled: true,
           hintText: hint,
           errorText: errorText,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(100.0)),
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(
-              color: AppColors.defaultColor,
+              color: AppColors.lightGreyColor,
               width: 1,
             ),
           ),
+          focusedBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderSide: BorderSide(
+              color: AppColors.greyColor,
+              width: 2,
+            ),
+          ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(100.0)),
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(
               color: errorColor,
               width: 1,
             ),
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(100.0)),
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(
-              color: AppColors.defaultColor,
+              color: AppColors.lightGreyColor,
               width: 1,
             ),
           ),

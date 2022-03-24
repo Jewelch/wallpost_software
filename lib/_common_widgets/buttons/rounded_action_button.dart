@@ -4,9 +4,11 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 class RoundedRectangleActionButton extends StatelessWidget {
   final String? title;
   final String? subtitle;
+  final MainAxisAlignment? alignment;
   final Widget? icon;
   final Color? color;
   final Color? borderColor;
+  final Color? textColor;
   final VoidCallback onPressed;
   final bool disabled;
   final bool showLoader;
@@ -14,9 +16,11 @@ class RoundedRectangleActionButton extends StatelessWidget {
   RoundedRectangleActionButton({
     this.title,
     this.subtitle,
+    this.alignment,
     this.icon,
     this.color,
     this.borderColor,
+    this.textColor,
     required this.onPressed,
     this.disabled = false,
     this.showLoader = false,
@@ -32,14 +36,14 @@ class RoundedRectangleActionButton extends StatelessWidget {
         highlightElevation: 0,
         shape: RoundedRectangleBorder(
           side: BorderSide(color: borderColor ?? Colors.transparent),
-          borderRadius: BorderRadius.circular(25.0),
+          borderRadius: BorderRadius.circular(8.0),
         ),
         padding: EdgeInsets.only(left: 8, right: 8),
         onPressed: (disabled || showLoader) ? null : onPressed,
-        color: color ?? AppColors.defaultColor,
+        color: color ?? AppColors.lightBlue,
         disabledColor: showLoader ? AppColors.defaultColor : AppColors.defaultColor.withOpacity(0.5),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment:  MainAxisAlignment.center,
           children: showLoader ? _buildLoader() : _buildIconAndTitle(),
         ),
       ),
@@ -52,8 +56,8 @@ class RoundedRectangleActionButton extends StatelessWidget {
       if (icon != null && title != null && title!.isNotEmpty) SizedBox(width: 8),
       if (title != null && title!.isNotEmpty)
         Flexible(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            mainAxisAlignment: alignment ?? MainAxisAlignment.center,
             children: [
               Text(
                 title!,
@@ -62,7 +66,7 @@ class RoundedRectangleActionButton extends StatelessWidget {
                 maxLines: 1,
                 style: TextStyle(
                   fontSize: 16,
-                  color: disabled ? Colors.white60 : Colors.white,
+                  color: disabled ? Colors.white60 : (textColor ?? Colors.white),
                   fontWeight: FontWeight.w400,
                 ),
               ),

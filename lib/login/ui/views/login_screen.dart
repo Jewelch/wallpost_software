@@ -40,29 +40,24 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Container(
-          decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-                colors: [
-                  AppColors.defaultColor.withOpacity(0.8),
-                  AppColors.defaultColor,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp),
-          ),
-          padding: EdgeInsets.all(10.0),
           child: ListView(
             physics: ClampingScrollPhysics(),
             children: <Widget>[
               loginIcon(),
-              SizedBox(height: 40),
-              formUI(),
-              SizedBox(height: 16),
-              _loginButton(),
-              SizedBox(height: 16),
-              _forgotPasswordButton(),
-              SizedBox(height: 16),
+              Container(
+                margin: EdgeInsets.all(40.0),
+                child: Column(
+                  children: [
+                    SizedBox(height: 4),
+                    formUI(),
+                    SizedBox(height: 12),
+                    _loginButton(),
+                    SizedBox(height: 4),
+                    _forgotPasswordButton(),
+                    SizedBox(height: 16),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -75,14 +70,14 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
       notifier: _showLogoNotifier,
       builder: (context, showLogo) => AnimatedContainer(
         duration: Duration(milliseconds: 100),
-        margin: EdgeInsets.only(top: (showLogo ?? true) ? 40 : 0),
+        margin: EdgeInsets.symmetric(vertical: (showLogo ?? true) ? 80 : 0),
         curve: Curves.easeInOut,
         width: double.infinity,
         child: Center(
           child: Container(
-            height: (showLogo ?? true) ? 120 : 0,
-            width: 120,
-            child: Image.asset('assets/logo/logo.png'),
+            height: (showLogo ?? true) ? 152 : 0,
+            width: 152,
+            child: Image.asset('assets/logo/wallpost_logo.png'),
           ),
         ),
       ),
@@ -91,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
 
   Widget formUI() {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         ItemNotifiable<String>(
           notifier: _accountNumberErrorNotifier,
@@ -133,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
       notifier: _showLoaderNotifier,
       builder: (context, value) => RoundedRectangleActionButton(
         title: 'Login',
-        borderColor: AppColors.defaultColorDark,
+        borderColor: AppColors.lightBlue,
         onPressed: () => _performLogin(),
         showLoader: value ?? false,
       ),
@@ -150,8 +145,10 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
 
   Widget _forgotPasswordButton() {
     return RoundedRectangleActionButton(
-      title: 'Forgot your password?',
+      title: 'Forgot password?',
+      alignment: MainAxisAlignment.end,
       color: Colors.transparent,
+      textColor: Colors.black,
       onPressed: () {
         ScreenPresenter.present(ForgotPasswordScreen(), context);
       },
