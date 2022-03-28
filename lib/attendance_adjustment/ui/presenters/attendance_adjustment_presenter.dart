@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_adjustment_form.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/services/adjusted_status_provider.dart';
 import 'package:wallpost/attendance_adjustment/services/attendance_adjustment_submitter.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_adjustment_view.dart';
@@ -58,7 +58,7 @@ class AttendanceAdjustmentPresenter {
     _adjustedPunchOutTime = _punchOutTime;
   }
 
-  //MARK: Function to get adjusted status of attendance.
+  //MARK: Function to get adjusted status of attendance_punch_in_out.
 
   Future<void> adjustPunchInTime(TimeOfDay adjustedPunchInTime) async {
     await _loadAdjustedStatus(adjustedPunchInTime: adjustedPunchInTime,adjustedPunchOutTime: _adjustedPunchOutTime);
@@ -119,7 +119,7 @@ class AttendanceAdjustmentPresenter {
 
 
 
-  //MARK: Function to submit adjusted attendance.
+  //MARK: Function to submit adjusted attendance_punch_in_out.
 
   Future<void> submitAdjustment(String reason) async {
     _view.clearError();

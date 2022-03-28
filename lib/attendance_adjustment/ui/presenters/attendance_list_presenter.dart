@@ -6,7 +6,7 @@ import 'package:wallpost/attendance_adjustment/services/attendance_list_provider
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_list_view.dart';
 
 import '../../../_shared/constants/app_colors.dart';
-import '../../entities/attendance_status.dart';
+import '../../../attendance__core/entities/attendance_status.dart';
 
 class AttendanceListPresenter {
   final AttendanceListView _view;
@@ -25,7 +25,7 @@ class AttendanceListPresenter {
       this._attendanceListProvider,
       )   : _selectedYear = AppYears.years().first;
 
-  //MARK: Function to load the attendance list
+  //MARK: Function to load the attendance_punch_in_out list
 
   Future<void> loadAttendanceList() async {
     if (_attendanceListProvider.isLoading) return;
@@ -40,7 +40,7 @@ class AttendanceListPresenter {
       if (_attendanceList.isNotEmpty) {
         _view.showAttendanceList(_attendanceList);
       } else {
-        _view.showNoListMessage("There is no attendance for $_selectedMonth $_selectedYear.\n\nTap here to reload.");
+        _view.showNoListMessage("There is no attendance_punch_in_out for $_selectedMonth $_selectedYear.\n\nTap here to reload.");
       }
       _view.hideLoader();
     } on WPException catch (e) {
@@ -49,7 +49,7 @@ class AttendanceListPresenter {
     }
   }
 
-  //MARK: Function to refresh the attendance list
+  //MARK: Function to refresh the attendance_punch_in_out list
 
   refresh() {
     _attendanceListProvider.reset();

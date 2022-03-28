@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/company_core/entities/employee.dart';
 
 class AttendanceAdjustmentForm implements JSONConvertible {

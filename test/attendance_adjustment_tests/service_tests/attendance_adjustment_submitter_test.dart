@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_adjustment_form.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/services/attendance_adjustment_submitter.dart';
 
 import '../../_mocks/mock_employee.dart';

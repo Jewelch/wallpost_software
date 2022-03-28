@@ -5,7 +5,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_adjustment_form.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/services/adjusted_status_provider.dart';
 import 'package:wallpost/attendance_adjustment/services/attendance_adjustment_submitter.dart';
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_adjustment_presenter.dart';
@@ -170,7 +170,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  //MARK: Tests for submitting adjusted attendance
+  //MARK: Tests for submitting adjusted attendance_punch_in_out
 
   Future<void> _loadAdjustedStatusAndResetAllMocks() async {
     when(() => adjustedStatusProvider.isLoading).thenReturn(false);
@@ -196,7 +196,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('notifies view if attendance not adjusted', () async {
+  test('notifies view if attendance_punch_in_out not adjusted', () async {
     //given
     when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(false);
 
@@ -211,7 +211,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('submitting adjusted attendance when the adjustment submitter is loading does nothing ', () async {
+  test('submitting adjusted attendance_punch_in_out when the adjustment submitter is loading does nothing ', () async {
     //given
     await _loadAdjustedStatusAndResetAllMocks();
     when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(true);
@@ -227,7 +227,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('failed to submit adjusted attendance', () async {
+  test('failed to submit adjusted attendance_punch_in_out', () async {
     //given
     await _loadAdjustedStatusAndResetAllMocks();
     when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(false);
@@ -251,7 +251,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('attendance adjustment submission successful', () async {
+  test('attendance_punch_in_out adjustment submission successful', () async {
     //given
     await _loadAdjustedStatusAndResetAllMocks();
     when(() => attendanceAdjustmentSubmitter.isLoading).thenReturn(false);

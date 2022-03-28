@@ -334,7 +334,7 @@ class Mocks {
     {
       "display_name": "Punch In/Out Outside Office",
       "name": "punch_in_out",
-      "sub_module": "attendance",
+      "sub_module": "attendance_punch_in_out",
       "visibility": true
     },
     {

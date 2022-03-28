@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_list_presenter.dart';
 
 class AttendanceListCard extends StatelessWidget {

@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
 import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/company_core/services/selected_employee_provider.dart';
 
 class AdjustedStatusProvider {

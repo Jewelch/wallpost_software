@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 
 class AttendanceListItem extends JSONInitializable {
   late num? _id;

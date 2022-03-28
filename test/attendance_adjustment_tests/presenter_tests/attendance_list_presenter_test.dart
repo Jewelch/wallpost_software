@@ -5,7 +5,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_status.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/services/attendance_list_provider.dart';
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_list_presenter.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_list_view.dart';
@@ -53,7 +53,7 @@ void main() {
 
   //MARK: Test for loading list
 
-  test('retrieving attendance list successfully', () async {
+  test('retrieving attendance_punch_in_out list successfully', () async {
     when(() => mockAttendanceListProvider.isLoading).thenReturn(false);
     when(() => mockAttendanceListProvider.get(month, year)).thenAnswer((_) => Future.value(_attendanceList));
 
@@ -69,7 +69,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('retrieving attendance list successfully with empty list', () async {
+  test('retrieving attendance_punch_in_out list successfully with empty list', () async {
     //given
     when(() => mockAttendanceListProvider.isLoading).thenReturn(false);
     when(() => mockAttendanceListProvider.get(month, year)).thenAnswer((_) => Future.value(List.empty()));
@@ -83,13 +83,13 @@ void main() {
       () => view.showLoader(),
       () => mockAttendanceListProvider.get(month, year),
       () => view.showNoListMessage(
-          "There is no attendance for ${presenter.getSelectedMonth()} ${presenter.getSelectedYear()}.\n\nTap here to reload."),
+          "There is no attendance_punch_in_out for ${presenter.getSelectedMonth()} ${presenter.getSelectedYear()}.\n\nTap here to reload."),
       () => view.hideLoader()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('retrieving attendance list failure', () async {
+  test('retrieving attendance_punch_in_out list failure', () async {
     //given
     when(() => mockAttendanceListProvider.isLoading).thenReturn(false);
     when(() => mockAttendanceListProvider.get(month, year)).thenAnswer(
@@ -110,7 +110,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('refresh the attendance list', () async {
+  test('refresh the attendance_punch_in_out list', () async {
     //given
     when(() => mockAttendanceListProvider.isLoading).thenReturn(false);
     when(() => mockAttendanceListProvider.get(month, year)).thenAnswer((_) => Future.value(_attendanceList));
