@@ -39,18 +39,20 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      backgroundColor: AppColors.screenBackgroundColor,
       body: SafeArea(
         child: Container(
           child: ListView(
             physics: ClampingScrollPhysics(),
             children: <Widget>[
               loginIcon(),
+              SizedBox(height: 4),
+              CurveBottomToTop(),
               Container(
                 margin: EdgeInsets.all(40.0),
                 child: Column(
                   children: [
                     SizedBox(height: 4),
-                    CurveBottomToTop(),
                     formUI(),
                     SizedBox(height: 12),
                     _loginButton(),

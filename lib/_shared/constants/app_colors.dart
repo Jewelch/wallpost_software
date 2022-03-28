@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  static const Color screenBackgroundColor = Colors.white;
+
   static const Color darkBlue = Color.fromRGBO(0, 60, 129, 1.0);
   static const Color blue = Color.fromRGBO(0, 105, 178, 1.0);
   static const Color lightBlue = Color.fromRGBO(0, 150, 227, 1.0);

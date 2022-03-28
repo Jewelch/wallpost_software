@@ -1,42 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class CurveBottomToTop extends StatelessWidget {
-
   CurveBottomToTop();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 260,
-      margin: EdgeInsets.only(right: 20),
+      height: 60,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.defaultColor.withOpacity(0.1),
+              offset: Offset(0, 0),
+              blurRadius: 40,
+              spreadRadius: 0),
+          BoxShadow(color: Colors.white, offset: Offset(0, 50)),
+        ],
+      ),
       child: CustomPaint(
-        painter: _HeaderCardPainter(),
+        painter: _CurveBottomToTopPainter(),
       ),
     );
   }
 }
 
-class _HeaderCardPainter extends CustomPainter {
+class _CurveBottomToTopPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint();
     Path path = Path();
 
-    paint.color = Color(0xff003C81);
+    paint.color = Colors.white;
     path = Path();
+    path.moveTo(size.width, 0);
+    path.cubicTo(size.width, 30, size.width - 30, 30, size.width - 30, 30);
     path.lineTo(30, 30);
-    path.cubicTo(0, size.height - 30, 0, size.height, 0, size.height); //bottom left curve
-
-
-    // path.cubicTo(0, 0, 0, 30, 20, 30);
-    path.lineTo(size.width - 30, 30);
-    // path.cubicTo(size.width, 30, size.width, 60, size.width, 60);
-    // path.lineTo(size.width, size.height - 60);
-    // path.cubicTo(size.width, size.height - 30, size.width - 30, size.height - 30, size.width - 30, size.height - 30);
-    // path.lineTo(20, size.height - 30);
-
-    path.lineTo(0, 0); //back to top
+    path.cubicTo(0, 30, 0, size.height, 0, size.height);
+    path.lineTo(size.width, 60);
+    path.lineTo(size.width, 0);
     canvas.drawPath(path, paint);
   }
 
