@@ -6,6 +6,10 @@ extension DateUtils on DateTime {
     return DateFormat('yyyy-MM-dd').format(this);
   }
 
+  String yyyyMMdd2String() {
+    return DateFormat('dd/MM/yyyy').format(this);
+  }
+
   // ignore: non_constant_identifier_names
   String HHmmssString() {
     return DateFormat('HH:mm:ss').format(this);

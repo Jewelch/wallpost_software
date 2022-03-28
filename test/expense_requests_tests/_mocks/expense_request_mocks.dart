@@ -3,13 +3,25 @@ import 'dart:io';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/expense_requests/entities/expense_category.dart';
 import 'package:wallpost/expense_requests/entities/expense_request_form.dart';
-import 'package:wallpost/expense_requests/ui/view_contracts/per_expense_request_view.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_file_uploader.dart';
+import 'package:wallpost/expense_requests/ui/models/expense_request.dart';
+
+import 'expense_categories_mock.dart';
+
+class MockFileUploader extends Mock implements WPFileUploader {}
 
 class MockFile extends Mock implements File {}
 
 var mockFile = MockFile();
 
-ExpenseRequestForm getExpenseRequest() {
+var successFullUploadingFileResponse = {
+  "status": "success",
+  // TODO change this to what api gie you
+  "filenames": ["file1"],
+  "message": "Approval Sent."
+};
+
+ExpenseRequestForm getExpenseRequestForm() {
   return ExpenseRequestForm(
       parentCategory: "parentCategory",
       category: "category",
@@ -18,12 +30,24 @@ ExpenseRequestForm getExpenseRequest() {
       quantity: "1",
       rate: "2",
       amount: "2",
-      files: [mockFile],
+      file: mockFile,
       total: "1");
 }
 
-class MockPerExpenseRequestView extends Mock implements PerExpenseRequestView {}
+ExpenseRequest getExpenseRequest() {
+  var expenseRequest =  ExpenseRequest();
+  var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[0]);
+  expenseRequest.selectedProject = category;
+  expenseRequest.selectedSubCategory = category;
+  expenseRequest.selectedMainCategory = category;
+  return expenseRequest;
+}
+
+
+var successFullAddingExpenseRequestResponse = {
+  "status": "success",
+  "data": {"id": "24", "status": "success", "message": "Approval Sent."}
+};
 
 class MockExpenseCategory extends Mock implements ExpenseCategory {}
 
-class MockExpenseRequest extends Mock implements ExpenseRequestForm {}

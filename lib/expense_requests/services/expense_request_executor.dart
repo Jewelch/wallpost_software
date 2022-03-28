@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
@@ -21,12 +20,11 @@ class ExpenseRequestExecutor {
 
   ExpenseRequestExecutor.initWith(this._networkAdapter, this._fileUploader, this._companyProvider);
 
-  Future execute(List<ExpenseRequestForm> expenseRequests) async {
-    if (expenseRequests.isEmpty) return;
+  Future execute(ExpenseRequestForm expenseRequest) async {
     String url = _prepareUrl();
     try {
-      await _uploadFiles(expenseRequests);
-      return await _execute(expenseRequests, url);
+      await _uploadFiles(expenseRequest);
+      return await _execute(expenseRequest, url);
     } on WPException {
       rethrow;
     }
@@ -40,12 +38,11 @@ class ExpenseRequestExecutor {
 
   //MARK: Functions to upload files to the server
 
-  Future _uploadFiles(List<ExpenseRequestForm> expenseRequests) async {
-    for (var expenseRequest in expenseRequests) {
-      var uploadResponse = await _fileUploader.upload(expenseRequest.files);
-      var filesString = _processUploadFileResponse(uploadResponse);
-      expenseRequest.filesString = filesString;
-    }
+  Future _uploadFiles(ExpenseRequestForm expenseRequests) async {
+    if (expenseRequests.file == null) return;
+    var uploadResponse = await _fileUploader.upload([expenseRequests.file!]);
+    var filesString = _processUploadFileResponse(uploadResponse);
+    expenseRequests.fileString = filesString;
   }
 
   String _processUploadFileResponse(APIResponse apiResponse) {
@@ -53,16 +50,18 @@ class ExpenseRequestExecutor {
 
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
+    if (apiResponse.data['status'] != "success") throw FailedToSaveRequest();
+
     var response = apiResponse.data as Map<String, dynamic>;
-    return response['file'];
+    // TODO test this in reality
+    return response['filenames'].toString();
   }
 
   //MARK: Functions to send expense request to the server
 
-  Future<bool> _execute(List<ExpenseRequestForm> expenseRequests, String url) async {
-    var mappedRequests = expenseRequests.map((e) => e.toJson()).toList();
+  Future<bool> _execute(ExpenseRequestForm expenseRequests, String url) async {
     var apiRequest = APIRequest(url);
-    apiRequest.addParameter("expenseItems", mappedRequests);
+    apiRequest.addParameter("expenseItems", [expenseRequests.toJson()]);
     var apiResponse = await _networkAdapter.post(apiRequest);
     return _processResponse(apiResponse);
   }

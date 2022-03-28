@@ -11,8 +11,8 @@ class ExpenseRequestForm implements JSONConvertible {
   String quantity;
   String rate;
   String amount;
-  List<File> files;
-  String filesString = "";
+  File? file;
+  String fileString = "";
   String total;
 
   ExpenseRequestForm({
@@ -24,24 +24,21 @@ class ExpenseRequestForm implements JSONConvertible {
     required this.quantity,
     required this.rate,
     required this.amount,
-    required this.files,
+    required this.file,
     required this.total,
   });
 
-  //TODO: Ask Niyas for create expense request sample request payload
   @override
   Map<String, dynamic> toJson() => {
-        "id": 0,
         "parentCategory": parentCategory,
         "category": category,
         "project": project,
-        "expense_request_id": 0,
         "expense_date": date,
         "description": description,
         "quantity": quantity,
         "rate": rate,
         "amount": amount,
-        "file": filesString,
+        "file": fileString,
         "total": total
       };
 }
