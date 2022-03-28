@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
@@ -26,8 +24,7 @@ class CompanyListScreen extends StatefulWidget {
   _CompanyListScreenState createState() => _CompanyListScreenState();
 }
 
-class _CompanyListScreenState extends State<CompanyListScreen>
-    implements CompaniesListView {
+class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
   late CompaniesListPresenter presenter;
   var _scrollController = ScrollController();
   var _viewSelectorNotifier = ItemNotifier<int>();
@@ -73,9 +70,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                     ? ItemNotifiable<bool>(
                         notifier: _viewAppBarSelectorNotifier,
                         builder: (context, showSearch) {
-                          return (showSearch == true)
-                              ? _filtersView()
-                              : _appBar();
+                          return (showSearch == true) ? _filtersView() : _appBar();
                         },
                       )
                     : Container();
@@ -127,18 +122,12 @@ class _CompanyListScreenState extends State<CompanyListScreen>
               height: 14,
             ),
             onLeadingButtonPressed: () => presenter.logout(),
-            onTrailingButtonPressed: () => {
-              if (showSearchBar == true)
-                _viewAppBarSelectorNotifier.notify(true)
-            },
+            onTrailingButtonPressed: () => {if (showSearchBar == true) _viewAppBarSelectorNotifier.notify(true)},
             textButton1: TextButton(
               onPressed: () {},
               child: Text(
                 "Group Summary",
-                style: TextStyle(
-                    color: Color(0xff0096E3),
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
+                style: TextStyle(color: Color(0xff0096E3), fontSize: 18, fontWeight: FontWeight.w700),
               ),
             ),
           );
@@ -148,14 +137,15 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   Widget _leadingButton() {
     return Container(
         child: ItemNotifiable<String>(
-            notifier: _profileImageNotifier,
-            builder: (context, imageUrl) {
-              return FadeInImage.assetNetwork(
-                placeholder: 'assets/logo/placeholder.jpg',
-                image: imageUrl!,
-                fit: BoxFit.cover,
-              );
-            }));
+      notifier: _profileImageNotifier,
+      builder: (context, imageUrl) {
+        return FadeInImage.assetNetwork(
+          placeholder: 'assets/logo/placeholder.jpg',
+          image: imageUrl!,
+          fit: BoxFit.cover,
+        );
+      },
+    ));
   }
 
   //MARK: Functions to build the filters view
@@ -191,8 +181,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
               child: ItemNotifiable<List<CompanyGroup>>(
                   notifier: _companyGroupsNotifier,
                   builder: (context, companiesGroup) {
-                    if ((companiesGroup != null) &&
-                        (companiesGroup.isNotEmpty)) {
+                    if ((companiesGroup != null) && (companiesGroup.isNotEmpty)) {
                       return Container(
                           height: 40,
                           child: ItemNotifiable<int>(
@@ -200,8 +189,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                               builder: (context, tappedIndex) {
                                 return ListView.builder(
                                   itemBuilder: (context, index) {
-                                    return _groupElement(
-                                        index, tappedIndex, companiesGroup);
+                                    return _groupElement(index, tappedIndex, companiesGroup);
                                   },
                                   shrinkWrap: true,
                                   scrollDirection: Axis.horizontal,
@@ -232,8 +220,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     );
   }
 
-  Widget _groupElement(
-      int index, int? tappedIndex, List<CompanyGroup> companiesGroup) {
+  Widget _groupElement(int index, int? tappedIndex, List<CompanyGroup> companiesGroup) {
     return Container(
       margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
       child: ItemNotifiable<String>(
@@ -245,9 +232,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
             labelStyle: TextStyle(color: Color(0xff003C81)),
             backgroundColor: AppColors.backGroundColor,
             side: BorderSide(
-                color: tappedIndex == index
-                    ? Color(0xff003C81)
-                    : Colors.transparent,
+                color: tappedIndex == index ? Color(0xff003C81) : Colors.transparent,
                 width: 1,
                 style: BorderStyle.solid),
             onPressed: () {
@@ -277,9 +262,8 @@ class _CompanyListScreenState extends State<CompanyListScreen>
                         presenter.getYears(),
                         item ?? presenter.getYears().last,
                         (p0) => {
-                          _dropDownItemNotifier.notify(p0),
-                        }
-                          );
+                              _dropDownItemNotifier.notify(p0),
+                            });
                   }));
         } else
           return Container();
@@ -300,8 +284,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
               context: context,
               removeTop: true,
               child: ListView.separated(
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
+                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                 controller: _scrollController,
                 itemCount: companyList!.length,
                 itemBuilder: (context, index) {
@@ -319,6 +302,16 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   }
 
   Widget _getCompanyCard(int index, List<CompanyListItem> companyList) {
+    // var company = companyList[index];
+    // if company.financialSummary == null {
+    //   return CompanyListCardWithutRevenue()
+    // }
+    // else return CompanyListCard(
+    // company: companyList[index],
+    // onPressed: () {
+    //   presenter.selectCompanyAtIndex(index);
+    // });
+
     return CompanyListCard(
         company: companyList[index],
         onPressed: () {
@@ -434,8 +427,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
 
   @override
   void goToCompanyDetailScreen() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(
-        DashboardScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
   }
 
   @override

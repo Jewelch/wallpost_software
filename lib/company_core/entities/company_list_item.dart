@@ -8,7 +8,7 @@ class CompanyListItem extends JSONInitializable implements JSONConvertible {
   late String _id;
   late String _name;
   late String _logoUrl;
-  late num _approvalCount;
+  late num _approvalCount; //todo break this down into individual counts - create a new class?
   FinancialSummary? _financialSummary;
 
   CompanyListItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {

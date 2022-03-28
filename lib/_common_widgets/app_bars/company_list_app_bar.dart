@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 
 import 'app_bar_divider.dart';
 
@@ -44,17 +41,13 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Row(children: [
                 SizedBox(width: 16),
-                GestureDetector(
-                    onTap: onLeadingButtonPressed,
-                    child: _constraintLeadingWidgetToSize(leadingButton)),
+                GestureDetector(onTap: onLeadingButtonPressed, child: _constraintLeadingWidgetToSize(leadingButton)),
                 SizedBox(width: 20),
               ]),
               textButton1,
               Row(children: [
                 SizedBox(width: 20),
-                GestureDetector(
-                    onTap: onTrailingButtonPressed,
-                    child: _constraintTrailingWidgetToSize(trailingButton)),
+                GestureDetector(onTap: onTrailingButtonPressed, child: _constraintTrailingWidgetToSize(trailingButton)),
                 SizedBox(width: 16),
               ]),
             ],
@@ -90,22 +83,22 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(14),
           child: SizedBox(
-            width: 47,
-            height: 50,
+            width: 40,
+            height: 40,
             child: Container(
               child: widget,
             ),
           ),
         ),
         Positioned(
-            bottom: -2,
-            right: -10,
+            bottom: -6,
+            right: -12,
             child: Container(
                 child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(6),
                     child: Container(
-                        width: 30,
-                        height: 24,
+                        width: 24,
+                        height: 20,
                         alignment: Alignment.center,
                         color: Colors.blue,
                         child: SizedBox(
@@ -116,14 +109,8 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
                               color: Colors.white,
                             )))),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white,
-                      blurRadius: 3,
-                      spreadRadius: 3,
-                    )
-                  ],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.white, width: 2),
                 )))
       ],
     );

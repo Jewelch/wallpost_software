@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_wp_core/dashboard_management/entities/Dashboard.dart';
 import 'package:wallpost/company_core/entities/company_list_item.dart';
 
 class CompanyListCard extends StatelessWidget {
@@ -39,32 +38,26 @@ class CompanyListCard extends StatelessWidget {
                       Expanded(
                           flex: 3,
                           child: Container(
-                            padding:
-                                const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                             alignment: Alignment.centerLeft,
                             child: tile(
-                                company.financialSummary?.profitLoss ??
-                                    "NO FINANCES",
+                                company.financialSummary?.profitLoss ?? "NO FINANCES",
                                 "Profit & Loss",
                                 Color(0xff25D06E),
-                                company.financialSummary?.receivableOverdue ??
-                                    "NO FINANCES",
+                                company.financialSummary?.receivableOverdue ?? "NO FINANCES",
                                 "Receivable Overdue",
                                 Color(0xffF62A20)),
                           )),
                       Expanded(
                           flex: 3,
                           child: Container(
-                            padding:
-                                const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                             alignment: Alignment.centerLeft,
                             child: tile(
-                                company.financialSummary?.cashAvailability ??
-                                    "NO FINANCES",
+                                company.financialSummary?.cashAvailability ?? "NO FINANCES",
                                 "Fund Availability",
                                 Color(0xff25D06E),
-                                company.financialSummary?.payableOverdue ??
-                                    "NO FINANCES",
+                                company.financialSummary?.payableOverdue ?? "NO FINANCES",
                                 "Payable Overdue",
                                 Color(0xffF62A20)),
                           )),
@@ -92,8 +85,7 @@ class CompanyListCard extends StatelessWidget {
           size: Size.fromRadius(44), // Image radius
           child: CachedNetworkImage(
             imageUrl: company.logoUrl,
-            placeholder: (context, url) =>
-                Center(child: Icon(Icons.camera_alt)),
+            placeholder: (context, url) => Center(child: Icon(Icons.camera_alt)),
             errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),
@@ -101,17 +93,15 @@ class CompanyListCard extends StatelessWidget {
     );
   }
 
-  Widget tile(String valueTop, String labelTop, Color colorTop,
-      String valueBottom, String labelBottom, Color colorBottom) {
+  Widget tile(
+      String valueTop, String labelTop, Color colorTop, String valueBottom, String labelBottom, Color colorBottom) {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              tileDetails(valueTop, labelTop, colorTop),
-              SizedBox(height: 10),
-              tileDetails(valueBottom, labelBottom, colorBottom)
-            ]));
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+          tileDetails(valueTop, labelTop, colorTop),
+          SizedBox(height: 10),
+          tileDetails(valueBottom, labelBottom, colorBottom)
+        ]));
   }
 
   Widget tileDetails(String value, String label, Color color) {
