@@ -51,6 +51,10 @@ class AppColors {
   static final Color absentColor = getColorFromHex('#FF0000');
   static final Color lateColor = getColorFromHex('#ffa500');
 
+
+  static final Color moreColor = getColorFromHex('#009842');
+  static final Color locationAddressTextColor = getColorFromHex('#d9d9d9');
+  static final Color attendanceStatusColor = getColorFromHex('#d9d9d9');
   //MARK: Util function to convert hex string to color
   static Color getColorFromHex(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll('#', '');

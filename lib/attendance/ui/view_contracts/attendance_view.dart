@@ -51,9 +51,6 @@ abstract class AttendanceView {
   void showAlertToDeniedLocationPermission(String title, String message);
 
 
-  //?
-  void doPunchOut();
-
 
   // ?
   void openAppSettings();

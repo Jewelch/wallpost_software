@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/file_picker/file_picker_screen.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
+import 'package:wallpost/attendance/ui/views/attendance_button.dart';
 import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_screen.dart';
 import 'package:wallpost/password_management/ui/views/change_password_screen.dart';
 
@@ -16,6 +17,7 @@ class MyPortalScreen extends StatelessWidget {
           child: Column(
             children: [
               Text('My Portal Screen'),
+
               FlatButton(
                 color: Colors.red,
                 child: Text('Logout'),
@@ -51,6 +53,10 @@ class MyPortalScreen extends StatelessWidget {
                   ScreenPresenter.present(LeaveListScreen(), context);
                 },
               ),
+              Container(
+                  height: 200,
+                  margin: EdgeInsets.only(top: 160),
+                  child: AttendanceButton()),
             ],
           ),
         ),

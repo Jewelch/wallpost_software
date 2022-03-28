@@ -640,6 +640,7 @@ void main() {
           "You are not allowed to punch in outside the office location. "
               "Doing so will affect your performance. Would you still like to punch in?"),
       () => mockPunchInMarker.punchIn(any(), isLocationValid: false),
+      () => view.showPunchOutButton()
     ]);
 
     _verifyNoMoreInteractionsOnAllMocks();
@@ -690,14 +691,11 @@ void main() {
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: true),
       () => mockPunchInMarker.punchIn(any(), isLocationValid: true),
+      () => view.showPunchOutButton()
     ]);
 
     _verifyNoMoreInteractionsOnAllMocks();
   });
-
-  test(
-      "show punch in button when the user is not punched in if location is invalid",
-      () async {});
 
   test(
       "shows enabled break button when the user is punched in and is not on break",
