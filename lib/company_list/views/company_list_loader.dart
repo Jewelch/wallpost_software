@@ -10,7 +10,7 @@ class CompanyListLoader extends StatelessWidget {
     return ShimmerEffect(
       child: ListView(
         children: [
-          SizedBox(height: 60),
+          _appBar(context),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
             child: Container(
@@ -56,6 +56,31 @@ class CompanyListLoader extends StatelessWidget {
               ],
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _appBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          _emptyContainer(height: 40, width: 40, cornerRadius: 10),
+          SizedBox(width: 8),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(32,0,32,0),
+              child: Column(
+                children: [
+                  _emptyContainer(height: 18,cornerRadius: 6),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(width: 8),
+          _emptyContainer(height: 40, width: 40, cornerRadius: 10),
+
         ],
       ),
     );

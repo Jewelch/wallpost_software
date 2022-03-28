@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
@@ -38,6 +40,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   var _showErrorNotifier = ItemNotifier<String>();
   var _profileImageNotifier = ItemNotifier<String>();
   var _groupItemTapNotifier = ItemNotifier<int>();
+  var _dropDownItemNotifier = ItemNotifier<String>();
 
   String _noSearchResultsMessage = "";
   String _errorMessage = "";
@@ -66,13 +69,16 @@ class _CompanyListScreenState extends State<CompanyListScreen>
             ItemNotifiable<bool>(
               notifier: _appBarVisibilityNotifier,
               builder: (context, showAppBar) {
-                return (showAppBar == true) ?
-                ItemNotifiable<bool>(
-                  notifier: _viewAppBarSelectorNotifier,
-                  builder: (context, showSearch) {
-                    return (showSearch == true) ? _filtersView() : _appBar();
-                  },
-                ) : Container();
+                return (showAppBar == true)
+                    ? ItemNotifiable<bool>(
+                        notifier: _viewAppBarSelectorNotifier,
+                        builder: (context, showSearch) {
+                          return (showSearch == true)
+                              ? _filtersView()
+                              : _appBar();
+                        },
+                      )
+                    : Container();
               },
             ),
             _financialSummaryView(),
@@ -255,13 +261,26 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   }
 
   //MARK: Function to build the financial summary
+  //String? init;
 
   Widget _financialSummaryView() {
     return ItemNotifiable<FinancialSummary>(
       notifier: _financialSummaryNotifier,
       builder: (context, summary) {
         if (summary != null) {
-          return Container(child: FinancialSummaryCard(summary));
+          return Container(
+              child: ItemNotifiable<String>(
+                  notifier: _dropDownItemNotifier,
+                  builder: (context, item) {
+                    return FinancialSummaryCard(
+                        summary,
+                        presenter.getYears(),
+                        item ?? presenter.getYears().last,
+                        (p0) => {
+                          _dropDownItemNotifier.notify(p0),
+                        }
+                          );
+                  }));
         } else
           return Container();
       },
@@ -361,7 +380,6 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   @override
   void hideLoader() {
     _appBarVisibilityNotifier.notify(true);
-
   }
 
   @override

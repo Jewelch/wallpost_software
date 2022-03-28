@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/custom_cards/header_card.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
@@ -6,65 +7,79 @@ import '../../_common_widgets/buttons/circular_icon_button.dart';
 
 class FinancialSummaryCard extends StatelessWidget {
   final FinancialSummary _financialSummary;
+  final Function(String) _onValueChanged;
+  final List<String> _items;
+  final String _item;
 
-  FinancialSummaryCard(this._financialSummary);
+  FinancialSummaryCard(
+      this._financialSummary, this._items, this._item,this._onValueChanged);
 
   @override
   Widget build(BuildContext context) {
     return HeaderCard(
       content: Column(
         children: <Widget>[
-          Row(children: [
-            Expanded(
-                flex: 5,
-                child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 40, 0, 0),
-                    child: Text(
-                      "Summary",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                        fontSize: 30.0,
-                      ),
-                    ))),
-            Expanded(
-                flex: 5,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      _financialSummaryFilterDropdown("YTD"),
-                      _financialSummaryFilterDropdown("2022")
-                    ],
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Padding(
+                padding: const EdgeInsets.fromLTRB(20, 40, 0, 0),
+                child: Text(
+                  "Summary",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    fontSize: 30.0,
                   ),
-                ))
+                )),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 50, 16, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  _financialSummaryFilter("YTD"),
+                  PopupMenuButton(
+                    child: Container(
+                        child: _financialSummaryFilterDropdown(_item)),
+                    onSelected: (String value) => _onValueChanged(value),
+                    color: Color(0xff4AF091),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
+                    itemBuilder: (context) {
+                      return _items.map((String item) {
+                        return PopupMenuItem(
+                          value: item,
+                          child: Center(child: _financialSummaryFilter(item)),
+                        );
+                      }).toList();
+                    },
+                  )
+                ],
+              ),
+            )
           ]),
           SizedBox(height: 8),
-          Row(children: [
-            Expanded(
-                flex: 4,
-                child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    child: Text(
-                      "Profit & Loss",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey[400],
-                        fontSize: 16.0,
-                      ),
-                    ))),
-            Expanded(
-                flex: 6,
-                child: Center(
-                    child: Text(
-                  _financialSummary.profitLoss.toString(),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: Text(
+                  "Profit & Loss",
                   style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xff4AF091),
-                      fontSize: 28.0,
-                      overflow: TextOverflow.ellipsis),
-                ))),
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[400],
+                    fontSize: 16.0,
+                  ),
+                )),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 32, 0),
+              child: Center(
+                  child: Text(
+                _financialSummary.profitLoss.toString(),
+                style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xff4AF091),
+                    fontSize: 28.0,
+                    overflow: TextOverflow.ellipsis),
+              )),
+            ),
           ]),
           SizedBox(height: 6),
           Padding(
@@ -82,14 +97,14 @@ class FinancialSummaryCard extends StatelessWidget {
                     flex: 3,
                     child: _financialSummaryElement(
                         "Receivables Overdue",
-                       Color(0xffFC6760) ,
+                        Color(0xffFC6760),
                         _financialSummary.receivableOverdue.toString())),
                 SizedBox.fromSize(size: Size(10, 0)),
                 Expanded(
                     flex: 3,
                     child: _financialSummaryElement(
                         "Payables Overdue",
-                        Color(0xffFC6760) ,
+                        Color(0xffFC6760),
                         _financialSummary.payableOverdue.toString())),
               ])),
         ],
@@ -112,12 +127,12 @@ class FinancialSummaryCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            SizedBox.fromSize(size: Size(0,10)),
+            SizedBox.fromSize(size: Size(0, 10)),
             Text(
               label,
               style: TextStyle(
                 fontWeight: FontWeight.w300,
-                color:Color(0xffDFF0F7),
+                color: Color(0xffDFF0F7),
                 fontSize: 11.0,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -141,5 +156,19 @@ class FinancialSummaryCard extends StatelessWidget {
         iconSize: 12,
       )
     ]);
+  }
+
+  Widget _financialSummaryFilter(String label) {
+    return Padding(
+      padding: EdgeInsets.only(right: 12),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontWeight: FontWeight.w400,
+          color: Colors.white,
+          fontSize: 20.0,
+        ),
+      ),
+    );
   }
 }

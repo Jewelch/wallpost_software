@@ -196,4 +196,19 @@ class CompaniesListPresenter {
   List<CompanyListItem> getCompanies() {
     return _companies;
   }
+
+  List<String> getYears() {
+    return _years;
+  }
+  final List<String> _years = <String>[
+    '2015',
+    '2016',
+    '2017',
+    '2018',
+    '2019',
+    '2020',
+    '2021',
+    '2022'
+  ];
+
 }
