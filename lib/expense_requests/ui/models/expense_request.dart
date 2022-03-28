@@ -1,22 +1,21 @@
+import 'dart:io';
+
+import 'package:wallpost/_shared/money/money.dart';
 import 'package:wallpost/expense_requests/entities/expense_category.dart';
 
 class ExpenseRequest {
-  ExpenseRequest? selectedCategory;
-  ExpenseRequest? selectedProject;
+  ExpenseCategory? selectedMainCategory;
+  ExpenseCategory? selectedSubCategory;
+  ExpenseCategory? selectedProject;
   DateTime date = DateTime.now();
-  String? description;
+  String description = "";
   int quantity = 0;
+  Money rate = Money.zero();
+  File? file;
 
-  //if rate amount and total are strings, will have to do the numeric validation manually.
-  String rate = "0.00"; // change to Money.
+  // TODO : ask Obaid about how to calculate
+  String get amount => "";
 
-
-  // List<File> files;
-  String filesString = "";
-
-
-
-
+  String get total => "";
 }
 
-//TODO: Copy the money class from DinDone to this project. _shared/money/money.dart

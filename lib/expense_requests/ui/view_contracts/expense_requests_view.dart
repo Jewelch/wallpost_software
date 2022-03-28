@@ -1,5 +1,9 @@
 abstract class ExpenseRequestsView {
-  void notifyMissingInputs();
+  void resetErrors();
+
+  void notifyMissingMainCategory();
+
+  void notifyMissingSubCategory();
 
   void showLoader();
 
@@ -8,5 +12,4 @@ abstract class ExpenseRequestsView {
   void showErrorMessage(String message);
 
   void onSendRequestsSuccessfully();
-
 }

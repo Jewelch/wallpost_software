@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
 import 'app_bar_divider.dart';
 

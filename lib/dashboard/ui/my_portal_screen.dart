@@ -40,8 +40,9 @@ class MyPortalScreen extends StatelessWidget {
               FlatButton(
                 color: Colors.greenAccent,
                 child: Text('Show file picker'),
-                onPressed: () {
-                  FilePickerScreen.present(context);
+                onPressed: () async{
+                 List files = await FilePickerScreen.present(context);
+                 print(files.length);
                 },
               ),
               FlatButton(
