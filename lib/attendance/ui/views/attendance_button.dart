@@ -20,7 +20,6 @@ class _AttendanceButtonState extends State<AttendanceButton>
   late final AttendancePresenter presenter;
    String? _timeString;
   String _locationAddress = "";
-  bool _visiblePunchInButton = false ;
 
   @override
   void initState() {
@@ -35,97 +34,94 @@ class _AttendanceButtonState extends State<AttendanceButton>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Visibility(
-        visible: _visiblePunchInButton,
-        child: Container(
-          margin: EdgeInsets.all(20),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(right: 12),
+      body: Container(
+        margin: EdgeInsets.all(20),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.only(right: 12),
+              height: 64,
+              decoration: BoxDecoration(
+                color: AppColors.moreColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20.0),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.moreColor.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Align(
+                  alignment: Alignment.centerRight,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        WidgetSpan(
+                          child: Icon(
+                            Icons.arrow_upward,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                        TextSpan(
+                          text: " More",
+                        ),
+                      ],
+                    ),
+                  )),
+            ),
+            InkWell(
+              onTap: () {
+                _doPunchIn();
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 72),
+                padding: EdgeInsets.all(12),
                 height: 64,
                 decoration: BoxDecoration(
-                  color: AppColors.moreColor,
+                  color: AppColors.presentColor,
                   borderRadius: BorderRadius.all(
                     Radius.circular(20.0),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.moreColor.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
                 ),
-                child: Align(
-                    alignment: Alignment.centerRight,
-                    child: RichText(
-                      text: TextSpan(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          WidgetSpan(
-                            child: Icon(
-                              Icons.arrow_upward,
-                              size: 20,
-                              color: Colors.white,
-                            ),
+                          Text(
+                            "Punch In",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
-                          TextSpan(
-                            text: " More",
+                          SizedBox(
+                            height: 2,
                           ),
+                          Text(_locationAddress,
+                              style: TextStyle(fontSize: 12, color: AppColors.locationAddressTextColor))
                         ],
                       ),
-                    )),
+                      Column(
+                        children: [
+                        //  Text( _timeString!,
+                          Text( _timeString!,
+                              style: TextStyle(fontSize: 16, color: Colors.white)),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          Text("Absent",
+                              style: TextStyle(fontSize: 12, color: AppColors.attendanceStatusColor))
+                        ],
+                      ),
+                    ]),
               ),
-              InkWell(
-                onTap: () {
-                  _doPunchIn();
-                },
-                child: Container(
-                  margin: EdgeInsets.only(right: 72),
-                  padding: EdgeInsets.all(12),
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: AppColors.presentColor,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20.0),
-                    ),
-                  ),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Punch In",
-                              style: TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                            SizedBox(
-                              height: 2,
-                            ),
-                            Text(_locationAddress,
-                                style: TextStyle(fontSize: 12, color: AppColors.locationAddressTextColor))
-                          ],
-                        ),
-                        Column(
-                          children: [
-                          //  Text( _timeString!,
-                            Text( _timeString!,
-                                style: TextStyle(fontSize: 16, color: Colors.white)),
-                            SizedBox(
-                              height: 2,
-                            ),
-                            Text("Absent",
-                                style: TextStyle(fontSize: 12, color: AppColors.attendanceStatusColor))
-                          ],
-                        ),
-                      ]),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -161,9 +157,6 @@ class _AttendanceButtonState extends State<AttendanceButton>
 
   @override
   void showPunchInButton() {
-    setState(() {
-      _visiblePunchInButton=true;
-    });
   }
 
   @override
