@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_check_mark_button.dart';
 import 'package:wallpost/_common_widgets/filter_views/selected_filters_view.dart';
@@ -82,7 +82,7 @@ class _MultiSelectFilterListState extends State<MultiSelectFilterList> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: SimpleAppBar(
+      appBar: SimpleAppBarOld(
         title: widget.screenTitle,
         leadingButtons: [
           CircularBackButton(

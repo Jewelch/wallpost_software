@@ -29,6 +29,8 @@ abstract class CompaniesListView {
 
   void showNoSearchResultsMessage(String message);
 
+  void goToLeftMenuScreen();
+
   void goToCompanyDetailScreen();
 
   void onCompanyDetailsLoadingFailed(String title, String message);

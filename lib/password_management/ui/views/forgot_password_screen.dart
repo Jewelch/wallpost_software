@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
+import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
 import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
@@ -62,7 +63,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> implements Forgot
                   ),
                 ),
               ),
-
+              CurveBottomToTop(),
               Container(
                 margin: EdgeInsets.all(20.0),
                 child: Column(
