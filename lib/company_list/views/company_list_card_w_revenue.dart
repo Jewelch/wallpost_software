@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_core/entities/company_list_item.dart';
 
-class CompanyListCard extends StatelessWidget {
+class CompanyListCardWithoutRev extends StatelessWidget {
   final CompanyListItem company;
   final VoidCallback onPressed;
 
-  CompanyListCard({required this.company, required this.onPressed});
+  CompanyListCardWithoutRev({required this.company, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -18,55 +18,27 @@ class CompanyListCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
-                  child: Text(
-                    company.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
-                  )),
+
               SizedBox(height: 2),
               Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Expanded(flex: 2, child: avatar()),
-                      Expanded(
-                          flex: 3,
-                          child: Container(
+                      avatar(),
+                       Container(
                             padding:
                                 const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                            alignment: Alignment.centerLeft,
-                            child: tile(
-                                company.financialSummary?.profitLoss ??
-                                    "NO FINANCES",
-                                "Profit & Loss",
-                                Color(0xff25D06E),
-                                company.financialSummary?.receivableOverdue ??
-                                    "NO FINANCES",
-                                "Receivable Overdue",
-                                Color(0xffF62A20)),
-                          )),
-                      Expanded(
-                          flex: 3,
-                          child: Container(
-                            padding:
-                                const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                            alignment: Alignment.centerLeft,
-                            child: tile(
-                                company.financialSummary?.cashAvailability ??
-                                    "NO FINANCES",
-                                "Fund Availability",
-                                Color(0xff25D06E),
-                                company.financialSummary?.payableOverdue ??
-                                    "NO FINANCES",
-                                "Payable Overdue",
-                                Color(0xffF62A20)),
-                          )),
+                            alignment: Alignment.center,
+                           child :Text(
+                                 company.name,
+                                 style: const TextStyle(
+                                   fontWeight: FontWeight.w700,
+                                   color: Colors.black,
+                                   fontSize: 21.0,
+                                 ),
+                               ),
+                          ),
                     ],
                   )),
             ],

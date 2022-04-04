@@ -23,6 +23,8 @@ abstract class CompaniesListView {
 
   void showCompanyList(List<CompanyListItem> companies);
 
+  void showApprovalCount(int? approvalCount);
+
   void hideCompanyList();
 
   void showErrorMessage(String message);

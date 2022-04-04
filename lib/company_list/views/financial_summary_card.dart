@@ -36,22 +36,23 @@ class FinancialSummaryCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   _financialSummaryFilter("YTD"),
-                  PopupMenuButton(
-                    child: Container(
-                        child: _financialSummaryFilterDropdown(_item)),
-                    onSelected: (String value) => _onValueChanged(value),
-                    color: Color(0xff4AF091),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
-                    itemBuilder: (context) {
-                      return _items.map((String item) {
-                        return PopupMenuItem(
-                          value: item,
-                          child: Center(child: _financialSummaryFilter(item)),
-                        );
-                      }).toList();
-                    },
-                  )
+                  _financialSummaryFilter("2022")
+                  // PopupMenuButton(
+                  //   child: Container(
+                  //       child: _financialSummaryFilterDropdown(_item)),
+                  //   onSelected: (String value) => _onValueChanged(value),
+                  //   color: Color(0xff4AF091),
+                  //   shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.all(Radius.circular(16.0))),
+                  //   itemBuilder: (context) {
+                  //     return _items.map((String item) {
+                  //       return PopupMenuItem(
+                  //         value: item,
+                  //         child: Center(child: _financialSummaryFilter(item)),
+                  //       );
+                  //     }).toList();
+                  //   },
+                  // )
                 ],
               ),
             )
