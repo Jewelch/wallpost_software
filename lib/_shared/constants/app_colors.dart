@@ -52,8 +52,14 @@ class AppColors {
   static final Color lateColor = getColorFromHex('#ffa500');
 
 //Attendance button colors
-  static final Color punchInButtonLightColor = Color.fromRGBO(43, 186, 104, 1.0);
-  static final Color punchInButtonDarkColor = getColorFromHex('#009842');
+  static final Color punchInButtonColor = Color.fromRGBO(43, 186, 104, 1.0);
+  static final Color punchInMoreButtonColor = getColorFromHex('#009842');
+
+  static final Color punchOutButtonColor=getColorFromHex('#f62a20');
+  static final Color punchOutMoreButtonColor=getColorFromHex('#c00d0d');
+
+  static final Color breakButton=getColorFromHex('#dff0f7');
+
   static final Color locationAddressTextColor = getColorFromHex('#d9d9d9');
   static final Color attendanceStatusColor = getColorFromHex('#d9d9d9');
   //MARK: Util function to convert hex string to color

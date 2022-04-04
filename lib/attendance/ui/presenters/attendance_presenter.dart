@@ -8,6 +8,8 @@ import 'package:wallpost/attendance/exception/location_permission_permanently_de
 import 'package:wallpost/attendance/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance/services/attendance_details_provider.dart';
 import 'package:wallpost/attendance/services/attendance_location_validator.dart';
+import 'package:wallpost/attendance/services/break_end_marker.dart';
+import 'package:wallpost/attendance/services/break_start_marker.dart';
 import 'package:wallpost/attendance/services/location_provider.dart';
 import 'package:wallpost/attendance/services/punch_in_from_app_permission_provider.dart';
 import 'package:wallpost/attendance/services/punch_in_marker.dart';
@@ -24,6 +26,8 @@ class AttendancePresenter {
   final AttendanceLocationValidator _attendanceLocationValidator;
   final PunchOutMarker _punchOutMarker;
   final PunchInMarker _punchInMarker;
+  final BreakStartMarker _breakStartMarker;
+  final BreakEndMarker _breakEndMarker;
 
   late AttendanceDetails _attendanceDetails;
   late AttendanceLocation _attendanceLocation;
@@ -36,7 +40,9 @@ class AttendancePresenter {
         _punchInNowPermissionProvider = PunchInNowPermissionProvider(),
         _attendanceLocationValidator = AttendanceLocationValidator(),
         _punchInMarker = PunchInMarker(),
-        _punchOutMarker = PunchOutMarker();
+        _punchOutMarker = PunchOutMarker(),
+  _breakStartMarker=BreakStartMarker(),
+  _breakEndMarker=BreakEndMarker();
 
   AttendancePresenter.initWith(
       this._view,
@@ -46,7 +52,9 @@ class AttendancePresenter {
       this._punchInNowPermissionProvider,
       this._attendanceLocationValidator,
       this._punchInMarker,
-      this._punchOutMarker);
+      this._punchOutMarker,
+      this._breakStartMarker,
+      this._breakEndMarker);
 
   Future<void> loadAttendanceDetails() async {
     if (_attendanceDetailsProvider.isLoading) return;
@@ -72,6 +80,7 @@ class AttendancePresenter {
   Future<void> _getLocation() async {
     try {
       _attendanceLocation = (await _locationProvider.getLocation())!;
+      _view.showLocationPositions(_attendanceLocation.latitude,_attendanceLocation.longitude);
       await _getLocationAddress(_attendanceLocation);
     } on LocationServicesDisabledException catch (e) {
       _view.showDisabledButton();
@@ -204,6 +213,22 @@ class AttendancePresenter {
           isLocationValid: isValid);
     } on WPException catch (e) {
       _view.showErrorMessage("Punch out failed", e.userReadableMessage);
+    }
+  }
+
+  Future<void> startBreak() async {
+    try {
+      await _breakStartMarker.startBreak(_attendanceDetails,_attendanceLocation);
+    } on WPException catch (e) {
+      _view.showErrorMessage("Start break is failed", e.userReadableMessage);
+    }
+  }
+
+  Future<void> endBreak() async {
+    try {
+      await _breakEndMarker.endBreak(_attendanceDetails,_attendanceLocation);
+    } on WPException catch (e) {
+      _view.showErrorMessage("Resume is failed", e.userReadableMessage);
     }
   }
 

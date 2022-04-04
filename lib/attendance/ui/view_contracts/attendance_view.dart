@@ -21,6 +21,8 @@ abstract class AttendanceView {
 
   void showTimeTillPunchIn(num seconds);
 
+  void showLocationPositions(num lat,num lon);
+
   void showLocationAddress(String address);
 
 
