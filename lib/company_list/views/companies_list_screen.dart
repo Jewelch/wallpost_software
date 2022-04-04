@@ -19,6 +19,7 @@ import 'package:wallpost/company_list/views/company_list_card_without_revenue.da
 import 'package:wallpost/company_list/views/company_list_loader.dart';
 import 'package:wallpost/company_list/views/financial_summary_card.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
+import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
 
 class CompanyListScreen extends StatefulWidget {
   @override
@@ -171,7 +172,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
               width: 14,
               height: 14,
             ),
-            onLeadingButtonPressed: () => presenter.logout(),
+            onLeadingButtonPressed: () => goToLeftMenuScreen(),
             onTrailingButtonPressed: () => {if (showSearchBar == true) _viewAppBarSelectorNotifier.notify(true)},
             textButton1: TextButton(
               onPressed: () {},
@@ -482,6 +483,11 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   @override
+  void goToLeftMenuScreen() {
+    ScreenPresenter.present(LeftMenuScreen(), context);
+  }
+
+  @override
   void goToCompanyDetailScreen() {
     ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
   }
@@ -514,4 +520,5 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   void selectGroupItem(int? index) {
     _groupItemTapNotifier.notify(index);
   }
+
 }
