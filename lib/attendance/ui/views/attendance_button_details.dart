@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/app_bar_with_back_button.dart';
 import 'package:wallpost/_common_widgets/custom_cards/header_card.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
@@ -27,14 +29,17 @@ class _AttendanceButtonDetailsScreenState
   late final AttendancePresenter presenter;
   GoogleMapController? _controller;
   Set<Marker> _markers = {};
+  late BitmapDescriptor customIcon;
+
   final ItemNotifier<int> _buttonTypeNotifier = ItemNotifier();
   final ItemNotifier<int> _typeNotifier = ItemNotifier();
   static const PUNCH_IN_BUTTON_VIEW = 1;
   static const PUNCH_OUT_BUTTON_VIEW = 2;
   static const LOADER_VIEW = 3;
 
-  static const BREAK_BUTTON_VIEW=4;
-  static const RESUME_BUTTON_VIEW=5;
+  static const SHOW_BREAK_BUTTON_VIEW = 4;
+  static const HIDE_BREAK_BUTTON_VIEW = 5;
+  static const RESUME_BUTTON_VIEW = 6;
 
   @override
   void initState() {
@@ -80,19 +85,19 @@ class _AttendanceButtonDetailsScreenState
                 child: _mapView(),
               ),
               Positioned(
-                child:_buildAttendanceButton(),
+                child: _buildAttendanceButton(),
                 right: 0,
                 left: 0,
-                bottom: -40,
+                bottom: -60,
               ),
             ],
           ),
           SizedBox(
-            height: 80,
+            height: 88,
           ),
           _buildBreakResumeButton(),
           SizedBox(
-            height: 20,
+            height: 16,
           ),
           _buildAttendanceDetails()
         ],
@@ -102,20 +107,24 @@ class _AttendanceButtonDetailsScreenState
 
   Widget _mapView() {
     return Container(
-      margin: EdgeInsets.only(right: 10, top: 10, bottom: 10),
+      margin: EdgeInsets.only(
+        right: 10,
+      ),
       child: ClipRRect(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
             topRight: Radius.circular(30),
             bottomRight: Radius.circular(30),
-            bottomLeft: Radius.circular(30),
           ),
           child: GoogleMap(
-            myLocationEnabled: true,
             zoomControlsEnabled: false,
+            compassEnabled: false,
+            zoomGesturesEnabled: false,
+            scrollGesturesEnabled: false,
+            tiltGesturesEnabled: false,
+            rotateGesturesEnabled: false,
             initialCameraPosition: CameraPosition(
-              target: LatLng(48.8561, 2.2930),
-              zoom: 18.0,
+              target: LatLng(0, 0),
+              zoom: 14.0,
             ),
             onMapCreated: (GoogleMapController controller) {
               _controller = controller;
@@ -183,7 +192,7 @@ class _AttendanceButtonDetailsScreenState
     return ItemNotifiable<int>(
       notifier: _typeNotifier,
       builder: (context, value) {
-        if (value == BREAK_BUTTON_VIEW) {
+        if (value == SHOW_BREAK_BUTTON_VIEW) {
           return _buildBreakButton();
         } else if (value == RESUME_BUTTON_VIEW) {
           return _buildResumeButton();
@@ -191,13 +200,13 @@ class _AttendanceButtonDetailsScreenState
         return Container();
       },
     );
-
   }
 
-  Widget _buildBreakButton(){
-
+  Widget _buildBreakButton() {
     return ElevatedButton.icon(
-      onPressed: () {presenter.startBreak();},
+      onPressed: () {
+        presenter.startBreak();
+      },
       icon: SvgPicture.asset(
         // <-- Icon
         "assets/icons/overtime_icon.svg",
@@ -219,10 +228,11 @@ class _AttendanceButtonDetailsScreenState
     );
   }
 
-  Widget _buildResumeButton(){
-
+  Widget _buildResumeButton() {
     return ElevatedButton.icon(
-      onPressed: () {presenter.endBreak();},
+      onPressed: () {
+        presenter.endBreak();
+      },
       icon: SvgPicture.asset(
         // <-- Icon
         "assets/icons/overtime_icon.svg",
@@ -243,8 +253,6 @@ class _AttendanceButtonDetailsScreenState
       ), // <-- Text
     );
   }
-
-
 
   Widget _buildAttendanceDetails() {
     return Container(
@@ -294,9 +302,14 @@ class _AttendanceButtonDetailsScreenState
     );
   }
 
+  // void setCustomMarker() async {
+  //   customIcon = await BitmapDescriptor.fromAssetImage(
+  //       ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/overtime_icon.svg');
+  // }
+
   @override
   void hideBreakButton() {
-    // TODO: implement hideBreakButton
+    _typeNotifier.notify(HIDE_BREAK_BUTTON_VIEW);
   }
 
   @override
@@ -326,7 +339,7 @@ class _AttendanceButtonDetailsScreenState
 
   @override
   void showBreakButton() {
-    _typeNotifier.notify(BREAK_BUTTON_VIEW);
+    _typeNotifier.notify(SHOW_BREAK_BUTTON_VIEW);
   }
 
   @override
@@ -341,7 +354,7 @@ class _AttendanceButtonDetailsScreenState
 
   @override
   void showErrorMessage(String title, String message) {
-    // TODO: implement showErrorMessage
+    Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 
   @override
@@ -351,7 +364,7 @@ class _AttendanceButtonDetailsScreenState
 
   @override
   void showLoader() {
-   _buttonTypeNotifier.notify(LOADER_VIEW);
+    _buttonTypeNotifier.notify(LOADER_VIEW);
   }
 
   @override
@@ -395,18 +408,18 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showLocationPositions(num lat, num lon) {
-    print("}}}}}}}}}}}}}}}}}}}}}}}}}");
-    print(lat);
-    // setState(() {
-    //
-    //   _controller?.animateCamera(CameraUpdate.newCameraPosition(
-    //       CameraPosition(target: LatLng(lat.toDouble(), lon.toDouble()), zoom: 12.0))).then((val) {
-    //
-    //   });
-    //   _markers.add(Marker(markerId: MarkerId('Home'),
-    //       position: LatLng(lat.toDouble(), lon.toDouble())
-    //   ));
-    // });
+  void showLocationPositions(num lat, num long) {
+    // setCustomMarker();
+    _controller
+        ?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
+      target: LatLng(lat.toDouble(), long.toDouble()),
+      zoom: 14.0,
+    )));
+    setState(() {
+      _markers.add(Marker(
+          //  icon: customIcon,
+          markerId: MarkerId('Home'),
+          position: LatLng(lat.toDouble(), long.toDouble())));
+    });
   }
 }

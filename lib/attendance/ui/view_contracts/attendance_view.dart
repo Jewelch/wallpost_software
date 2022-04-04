@@ -59,4 +59,5 @@ abstract class AttendanceView {
 
 
   void showError(String title, String message);
+
 }

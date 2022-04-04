@@ -6,6 +6,7 @@ import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/services/time_to_punch_in_calculator.dart';
 import 'package:wallpost/attendance/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance/ui/views/attendance_rectangle_rounded_action_button.dart';
 import 'package:wallpost/attendance/ui/views/attendance_button_details.dart';
@@ -22,7 +23,10 @@ class _AttendanceButtonState extends State<AttendanceButton>
   late final AttendancePresenter presenter;
   String? _timeString;
   String _locationAddress = "";
-  late num _remainingTimeToPunchIn = 0;
+
+  //late num _remainingTimeToPunchIn = 0;
+  late Timer _timer;
+  String? _remainingTimeToPunchInString = "";
 
   final ItemNotifier<int> _viewTypeNotifier = ItemNotifier();
   static const DISABLE_VIEW = 1;
@@ -40,28 +44,34 @@ class _AttendanceButtonState extends State<AttendanceButton>
   }
 
   @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
         width: MediaQuery.of(context).size.width,
         child: Column(
-          children: [ItemNotifiable<int>(
-            notifier: _viewTypeNotifier,
-            builder: (context, value) {
-              if (value == LOADER_VIEW) {
-                return _buildLoader();
-              } else if (value == DISABLE_VIEW) {
-                return _buildDisableButton();
-              } else if (value == PUNCH_IN_BUTTON_VIEW) {
-                return _buildPunchInButton();
-              }else if(value==PUNCH_OUT_BUTTON_VIEW){
-                return _buildPunchOutButton();
-              }
-              return Container();
-            },
-          )
-
+          children: [
+            ItemNotifiable<int>(
+              notifier: _viewTypeNotifier,
+              builder: (context, value) {
+                if (value == LOADER_VIEW) {
+                  return _buildLoader();
+                } else if (value == DISABLE_VIEW) {
+                  return _buildDisableButton();
+                } else if (value == PUNCH_IN_BUTTON_VIEW) {
+                  return _buildPunchInButton();
+                } else if (value == PUNCH_OUT_BUTTON_VIEW) {
+                  return _buildPunchOutButton();
+                }
+                return Container();
+              },
+            )
           ],
         ),
       ),
@@ -83,8 +93,8 @@ class _AttendanceButtonState extends State<AttendanceButton>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-        width: 20,
-        height: 20,
+            width: 20,
+            height: 20,
             child: CircularProgressIndicator(
               strokeWidth: 2,
               backgroundColor: Colors.transparent,
@@ -108,28 +118,30 @@ class _AttendanceButtonState extends State<AttendanceButton>
             Radius.circular(20.0),
           ),
         ),
+
         child: Align(
             alignment: Alignment.center,
-            child: Text(
-              "$_remainingTimeToPunchIn  To Punch In",
+            child:
+            Text(
+              "$_remainingTimeToPunchInString  To Punch In",
               style: TextStyle(color: Colors.white),
             )));
   }
 
-
-
-  Widget _buildPunchInButton(){
+  Widget _buildPunchInButton() {
     return AttendanceRectangleRoundedActionButton(
       title: "Punch In",
-      subtitle: _locationAddress.length > 30 ? '${_locationAddress.substring(0, 30)}...' : _locationAddress,
+      subtitle: _locationAddress.length > 30
+          ? '${_locationAddress.substring(0, 30)}...'
+          : _locationAddress,
       status: "Abse",
       time: "10:10",
       attendanceButtonColor: AppColors.punchInButtonColor,
       moreButtonColor: AppColors.punchInMoreButtonColor,
-      onButtonPressed: (){
+      onButtonPressed: () {
         print("button");
       },
-      onMorePressed: (){
+      onMorePressed: () {
         print("More");
         ScreenPresenter.presentAndRemoveAllPreviousScreens(
             AttendanceButtonDetailsScreen(), context);
@@ -137,20 +149,43 @@ class _AttendanceButtonState extends State<AttendanceButton>
     );
   }
 
-  Widget _buildPunchOutButton(){
+  Widget _buildPunchOutButton() {
     return AttendanceRectangleRoundedActionButton(
       title: "Punch Out",
-      subtitle: _locationAddress.length > 30 ? '${_locationAddress.substring(0, 30)}...' : _locationAddress,
+      subtitle: _locationAddress.length > 30
+          ? '${_locationAddress.substring(0, 30)}...'
+          : _locationAddress,
       status: "",
       time: "10:10",
       attendanceButtonColor: AppColors.punchOutButtonColor,
       moreButtonColor: AppColors.punchOutMoreButtonColor,
-      onButtonPressed: (){
+      onButtonPressed: () {
         print("button punchout");
       },
-      onMorePressed: (){
-          ScreenPresenter.presentAndRemoveAllPreviousScreens(
-              AttendanceButtonDetailsScreen(), context);
+      onMorePressed: () {
+        ScreenPresenter.presentAndRemoveAllPreviousScreens(
+            AttendanceButtonDetailsScreen(), context);
+      },
+    );
+  }
+
+  void _startCountDownTimer(num _start) {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        _remainingTimeToPunchInString =
+            TimeToPunchInCalculator.timeTillPunchIn(_start.toInt());
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+            _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
       },
     );
   }
@@ -168,7 +203,7 @@ class _AttendanceButtonState extends State<AttendanceButton>
   // }
 
   void _doPunchIn() {
-   // presenter.validateLocation(true);
+    // presenter.validateLocation(true);
     print("doPunchIn>>>>>>>>>>>>>More");
   }
 
@@ -188,12 +223,12 @@ class _AttendanceButtonState extends State<AttendanceButton>
   @override
   void showPunchOutButton() {
     _viewTypeNotifier.notify(PUNCH_OUT_BUTTON_VIEW);
-
   }
 
   @override
   void showTimeTillPunchIn(num seconds) {
-    _remainingTimeToPunchIn = seconds;
+    // _remainingTimeToPunchIn = seconds;
+    _startCountDownTimer(seconds);
     _viewTypeNotifier.notify(DISABLE_VIEW);
   }
 

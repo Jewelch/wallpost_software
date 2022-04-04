@@ -219,14 +219,18 @@ class AttendancePresenter {
   Future<void> startBreak() async {
     try {
       await _breakStartMarker.startBreak(_attendanceDetails,_attendanceLocation);
+      _view.showResumeButton();
     } on WPException catch (e) {
       _view.showErrorMessage("Start break is failed", e.userReadableMessage);
     }
   }
 
+
+
   Future<void> endBreak() async {
     try {
       await _breakEndMarker.endBreak(_attendanceDetails,_attendanceLocation);
+      _view.showBreakButton();
     } on WPException catch (e) {
       _view.showErrorMessage("Resume is failed", e.userReadableMessage);
     }

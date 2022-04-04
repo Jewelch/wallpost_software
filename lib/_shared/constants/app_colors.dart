@@ -56,7 +56,7 @@ class AppColors {
   static final Color punchInMoreButtonColor = getColorFromHex('#009842');
 
   static final Color punchOutButtonColor=getColorFromHex('#f62a20');
-  static final Color punchOutMoreButtonColor=getColorFromHex('#c00d0d');
+  static final Color punchOutMoreButtonColor=getColorFromHex('#E22017');
 
   static final Color breakButton=getColorFromHex('#dff0f7');
 

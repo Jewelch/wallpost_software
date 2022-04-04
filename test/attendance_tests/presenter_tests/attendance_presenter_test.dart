@@ -11,6 +11,8 @@ import 'package:wallpost/attendance/exception/location_permission_permanently_de
 import 'package:wallpost/attendance/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance/services/attendance_details_provider.dart';
 import 'package:wallpost/attendance/services/attendance_location_validator.dart';
+import 'package:wallpost/attendance/services/break_end_marker.dart';
+import 'package:wallpost/attendance/services/break_start_marker.dart';
 import 'package:wallpost/attendance/services/location_provider.dart';
 import 'package:wallpost/attendance/services/punch_in_from_app_permission_provider.dart';
 import 'package:wallpost/attendance/services/punch_in_marker.dart';
@@ -50,6 +52,10 @@ class MockPunchInMarker extends Mock implements PunchInMarker {}
 
 class MockPunchOutMarker extends Mock implements PunchOutMarker {}
 
+class MockBreakStartMarker extends Mock implements BreakStartMarker {}
+
+class MockBreakEndMarker extends Mock implements BreakEndMarker {}
+
 void main() {
   var view = MockAttendanceView();
   var mockAttendanceDetailsProvider = MockAttendanceDetailsProvider();
@@ -60,6 +66,8 @@ void main() {
   var mockAttendanceLocationValidator = MockAttendanceLocationValidator();
   var mockPunchInMarker = MockPunchInMarker();
   var mockPunchOutMarker = MockPunchOutMarker();
+  var mockBreakStartMaker = MockBreakStartMarker();
+  var mocKBreakEndMarker = MockBreakEndMarker();
 
   AttendancePresenter presenter = AttendancePresenter.initWith(
       view,
@@ -69,7 +77,9 @@ void main() {
       mockPunchInNowPermissionProvider,
       mockAttendanceLocationValidator,
       mockPunchInMarker,
-      mockPunchOutMarker);
+      mockPunchOutMarker,
+      mockBreakStartMaker,
+      mocKBreakEndMarker);
 
   setUp(() {
     reset(view);
