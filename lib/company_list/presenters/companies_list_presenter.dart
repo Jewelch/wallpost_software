@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/company_core/entities/company_list.dart';
@@ -57,7 +59,6 @@ class CompaniesListPresenter {
   void _handleResponse(CompanyList companyList) {
     _companies = companyList.companies;
 
-
     if (_companies.isNotEmpty) {
       _setupFilterViews(companyList);
       _showFilteredCompanies();
@@ -91,7 +92,7 @@ class CompaniesListPresenter {
 
   void _showFilteredCompanies() {
     _filterList.clear();
-    if(_groupCompanies.isNotEmpty){
+    if (_groupCompanies.isNotEmpty) {
       for (int i = 0; i < _groupCompanies.length; i++) {
         var item = _groupCompanies[i];
         if (item.name.toLowerCase().contains(_searchText.toLowerCase())) {
@@ -107,11 +108,25 @@ class CompaniesListPresenter {
       }
     }
 
-
     if (_filterList.isEmpty) {
-      _view.showNoSearchResultsMessage("There are no companies for the  given search criteria.");
+      _view.showNoSearchResultsMessage(
+          "There are no companies for the  given search criteria.");
+      _view.showApprovalCount(null);
     } else {
       _view.showCompanyList(_filterList);
+      handleApprovalCount();
+    }
+  }
+
+  void handleApprovalCount() {
+    num approvalCount = 0;
+    for (var i = 0; i < _filterList.length; i++) {
+      approvalCount += _filterList[i].approvalCount;
+    }
+    if (approvalCount != 0) {
+      _view.showApprovalCount(approvalCount.toInt());
+    } else {
+      _view.showApprovalCount(null);
     }
   }
 
@@ -124,6 +139,7 @@ class CompaniesListPresenter {
     _companyListProvider.reset();
     _searchText = "";
     _groupCompanies.clear();
+    _view.showApprovalCount(null);
     loadCompanies();
   }
 
@@ -143,7 +159,6 @@ class CompaniesListPresenter {
   //MARK: Function to select group filter
 
   void showGroup(int index) {
-
     _groupCompanies.clear();
 
     if (_companyList.groups[index].financialSummary != null) {
@@ -172,12 +187,14 @@ class CompaniesListPresenter {
   _selectCompany(CompanyListItem companyListItem) async {
     _view.showLoader();
     try {
-      var _ = await _companyDetailsProvider.getCompanyDetails(companyListItem.id.toString());
+      var _ = await _companyDetailsProvider
+          .getCompanyDetails(companyListItem.id.toString());
       _view.hideLoader();
       _view.goToCompanyDetailScreen();
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.onCompanyDetailsLoadingFailed('Failed To load company details', e.userReadableMessage);
+      _view.onCompanyDetailsLoadingFailed(
+          'Failed To load company details', e.userReadableMessage);
     }
   }
 
@@ -200,6 +217,7 @@ class CompaniesListPresenter {
   List<String> getYears() {
     return _years;
   }
+
   final List<String> _years = <String>[
     '2015',
     '2016',
@@ -210,5 +228,4 @@ class CompaniesListPresenter {
     '2021',
     '2022'
   ];
-
 }

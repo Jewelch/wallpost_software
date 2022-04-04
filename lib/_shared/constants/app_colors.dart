@@ -54,6 +54,9 @@ class AppColors {
   static final Color absentColor = getColorFromHex('#FF0000');
   static final Color lateColor = getColorFromHex('#ffa500');
 
+  //Dashboard colors
+  static final Color bottomSheetColor = getColorFromHex('#F8A228');
+
   //MARK: Util function to convert hex string to color
   static Color getColorFromHex(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll('#', '');

@@ -14,7 +14,8 @@ import 'package:wallpost/company_core/entities/company_list_item.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 import 'package:wallpost/company_list/presenters/companies_list_presenter.dart';
 import 'package:wallpost/company_list/view_contracts/company_list_view.dart';
-import 'package:wallpost/company_list/views/company_list_card.dart';
+import 'package:wallpost/company_list/views/company_list_card_with_revenue.dart';
+import 'package:wallpost/company_list/views/company_list_card_without_revenue.dart';
 import 'package:wallpost/company_list/views/company_list_loader.dart';
 import 'package:wallpost/company_list/views/financial_summary_card.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
@@ -31,6 +32,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   var _viewAppBarSelectorNotifier = ItemNotifier<bool>();
   var _searchBarVisibilityNotifier = ItemNotifier<bool>();
   var _appBarVisibilityNotifier = ItemNotifier<bool>();
+  var _approvalCountNotifier = ItemNotifier<int>();
   var _companyGroupsNotifier = ItemNotifier<List<CompanyGroup>>();
   var _financialSummaryNotifier = ItemNotifier<FinancialSummary>();
   var _companiesListNotifier = ItemNotifier<List<CompanyListItem>>();
@@ -99,6 +101,54 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                   ],
                 ),
               ),
+            ),
+            ItemNotifiable<int>(
+              notifier: _approvalCountNotifier,
+              builder: (context, value) {
+                if (value == null) {
+                  return Container();
+                } else
+                  return Container(
+                    height: 50,
+                    color: AppColors.bottomSheetColor,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(width: 10),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: SvgPicture.asset(
+                            'assets/icons/exclamation_icon.svg',
+                            color: Colors.white,
+                            width: 14,
+                            height: 18,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            "Approvals",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        new Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(value.toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              )),
+                        ),
+                        SizedBox(width: 10)
+                      ],
+                    ),
+                  );
+              },
             ),
           ],
         ),
@@ -302,21 +352,21 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   Widget _getCompanyCard(int index, List<CompanyListItem> companyList) {
-    // var company = companyList[index];
-    // if company.financialSummary == null {
-    //   return CompanyListCardWithutRevenue()
-    // }
-    // else return CompanyListCard(
-    // company: companyList[index],
-    // onPressed: () {
-    //   presenter.selectCompanyAtIndex(index);
-    // });
+    var company = companyList[index];
 
-    return CompanyListCard(
-        company: companyList[index],
-        onPressed: () {
-          presenter.selectCompanyAtIndex(index);
-        });
+    if (company.financialSummary == null) {
+      return CompanyListCardWithoutRev(
+          company: companyList[index],
+          onPressed: () {
+            presenter.selectCompanyAtIndex(index);
+          });
+    } else {
+      return CompanyListCardWithRevenue(
+          company: companyList[index],
+          onPressed: () {
+            presenter.selectCompanyAtIndex(index);
+          });
+    }
   }
 
   //MARK: Functions to build error views
@@ -337,6 +387,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         notifier: _showErrorNotifier,
         builder: (context, errorMessage) {
           return Container(
+            padding: EdgeInsets.symmetric(horizontal: 24),
             height: 150,
             child: Center(
               child: Column(
@@ -407,6 +458,11 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   void showCompanyList(List<CompanyListItem> companies) {
     _companiesListNotifier.notify(companies);
     _viewSelectorNotifier.notify(COMPANIES_VIEW);
+  }
+
+  @override
+  void showApprovalCount(int? approvalCount) {
+    _approvalCountNotifier.notify(approvalCount);
   }
 
   @override

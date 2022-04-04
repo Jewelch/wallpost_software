@@ -12,6 +12,12 @@ class TextStyles {
         color: Colors.black,
       );
 
+  static get largeTitleTextStyleBold => TextStyle(
+        fontSize: 18,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      );
+
   static get subTitleTextStyle => TextStyle(
         fontSize: 14,
         color: AppColors.getColorFromHex('#777777'),

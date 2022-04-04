@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../_shared/constants/app_colors.dart';
+
 class HeaderCard extends StatelessWidget {
   final Widget content;
 
@@ -11,6 +13,15 @@ class HeaderCard extends StatelessWidget {
       width: double.infinity,
       height: 260,
       margin: EdgeInsets.only(right: 20),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.defaultColor.withOpacity(0.02),
+              offset: Offset(0, 0),
+              blurRadius: 10,
+              spreadRadius: 00),
+        ],
+      ),
       child: CustomPaint(
         painter: _HeaderCardPainter(),
         child: content,

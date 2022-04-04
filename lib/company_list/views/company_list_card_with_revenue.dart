@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_core/entities/company_list_item.dart';
@@ -12,111 +12,116 @@ class CompanyListCardWithRevenue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8),
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: onPressed,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(company.name, style: TextStyles.titleTextStyle.copyWith(fontWeight: FontWeight.bold)),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Approval${company.approvalCount == 1 ? '' : 's'}',
-                                  style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
-                              Text(
-                                company.approvalCount.toString(),
-                                style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 12),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Notification  TODO',
-                                  style: TextStyles.subTitleTextStyle.copyWith(color: Colors.black)),
-                              Text(
-                                "TODO",
-                                style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+                padding: const EdgeInsets.only(left: 4.0),
+                child: Text(company.name, style: TextStyles.largeTitleTextStyleBold)),
+            SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                _companyLogo(),
+                SizedBox(width: 6),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 8.0, bottom: 4),
+                    alignment: Alignment.centerLeft,
+                    child: tile(
+                      company.financialSummary?.profitLoss ?? "",
+                      "Profit & Loss",
+                      Color(0xff25D06E),
+                      company.financialSummary?.receivableOverdue ?? "",
+                      "Receivables Overdue",
+                      Color(0xffF62A20),
                     ),
-                    Container(height: 80, child: VerticalDivider()),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                "company.actualSalesAmount",
-                                style: TextStyles.titleTextStyle,
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                "company.currencyCode",
-                                style: TextStyles.labelTextStyle,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            'Actual Sales',
-                            style: TextStyles.labelTextStyle,
-                          ),
-                          SizedBox(height: 16),
-                          LinearPercentIndicator(
-                            lineHeight: 14,
-                            percent: 100,
-                            progressColor: _getColorForPerformance(100),
-                            center: Text(
-                              "100%",
-                              style: TextStyles.labelTextStyle.copyWith(color: Colors.white),
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Overall Sales Achievement',
-                            style: TextStyles.labelTextStyle,
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                )
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 8.0, bottom: 4),
+                    alignment: Alignment.centerLeft,
+                    child: tile(
+                        company.financialSummary?.cashAvailability ?? "",
+                        "Fund Availability",
+                        Color(0xff25D06E),
+                        company.financialSummary?.payableOverdue ?? "",
+                        "Payables Overdue",
+                        Color(0xffF62A20)),
+                  ),
+                ),
               ],
             ),
+            SizedBox(height: 12),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _companyLogo() {
+    final borderRadius = BorderRadius.circular(20);
+    return Container(
+      width: 100,
+      height: 100,
+      padding: EdgeInsets.all(6),
+      // Border width
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: borderRadius,
+        border: Border.all(color: AppColors.greyColor),
+      ),
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: SizedBox.fromSize(
+          size: Size.fromRadius(44), // Image radius
+          child: CachedNetworkImage(
+            imageUrl: company.logoUrl,
+            placeholder: (context, url) => Center(child: Icon(Icons.camera_alt)),
+            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),
       ),
     );
   }
 
-  Color _getColorForPerformance(int performance) {
-    // var performanceLevelCalculator = MyPortalPerformanceLevelCalculator();
-    // if (performanceLevelCalculator.isPerformanceGood(performance)) {
-    //   return AppColors.goodPerformanceColor;
-    // } else if (performanceLevelCalculator.isPerformanceAverage(performance)) {
-    //   return AppColors.averagePerformanceColor;
-    // } else {
-    //   return AppColors.badPerformanceColor;
-    // }
-    return AppColors.actionButtonColor;
+  Widget tile(
+    String valueTop,
+    String labelTop,
+    Color colorTop,
+    String valueBottom,
+    String labelBottom,
+    Color colorBottom,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        tileDetails(valueTop, labelTop, colorTop),
+        SizedBox(height: 8),
+        tileDetails(valueBottom, labelBottom, colorBottom)
+      ],
+    );
+  }
+
+  Widget tileDetails(
+    String value,
+    String label,
+    Color color,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          value,
+          style: TextStyles.titleTextStyle.copyWith(fontWeight: FontWeight.bold, color: color),
+        ),
+        Text(label, style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
+      ],
+    );
   }
 }
