@@ -7,6 +7,8 @@ class ItemNotifier<T> {
   T? _value;
   VoidCallback? _listener;
 
+  ItemNotifier([this._value]);
+
   void setListener(VoidCallback listener) {
     _listener = listener;
   }

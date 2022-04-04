@@ -1,33 +1,45 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:wallpost/_shared/extensions/file_extension.dart';
 import '../screen_presenter/modal_sheet_presenter.dart';
 
 enum FileTypes { images, videos, documents, audios }
 
-class FilePickerScreen extends StatelessWidget {
+class FilePickerScreen extends StatefulWidget {
   final bool allowMultiple;
-  final List<File> files = const [];
   final List<FileTypes> filesType;
 
-  static Future<dynamic> present(BuildContext context) {
+  static Future<dynamic> present(BuildContext context,
+      {bool allowMultiple = false, List<FileTypes> filesType = FileTypes.values}) {
     return ModalSheetPresenter.present(
       context: context,
       title: "Pick File",
-      content: FilePickerScreen(),
+      content: FilePickerScreen(
+        allowMultiple: allowMultiple,
+        filesType: filesType,
+      ),
       controller: ModalSheetController(),
     );
   }
 
-  const FilePickerScreen({Key? key, this.allowMultiple = false, this.filesType = FileTypes.values})
+  const FilePickerScreen({Key? key, required this.allowMultiple, required this.filesType})
       : super(key: key);
+
+  @override
+  State<FilePickerScreen> createState() => _FilePickerScreenState();
+}
+
+class _FilePickerScreenState extends State<FilePickerScreen> {
+  final List<File> files =  [];
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (filesType.contains(FileTypes.images))
+          if (widget.filesType.contains(FileTypes.images))
             ListTile(
               title: Text("Image"),
               onTap: () async {
@@ -35,7 +47,7 @@ class FilePickerScreen extends StatelessWidget {
                 _addFiles(images);
               },
             ),
-          if (filesType.contains(FileTypes.videos))
+          if (widget.filesType.contains(FileTypes.videos))
             ListTile(
               title: Text("Video"),
               onTap: () async {
@@ -43,7 +55,7 @@ class FilePickerScreen extends StatelessWidget {
                 _addFiles(videos);
               },
             ),
-          if (filesType.contains(FileTypes.documents))
+          if (widget.filesType.contains(FileTypes.documents))
             ListTile(
               title: Text("Document"),
               onTap: () async {
@@ -51,7 +63,7 @@ class FilePickerScreen extends StatelessWidget {
                 _addFiles(document);
               },
             ),
-          if (filesType.contains(FileTypes.audios))
+          if (widget.filesType.contains(FileTypes.audios))
             ListTile(
               title: Text("Audio"),
               onTap: () async {
@@ -59,7 +71,15 @@ class FilePickerScreen extends StatelessWidget {
                 _addFiles(audios);
               },
             ),
-
+          if(files.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Selected Files:"),
+            ),
+          ...files.map((file) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(file.name(),),
+          )),
           ListTile(
             title: Text("finish"),
             onTap: () => Navigator.of(context).pop(files),
@@ -72,7 +92,9 @@ class FilePickerScreen extends StatelessWidget {
   Future<List<File>?> _pickFiles(FileType filesType, {List<String>? allowedExtensions}) async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-          allowMultiple: allowMultiple, type: filesType, allowedExtensions: allowedExtensions);
+          allowMultiple: widget.allowMultiple,
+          type: filesType,
+          allowedExtensions: allowedExtensions);
       if (result != null) {
         List<File> files = result.paths.map((path) => File(path!)).toList();
         return files;
@@ -82,12 +104,13 @@ class FilePickerScreen extends StatelessWidget {
     }
   }
 
-  void _addFiles(List<File>? files) {
-    if (files == null) return;
-    if (allowMultiple) files.addAll(files);
-    if (!allowMultiple) {
+  void _addFiles(List<File>? newFiles) {
+    if (newFiles == null) return;
+    if (widget.allowMultiple) files.addAll(newFiles);
+    if (!widget.allowMultiple) {
       files.clear();
-      files.addAll(files);
+      files.addAll(newFiles);
     }
+    setState(() {});
   }
 }

@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/expense_requests/entities/expense_category.dart';
 import 'package:wallpost/expense_requests/entities/expense_request_form.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_file_uploader.dart';
-import 'package:wallpost/expense_requests/ui/models/expense_request.dart';
+import 'package:wallpost/expense_requests/ui/models/expense_request_model.dart';
 
 import 'expense_categories_mock.dart';
 
@@ -34,8 +34,8 @@ ExpenseRequestForm getExpenseRequestForm() {
       total: "1");
 }
 
-ExpenseRequest getExpenseRequest() {
-  var expenseRequest =  ExpenseRequest();
+ExpenseRequestModel getExpenseRequest() {
+  var expenseRequest =  ExpenseRequestModel();
   var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[0]);
   expenseRequest.selectedProject = category;
   expenseRequest.selectedSubCategory = category;
@@ -43,6 +43,19 @@ ExpenseRequest getExpenseRequest() {
   return expenseRequest;
 }
 
+ExpenseRequestModel getExpenseRequestWithMissedSubCategory() {
+  var expenseRequest =  ExpenseRequestModel();
+  var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[0]);
+  expenseRequest.selectedMainCategory = category;
+  return expenseRequest;
+}
+
+ExpenseRequestModel getExpenseRequestWithMissedProject() {
+  var expenseRequest =  ExpenseRequestModel();
+  var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[1]);
+  expenseRequest.selectedMainCategory = category;
+  return expenseRequest;
+}
 
 var successFullAddingExpenseRequestResponse = {
   "status": "success",

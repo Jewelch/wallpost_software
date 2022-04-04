@@ -10,7 +10,7 @@ main() {
 
     expect(expenseCategory.id, "1");
     expect(expenseCategory.name, "Camp Expense");
-    expect(expenseCategory.subCategories.length, 0);
+    expect(expenseCategory.subCategories.length, 1);
   });
 
   test("test initializing expense category with missing data throws a exception", () {

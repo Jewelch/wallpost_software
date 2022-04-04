@@ -29,7 +29,7 @@ class PopupPresenter {
                 CircularIconButton(
                   iconName: 'assets/icons/close_icon.svg',
                   color: Colors.white,
-                  iconColor: AppColors.darkGreyIconColor,
+                  iconColor: AppColors.darkGrey,
                   onPressed: () {
                     Navigator.of(context).pop();
                     if (onCloseButtonPressed != null) onCloseButtonPressed();

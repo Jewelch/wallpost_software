@@ -74,7 +74,7 @@ class CompanyListCard extends StatelessWidget {
       padding: EdgeInsets.all(2), // Border width
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
-          color: AppColors.darkGreyIconColor,
+          color: AppColors.darkGrey,
           blurRadius: 4,
           offset: Offset(1, 1), // Shadow position
         ),

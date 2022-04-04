@@ -18,6 +18,7 @@ import 'package:wallpost/company_list/views/company_list_card.dart';
 import 'package:wallpost/company_list/views/company_list_loader.dart';
 import 'package:wallpost/company_list/views/financial_summary_card.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
+import 'package:wallpost/expense_requests/ui/views/screens/expense_request_screen.dart';
 
 class CompanyListScreen extends StatefulWidget {
   @override
@@ -121,13 +122,20 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
               width: 14,
               height: 14,
             ),
-            onLeadingButtonPressed: () => presenter.logout(),
-            onTrailingButtonPressed: () => {if (showSearchBar == true) _viewAppBarSelectorNotifier.notify(true)},
+            // onLeadingButtonPressed: () => presenter.logout(),
+            onLeadingButtonPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => ExpenseRequestScreen(),
+              ),
+            ),
+            onTrailingButtonPressed: () =>
+                {if (showSearchBar == true) _viewAppBarSelectorNotifier.notify(true)},
             textButton1: TextButton(
               onPressed: () {},
               child: Text(
                 "Group Summary",
-                style: TextStyle(color: Color(0xff0096E3), fontSize: 18, fontWeight: FontWeight.w700),
+                style:
+                    TextStyle(color: Color(0xff0096E3), fontSize: 18, fontWeight: FontWeight.w700),
               ),
             ),
           );

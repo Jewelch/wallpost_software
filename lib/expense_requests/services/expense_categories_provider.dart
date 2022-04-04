@@ -5,18 +5,24 @@ import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/expense_requests/constants/expense_requests_urls.dart';
 import 'package:wallpost/expense_requests/entities/expense_category.dart';
 
+import '../../company_core/services/selected_company_provider.dart';
+
 class ExpenseCategoriesProvider {
   final NetworkAdapter _networkAdapter;
   late String _sessionId;
+  SelectedCompanyProvider _selectedCompanyProvider;
 
   bool isLoading = false;
 
-  ExpenseCategoriesProvider() : _networkAdapter = WPAPI();
+  ExpenseCategoriesProvider()
+      : _networkAdapter = WPAPI(),
+        _selectedCompanyProvider = SelectedCompanyProvider();
 
-  ExpenseCategoriesProvider.initWith(this._networkAdapter);
+  ExpenseCategoriesProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
-  Future<List<ExpenseCategory>> get(String companyId) async {
+  Future<List<ExpenseCategory>> get() async {
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     var url = ExpenseRequestsUrls.getExpenseCategoriesUrl(companyId);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;

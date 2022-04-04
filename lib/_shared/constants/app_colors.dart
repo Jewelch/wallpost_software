@@ -18,7 +18,7 @@ class AppColors {
   //Button colors
   static final Color actionButtonColor = defaultColor;
   static final Color criticalButtonColor = getColorFromHex('#db544e');
-  static final Color darkGreyIconColor = Color.fromRGBO(100, 100, 100, 1.0);
+  static final Color darkGrey = Color.fromRGBO(100, 100, 100, 1.0);
 
   //Text colors
   static final Color labelColor = getColorFromHex('#777777');
@@ -53,6 +53,9 @@ class AppColors {
   static final Color presentColor = Color.fromRGBO(43, 186, 104, 1.0);
   static final Color absentColor = getColorFromHex('#FF0000');
   static final Color lateColor = getColorFromHex('#ffa500');
+
+  //requests colors
+  static final Color lightGrey = Colors.grey[100]!;
 
   //MARK: Util function to convert hex string to color
   static Color getColorFromHex(String hexColor) {

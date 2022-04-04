@@ -1,0 +1,442 @@
+import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/file_picker/file_picker_screen.dart';
+import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
+import 'package:wallpost/_shared/extensions/file_extension.dart';
+import 'package:wallpost/_shared/loadable_widget/loadable_widget.dart';
+import 'package:wallpost/_shared/loadable_widget/widget_status.dart';
+import 'package:wallpost/expense_requests/entities/expense_category.dart';
+import 'package:wallpost/expense_requests/ui/presenters/expense_request_presenter.dart';
+import 'package:wallpost/expense_requests/ui/view_contracts/expense_requests_view.dart';
+import 'package:wallpost/expense_requests/ui/views/widgets/shimmer_effect_expense_request.dart';
+import '../../../../_common_widgets/app_bars/request_app_bar.dart';
+import '../../models/expense_request_model.dart';
+
+class ExpenseRequestScreen extends StatefulWidget {
+  @override
+  State<ExpenseRequestScreen> createState() => _ExpenseRequestScreenState();
+}
+
+class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
+    implements ExpenseRequestsView {
+  final ItemNotifier<WidgetStatus> _loadingStatusNotifier = ItemNotifier(WidgetStatus.loading);
+  final ItemNotifier<bool> _subCategoriesNotifier = ItemNotifier(false);
+  final ItemNotifier<bool> _projectsNotifier = ItemNotifier(false);
+  final ItemNotifier<bool> _missingCategoryNotifier = ItemNotifier(false);
+  final ItemNotifier<bool> _missingSubCategoryNotifier = ItemNotifier(false);
+  final ItemNotifier<bool> _missingProjectNotifier = ItemNotifier(false);
+  final ItemNotifier<bool> _showLoaderNotifier = ItemNotifier(false);
+
+  final _expenseRequest = ExpenseRequestModel();
+
+  late final ExpenseRequestPresenter _presenter;
+
+  @override
+  void initState() {
+    super.initState();
+    _presenter = ExpenseRequestPresenter(this);
+    _presenter.getCategories();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.screenBackgroundColor,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _getBottomButton(),
+      appBar: RequestsAppBar(title: "Expense Request"),
+      body: ItemNotifiable<WidgetStatus>(
+        notifier: _loadingStatusNotifier,
+        builder: (_, status) {
+          return LoadableWidget(
+            status: status!,
+            loadingWidget: ShimmerEffectExpenseRequest(),
+            errorWidget: SizedBox(),
+            child: ListView(
+              padding: EdgeInsets.all(16),
+              children: [
+                ..._inputWithHeader(
+                  required: true,
+                  title: "Date",
+                  child: GestureDetector(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          DateTime.now().yyyyMMddString(),
+                          style: TextStyle(color: AppColors.darkGrey),
+                        ),
+                        IconButton(
+                            onPressed: () async {
+                              DateTime date = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime.now(),
+                                      lastDate: DateTime.now().add(Duration(days: 600))) ??
+                                  DateTime.now();
+                              _expenseRequest.date = date;
+                            },
+                            icon: Icon(
+                              Icons.calendar_today_outlined,
+                              color: AppColors.darkGrey,
+                            ))
+                      ],
+                    ),
+                  ),
+                ),
+                ItemNotifiable<bool>(
+                  notifier: _missingCategoryNotifier,
+                  builder: (_, isCategoryMissing) => Column(
+                    children: _inputWithHeader(
+                      missingError: isCategoryMissing!,
+                      required: true,
+                      title: "Select the type of expense",
+                      child: DropdownButton<ExpenseCategory>(
+                        items: _presenter.expenseRequests
+                            .map<DropdownMenuItem<ExpenseCategory>>((category) =>
+                                DropdownMenuItem(value: category, child: Text(category.name)))
+                            .toList(),
+                        onChanged: (mainCategory) {
+                          _expenseRequest.selectedMainCategory = mainCategory;
+                          if (mainCategory != null) {
+                            _presenter.selectCategory(mainCategory);
+                            setState(() {});
+                          }
+                        },
+                        icon: Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Icon(
+                            Icons.arrow_forward_ios_sharp,
+                            color: AppColors.darkGrey,
+                          ),
+                        ),
+                        alignment: Alignment.centerRight,
+                        value: _expenseRequest.selectedMainCategory,
+                        underline: SizedBox(),
+                        isExpanded: true,
+                        style: TextStyle(color: AppColors.darkGrey),
+                      ),
+                    ),
+                  ),
+                ),
+                ItemNotifiable<bool>(
+                  notifier: _subCategoriesNotifier,
+                  builder: (_, hasSubCategory) => hasSubCategory!
+                      ? ItemNotifiable<bool>(
+                          notifier: _missingSubCategoryNotifier,
+                          builder: (_, isSubCategoryMissing) => Column(
+                            children: _inputWithHeader(
+                              missingError: isSubCategoryMissing!,
+                              required: true,
+                              title: "Select the sub type of expense",
+                              child: DropdownButton<ExpenseCategory>(
+                                items: _expenseRequest.selectedMainCategory!.subCategories
+                                    .map<DropdownMenuItem<ExpenseCategory>>(
+                                      (subExpenseCategory) => DropdownMenuItem(
+                                        value: subExpenseCategory,
+                                        child: Text(subExpenseCategory.name),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (subCategory) {
+                                  _expenseRequest.selectedSubCategory = subCategory;
+                                  setState(() {});
+                                },
+                                icon: Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios_sharp,
+                                    color: AppColors.darkGrey,
+                                  ),
+                                ),
+                                alignment: Alignment.centerRight,
+                                value: _expenseRequest.selectedSubCategory,
+                                underline: SizedBox(),
+                                isExpanded: true,
+                                style: TextStyle(color: AppColors.darkGrey),
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                ),
+                ItemNotifiable<bool>(
+                    notifier: _projectsNotifier,
+                    builder: (_, hasProject) {
+                      return hasProject!
+                          ? ItemNotifiable<bool>(
+                              notifier: _missingProjectNotifier,
+                              builder: (_, isProjectMissing) => Column(
+                                children: _inputWithHeader(
+                                  missingError: isProjectMissing!,
+                                  required: true,
+                                  title: "Select the project",
+                                  child: DropdownButton<ExpenseCategory>(
+                                    items: _expenseRequest.selectedMainCategory!.projects
+                                        .map<DropdownMenuItem<ExpenseCategory>>(
+                                          (project) => DropdownMenuItem(
+                                            value: project,
+                                            child: Text(project.name),
+                                          ),
+                                        )
+                                        .toList(),
+                                    onChanged: (project) {
+                                      _expenseRequest.selectedProject = project;
+                                      setState(() {});
+                                    },
+                                    icon: Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios_sharp,
+                                        color: AppColors.darkGrey,
+                                      ),
+                                    ),
+                                    alignment: Alignment.centerRight,
+                                    value: _expenseRequest.selectedProject,
+                                    underline: SizedBox(),
+                                    isExpanded: true,
+                                    style: TextStyle(color: AppColors.darkGrey),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox();
+                    }),
+                ..._inputWithHeader(
+                  required: true,
+                  title: "Enter the expense amount",
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: _expenseRequest.amount,
+                      hintStyle: TextStyle(color: AppColors.darkGrey),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      var amount = double.tryParse(value) ?? 0;
+                      _expenseRequest.setAmount(amount);
+                    },
+                  ),
+                ),
+                ..._inputWithHeader(
+                  required: true,
+                  title: "Enter the total quantity",
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: _expenseRequest.quantity.toString(),
+                      hintStyle: TextStyle(color: AppColors.darkGrey),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      var quantity = int.tryParse(value) ?? 0;
+                      _expenseRequest.quantity = quantity;
+                    },
+                  ),
+                ),
+                ..._inputWithHeader(
+                  title: "Total amount to claim is",
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: _expenseRequest.rate,
+                      hintStyle: TextStyle(color: AppColors.darkGrey),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                ..._inputWithHeader(
+                  required: true,
+                  title: "Upload supporting document",
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _expenseRequest.file != null ? _expenseRequest.file!.name() : "",
+                        style: TextStyle(color: AppColors.darkGrey),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          var files = await FilePickerScreen.present(context,
+                              filesType: [FileTypes.documents]);
+                          if ((files as List).isNotEmpty ) _expenseRequest.file = files[0];
+                          setState(() {});
+                        },
+                        icon: Icon(
+                          Icons.attach_file,
+                          color: AppColors.darkGrey,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _getBottomButton() {
+    return GestureDetector(
+      onTap: (){
+        //TODO: ignore if is in loading
+        _presenter.sendExpenseRequest(_expenseRequest);
+      },
+      child: Container(
+        decoration:
+            BoxDecoration(color: AppColors.presentColor, borderRadius: BorderRadius.circular(8)),
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        width: MediaQuery.of(context).size.width,
+        height: 40,
+        child: ItemNotifiable<bool>(
+          notifier: _showLoaderNotifier,
+          builder: (_, isLoading) => Center(
+              child: isLoading!
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        backgroundColor: Colors.transparent,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+                      ),
+                    )
+                  : Text(
+                      "Save",
+                      style: TextStyle(
+                          color: AppColors.screenBackgroundColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _inputWithHeader({
+    required String title,
+    required Widget child,
+    bool required = false,
+    bool missingError = false,
+  }) {
+    return [
+      Row(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          if (required)
+            Text(
+              "*",
+              style: TextStyle(color: Colors.red),
+            ),
+          if (missingError)
+            Text(
+              "  this field is required",
+              style: TextStyle(color: Colors.red),
+            ),
+        ],
+      ),
+      SizedBox(
+        height: 8,
+      ),
+      Container(
+        decoration:
+            BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(8)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: child,
+        ),
+      ),
+      SizedBox(
+        height: 16,
+      ),
+    ];
+  }
+
+  // MARK: view functions
+
+  @override
+  void onStartFetchCategories() {
+    _loadingStatusNotifier.notify(WidgetStatus.loading);
+  }
+
+  @override
+  void onFetchCategoriesSuccessfully() {
+    _loadingStatusNotifier.notify(WidgetStatus.ready);
+  }
+
+  @override
+  void onFieldToFetchCategories(String userReadableMessage) {
+    _loadingStatusNotifier.notify(WidgetStatus.error);
+  }
+
+  @override
+  void showSubCategories(List<ExpenseCategory> subCategories) {
+    _subCategoriesNotifier.notify(true);
+  }
+
+  @override
+  void hideSubCategoriesView() {
+    _subCategoriesNotifier.notify(false);
+  }
+
+  @override
+  void showProjects(List<ExpenseCategory> projects) {
+    _projectsNotifier.notify(true);
+  }
+
+  @override
+  void hideProjectsView() {
+    _projectsNotifier.notify(false);
+  }
+
+  @override
+  void resetErrors() {
+    _missingCategoryNotifier.notify(false);
+    _missingSubCategoryNotifier.notify(false);
+    _missingProjectNotifier.notify(false);
+  }
+
+  @override
+  void notifyMissingMainCategory() {
+    _missingCategoryNotifier.notify(true);
+  }
+
+  @override
+  void notifyMissingSubCategory() {
+    _missingSubCategoryNotifier.notify(true);
+  }
+
+  @override
+  void notifyMissingProject() {
+    _missingProjectNotifier.notify(false);
+  }
+
+  @override
+  void showLoader() {
+    _showLoaderNotifier.notify(true);
+  }
+
+  @override
+  void hideLoader() {
+    _showLoaderNotifier.notify(false);
+  }
+
+  // TODO Ask Obaid
+
+  @override
+  void onSendRequestsSuccessfully() {
+  }
+
+  @override
+  void showErrorMessage(String message) {
+  }
+}
