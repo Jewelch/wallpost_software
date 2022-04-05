@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class TextStyles {
-  static get titleTextStyle => TextStyle(
-        fontSize: 16,
-        color: Colors.black,
-      );
-
-  static get largeTitleTextStyle => TextStyle(
+  static get screenTitleTextStyle => TextStyle(
         fontSize: 18,
-        color: Colors.black,
+        color: AppColors.defaultColorDark,
+        fontWeight: FontWeight.bold,
       );
 
   static get largeTitleTextStyleBold => TextStyle(
@@ -18,18 +14,18 @@ class TextStyles {
         fontWeight: FontWeight.bold,
       );
 
+  static get titleTextStyle => TextStyle(
+        fontSize: 16,
+        color: Colors.black,
+      );
+
   static get subTitleTextStyle => TextStyle(
         fontSize: 14,
-        color: AppColors.getColorFromHex('#777777'),
+        color: Colors.black,
       );
 
   static get labelTextStyle => TextStyle(
         fontSize: 12,
-        color: AppColors.getColorFromHex('#777777'),
-      );
-
-  static get failureMessageTextStyle => TextStyle(
-        fontSize: 16,
-        color: AppColors.getColorFromHex('#777777'),
+        color: Colors.grey,
       );
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class CompanyListLoader extends StatelessWidget {
   const CompanyListLoader({Key? key}) : super(key: key);
@@ -12,16 +11,15 @@ class CompanyListLoader extends StatelessWidget {
         children: [
           _appBar(context),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+            padding: const EdgeInsets.fromLTRB(12, 16, 12, 8),
             child: Container(
               height: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: AppColors.primaryContrastColor,
+                color: Colors.white,
               ),
             ),
           ),
-          SizedBox(height: 8),
           _tile(context),
           SizedBox(height: 8),
           _tile(context),
@@ -67,7 +65,7 @@ class CompanyListLoader extends StatelessWidget {
 
   Widget _appBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         children: [
           _emptyContainer(height: 40, width: 40, cornerRadius: 10),
@@ -85,7 +83,7 @@ class CompanyListLoader extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: AppColors.primaryContrastColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(cornerRadius),
       ),
     );

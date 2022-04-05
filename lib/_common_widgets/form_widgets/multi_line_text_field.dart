@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
@@ -7,13 +5,13 @@ class MultiLineTextField extends StatefulWidget {
   final String label;
   final String placeholder;
   final TextInputType textInputType;
-  final FormFieldValidator validator;
-  final TextEditingController controller;
-  final TextInputAction textInputAction;
-  final ValueChanged<String> onFieldSubmitted;
+  final FormFieldValidator? validator;
+  final TextEditingController? controller;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
   final textCapitalization;
-  final Widget trailingWidget;
-  final FormFieldSetter<String> onSaved;
+  final Widget? trailingWidget;
+  final FormFieldSetter<String>? onSaved;
 
   MultiLineTextField({
     this.label = '',
@@ -27,6 +25,7 @@ class MultiLineTextField extends StatefulWidget {
     this.trailingWidget,
     this.onSaved,
   });
+
   @override
   _MultiLineTextFieldState createState() => _MultiLineTextFieldState();
 }
@@ -51,8 +50,7 @@ class _MultiLineTextFieldState extends State<MultiLineTextField> {
         hintStyle: TextStyles.subTitleTextStyle,
         hintMaxLines: 2,
         labelText: widget.label,
-        labelStyle:
-            TextStyles.largeTitleTextStyle.copyWith(color: Colors.black),
+        labelStyle: TextStyles.labelTextStyle.copyWith(color: Colors.black),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
 import 'package:wallpost/attendance__core/entities/attendance_status.dart';
@@ -9,6 +9,8 @@ class AttendanceListCard extends StatelessWidget {
   final AttendanceListPresenter presenter;
   final AttendanceListItem attendanceListItem;
   final VoidCallback onPressed;
+
+  final Color labelColor = Colors.yellow;
 
   AttendanceListCard({
     required this.presenter,
@@ -49,7 +51,7 @@ class AttendanceListCard extends StatelessWidget {
                             'Punch In',
                             style: TextStyle(color: presenter.getPunchInLabelColorForItem(attendanceListItem)),
                           ),
-                          Text(attendanceListItem.originalPunchInTime, style: TextStyle(color: AppColors.labelColor))
+                          Text(attendanceListItem.originalPunchInTime, style: TextStyle(color: labelColor))
                         ],
                       ),
                       SizedBox(
@@ -61,7 +63,7 @@ class AttendanceListCard extends StatelessWidget {
                             'Punch Out',
                             style: TextStyle(color: presenter.getPunchInLabelColorForItem(attendanceListItem)),
                           ),
-                          Text(attendanceListItem.originalPunchOutTime, style: TextStyle(color: AppColors.labelColor))
+                          Text(attendanceListItem.originalPunchOutTime, style: TextStyle(color: labelColor))
                         ],
                       ),
                     ],
@@ -70,9 +72,9 @@ class AttendanceListCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text('Adjust', style: TextStyle(color: AppColors.defaultColorDark)),
-                      CircularIconButton(
+                      RoundedIconButton(
                         iconName: 'assets/icons/right_arrow_icon.svg',
-                        color: Colors.white,
+                        backgroundColor: Colors.white,
                         iconSize: 14,
                         iconColor: AppColors.defaultColor,
                         onPressed: onPressed,

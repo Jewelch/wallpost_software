@@ -5,7 +5,7 @@ class LoginTextField extends StatelessWidget {
   final String? hint;
   final bool obscureText;
   final String? errorText;
-  final Color errorColor;
+  final bool isEnabled;
   final TextInputType keyboardType;
   final TextEditingController? controller;
   final TextInputAction? textInputAction;
@@ -15,7 +15,7 @@ class LoginTextField extends StatelessWidget {
     this.hint,
     this.obscureText = false,
     this.errorText,
-    this.errorColor = AppColors.failureColor,
+    this.isEnabled = true,
     this.keyboardType = TextInputType.text,
     this.controller,
     this.textInputAction,
@@ -35,39 +35,40 @@ class LoginTextField extends StatelessWidget {
         onFieldSubmitted: onFieldSubmitted,
         decoration: InputDecoration(
           isDense: true,
-          fillColor: AppColors.lightGreyColor,
+          fillColor: AppColors.textFieldBackgroundColor,
           filled: true,
           hintText: hint,
           errorText: errorText,
-          enabledBorder: OutlineInputBorder(
+          enabled: isEnabled,
+          border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(
-              color: AppColors.lightGreyColor,
+              color: AppColors.textFieldBorderColor,
               width: 1,
             ),
           ),
-          focusedBorder:  OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(
-              color: AppColors.greyColor,
+              color: AppColors.textFieldBackgroundColor,
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderSide: BorderSide(
+              color: AppColors.textFieldFocusedBorderColor,
               width: 2,
             ),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(
-              color: errorColor,
+              color: AppColors.textFieldErrorBorderColor,
               width: 1,
             ),
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(
-              color: AppColors.lightGreyColor,
-              width: 1,
-            ),
-          ),
-          errorStyle: TextStyle(fontSize: 14, color: errorColor),
+          errorStyle: TextStyle(fontSize: 14, color: AppColors.textFieldErrorBorderColor),
         ),
       ),
     );

@@ -1,18 +1,11 @@
-import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/header_card.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 
-import '../../_common_widgets/buttons/circular_icon_button.dart';
-
 class FinancialSummaryCard extends StatelessWidget {
   final FinancialSummary _financialSummary;
-  final Function(String) _onValueChanged;
-  final List<String> _items;
-  final String _item;
 
-  FinancialSummaryCard(
-      this._financialSummary, this._items, this._item,this._onValueChanged);
+  FinancialSummaryCard(this._financialSummary);
 
   @override
   Widget build(BuildContext context) {
@@ -85,28 +78,21 @@ class FinancialSummaryCard extends StatelessWidget {
           SizedBox(height: 6),
           Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(
                     flex: 3,
                     child: _financialSummaryElement(
-                        "Fund Availability",
-                        Color(0xff4AF091),
-                        _financialSummary.cashAvailability.toString())),
+                        "Fund Availability", Color(0xff4AF091), _financialSummary.cashAvailability.toString())),
                 SizedBox.fromSize(size: Size(10, 0)),
                 Expanded(
                     flex: 3,
                     child: _financialSummaryElement(
-                        "Receivables Overdue",
-                        Color(0xffFC6760),
-                        _financialSummary.receivableOverdue.toString())),
+                        "Receivables Overdue", Color(0xffFC6760), _financialSummary.receivableOverdue.toString())),
                 SizedBox.fromSize(size: Size(10, 0)),
                 Expanded(
                     flex: 3,
                     child: _financialSummaryElement(
-                        "Payables Overdue",
-                        Color(0xffFC6760),
-                        _financialSummary.payableOverdue.toString())),
+                        "Payables Overdue", Color(0xffFC6760), _financialSummary.payableOverdue.toString())),
               ])),
         ],
       ),
@@ -140,23 +126,6 @@ class FinancialSummaryCard extends StatelessWidget {
             )
           ],
         ));
-  }
-
-  Widget _financialSummaryFilterDropdown(String label) {
-    return Row(children: [
-      Text(
-        label,
-        style: TextStyle(
-          fontWeight: FontWeight.w400,
-          color: Colors.white,
-          fontSize: 20.0,
-        ),
-      ),
-      CircularIconButton(
-        iconName: 'assets/icons/down_arrow_icon.svg',
-        iconSize: 12,
-      )
-    ]);
   }
 
   Widget _financialSummaryFilter(String label) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/notifiable/notifiable.dart';
+import 'package:notifiable/notifiable.dart';
 import 'package:wallpost/expense_requests/entities/expense_request_form.dart';
 import 'package:wallpost/expense_requests/ui/views/per_expense_request_card.dart';
 

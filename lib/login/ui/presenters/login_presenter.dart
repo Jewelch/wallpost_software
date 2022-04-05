@@ -16,12 +16,14 @@ class LoginPresenter {
     if (!_isInputValid(accountNumber, username, password)) return;
     if (_authenticator.isLoading) return;
 
+    _view.disableFormInput();
+    _view.showLoader();
     try {
-      _view.showLoader();
       await _authenticator.login(Credentials(accountNumber, username, password));
       _view.hideLoader();
       _view.goToCompanyListScreen();
     } on WPException catch (e) {
+      _view.enableFormInput();
       _view.hideLoader();
       _view.onLoginFailed("Login Failed", e.userReadableMessage);
     }
@@ -46,5 +48,9 @@ class LoginPresenter {
     }
 
     return isValid;
+  }
+
+  bool isLoading() {
+    return _authenticator.isLoading;
   }
 }

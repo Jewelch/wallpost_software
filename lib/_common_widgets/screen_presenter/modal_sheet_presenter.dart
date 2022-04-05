@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 
-import '../buttons/circular_icon_button.dart';
+import '../buttons/rounded_icon_button.dart';
 import '../text_styles/text_styles.dart';
 
 class ModalSheetController {
@@ -123,10 +123,10 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                               Expanded(
                                 child: Text(
                                   widget.title,
-                                  style: TextStyles.largeTitleTextStyle,
+                                  style: TextStyles.screenTitleTextStyle,
                                 ),
                               ),
-                              CircularIconButton(
+                              RoundedIconButton(
                                 iconName: 'assets/icons/close_icon.svg',
                                 iconSize: 14,
                                 onPressed: () => close(),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/app_bars/company_list_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
-import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
-import 'package:wallpost/_common_widgets/search_bar/search_bar_with_title.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -14,12 +13,15 @@ import 'package:wallpost/company_core/entities/company_list_item.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 import 'package:wallpost/company_list/presenters/companies_list_presenter.dart';
 import 'package:wallpost/company_list/view_contracts/company_list_view.dart';
+import 'package:wallpost/company_list/views/company_list_app_bar.dart';
 import 'package:wallpost/company_list/views/company_list_card_with_revenue.dart';
 import 'package:wallpost/company_list/views/company_list_card_without_revenue.dart';
 import 'package:wallpost/company_list/views/company_list_loader.dart';
 import 'package:wallpost/company_list/views/financial_summary_card.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
+
+import '../../_common_widgets/search_bar/search_bar.dart';
 
 class CompanyListScreen extends StatefulWidget {
   @override
@@ -29,18 +31,18 @@ class CompanyListScreen extends StatefulWidget {
 class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
   late CompaniesListPresenter presenter;
   var _scrollController = ScrollController();
-  var _viewSelectorNotifier = ItemNotifier<int>();
-  var _viewAppBarSelectorNotifier = ItemNotifier<bool>();
-  var _searchBarVisibilityNotifier = ItemNotifier<bool>();
-  var _appBarVisibilityNotifier = ItemNotifier<bool>();
-  var _approvalCountNotifier = ItemNotifier<int>();
-  var _companyGroupsNotifier = ItemNotifier<List<CompanyGroup>>();
-  var _financialSummaryNotifier = ItemNotifier<FinancialSummary>();
-  var _companiesListNotifier = ItemNotifier<List<CompanyListItem>>();
-  var _showErrorNotifier = ItemNotifier<String>();
-  var _profileImageNotifier = ItemNotifier<String>();
-  var _groupItemTapNotifier = ItemNotifier<int>();
-  var _dropDownItemNotifier = ItemNotifier<String>();
+  var _viewSelectorNotifier = ItemNotifier<int>(defaultValue: 0);
+  var _viewAppBarSelectorNotifier = ItemNotifier<bool>(defaultValue: true);
+  var _searchBarVisibilityNotifier = ItemNotifier<bool>(defaultValue: true);
+  var _appBarVisibilityNotifier = ItemNotifier<bool>(defaultValue: true);
+  var _approvalCountNotifier = ItemNotifier<int>(defaultValue: 0);
+  var _companyGroupsNotifier = ItemNotifier<List<CompanyGroup>>(defaultValue: []);
+  var _financialSummaryNotifier = ItemNotifier<FinancialSummary?>(defaultValue: null);
+  var _companiesListNotifier = ItemNotifier<List<CompanyListItem>>(defaultValue: []);
+  var _showErrorNotifier = ItemNotifier<String>(defaultValue: "");
+  var _profileImageNotifier = ItemNotifier<String>(defaultValue: "");
+  var _groupItemTapNotifier = ItemNotifier<int>(defaultValue: 0);
+  var _dropDownItemNotifier = ItemNotifier<String>(defaultValue: "");
 
   String _noSearchResultsMessage = "";
   String _errorMessage = "";
@@ -54,7 +56,6 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     presenter = CompaniesListPresenter(this);
     presenter.loadCompanies();
     presenter.loadUserDetails();
-
     super.initState();
   }
 
@@ -111,7 +112,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                 } else
                   return Container(
                     height: 50,
-                    color: AppColors.bottomSheetColor,
+                    color: AppColors.bannerBackgroundColor,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -165,38 +166,29 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         builder: (context, showSearchBar) {
           return CompanyListAppBar(
             //title: 'Group Dashboard',
-            leadingButton: _leadingButton(),
-            trailingButton: SvgPicture.asset(
-              'assets/icons/search_icon.svg',
-              color: Colors.white,
-              width: 14,
-              height: 14,
-            ),
-            onLeadingButtonPressed: () => goToLeftMenuScreen(),
-            onTrailingButtonPressed: () => {if (showSearchBar == true) _viewAppBarSelectorNotifier.notify(true)},
-            textButton1: TextButton(
-              onPressed: () {},
-              child: Text(
-                "Group Summary",
-                style: TextStyle(color: Color(0xff0096E3), fontSize: 18, fontWeight: FontWeight.w700),
+            leadingButton: GestureDetector(
+              onTap: goToLeftMenuScreen,
+              child: Container(
+                child: ItemNotifiable<String>(
+                  notifier: _profileImageNotifier,
+                  builder: (context, imageUrl) {
+                    return FadeInImage.assetNetwork(
+                      placeholder: 'assets/logo/placeholder.jpg',
+                      image: imageUrl!,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
               ),
+            ),
+            trailingButton: RoundedIconButton(
+              iconName: 'assets/icons/search_icon.svg',
+              onPressed: () {
+                if (showSearchBar == true) _viewAppBarSelectorNotifier.notify(true);
+              },
             ),
           );
         });
-  }
-
-  Widget _leadingButton() {
-    return Container(
-        child: ItemNotifiable<String>(
-      notifier: _profileImageNotifier,
-      builder: (context, imageUrl) {
-        return FadeInImage.assetNetwork(
-          placeholder: 'assets/logo/placeholder.jpg',
-          image: imageUrl!,
-          fit: BoxFit.cover,
-        );
-      },
-    ));
   }
 
   //MARK: Functions to build the filters view
@@ -216,7 +208,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                   child: GestureDetector(
                       onTap: () => {
                             _viewAppBarSelectorNotifier.notify(false),
-                            _groupItemTapNotifier.notify(null),
+                            _groupItemTapNotifier.notify(0),
                             presenter.resetSearch()
                           },
                       child: Text(
@@ -260,9 +252,9 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
       notifier: _searchBarVisibilityNotifier,
       builder: (context, shouldShowSearchBar) {
         if (shouldShowSearchBar == true) {
-          return SearchBarWithTitle(
-            title: 'Search',
-            onChanged: (searchText) => presenter.performSearch(searchText),
+          return SearchBar(
+            hint: 'Search',
+            onSearchTextChanged: (searchText) => presenter.performSearch(searchText),
           );
         } else {
           return Container();
@@ -281,7 +273,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
             elevation: 2,
             label: Text(companiesGroup[index].name),
             labelStyle: TextStyle(color: Color(0xff003C81)),
-            backgroundColor: AppColors.backGroundColor,
+            backgroundColor: AppColors.defaultColor,
             side: BorderSide(
                 color: tappedIndex == index ? Color(0xff003C81) : Colors.transparent,
                 width: 1,
@@ -297,10 +289,9 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   //MARK: Function to build the financial summary
-  //String? init;
 
   Widget _financialSummaryView() {
-    return ItemNotifiable<FinancialSummary>(
+    return ItemNotifiable<FinancialSummary?>(
       notifier: _financialSummaryNotifier,
       builder: (context, summary) {
         if (summary != null) {
@@ -308,13 +299,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
               child: ItemNotifiable<String>(
                   notifier: _dropDownItemNotifier,
                   builder: (context, item) {
-                    return FinancialSummaryCard(
-                        summary,
-                        presenter.getYears(),
-                        item ?? presenter.getYears().last,
-                        (p0) => {
-                              _dropDownItemNotifier.notify(p0),
-                            });
+                    return FinancialSummaryCard(summary);
                   }));
         } else
           return Container();
@@ -329,6 +314,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
       notifier: _companiesListNotifier,
       builder: (context, companyList) {
         return Container(
+          padding: EdgeInsets.only(top: 10),
           child: RefreshIndicator(
             onRefresh: () => presenter.refresh(),
             child: MediaQuery.removePadding(
@@ -378,7 +364,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
           child: Text(
         _noSearchResultsMessage,
         textAlign: TextAlign.center,
-        style: TextStyles.failureMessageTextStyle,
+        style: TextStyles.titleTextStyle,
       )),
     );
   }
@@ -398,7 +384,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                     child: Text(
                       _errorMessage,
                       textAlign: TextAlign.center,
-                      style: TextStyles.failureMessageTextStyle,
+                      style: TextStyles.titleTextStyle,
                     ),
                     onPressed: () => presenter.refresh(),
                   ),
@@ -463,7 +449,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
 
   @override
   void showApprovalCount(int? approvalCount) {
-    _approvalCountNotifier.notify(approvalCount);
+    _approvalCountNotifier.notify(approvalCount ?? 0);
   }
 
   @override
@@ -518,7 +504,6 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
 
   @override
   void selectGroupItem(int? index) {
-    _groupItemTapNotifier.notify(index);
+    _groupItemTapNotifier.notify(index ?? 0);
   }
-
 }

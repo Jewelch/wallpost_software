@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/form_widgets/password_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
-import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -23,9 +21,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
   var _showLogo = true;
   late Loader _loader;
   late ChangePasswordPresenter presenter;
-  var _currentPasswordErrorNotifier = ItemNotifier<String>();
-  var _newPasswordErrorNotifier = ItemNotifier<String>();
-  var _confirmPasswordErrorNotifier = ItemNotifier<String>();
+  var _currentPasswordErrorNotifier = ItemNotifier<String>(defaultValue: "");
+  var _newPasswordErrorNotifier = ItemNotifier<String>(defaultValue: "");
+  var _confirmPasswordErrorNotifier = ItemNotifier<String>(defaultValue: "");
   var _currentPasswordTextController = TextEditingController();
   var _newPasswordTextController = TextEditingController();
   var _confirmPasswordTextController = TextEditingController();
@@ -45,13 +43,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
         resizeToAvoidBottomInset: true,
         appBar: SimpleAppBarOld(
           title: 'Change Password',
-          leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
-          trailingButtons: [
-            CircularIconButton(
-              iconName: 'assets/icons/check_mark_icon.svg',
-              onPressed: _changePassword,
-            )
-          ],
+          // leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
+          // trailingButtons: [
+          //   IconButton(
+          //     iconName: 'assets/icons/check_mark_icon.svg',
+          //     onPressed: _changePassword,
+          //   )
+          // ],
           showDivider: true,
         ),
         body: Container(
@@ -193,9 +191,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
 
   @override
   void clearErrors() {
-    _currentPasswordErrorNotifier.notify(null);
-    _newPasswordErrorNotifier.notify(null);
-    _confirmPasswordErrorNotifier.notify(null);
+    _currentPasswordErrorNotifier.notify("");
+    _newPasswordErrorNotifier.notify("");
+    _confirmPasswordErrorNotifier.notify("");
   }
 
   @override

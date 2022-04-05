@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
 import 'app_bar_divider.dart';
 
 class SimpleAppBarOld extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final List<CircularIconButton> leadingButtons;
-  final List<CircularIconButton> trailingButtons;
+  final List<IconButton> leadingButtons;
+  final List<IconButton> trailingButtons;
   final bool showDivider;
 
   @override

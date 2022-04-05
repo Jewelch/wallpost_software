@@ -6,6 +6,9 @@ import '../../../_shared/constants/app_colors.dart';
 class AttendanceListLoader extends StatelessWidget {
   const AttendanceListLoader({Key? key}) : super(key: key);
 
+
+  final Color primaryContrastColor = Colors.yellow;
+
   @override
   Widget build(BuildContext context) {
     return ShimmerEffect(
@@ -96,7 +99,7 @@ class AttendanceListLoader extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: AppColors.primaryContrastColor,
+        color: primaryContrastColor,
         borderRadius: BorderRadius.circular(cornerRadius),
       ),
     );

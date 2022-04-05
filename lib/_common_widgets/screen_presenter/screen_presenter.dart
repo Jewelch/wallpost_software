@@ -43,7 +43,7 @@ class ScreenPresenter {
       ) {
         var begin = _getBeginOffset(slideDirection);
         var end = Offset.zero;
-        var curve = Curves.easeOut;
+        var curve = Curves.easeInOut;
         var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         return SlideTransition(
           position: animation.drive(tween),

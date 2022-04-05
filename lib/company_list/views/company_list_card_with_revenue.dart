@@ -32,7 +32,7 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.only(left: 8.0, bottom: 4),
                     alignment: Alignment.centerLeft,
-                    child: tile(
+                    child: _tile(
                       company.financialSummary?.profitLoss ?? "",
                       "Profit & Loss",
                       Color(0xff25D06E),
@@ -46,7 +46,7 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.only(left: 8.0, bottom: 4),
                     alignment: Alignment.centerLeft,
-                    child: tile(
+                    child: _tile(
                         company.financialSummary?.cashAvailability ?? "",
                         "Fund Availability",
                         Color(0xff25D06E),
@@ -74,7 +74,7 @@ class CompanyListCardWithRevenue extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: borderRadius,
-        border: Border.all(color: AppColors.greyColor),
+        border: Border.all(color: Colors.red),
       ),
       child: ClipRRect(
         borderRadius: borderRadius,
@@ -90,7 +90,7 @@ class CompanyListCardWithRevenue extends StatelessWidget {
     );
   }
 
-  Widget tile(
+  Widget _tile(
     String valueTop,
     String labelTop,
     Color colorTop,

@@ -3,6 +3,10 @@ abstract class LoginView {
 
   void hideLoader();
 
+  void enableFormInput();
+
+  void disableFormInput();
+
   void notifyInvalidAccountNumber(String message);
 
   void notifyInvalidUsername(String message);

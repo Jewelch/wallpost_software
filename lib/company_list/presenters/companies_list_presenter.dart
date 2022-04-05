@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/company_core/entities/company_list.dart';
@@ -75,7 +73,9 @@ class CompaniesListPresenter {
     else
       _view.hideCompanyGroups();
 
-    if (companyList.financialSummary != null)
+    //checking if at least one company has financial data
+    //if not company has financial data, then hide the financial summary
+    if (companyList.companies.where((c) => c.financialSummary != null).toList().length > 0)
       _view.showFinancialSummary(companyList.financialSummary!);
     else
       _view.hideFinancialSummary();
@@ -109,8 +109,7 @@ class CompaniesListPresenter {
     }
 
     if (_filterList.isEmpty) {
-      _view.showNoSearchResultsMessage(
-          "There are no companies for the  given search criteria.");
+      _view.showNoSearchResultsMessage("There are no companies for the  given search criteria.");
       _view.showApprovalCount(null);
     } else {
       _view.showCompanyList(_filterList);
@@ -187,14 +186,12 @@ class CompaniesListPresenter {
   _selectCompany(CompanyListItem companyListItem) async {
     _view.showLoader();
     try {
-      var _ = await _companyDetailsProvider
-          .getCompanyDetails(companyListItem.id.toString());
+      var _ = await _companyDetailsProvider.getCompanyDetails(companyListItem.id.toString());
       _view.hideLoader();
       _view.goToCompanyDetailScreen();
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.onCompanyDetailsLoadingFailed(
-          'Failed To load company details', e.userReadableMessage);
+      _view.onCompanyDetailsLoadingFailed('Failed To load company details', e.userReadableMessage);
     }
   }
 
@@ -218,14 +215,5 @@ class CompaniesListPresenter {
     return _years;
   }
 
-  final List<String> _years = <String>[
-    '2015',
-    '2016',
-    '2017',
-    '2018',
-    '2019',
-    '2020',
-    '2021',
-    '2022'
-  ];
+  final List<String> _years = <String>['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022'];
 }

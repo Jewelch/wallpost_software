@@ -13,17 +13,28 @@ class AttendanceListPresenter {
   final AttendanceListProvider _attendanceListProvider;
   List<AttendanceListItem> _attendanceList = [];
 
-  late int _selectedYear = DateTime.now().year;
-  late String _selectedMonth  = AppYears.shortenedMonthNames(_selectedYear).last;
+  final Color presentColor = Color.fromRGBO(43, 186, 104, 1.0);
+  final Color absentColor = Colors.red;
+  final Color lateColor = Colors.purple;
+  final Color labelColor = Colors.yellow;
+
+  late int _selectedYear = DateTime
+      .now()
+      .year;
+  late String _selectedMonth = AppYears
+      .shortenedMonthNames(_selectedYear)
+      .last;
 
   AttendanceListPresenter(this._view)
       : _attendanceListProvider = AttendanceListProvider(),
-        _selectedYear = AppYears.years().first;
+        _selectedYear = AppYears
+            .years()
+            .first;
 
-  AttendanceListPresenter.initWith(
-      this._view,
-      this._attendanceListProvider,
-      )   : _selectedYear = AppYears.years().first;
+  AttendanceListPresenter.initWith(this._view,
+      this._attendanceListProvider,) : _selectedYear = AppYears
+      .years()
+      .first;
 
   //MARK: Function to load the attendance_punch_in_out list
 
@@ -40,7 +51,8 @@ class AttendanceListPresenter {
       if (_attendanceList.isNotEmpty) {
         _view.showAttendanceList(_attendanceList);
       } else {
-        _view.showNoListMessage("There is no attendance_punch_in_out for $_selectedMonth $_selectedYear.\n\nTap here to reload.");
+        _view.showNoListMessage(
+            "There is no attendance_punch_in_out for $_selectedMonth $_selectedYear.\n\nTap here to reload.");
       }
       _view.hideLoader();
     } on WPException catch (e) {
@@ -92,20 +104,20 @@ class AttendanceListPresenter {
       case AttendanceStatus.NoAction:
       case AttendanceStatus.OnTime:
       case AttendanceStatus.Break:
-        return AppColors.presentColor;
+        return presentColor;
       case AttendanceStatus.Late:
       case AttendanceStatus.HalfDay:
       case AttendanceStatus.EarlyLeave:
-        return AppColors.lateColor;
+        return lateColor;
       case AttendanceStatus.Absent:
-        return AppColors.absentColor;
+        return absentColor;
     }
   }
 
   Color getPunchInLabelColorForItem(AttendanceListItem attendanceItem) {
     switch (attendanceItem.status) {
       case AttendanceStatus.Late:
-        return AppColors.lateColor;
+        return lateColor;
       default:
         return Colors.black;
     }
@@ -114,9 +126,9 @@ class AttendanceListPresenter {
   Color punchOutLabelColorForItem(AttendanceListItem attendanceItem) {
     switch (attendanceItem.status) {
       case AttendanceStatus.HalfDay:
-        return AppColors.lateColor;
+        return lateColor;
       case AttendanceStatus.Absent:
-        return AppColors.absentColor;
+        return absentColor;
       default:
         return Colors.black;
     }

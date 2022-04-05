@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
+import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/leave/ui/models/leave_list_item_type.dart';
 import 'package:wallpost/leave/ui/view_contracts/leave_list_view.dart';
 import 'package:wallpost/leave/ui/views/leave_list_item_tile.dart';
@@ -14,7 +14,7 @@ class LeaveListScreen extends StatefulWidget {
 
 class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListView {
   late LeaveListPresenter _presenter;
-  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier();
+  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: 0);
   final _scrollController = ScrollController();
   final int viewTypeLoader = 1;
   final int viewTypeError = 2;

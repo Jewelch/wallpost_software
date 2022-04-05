@@ -11,15 +11,16 @@ class HeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 260,
-      margin: EdgeInsets.only(right: 20),
+      height: 280,
+      margin: EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-              color: AppColors.defaultColor.withOpacity(0.02),
-              offset: Offset(0, 0),
-              blurRadius: 10,
-              spreadRadius: 00),
+            color: AppColors.defaultColor.withOpacity(0.02),
+            offset: Offset(0, 0),
+            blurRadius: 10,
+            spreadRadius: 0,
+          ),
         ],
       ),
       child: CustomPaint(
@@ -36,7 +37,7 @@ class _HeaderCardPainter extends CustomPainter {
     Paint paint = Paint();
     Path path = Path();
 
-    paint.color = Color(0xff003C81);
+    paint.color = AppColors.defaultColorDark;
     path = Path();
     path.lineTo(0, 0);
     path.cubicTo(0, 0, 0, 30, 20, 30);

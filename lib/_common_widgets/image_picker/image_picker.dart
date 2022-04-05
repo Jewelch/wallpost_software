@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,7 +6,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class ImagePicker {
-  static void show({BuildContext context, ValueChanged<File> onImageSelected}) {
+  static void show({required BuildContext context, required ValueChanged<File> onImageSelected}) {
     showMaterialModalBottomSheet(
       context: context,
       builder: (context) => Container(
@@ -53,13 +51,13 @@ class ImagePicker {
   }
 
   static void _launchImageSelection({
-    image_picker_library.ImageSource source,
-    BuildContext context,
-    ValueChanged<File> onImageSelected,
+    required image_picker_library.ImageSource source,
+    required BuildContext context,
+    required ValueChanged<File> onImageSelected,
   }) async {
     image_picker_library.ImagePicker _picker = image_picker_library.ImagePicker();
     try {
-      final pickedFile = await _picker.getImage(source: source);
+      final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
         var imageFile = File(pickedFile.path);
         onImageSelected(imageFile);

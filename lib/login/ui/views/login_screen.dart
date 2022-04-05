@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
 import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
-import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
+import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_main/ui/views/main_screen.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -19,11 +20,12 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> implements LoginView {
   late LoginPresenter presenter;
-  var _accountNumberErrorNotifier = ItemNotifier<String>();
-  var _usernameErrorNotifier = ItemNotifier<String>();
-  var _passwordErrorNotifier = ItemNotifier<String>();
-  var _showLogoNotifier = ItemNotifier<bool>();
-  var _showLoaderNotifier = ItemNotifier<bool>();
+  var _accountNumberErrorNotifier = ItemNotifier<String?>(defaultValue: null);
+  var _usernameErrorNotifier = ItemNotifier<String?>(defaultValue: null);
+  var _passwordErrorNotifier = ItemNotifier<String?>(defaultValue: null);
+  var _showLogoNotifier = ItemNotifier<bool>(defaultValue: true);
+  var _showLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
+  var _formInputInteractionNotifier = ItemNotifier<bool>(defaultValue: true);
   var _accountNumberTextController = TextEditingController();
   var _usernameTextController = TextEditingController();
   var _passwordTextController = TextEditingController();
@@ -37,49 +39,51 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: AppColors.screenBackgroundColor,
-      body: SafeArea(
-        child: Container(
-          child: ListView(
-            physics: ClampingScrollPhysics(),
-            children: <Widget>[
-              loginIcon(),
-              SizedBox(height: 4),
-              CurveBottomToTop(),
-              Container(
-                margin: EdgeInsets.all(40.0),
-                child: Column(
-                  children: [
-                    SizedBox(height: 4),
-                    formUI(),
-                    SizedBox(height: 12),
-                    _loginButton(),
-                    SizedBox(height: 4),
-                    _forgotPasswordButton(),
-                    SizedBox(height: 16),
-                  ],
+    return OnTapKeyboardDismisser(
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: AppColors.screenBackgroundColor,
+        body: SafeArea(
+          child: Container(
+            child: ListView(
+              physics: ClampingScrollPhysics(),
+              children: <Widget>[
+                _logo(),
+                SizedBox(height: 4),
+                CurveBottomToTop(),
+                Container(
+                  margin: EdgeInsets.all(40.0),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 4),
+                      formUI(),
+                      SizedBox(height: 16),
+                      _loginButton(),
+                      SizedBox(height: 4),
+                      _forgotPasswordButton(),
+                      SizedBox(height: 16),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget loginIcon() {
+  Widget _logo() {
     return ItemNotifiable<bool>(
       notifier: _showLogoNotifier,
       builder: (context, showLogo) => AnimatedContainer(
         duration: Duration(milliseconds: 100),
-        margin: EdgeInsets.symmetric(vertical: (showLogo ?? true) ? 80 : 0),
+        margin: EdgeInsets.symmetric(vertical: showLogo ? 80 : 0),
         curve: Curves.easeInOut,
         width: double.infinity,
         child: Center(
           child: Container(
-            height: (showLogo ?? true) ? 152 : 0,
+            height: showLogo ? 152 : 0,
             width: 152,
             child: Image.asset('assets/logo/wallpost_logo.png'),
           ),
@@ -89,52 +93,58 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
   }
 
   Widget formUI() {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        ItemNotifiable<String>(
-          notifier: _accountNumberErrorNotifier,
-          builder: (context, value) => LoginTextField(
-            controller: _accountNumberTextController,
-            hint: "Account Number",
-            errorText: value,
-            textInputAction: TextInputAction.next,
+    return ItemNotifiable<bool>(
+      notifier: _formInputInteractionNotifier,
+      builder: (context, enableFormInput) => Column(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          ItemNotifiable<String?>(
+            notifier: _accountNumberErrorNotifier,
+            builder: (context, value) => LoginTextField(
+              controller: _accountNumberTextController,
+              hint: "Account Number",
+              errorText: value,
+              textInputAction: TextInputAction.next,
+              isEnabled: enableFormInput,
+            ),
           ),
-        ),
-        SizedBox(height: 16),
-        ItemNotifiable<String>(
-          notifier: _usernameErrorNotifier,
-          builder: (context, value) => LoginTextField(
-            controller: _usernameTextController,
-            hint: "Username",
-            errorText: value,
-            textInputAction: TextInputAction.next,
+          SizedBox(height: 16),
+          ItemNotifiable<String?>(
+            notifier: _usernameErrorNotifier,
+            builder: (context, value) => LoginTextField(
+              controller: _usernameTextController,
+              hint: "Username",
+              errorText: value,
+              textInputAction: TextInputAction.next,
+              isEnabled: enableFormInput,
+            ),
           ),
-        ),
-        SizedBox(height: 16),
-        ItemNotifiable<String>(
-          notifier: _passwordErrorNotifier,
-          builder: (context, value) => LoginTextField(
-            controller: _passwordTextController,
-            hint: "Password",
-            errorText: value,
-            textInputAction: TextInputAction.done,
-            obscureText: true,
-            onFieldSubmitted: (_) => _performLogin(),
+          SizedBox(height: 16),
+          ItemNotifiable<String?>(
+            notifier: _passwordErrorNotifier,
+            builder: (context, value) => LoginTextField(
+              controller: _passwordTextController,
+              hint: "Password",
+              errorText: value,
+              textInputAction: TextInputAction.done,
+              obscureText: true,
+              isEnabled: enableFormInput,
+              onFieldSubmitted: (_) => _performLogin(),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _loginButton() {
     return ItemNotifiable<bool>(
       notifier: _showLoaderNotifier,
-      builder: (context, value) => RoundedRectangleActionButton(
+      builder: (context, showLoader) => RoundedRectangleActionButton(
         title: 'Login',
-        borderColor: AppColors.lightBlue,
+        borderColor: AppColors.defaultColor,
         onPressed: () => _performLogin(),
-        showLoader: value ?? false,
+        showLoader: showLoader,
       ),
     );
   }
@@ -148,14 +158,20 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
   }
 
   Widget _forgotPasswordButton() {
-    return RoundedRectangleActionButton(
-      title: 'Forgot password?',
-      alignment: MainAxisAlignment.end,
-      color: Colors.transparent,
-      textColor: Colors.black,
-      onPressed: () {
-        ScreenPresenter.present(ForgotPasswordScreen(), context);
-      },
+    return ItemNotifiable<bool>(
+      notifier: _formInputInteractionNotifier,
+      builder: (context, enableInteraction) => RoundedRectangleActionButton(
+        title: 'Forgot password?',
+        textColor: Colors.black,
+        disabledTextColor: Colors.black54,
+        backgroundColor: Colors.transparent,
+        disabledBackgroundColor: Colors.transparent,
+        disabled: !enableInteraction,
+        alignment: MainAxisAlignment.end,
+        onPressed: () {
+          ScreenPresenter.present(ForgotPasswordScreen(), context);
+        },
+      ),
     );
   }
 
@@ -170,6 +186,16 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
   @override
   void hideLoader() {
     _showLoaderNotifier.notify(false);
+  }
+
+  @override
+  void enableFormInput() {
+    _formInputInteractionNotifier.notify(true);
+  }
+
+  @override
+  void disableFormInput() {
+    _formInputInteractionNotifier.notify(false);
   }
 
   @override

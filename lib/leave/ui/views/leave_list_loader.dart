@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
-
-import '../../../_shared/constants/app_colors.dart';
 
 class LeaveListLoader extends StatelessWidget {
   const LeaveListLoader({Key? key}) : super(key: key);
@@ -64,7 +62,7 @@ class LeaveListLoader extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: AppColors.primaryContrastColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(cornerRadius),
       ),
     );

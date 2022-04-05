@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/notifications/services/all_notifications_reader.dart';
 import 'package:wallpost/notifications/services/unread_notifications_count_provider.dart';
 import 'package:wallpost/notifications/ui/presenters/notifications_list_presenter.dart';
 import 'package:wallpost/notifications/ui/view_contracts/notifications_list_view.dart';
-
-import '../../../dashboard/ui/left_menu_screen.dart';
 
 class NotificationsScreen extends StatefulWidget {
   @override
@@ -59,18 +53,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> implements No
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
-        leading: CircularIconButton(
-          iconName: 'assets/icons/menu_icon.svg',
-          iconSize: 12,
-          onPressed: () => ScreenPresenter.present(
-            LeftMenuScreen(),
-            context,
-            slideDirection: SlideDirection.fromLeft,
-          ),
-        ),
-      ),
+      // appBar: WPAppBar(
+      //   title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+      //   // leading: IconButton(
+      //   //   iconName: 'assets/icons/menu_icon.svg',
+      //   //   iconSize: 12,
+      //   //   onPressed: () => ScreenPresenter.present(
+      //   //     LeftMenuScreen(),
+      //   //     context,
+      //   //     slideDirection: SlideDirection.fromLeft,
+      //   //   ),
+      //   // ),
+      // ),
       body: SafeArea(
         child: Container(
           child: Column(

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
-import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
@@ -21,10 +20,13 @@ class AttendanceAdjustmentScreen extends StatefulWidget {
 }
 
 class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen> implements AttendanceAdjustmentView {
-  var _reasonErrorNotifier = ItemNotifier<String>();
+  var _reasonErrorNotifier = ItemNotifier<String>(defaultValue: "");
   var _reasonTextController = TextEditingController();
   late AttendanceAdjustmentPresenter presenter;
   late Loader loader;
+
+  final Color labelColor = Colors.yellow;
+  final Color greyColor = Colors.grey;
 
   @override
   void initState() {
@@ -41,20 +43,20 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
         title: 'Adjust Attendance',
         showDivider: true,
         leadingButtons: [
-          CircularIconButton(
-            color: Colors.white,
-            iconColor: AppColors.defaultColor,
-            iconName: 'assets/icons/close_icon.svg',
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
-        trailingButtons: [
-          CircularIconButton(
-            color: Colors.white,
-            iconColor: AppColors.defaultColor,
-            iconName: 'assets/icons/check_mark_icon.svg',
-            onPressed: _submitAdjustment,
-          ),
+          //   IconButton(
+          //     color: Colors.white,
+          //     iconColor: AppColors.defaultColor,
+          //     iconName: 'assets/icons/close_icon.svg',
+          //     onPressed: () => Navigator.pop(context),
+          //   ),
+          // ],
+          // trailingButtons: [
+          //   IconButton(
+          //     color: Colors.white,
+          //     iconColor: AppColors.defaultColor,
+          //     iconName: 'assets/icons/check_mark_icon.svg',
+          //     onPressed: _submitAdjustment,
+          //   ),
         ],
       ),
       body: SingleChildScrollView(
@@ -123,7 +125,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
           ),
           Text(
             widget.attendanceListItem.originalPunchInTime,
-            style: TextStyle(color: AppColors.labelColor),
+            style: TextStyle(color: labelColor),
           ),
         ],
       ),
@@ -198,7 +200,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
           ),
           Text(
             widget.attendanceListItem.originalPunchOutTime,
-            style: TextStyle(color: AppColors.labelColor),
+            style: TextStyle(color: labelColor),
           ),
         ],
       ),
@@ -277,7 +279,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
               maxLines: 8,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.greyColor, width: 1.0),
+                  borderSide: BorderSide(color: greyColor, width: 1.0),
                 ),
                 hintText: 'write your reason here',
                 errorText: value,
@@ -290,15 +292,15 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   }
 
   void _pickPunchInTime() async {
-    TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.getPunchInTime());
-    if(adjustedTime != null) {
+    TimeOfDay? adjustedTime = await showTimePicker(context: context, initialTime: presenter.getPunchInTime());
+    if (adjustedTime != null) {
       presenter.adjustPunchInTime(adjustedTime);
     }
   }
 
   void _pickPunchOutTime() async {
-    TimeOfDay? adjustedTime  = await showTimePicker(context: context, initialTime: presenter.getPunchOutTime());
-    if(adjustedTime != null) {
+    TimeOfDay? adjustedTime = await showTimePicker(context: context, initialTime: presenter.getPunchOutTime());
+    if (adjustedTime != null) {
       presenter.adjustPunchOutTime(adjustedTime);
     }
   }
@@ -319,7 +321,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
 
   @override
   void clearError() {
-    _reasonErrorNotifier.notify(null);
+    _reasonErrorNotifier.notify("");
   }
 
   @override
@@ -355,5 +357,4 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   void onDidLoadAdjustedStatus() {
     setState(() {});
   }
-
 }
