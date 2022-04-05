@@ -3,6 +3,10 @@ abstract class ChangePasswordView {
 
   void hideLoader();
 
+  void enableFormInput();
+
+  void disableFormInput();
+
   void notifyInvalidCurrentPassword(String message);
 
   void notifyInvalidNewPassword(String message);

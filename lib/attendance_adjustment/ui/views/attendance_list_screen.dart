@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
+// import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
@@ -37,17 +37,17 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: SimpleAppBarOld(
-        title: 'Adjust Attendance',
-        showDivider: true,
-        leadingButtons: [
-          // CircularBackButton(
-          //   color: Colors.white,
-          //   iconColor: AppColors.defaultColor,
-          //   onPressed: () => Navigator.pop(context),
-          // ),
-        ],
-      ),
+      // appBar: SimpleAppBarOld(
+      //   title: 'Adjust Attendance',
+      //   showDivider: true,
+      //   leadingButtons: [
+      //     // CircularBackButton(
+      //     //   color: Colors.white,
+      //     //   iconColor: AppColors.defaultColor,
+      //     //   onPressed: () => Navigator.pop(context),
+      //     // ),
+      //   ],
+      // ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,

@@ -163,8 +163,6 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> implements Forgot
 
   @override
   void showLoader() {
-    _accountNumberErrorNotifier.notify(null);
-    _emailErrorNotifier.notify(null);
     _showLoaderNotifier.notify(true);
   }
 

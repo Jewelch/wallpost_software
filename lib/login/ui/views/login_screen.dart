@@ -5,6 +5,7 @@ import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
 import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
+import 'package:wallpost/_common_widgets/form_widgets/password_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_main/ui/views/main_screen.dart';
@@ -122,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
           SizedBox(height: 16),
           ItemNotifiable<String?>(
             notifier: _passwordErrorNotifier,
-            builder: (context, value) => LoginTextField(
+            builder: (context, value) => PasswordTextField(
               controller: _passwordTextController,
               hint: "Password",
               errorText: value,
@@ -177,9 +178,6 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
 
   @override
   void showLoader() {
-    _accountNumberErrorNotifier.notify(null);
-    _usernameErrorNotifier.notify(null);
-    _passwordErrorNotifier.notify(null);
     _showLoaderNotifier.notify(true);
   }
 

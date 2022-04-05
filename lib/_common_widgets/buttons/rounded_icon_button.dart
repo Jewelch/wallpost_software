@@ -23,11 +23,15 @@ class RoundedIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
       child: TextButton(
         style: ButtonStyle(
+          fixedSize: MaterialStateProperty.resolveWith<Size>((Set<MaterialState> states) {
+            return Size(width, height);
+          },),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.disabled)) {
@@ -46,7 +50,10 @@ class RoundedIconButton extends StatelessWidget {
           height: iconSize,
           color: iconColor,
         ),
-        onPressed: onPressed,
+        onPressed: () {
+          print("yeashh!!!");
+          onPressed?.call();
+        },
       ),
     );
   }

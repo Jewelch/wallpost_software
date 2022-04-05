@@ -6,22 +6,26 @@ class CurveBottomToTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 60,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-              color: AppColors.defaultColor.withOpacity(0.1),
-              offset: Offset(0, 0),
-              blurRadius: 40,
-              spreadRadius: 0),
-          BoxShadow(color: Colors.white, offset: Offset(0, 50)),
-        ],
-      ),
-      child: CustomPaint(
-        painter: _CurveBottomToTopPainter(),
-      ),
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 60,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  color: AppColors.defaultColor.withOpacity(0.05),
+                  offset: Offset(0, 0),
+                  blurRadius: 20,
+                  spreadRadius: 0),
+            ],
+          ),
+          child: CustomPaint(
+            painter: _CurveBottomToTopPainter(),
+          ),
+        ),
+        Container(height: 20, color: Colors.white),
+      ],
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
+// import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -39,26 +39,26 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: SimpleAppBarOld(
-        title: 'Adjust Attendance',
-        showDivider: true,
-        leadingButtons: [
-          //   IconButton(
-          //     color: Colors.white,
-          //     iconColor: AppColors.defaultColor,
-          //     iconName: 'assets/icons/close_icon.svg',
-          //     onPressed: () => Navigator.pop(context),
-          //   ),
-          // ],
-          // trailingButtons: [
-          //   IconButton(
-          //     color: Colors.white,
-          //     iconColor: AppColors.defaultColor,
-          //     iconName: 'assets/icons/check_mark_icon.svg',
-          //     onPressed: _submitAdjustment,
-          //   ),
-        ],
-      ),
+      // appBar: SimpleAppBarOld(
+      //   title: 'Adjust Attendance',
+      //   showDivider: true,
+      //   leadingButtons: [
+      //     //   IconButton(
+      //     //     color: Colors.white,
+      //     //     iconColor: AppColors.defaultColor,
+      //     //     iconName: 'assets/icons/close_icon.svg',
+      //     //     onPressed: () => Navigator.pop(context),
+      //     //   ),
+      //     // ],
+      //     // trailingButtons: [
+      //     //   IconButton(
+      //     //     color: Colors.white,
+      //     //     iconColor: AppColors.defaultColor,
+      //     //     iconName: 'assets/icons/check_mark_icon.svg',
+      //     //     onPressed: _submitAdjustment,
+      //     //   ),
+      //   ],
+      // ),
       body: SingleChildScrollView(
         reverse: true,
         child: Container(

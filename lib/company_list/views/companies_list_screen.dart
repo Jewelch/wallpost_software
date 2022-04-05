@@ -470,7 +470,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
 
   @override
   void goToLeftMenuScreen() {
-    ScreenPresenter.present(LeftMenuScreen(), context);
+    LeftMenuScreen.show(context);
   }
 
   @override
