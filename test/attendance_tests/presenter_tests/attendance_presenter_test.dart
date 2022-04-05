@@ -11,6 +11,7 @@ import 'package:wallpost/attendance/exception/location_permission_permanently_de
 import 'package:wallpost/attendance/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance/services/attendance_details_provider.dart';
 import 'package:wallpost/attendance/services/attendance_location_validator.dart';
+import 'package:wallpost/attendance/services/attendance_report_provider.dart';
 import 'package:wallpost/attendance/services/break_end_marker.dart';
 import 'package:wallpost/attendance/services/break_start_marker.dart';
 import 'package:wallpost/attendance/services/location_provider.dart';
@@ -48,6 +49,8 @@ class MockAttendanceLocation extends Mock implements AttendanceLocation {}
 class MockAttendanceLocationValidator extends Mock
     implements AttendanceLocationValidator {}
 
+    class MockAttendanceReportProvider extends Mock implements AttendanceReportProvider{}
+
 class MockPunchInMarker extends Mock implements PunchInMarker {}
 
 class MockPunchOutMarker extends Mock implements PunchOutMarker {}
@@ -55,6 +58,8 @@ class MockPunchOutMarker extends Mock implements PunchOutMarker {}
 class MockBreakStartMarker extends Mock implements BreakStartMarker {}
 
 class MockBreakEndMarker extends Mock implements BreakEndMarker {}
+
+
 
 void main() {
   var view = MockAttendanceView();
@@ -68,6 +73,7 @@ void main() {
   var mockPunchOutMarker = MockPunchOutMarker();
   var mockBreakStartMaker = MockBreakStartMarker();
   var mocKBreakEndMarker = MockBreakEndMarker();
+  var mockAttendanveReportProvider= MockAttendanceReportProvider();
 
   AttendancePresenter presenter = AttendancePresenter.initWith(
       view,
@@ -79,7 +85,8 @@ void main() {
       mockPunchInMarker,
       mockPunchOutMarker,
       mockBreakStartMaker,
-      mocKBreakEndMarker);
+      mocKBreakEndMarker,
+  mockAttendanveReportProvider);
 
   setUp(() {
     reset(view);
@@ -650,7 +657,6 @@ void main() {
           "You are not allowed to punch in outside the office location. "
               "Doing so will affect your performance. Would you still like to punch in?"),
       () => mockPunchInMarker.punchIn(any(), isLocationValid: false),
-      () => view.showPunchOutButton()
     ]);
 
     _verifyNoMoreInteractionsOnAllMocks();
@@ -701,7 +707,6 @@ void main() {
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: true),
       () => mockPunchInMarker.punchIn(any(), isLocationValid: true),
-      () => view.showPunchOutButton()
     ]);
 
     _verifyNoMoreInteractionsOnAllMocks();
@@ -1038,6 +1043,92 @@ void main() {
       () => view.showPunchOutTime(punchOutTime),
       () => view.showDisabledButton(),
       () => view.hideBreakButton(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("show resume button when start break" ,()async{
+    //given
+    var attendance = MockAttendanceDetails();
+    var attendanceLocation = MockAttendanceLocation();
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => attendance.isPunchedIn).thenReturn(true);
+    when(() => attendance.isPunchedOut).thenReturn(false);
+    when(() => attendance.isOnBreak).thenReturn(false);
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
+    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+    when(() => mockBreakStartMaker.startBreak(any(), any()))
+        .thenAnswer((_) => Future.value());
+
+    await presenter.loadAttendanceDetails();
+
+    // when
+    await presenter.startBreak();
+
+    //then
+    verifyInOrder([
+      () => mockAttendanceDetailsProvider.isLoading,
+    () => view.showLoader(),
+    () => mockAttendanceDetailsProvider.getDetails(),
+    () => view.hideLoader(),
+    () => view.showPunchInTime(punchInTime),
+    () => view.showPunchOutButton(),
+    () => view.showBreakButton(),
+    () => mockLocationProvider.getLocation(),
+    () => mockLocationProvider.getLocationAddress(any()),
+    () => view.showLocationAddress("address"),
+    ()=> mockBreakStartMaker.startBreak(any(), any()),
+      ()=>view.showResumeButton()
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("show break button when end break" ,()async{
+    //given
+    var attendance = MockAttendanceDetails();
+    var attendanceLocation = MockAttendanceLocation();
+    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
+    when(() => attendance.isPunchedIn).thenReturn(true);
+    when(() => attendance.isPunchedOut).thenReturn(false);
+    when(() => attendance.isOnBreak).thenReturn(true);
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    String punchInTime = inputFormat.parse('2021-09-02 09:00:00').toString();
+    when(() => attendance.punchInTimeString).thenReturn(punchInTime);
+    when(() => mockAttendanceDetailsProvider.getDetails())
+        .thenAnswer((_) => Future.value(attendance));
+    when(() => mockLocationProvider.getLocation())
+        .thenAnswer((_) => Future.value(attendanceLocation));
+    when(() => mockLocationProvider.getLocationAddress(any()))
+        .thenAnswer((_) => Future.value("address"));
+    when(() => mocKBreakEndMarker.endBreak(any(), any()))
+        .thenAnswer((_) => Future.value());
+
+    await presenter.loadAttendanceDetails();
+
+    // when
+    await presenter.endBreak();
+
+    //then
+    verifyInOrder([
+          () => mockAttendanceDetailsProvider.isLoading,
+          () => view.showLoader(),
+          () => mockAttendanceDetailsProvider.getDetails(),
+          () => view.hideLoader(),
+          () => view.showPunchInTime(punchInTime),
+          () => view.showPunchOutButton(),
+          () => view.showResumeButton(),
+          () => mockLocationProvider.getLocation(),
+          () => mockLocationProvider.getLocationAddress(any()),
+          () => view.showLocationAddress("address"),
+          ()=> mocKBreakEndMarker.endBreak(any(), any()),
+          ()=>view.showBreakButton()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });

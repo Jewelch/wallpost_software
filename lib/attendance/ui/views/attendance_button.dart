@@ -6,6 +6,7 @@ import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/entities/attendance_report.dart';
 import 'package:wallpost/attendance/services/time_to_punch_in_calculator.dart';
 import 'package:wallpost/attendance/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance/ui/views/attendance_rectangle_rounded_action_button.dart';
@@ -38,8 +39,8 @@ class _AttendanceButtonState extends State<AttendanceButton>
   void initState() {
     presenter = AttendancePresenter(this);
     presenter.loadAttendanceDetails();
-    // _timeString = _formatDateTime(DateTime.now());
-    // Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+     _timeString = _formatDateTime(DateTime.now());
+     Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
   }
 
@@ -131,15 +132,15 @@ class _AttendanceButtonState extends State<AttendanceButton>
   Widget _buildPunchInButton() {
     return AttendanceRectangleRoundedActionButton(
       title: "Punch In",
-      subtitle: _locationAddress.length > 30
-          ? '${_locationAddress.substring(0, 30)}...'
+      subtitle: _locationAddress.length > 24
+          ? '${_locationAddress.substring(0, 24)}...'
           : _locationAddress,
-      status: "Abse",
-      time: "10:10",
+      status: "",
+      time: _timeString,
       attendanceButtonColor: AppColors.punchInButtonColor,
       moreButtonColor: AppColors.punchInMoreButtonColor,
       onButtonPressed: () {
-        print("button");
+       presenter.doPunchIn(true);
       },
       onMorePressed: () {
         print("More");
@@ -152,15 +153,15 @@ class _AttendanceButtonState extends State<AttendanceButton>
   Widget _buildPunchOutButton() {
     return AttendanceRectangleRoundedActionButton(
       title: "Punch Out",
-      subtitle: _locationAddress.length > 30
-          ? '${_locationAddress.substring(0, 30)}...'
+      subtitle: _locationAddress.length > 24
+          ? '${_locationAddress.substring(0, 24)}...'
           : _locationAddress,
       status: "",
-      time: "10:10",
+      time:_timeString,
       attendanceButtonColor: AppColors.punchOutButtonColor,
       moreButtonColor: AppColors.punchOutMoreButtonColor,
       onButtonPressed: () {
-        print("button punchout");
+        _doPunchOut();
       },
       onMorePressed: () {
         ScreenPresenter.presentAndRemoveAllPreviousScreens(
@@ -190,21 +191,30 @@ class _AttendanceButtonState extends State<AttendanceButton>
     );
   }
 
-  // void _getTime() {
-  //   final DateTime now = DateTime.now();
-  //   final String formattedDateTime = _formatDateTime(now);
-  //   setState(() {
-  //     _timeString = formattedDateTime;
-  //   });
-  // }
-  //
-  // String _formatDateTime(DateTime dateTime) {
-  //   return DateFormat('hh:mm a').format(dateTime);
-  // }
+  void _getTime() {
+    final DateTime now = DateTime.now();
+    final String formattedDateTime = _formatDateTime(now);
+    setState(() {
+      _timeString = formattedDateTime;
+    });
+  }
 
-  void _doPunchIn() {
-    // presenter.validateLocation(true);
-    print("doPunchIn>>>>>>>>>>>>>More");
+  String _formatDateTime(DateTime dateTime) {
+    return DateFormat('hh:mm a').format(dateTime);
+  }
+
+  void _doPunchOut() {
+    Alert.showSimpleAlertWithButtons(
+      context: context,
+      title: "Punch Out",
+      message:" Do you really want to punch out? ",
+      buttonOneTitle: "Yes",
+      buttonTwoTitle: "Cancel",
+      buttonOneOnPressed: () {
+        print("punchout");
+       // presenter.doPunchOut(true);
+      },
+    );
   }
 
   @override
@@ -312,5 +322,10 @@ class _AttendanceButtonState extends State<AttendanceButton>
   @override
   void showLocationPositions(num lat, num lon) {
     // TODO: implement showLocationPositions
+  }
+
+  @override
+  void showAttendanceReport(AttendanceReport attendanceReport) {
+    // TODO: implement showAttendanceReport
   }
 }

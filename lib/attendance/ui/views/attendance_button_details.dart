@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/app_bar_with_back_button.dart';
 import 'package:wallpost/_common_widgets/custom_cards/header_card.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/entities/attendance_report.dart';
 import 'package:wallpost/attendance/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance/ui/view_contracts/attendance_view.dart';
 import 'package:wallpost/attendance/ui/views/attendance_rounded_action_button.dart';
 import 'package:wallpost/company_list/views/companies_list_screen.dart';
+import 'package:wallpost/dashboard/ui/my_portal_screen.dart';
 
 class AttendanceButtonDetailsScreen extends StatefulWidget {
   const AttendanceButtonDetailsScreen({Key? key}) : super(key: key);
@@ -30,9 +33,11 @@ class _AttendanceButtonDetailsScreenState
   GoogleMapController? _controller;
   Set<Marker> _markers = {};
   late BitmapDescriptor customIcon;
+  String? _timeString;
 
   final ItemNotifier<int> _buttonTypeNotifier = ItemNotifier();
-  final ItemNotifier<int> _typeNotifier = ItemNotifier();
+  final ItemNotifier<int> _breakShowNotifier = ItemNotifier();
+  var _attendanceReportNotifier = ItemNotifier<AttendanceReport>();
   static const PUNCH_IN_BUTTON_VIEW = 1;
   static const PUNCH_OUT_BUTTON_VIEW = 2;
   static const LOADER_VIEW = 3;
@@ -45,8 +50,9 @@ class _AttendanceButtonDetailsScreenState
   void initState() {
     presenter = AttendancePresenter(this);
     presenter.loadAttendanceDetails();
-    // _timeString = _formatDateTime(DateTime.now());
-    // Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    presenter.attendanceReport();
+     _timeString = _formatDateTime(DateTime.now());
+     Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
   }
 
@@ -62,11 +68,11 @@ class _AttendanceButtonDetailsScreenState
         ),
         onLeadingButtonPressed: () =>
             ScreenPresenter.presentAndRemoveAllPreviousScreens(
-                CompanyListScreen(), context),
+                MyPortalScreen(), context),
         textButton1: TextButton(
           onPressed: () {},
           child: Text(
-            "Punch out screen",
+            "Company name",
             style: TextStyle(
                 color: Color(0xff0096E3),
                 fontSize: 18,
@@ -99,7 +105,7 @@ class _AttendanceButtonDetailsScreenState
           SizedBox(
             height: 16,
           ),
-          _buildAttendanceDetails()
+          _buildAttendanceReport()
         ],
       )),
     );
@@ -171,7 +177,7 @@ class _AttendanceButtonDetailsScreenState
   Widget _buildPunchInButton() {
     return AttendanceRoundedActionButton(
         title: "Punch In",
-        time: "10:10 AM",
+        time: _timeString,
         buttonColor: AppColors.punchInButtonColor,
         onButtonPressed: () {
           print("punch in");
@@ -181,7 +187,7 @@ class _AttendanceButtonDetailsScreenState
   Widget _buildPunchOutButton() {
     return AttendanceRoundedActionButton(
         title: "Punch Out",
-        time: "10:10 PM",
+        time: _timeString,
         buttonColor: AppColors.punchOutButtonColor,
         onButtonPressed: () {
           print("punch out");
@@ -190,12 +196,14 @@ class _AttendanceButtonDetailsScreenState
 
   Widget _buildBreakResumeButton() {
     return ItemNotifiable<int>(
-      notifier: _typeNotifier,
+      notifier: _breakShowNotifier,
       builder: (context, value) {
         if (value == SHOW_BREAK_BUTTON_VIEW) {
           return _buildBreakButton();
         } else if (value == RESUME_BUTTON_VIEW) {
           return _buildResumeButton();
+        }else if (value == HIDE_BREAK_BUTTON_VIEW) {
+          return Container();
         }
         return Container();
       },
@@ -204,102 +212,145 @@ class _AttendanceButtonDetailsScreenState
 
   Widget _buildBreakButton() {
     return ElevatedButton.icon(
-      onPressed: () {
-        presenter.startBreak();
-      },
-      icon: SvgPicture.asset(
-        // <-- Icon
-        "assets/icons/overtime_icon.svg",
-        height: 16,
+      icon: Icon(
+        Icons.coffee_outlined,
         color: Color(0xff003C81),
+        size: 20,
       ),
       label: Text(
-        'Start break',
+        'Start Break',
         style: TextStyle(fontSize: 16, color: Color(0xff003C81)),
       ),
       style: ElevatedButton.styleFrom(
-        primary: AppColors.breakButton,
+        primary: AppColors.breakButtonColor,
+        elevation: 0,
+        padding: EdgeInsets.only(left: 20, right: 20),
         shape: new RoundedRectangleBorder(
           borderRadius: new BorderRadius.circular(14.0),
         ),
-        elevation: 0,
-        padding: EdgeInsets.only(left: 20, right: 20),
-      ), // <-- Text
+      ),
+      onPressed: () {
+        presenter.startBreak();
+      }, // <-- Text
     );
   }
 
   Widget _buildResumeButton() {
     return ElevatedButton.icon(
-      onPressed: () {
-        presenter.endBreak();
-      },
-      icon: SvgPicture.asset(
-        // <-- Icon
-        "assets/icons/overtime_icon.svg",
-        height: 16,
-        color: Color(0xff003C81),
+      icon: Icon(
+        Icons.coffee_outlined,
+        color: Colors.white,
+        size: 20,
       ),
       label: Text(
         'Resume',
-        style: TextStyle(fontSize: 16, color: Color(0xff003C81)),
+        style: TextStyle(fontSize: 16, color: Colors.white),
       ),
       style: ElevatedButton.styleFrom(
-        primary: AppColors.breakButton,
+        primary: AppColors.resumeButtonColor,
+        elevation: 0,
+        padding: EdgeInsets.only(left: 20, right: 20),
         shape: new RoundedRectangleBorder(
           borderRadius: new BorderRadius.circular(14.0),
         ),
-        elevation: 0,
-        padding: EdgeInsets.only(left: 20, right: 20),
-      ), // <-- Text
+      ),
+      onPressed: () {
+        presenter.endBreak();
+      },// <-- Text
     );
   }
 
-  Widget _buildAttendanceDetails() {
+  Widget _buildAttendanceReport() {
     return Container(
-      margin: EdgeInsets.all(20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              Text("1 Day",
-                  style: TextStyle(
-                      color: Color(0xfff8a632), fontWeight: FontWeight.bold)),
-              SizedBox(
-                height: 16,
-              ),
-              Text("Late Punch In")
-            ],
-          ),
-          Column(
-            children: [
-              Text(
-                "1 Day",
-                style: TextStyle(
-                    color: Color(0xff222222), fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Text("Late Punch In")
-            ],
-          ),
-          Column(
-            children: [
-              Text(
-                "1 Day",
-                style: TextStyle(
-                    color: Color(0xfff8524a), fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Text("Late Punch In")
-            ],
-          )
-        ],
-      ),
-    );
+        child: ItemNotifiable<AttendanceReport>(
+            notifier: _attendanceReportNotifier,
+            builder: (context, attendanceReport) {
+              if ((attendanceReport != null)) {
+                return Container(
+                  margin: EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          if (attendanceReport.late == 1)
+                            Text("${attendanceReport.late} Day",
+                                style: TextStyle(
+                                    color: Color(0xfff8a632),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold)),
+                          if (attendanceReport.late == 0 ||
+                              attendanceReport.late > 1)
+                            Text("${attendanceReport.late} Days",
+                                style: TextStyle(
+                                    color: Color(0xfff8a632),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Text("Late Punch In",
+                              style: TextStyle(color: Colors.black))
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          if (attendanceReport.earlyLeave == 1)
+                            Text(
+                              "${attendanceReport.earlyLeave} Day",
+                              style: TextStyle(
+                                  color: Color(0xff222222),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          if (attendanceReport.earlyLeave == 0 ||
+                              attendanceReport.earlyLeave > 1)
+                            Text(
+                              "${attendanceReport.earlyLeave} Days",
+                              style: TextStyle(
+                                  color: Color(0xff222222),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Text("Early Punch Out",
+                              style: TextStyle(color: Colors.black))
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          if (attendanceReport.absents == 1)
+                            Text(
+                              "${attendanceReport.absents} Day",
+                              style: TextStyle(
+                                  color: Color(0xfff8524a),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          if (attendanceReport.absents == 0 ||
+                              attendanceReport.absents > 1)
+                            Text(
+                              "${attendanceReport.absents} Days",
+                              style: TextStyle(
+                                  color: Color(0xfff8524a),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Text("Absences",
+                              style: TextStyle(color: Colors.black))
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              } else
+                return Container();
+            }));
   }
 
   // void setCustomMarker() async {
@@ -307,9 +358,32 @@ class _AttendanceButtonDetailsScreenState
   //       ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/overtime_icon.svg');
   // }
 
+  void _getTime() {
+    final DateTime now = DateTime.now();
+    final String formattedDateTime = _formatDateTime(now);
+    setState(() {
+      _timeString = formattedDateTime;
+    });
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return DateFormat('hh:mm a').format(dateTime);
+  }
+
+  @override
+  void showBreakButton() {
+
+    _breakShowNotifier.notify(SHOW_BREAK_BUTTON_VIEW);
+  }
+
   @override
   void hideBreakButton() {
-    _typeNotifier.notify(HIDE_BREAK_BUTTON_VIEW);
+    _breakShowNotifier.notify(HIDE_BREAK_BUTTON_VIEW);
+  }
+
+  @override
+  void showResumeButton() {
+    _breakShowNotifier.notify(RESUME_BUTTON_VIEW);
   }
 
   @override
@@ -337,10 +411,7 @@ class _AttendanceButtonDetailsScreenState
     // TODO: implement showAlertToVerifyLocation
   }
 
-  @override
-  void showBreakButton() {
-    _typeNotifier.notify(SHOW_BREAK_BUTTON_VIEW);
-  }
+
 
   @override
   void showDisabledButton() {
@@ -397,10 +468,7 @@ class _AttendanceButtonDetailsScreenState
     // TODO: implement showPunchOutTime
   }
 
-  @override
-  void showResumeButton() {
-    _typeNotifier.notify(RESUME_BUTTON_VIEW);
-  }
+
 
   @override
   void showTimeTillPunchIn(num seconds) {
@@ -421,5 +489,10 @@ class _AttendanceButtonDetailsScreenState
           markerId: MarkerId('Home'),
           position: LatLng(lat.toDouble(), long.toDouble())));
     });
+  }
+
+  @override
+  void showAttendanceReport(AttendanceReport attendanceReport) {
+    _attendanceReportNotifier.notify(attendanceReport);
   }
 }

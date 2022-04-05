@@ -34,7 +34,6 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
             child:
             Container(
               width: MediaQuery.of(context).size.width * 0.3,
-
               child: MaterialButton(
                 height: 64,
                 elevation: 0,
@@ -99,7 +98,7 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
                     Column(
                       children: [
                         //  Text( _timeString!,
-                        Text("10:10",
+                        Text(time!,
                             style:
                             TextStyle(fontSize: 16, color: Colors.white)),
                         SizedBox(

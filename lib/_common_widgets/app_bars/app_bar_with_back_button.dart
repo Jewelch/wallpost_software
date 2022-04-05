@@ -55,12 +55,13 @@ class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidge
         borderRadius: BorderRadius.circular(16),
         child: Center(
           child: Container(
-            color: Colors.blue,
+            color: Color(0xff0096e3),
             child: SizedBox(
-              width: 44,
-              height: 38,
+              width: 42,
+              height: 36,
               child: Container(
                 alignment: Alignment.center,
+                padding: EdgeInsets.all(12),
                 child: widget,
               ),
             ),

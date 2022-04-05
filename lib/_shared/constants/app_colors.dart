@@ -58,7 +58,8 @@ class AppColors {
   static final Color punchOutButtonColor=getColorFromHex('#f62a20');
   static final Color punchOutMoreButtonColor=getColorFromHex('#E22017');
 
-  static final Color breakButton=getColorFromHex('#dff0f7');
+  static final Color breakButtonColor=getColorFromHex('#dff0f7');
+  static final Color resumeButtonColor=getColorFromHex('#25D06E');
 
   static final Color locationAddressTextColor = getColorFromHex('#d9d9d9');
   static final Color attendanceStatusColor = getColorFromHex('#d9d9d9');

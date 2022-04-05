@@ -1,6 +1,7 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance/entities/attendance_details.dart';
 import 'package:wallpost/attendance/entities/attendance_location.dart';
+import 'package:wallpost/attendance/entities/attendance_report.dart';
 import 'package:wallpost/attendance/exception/location_acquisition_failed_exception.dart';
 import 'package:wallpost/attendance/exception/location_address_failed_exception.dart';
 import 'package:wallpost/attendance/exception/location_permission_denied_exception.dart';
@@ -8,6 +9,7 @@ import 'package:wallpost/attendance/exception/location_permission_permanently_de
 import 'package:wallpost/attendance/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance/services/attendance_details_provider.dart';
 import 'package:wallpost/attendance/services/attendance_location_validator.dart';
+import 'package:wallpost/attendance/services/attendance_report_provider.dart';
 import 'package:wallpost/attendance/services/break_end_marker.dart';
 import 'package:wallpost/attendance/services/break_start_marker.dart';
 import 'package:wallpost/attendance/services/location_provider.dart';
@@ -28,9 +30,12 @@ class AttendancePresenter {
   final PunchInMarker _punchInMarker;
   final BreakStartMarker _breakStartMarker;
   final BreakEndMarker _breakEndMarker;
+  late AttendanceReportProvider _attendanceReportProvider;
 
   late AttendanceDetails _attendanceDetails;
   late AttendanceLocation _attendanceLocation;
+  late AttendanceReport _attendanceReport;
+
 
   //NOTE: getting the location is a parallel process or - do we load location only when needed? - only when needed
   AttendancePresenter(this._view)
@@ -42,7 +47,8 @@ class AttendancePresenter {
         _punchInMarker = PunchInMarker(),
         _punchOutMarker = PunchOutMarker(),
   _breakStartMarker=BreakStartMarker(),
-  _breakEndMarker=BreakEndMarker();
+  _breakEndMarker=BreakEndMarker(),
+  _attendanceReportProvider=AttendanceReportProvider();
 
   AttendancePresenter.initWith(
       this._view,
@@ -54,7 +60,8 @@ class AttendancePresenter {
       this._punchInMarker,
       this._punchOutMarker,
       this._breakStartMarker,
-      this._breakEndMarker);
+      this._breakEndMarker,
+      this._attendanceReportProvider);
 
   Future<void> loadAttendanceDetails() async {
     if (_attendanceDetailsProvider.isLoading) return;
@@ -225,14 +232,22 @@ class AttendancePresenter {
     }
   }
 
-
-
   Future<void> endBreak() async {
     try {
       await _breakEndMarker.endBreak(_attendanceDetails,_attendanceLocation);
+      print("end break");
       _view.showBreakButton();
     } on WPException catch (e) {
-      _view.showErrorMessage("Resume is failed", e.userReadableMessage);
+      _view.showErrorMessage("End break is failed", e.userReadableMessage);
+    }
+  }
+
+  Future<void> attendanceReport() async {
+    try{
+      _attendanceReport= await _attendanceReportProvider.getReport();
+     _view.showAttendanceReport(_attendanceReport);
+    }on WPException catch (e) {
+      _view.showErrorMessage("get report failed", e.userReadableMessage);
     }
   }
 

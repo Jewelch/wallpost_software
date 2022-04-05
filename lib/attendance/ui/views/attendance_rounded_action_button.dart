@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class AttendanceRoundedActionButton extends StatelessWidget {
   final String? title;
@@ -18,17 +16,16 @@ class AttendanceRoundedActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
+      padding: EdgeInsets.all(24),
+      shape: CircleBorder(),
       elevation: 0,
-      onPressed: onButtonPressed,
       color: buttonColor,
       textColor: Colors.white,
       child: Column(
         children: [
-          SvgPicture.asset(
-            // <-- Icon
-            "assets/icons/overtime_icon.svg",
-            height: 18,
-            color: Colors.white,
+          Icon(
+            Icons.access_time,
+            size: 32,
           ),
           SizedBox(
             height: 12,
@@ -43,8 +40,7 @@ class AttendanceRoundedActionButton extends StatelessWidget {
           )
         ],
       ),
-      padding: EdgeInsets.all(30),
-      shape: CircleBorder(),
+      onPressed: onButtonPressed,
     );
   }
 }

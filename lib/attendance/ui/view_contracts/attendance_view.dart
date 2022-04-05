@@ -1,3 +1,5 @@
+import 'package:wallpost/attendance/entities/attendance_report.dart';
+
 abstract class AttendanceView {
   void showLoader();
 
@@ -59,5 +61,7 @@ abstract class AttendanceView {
 
 
   void showError(String title, String message);
+
+  void showAttendanceReport(AttendanceReport attendanceReport);
 
 }
