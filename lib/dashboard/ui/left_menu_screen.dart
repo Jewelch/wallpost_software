@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
-import 'package:wallpost/company_list/views/companies_list_screen.dart';
 import 'package:wallpost/notifications/ui/views/notifications_screen.dart';
 import 'package:wallpost/password_management/ui/views/change_password_screen.dart';
 
@@ -25,16 +26,8 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: SimpleAppBar(
-        title: 'Itialus - Qatar',
-        // title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
-        leadingButton: SvgPicture.asset(
-          'assets/icons/back_icon.svg',
-          color: Colors.white,
-          width: 14,
-          height: 14,
-        ),
-        onLeadingButtonPressed: () => Navigator.pop(context),
-        onDownArrowButtonPressed: goToCompaniesListScreen,
+        leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
+        showDivider: false,
       ),
       body: SafeArea(
         child: Container(
@@ -58,7 +51,7 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
       content: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: 48.0, bottom: 8.0),
+            margin: EdgeInsets.only(top: 56.0, bottom: 8.0),
             width: 100,
             height: 100,
             decoration: BoxDecoration(
@@ -82,17 +75,7 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
           ),
           Text(
             CurrentUserProvider().getCurrentUser().fullName,
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.white,
-            ),
-          ),
-          Text(
-            'Line Manager',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.greenAccent,
-            ),
+            style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
           ),
         ],
       ),
@@ -102,31 +85,31 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
   Widget _changePassword() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              SvgPicture.asset(
-                'assets/icons/settings_icon.svg',
-                color: Colors.black,
-                width: 20,
-                height: 20,
-              ),
-              SizedBox(
-                width: 12.0,
-              ),
-              Text(
-                'Change Password',
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-          InkWell(
-            child: Icon(Icons.arrow_forward_ios),
-            onTap: goToChangePasswordScreen,
-          ),
-        ],
+      child: InkWell(
+        onTap: goToChangePasswordScreen,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/settings_icon.svg',
+                  color: Colors.black,
+                  width: 20,
+                  height: 20,
+                ),
+                SizedBox(
+                  width: 12.0,
+                ),
+                Text(
+                  'Change Password',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+            Icon(Icons.arrow_forward_ios),
+          ],
+        ),
       ),
     );
   }
@@ -134,30 +117,30 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
   Widget _notifications() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              SvgPicture.asset(
-                'assets/icons/notification_icon.svg',
-                width: 20,
-                height: 20,
-              ),
-              SizedBox(
-                width: 12.0,
-              ),
-              Text(
-                'Notifications',
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-          InkWell(
-            child: Icon(Icons.arrow_forward_ios),
-            onTap: goToNotificationsScreen,
-          ),
-        ],
+      child: InkWell(
+        onTap: goToNotificationsScreen,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/notification_icon.svg',
+                  width: 20,
+                  height: 20,
+                ),
+                SizedBox(
+                  width: 12.0,
+                ),
+                Text(
+                  'Notifications',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+            Icon(Icons.arrow_forward_ios),
+          ],
+        ),
       ),
     );
   }
@@ -165,26 +148,25 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
   Widget _logout() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SvgPicture.asset(
-            'assets/icons/logout_box_arrow_icon.svg',
-            color: Colors.red,
-            width: 20,
-            height: 20,
-          ),
-          SizedBox(
-            width: 12.0,
-          ),
-          TextButton(
-            child: Text(
-              'Logout',
+      child: InkWell(
+        onTap: logout,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SvgPicture.asset(
+              'assets/icons/logout_box_arrow_icon.svg',
+              color: Colors.red,
+              width: 20,
+              height: 20,
+            ),
+            SizedBox(
+              width: 12.0,
+            ),
+            Text('Logout',
               style: TextStyle(color: Colors.red, fontSize: 16),
             ),
-            onPressed: logout,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -195,10 +177,6 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
 
   goToNotificationsScreen() {
     ScreenPresenter.present(NotificationsScreen(), context);
-  }
-
-  goToCompaniesListScreen() {
-    ScreenPresenter.present(CompanyListScreen(), context);
   }
 
   logout() {

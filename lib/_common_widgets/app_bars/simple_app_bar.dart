@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
+import 'app_bar_divider.dart';
+
 class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final Widget? leadingButton;
-  final Widget? trailingButton;
-  final VoidCallback? onDownArrowButtonPressed;
-  final VoidCallback? onLeadingButtonPressed;
-  final VoidCallback? onTrailingButtonPressed;
+  final String? title;
+  final List<CircularIconButton>? leadingButtons;
+  final List<CircularIconButton>? trailingButtons;
+  final bool showDivider;
 
   @override
   final Size preferredSize;
 
   SimpleAppBar({
-    required this.title,
-    this.leadingButton,
-    this.trailingButton,
-    this.onDownArrowButtonPressed,
-    this.onLeadingButtonPressed,
-    this.onTrailingButtonPressed,
+    this.title,
+    this.leadingButtons = const [],
+    this.trailingButtons = const [],
+    this.showDivider = false,
   }) : preferredSize = Size.fromHeight(56);
 
   @override
@@ -30,30 +29,44 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
       brightness: Brightness.light,
       backgroundColor: Colors.white,
       elevation: 0.0,
+      bottom: showDivider ? AppBarDivider() : null,
+      // Don't show the default leading button
       automaticallyImplyLeading: false,
       title: Stack(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (leadingButton != null)
+              if (leadingButtons != null)
                 Row(children: [
-                  SizedBox(width: 16),
-                  GestureDetector(onTap: onLeadingButtonPressed, child: _constraintWidgetToSize(leadingButton!)),
-                  SizedBox(width: 20),
+                  ...[SizedBox(width: 12)],
+                  ..._resizeButtons(leadingButtons!),
                 ]),
-              Expanded(child: _makeCenterTitleView(),),
-              if (trailingButton != null)
-                Row(children: [
-                  SizedBox(width: 20),
-                  GestureDetector(onTap: onTrailingButtonPressed, child: _constraintWidgetToSize(trailingButton!)),
-                  SizedBox(width: 16),
-                ]),
+              if (trailingButtons != null) Row(children: _resizeButtons(trailingButtons!)),
             ],
           ),
+          if (title != null)
+            Positioned.fill(
+              child: Center(
+                child: Text(
+                  title!,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.titleTextStyle.copyWith(fontSize: 18.0, color: AppColors.darkBlue, fontWeight: FontWeight.bold),
+                ),
+              ),
+            )
         ],
       ),
     );
+  }
+
+  List<Widget> _resizeButtons(List<Widget> buttons) {
+    List<Widget> resizedButtons = [];
+    for (Widget button in buttons) {
+      resizedButtons.add(_constraintWidgetToSize(button));
+      resizedButtons.add(SizedBox(width: 8));
+    }
+    return resizedButtons;
   }
 
   Widget _constraintWidgetToSize(Widget widget) {
@@ -72,37 +85,5 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
         ));
-  }
-
-  Widget _makeCenterTitleView() {
-    return ClipRRect(
-      child: Container(
-        height: 32,
-        width: double.infinity,
-        child: Row(
-          children: [
-            Container(
-              child: Center(
-                child: Text(title, style: TextStyle(color: AppColors.lightBlue, fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-            ),
-            SizedBox(width: 8.0,),
-            InkWell(
-              child: Center(
-                child: SvgPicture.asset(
-                  'assets/icons/down_arrow_icon.svg',
-                  color: AppColors.lightBlue,
-                  width: 16,
-                  height: 16,
-                ),
-              ),
-              onTap: () {
-                if (onDownArrowButtonPressed != null) onDownArrowButtonPressed!();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

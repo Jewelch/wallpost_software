@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
@@ -37,9 +37,9 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: SimpleAppBarOld(
+      appBar: SimpleAppBar(
         title: 'Adjust Attendance',
-        showDivider: true,
+        // showDivider: true,
         leadingButtons: [
           CircularIconButton(
             color: Colors.white,

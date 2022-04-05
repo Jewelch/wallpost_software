@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
@@ -41,9 +41,9 @@ class _AttendanceListScreenState extends State<AttendanceListScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: SimpleAppBarOld(
+      appBar: SimpleAppBar(
         title: 'Adjust Attendance',
-        showDivider: true,
+        // showDivider: true,
         leadingButtons: [
           CircularBackButton(
             color: Colors.white,

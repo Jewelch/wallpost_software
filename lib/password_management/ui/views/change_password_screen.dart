@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
+import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
 import 'package:wallpost/_common_widgets/form_widgets/password_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
@@ -43,15 +44,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: true,
-        appBar: SimpleAppBarOld(
+        appBar:SimpleAppBar(
           title: 'Change Password',
           leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
-          trailingButtons: [
-            CircularIconButton(
-              iconName: 'assets/icons/check_mark_icon.svg',
-              onPressed: _changePassword,
-            )
-          ],
           showDivider: true,
         ),
         body: Container(
@@ -63,8 +58,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
               children: <Widget>[
                 profileImageAndNameWidget(),
                 descriptionText(),
-                SizedBox(height: 12),
-                formUI(),
+                SizedBox(height: 20),
+                CurveBottomToTop(),
+                Container(
+                  margin: EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      formUI(),
+                      _changePasswordButton(),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -83,17 +88,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
           Container(
             width: 100,
             height: 100,
-            decoration: BoxDecoration(
-                border: Border.all(color: AppColors.defaultColor, width: 1), borderRadius: BorderRadius.circular(50)),
+            decoration: BoxDecoration(border: Border.all(color: AppColors.defaultColor, width: 1), borderRadius: BorderRadius.circular(50)),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
               child: AspectRatio(
                 aspectRatio: 1 / 1,
                 child: ClipOval(
                   child: FadeInImage.assetNetwork(
-                      fit: BoxFit.cover,
-                      placeholder: "assets/icons/user_image_placeholder.png",
-                      image: presenter.getProfileImage()),
+                      fit: BoxFit.cover, placeholder: "assets/icons/user_image_placeholder.png", image: presenter.getProfileImage()),
                 ),
               ),
             ),
@@ -109,8 +111,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
 
   Widget descriptionText() {
     return Container(
-      child: Text(
-          'You need to type in your current password to make sure its not someone else trying to access your data',
+      child: Text('You need to type in your current password to make sure its not someone else trying to access your data',
           style: TextStyles.subTitleTextStyle),
     );
   }
@@ -159,9 +160,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
     );
   }
 
+  Widget _changePasswordButton() {
+    return RoundedRectangleActionButton(
+      title: 'Continue',
+      borderColor: AppColors.lightBlue,
+      onPressed: () => _changePassword(),
+    );
+  }
+
   void _changePassword() {
-    presenter.changePassword(
-        _currentPasswordTextController.text, _newPasswordTextController.text, _confirmPasswordTextController.text);
+    presenter.changePassword(_currentPasswordTextController.text, _newPasswordTextController.text, _confirmPasswordTextController.text);
   }
 
   //MARK : View functions
