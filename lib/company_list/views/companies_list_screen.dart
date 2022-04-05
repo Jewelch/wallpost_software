@@ -122,12 +122,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
               width: 14,
               height: 14,
             ),
-            // onLeadingButtonPressed: () => presenter.logout(),
-            onLeadingButtonPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => ExpenseRequestScreen(),
-              ),
-            ),
+            onLeadingButtonPressed: () => presenter.logout(),
             onTrailingButtonPressed: () =>
                 {if (showSearchBar == true) _viewAppBarSelectorNotifier.notify(true)},
             textButton1: TextButton(

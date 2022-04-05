@@ -43,7 +43,7 @@ main() {
   });
 
   test("api request is built correctly", () async {
-    expenseRequest.fileString = "[file1]";
+    expenseRequest.fileString = "file1";
     Map<String, dynamic> requestParams = {
       'expenseItems': [expenseRequest.toJson()]
     };
@@ -63,7 +63,7 @@ main() {
 
     var verifyResult = verify(() => fileUploader.upload(any()));
     expect(verifyResult.callCount, 1);
-    expect(expenseRequest.fileString, "[file1]");
+    expect(expenseRequest.fileString, "file1");
   });
 
   test("never call file uploading if expense request doesn't has file", () async {

@@ -15,10 +15,7 @@ class MockFile extends Mock implements File {}
 var mockFile = MockFile();
 
 var successFullUploadingFileResponse = {
-  "status": "success",
-  // TODO change this to what api gie you
-  "filenames": ["file1"],
-  "message": "Approval Sent."
+  "sample_pdf": "file1",
 };
 
 ExpenseRequestForm getExpenseRequestForm() {

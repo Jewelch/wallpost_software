@@ -5,6 +5,7 @@ import 'package:wallpost/_common_widgets/custom_switch/custom_switch.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
+import 'package:wallpost/expense_requests/ui/views/screens/expense_request_screen.dart';
 
 class RequestsScreen extends StatefulWidget {
   @override
@@ -51,14 +52,24 @@ class _RequestsScreenState extends State<RequestsScreen> {
               ),
               Divider(),
               buildRequestsButton('Task', 'tasks_icon.svg', () => {}
-                //Navigator.pushNamed(context, RouteNames.task)}
-                ),
+                  //Navigator.pushNamed(context, RouteNames.task)}
+                  ),
               buildRequestsButton(
-                  'Leave', 'leave_icon.svg', () => {
-
-                    // Navigator.pushNamed(context, RouteNames.leaveList)
-              }),
-              buildRequestsButton('Expense', 'expense_icon.svg', () => {}),
+                  'Leave',
+                  'leave_icon.svg',
+                  () => {
+                        // Navigator.pushNamed(context, RouteNames.leaveList)
+                      }),
+              buildRequestsButton(
+                  'Expense',
+                  'expense_icon.svg',
+                  () => {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => ExpenseRequestScreen(),
+                          ),
+                        ),
+                      }),
               buildRequestsButton('Overtime', 'overtime_icon.svg', () => {}),
               buildRequestsButton('Attendance Adjustment', 'attendance_icon.svg', () => {}),
             ],
