@@ -68,19 +68,20 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                           style: TextStyle(color: AppColors.darkGrey),
                         ),
                         IconButton(
-                            onPressed: () async {
-                              DateTime date = await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime.now().add(Duration(days: 600))) ??
-                                  DateTime.now();
-                              _expenseRequest.date = date;
-                            },
-                            icon: Icon(
-                              Icons.calendar_today_outlined,
-                              color: AppColors.darkGrey,
-                            ))
+                          onPressed: () async {
+                            DateTime date = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime.now().add(Duration(days: 600))) ??
+                                DateTime.now();
+                            _expenseRequest.date = date;
+                          },
+                          icon: Icon(
+                            Icons.calendar_today_outlined,
+                            color: AppColors.darkGrey,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -260,7 +261,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                         onPressed: () async {
                           var files = await FilePickerScreen.present(context,
                               filesType: [FileTypes.documents]);
-                          if ((files as List).isNotEmpty ) _expenseRequest.file = files[0];
+                          if ((files as List).isNotEmpty) _expenseRequest.file = files[0];
                           setState(() {});
                         },
                         icon: Icon(
@@ -281,7 +282,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
 
   Widget _getBottomButton() {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         //TODO: ignore if is in loading
         _presenter.sendExpenseRequest(_expenseRequest);
       },
@@ -294,23 +295,24 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
         child: ItemNotifiable<bool>(
           notifier: _showLoaderNotifier,
           builder: (_, isLoading) => Center(
-              child: isLoading!
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        backgroundColor: Colors.transparent,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
-                      ),
-                    )
-                  : Text(
-                      "Save",
-                      style: TextStyle(
-                          color: AppColors.screenBackgroundColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    )),
+            child: isLoading!
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      backgroundColor: Colors.transparent,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+                    ),
+                  )
+                : Text(
+                    "Save",
+                    style: TextStyle(
+                        color: AppColors.screenBackgroundColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+          ),
         ),
       ),
     );
@@ -433,10 +435,8 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
   // TODO Ask Obaid
 
   @override
-  void onSendRequestsSuccessfully() {
-  }
+  void onSendRequestsSuccessfully() {}
 
   @override
-  void showErrorMessage(String message) {
-  }
+  void showErrorMessage(String message) {}
 }
