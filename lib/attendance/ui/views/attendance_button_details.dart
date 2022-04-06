@@ -34,14 +34,14 @@ class _AttendanceButtonDetailsScreenState
   Set<Marker> _markers = {};
   late BitmapDescriptor customIcon;
   String? _timeString;
+  late Timer _currentTimer;
 
   final ItemNotifier<int> _buttonTypeNotifier = ItemNotifier();
-  final ItemNotifier<int> _breakShowNotifier = ItemNotifier();
+  final ItemNotifier<int> _breakButtonNotifier = ItemNotifier();
   var _attendanceReportNotifier = ItemNotifier<AttendanceReport>();
   static const PUNCH_IN_BUTTON_VIEW = 1;
   static const PUNCH_OUT_BUTTON_VIEW = 2;
   static const LOADER_VIEW = 3;
-
   static const SHOW_BREAK_BUTTON_VIEW = 4;
   static const HIDE_BREAK_BUTTON_VIEW = 5;
   static const RESUME_BUTTON_VIEW = 6;
@@ -51,9 +51,16 @@ class _AttendanceButtonDetailsScreenState
     presenter = AttendancePresenter(this);
     presenter.loadAttendanceDetails();
     presenter.attendanceReport();
-     _timeString = _formatDateTime(DateTime.now());
-     Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    _timeString = _formatDateTime(DateTime.now());
+    _currentTimer =
+        Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _currentTimer.cancel();
+    super.dispose();
   }
 
   @override
@@ -180,7 +187,7 @@ class _AttendanceButtonDetailsScreenState
         time: _timeString,
         buttonColor: AppColors.punchInButtonColor,
         onButtonPressed: () {
-          print("punch in");
+          presenter.doPunchIn(true);
         });
   }
 
@@ -190,19 +197,19 @@ class _AttendanceButtonDetailsScreenState
         time: _timeString,
         buttonColor: AppColors.punchOutButtonColor,
         onButtonPressed: () {
-          print("punch out");
+          _doPunchOut();
         });
   }
 
   Widget _buildBreakResumeButton() {
     return ItemNotifiable<int>(
-      notifier: _breakShowNotifier,
+      notifier: _breakButtonNotifier,
       builder: (context, value) {
         if (value == SHOW_BREAK_BUTTON_VIEW) {
           return _buildBreakButton();
         } else if (value == RESUME_BUTTON_VIEW) {
           return _buildResumeButton();
-        }else if (value == HIDE_BREAK_BUTTON_VIEW) {
+        } else if (value == HIDE_BREAK_BUTTON_VIEW) {
           return Container();
         }
         return Container();
@@ -256,7 +263,7 @@ class _AttendanceButtonDetailsScreenState
       ),
       onPressed: () {
         presenter.endBreak();
-      },// <-- Text
+      }, // <-- Text
     );
   }
 
@@ -370,67 +377,32 @@ class _AttendanceButtonDetailsScreenState
     return DateFormat('hh:mm a').format(dateTime);
   }
 
+  void _doPunchOut() {
+    Alert.showSimpleAlertWithButtons(
+      context: context,
+      title: "Punch Out",
+      message: " Do you really want to punch out? ",
+      buttonOneTitle: "Cancel",
+      buttonTwoTitle: "Yes",
+      buttonTwoOnPressed: () {
+        presenter.doPunchOut(true);
+      },
+    );
+  }
+
   @override
   void showBreakButton() {
-
-    _breakShowNotifier.notify(SHOW_BREAK_BUTTON_VIEW);
+    _breakButtonNotifier.notify(SHOW_BREAK_BUTTON_VIEW);
   }
 
   @override
   void hideBreakButton() {
-    _breakShowNotifier.notify(HIDE_BREAK_BUTTON_VIEW);
+    _breakButtonNotifier.notify(HIDE_BREAK_BUTTON_VIEW);
   }
 
   @override
   void showResumeButton() {
-    _breakShowNotifier.notify(RESUME_BUTTON_VIEW);
-  }
-
-  @override
-  void hideLoader() {
-    // TODO: implement hideLoader
-  }
-
-  @override
-  void openAppSettings() {
-    // TODO: implement openAppSettings
-  }
-
-  @override
-  void showAlertToDeniedLocationPermission(String title, String message) {
-    // TODO: implement showAlertToDeniedLocationPermission
-  }
-
-  @override
-  void showAlertToTurnOnDeviceLocation(String title, String message) {
-    // TODO: implement showAlertToTurnOnDeviceLocation
-  }
-
-  @override
-  void showAlertToVerifyLocation(String message) {
-    // TODO: implement showAlertToVerifyLocation
-  }
-
-
-
-  @override
-  void showDisabledButton() {
-    // TODO: implement showDisabledButton
-  }
-
-  @override
-  void showError(String title, String message) {
-    // TODO: implement showError
-  }
-
-  @override
-  void showErrorMessage(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void showFailedToGetLocation(String title, String message) {
-    // TODO: implement showFailedToGetLocation
+    _breakButtonNotifier.notify(RESUME_BUTTON_VIEW);
   }
 
   @override
@@ -439,13 +411,8 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showLocationAddress(String address) {
-    // TODO: implement showLocationAddress
-  }
-
-  @override
-  void showMessageToAllowPunchInFromAppPermission(String message) {
-    // TODO: implement showMessageToAllowPunchInFromAppPermission
+  void hideLoader() {
+    // TODO: implement hideLoader
   }
 
   @override
@@ -468,11 +435,20 @@ class _AttendanceButtonDetailsScreenState
     // TODO: implement showPunchOutTime
   }
 
-
+  @override
+  void showDisabledButton() {
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(
+        MyPortalScreen(), context);
+  }
 
   @override
   void showTimeTillPunchIn(num seconds) {
     // TODO: implement showTimeTillPunchIn
+  }
+
+  @override
+  void showLocationAddress(String address) {
+    // TODO: implement showLocationAddress
   }
 
   @override
@@ -494,5 +470,45 @@ class _AttendanceButtonDetailsScreenState
   @override
   void showAttendanceReport(AttendanceReport attendanceReport) {
     _attendanceReportNotifier.notify(attendanceReport);
+  }
+
+  @override
+  void openAppSettings() {
+    // TODO: implement openAppSettings
+  }
+
+  @override
+  void showError(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
+  void showErrorMessage(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
+  void showMessageToAllowPunchInFromAppPermission(String message) {
+    // TODO: implement showMessageToAllowPunchInFromAppPermission
+  }
+
+  @override
+  void showFailedToGetLocation(String title, String message) {
+    // TODO: implement showFailedToGetLocation
+  }
+
+  @override
+  void showAlertToDeniedLocationPermission(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
+  void showAlertToTurnOnDeviceLocation(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
+  void showAlertToVerifyLocation(String message) {
+    Alert.showSimpleAlert(context: context, title: "", message: message);
   }
 }

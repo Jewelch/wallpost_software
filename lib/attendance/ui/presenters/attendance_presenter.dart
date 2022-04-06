@@ -209,15 +209,18 @@ class AttendancePresenter {
     try {
       await _punchInMarker.punchIn(_attendanceLocation,
           isLocationValid: isValid);
+      loadAttendanceDetails();
     } on WPException catch (e) {
       _view.showErrorMessage("Punch in failed", e.userReadableMessage);
     }
   }
 
   Future<void> doPunchOut(bool isValid) async {
+
     try {
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation,
           isLocationValid: isValid);
+      loadAttendanceDetails();
     } on WPException catch (e) {
       _view.showErrorMessage("Punch out failed", e.userReadableMessage);
     }
@@ -226,6 +229,7 @@ class AttendancePresenter {
   Future<void> startBreak() async {
     try {
       await _breakStartMarker.startBreak(_attendanceDetails,_attendanceLocation);
+      loadAttendanceDetails();
       _view.showResumeButton();
     } on WPException catch (e) {
       _view.showErrorMessage("Start break is failed", e.userReadableMessage);
@@ -234,8 +238,7 @@ class AttendancePresenter {
 
   Future<void> endBreak() async {
     try {
-      await _breakEndMarker.endBreak(_attendanceDetails,_attendanceLocation);
-      print("end break");
+     await _breakEndMarker.endBreak(_attendanceDetails,_attendanceLocation);
       _view.showBreakButton();
     } on WPException catch (e) {
       _view.showErrorMessage("End break is failed", e.userReadableMessage);
@@ -247,7 +250,7 @@ class AttendancePresenter {
       _attendanceReport= await _attendanceReportProvider.getReport();
      _view.showAttendanceReport(_attendanceReport);
     }on WPException catch (e) {
-      _view.showErrorMessage("get report failed", e.userReadableMessage);
+      _view.showErrorMessage("Getting attendance report is failed", e.userReadableMessage);
     }
   }
 

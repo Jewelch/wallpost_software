@@ -33,7 +33,7 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
             right: 0,
             child:
             Container(
-              width: MediaQuery.of(context).size.width * 0.3,
+              width: MediaQuery.of(context).size.width * 0.33,
               child: MaterialButton(
                 height: 64,
                 elevation: 0,
@@ -65,12 +65,12 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
             ),
           ),
           Container(
-            width: MediaQuery.of(context).size.width * 0.7,
+            width: MediaQuery.of(context).size.width * 0.67,
             child: MaterialButton(
               elevation: 0,
               highlightElevation: 0,
               height: 64,
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.only(left: 14,right: 14),
               color: attendanceButtonColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
