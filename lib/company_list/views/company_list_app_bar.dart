@@ -3,17 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
+
+import '../../_common_widgets/buttons/rounded_icon_button.dart';
 
 class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Widget leadingButton;
-  final Widget trailingButton;
+  final String profileImageUrl;
+  final VoidCallback onSearchButtonPressed;
 
   @override
   final Size preferredSize;
 
   CompanyListAppBar({
-    required this.leadingButton,
-    required this.trailingButton,
+    required this.profileImageUrl,
+    required this.onSearchButtonPressed,
   }) : preferredSize = Size.fromHeight(56);
 
   @override
@@ -31,11 +34,9 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(children: [
-                SizedBox(width: 12),
-                _addMenuButtonToLeadingWidget(leadingButton),
-                SizedBox(width: 20),
-              ]),
+              SizedBox(width: 12),
+              _menuButton(context),
+              SizedBox(width: 20),
               Expanded(
                 child: Center(
                     child: Text(
@@ -43,11 +44,9 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
                 )),
               ),
-              Row(children: [
-                SizedBox(width: 20),
-                trailingButton,
-                SizedBox(width: 12),
-              ]),
+              SizedBox(width: 20),
+              _searchButton(),
+              SizedBox(width: 12),
             ],
           ),
         ],
@@ -55,40 +54,56 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget _addMenuButtonToLeadingWidget(Widget? widget) {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: AlignmentDirectional.bottomEnd,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(14),
-          child: SizedBox(
-            width: 40,
-            height: 40,
-            child: Container(
-              child: widget,
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: -6,
-          right: -12,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: Container(
-              width: 30,
-              height: 24,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColors.defaultColor,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.white, width: 2),
+  Widget _menuButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () => LeftMenuScreen.show(context),
+      child: Container(
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: AlignmentDirectional.bottomEnd,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: Container(
+                  child: FadeInImage.assetNetwork(
+                    placeholder: 'assets/logo/placeholder.jpg',
+                    image: profileImageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              child: SvgPicture.asset('assets/icons/menu_icon.svg', width: 10, height: 10),
             ),
-          ),
-        )
-      ],
+            Positioned(
+              bottom: -6,
+              right: -12,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Container(
+                  width: 30,
+                  height: 24,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.defaultColor,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                  child: SvgPicture.asset('assets/icons/menu_icon.svg', width: 10, height: 10),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _searchButton() {
+    return RoundedIconButton(
+      iconName: 'assets/icons/search_icon.svg',
+      onPressed: onSearchButtonPressed,
     );
   }
 }

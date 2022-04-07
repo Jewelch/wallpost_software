@@ -7,7 +7,7 @@ import 'package:wallpost/company_core/entities/company_list_item.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 import 'package:wallpost/company_core/services/company_details_provider.dart';
 import 'package:wallpost/company_core/services/company_list_provider.dart';
-import 'package:wallpost/company_list/presenters/companies_list_presenter.dart';
+import 'package:wallpost/company_list/presenters/company_list_presenter.dart';
 import 'package:wallpost/company_list/view_contracts/company_list_view.dart';
 
 import '../../_mocks/mock_company.dart';
@@ -34,7 +34,7 @@ void main() {
   var mockCurrentUserProvider = MockCurrentUserProvider();
   var mockCompaniesListProvider = MockCompaniesListProvider();
   var mockCompanyDetailsProvider = MockCompanyDetailsProvider();
-  late CompaniesListPresenter presenter;
+  late CompanyListPresenter presenter;
 
   var companyList = MockCompanyList();
   var company1 = MockCompanyListItem();
@@ -77,7 +77,7 @@ void main() {
 
   setUp(() {
     _resetAllMockInteractions();
-    presenter = CompaniesListPresenter.initWith(
+    presenter = CompanyListPresenter.initWith(
       view,
       mockCurrentUserProvider,
       mockCompaniesListProvider,
@@ -116,7 +116,7 @@ void main() {
       () => mockCompaniesListProvider.get(),
       () => view.hideLoader(),
       () => view.hideSearchBar(),
-      () => view.hideCompanyGroups(),
+      () => view.hideCompanyGroupsFilter(),
       () => view.hideFinancialSummary(),
       () => view.hideCompanyList(),
       () => view.showErrorMessage(
@@ -146,7 +146,7 @@ void main() {
       () => mockCompaniesListProvider.get(),
       () => view.hideLoader(),
       () => view.hideSearchBar(),
-      () => view.hideCompanyGroups(),
+      () => view.hideCompanyGroupsFilter(),
       () => view.hideFinancialSummary(),
       () => view.hideCompanyList(),
       () => view
@@ -176,7 +176,7 @@ void main() {
       () => mockCompaniesListProvider.get(),
       () => view.hideLoader(),
       () => view.showSearchBar(),
-      () => view.hideCompanyGroups(),
+      () => view.hideCompanyGroupsFilter(),
       () => view.hideFinancialSummary(),
       () => view.showCompanyList(_companyList),
       () => view.showApprovalCount(3)
@@ -203,7 +203,7 @@ void main() {
       () => mockCompaniesListProvider.get(),
       () => view.hideLoader(),
       () => view.showSearchBar(),
-      () => view.showCompanyGroups(_companyGroupList),
+      () => view.showCompanyGroupsFilter(_companyGroupList),
       () => view.hideFinancialSummary(),
       () => view.showCompanyList(_companyList),
       () => view.showApprovalCount(3)
@@ -232,7 +232,7 @@ void main() {
       () => mockCompaniesListProvider.get(),
       () => view.hideLoader(),
       () => view.showSearchBar(),
-      () => view.showCompanyGroups(_companyGroupList),
+      () => view.showCompanyGroupsFilter(_companyGroupList),
       () => view.showFinancialSummary(financialSummary),
       () => view.showCompanyList(_companyList),
       () => view.showApprovalCount(3)
@@ -333,7 +333,7 @@ void main() {
       () => mockCompaniesListProvider.get(),
       () => view.hideLoader(),
       () => view.showSearchBar(),
-      () => view.showCompanyGroups(_companyGroupList),
+      () => view.showCompanyGroupsFilter(_companyGroupList),
       () => view.showFinancialSummary(financialSummary),
       () => view.showCompanyList(_companyList),
       () => view.showApprovalCount(3)

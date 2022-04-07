@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_core/entities/company_list_item.dart';
 
 class CompanyListCardWithoutRev extends StatelessWidget {
@@ -12,30 +11,30 @@ class CompanyListCardWithoutRev extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onPressed,
       child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 2),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  _companyLogo(),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                    alignment: Alignment.center,
-                    child: Text(
-                      company.name,
-                      style: TextStyles.largeTitleTextStyleBold,
-                    ),
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                _companyLogo(),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                  alignment: Alignment.center,
+                  child: Text(
+                    company.name,
+                    style: TextStyles.largeTitleTextStyleBold,
                   ),
-                ],
-              ),
-            ],
-          )),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -49,7 +48,7 @@ class CompanyListCardWithoutRev extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: borderRadius,
-        border: Border.all(color: Colors.red),
+        border: Border.all(color: Color.fromRGBO(240, 240, 240, 1.0), width: 2),
       ),
       child: ClipRRect(
         borderRadius: borderRadius,

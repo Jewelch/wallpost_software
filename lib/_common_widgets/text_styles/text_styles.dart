@@ -14,6 +14,12 @@ class TextStyles {
         fontWeight: FontWeight.bold,
       );
 
+  static get headerCardLargeTextStyle => TextStyle(
+      fontWeight: FontWeight.w700,
+      color: AppColors.defaultColorDarkContrastColor,
+      fontSize: 28.0,
+      overflow: TextOverflow.ellipsis);
+
   static get titleTextStyle => TextStyle(
         fontSize: 16,
         color: Colors.black,
