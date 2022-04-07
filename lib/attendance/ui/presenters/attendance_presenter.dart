@@ -194,7 +194,7 @@ class AttendancePresenter {
           await doPunchOut(true);
         }
       } else {
-        _view.showError(
+        _view.showAlertToInvalidLocation(isForPunchIn,
             "Invalid punch ${isForPunchIn ? 'in' : 'out'} location",
             "You are not allowed to punch ${isForPunchIn ? 'in' : 'out'} outside the office location. " +
                 "Doing so will affect your performance. Would you still like to punch ${isForPunchIn ? 'in' : 'out'}?");
@@ -211,7 +211,7 @@ class AttendancePresenter {
           isLocationValid: isValid);
       loadAttendanceDetails();
     } on WPException catch (e) {
-      _view.showErrorMessage("Punch in failed", e.userReadableMessage);
+      _view.showErrorMessage("Punched in failed", e.userReadableMessage);
     }
   }
 
@@ -222,7 +222,7 @@ class AttendancePresenter {
           isLocationValid: isValid);
       loadAttendanceDetails();
     } on WPException catch (e) {
-      _view.showErrorMessage("Punch out failed", e.userReadableMessage);
+      _view.showErrorMessage("Punched out failed", e.userReadableMessage);
     }
   }
 

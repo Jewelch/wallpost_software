@@ -64,4 +64,6 @@ abstract class AttendanceView {
 
   void showAttendanceReport(AttendanceReport attendanceReport);
 
+  void showAlertToInvalidLocation(bool isForPunchIn,String title,String message);
+
 }

@@ -187,7 +187,7 @@ class _AttendanceButtonDetailsScreenState
         time: _timeString,
         buttonColor: AppColors.punchInButtonColor,
         onButtonPressed: () {
-          presenter.doPunchIn(true);
+          presenter.validateLocation(true);
         });
   }
 
@@ -385,7 +385,7 @@ class _AttendanceButtonDetailsScreenState
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () {
-        presenter.doPunchOut(true);
+       presenter.validateLocation(false);
       },
     );
   }
@@ -510,5 +510,23 @@ class _AttendanceButtonDetailsScreenState
   @override
   void showAlertToVerifyLocation(String message) {
     Alert.showSimpleAlert(context: context, title: "", message: message);
+  }
+
+  @override
+  void showAlertToInvalidLocation(bool isForPunchIn,String title, String message) {
+    Alert.showSimpleAlertWithButtons(
+      context: context,
+      title: title,
+      message: message,
+      buttonOneTitle: "Cancel",
+      buttonTwoTitle: "Yes",
+      buttonTwoOnPressed: () {
+        if(isForPunchIn){
+          presenter.doPunchIn(false);
+        }else{
+          presenter.doPunchOut(false);
+        }
+      },
+    );
   }
 }

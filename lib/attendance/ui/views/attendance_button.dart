@@ -154,7 +154,7 @@ class _AttendanceButtonState extends State<AttendanceButton>
       attendanceButtonColor: AppColors.punchInButtonColor,
       moreButtonColor: AppColors.punchInMoreButtonColor,
       onButtonPressed: () {
-        presenter.doPunchIn(true);
+        presenter.validateLocation(true);
       },
       onMorePressed: () {
         ScreenPresenter.presentAndRemoveAllPreviousScreens(
@@ -224,7 +224,7 @@ class _AttendanceButtonState extends State<AttendanceButton>
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () {
-        presenter.doPunchOut(true);
+        presenter.validateLocation(false);
       },
     );
   }
@@ -342,5 +342,23 @@ class _AttendanceButtonState extends State<AttendanceButton>
   @override
   void showAttendanceReport(AttendanceReport attendanceReport) {
     // TODO: implement showAttendanceReport
+  }
+
+  @override
+  void showAlertToInvalidLocation(bool isForPunchIn,String title, String message) {
+    Alert.showSimpleAlertWithButtons(
+      context: context,
+      title: title,
+      message: message,
+      buttonOneTitle: "Cancel",
+      buttonTwoTitle: "Yes",
+      buttonTwoOnPressed: () {
+        if(isForPunchIn){
+          presenter.doPunchIn(false);
+        }else{
+          presenter.doPunchOut(false);
+        }
+      },
+    );
   }
 }
