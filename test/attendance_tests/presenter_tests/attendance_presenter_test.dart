@@ -49,7 +49,8 @@ class MockAttendanceLocation extends Mock implements AttendanceLocation {}
 class MockAttendanceLocationValidator extends Mock
     implements AttendanceLocationValidator {}
 
-    class MockAttendanceReportProvider extends Mock implements AttendanceReportProvider{}
+class MockAttendanceReportProvider extends Mock
+    implements AttendanceReportProvider {}
 
 class MockPunchInMarker extends Mock implements PunchInMarker {}
 
@@ -58,8 +59,6 @@ class MockPunchOutMarker extends Mock implements PunchOutMarker {}
 class MockBreakStartMarker extends Mock implements BreakStartMarker {}
 
 class MockBreakEndMarker extends Mock implements BreakEndMarker {}
-
-
 
 void main() {
   var view = MockAttendanceView();
@@ -73,7 +72,7 @@ void main() {
   var mockPunchOutMarker = MockPunchOutMarker();
   var mockBreakStartMaker = MockBreakStartMarker();
   var mocKBreakEndMarker = MockBreakEndMarker();
-  var mockAttendanveReportProvider= MockAttendanceReportProvider();
+  var mockAttendanveReportProvider = MockAttendanceReportProvider();
 
   AttendancePresenter presenter = AttendancePresenter.initWith(
       view,
@@ -86,7 +85,7 @@ void main() {
       mockPunchOutMarker,
       mockBreakStartMaker,
       mocKBreakEndMarker,
-  mockAttendanveReportProvider);
+      mockAttendanveReportProvider);
 
   setUp(() {
     reset(view);
@@ -162,6 +161,7 @@ void main() {
       () => view.showPunchOutButton(),
       () => view.showBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
     ]);
@@ -337,10 +337,9 @@ void main() {
       () => view.showPunchInButton(),
       () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
-      () => view.showDisabledButton(),
-      () => view.showAlertToTurnOnDeviceLocation(
-          "Please make sure you enable GPS",
-          LocationServicesDisabledException().userReadableMessage),
+      () => view.requestToTurnOnDeviceLocation(
+          LocationServicesDisabledException().userReadableMessage,
+          "Please make sure you enable GPS"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -377,10 +376,9 @@ void main() {
       () => view.showPunchInButton(),
       () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
-      () => view.showDisabledButton(),
-      () => view.showAlertToDeniedLocationPermission(
-          "Please allow to access device location",
-          LocationPermissionsDeniedException().userReadableMessage),
+      () => view.requestToLocationPermissions(
+          LocationPermissionsDeniedException().userReadableMessage,
+          "Please allow to access device location"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -418,7 +416,6 @@ void main() {
       () => view.showPunchInButton(),
       () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
-      () => view.showDisabledButton(),
       () => view.openAppSettings(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -456,8 +453,7 @@ void main() {
       () => view.showPunchInButton(),
       () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
-      () => view.showDisabledButton(),
-      () => view.showFailedToGetLocation("Getting location failed",
+      () => view.showErrorMessage("Getting location failed",
           LocationAcquisitionFailedException().userReadableMessage),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -499,6 +495,7 @@ void main() {
       () => view.showPunchInButton(),
       () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
     ]);
@@ -544,6 +541,7 @@ void main() {
       () => view.showPunchInButton(),
       () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
       () => mockAttendanceLocationValidator.validateLocation(any(),
@@ -595,13 +593,14 @@ void main() {
       () => view.showPunchInButton(),
       () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: true),
       () => mockPunchInMarker.punchIn(any(), isLocationValid: true),
       () => view.showErrorMessage(
-          "Punch in failed", InvalidResponseException().userReadableMessage),
+          'Punched in failed', InvalidResponseException().userReadableMessage),
     ]);
 
     _verifyNoMoreInteractionsOnAllMocks();
@@ -609,6 +608,7 @@ void main() {
 
   test("successfully punched in with invalid location", () async {
     //given
+
     var attendance = MockAttendanceDetails();
     var appPermission = MockPunchInFromAppPermission();
     var punchInNowPermission = MockPunchInNowPermission();
@@ -648,15 +648,18 @@ void main() {
       () => view.showPunchInButton(),
       () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: true),
-      () => view.showError(
-          "Invalid punch in location",
-          "You are not allowed to punch in outside the office location. "
-              "Doing so will affect your performance. Would you still like to punch in?"),
+      () => view.showAlertToInvalidLocation(
+          true,
+          'Invalid punch in location',
+          'You are not allowed to punch in outside the office location. '
+              'Doing so will affect your performance. Would you still like to punch in?'),
       () => mockPunchInMarker.punchIn(any(), isLocationValid: false),
+      () => view.loadAttendanceDetails()
     ]);
 
     _verifyNoMoreInteractionsOnAllMocks();
@@ -702,11 +705,13 @@ void main() {
       () => view.showPunchInButton(),
       () => view.hideBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: true),
       () => mockPunchInMarker.punchIn(any(), isLocationValid: true),
+      () => view.loadAttendanceDetails()
     ]);
 
     _verifyNoMoreInteractionsOnAllMocks();
@@ -745,6 +750,7 @@ void main() {
       () => view.showPunchOutButton(),
       () => view.showBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
     ]);
@@ -782,6 +788,7 @@ void main() {
       () => view.showPunchOutButton(),
       () => view.showResumeButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
     ]);
@@ -820,6 +827,7 @@ void main() {
       () => view.showPunchOutButton(),
       () => view.showBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
     ]);
@@ -861,6 +869,7 @@ void main() {
       () => view.showPunchOutButton(),
       () => view.showBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
       () => mockAttendanceLocationValidator.validateLocation(any(),
@@ -907,13 +916,14 @@ void main() {
       () => view.showPunchOutButton(),
       () => view.showBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: false),
       () => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: true),
       () => view.showErrorMessage(
-          "Punch out failed", InvalidResponseException().userReadableMessage),
+          'Punched out failed', InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -956,15 +966,18 @@ void main() {
       () => view.showPunchOutButton(),
       () => view.showBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: false),
-      () => view.showError(
-          "Invalid punch out location",
-          "You are not allowed to punch out outside the office location. "
-              "Doing so will affect your performance. Would you still like to punch out?"),
+      () => view.showAlertToInvalidLocation(
+          false,
+          'Invalid punch out location',
+          'You are not allowed to punch out outside the office location. '
+              'Doing so will affect your performance. Would you still like to punch out?'),
       () => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: false),
+      () => view.loadAttendanceDetails()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -1005,11 +1018,13 @@ void main() {
       () => view.showPunchOutButton(),
       () => view.showBreakButton(),
       () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: false),
       () => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: true),
+      () => view.loadAttendanceDetails()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -1047,7 +1062,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("show resume button when start break" ,()async{
+  test("show resume button when start break", () async {
     //given
     var attendance = MockAttendanceDetails();
     var attendanceLocation = MockAttendanceLocation();
@@ -1075,22 +1090,24 @@ void main() {
     //then
     verifyInOrder([
       () => mockAttendanceDetailsProvider.isLoading,
-    () => view.showLoader(),
-    () => mockAttendanceDetailsProvider.getDetails(),
-    () => view.hideLoader(),
-    () => view.showPunchInTime(punchInTime),
-    () => view.showPunchOutButton(),
-    () => view.showBreakButton(),
-    () => mockLocationProvider.getLocation(),
-    () => mockLocationProvider.getLocationAddress(any()),
-    () => view.showLocationAddress("address"),
-    ()=> mockBreakStartMaker.startBreak(any(), any()),
-      ()=>view.showResumeButton()
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => view.hideLoader(),
+      () => view.showPunchInTime(punchInTime),
+      () => view.showPunchOutButton(),
+      () => view.showBreakButton(),
+      () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+      () => mockBreakStartMaker.startBreak(any(), any()),
+      () => view.loadAttendanceDetails(),
+      () => view.showResumeButton()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("show break button when end break" ,()async{
+  test("show break button when end break", () async {
     //given
     var attendance = MockAttendanceDetails();
     var attendanceLocation = MockAttendanceLocation();
@@ -1117,18 +1134,19 @@ void main() {
 
     //then
     verifyInOrder([
-          () => mockAttendanceDetailsProvider.isLoading,
-          () => view.showLoader(),
-          () => mockAttendanceDetailsProvider.getDetails(),
-          () => view.hideLoader(),
-          () => view.showPunchInTime(punchInTime),
-          () => view.showPunchOutButton(),
-          () => view.showResumeButton(),
-          () => mockLocationProvider.getLocation(),
-          () => mockLocationProvider.getLocationAddress(any()),
-          () => view.showLocationAddress("address"),
-          ()=> mocKBreakEndMarker.endBreak(any(), any()),
-          ()=>view.showBreakButton()
+      () => mockAttendanceDetailsProvider.isLoading,
+      () => view.showLoader(),
+      () => mockAttendanceDetailsProvider.getDetails(),
+      () => view.hideLoader(),
+      () => view.showPunchInTime(punchInTime),
+      () => view.showPunchOutButton(),
+      () => view.showResumeButton(),
+      () => mockLocationProvider.getLocation(),
+      () => view.showLocationPositions(attendanceLocation),
+      () => mockLocationProvider.getLocationAddress(any()),
+      () => view.showLocationAddress("address"),
+      () => mocKBreakEndMarker.endBreak(any(), any()),
+      () => view.showBreakButton()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });

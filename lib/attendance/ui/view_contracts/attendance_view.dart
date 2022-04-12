@@ -1,3 +1,4 @@
+import 'package:wallpost/attendance/entities/attendance_location.dart';
 import 'package:wallpost/attendance/entities/attendance_report.dart';
 
 abstract class AttendanceView {
@@ -23,47 +24,27 @@ abstract class AttendanceView {
 
   void showTimeTillPunchIn(num seconds);
 
-  void showLocationPositions(num lat,num lon);
+  void showLocationPositions(AttendanceLocation attendanceLocation);
 
   void showLocationAddress(String address);
 
+  void showAttendanceReport(AttendanceReport attendanceReport);
 
-  //TODO: We don't need so many failure functions - use single function showErrorMessage(String title, String message)
+  void loadAttendanceDetails();
+
+  void showAlertToInvalidLocation(
+      bool isForPunchIn, String title, String message);
+
+  void requestToTurnOnDeviceLocation(String title, String message);
+
+  void requestToLocationPermissions(String title, String message);
+
+  // The user opted to never again see the permission request dialog for this
+  // app. The only way to change the permission's status now is to let the
+  // user manually enable it in the system settings.
+  void openAppSettings();
 
   void showErrorMessage(String title, String message);
 
-  //void showFailedToLoadAttendance(String title, String message);
-
-  void showFailedToGetLocation(String title, String message);
-
-  //void showFailedToGetPunchInFromAppPermission(String title, String message);
-
-  //void showFailedToGetPunchInPermission(String title, String message);
-
-  void showMessageToAllowPunchInFromAppPermission(String message);
-
-
-
-
-  void showAlertToVerifyLocation(String message);
-
-
-  //TODO: rename to requestToTurnOnDeviceLocation
-  void showAlertToTurnOnDeviceLocation(String title, String message);
-
-  //TODO: rename to requestLocationPermissions
-  void showAlertToDeniedLocationPermission(String title, String message);
-
-
-
-  // ?
-  void openAppSettings();
-
-
   void showError(String title, String message);
-
-  void showAttendanceReport(AttendanceReport attendanceReport);
-
-  void showAlertToInvalidLocation(bool isForPunchIn,String title,String message);
-
 }

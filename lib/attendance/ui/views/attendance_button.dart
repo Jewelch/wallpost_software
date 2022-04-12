@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/entities/attendance_location.dart';
 import 'package:wallpost/attendance/entities/attendance_report.dart';
 import 'package:wallpost/attendance/services/time_to_punch_in_calculator.dart';
 import 'package:wallpost/attendance/ui/presenters/attendance_presenter.dart';
@@ -19,7 +22,7 @@ class AttendanceButton extends StatefulWidget {
   State<AttendanceButton> createState() => _AttendanceButtonState();
 }
 
-class _AttendanceButtonState extends State<AttendanceButton>
+class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBindingObserver
     implements AttendanceView {
   late final AttendancePresenter presenter;
   String? _timeString;
@@ -40,13 +43,23 @@ class _AttendanceButtonState extends State<AttendanceButton>
     presenter.loadAttendanceDetails();
     _timeString = _formatDateTime(DateTime.now());
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   void dispose() {
     _countDownTimer.cancel();
     _currentTimer.cancel();
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      presenter.loadAttendanceDetails();
+    }
   }
 
   @override
@@ -122,7 +135,7 @@ class _AttendanceButtonState extends State<AttendanceButton>
           child: Align(
               alignment: Alignment.center,
               child: Text(
-                "Loading To Punch In",
+                "Loading...To Punch In",
                 style: TextStyle(color: Colors.white),
               )));
     return Container(
@@ -157,6 +170,7 @@ class _AttendanceButtonState extends State<AttendanceButton>
         presenter.validateLocation(true);
       },
       onMorePressed: () {
+        _currentTimer.cancel();
         ScreenPresenter.presentAndRemoveAllPreviousScreens(
             AttendanceButtonDetailsScreen(), context);
       },
@@ -177,6 +191,7 @@ class _AttendanceButtonState extends State<AttendanceButton>
         _doPunchOut();
       },
       onMorePressed: () {
+        _currentTimer.cancel();
         ScreenPresenter.presentAndRemoveAllPreviousScreens(
             AttendanceButtonDetailsScreen(), context);
       },
@@ -184,6 +199,8 @@ class _AttendanceButtonState extends State<AttendanceButton>
   }
 
   void _startCountDownTimer(num _start) {
+
+        Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     const oneSec = const Duration(seconds: 1);
     _countDownTimer = new Timer.periodic(
       oneSec,
@@ -202,6 +219,20 @@ class _AttendanceButtonState extends State<AttendanceButton>
         }
       },
     );
+  }
+  void _gettTime(num _start, Timer timer) {
+    _remainingTimeToPunchInString =
+        TimeToPunchInCalculator.timeTillPunchIn(_start.toInt());
+    if (_start == 0) {
+      setState(() {
+        timer.cancel();
+        presenter.loadAttendanceDetails();
+      });
+    } else {
+      setState(() {
+        _start--;
+      });
+    }
   }
 
   void _getTime() {
@@ -253,7 +284,9 @@ class _AttendanceButtonState extends State<AttendanceButton>
 
   @override
   void showTimeTillPunchIn(num seconds) {
-    _startCountDownTimer(seconds);
+    //_startCountDownTimer(seconds);
+    _countDownTimer =
+        Timer.periodic(Duration(seconds: 1), (Timer t) => _gettTime(seconds,t));
     _viewTypeNotifier.notify(DISABLE_VIEW);
   }
 
@@ -268,10 +301,36 @@ class _AttendanceButtonState extends State<AttendanceButton>
   }
 
   @override
-  void showLocationAddress(String address) {
-    setState(() {
-      _locationAddress = address;
-    });
+  void showDisabledButton() {
+    _viewTypeNotifier.notify(DISABLE_VIEW);
+
+  }
+
+  @override
+  void requestToTurnOnDeviceLocation(String title, String message) {
+    Alert.showSimpleAlert(
+        context: context,
+        title: title,
+        message: message,
+        onPressed: () {
+          AppSettings.openLocationSettings();
+        });
+  }
+
+  @override
+  void requestToLocationPermissions(String title, String message) {
+    Alert.showSimpleAlert(
+        context: context,
+        title: title,
+        message: message,
+        onPressed: () {
+          presenter.loadAttendanceDetails();
+        });
+  }
+
+  @override
+  void openAppSettings() {
+    AppSettings.openAppSettings();
   }
 
   @override
@@ -290,28 +349,25 @@ class _AttendanceButtonState extends State<AttendanceButton>
   }
 
   @override
-  void openAppSettings() {
-    // TODO: implement openAppSettings
+  void showLocationPositions(AttendanceLocation attendanceLocation) {
+    // TODO: implement showLocationPositions
   }
 
   @override
-  void showDisabledButton() {
-    _viewTypeNotifier.notify(DISABLE_VIEW);
+  void showLocationAddress(String address) {
+    setState(() {
+      _locationAddress = address;
+    });
   }
 
   @override
-  void showAlertToDeniedLocationPermission(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
+  void showAttendanceReport(AttendanceReport attendanceReport) {
+    // TODO: implement showAttendanceReport
   }
 
   @override
-  void showAlertToTurnOnDeviceLocation(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void showAlertToVerifyLocation(String message) {
-    Alert.showSimpleAlert(context: context, title: "", message: message);
+  void loadAttendanceDetails() {
+    presenter.loadAttendanceDetails();
   }
 
   @override
@@ -324,28 +380,10 @@ class _AttendanceButtonState extends State<AttendanceButton>
     Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 
-  @override
-  void showFailedToGetLocation(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
 
   @override
-  void showMessageToAllowPunchInFromAppPermission(String message) {
-    Alert.showSimpleAlert(context: context, title: "", message: message);
-  }
-
-  @override
-  void showLocationPositions(num lat, num lon) {
-    // TODO: implement showLocationPositions
-  }
-
-  @override
-  void showAttendanceReport(AttendanceReport attendanceReport) {
-    // TODO: implement showAttendanceReport
-  }
-
-  @override
-  void showAlertToInvalidLocation(bool isForPunchIn,String title, String message) {
+  void showAlertToInvalidLocation(
+      bool isForPunchIn, String title, String message) {
     Alert.showSimpleAlertWithButtons(
       context: context,
       title: title,
@@ -353,12 +391,13 @@ class _AttendanceButtonState extends State<AttendanceButton>
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () {
-        if(isForPunchIn){
+        if (isForPunchIn) {
           presenter.doPunchIn(false);
-        }else{
+        } else {
           presenter.doPunchOut(false);
         }
       },
     );
   }
+
 }

@@ -1,22 +1,21 @@
 import 'dart:async';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/app_bar_with_back_button.dart';
-import 'package:wallpost/_common_widgets/custom_cards/header_card.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/entities/attendance_location.dart';
 import 'package:wallpost/attendance/entities/attendance_report.dart';
 import 'package:wallpost/attendance/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance/ui/view_contracts/attendance_view.dart';
 import 'package:wallpost/attendance/ui/views/attendance_rounded_action_button.dart';
-import 'package:wallpost/company_list/views/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/my_portal_screen.dart';
 
 class AttendanceButtonDetailsScreen extends StatefulWidget {
@@ -33,7 +32,7 @@ class _AttendanceButtonDetailsScreenState
   GoogleMapController? _controller;
   Set<Marker> _markers = {};
   late BitmapDescriptor customIcon;
-  String? _timeString;
+  String? _timeString="10:10";
   late Timer _currentTimer;
 
   final ItemNotifier<int> _buttonTypeNotifier = ItemNotifier();
@@ -51,9 +50,9 @@ class _AttendanceButtonDetailsScreenState
     presenter = AttendancePresenter(this);
     presenter.loadAttendanceDetails();
     presenter.attendanceReport();
-    _timeString = _formatDateTime(DateTime.now());
-    _currentTimer =
-        Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    // _timeString = _formatDateTime(DateTime.now());
+    // _currentTimer =
+    //     Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
   }
 
@@ -87,34 +86,36 @@ class _AttendanceButtonDetailsScreenState
           ),
         ),
       ),
-      body: SafeArea(
-          child: Column(
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              Container(
-                height: 350,
-                child: _mapView(),
-              ),
-              Positioned(
-                child: _buildAttendanceButton(),
-                right: 0,
-                left: 0,
-                bottom: -60,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 88,
-          ),
-          _buildBreakResumeButton(),
-          SizedBox(
-            height: 16,
-          ),
-          _buildAttendanceReport()
-        ],
-      )),
+      body: SingleChildScrollView(
+        child: SafeArea(
+            child: Column(
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.55,
+                  child: _mapView(),
+                ),
+                Positioned(
+                  child: _buildAttendanceButton(),
+                  right: 0,
+                  left: 0,
+                  bottom: -70,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 88,
+            ),
+            _buildBreakResumeButton(),
+            SizedBox(
+              height: 8,
+            ),
+            _buildAttendanceReport()
+          ],
+        )),
+      ),
     );
   }
 
@@ -365,17 +366,17 @@ class _AttendanceButtonDetailsScreenState
   //       ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/overtime_icon.svg');
   // }
 
-  void _getTime() {
-    final DateTime now = DateTime.now();
-    final String formattedDateTime = _formatDateTime(now);
-    setState(() {
-      _timeString = formattedDateTime;
-    });
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    return DateFormat('hh:mm a').format(dateTime);
-  }
+  // void _getTime() {
+  //   final DateTime now = DateTime.now();
+  //   final String formattedDateTime = _formatDateTime(now);
+  //   setState(() {
+  //     _timeString = formattedDateTime;
+  //   });
+  // }
+  //
+  // String _formatDateTime(DateTime dateTime) {
+  //   return DateFormat('hh:mm a').format(dateTime);
+  // }
 
   void _doPunchOut() {
     Alert.showSimpleAlertWithButtons(
@@ -452,18 +453,18 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showLocationPositions(num lat, num long) {
+  void showLocationPositions(AttendanceLocation attendanceLocation) {
     // setCustomMarker();
     _controller
         ?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-      target: LatLng(lat.toDouble(), long.toDouble()),
+      target: LatLng(attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble()),
       zoom: 14.0,
     )));
     setState(() {
       _markers.add(Marker(
           //  icon: customIcon,
           markerId: MarkerId('Home'),
-          position: LatLng(lat.toDouble(), long.toDouble())));
+          position: LatLng(attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble())));
     });
   }
 
@@ -473,43 +474,37 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
+  void loadAttendanceDetails() {
+    presenter.loadAttendanceDetails();
+  }
+
+  @override
+  void requestToTurnOnDeviceLocation(String title, String message) {
+    Alert.showSimpleAlert(
+        context: context,
+        title: title,
+        message: message,
+        onPressed: () {
+          AppSettings.openLocationSettings();
+          Navigator.push(context,MaterialPageRoute(builder: (context) => AttendanceButtonDetailsScreen()));
+        });
+  }
+
+  @override
+  void requestToLocationPermissions(String title, String message) {
+    Alert.showSimpleAlert(
+        context: context,
+        title: title,
+        message: message,
+        onPressed: () {
+          presenter.loadAttendanceDetails();
+        });
+  }
+
+  @override
   void openAppSettings() {
-    // TODO: implement openAppSettings
-  }
-
-  @override
-  void showError(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void showErrorMessage(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void showMessageToAllowPunchInFromAppPermission(String message) {
-    // TODO: implement showMessageToAllowPunchInFromAppPermission
-  }
-
-  @override
-  void showFailedToGetLocation(String title, String message) {
-    // TODO: implement showFailedToGetLocation
-  }
-
-  @override
-  void showAlertToDeniedLocationPermission(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void showAlertToTurnOnDeviceLocation(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void showAlertToVerifyLocation(String message) {
-    Alert.showSimpleAlert(context: context, title: "", message: message);
+    AppSettings.openAppSettings();
+    Navigator.push(context,MaterialPageRoute(builder: (context) => AttendanceButtonDetailsScreen()));
   }
 
   @override
@@ -528,5 +523,15 @@ class _AttendanceButtonDetailsScreenState
         }
       },
     );
+  }
+
+  @override
+  void showError(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
+  void showErrorMessage(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 }

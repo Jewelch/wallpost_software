@@ -17,7 +17,7 @@ class LocationProvider {
   late LocationPermission permission;
 
   Future<AttendanceLocation?> getLocation() async {
-    try {
+   // try {
       bool serviceEnabled;
       LocationPermission permission;
 
@@ -47,9 +47,9 @@ class LocationProvider {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       return AttendanceLocation(position.latitude, position.longitude);
-    } catch (e) {
-      throw LocationAcquisitionFailedException();
-    }
+    // } catch (e) {
+    //   throw LocationAcquisitionFailedException();
+    // }
 
   }
 

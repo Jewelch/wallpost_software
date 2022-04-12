@@ -36,7 +36,6 @@ class AttendancePresenter {
   late AttendanceLocation _attendanceLocation;
   late AttendanceReport _attendanceReport;
 
-
   //NOTE: getting the location is a parallel process or - do we load location only when needed? - only when needed
   AttendancePresenter(this._view)
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
@@ -46,9 +45,9 @@ class AttendancePresenter {
         _attendanceLocationValidator = AttendanceLocationValidator(),
         _punchInMarker = PunchInMarker(),
         _punchOutMarker = PunchOutMarker(),
-  _breakStartMarker=BreakStartMarker(),
-  _breakEndMarker=BreakEndMarker(),
-  _attendanceReportProvider=AttendanceReportProvider();
+        _breakStartMarker = BreakStartMarker(),
+        _breakEndMarker = BreakEndMarker(),
+        _attendanceReportProvider = AttendanceReportProvider();
 
   AttendancePresenter.initWith(
       this._view,
@@ -84,26 +83,25 @@ class AttendancePresenter {
     }
   }
 
-  Future<void> _getLocation() async {
+  Future<void> getLocation() async {
     try {
       _attendanceLocation = (await _locationProvider.getLocation())!;
-      _view.showLocationPositions(_attendanceLocation.latitude,_attendanceLocation.longitude);
+      _view.showLocationPositions(_attendanceLocation);
       await _getLocationAddress(_attendanceLocation);
     } on LocationServicesDisabledException catch (e) {
-      _view.showDisabledButton();
-      _view.showAlertToTurnOnDeviceLocation(
-          "Please make sure you enable GPS", e.userReadableMessage);
+      // _view.showDisabledButton();
+      _view.requestToTurnOnDeviceLocation(
+          e.userReadableMessage, "Please make sure you enable GPS");
     } on LocationPermissionsDeniedException catch (e) {
-      _view.showDisabledButton();
-      _view.showAlertToDeniedLocationPermission(
-          "Please allow to access device location", e.userReadableMessage);
+      // _view.showDisabledButton();
+      _view.requestToLocationPermissions(
+          e.userReadableMessage, "Please allow to access device location");
     } on LocationPermissionsPermanentlyDeniedException {
-      _view.showDisabledButton();
+      //_view.showDisabledButton();
       _view.openAppSettings();
     } on LocationAcquisitionFailedException catch (e) {
-      _view.showDisabledButton();
-      _view.showFailedToGetLocation(
-          "Getting location failed", e.userReadableMessage);
+      // _view.showDisabledButton();
+      _view.showErrorMessage("Getting location failed", e.userReadableMessage);
     }
   }
 
@@ -147,7 +145,7 @@ class AttendancePresenter {
       if (punchInNowPermission.canPunchInNow) {
         _view.showPunchInButton();
         _view.hideBreakButton();
-        await _getLocation();
+        await getLocation();
       } else {
         _view.showDisabledButton();
         _view.hideBreakButton();
@@ -171,7 +169,7 @@ class AttendancePresenter {
       _showPunchInTime(_attendanceDetails);
       _view.showPunchOutButton();
       _isOnBreak(_attendanceDetails);
-      await _getLocation();
+      await getLocation();
     }
   }
 
@@ -194,7 +192,8 @@ class AttendancePresenter {
           await doPunchOut(true);
         }
       } else {
-        _view.showAlertToInvalidLocation(isForPunchIn,
+        _view.showAlertToInvalidLocation(
+            isForPunchIn,
             "Invalid punch ${isForPunchIn ? 'in' : 'out'} location",
             "You are not allowed to punch ${isForPunchIn ? 'in' : 'out'} outside the office location. " +
                 "Doing so will affect your performance. Would you still like to punch ${isForPunchIn ? 'in' : 'out'}?");
@@ -209,18 +208,17 @@ class AttendancePresenter {
     try {
       await _punchInMarker.punchIn(_attendanceLocation,
           isLocationValid: isValid);
-      loadAttendanceDetails();
+     _view.loadAttendanceDetails();
     } on WPException catch (e) {
       _view.showErrorMessage("Punched in failed", e.userReadableMessage);
     }
   }
 
   Future<void> doPunchOut(bool isValid) async {
-
     try {
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation,
           isLocationValid: isValid);
-      loadAttendanceDetails();
+      _view.loadAttendanceDetails();
     } on WPException catch (e) {
       _view.showErrorMessage("Punched out failed", e.userReadableMessage);
     }
@@ -228,8 +226,9 @@ class AttendancePresenter {
 
   Future<void> startBreak() async {
     try {
-      await _breakStartMarker.startBreak(_attendanceDetails,_attendanceLocation);
-      loadAttendanceDetails();
+      await _breakStartMarker.startBreak(
+          _attendanceDetails, _attendanceLocation);
+      _view.loadAttendanceDetails();
       _view.showResumeButton();
     } on WPException catch (e) {
       _view.showErrorMessage("Start break is failed", e.userReadableMessage);
@@ -238,7 +237,7 @@ class AttendancePresenter {
 
   Future<void> endBreak() async {
     try {
-     await _breakEndMarker.endBreak(_attendanceDetails,_attendanceLocation);
+      await _breakEndMarker.endBreak(_attendanceDetails, _attendanceLocation);
       _view.showBreakButton();
     } on WPException catch (e) {
       _view.showErrorMessage("End break is failed", e.userReadableMessage);
@@ -246,11 +245,12 @@ class AttendancePresenter {
   }
 
   Future<void> attendanceReport() async {
-    try{
-      _attendanceReport= await _attendanceReportProvider.getReport();
-     _view.showAttendanceReport(_attendanceReport);
-    }on WPException catch (e) {
-      _view.showErrorMessage("Getting attendance report is failed", e.userReadableMessage);
+    try {
+      _attendanceReport = await _attendanceReportProvider.getReport();
+      _view.showAttendanceReport(_attendanceReport);
+    } on WPException catch (e) {
+      _view.showErrorMessage(
+          "Getting attendance report is failed", e.userReadableMessage);
     }
   }
 
