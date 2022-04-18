@@ -7,6 +7,7 @@ import 'package:wallpost/company_core/services/company_list_provider.dart';
 import 'package:wallpost/company_list/view_contracts/company_list_view.dart';
 
 import '../../company_core/entities/company_group.dart';
+import '../../company_core/services/company_details_provider.dart';
 
 class CompanyListPresenter {
   final CompaniesListView _view;
@@ -134,7 +135,15 @@ class CompanyListPresenter {
 
   //MARK: Functions to select a company
 
-  selectCompany(CompanyListItem company) {}
+  selectCompany(CompanyListItem company) async {
+    //TODO: Remove this and move this API call to the dashboard?
+    _view.showLoader();
+    try {
+      var _ = await CompanyDetailsProvider().getCompanyDetails(company.id);
+      _view.goToCompanyDetailScreen();
+    } on WPException catch (e) {
+    }
+  }
 
   //MARK: Getters
 
