@@ -9,7 +9,7 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
   final Color? attendanceButtonColor;
   final Color? moreButtonColor;
   final VoidCallback onButtonPressed;
-  final VoidCallback onMorePressed;
+  final VoidCallback onMoreButtonPressed;
 
   AttendanceRectangleRoundedActionButton({
     required this.title,
@@ -19,7 +19,7 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
     required this.attendanceButtonColor,
     required this.moreButtonColor,
     required this.onButtonPressed,
-    required this.onMorePressed,
+    required this.onMoreButtonPressed,
   });
 
   @override
@@ -60,7 +60,7 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
                     ],
                   ),
                 ),
-                onPressed: onMorePressed,
+                onPressed: onMoreButtonPressed,
               ),
             ),
           ),

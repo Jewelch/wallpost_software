@@ -209,6 +209,7 @@ class AttendancePresenter {
       await _punchInMarker.punchIn(_attendanceLocation,
           isLocationValid: isValid);
      _view.loadAttendanceDetails();
+
     } on WPException catch (e) {
       _view.showErrorMessage("Punched in failed", e.userReadableMessage);
     }
@@ -244,7 +245,7 @@ class AttendancePresenter {
     }
   }
 
-  Future<void> attendanceReport() async {
+  Future<void> loadAttendanceReport() async {
     try {
       _attendanceReport = await _attendanceReportProvider.getReport();
       _view.showAttendanceReport(_attendanceReport);

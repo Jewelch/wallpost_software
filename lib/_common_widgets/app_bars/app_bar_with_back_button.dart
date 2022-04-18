@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-
 import 'app_bar_divider.dart';
 
 class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidget {
@@ -57,7 +52,7 @@ class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidge
           child: Container(
             color: Color(0xff0096e3),
             child: SizedBox(
-              width: 42,
+              width: 44,
               height: 36,
               child: Container(
                 alignment: Alignment.center,

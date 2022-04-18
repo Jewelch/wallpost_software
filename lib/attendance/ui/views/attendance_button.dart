@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
@@ -22,16 +21,17 @@ class AttendanceButton extends StatefulWidget {
   State<AttendanceButton> createState() => _AttendanceButtonState();
 }
 
-class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBindingObserver
+class _AttendanceButtonState extends State<AttendanceButton>
+    with WidgetsBindingObserver
     implements AttendanceView {
+
+  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier();
   late final AttendancePresenter presenter;
   String? _timeString;
   String _locationAddress = "";
+  String? _remainingTimeToPunchInString;
   late Timer _countDownTimer;
   late Timer _currentTimer;
-  String? _remainingTimeToPunchInString;
-
-  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier();
   static const DISABLE_VIEW = 1;
   static const PUNCH_IN_BUTTON_VIEW = 2;
   static const PUNCH_OUT_BUTTON_VIEW = 3;
@@ -48,8 +48,8 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void dispose() {
-    _countDownTimer.cancel();
     _currentTimer.cancel();
+    _countDownTimer.cancel();
     WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
@@ -169,7 +169,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       onButtonPressed: () {
         presenter.validateLocation(true);
       },
-      onMorePressed: () {
+      onMoreButtonPressed: () {
         _currentTimer.cancel();
         ScreenPresenter.presentAndRemoveAllPreviousScreens(
             AttendanceButtonDetailsScreen(), context);
@@ -190,7 +190,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       onButtonPressed: () {
         _doPunchOut();
       },
-      onMorePressed: () {
+      onMoreButtonPressed: () {
         _currentTimer.cancel();
         ScreenPresenter.presentAndRemoveAllPreviousScreens(
             AttendanceButtonDetailsScreen(), context);
@@ -198,13 +198,38 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     );
   }
 
-  void _startCountDownTimer(num _start) {
 
-        Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+
+  void _doPunchOut() {
+    Alert.showSimpleAlertWithButtons(
+      context: context,
+      title: "Punch Out",
+      message: " Do you really want to punch out ? ",
+      buttonOneTitle: "Cancel",
+      buttonTwoTitle: "Yes",
+      buttonTwoOnPressed: () {
+        presenter.validateLocation(false);
+      },
+    );
+  }
+
+  void _getTime() {
+    final DateTime now = DateTime.now();
+    final String formattedDateTime = _formatDateTime(now);
+   if(this.mounted) setState(() {
+      _timeString = formattedDateTime;
+    });
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return DateFormat('hh:mm a').format(dateTime);
+  }
+
+  void _startCountDownTimer(num _start) {
     const oneSec = const Duration(seconds: 1);
     _countDownTimer = new Timer.periodic(
       oneSec,
-      (Timer timer) {
+          (Timer timer) {
         _remainingTimeToPunchInString =
             TimeToPunchInCalculator.timeTillPunchIn(_start.toInt());
         if (_start == 0) {
@@ -220,45 +245,8 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       },
     );
   }
-  void _gettTime(num _start, Timer timer) {
-    _remainingTimeToPunchInString =
-        TimeToPunchInCalculator.timeTillPunchIn(_start.toInt());
-    if (_start == 0) {
-      setState(() {
-        timer.cancel();
-        presenter.loadAttendanceDetails();
-      });
-    } else {
-      setState(() {
-        _start--;
-      });
-    }
-  }
 
-  void _getTime() {
-    final DateTime now = DateTime.now();
-    final String formattedDateTime = _formatDateTime(now);
-    setState(() {
-      _timeString = formattedDateTime;
-    });
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    return DateFormat('hh:mm a').format(dateTime);
-  }
-
-  void _doPunchOut() {
-    Alert.showSimpleAlertWithButtons(
-      context: context,
-      title: "Punch Out",
-      message: " Do you really want to punch out? ",
-      buttonOneTitle: "Cancel",
-      buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () {
-        presenter.validateLocation(false);
-      },
-    );
-  }
+  //MARK: View functions
 
   @override
   void showLoader() {
@@ -284,26 +272,19 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void showTimeTillPunchIn(num seconds) {
-    //_startCountDownTimer(seconds);
-    _countDownTimer =
-        Timer.periodic(Duration(seconds: 1), (Timer t) => _gettTime(seconds,t));
+    _startCountDownTimer(seconds);
     _viewTypeNotifier.notify(DISABLE_VIEW);
   }
 
   @override
-  void showPunchInTime(String time) {
-    // TODO: implement showPunchInTime
-  }
+  void showPunchInTime(String time) {}
 
   @override
-  void showPunchOutTime(String time) {
-    // TODO: implement showPunchOutTime
-  }
+  void showPunchOutTime(String time) {}
 
   @override
   void showDisabledButton() {
     _viewTypeNotifier.notify(DISABLE_VIEW);
-
   }
 
   @override
@@ -334,24 +315,16 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   @override
-  void showBreakButton() {
-    // TODO: implement showBreakButton
-  }
+  void showBreakButton() {}
 
   @override
-  void hideBreakButton() {
-    // TODO: implement hideBreakButton
-  }
+  void hideBreakButton() {}
 
   @override
-  void showResumeButton() {
-    // TODO: implement showResumeButton
-  }
+  void showResumeButton() {}
 
   @override
-  void showLocationPositions(AttendanceLocation attendanceLocation) {
-    // TODO: implement showLocationPositions
-  }
+  void showLocationPositions(AttendanceLocation attendanceLocation) {}
 
   @override
   void showLocationAddress(String address) {
@@ -361,9 +334,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   @override
-  void showAttendanceReport(AttendanceReport attendanceReport) {
-    // TODO: implement showAttendanceReport
-  }
+  void showAttendanceReport(AttendanceReport attendanceReport) {}
 
   @override
   void loadAttendanceDetails() {
@@ -379,7 +350,6 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   void showErrorMessage(String title, String message) {
     Alert.showSimpleAlert(context: context, title: title, message: message);
   }
-
 
   @override
   void showAlertToInvalidLocation(
@@ -399,5 +369,4 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       },
     );
   }
-
 }

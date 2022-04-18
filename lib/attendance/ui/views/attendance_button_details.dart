@@ -16,6 +16,8 @@ import 'package:wallpost/attendance/entities/attendance_report.dart';
 import 'package:wallpost/attendance/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance/ui/view_contracts/attendance_view.dart';
 import 'package:wallpost/attendance/ui/views/attendance_rounded_action_button.dart';
+import 'package:wallpost/company_core/services/selected_company_provider.dart';
+import 'package:wallpost/company_list/views/companies_list_screen.dart';
 import 'package:wallpost/dashboard/ui/my_portal_screen.dart';
 
 class AttendanceButtonDetailsScreen extends StatefulWidget {
@@ -27,17 +29,18 @@ class AttendanceButtonDetailsScreen extends StatefulWidget {
 }
 
 class _AttendanceButtonDetailsScreenState
-    extends State<AttendanceButtonDetailsScreen> implements AttendanceView {
+    extends State<AttendanceButtonDetailsScreen>
+    with WidgetsBindingObserver
+    implements AttendanceView {
+  final ItemNotifier<int> _buttonTypeNotifier = ItemNotifier();
+  final ItemNotifier<int> _breakButtonNotifier = ItemNotifier();
+  var _attendanceReportNotifier = ItemNotifier<AttendanceReport>();
   late final AttendancePresenter presenter;
   GoogleMapController? _controller;
   Set<Marker> _markers = {};
   late BitmapDescriptor customIcon;
-  String? _timeString="10:10";
+  String? _timeString = "10:10";
   late Timer _currentTimer;
-
-  final ItemNotifier<int> _buttonTypeNotifier = ItemNotifier();
-  final ItemNotifier<int> _breakButtonNotifier = ItemNotifier();
-  var _attendanceReportNotifier = ItemNotifier<AttendanceReport>();
   static const PUNCH_IN_BUTTON_VIEW = 1;
   static const PUNCH_OUT_BUTTON_VIEW = 2;
   static const LOADER_VIEW = 3;
@@ -49,7 +52,7 @@ class _AttendanceButtonDetailsScreenState
   void initState() {
     presenter = AttendancePresenter(this);
     presenter.loadAttendanceDetails();
-    presenter.attendanceReport();
+    presenter.loadAttendanceReport();
     // _timeString = _formatDateTime(DateTime.now());
     // _currentTimer =
     //     Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
@@ -60,6 +63,14 @@ class _AttendanceButtonDetailsScreenState
   void dispose() {
     _currentTimer.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      presenter.loadAttendanceDetails();
+    }
   }
 
   @override
@@ -76,14 +87,22 @@ class _AttendanceButtonDetailsScreenState
             ScreenPresenter.presentAndRemoveAllPreviousScreens(
                 MyPortalScreen(), context),
         textButton1: TextButton(
-          onPressed: () {},
-          child: Text(
-            "Company name",
-            style: TextStyle(
-                color: Color(0xff0096E3),
-                fontSize: 18,
-                fontWeight: FontWeight.w700),
+          child: Row(
+            children: [
+              Text(
+                '${SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name} ',
+                style: TextStyle(
+                    color: Color(0xff0096E3),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700),
+              ),
+              Icon(Icons.keyboard_arrow_down_outlined, size: 28),
+            ],
           ),
+          onPressed: () {
+            ScreenPresenter.presentAndRemoveAllPreviousScreens(
+                CompanyListScreen(), context);
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -91,16 +110,16 @@ class _AttendanceButtonDetailsScreenState
             child: Column(
           children: [
             Stack(
+              alignment: Alignment.center,
               clipBehavior: Clip.none,
               children: <Widget>[
                 Container(
                   height: MediaQuery.of(context).size.height * 0.55,
                   child: _mapView(),
                 ),
+                //_buildAttendanceButton(),
                 Positioned(
                   child: _buildAttendanceButton(),
-                  right: 0,
-                  left: 0,
                   bottom: -70,
                 ),
               ],
@@ -386,10 +405,12 @@ class _AttendanceButtonDetailsScreenState
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () {
-       presenter.validateLocation(false);
+        presenter.validateLocation(false);
       },
     );
   }
+
+  //MARK: View functions
 
   @override
   void showBreakButton() {
@@ -412,9 +433,7 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void hideLoader() {
-    // TODO: implement hideLoader
-  }
+  void hideLoader() {}
 
   @override
   void showPunchInButton() {
@@ -422,9 +441,7 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showPunchInTime(String time) {
-    // TODO: implement showPunchInTime
-  }
+  void showPunchInTime(String time) {}
 
   @override
   void showPunchOutButton() {
@@ -432,9 +449,7 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showPunchOutTime(String time) {
-    // TODO: implement showPunchOutTime
-  }
+  void showPunchOutTime(String time) {}
 
   @override
   void showDisabledButton() {
@@ -443,28 +458,26 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showTimeTillPunchIn(num seconds) {
-    // TODO: implement showTimeTillPunchIn
-  }
+  void showTimeTillPunchIn(num seconds) {}
 
   @override
-  void showLocationAddress(String address) {
-    // TODO: implement showLocationAddress
-  }
+  void showLocationAddress(String address) {}
 
   @override
   void showLocationPositions(AttendanceLocation attendanceLocation) {
     // setCustomMarker();
     _controller
         ?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-      target: LatLng(attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble()),
+      target: LatLng(attendanceLocation.latitude.toDouble(),
+          attendanceLocation.longitude.toDouble()),
       zoom: 14.0,
     )));
     setState(() {
       _markers.add(Marker(
           //  icon: customIcon,
           markerId: MarkerId('Home'),
-          position: LatLng(attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble())));
+          position: LatLng(attendanceLocation.latitude.toDouble(),
+              attendanceLocation.longitude.toDouble())));
     });
   }
 
@@ -476,6 +489,7 @@ class _AttendanceButtonDetailsScreenState
   @override
   void loadAttendanceDetails() {
     presenter.loadAttendanceDetails();
+    presenter.loadAttendanceReport();
   }
 
   @override
@@ -486,7 +500,6 @@ class _AttendanceButtonDetailsScreenState
         message: message,
         onPressed: () {
           AppSettings.openLocationSettings();
-          Navigator.push(context,MaterialPageRoute(builder: (context) => AttendanceButtonDetailsScreen()));
         });
   }
 
@@ -504,11 +517,11 @@ class _AttendanceButtonDetailsScreenState
   @override
   void openAppSettings() {
     AppSettings.openAppSettings();
-    Navigator.push(context,MaterialPageRoute(builder: (context) => AttendanceButtonDetailsScreen()));
   }
 
   @override
-  void showAlertToInvalidLocation(bool isForPunchIn,String title, String message) {
+  void showAlertToInvalidLocation(
+      bool isForPunchIn, String title, String message) {
     Alert.showSimpleAlertWithButtons(
       context: context,
       title: title,
@@ -516,9 +529,9 @@ class _AttendanceButtonDetailsScreenState
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () {
-        if(isForPunchIn){
+        if (isForPunchIn) {
           presenter.doPunchIn(false);
-        }else{
+        } else {
           presenter.doPunchOut(false);
         }
       },

@@ -23,14 +23,12 @@ class LocationProvider {
 
       // Test if location services are enabled.
       serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      print(serviceEnabled);
       if (!serviceEnabled) {
      throw LocationServicesDisabledException();
       }
 
       // Check location permission is denied.
       permission = await Geolocator.checkPermission();
-      print(permission);
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
