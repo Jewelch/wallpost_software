@@ -337,7 +337,7 @@ class _AttendanceButtonState extends State<AttendanceButton>
   void showAttendanceReport(AttendanceReport attendanceReport) {}
 
   @override
-  void loadAttendanceDetails() {
+  void doRefresh() {
     presenter.loadAttendanceDetails();
   }
 

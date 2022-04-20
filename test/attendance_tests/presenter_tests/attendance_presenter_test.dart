@@ -659,7 +659,7 @@ void main() {
           'You are not allowed to punch in outside the office location. '
               'Doing so will affect your performance. Would you still like to punch in?'),
       () => mockPunchInMarker.punchIn(any(), isLocationValid: false),
-      () => view.loadAttendanceDetails()
+      () => view.doRefresh()
     ]);
 
     _verifyNoMoreInteractionsOnAllMocks();
@@ -711,7 +711,7 @@ void main() {
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: true),
       () => mockPunchInMarker.punchIn(any(), isLocationValid: true),
-      () => view.loadAttendanceDetails()
+      () => view.doRefresh()
     ]);
 
     _verifyNoMoreInteractionsOnAllMocks();
@@ -977,7 +977,7 @@ void main() {
           'You are not allowed to punch out outside the office location. '
               'Doing so will affect your performance. Would you still like to punch out?'),
       () => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: false),
-      () => view.loadAttendanceDetails()
+      () => view.doRefresh()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -1024,7 +1024,7 @@ void main() {
       () => mockAttendanceLocationValidator.validateLocation(any(),
           isForPunchIn: false),
       () => mockPunchOutMarker.punchOut(any(), any(), isLocationValid: true),
-      () => view.loadAttendanceDetails()
+      () => view.doRefresh()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -1101,7 +1101,7 @@ void main() {
       () => mockLocationProvider.getLocationAddress(any()),
       () => view.showLocationAddress("address"),
       () => mockBreakStartMaker.startBreak(any(), any()),
-      () => view.loadAttendanceDetails(),
+      () => view.doRefresh(),
       () => view.showResumeButton()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();

@@ -36,7 +36,6 @@ class AttendancePresenter {
   late AttendanceLocation _attendanceLocation;
   late AttendanceReport _attendanceReport;
 
-  //NOTE: getting the location is a parallel process or - do we load location only when needed? - only when needed
   AttendancePresenter(this._view)
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
         _locationProvider = LocationProvider(),
@@ -89,18 +88,14 @@ class AttendancePresenter {
       _view.showLocationPositions(_attendanceLocation);
       await _getLocationAddress(_attendanceLocation);
     } on LocationServicesDisabledException catch (e) {
-      // _view.showDisabledButton();
       _view.requestToTurnOnDeviceLocation(
           e.userReadableMessage, "Please make sure you enable GPS");
     } on LocationPermissionsDeniedException catch (e) {
-      // _view.showDisabledButton();
       _view.requestToLocationPermissions(
           e.userReadableMessage, "Please allow to access device location");
     } on LocationPermissionsPermanentlyDeniedException {
-      //_view.showDisabledButton();
       _view.openAppSettings();
     } on LocationAcquisitionFailedException catch (e) {
-      // _view.showDisabledButton();
       _view.showErrorMessage("Getting location failed", e.userReadableMessage);
     }
   }
@@ -208,7 +203,7 @@ class AttendancePresenter {
     try {
       await _punchInMarker.punchIn(_attendanceLocation,
           isLocationValid: isValid);
-     _view.loadAttendanceDetails();
+     _view.doRefresh();
 
     } on WPException catch (e) {
       _view.showErrorMessage("Punched in failed", e.userReadableMessage);
@@ -219,7 +214,7 @@ class AttendancePresenter {
     try {
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation,
           isLocationValid: isValid);
-      _view.loadAttendanceDetails();
+      _view.doRefresh();
     } on WPException catch (e) {
       _view.showErrorMessage("Punched out failed", e.userReadableMessage);
     }
@@ -229,7 +224,7 @@ class AttendancePresenter {
     try {
       await _breakStartMarker.startBreak(
           _attendanceDetails, _attendanceLocation);
-      _view.loadAttendanceDetails();
+      _view.doRefresh();
       _view.showResumeButton();
     } on WPException catch (e) {
       _view.showErrorMessage("Start break is failed", e.userReadableMessage);

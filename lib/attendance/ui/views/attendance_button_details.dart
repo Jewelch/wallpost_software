@@ -112,20 +112,25 @@ class _AttendanceButtonDetailsScreenState
             Stack(
               alignment: Alignment.center,
               clipBehavior: Clip.none,
-              children: <Widget>[
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.55,
-                  child: _mapView(),
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.55,
+                      child: _mapView(),
+                    ),
+                    Container(height: 70, color: Colors.transparent),
+                  ],
                 ),
-                //_buildAttendanceButton(),
                 Positioned(
                   child: _buildAttendanceButton(),
-                  bottom: -70,
+                  bottom: 0,
                 ),
               ],
             ),
             SizedBox(
-              height: 88,
+              height: 16,
             ),
             _buildBreakResumeButton(),
             SizedBox(
@@ -487,7 +492,7 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void loadAttendanceDetails() {
+  void doRefresh() {
     presenter.loadAttendanceDetails();
     presenter.loadAttendanceReport();
   }

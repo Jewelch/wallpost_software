@@ -30,7 +30,7 @@ abstract class AttendanceView {
 
   void showAttendanceReport(AttendanceReport attendanceReport);
 
-  void loadAttendanceDetails();
+  void doRefresh();
 
   void showAlertToInvalidLocation(
       bool isForPunchIn, String title, String message);
