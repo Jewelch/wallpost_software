@@ -5,7 +5,6 @@ import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dar
 import 'package:wallpost/attendance_adjustment/services/attendance_list_provider.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_list_view.dart';
 
-import '../../../_shared/constants/app_colors.dart';
 import '../../../attendance__core/entities/attendance_status.dart';
 
 class AttendanceListPresenter {
@@ -15,14 +14,13 @@ class AttendanceListPresenter {
 
   final Color presentColor = Color.fromRGBO(43, 186, 104, 1.0);
   final Color absentColor = Colors.red;
-  final Color lateColor = Colors.purple;
-  final Color labelColor = Colors.yellow;
+  final Color lateColor = Colors.orangeAccent;
 
   late int _selectedYear = DateTime
       .now()
       .year;
   late String _selectedMonth = AppYears
-      .shortenedMonthNames(_selectedYear)
+      .monthNames(_selectedYear)
       .last;
 
   AttendanceListPresenter(this._view)
@@ -44,7 +42,7 @@ class AttendanceListPresenter {
     _attendanceList.clear();
     _view.showLoader();
     try {
-      var monthNumber = AppYears.shortenedMonthNames(_selectedYear).indexOf((_selectedMonth)) + 1;
+      var monthNumber = AppYears.monthNames(_selectedYear).indexOf((_selectedMonth)) + 1;
       var attendanceList = await _attendanceListProvider.get(monthNumber, _selectedYear);
       _attendanceList.addAll(attendanceList);
 
@@ -87,7 +85,7 @@ class AttendanceListPresenter {
   }
 
   List<String> getMonthsList() {
-    return AppYears.shortenedMonthNames(_selectedYear);
+    return AppYears.monthNames(_selectedYear);
   }
 
   String getSelectedMonth() {
@@ -114,23 +112,4 @@ class AttendanceListPresenter {
     }
   }
 
-  Color getPunchInLabelColorForItem(AttendanceListItem attendanceItem) {
-    switch (attendanceItem.status) {
-      case AttendanceStatus.Late:
-        return lateColor;
-      default:
-        return Colors.black;
-    }
-  }
-
-  Color punchOutLabelColorForItem(AttendanceListItem attendanceItem) {
-    switch (attendanceItem.status) {
-      case AttendanceStatus.HalfDay:
-        return lateColor;
-      case AttendanceStatus.Absent:
-        return absentColor;
-      default:
-        return Colors.black;
-    }
-  }
 }

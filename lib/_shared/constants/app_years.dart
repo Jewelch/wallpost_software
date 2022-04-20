@@ -10,8 +10,8 @@ class AppYears {
     return years;
   }
 
-  static List<String> shortenedMonthNames(int year) {
-    List<String> months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  static List<String> monthNames(int year) {
+    List<String> months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     if(year == DateTime.now().year) {
       return months.sublist(0, DateTime.now().month);

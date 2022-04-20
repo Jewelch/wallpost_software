@@ -28,10 +28,16 @@ class TextStyles {
   static get subTitleTextStyle => TextStyle(
         fontSize: 14,
         color: Colors.black,
-      );
+  );
 
   static get labelTextStyle => TextStyle(
         fontSize: 12,
         color: Colors.grey,
       );
+
+  static get thickTextStyle => TextStyle(
+    fontSize: 12,
+    color: Colors.black,
+    fontWeight: FontWeight.w600,
+  );
 }
