@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -39,7 +38,7 @@ class _AttendanceButtonDetailsScreenState
   GoogleMapController? _controller;
   Set<Marker> _markers = {};
   late BitmapDescriptor customIcon;
-  String? _timeString = "10:10";
+  String? _timeString;
   late Timer _currentTimer;
   static const PUNCH_IN_BUTTON_VIEW = 1;
   static const PUNCH_OUT_BUTTON_VIEW = 2;
@@ -53,9 +52,9 @@ class _AttendanceButtonDetailsScreenState
     presenter = AttendancePresenter(this);
     presenter.loadAttendanceDetails();
     presenter.loadAttendanceReport();
-    // _timeString = _formatDateTime(DateTime.now());
-    // _currentTimer =
-    //     Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    _timeString = _formatDateTime(DateTime.now());
+    _currentTimer =
+        Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
   }
 
@@ -390,17 +389,17 @@ class _AttendanceButtonDetailsScreenState
   //       ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/overtime_icon.svg');
   // }
 
-  // void _getTime() {
-  //   final DateTime now = DateTime.now();
-  //   final String formattedDateTime = _formatDateTime(now);
-  //   setState(() {
-  //     _timeString = formattedDateTime;
-  //   });
-  // }
-  //
-  // String _formatDateTime(DateTime dateTime) {
-  //   return DateFormat('hh:mm a').format(dateTime);
-  // }
+  void _getTime() {
+    final DateTime now = DateTime.now();
+    final String formattedDateTime = _formatDateTime(now);
+    setState(() {
+      _timeString = formattedDateTime;
+    });
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return DateFormat('hh:mm a').format(dateTime);
+  }
 
   void _doPunchOut() {
     Alert.showSimpleAlertWithButtons(
