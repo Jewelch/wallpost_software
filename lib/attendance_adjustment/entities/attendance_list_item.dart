@@ -81,6 +81,14 @@ class AttendanceListItem extends JSONInitializable {
     return _convertDateToString(_date);
   }
 
+  String getReadableMonthOfDate() {
+    return _convertDateToMonthString(_date);
+  }
+
+  String getReadableDayOfDate() {
+    return _convertDateToDayString(_date);
+  }
+
   String getPunchInReadableTime() {
     return _convertTimeToString(_punchInTime);
   }
@@ -98,6 +106,17 @@ class AttendanceListItem extends JSONInitializable {
 
   String _convertDateToString(DateTime? date) {
     if (date == null) return '';
-    return DateFormat('dd.MM.yyyy - EEE').format(date);
+    return DateFormat('dd').format(date);
   }
+
+  String _convertDateToMonthString(DateTime? date) {
+    if (date == null) return '';
+    return DateFormat('MMM').format(date);
+  }
+
+  String _convertDateToDayString(DateTime? date) {
+    if (date == null) return '';
+    return  DateFormat('EEEE').format(date);
+  }
+
 }

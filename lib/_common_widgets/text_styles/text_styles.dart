@@ -34,4 +34,10 @@ class TextStyles {
         fontSize: 12,
         color: Colors.grey,
       );
+
+  static get labelTextStyleBold => TextStyle(
+        fontSize: 12,
+        color: Colors.black,
+        fontWeight: FontWeight.w600,
+      );
 }

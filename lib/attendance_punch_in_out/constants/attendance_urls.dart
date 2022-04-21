@@ -2,7 +2,7 @@ import 'package:wallpost/_shared/constants/base_urls.dart';
 
 class AttendanceUrls {
   static String getAttendanceDetailsUrl(String companyId, String employeeId) {
-    return '${BaseUrls.hrUrlV2()}/widget/attendance';
+    return '${BaseUrls.hrUrlV2()}/widget/attendancse';
   }
 
   static String attendanceReportUrl(String companyId, String employeeId, String startDate, String endDate) {
