@@ -31,56 +31,54 @@ class AttendanceListCard extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border.all(color: borderColor,),
             borderRadius: BorderRadiusDirectional.circular(8,)),
-        child: Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        attendanceListItem.getReadableMonthOfDate(),
-                        style: TextStyles.subTitleTextStyle.copyWith(color: Colors.grey),
-                      ),
-                      SizedBox(height: 4,),
-                      Text(
-                        attendanceListItem.getReadableDate(),
-                        style: TextStyles.thickTextStyle.copyWith(color: AppColors.defaultColorDark, fontSize: 16.0,),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        dayAndTime(),
-                        style: TextStyles.thickTextStyle,
-                      ),
-                      SizedBox(height: 4,),
-                      Text(
-                        attendanceListItem.status.toReadableString(),
-                        style: TextStyles.labelTextStyle.copyWith(color: presenter.getStatusColorForItem(attendanceListItem)),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              RoundedIconButton(
-                iconName: 'assets/icons/right_arrow_icon.svg',
-                backgroundColor: Colors.white,
-                iconSize: 24,
-                width: 16,
-                height: 16,
-                iconColor: Colors.blueGrey,
-              ),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      attendanceListItem.getReadableMonthOfDate(),
+                      style: TextStyles.subTitleTextStyle.copyWith(color: Colors.grey),
+                    ),
+                    SizedBox(height: 4,),
+                    Text(
+                      attendanceListItem.getReadableDate(),
+                      style: TextStyles.thickTextStyle.copyWith(color: AppColors.defaultColorDark, fontSize: 16.0,),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      dayAndTime(),
+                      style: TextStyles.thickTextStyle,
+                    ),
+                    SizedBox(height: 4,),
+                    Text(
+                      attendanceListItem.status.toReadableString(),
+                      style: TextStyles.labelTextStyle.copyWith(color: presenter.getStatusColorForItem(attendanceListItem)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            RoundedIconButton(
+              iconName: 'assets/icons/right_arrow_icon.svg',
+              backgroundColor: Colors.white,
+              iconSize: 24,
+              width: 16,
+              height: 16,
+              iconColor: Colors.blueGrey,
+            ),
+          ],
         ),
       ),
     );

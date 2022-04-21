@@ -13,7 +13,7 @@ class AttendanceListLoader extends StatelessWidget {
         shrinkWrap: true,
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(20,20,20,8),
+            padding: EdgeInsets.fromLTRB(20,20,20,16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
