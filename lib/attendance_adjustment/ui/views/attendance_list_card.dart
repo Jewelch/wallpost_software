@@ -22,65 +22,66 @@ class AttendanceListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        padding: EdgeInsets.all(12),
-        decoration:
-            BoxDecoration(border: Border.all(color: borderColor), borderRadius: BorderRadiusDirectional.circular(8)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      attendanceListItem.getReadableMonthOfDate(),
-                      style: TextStyles.subTitleTextStyle.copyWith(color: Colors.grey),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      attendanceListItem.getReadableDate(),
-                      style: TextStyles.labelTextStyleBold.copyWith(
-                        color: AppColors.defaultColorDark,
-                        fontSize: 16.0,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        child: InkWell(
+          onTap: onPressed,
+          child: Ink(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(border: Border.all(color: borderColor), borderRadius: BorderRadiusDirectional.circular(8)),
+            child: Row(
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             children: [
+              Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        attendanceListItem.getReadableMonthOfDate(),
+                        style: TextStyles.subTitleTextStyle.copyWith(color: Colors.grey),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      dayAndTime(),
-                      style: TextStyles.labelTextStyleBold,
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      attendanceListItem.status.toReadableString(),
-                      style: TextStyles.labelTextStyle
-                          .copyWith(color: presenter.getStatusColorForItem(attendanceListItem)),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            RoundedIconButton(
-              iconName: 'assets/icons/right_arrow_icon.svg',
-              backgroundColor: Colors.white,
-              iconSize: 24,
-              width: 16,
-              height: 16,
-              iconColor: Colors.blueGrey,
-            ),
-          ],
-        ),
+                      SizedBox(height: 4),
+                      Text(
+                        attendanceListItem.getReadableDate(),
+                        style: TextStyles.labelTextStyleBold.copyWith(
+                          color: AppColors.defaultColorDark,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        dayAndTime(),
+                        style: TextStyles.labelTextStyleBold,
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        attendanceListItem.status.toReadableString(),
+                        style: TextStyles.labelTextStyle
+                            .copyWith(color: presenter.getStatusColorForItem(attendanceListItem)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              RoundedIconButton(
+                iconName: 'assets/icons/right_arrow_icon.svg',
+                backgroundColor: Colors.white,
+                iconSize: 24,
+                width: 16,
+                height: 16,
+                iconColor: Colors.blueGrey,
+              ),
+            ],
+          ),
       ),
+        ),
     );
   }
 
