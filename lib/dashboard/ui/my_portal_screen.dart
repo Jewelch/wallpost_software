@@ -3,6 +3,7 @@ import 'package:wallpost/_common_widgets/file_picker/file_picker_screen.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_screen.dart';
+import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_button.dart';
 import 'package:wallpost/password_management/ui/views/change_password_screen.dart';
 
 import '../../leave/ui/views/leave_list_screen.dart';
@@ -40,9 +41,9 @@ class MyPortalScreen extends StatelessWidget {
               FlatButton(
                 color: Colors.greenAccent,
                 child: Text('Show file picker'),
-                onPressed: () async{
-                 List files = await FilePickerScreen.present(context);
-                 print(files.length);
+                onPressed: () async {
+                  List files = await FilePickerScreen.present(context);
+                  print(files.length);
                 },
               ),
               FlatButton(
@@ -52,6 +53,7 @@ class MyPortalScreen extends StatelessWidget {
                   ScreenPresenter.present(LeaveListScreen(), context);
                 },
               ),
+              Container(height: 200, margin: EdgeInsets.only(top: 160), child: AttendanceButton()),
             ],
           ),
         ),
