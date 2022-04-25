@@ -86,11 +86,12 @@ class AttendancePresenter {
       _view.showLocationPositions(_attendanceLocation);
       await _getLocationAddress(_attendanceLocation);
     } on LocationServicesDisabledException catch (e) {
-      _view.requestToTurnOnDeviceLocation(e.userReadableMessage, "Please make sure you enable GPS");
+      _view.requestToTurnOnDeviceLocation(e.userReadableMessage, "Location service disabled."
+          "\nTap here to go to location settings");
     }
     on LocationPermissionsDeniedException catch (e) {
       _view.requestToLocationPermissions(true,e.userReadableMessage, "Location permission denied."
-          "Tap here to grant permission");
+          "\nTap here to grant permission");
     } on LocationPermissionsPermanentlyDeniedException catch (e){
       _view.requestToLocationPermissions(false,e.userReadableMessage, "Location permission denied."
           "\nTap here to go to settings");
