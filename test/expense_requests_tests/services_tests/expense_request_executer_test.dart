@@ -177,15 +177,58 @@ main() {
     }
   });
 
+  test('test executing flag is set to true when the service is executed', () async {
+    mockNetworkAdapter.succeed(successfulExecuteResponse);
+
+    _requestExecutor.execute(expenseRequest);
+
+    expect(_requestExecutor.isExecuting, true);
+  });
+
+  test('test executing flag is reset after success', () async {
+    mockNetworkAdapter.succeed(successfulExecuteResponse);
+
+    var _ = await _requestExecutor.execute(expenseRequest);
+
+    expect(_requestExecutor.isExecuting, false);
+  });
+
+  test('test executing flag is reset after failure', () async {
+    mockNetworkAdapter.fail(NetworkFailureException());
+
+    try {
+      var _ = await _requestExecutor.execute(expenseRequest);
+      fail('failed to throw exception');
+    } catch (e) {
+      expect(e is NetworkFailureException, true);
+      expect(_requestExecutor.isExecuting, false);
+    }
+  });
+
   test("success", () async {
     mockNetworkAdapter.succeed(successfulExecuteResponse);
 
-    var res = await _requestExecutor.execute(expenseRequest);
+    var _ = await _requestExecutor.execute(expenseRequest);
 
     var verifyResult = verify(() => fileUploader.upload(any()));
     var verifyResult2 = verify(() => selectedCompanyProvider.getSelectedCompanyForCurrentUser());
     expect(verifyResult.callCount, 1);
     expect(verifyResult2.callCount, 1);
-    expect(res, true);
   });
+
+
+  test('test calling execute while still executing the first call do nothing', () async {
+    mockNetworkAdapter.succeed(successfulExecuteResponse);
+
+    var _ =  _requestExecutor.execute(expenseRequest);
+    _ = _requestExecutor.execute(expenseRequest);
+    _ = _requestExecutor.execute(expenseRequest);
+
+    var verifyResult = verify(() => fileUploader.upload(any()));
+    var verifyResult2 = verify(() => selectedCompanyProvider.getSelectedCompanyForCurrentUser());
+    expect(verifyResult.callCount, 1);
+    expect(verifyResult2.callCount, 1);
+  });
+
+
 }

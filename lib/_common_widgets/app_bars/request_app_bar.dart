@@ -3,14 +3,14 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 
 import 'app_bar_divider.dart';
 
-class RequestsAppBar extends StatelessWidget implements PreferredSizeWidget {
+class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
 
   @override
   final Size preferredSize;
 
-  RequestsAppBar({
+  AppBarWithBackButton({
     required this.title,
   }) : preferredSize = Size.fromHeight(56);
 

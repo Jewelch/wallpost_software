@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/alert/alert.dart';
+import 'package:wallpost/_common_widgets/app_bars/request_app_bar.dart';
 import 'package:wallpost/_common_widgets/file_picker/file_picker_screen.dart';
 import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/_shared/extensions/file_extension.dart';
 import 'package:wallpost/_shared/loadable_widget/loadable_widget.dart';
 import 'package:wallpost/_shared/loadable_widget/widget_status.dart';
 import 'package:wallpost/expense_requests/entities/expense_category.dart';
+import 'package:wallpost/expense_requests/ui/models/expense_request_model.dart';
 import 'package:wallpost/expense_requests/ui/presenters/expense_request_presenter.dart';
 import 'package:wallpost/expense_requests/ui/view_contracts/expense_requests_view.dart';
-import 'package:wallpost/expense_requests/ui/views/widgets/shimmer_effect_expense_request.dart';
-import '../../../../_common_widgets/app_bars/request_app_bar.dart';
-import '../../models/expense_request_model.dart';
+import 'package:wallpost/expense_requests/ui/views/widgets/date_selector.dart';
+import 'package:wallpost/expense_requests/ui/views/widgets/expense_main_category_selector.dart';
+import 'package:wallpost/expense_requests/ui/views/widgets/expense_request_upload_success.dart';
+import 'package:wallpost/expense_requests/ui/views/widgets/header_with_input.dart';
+import 'package:wallpost/expense_requests/ui/views/widgets/expense_request_loader.dart';
 
 class ExpenseRequestScreen extends StatefulWidget {
   @override
@@ -45,78 +50,44 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
       backgroundColor: AppColors.screenBackgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: _getBottomButton(),
-      appBar: RequestsAppBar(title: "Expense Request"),
+      appBar: AppBarWithBackButton(title: "Expense Request"),
       body: ItemNotifiable<WidgetStatus>(
         notifier: _loadingStatusNotifier,
         builder: (_, status) {
           return LoadableWidget(
             status: status!,
-            loadingWidget: ShimmerEffectExpenseRequest(),
-            errorWidget: SizedBox(),
+            loadingWidget: ExpenseRequestLoader(),
+            errorWidget: GestureDetector(
+              onTap: () => _presenter.getCategories(),
+              child: Container(
+                height: 100,
+                child: Text("Ops something went wrong \n\n tap here to retry"),
+              ),
+            ),
             child: ListView(
               padding: EdgeInsets.all(16),
               children: [
-                ..._inputWithHeader(
+                ...headerWithInput(
                   required: true,
                   title: "Date",
-                  child: GestureDetector(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          DateTime.now().yyyyMMddString(),
-                          style: TextStyle(color: AppColors.darkGrey),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            DateTime date = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime.now(),
-                                    lastDate: DateTime.now().add(Duration(days: 600))) ??
-                                DateTime.now();
-                            _expenseRequest.date = date;
-                          },
-                          icon: Icon(
-                            Icons.calendar_today_outlined,
-                            color: AppColors.darkGrey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: DateSelector(onDateSelected: (date) => _expenseRequest.date = date),
                 ),
                 ItemNotifiable<bool>(
                   notifier: _missingCategoryNotifier,
                   builder: (_, isCategoryMissing) => Column(
-                    children: _inputWithHeader(
-                      missingError: isCategoryMissing!,
+                    children: headerWithInput(
+                      showRequiredMessage: isCategoryMissing!,
                       required: true,
                       title: "Select the type of expense",
-                      child: DropdownButton<ExpenseCategory>(
-                        items: _presenter.expenseRequests
-                            .map<DropdownMenuItem<ExpenseCategory>>((category) =>
-                                DropdownMenuItem(value: category, child: Text(category.name)))
-                            .toList(),
+                      child: ExpenseCategorySelector(
+                        items: _presenter.expenseRequests,
                         onChanged: (mainCategory) {
                           _expenseRequest.selectedMainCategory = mainCategory;
                           if (mainCategory != null) {
                             _presenter.selectCategory(mainCategory);
-                            setState(() {});
                           }
                         },
-                        icon: Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: Icon(
-                            Icons.arrow_forward_ios_sharp,
-                            color: AppColors.darkGrey,
-                          ),
-                        ),
-                        alignment: Alignment.centerRight,
                         value: _expenseRequest.selectedMainCategory,
-                        underline: SizedBox(),
-                        isExpanded: true,
-                        style: TextStyle(color: AppColors.darkGrey),
                       ),
                     ),
                   ),
@@ -127,35 +98,16 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                       ? ItemNotifiable<bool>(
                           notifier: _missingSubCategoryNotifier,
                           builder: (_, isSubCategoryMissing) => Column(
-                            children: _inputWithHeader(
-                              missingError: isSubCategoryMissing!,
+                            children: headerWithInput(
+                              showRequiredMessage: isSubCategoryMissing!,
                               required: true,
                               title: "Select the sub type of expense",
-                              child: DropdownButton<ExpenseCategory>(
-                                items: _expenseRequest.selectedMainCategory!.subCategories
-                                    .map<DropdownMenuItem<ExpenseCategory>>(
-                                      (subExpenseCategory) => DropdownMenuItem(
-                                        value: subExpenseCategory,
-                                        child: Text(subExpenseCategory.name),
-                                      ),
-                                    )
-                                    .toList(),
+                              child: ExpenseCategorySelector(
+                                items: _expenseRequest.selectedMainCategory!.subCategories,
                                 onChanged: (subCategory) {
                                   _expenseRequest.selectedSubCategory = subCategory;
-                                  setState(() {});
                                 },
-                                icon: Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: Icon(
-                                    Icons.arrow_forward_ios_sharp,
-                                    color: AppColors.darkGrey,
-                                  ),
-                                ),
-                                alignment: Alignment.centerRight,
                                 value: _expenseRequest.selectedSubCategory,
-                                underline: SizedBox(),
-                                isExpanded: true,
-                                style: TextStyle(color: AppColors.darkGrey),
                               ),
                             ),
                           ),
@@ -169,42 +121,23 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                           ? ItemNotifiable<bool>(
                               notifier: _missingProjectNotifier,
                               builder: (_, isProjectMissing) => Column(
-                                children: _inputWithHeader(
-                                  missingError: isProjectMissing!,
+                                children: headerWithInput(
+                                  showRequiredMessage: isProjectMissing!,
                                   required: true,
                                   title: "Select the project",
-                                  child: DropdownButton<ExpenseCategory>(
-                                    items: _expenseRequest.selectedMainCategory!.projects
-                                        .map<DropdownMenuItem<ExpenseCategory>>(
-                                          (project) => DropdownMenuItem(
-                                            value: project,
-                                            child: Text(project.name),
-                                          ),
-                                        )
-                                        .toList(),
+                                  child: ExpenseCategorySelector(
+                                    items: _expenseRequest.selectedMainCategory!.projects,
                                     onChanged: (project) {
                                       _expenseRequest.selectedProject = project;
-                                      setState(() {});
                                     },
-                                    icon: Padding(
-                                      padding: const EdgeInsets.only(right: 8),
-                                      child: Icon(
-                                        Icons.arrow_forward_ios_sharp,
-                                        color: AppColors.darkGrey,
-                                      ),
-                                    ),
-                                    alignment: Alignment.centerRight,
                                     value: _expenseRequest.selectedProject,
-                                    underline: SizedBox(),
-                                    isExpanded: true,
-                                    style: TextStyle(color: AppColors.darkGrey),
                                   ),
                                 ),
                               ),
                             )
                           : SizedBox();
                     }),
-                ..._inputWithHeader(
+                ...headerWithInput(
                   required: true,
                   title: "Enter the expense amount",
                   child: TextField(
@@ -220,7 +153,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                     },
                   ),
                 ),
-                ..._inputWithHeader(
+                ...headerWithInput(
                   required: true,
                   title: "Enter the total quantity",
                   child: TextField(
@@ -236,7 +169,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                     },
                   ),
                 ),
-                ..._inputWithHeader(
+                ...headerWithInput(
                   title: "Total amount to claim is",
                   child: TextField(
                     decoration: InputDecoration(
@@ -247,7 +180,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                     keyboardType: TextInputType.number,
                   ),
                 ),
-                ..._inputWithHeader(
+                ...headerWithInput(
                   required: true,
                   title: "Upload supporting document",
                   child: Row(
@@ -283,7 +216,6 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
   Widget _getBottomButton() {
     return GestureDetector(
       onTap: () {
-        //TODO: ignore if is in loading
         _presenter.sendExpenseRequest(_expenseRequest);
       },
       child: Container(
@@ -316,51 +248,6 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
         ),
       ),
     );
-  }
-
-  List<Widget> _inputWithHeader({
-    required String title,
-    required Widget child,
-    bool required = false,
-    bool missingError = false,
-  }) {
-    return [
-      Row(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          if (required)
-            Text(
-              "*",
-              style: TextStyle(color: Colors.red),
-            ),
-          if (missingError)
-            Text(
-              "  this field is required",
-              style: TextStyle(color: Colors.red),
-            ),
-        ],
-      ),
-      SizedBox(
-        height: 8,
-      ),
-      Container(
-        decoration:
-            BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(8)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: child,
-        ),
-      ),
-      SizedBox(
-        height: 16,
-      ),
-    ];
   }
 
   // MARK: view functions
@@ -435,8 +322,12 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
   // TODO Ask Obaid
 
   @override
-  void onSendRequestsSuccessfully() {}
+  void onSendRequestsSuccessfully() {
+    ScreenPresenter.present(ExpenseRequestSubmittedSuccessScreen(), context);
+  }
 
   @override
-  void showErrorMessage(String message) {}
+  void showErrorMessage(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
 }

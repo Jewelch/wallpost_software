@@ -15,7 +15,6 @@ class ExpenseRequestModel {
   String get amount => _amount.toString();
   File? file;
 
-  // TODO : ask Obaid about how to calculate
   String get rate => _amount.multiply(quantity).toString();
 
   String get total => "";

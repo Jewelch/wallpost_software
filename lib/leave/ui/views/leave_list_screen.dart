@@ -65,7 +65,7 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
       onTap: () => _presenter.getNext(),
       child: Container(
         height: 100,
-        child: Text("Error. Tap to reload"),
+        child: Text(_presenter.errorMessage),
       ),
     );
   }
@@ -89,7 +89,7 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
                 onTap: () => _presenter.getNext(),
                 child: Container(
                   height: 100,
-                  child: Text("leave list error. Tap to reload"),
+                  child: Text(_presenter.errorMessage),
                 ),
               );
             case LeaveListItemType.EmptySpace:

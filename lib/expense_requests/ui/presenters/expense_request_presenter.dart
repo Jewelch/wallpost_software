@@ -63,7 +63,7 @@ class ExpenseRequestPresenter {
       _view.onSendRequestsSuccessfully();
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.showErrorMessage(e.userReadableMessage);
+      _view.showErrorMessage("Failed to upload expense request", e.userReadableMessage);
     }
   }
 

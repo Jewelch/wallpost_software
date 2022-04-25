@@ -54,7 +54,7 @@ class AppColors {
   static final Color absentColor = getColorFromHex('#FF0000');
   static final Color lateColor = getColorFromHex('#ffa500');
 
-  //requests colors
+  //expense requests colors
   static final Color lightGrey = Colors.grey[100]!;
 
   //MARK: Util function to convert hex string to color

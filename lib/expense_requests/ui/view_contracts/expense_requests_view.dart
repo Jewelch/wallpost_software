@@ -27,7 +27,7 @@ abstract class ExpenseRequestsView {
 
   void hideLoader();
 
-  void showErrorMessage(String message);
+  void showErrorMessage(String title,String message);
 
   void onSendRequestsSuccessfully();
 }

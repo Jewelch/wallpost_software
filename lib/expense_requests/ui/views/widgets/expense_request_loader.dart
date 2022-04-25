@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 import '../../../../_shared/constants/app_colors.dart';
 
-class ShimmerEffectExpenseRequest extends StatelessWidget {
+class ExpenseRequestLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShimmerEffect(

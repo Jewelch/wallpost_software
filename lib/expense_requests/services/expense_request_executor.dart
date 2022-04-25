@@ -12,6 +12,7 @@ class ExpenseRequestExecutor {
   WPFileUploader _fileUploader;
   NetworkAdapter _networkAdapter;
   SelectedCompanyProvider _companyProvider;
+  bool isExecuting = false;
 
   ExpenseRequestExecutor()
       : _networkAdapter = WPAPI(),
@@ -21,11 +22,15 @@ class ExpenseRequestExecutor {
   ExpenseRequestExecutor.initWith(this._networkAdapter, this._fileUploader, this._companyProvider);
 
   Future execute(ExpenseRequestForm expenseRequest) async {
+    if(isExecuting) return;
+    isExecuting = true;
     String url = _prepareUrl();
     try {
       await _uploadFiles(expenseRequest);
-      return await _execute(expenseRequest, url);
+      await _execute(expenseRequest, url);
+      isExecuting = false;
     } on WPException {
+      isExecuting = false;
       rethrow;
     }
   }
