@@ -1,7 +1,5 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
-import 'package:wallpost/attendance_punch_in_out/exception/location_acquisition_failed_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/exception/location_address_failed_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/exception/location_permission_denied_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/exception/location_permission_permanently_denied_exception.dart';
@@ -11,13 +9,11 @@ import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.da
 
 
 class LocationProvider {
-  //Create a new class called Location in entities
-  //catch all errors and return a custom error - eg LocationError() in new package called errors
   late bool serviceEnabled;
-  late LocationPermission permission;
+ late LocationPermission permission;
 
   Future<AttendanceLocation?> getLocation() async {
-    try {
+   // try {
       bool serviceEnabled;
       LocationPermission permission;
 
@@ -45,9 +41,9 @@ class LocationProvider {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       return AttendanceLocation(position.latitude, position.longitude);
-    } catch (e) {
-      throw LocationAcquisitionFailedException();
-    }
+    // } catch (e) {
+    //   throw LocationAcquisitionFailedException();zz
+    // }
 
   }
 
@@ -62,5 +58,4 @@ class LocationProvider {
     }
   }
 }
-// 1. Getting the location - attendance_punch_in_out will not work wihtout this - use get location
-//     2. getlocationaddress - optional
+

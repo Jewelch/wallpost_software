@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
@@ -13,6 +13,7 @@ import 'package:wallpost/attendance_punch_in_out/services/time_to_punch_in_calcu
 import 'package:wallpost/attendance_punch_in_out/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_button_details.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_rectangle_rounded_action_button.dart';
+import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_rectangle_rounded_error_action_button.dart';
 
 import '../view_contracts/attendance_view.dart';
 
@@ -21,18 +22,27 @@ class AttendanceButton extends StatefulWidget {
   State<AttendanceButton> createState() => _AttendanceButtonState();
 }
 
-class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBindingObserver implements AttendanceView {
-  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: DISABLE_VIEW);
+class _AttendanceButtonState extends State<AttendanceButton>
+    with WidgetsBindingObserver
+    implements AttendanceView {
+  final ItemNotifier<int> _viewTypeNotifier =
+      ItemNotifier(defaultValue: DISABLE_VIEW);
   late final AttendancePresenter presenter;
   String? _timeString;
   String _locationAddress = "";
   String? _remainingTimeToPunchInString;
   late Timer _countDownTimer;
   late Timer _currentTimer;
+  var _errorMessage = "";
+  bool _checkingPermission = false;
   static const DISABLE_VIEW = 1;
   static const PUNCH_IN_BUTTON_VIEW = 2;
   static const PUNCH_OUT_BUTTON_VIEW = 3;
   static const LOADER_VIEW = 4;
+  static const ERROR_VIEW = 5;
+  static const LOCATION_ERROR_VIEW = 6;
+  static const PERMISSION_DENIED_ERROR_VIEW = 7;
+  static const PERMISSION_DENIED_FOREVER_ERROR_VIEW = 8;
 
   @override
   void initState() {
@@ -54,8 +64,10 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      presenter.loadAttendanceDetails();
+    if (state == AppLifecycleState.resumed && _checkingPermission) {
+      presenter
+          .loadAttendanceDetails()
+          .then((value) => _checkingPermission = false);
     }
   }
 
@@ -78,6 +90,14 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
                   return _buildPunchInButton();
                 } else if (value == PUNCH_OUT_BUTTON_VIEW) {
                   return _buildPunchOutButton();
+                } else if (value == ERROR_VIEW) {
+                  return _errorAndRetryButton();
+                } else if (value == LOCATION_ERROR_VIEW) {
+                  return _locationErrorAndRetryButton();
+                }else if (value == PERMISSION_DENIED_ERROR_VIEW) {
+                  return _permissionDeniedErrorAndRetryButton();
+                }else if (value == PERMISSION_DENIED_FOREVER_ERROR_VIEW) {
+                  return _permissionDeniedForEverErrorAndRetryButton();
                 }
                 return Container();
               },
@@ -94,7 +114,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       width: MediaQuery.of(context).size.width,
       height: 64,
       decoration: BoxDecoration(
-        color: Colors.purple,
+        color: Colors.grey,
         borderRadius: BorderRadius.all(
           Radius.circular(20.0),
         ),
@@ -108,12 +128,48 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
             child: CircularProgressIndicator(
               strokeWidth: 2,
               backgroundColor: Colors.transparent,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _errorAndRetryButton() {
+    return AttendanceRectangleRoundedErrorActionButton(
+        errorText: _errorMessage,
+        onButtonPressed: () {
+          presenter.loadAttendanceDetails();
+        });
+  }
+
+  Widget _locationErrorAndRetryButton() {
+    return AttendanceRectangleRoundedErrorActionButton(
+        errorText: _errorMessage,
+        onButtonPressed: () {
+          _checkingPermission = true;
+          Geolocator.openLocationSettings();
+        });
+  }
+
+  Widget _permissionDeniedErrorAndRetryButton() {
+    return AttendanceRectangleRoundedErrorActionButton(
+        errorText: _errorMessage,
+        onButtonPressed: () {
+          _checkingPermission = true;
+          presenter.loadAttendanceDetails().then((value) => _checkingPermission=false);
+        });
+  }
+
+  Widget _permissionDeniedForEverErrorAndRetryButton() {
+    return AttendanceRectangleRoundedErrorActionButton(
+        errorText: _errorMessage,
+        onButtonPressed: () {
+          _checkingPermission = true;
+          Geolocator.openAppSettings();
+        });
   }
 
   Widget _buildDisableView() {
@@ -155,7 +211,9 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   Widget _buildPunchInButton() {
     return AttendanceRectangleRoundedActionButton(
       title: "Punch In",
-      subtitle: _locationAddress.length > 20 ? '${_locationAddress.substring(0, 20)}...' : _locationAddress,
+      subtitle: _locationAddress.length > 20
+          ? '${_locationAddress.substring(0, 20)}...'
+          : _locationAddress,
       status: "",
       time: _timeString,
       attendanceButtonColor: AppColors.punchInButtonColor,
@@ -165,7 +223,8 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       },
       onMoreButtonPressed: () {
         _currentTimer.cancel();
-        ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
+        ScreenPresenter.presentAndRemoveAllPreviousScreens(
+            AttendanceButtonDetailsScreen(), context);
       },
     );
   }
@@ -173,7 +232,9 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   Widget _buildPunchOutButton() {
     return AttendanceRectangleRoundedActionButton(
       title: "Punch Out",
-      subtitle: _locationAddress.length > 20 ? '${_locationAddress.substring(0, 20)}...' : _locationAddress,
+      subtitle: _locationAddress.length > 20
+          ? '${_locationAddress.substring(0, 20)}...'
+          : _locationAddress,
       status: "",
       time: _timeString,
       attendanceButtonColor: AppColors.punchOutButtonColor,
@@ -183,7 +244,8 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       },
       onMoreButtonPressed: () {
         _currentTimer.cancel();
-        ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
+        ScreenPresenter.presentAndRemoveAllPreviousScreens(
+            AttendanceButtonDetailsScreen(), context);
       },
     );
   }
@@ -219,7 +281,8 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     _countDownTimer = new Timer.periodic(
       oneSec,
       (Timer timer) {
-        _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(_start.toInt());
+        _remainingTimeToPunchInString =
+            TimeToPunchInCalculator.timeTillPunchIn(_start.toInt());
         if (_start == 0) {
           setState(() {
             timer.cancel();
@@ -247,13 +310,15 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   @override
   void showPunchInButton() {
     _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
-    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    _currentTimer =
+        Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
   }
 
   @override
   void showPunchOutButton() {
     _viewTypeNotifier.notify(PUNCH_OUT_BUTTON_VIEW);
-    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    _currentTimer =
+        Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
   }
 
   @override
@@ -275,29 +340,20 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void requestToTurnOnDeviceLocation(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () {
-          AppSettings.openLocationSettings();
-        });
+    _errorMessage = message;
+    _viewTypeNotifier.notify(LOCATION_ERROR_VIEW);
   }
 
   @override
-  void requestToLocationPermissions(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () {
-          presenter.loadAttendanceDetails();
-        });
-  }
-
-  @override
-  void openAppSettings() {
-    AppSettings.openAppSettings();
+  void requestToLocationPermissions(
+      bool isDenied, String title, String message) {
+    if (isDenied) {
+      _errorMessage = message;
+      _viewTypeNotifier.notify(PERMISSION_DENIED_ERROR_VIEW);
+    } else {
+      _errorMessage = message;
+      _viewTypeNotifier.notify(PERMISSION_DENIED_FOREVER_ERROR_VIEW);
+    }
   }
 
   @override
@@ -323,9 +379,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   void showAttendanceReport(AttendanceReport attendanceReport) {}
 
   @override
-  void doRefresh() {
-    presenter.loadAttendanceDetails();
-  }
+  void doRefresh() {}
 
   @override
   void showError(String title, String message) {
@@ -334,11 +388,13 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void showErrorMessage(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
+    _errorMessage = message;
+    _viewTypeNotifier.notify(ERROR_VIEW);
   }
 
   @override
-  void showAlertToInvalidLocation(bool isForPunchIn, String title, String message) {
+  void showAlertToInvalidLocation(
+      bool isForPunchIn, String title, String message) {
     Alert.showSimpleAlertWithButtons(
       context: context,
       title: title,

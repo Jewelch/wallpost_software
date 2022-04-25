@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
@@ -23,15 +23,20 @@ class AttendanceButtonDetailsScreen extends StatefulWidget {
   const AttendanceButtonDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  _AttendanceButtonDetailsScreenState createState() => _AttendanceButtonDetailsScreenState();
+  _AttendanceButtonDetailsScreenState createState() =>
+      _AttendanceButtonDetailsScreenState();
 }
 
-class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsScreen>
+class _AttendanceButtonDetailsScreenState
+    extends State<AttendanceButtonDetailsScreen>
     with WidgetsBindingObserver
     implements AttendanceView {
-  final ItemNotifier<int> _buttonTypeNotifier = ItemNotifier(defaultValue: PUNCH_IN_BUTTON_VIEW);
-  final ItemNotifier<int> _breakButtonNotifier = ItemNotifier(defaultValue: SHOW_BREAK_BUTTON_VIEW);
-  var _attendanceReportNotifier = ItemNotifier<AttendanceReport?>(defaultValue: null);
+  final ItemNotifier<int> _buttonTypeNotifier =
+      ItemNotifier(defaultValue: PUNCH_IN_BUTTON_VIEW);
+  final ItemNotifier<int> _breakButtonNotifier =
+      ItemNotifier(defaultValue: SHOW_BREAK_BUTTON_VIEW);
+  var _attendanceReportNotifier =
+      ItemNotifier<AttendanceReport?>(defaultValue: null);
   late final AttendancePresenter presenter;
   GoogleMapController? _controller;
   Set<Marker> _markers = {};
@@ -51,13 +56,16 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
     presenter.loadAttendanceDetails();
     presenter.loadAttendanceReport();
     _timeString = _formatDateTime(DateTime.now());
-    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    _currentTimer =
+        Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   void dispose() {
     _currentTimer.cancel();
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
@@ -65,7 +73,8 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      presenter.loadAttendanceDetails();
+      _controller!.setMapStyle("[]");
+        presenter.loadAttendanceDetails();
     }
   }
 
@@ -79,19 +88,25 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
           width: 18,
           height: 18,
         ),
-        onLeadingButtonPressed: () => ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context),
+        onLeadingButtonPressed: () =>
+            ScreenPresenter.presentAndRemoveAllPreviousScreens(
+                MyPortalScreen(), context),
         textButton1: TextButton(
           child: Row(
             children: [
               Text(
                 '${SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name} ',
-                style: TextStyle(color: Color(0xff0096E3), fontSize: 16, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                  color: AppColors.defaultColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700),
               ),
               Icon(Icons.keyboard_arrow_down_outlined, size: 28),
             ],
           ),
           onPressed: () {
-            ScreenPresenter.presentAndRemoveAllPreviousScreens(CompanyListScreen(), context);
+            ScreenPresenter.presentAndRemoveAllPreviousScreens(
+                CompanyListScreen(), context);
           },
         ),
       ),
@@ -297,14 +312,22 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
                         children: [
                           if (attendanceReport.late == 1)
                             Text("${attendanceReport.late} Day",
-                                style: TextStyle(color: Color(0xfff8a632), fontSize: 14, fontWeight: FontWeight.bold)),
-                          if (attendanceReport.late == 0 || attendanceReport.late > 1)
+                                style: TextStyle(
+                                    color: AppColors.attendanceReportLatePunchInDayTextColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold)),
+                          if (attendanceReport.late == 0 ||
+                              attendanceReport.late > 1)
                             Text("${attendanceReport.late} Days",
-                                style: TextStyle(color: Color(0xfff8a632), fontSize: 16, fontWeight: FontWeight.bold)),
+                                style: TextStyle(
+                                    color:AppColors.attendanceReportLatePunchInDayTextColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
                           SizedBox(
                             height: 16,
                           ),
-                          Text("Late Punch In", style: TextStyle(color: Colors.black))
+                          Text("Late Punch In",
+                              style: TextStyle(color: Colors.black))
                         ],
                       ),
                       Column(
@@ -312,17 +335,25 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
                           if (attendanceReport.earlyLeave == 1)
                             Text(
                               "${attendanceReport.earlyLeave} Day",
-                              style: TextStyle(color: Color(0xff222222), fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          if (attendanceReport.earlyLeave == 0 || attendanceReport.earlyLeave > 1)
+                          if (attendanceReport.earlyLeave == 0 ||
+                              attendanceReport.earlyLeave > 1)
                             Text(
                               "${attendanceReport.earlyLeave} Days",
-                              style: TextStyle(color: Color(0xff222222), fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
                           SizedBox(
                             height: 16,
                           ),
-                          Text("Early Punch Out", style: TextStyle(color: Colors.black))
+                          Text("Early Punch Out",
+                              style: TextStyle(color: Colors.black))
                         ],
                       ),
                       Column(
@@ -330,17 +361,25 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
                           if (attendanceReport.absents == 1)
                             Text(
                               "${attendanceReport.absents} Day",
-                              style: TextStyle(color: Color(0xfff8524a), fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  color: AppColors.attendanceReportAbsenceDayTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          if (attendanceReport.absents == 0 || attendanceReport.absents > 1)
+                          if (attendanceReport.absents == 0 ||
+                              attendanceReport.absents > 1)
                             Text(
                               "${attendanceReport.absents} Days",
-                              style: TextStyle(color: Color(0xfff8524a), fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  color: AppColors.attendanceReportAbsenceDayTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
                           SizedBox(
                             height: 16,
                           ),
-                          Text("Absences", style: TextStyle(color: Colors.black))
+                          Text("Absences",
+                              style: TextStyle(color: Colors.black))
                         ],
                       )
                     ],
@@ -350,11 +389,6 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
                 return Container();
             }));
   }
-
-  // void setCustomMarker() async {
-  //   customIcon = await BitmapDescriptor.fromAssetImage(
-  //       ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/overtime_icon.svg');
-  // }
 
   void _getTime() {
     final DateTime now = DateTime.now();
@@ -424,7 +458,8 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
 
   @override
   void showDisabledButton() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(
+        MyPortalScreen(), context);
   }
 
   @override
@@ -435,16 +470,17 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
 
   @override
   void showLocationPositions(AttendanceLocation attendanceLocation) {
-    // setCustomMarker();
-    _controller?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-      target: LatLng(attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble()),
+    _controller
+        ?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
+      target: LatLng(attendanceLocation.latitude.toDouble(),
+          attendanceLocation.longitude.toDouble()),
       zoom: 14.0,
     )));
     setState(() {
       _markers.add(Marker(
-          //  icon: customIcon,
-          markerId: MarkerId('Home'),
-          position: LatLng(attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble())));
+          markerId: MarkerId(''),
+          position: LatLng(attendanceLocation.latitude.toDouble(),
+              attendanceLocation.longitude.toDouble())));
     });
   }
 
@@ -466,28 +502,35 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
         title: title,
         message: message,
         onPressed: () {
-          AppSettings.openLocationSettings();
+          Geolocator.openLocationSettings();
         });
   }
 
   @override
-  void requestToLocationPermissions(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () {
-          presenter.loadAttendanceDetails();
-        });
+  void requestToLocationPermissions(
+      bool isDenied, String title, String message) {
+    if (isDenied) {
+      Alert.showSimpleAlert(
+          context: context,
+          title: title,
+          message: message,
+          onPressed: () {
+            presenter.loadAttendanceDetails();
+          });
+    } else {
+      Alert.showSimpleAlert(
+          context: context,
+          title: title,
+          message: message,
+          onPressed: () {
+            Geolocator.openAppSettings();
+          });
+    }
   }
 
   @override
-  void openAppSettings() {
-    AppSettings.openAppSettings();
-  }
-
-  @override
-  void showAlertToInvalidLocation(bool isForPunchIn, String title, String message) {
+  void showAlertToInvalidLocation(
+      bool isForPunchIn, String title, String message) {
     Alert.showSimpleAlertWithButtons(
       context: context,
       title: title,
@@ -511,6 +554,12 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
 
   @override
   void showErrorMessage(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
+    Alert.showSimpleAlert(
+        context: context,
+        title: title,
+        message: message,
+        onPressed: () {
+          presenter.loadAttendanceDetails();
+        });
   }
 }

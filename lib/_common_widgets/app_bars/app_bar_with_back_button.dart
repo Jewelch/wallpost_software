@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'app_bar_divider.dart';
 
 class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidget {
@@ -50,7 +51,7 @@ class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidge
         borderRadius: BorderRadius.circular(16),
         child: Center(
           child: Container(
-            color: Color(0xff0096e3),
+            color: AppColors.defaultColor,
             child: SizedBox(
               width: 44,
               height: 36,

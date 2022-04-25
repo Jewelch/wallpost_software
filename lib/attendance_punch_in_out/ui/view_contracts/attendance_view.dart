@@ -37,12 +37,7 @@ abstract class AttendanceView {
 
   void requestToTurnOnDeviceLocation(String title, String message);
 
-  void requestToLocationPermissions(String title, String message);
-
-  // The user opted to never again see the permission request dialog for this
-  // app. The only way to change the permission's status now is to let the
-  // user manually enable it in the system settings.
-  void openAppSettings();
+  void requestToLocationPermissions(bool isDenied,String title, String message);
 
   void showErrorMessage(String title, String message);
 

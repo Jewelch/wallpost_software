@@ -76,8 +76,7 @@ class AttendancePresenter {
       }
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.showDisabledButton();
-      _view.showErrorMessage("Loading attendance details failed", e.userReadableMessage);
+      _view.showErrorMessage("Loading attendance details failed", "Failed to load attendance details.\nTap to reload");
     }
   }
 
@@ -88,10 +87,13 @@ class AttendancePresenter {
       await _getLocationAddress(_attendanceLocation);
     } on LocationServicesDisabledException catch (e) {
       _view.requestToTurnOnDeviceLocation(e.userReadableMessage, "Please make sure you enable GPS");
-    } on LocationPermissionsDeniedException catch (e) {
-      _view.requestToLocationPermissions(e.userReadableMessage, "Please allow to access device location");
-    } on LocationPermissionsPermanentlyDeniedException {
-      _view.openAppSettings();
+    }
+    on LocationPermissionsDeniedException catch (e) {
+      _view.requestToLocationPermissions(true,e.userReadableMessage, "Location permission denied."
+          "Tap here to grant permission");
+    } on LocationPermissionsPermanentlyDeniedException catch (e){
+      _view.requestToLocationPermissions(false,e.userReadableMessage, "Location permission denied."
+          "\nTap here to go to settings");
     } on LocationAcquisitionFailedException catch (e) {
       _view.showErrorMessage("Getting location failed", e.userReadableMessage);
     }
@@ -113,15 +115,14 @@ class AttendancePresenter {
         await _loadPunchInDetails();
       } else {
         _view.hideLoader();
-        _view.showDisabledButton();
         _view.hideBreakButton();
-        _view.showError("Punch in from app disabled",
-            "Looks like you are not allowed to punch in from the app. Please contact your HR to resolve this issue.");
+        _view.showErrorMessage("Punch in from app disabled", "Punch in from app disabled,"
+            "Looks like you are not allowed to punch in from the app.\nPlease contact your HR to resolve this issue.");
       }
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.showDisabledButton();
-      _view.showErrorMessage("Failed to load punch in from app permission", e.userReadableMessage);
+     // _view.showDisabledButton();
+      _view.showErrorMessage("", "Failed to load punch in from app permission.\nTap to reload");
     }
   }
 
@@ -140,8 +141,7 @@ class AttendancePresenter {
       }
     } on WPException catch (e) {
       _view.hideLoader();
-      _view.showDisabledButton();
-      _view.showErrorMessage("Failed to load punch in permission", e.userReadableMessage);
+      _view.showErrorMessage("Failed to load punch in permission", "Failed to load punch in permission.\nTap to reload");
     }
   }
 
@@ -152,10 +152,11 @@ class AttendancePresenter {
       _view.showDisabledButton();
       _view.hideBreakButton();
     } else {
-      _showPunchInTime(_attendanceDetails);
+      //_showPunchInTime(_attendanceDetails);
       _view.showPunchOutButton();
-      _isOnBreak(_attendanceDetails);
       await getLocation();
+      _isOnBreak(_attendanceDetails);
+
     }
   }
 
