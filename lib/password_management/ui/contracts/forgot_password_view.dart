@@ -3,6 +3,10 @@ abstract class ForgotPasswordView {
 
   void hideLoader();
 
+  void enableFormInput();
+
+  void disableFormInput();
+
   void notifyInvalidAccountNumber(String message);
 
   void notifyInvalidEmailFormat(String message);

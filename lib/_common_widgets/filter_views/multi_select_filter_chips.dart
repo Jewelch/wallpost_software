@@ -1,12 +1,10 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/filter_views/custom_filter_chip.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class MultiSelectFilterChipsController {
-  _MultiSelectFilterChipsState _state;
+  _MultiSelectFilterChipsState? _state;
 
   void addState(_MultiSelectFilterChipsState state) {
     _state = state;
@@ -14,7 +12,7 @@ class MultiSelectFilterChipsController {
 
   List<int> getSelectedIndices() {
     assert(_isAttached, 'State not attached');
-    return _state._selectedIndices;
+    return _state?._selectedIndices ?? [];
   }
 
   void dispose() => _state = null;
@@ -26,16 +24,16 @@ class MultiSelectFilterChips extends StatefulWidget {
   final List<String> titles;
   final List<int> selectedIndices;
   final bool allowMultipleSelection;
-  final Function(int) onItemSelected;
-  final Function(int) onItemDeselected;
+  final Function(int)? onItemSelected;
+  final Function(int)? onItemDeselected;
   final bool showTrailingButton;
-  final String trailingButtonTitle;
-  final VoidCallback onTrailingButtonPressed;
-  final MultiSelectFilterChipsController controller;
+  final String? trailingButtonTitle;
+  final VoidCallback? onTrailingButtonPressed;
+  final MultiSelectFilterChipsController? controller;
 
   MultiSelectFilterChips({
-    this.titles,
-    this.selectedIndices,
+    required this.titles,
+    required this.selectedIndices,
     this.allowMultipleSelection = false,
     this.onItemSelected,
     this.onItemDeselected,
@@ -51,17 +49,16 @@ class MultiSelectFilterChips extends StatefulWidget {
   }
 
   @override
-  _MultiSelectFilterChipsState createState() =>
-      _MultiSelectFilterChipsState(selectedIndices, controller: controller);
+  _MultiSelectFilterChipsState createState() => _MultiSelectFilterChipsState(selectedIndices, controller: controller);
 }
 
 class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
   List<int> _selectedIndices;
 
-  final MultiSelectFilterChipsController controller;
+  final MultiSelectFilterChipsController? controller;
 
   _MultiSelectFilterChipsState(this._selectedIndices, {this.controller}) {
-    if (controller != null) controller.addState(this);
+    controller?.addState(this);
   }
 
   @override
@@ -73,29 +70,21 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 10.0,
-      runSpacing: 2,
+    return ListView(
+      scrollDirection: Axis.horizontal,
       children: List.generate(
         _getNumberOfItems(),
         (index) {
-          return CustomFilterChip(
-            title: Text(
-                _isItemAtIndexTheTrailingButton(index)
-                    ? widget.trailingButtonTitle
-                    : widget.titles[index],
-                style: _isSelected(index)
-                    ? TextStyles.subTitleTextStyle
-                        .copyWith(color: AppColors.defaultColor)
-                    : TextStyles.subTitleTextStyle),
-            shape: CustomFilterChipShape.roundedRectangle,
-            backgroundColor: _isSelected(index)
-                ? Colors.white
-                : AppColors.primaryContrastColor,
-            borderColor: _isSelected(index)
-                ? AppColors.defaultColor
-                : AppColors.primaryContrastColor,
-            onPressed: _getActionForItemAtIndex(index),
+          return Container(
+            padding: EdgeInsets.only(left: 12, right: index == _getNumberOfItems() - 1 ? 12 : 0),
+            child: CustomFilterChip(
+              title: Text(_isItemAtIndexTheTrailingButton(index) ? widget.trailingButtonTitle! : widget.titles[index],
+                  style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColorDark)),
+              shape: CustomFilterChipShape.roundedRectangle,
+              backgroundColor: AppColors.filtersBackgroundColour,
+              borderColor: _isSelected(index) ? AppColors.defaultColorDark : AppColors.filtersBackgroundColour,
+              onPressed: _getActionForItemAtIndex(index),
+            ),
           );
         },
       ),
@@ -108,11 +97,9 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
 
   VoidCallback _getActionForItemAtIndex(int index) {
     if (_isItemAtIndexTheTrailingButton(index)) {
-      return () => widget.onTrailingButtonPressed();
+      return () => widget.onTrailingButtonPressed?.call();
     } else {
-      return () => _isSelected(index)
-          ? _deselectItemAtIndex(index)
-          : _selectItemAtIndex(index);
+      return () => _isSelected(index) ? _deselectItemAtIndex(index) : _selectItemAtIndex(index);
     }
   }
 
@@ -121,12 +108,12 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
       if (widget.allowMultipleSelection == false) _selectedIndices.clear();
       _selectedIndices.add(index);
     });
-    if (widget.onItemSelected != null) widget.onItemSelected(index);
+    widget.onItemSelected?.call(index);
   }
 
   void _deselectItemAtIndex(int index) {
     setState(() => _selectedIndices.remove(index));
-    if (widget.onItemDeselected != null) widget.onItemDeselected(index);
+    widget.onItemDeselected?.call(index);
   }
 
   //MARK: Util functions

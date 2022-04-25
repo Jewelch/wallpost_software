@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/_common_widgets/app_bars/wp_app_bar.dart';
 import 'package:wallpost/_common_widgets/custom_switch/custom_switch.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/company_core/services/selected_company_provider.dart';
-import 'package:wallpost/expense_requests/ui/views/screens/expense_request_screen.dart';
 
 class RequestsScreen extends StatefulWidget {
   @override
@@ -18,9 +15,6 @@ class _RequestsScreenState extends State<RequestsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: WPAppBar(
-        title: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
-      ),
       body: SafeArea(
         child: Container(
           child: Column(
@@ -60,16 +54,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   () => {
                         // Navigator.pushNamed(context, RouteNames.leaveList)
                       }),
-              buildRequestsButton(
-                  'Expense',
-                  'expense_icon.svg',
-                  () => {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => ExpenseRequestScreen(),
-                          ),
-                        ),
-                      }),
+              buildRequestsButton('Expense', 'expense_icon.svg', () => {}),
               buildRequestsButton('Overtime', 'overtime_icon.svg', () => {}),
               buildRequestsButton('Attendance Adjustment', 'attendance_icon.svg', () => {}),
             ],
@@ -97,7 +82,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
               ),
               Text(
                 buttonTitle,
-                style: TextStyles.largeTitleTextStyle,
+                style: TextStyles.titleTextStyle,
               ),
               Spacer(),
               Padding(

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_adjustment_form.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
-import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/services/adjusted_status_provider.dart';
 import 'package:wallpost/attendance_adjustment/services/attendance_adjustment_submitter.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_adjustment_view.dart';
@@ -16,6 +15,11 @@ class AttendanceAdjustmentPresenter {
   final AdjustedStatusProvider _adjustedStatusProvider;
   final AttendanceAdjustmentSubmitter _adjustmentSubmitter;
   final SelectedEmployeeProvider _selectedEmployeeProvider;
+
+  final Color presentColor = Color.fromRGBO(43, 186, 104, 1.0);
+  final Color absentColor = Colors.red;
+  final Color lateColor = Colors.purple;
+  final Color labelColor = Colors.yellow;
 
   late TimeOfDay _punchInTime = TimeOfDay(hour: 00, minute: 00);
   late TimeOfDay _punchOutTime = TimeOfDay(hour: 00, minute: 00);
@@ -29,8 +33,6 @@ class AttendanceAdjustmentPresenter {
   Color adjustedPunchOutColor = Colors.white;
   late String status = _attendanceListItem.status.toReadableString();
   late Color statusColor = getStatusColor(_attendanceListItem.status);
-
-
 
   AttendanceAdjustmentPresenter(this._view, this._attendanceListItem)
       : _adjustmentSubmitter = AttendanceAdjustmentSubmitter(),
@@ -61,7 +63,7 @@ class AttendanceAdjustmentPresenter {
   //MARK: Function to get adjusted status of attendance_punch_in_out.
 
   Future<void> adjustPunchInTime(TimeOfDay adjustedPunchInTime) async {
-    await _loadAdjustedStatus(adjustedPunchInTime: adjustedPunchInTime,adjustedPunchOutTime: _adjustedPunchOutTime);
+    await _loadAdjustedStatus(adjustedPunchInTime: adjustedPunchInTime, adjustedPunchOutTime: _adjustedPunchOutTime);
 
     //if status was adjusted - set the adjusted time
 
@@ -115,10 +117,6 @@ class AttendanceAdjustmentPresenter {
     }
   }
 
-
-
-
-
   //MARK: Function to submit adjusted attendance_punch_in_out.
 
   Future<void> submitAdjustment(String reason) async {
@@ -164,11 +162,11 @@ class AttendanceAdjustmentPresenter {
 
   //MARK: Getters
 
-  TimeOfDay getPunchInTime(){
+  TimeOfDay getPunchInTime() {
     return _punchInTime;
   }
 
-  TimeOfDay getPunchOutTime(){
+  TimeOfDay getPunchOutTime() {
     return _punchOutTime;
   }
 
@@ -192,22 +190,22 @@ class AttendanceAdjustmentPresenter {
       case AttendanceStatus.NoAction:
       case AttendanceStatus.OnTime:
       case AttendanceStatus.Break:
-        return AppColors.presentColor;
+        return presentColor;
       case AttendanceStatus.Late:
       case AttendanceStatus.HalfDay:
       case AttendanceStatus.EarlyLeave:
-        return AppColors.lateColor;
+        return lateColor;
       case AttendanceStatus.Absent:
-        return AppColors.absentColor;
+        return absentColor;
     }
   }
 
   Color getLabelColorForItem(AttendanceListItem attendanceItem) {
     switch (attendanceItem.status) {
       case AttendanceStatus.Late:
-        return AppColors.lateColor;
+        return lateColor;
       default:
-        return AppColors.labelColor;
+        return labelColor;
     }
   }
 }

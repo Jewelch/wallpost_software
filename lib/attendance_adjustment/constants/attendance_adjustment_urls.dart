@@ -5,7 +5,7 @@ import 'package:wallpost/_shared/extensions/date_extensions.dart';
 class AttendanceAdjustmentUrls {
   static String getAttendanceListsUrl(
       String companyId, String employeeId, int month, int year) {
-    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance_punch_in_out-adjustment?scope=my&perPage=50&employee_id=$employeeId&month=$month&year=$year';
+    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance-adjustment?scope=my&perPage=50&employee_id=$employeeId&month=$month&year=$year';
   }
 
   static String getAdjustedStatusUrl(
@@ -16,7 +16,7 @@ class AttendanceAdjustmentUrls {
     TimeOfDay? adjustedPunchOutTime,
   ) {
     var url =
-        '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance_punch_in_out-adjustment/work_status?';
+        '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance-adjustment/work_status?';
     url += 'date=${date.yyyyMMddString()}';
 
     if (adjustedPunchInTime == null)
@@ -33,6 +33,6 @@ class AttendanceAdjustmentUrls {
   }
 
   static String submitAdjustmentUrl(String companyId, String employeeId) {
-    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance_punch_in_out-adjustment/single';
+    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance-adjustment/single';
   }
 }

@@ -104,6 +104,7 @@ void main() {
       () => view.notifyInvalidConfirmPassword("Please re-enter new password"),
       () => passwordChanger.isLoading,
       () => view.clearErrors(),
+      () => view.disableFormInput(),
       () => view.showLoader(),
       () => passwordChanger.changePassword(any()),
       () => view.hideLoader(),
@@ -125,6 +126,7 @@ void main() {
     verifyInOrder([
       () => passwordChanger.isLoading,
       () => view.clearErrors(),
+      () => view.disableFormInput(),
       () => view.showLoader(),
       () => passwordChanger.changePassword(any()),
       () => view.hideLoader(),
@@ -146,8 +148,10 @@ void main() {
     verifyInOrder([
       () => passwordChanger.isLoading,
       () => view.clearErrors(),
+      () => view.disableFormInput(),
       () => view.showLoader(),
       () => passwordChanger.changePassword(any()),
+      () => view.enableFormInput(),
       () => view.hideLoader(),
       () => view.onChangePasswordFailed("Failed to change password", InvalidResponseException().userReadableMessage),
     ]);

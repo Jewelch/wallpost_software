@@ -40,6 +40,7 @@ void main() {
     verifyInOrder([
       () => view.clearLoginErrors(),
       () => authenticator.isLoading,
+      () => view.disableFormInput(),
       () => view.showLoader(),
       () => authenticator.login(any()),
       () => view.hideLoader(),
@@ -119,8 +120,10 @@ void main() {
     verifyInOrder([
       () => view.clearLoginErrors(),
       () => authenticator.isLoading,
+      () => view.disableFormInput(),
       () => view.showLoader(),
       () => authenticator.login(any()),
+      () => view.enableFormInput(),
       () => view.hideLoader(),
       () => view.onLoginFailed("Login Failed", InvalidResponseException().userReadableMessage),
     ]);

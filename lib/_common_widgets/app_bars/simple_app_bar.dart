@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-
-import 'app_bar_divider.dart';
 
 class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final List<CircularIconButton> leadingButtons;
-  final List<CircularIconButton> trailingButtons;
-  final bool showDivider;
+  final Widget? leadingButton;
+  final Widget? trailingButton;
 
   @override
   final Size preferredSize;
 
   SimpleAppBar({
     required this.title,
-    this.leadingButtons = const [],
-    this.trailingButtons = const [],
-    this.showDivider = false,
+    this.leadingButton,
+    this.trailingButton,
   }) : preferredSize = Size.fromHeight(56);
 
   @override
@@ -25,56 +20,20 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       centerTitle: true,
       titleSpacing: 0,
-      brightness: Brightness.light,
       backgroundColor: Colors.white,
       elevation: 0.0,
-      bottom: showDivider ? AppBarDivider() : null,
-      // Don't show the default leading button
       automaticallyImplyLeading: false,
-      title: Stack(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (leadingButtons != null)
-                Row(children: [
-                  ...[SizedBox(width: 8)],
-                  ..._resizeButtons(leadingButtons),
-                ]),
-              if (trailingButtons != null) Row(children: _resizeButtons(trailingButtons)),
-            ],
-          ),
-          Positioned.fill(
-            child: Center(
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyles.titleTextStyle.copyWith(fontSize: 18.0),
-              ),
-            ),
-          )
+          SizedBox(width: 12),
+          if (leadingButton != null) leadingButton!,
+          if (leadingButton != null) SizedBox(width: 8),
+          Expanded(child: Text(title, style: TextStyles.screenTitleTextStyle)),
+          if (trailingButton != null) SizedBox(width: 8),
+          if (trailingButton != null) trailingButton!,
+          SizedBox(width: 12),
         ],
-      ),
-    );
-  }
-
-  List<Widget> _resizeButtons(List<Widget> buttons) {
-    List<Widget> resizedButtons = [];
-    for (Widget button in buttons) {
-      resizedButtons.add(_constraintWidgetToSize(button));
-      resizedButtons.add(SizedBox(width: 8));
-    }
-    return resizedButtons;
-  }
-
-  Widget _constraintWidgetToSize(Widget widget) {
-    return Container(
-      child: Center(
-        child: SizedBox(
-          width: 32,
-          height: 32,
-          child: widget,
-        ),
       ),
     );
   }

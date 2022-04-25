@@ -7,7 +7,7 @@
 // import 'package:wallpost/company_list/entities/company_list_item.dart';
 // import 'package:wallpost/company_list/services/company_details_provider.dart';
 // import 'package:wallpost/company_list/services/company_list_provider.dart';
-// import 'package:wallpost/company_list/ui/presenters/companies_list_presenter.dart';
+// import 'package:wallpost/company_list/ui/presenters/company_list_presenter.dart';
 // import 'package:wallpost/company_list/ui/view_contracts/company_list_view.dart';
 //
 // import '../../_mocks/mock_company.dart';

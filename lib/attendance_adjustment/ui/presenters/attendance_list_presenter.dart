@@ -5,7 +5,6 @@ import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dar
 import 'package:wallpost/attendance_adjustment/services/attendance_list_provider.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_list_view.dart';
 
-import '../../../_shared/constants/app_colors.dart';
 import '../../../attendance__core/entities/attendance_status.dart';
 
 class AttendanceListPresenter {
@@ -13,17 +12,20 @@ class AttendanceListPresenter {
   final AttendanceListProvider _attendanceListProvider;
   List<AttendanceListItem> _attendanceList = [];
 
+  final Color presentColor = Color.fromRGBO(43, 186, 104, 1.0);
+  final Color absentColor = Colors.red;
+  final Color lateColor = Colors.orangeAccent;
   late int _selectedYear = DateTime.now().year;
-  late String _selectedMonth  = AppYears.shortenedMonthNames(_selectedYear).last;
+  late String _selectedMonth = AppYears.currentAndPastMonthsOfTheCurrentYear(_selectedYear).last;
 
   AttendanceListPresenter(this._view)
       : _attendanceListProvider = AttendanceListProvider(),
         _selectedYear = AppYears.years().first;
 
   AttendanceListPresenter.initWith(
-      this._view,
-      this._attendanceListProvider,
-      )   : _selectedYear = AppYears.years().first;
+    this._view,
+    this._attendanceListProvider,
+  ) : _selectedYear = AppYears.years().first;
 
   //MARK: Function to load the attendance_punch_in_out list
 
@@ -33,14 +35,14 @@ class AttendanceListPresenter {
     _attendanceList.clear();
     _view.showLoader();
     try {
-      var monthNumber = AppYears.shortenedMonthNames(_selectedYear).indexOf((_selectedMonth)) + 1;
+      var monthNumber = AppYears.currentAndPastMonthsOfTheCurrentYear(_selectedYear).indexOf((_selectedMonth)) + 1;
       var attendanceList = await _attendanceListProvider.get(monthNumber, _selectedYear);
       _attendanceList.addAll(attendanceList);
 
       if (_attendanceList.isNotEmpty) {
         _view.showAttendanceList(_attendanceList);
       } else {
-        _view.showNoListMessage("There is no attendance_punch_in_out for $_selectedMonth $_selectedYear.\n\nTap here to reload.");
+        _view.showNoListMessage("There is no attendance for $_selectedMonth $_selectedYear.\n\nTap here to reload.");
       }
       _view.hideLoader();
     } on WPException catch (e) {
@@ -75,7 +77,7 @@ class AttendanceListPresenter {
   }
 
   List<String> getMonthsList() {
-    return AppYears.shortenedMonthNames(_selectedYear);
+    return AppYears.currentAndPastMonthsOfTheCurrentYear(_selectedYear);
   }
 
   String getSelectedMonth() {
@@ -92,33 +94,13 @@ class AttendanceListPresenter {
       case AttendanceStatus.NoAction:
       case AttendanceStatus.OnTime:
       case AttendanceStatus.Break:
-        return AppColors.presentColor;
+        return presentColor;
       case AttendanceStatus.Late:
       case AttendanceStatus.HalfDay:
       case AttendanceStatus.EarlyLeave:
-        return AppColors.lateColor;
+        return lateColor;
       case AttendanceStatus.Absent:
-        return AppColors.absentColor;
-    }
-  }
-
-  Color getPunchInLabelColorForItem(AttendanceListItem attendanceItem) {
-    switch (attendanceItem.status) {
-      case AttendanceStatus.Late:
-        return AppColors.lateColor;
-      default:
-        return Colors.black;
-    }
-  }
-
-  Color punchOutLabelColorForItem(AttendanceListItem attendanceItem) {
-    switch (attendanceItem.status) {
-      case AttendanceStatus.HalfDay:
-        return AppColors.lateColor;
-      case AttendanceStatus.Absent:
-        return AppColors.absentColor;
-      default:
-        return Colors.black;
+        return absentColor;
     }
   }
 }

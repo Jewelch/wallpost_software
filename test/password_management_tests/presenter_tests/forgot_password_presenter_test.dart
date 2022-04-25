@@ -40,6 +40,7 @@ void main() {
     verifyInOrder([
       () => view.clearErrors(),
       () => passwordResetter.isLoading,
+      () => view.disableFormInput(),
       () => view.showLoader(),
       () => passwordResetter.resetPassword(any()),
       () => view.hideLoader(),
@@ -81,6 +82,7 @@ void main() {
       () => view.notifyInvalidEmailFormat("Invalid email format"),
       () => view.clearErrors(),
       () => passwordResetter.isLoading,
+      () => view.disableFormInput(),
       () => view.showLoader(),
       () => passwordResetter.resetPassword(any()),
       () => view.hideLoader(),
@@ -120,8 +122,10 @@ void main() {
     verifyInOrder([
       () => view.clearErrors(),
       () => passwordResetter.isLoading,
+      () => view.disableFormInput(),
       () => view.showLoader(),
       () => passwordResetter.resetPassword(any()),
+      () => view.enableFormInput(),
       () => view.hideLoader(),
       () => view.onResetPasswordFailed("Reset password failed", InvalidResponseException().userReadableMessage),
     ]);

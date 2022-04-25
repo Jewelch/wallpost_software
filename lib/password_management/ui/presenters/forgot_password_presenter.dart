@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/api_exception.dart';
 import 'package:wallpost/password_management/entities/reset_password_form.dart';
 import 'package:wallpost/password_management/services/password_resetter.dart';
 import 'package:wallpost/password_management/ui/contracts/forgot_password_view.dart';
@@ -18,15 +19,21 @@ class ForgotPasswordPresenter {
     if (!_isInputValid(_accountNumber, _email)) return;
     if (_passwordResetter.isLoading) return;
 
+    _view.disableFormInput();
+    _view.showLoader();
     try {
-      _view.showLoader();
       var resetPasswordForm = ResetPasswordForm(_accountNumber, _email);
       await _passwordResetter.resetPassword(resetPasswordForm);
       _view.hideLoader();
       _view.goToSuccessScreen();
     } on WPException catch (e) {
+      _view.enableFormInput();
       _view.hideLoader();
-      _view.onResetPasswordFailed("Reset password failed", e.userReadableMessage);
+      if (e is HTTPException && e.httpCode == 401) {
+        _view.onResetPasswordFailed("Reset password failed", "Invalid account number or email");
+      } else {
+        _view.onResetPasswordFailed("Reset password failed", e.userReadableMessage);
+      }
     }
   }
 

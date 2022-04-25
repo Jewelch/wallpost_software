@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
-import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
 import 'package:wallpost/attendance__core/entities/attendance_status.dart';
+import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
 import 'package:wallpost/attendance_adjustment/services/attendance_list_provider.dart';
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_list_presenter.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_list_view.dart';
@@ -25,7 +23,6 @@ void main() {
 
   var attendanceListItem1 = MockAttendanceListItem();
   var attendanceListItem2 = MockAttendanceListItem();
-  var attendanceListItem3 = MockAttendanceListItem();
   List<AttendanceListItem> _attendanceList = [attendanceListItem1, attendanceListItem2];
 
   void _verifyNoMoreInteractionsOnAllMocks() {
@@ -46,7 +43,7 @@ void main() {
   test('selected month and year is initialized successfully', () async {
     presenter = AttendanceListPresenter.initWith(view, mockAttendanceListProvider);
 
-    expect(presenter.getSelectedMonth(), AppYears.shortenedMonthNames(year)[DateTime.now().month - 1]);
+    expect(presenter.getSelectedMonth(), AppYears.currentAndPastMonthsOfTheCurrentYear(year)[DateTime.now().month - 1]);
     expect(presenter.getSelectedYear(), AppYears.years().first);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -69,7 +66,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('retrieving attendance_punch_in_out list successfully with empty list', () async {
+  test('retrieving attendance list successfully with empty list', () async {
     //given
     when(() => mockAttendanceListProvider.isLoading).thenReturn(false);
     when(() => mockAttendanceListProvider.get(month, year)).thenAnswer((_) => Future.value(List.empty()));
@@ -83,13 +80,13 @@ void main() {
       () => view.showLoader(),
       () => mockAttendanceListProvider.get(month, year),
       () => view.showNoListMessage(
-          "There is no attendance_punch_in_out for ${presenter.getSelectedMonth()} ${presenter.getSelectedYear()}.\n\nTap here to reload."),
+          "There is no attendance for ${presenter.getSelectedMonth()} ${presenter.getSelectedYear()}.\n\nTap here to reload."),
       () => view.hideLoader()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('retrieving attendance_punch_in_out list failure', () async {
+  test('retrieving attendance list failure', () async {
     //given
     when(() => mockAttendanceListProvider.isLoading).thenReturn(false);
     when(() => mockAttendanceListProvider.get(month, year)).thenAnswer(
@@ -110,7 +107,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('refresh the attendance_punch_in_out list', () async {
+  test('refresh the attendance list', () async {
     //given
     when(() => mockAttendanceListProvider.isLoading).thenReturn(false);
     when(() => mockAttendanceListProvider.get(month, year)).thenAnswer((_) => Future.value(_attendanceList));
@@ -150,27 +147,27 @@ void main() {
 
   test('get status color', () {
     when(() => attendanceListItem1.status).thenReturn(AttendanceStatus.Present);
-    when(() => attendanceListItem2.status).thenReturn(AttendanceStatus.Absent);
+    expect(presenter.getStatusColorForItem(attendanceListItem1), presenter.presentColor);
 
-    expect(presenter.getStatusColorForItem(attendanceListItem1), AppColors.presentColor);
-    expect(presenter.getStatusColorForItem(attendanceListItem2), AppColors.absentColor);
-  });
+    when(() => attendanceListItem1.status).thenReturn(AttendanceStatus.NoAction);
+    expect(presenter.getStatusColorForItem(attendanceListItem1), presenter.presentColor);
 
-  test('get punchIn label color', () {
+    when(() => attendanceListItem1.status).thenReturn(AttendanceStatus.OnTime);
+    expect(presenter.getStatusColorForItem(attendanceListItem1), presenter.presentColor);
+
+    when(() => attendanceListItem1.status).thenReturn(AttendanceStatus.Break);
+    expect(presenter.getStatusColorForItem(attendanceListItem1), presenter.presentColor);
+
     when(() => attendanceListItem1.status).thenReturn(AttendanceStatus.Late);
-    when(() => attendanceListItem2.status).thenReturn(AttendanceStatus.Present);
+    expect(presenter.getStatusColorForItem(attendanceListItem1), presenter.lateColor);
 
-    expect(presenter.getPunchInLabelColorForItem(attendanceListItem1), AppColors.lateColor);
-    expect(presenter.getPunchInLabelColorForItem(attendanceListItem2), Colors.black);
-  });
-
-  test('get punchOut label color', () {
     when(() => attendanceListItem1.status).thenReturn(AttendanceStatus.HalfDay);
-    when(() => attendanceListItem2.status).thenReturn(AttendanceStatus.Absent);
-    when(() => attendanceListItem3.status).thenReturn(AttendanceStatus.Present);
+    expect(presenter.getStatusColorForItem(attendanceListItem1), presenter.lateColor);
 
-    expect(presenter.punchOutLabelColorForItem(attendanceListItem1), AppColors.lateColor);
-    expect(presenter.punchOutLabelColorForItem(attendanceListItem2), AppColors.absentColor);
-    expect(presenter.punchOutLabelColorForItem(attendanceListItem3), Colors.black);
+    when(() => attendanceListItem1.status).thenReturn(AttendanceStatus.EarlyLeave);
+    expect(presenter.getStatusColorForItem(attendanceListItem1), presenter.lateColor);
+
+    when(() => attendanceListItem1.status).thenReturn(AttendanceStatus.Absent);
+    expect(presenter.getStatusColorForItem(attendanceListItem1), presenter.absentColor);
   });
 }

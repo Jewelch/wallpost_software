@@ -20,16 +20,4 @@ extension LeaveStatusExtension on LeaveStatus {
       return 'Cancelled';
     }
   }
-
-  Color colorValue() {
-    if (this == LeaveStatus.pendingApproval) {
-      return AppColors.pendingApprovalColor;
-    } else if (this == LeaveStatus.approved) {
-      return AppColors.approvedColor;
-    } else if (this == LeaveStatus.rejected) {
-      return AppColors.rejectedColor;
-    } else {
-      return AppColors.cancelledColor;
-    }
-  }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_back_button.dart';
-import 'package:wallpost/_common_widgets/buttons/circular_icon_button.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
+import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
 import 'package:wallpost/_common_widgets/form_widgets/password_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
-import 'package:wallpost/_common_widgets/loader/loader.dart';
-import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -14,26 +14,29 @@ import 'package:wallpost/password_management/ui/contracts/change_password_view.d
 import 'package:wallpost/password_management/ui/presenters/change_password_presenter.dart';
 import 'package:wallpost/password_management/ui/views/change_password_success_screen.dart';
 
+import '../../../_common_widgets/buttons/rounded_back_button.dart';
+
 class ChangePasswordScreen extends StatefulWidget {
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements ChangePasswordView {
-  var _showLogo = true;
-  late Loader _loader;
   late ChangePasswordPresenter presenter;
-  var _currentPasswordErrorNotifier = ItemNotifier<String>();
-  var _newPasswordErrorNotifier = ItemNotifier<String>();
-  var _confirmPasswordErrorNotifier = ItemNotifier<String>();
+  var _showLogoNotifier = ItemNotifier<bool>(defaultValue: true);
+  var _currentPasswordErrorNotifier = ItemNotifier<String?>(defaultValue: null);
+  var _newPasswordErrorNotifier = ItemNotifier<String?>(defaultValue: null);
+  var _confirmPasswordErrorNotifier = ItemNotifier<String?>(defaultValue: null);
+  var _showLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
+  var _formInputInteractionNotifier = ItemNotifier<bool>(defaultValue: true);
   var _currentPasswordTextController = TextEditingController();
   var _newPasswordTextController = TextEditingController();
   var _confirmPasswordTextController = TextEditingController();
 
   @override
   void initState() {
-    _loader = Loader(context);
     presenter = ChangePasswordPresenter(this);
+    KeyboardVisibilityController().onChange.listen((visibility) => _showLogoNotifier.notify(!visibility));
     super.initState();
   }
 
@@ -45,26 +48,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
         resizeToAvoidBottomInset: true,
         appBar: SimpleAppBar(
           title: 'Change Password',
-          leadingButtons: [CircularBackButton(onPressed: () => Navigator.pop(context))],
-          trailingButtons: [
-            CircularIconButton(
-              iconName: 'assets/icons/check_mark_icon.svg',
-              onPressed: _changePassword,
-            )
-          ],
-          showDivider: true,
+          leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
         ),
         body: Container(
           height: double.infinity,
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 12),
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                profileImageAndNameWidget(),
-                descriptionText(),
+                SizedBox(height: 20),
+                _profileImageAndNameWidget(),
                 SizedBox(height: 12),
+                CurveBottomToTop(),
                 formUI(),
+                _changePasswordButton(),
               ],
             ),
           ),
@@ -73,87 +70,124 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
     );
   }
 
-  Widget profileImageAndNameWidget() {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 100),
-      curve: Curves.easeInOut,
-      height: _showLogo ? 180 : 0,
-      child: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-                border: Border.all(color: AppColors.defaultColor, width: 1), borderRadius: BorderRadius.circular(50)),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: AspectRatio(
-                aspectRatio: 1 / 1,
-                child: ClipOval(
-                  child: FadeInImage.assetNetwork(
-                      fit: BoxFit.cover,
-                      placeholder: "assets/icons/user_image_placeholder.png",
-                      image: presenter.getProfileImage()),
-                ),
+  Widget _profileImageAndNameWidget() {
+    return ItemNotifiable<bool>(
+      notifier: _showLogoNotifier,
+      builder: (context, showLogo) => AnimatedContainer(
+        duration: Duration(milliseconds: 100),
+        curve: Curves.easeInOut,
+        width: double.infinity,
+        child: Center(
+          child: Container(
+            height: showLogo ? 220 : 0,
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.defaultColor, width: 1),
+                        borderRadius: BorderRadius.circular(60)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(60),
+                      child: AspectRatio(
+                        aspectRatio: 1 / 1,
+                        child: ClipOval(
+                          child: FadeInImage.assetNetwork(
+                              fit: BoxFit.cover,
+                              placeholder: "assets/icons/user_image_placeholder.png",
+                              image: presenter.getProfileImage()),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    presenter.getUserName(),
+                    style: TextStyles.titleTextStyle,
+                  ),
+                  SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      'You need to type in your current password to make sure its not someone else trying to access your data',
+                      style: TextStyles.subTitleTextStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
               ),
             ),
           ),
-          Text(
-            presenter.getUserName(),
-            style: TextStyles.titleTextStyle,
-          ),
-        ]),
+        ),
       ),
     );
   }
 
-  Widget descriptionText() {
-    return Container(
-      child: Text(
-          'You need to type in your current password to make sure its not someone else trying to access your data',
-          style: TextStyles.subTitleTextStyle),
+  Widget formUI() {
+    return ItemNotifiable<bool>(
+      notifier: _formInputInteractionNotifier,
+      builder: (context, enableInput) => Container(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: Form(
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 16),
+                ItemNotifiable<String?>(
+                  notifier: _currentPasswordErrorNotifier,
+                  builder: (context, value) => PasswordTextField(
+                    hint: "Current Password",
+                    controller: _currentPasswordTextController,
+                    textInputAction: TextInputAction.next,
+                    errorText: value,
+                    isEnabled: enableInput,
+                  ),
+                ),
+                SizedBox(height: 16),
+                ItemNotifiable<String?>(
+                  notifier: _newPasswordErrorNotifier,
+                  builder: (context, value) => PasswordTextField(
+                    hint: "New Password",
+                    controller: _newPasswordTextController,
+                    textInputAction: TextInputAction.next,
+                    errorText: value,
+                    isEnabled: enableInput,
+                  ),
+                ),
+                SizedBox(height: 16),
+                ItemNotifiable<String?>(
+                  notifier: _confirmPasswordErrorNotifier,
+                  builder: (context, value) => PasswordTextField(
+                    hint: "Confirm New Password",
+                    controller: _confirmPasswordTextController,
+                    textInputAction: TextInputAction.done,
+                    errorText: value,
+                    isEnabled: enableInput,
+                  ),
+                ),
+                SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  Widget formUI() {
-    return Container(
-      child: Form(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              ItemNotifiable<String>(
-                notifier: _currentPasswordErrorNotifier,
-                builder: (context, value) => PasswordTextField(
-                  label: "Current Password",
-                  controller: _currentPasswordTextController,
-                  textInputAction: TextInputAction.next,
-                  errorText: value,
-                  // errorText: value,
-                ),
-              ),
-              SizedBox(height: 10),
-              ItemNotifiable<String>(
-                notifier: _newPasswordErrorNotifier,
-                builder: (context, value) => PasswordTextField(
-                  label: "New Password",
-                  controller: _newPasswordTextController,
-                  textInputAction: TextInputAction.next,
-                  errorText: value,
-                ),
-              ),
-              SizedBox(height: 10),
-              ItemNotifiable<String>(
-                notifier: _confirmPasswordErrorNotifier,
-                builder: (context, value) => PasswordTextField(
-                  label: "Confirm New Password",
-                  controller: _confirmPasswordTextController,
-                  textInputAction: TextInputAction.done,
-                  errorText: value,
-                ),
-              ),
-              SizedBox(height: 10),
-            ],
-          ),
+  Widget _changePasswordButton() {
+    return ItemNotifiable<bool>(
+      notifier: _showLoaderNotifier,
+      builder: (context, showLoader) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: RoundedRectangleActionButton(
+          title: 'Change Password',
+          borderColor: AppColors.defaultColor,
+          onPressed: () => _changePassword(),
+          showLoader: showLoader,
         ),
       ),
     );
@@ -161,19 +195,32 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
 
   void _changePassword() {
     presenter.changePassword(
-        _currentPasswordTextController.text, _newPasswordTextController.text, _confirmPasswordTextController.text);
+      _currentPasswordTextController.text,
+      _newPasswordTextController.text,
+      _confirmPasswordTextController.text,
+    );
   }
 
   //MARK : View functions
 
   @override
   void showLoader() {
-    _loader.showLoadingIndicator("Changing your password...");
+    _showLoaderNotifier.notify(true);
   }
 
   @override
   void hideLoader() {
-    _loader.hideOpenDialog();
+    _showLoaderNotifier.notify(false);
+  }
+
+  @override
+  void enableFormInput() {
+    _formInputInteractionNotifier.notify(true);
+  }
+
+  @override
+  void disableFormInput() {
+    _formInputInteractionNotifier.notify(false);
   }
 
   @override

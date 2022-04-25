@@ -25,6 +25,7 @@ class ChangePasswordPresenter {
     _view.clearErrors();
     if (!_isInputValid(oldPassword, newPassword, confirmPassword)) return;
 
+    _view.disableFormInput();
     _view.showLoader();
     try {
       var changePasswordForm = ChangePasswordForm(oldPassword: oldPassword, newPassword: newPassword);
@@ -32,6 +33,7 @@ class ChangePasswordPresenter {
       _view.hideLoader();
       _view.goToSuccessScreen();
     } on WPException catch (e) {
+      _view.enableFormInput();
       _view.hideLoader();
       _view.onChangePasswordFailed("Failed to change password", e.userReadableMessage);
     }

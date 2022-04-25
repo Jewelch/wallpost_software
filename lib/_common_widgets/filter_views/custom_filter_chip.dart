@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
@@ -10,26 +8,26 @@ enum CustomFilterChipShape {
 
 class CustomFilterChip extends StatelessWidget {
   final Text title;
-  final Widget icon;
+  final Widget? icon;
   final Color backgroundColor;
   final Color borderColor;
   final CustomFilterChipShape shape;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   CustomFilterChip({
-    this.title,
+    required this.title,
     this.icon,
-    Color backgroundColor,
-    this.borderColor,
-    this.shape,
+    Color backgroundColor = AppColors.filtersBackgroundColour,
+    this.borderColor = AppColors.defaultColorDark,
+    this.shape = CustomFilterChipShape.roundedRectangle,
     this.onPressed,
-  }) : this.backgroundColor = backgroundColor ?? AppColors.primaryContrastColor;
+  }) : this.backgroundColor = backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 32,
-      child: RaisedButton(
+      child: MaterialButton(
         child: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,7 +42,7 @@ class CustomFilterChip extends StatelessWidget {
               ),
           ],
         ),
-        color: backgroundColor ?? AppColors.primaryContrastColor,
+        color: backgroundColor,
         shape: _buildBorder(),
         onPressed: onPressed,
         elevation: 0,
@@ -56,14 +54,14 @@ class CustomFilterChip extends StatelessWidget {
 
   ShapeBorder _buildBorder() {
     double borderRadius = 0;
-    if (shape == CustomFilterChipShape.roundedRectangle) borderRadius = 5.0;
+    if (shape == CustomFilterChipShape.roundedRectangle) borderRadius = 16.0;
     if (shape == CustomFilterChipShape.capsule) borderRadius = 100.0;
 
     return RoundedRectangleBorder(
       borderRadius: new BorderRadius.circular(borderRadius),
       side: BorderSide(
-        color: borderColor ?? this.backgroundColor,
-        width: .5,
+        color: borderColor,
+        width: 1,
       ),
     );
   }

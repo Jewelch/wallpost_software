@@ -41,7 +41,7 @@ class ForgotPasswordSuccessScreen extends StatelessWidget {
             ),
             RoundedRectangleActionButton(
               title: 'Go back to login',
-              color: AppColors.successColor,
+              backgroundColor: AppColors.successColor,
               onPressed: () {
                 ScreenPresenter.presentAndRemoveAllPreviousScreens(
                   LoginScreen(),
