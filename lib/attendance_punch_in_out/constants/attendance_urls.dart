@@ -2,9 +2,8 @@ import 'package:wallpost/_shared/constants/base_urls.dart';
 
 class AttendanceUrls {
   static String getAttendanceDetailsUrl(String companyId, String employeeId) {
-    return '${BaseUrls.hrUrlV2()}/widget/attendancse';
+    return '${BaseUrls.hrUrlV2()}/widget/attendance';
   }
-
   static String attendanceReportUrl(String companyId, String employeeId, String startDate, String endDate) {
     return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance_punch_in_out/reportsCountHR?'
         '&scope=MY&date_from=$startDate&date_to=$endDate';
@@ -15,7 +14,7 @@ class AttendanceUrls {
   }
 
   static String punchInNowPermissionProviderUrl(String companyId, String employeeId) {
-    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/inoutrules/is_allowed_punchin?';
+    return '${BaseUrls.hrUrlV2()}/widget/is_allowed_punchin';
   }
 
   static String attendanceLocationValidationUrl(String companyId, String employeeId, bool isPunchingIn) {

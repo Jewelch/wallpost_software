@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
@@ -53,11 +53,13 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
     _timeString = _formatDateTime(DateTime.now());
     _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   void dispose() {
     _currentTimer.cancel();
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
@@ -65,6 +67,7 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
+      _controller!.setMapStyle("[]");
       presenter.loadAttendanceDetails();
     }
   }
@@ -85,7 +88,7 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
             children: [
               Text(
                 '${SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name} ',
-                style: TextStyle(color: Color(0xff0096E3), fontSize: 16, fontWeight: FontWeight.w700),
+                style: TextStyle(color: AppColors.defaultColor, fontSize: 16, fontWeight: FontWeight.w700),
               ),
               Icon(Icons.keyboard_arrow_down_outlined, size: 28),
             ],
@@ -297,10 +300,16 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
                         children: [
                           if (attendanceReport.late == 1)
                             Text("${attendanceReport.late} Day",
-                                style: TextStyle(color: Color(0xfff8a632), fontSize: 14, fontWeight: FontWeight.bold)),
+                                style: TextStyle(
+                                    color: AppColors.attendanceReportLatePunchInDayTextColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold)),
                           if (attendanceReport.late == 0 || attendanceReport.late > 1)
                             Text("${attendanceReport.late} Days",
-                                style: TextStyle(color: Color(0xfff8a632), fontSize: 16, fontWeight: FontWeight.bold)),
+                                style: TextStyle(
+                                    color: AppColors.attendanceReportLatePunchInDayTextColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
                           SizedBox(
                             height: 16,
                           ),
@@ -312,12 +321,12 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
                           if (attendanceReport.earlyLeave == 1)
                             Text(
                               "${attendanceReport.earlyLeave} Day",
-                              style: TextStyle(color: Color(0xff222222), fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           if (attendanceReport.earlyLeave == 0 || attendanceReport.earlyLeave > 1)
                             Text(
                               "${attendanceReport.earlyLeave} Days",
-                              style: TextStyle(color: Color(0xff222222), fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           SizedBox(
                             height: 16,
@@ -330,12 +339,18 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
                           if (attendanceReport.absents == 1)
                             Text(
                               "${attendanceReport.absents} Day",
-                              style: TextStyle(color: Color(0xfff8524a), fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  color: AppColors.attendanceReportAbsenceDayTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
                           if (attendanceReport.absents == 0 || attendanceReport.absents > 1)
                             Text(
                               "${attendanceReport.absents} Days",
-                              style: TextStyle(color: Color(0xfff8524a), fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  color: AppColors.attendanceReportAbsenceDayTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
                           SizedBox(
                             height: 16,
@@ -350,11 +365,6 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
                 return Container();
             }));
   }
-
-  // void setCustomMarker() async {
-  //   customIcon = await BitmapDescriptor.fromAssetImage(
-  //       ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/overtime_icon.svg');
-  // }
 
   void _getTime() {
     final DateTime now = DateTime.now();
@@ -420,10 +430,14 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
   }
 
   @override
+  void showAddress(String address) {
+  }
+
+  @override
   void showPunchOutTime(String time) {}
 
   @override
-  void showDisabledButton() {
+  void showCountDownView(int secondsTillPunchIn) {
     ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context);
   }
 
@@ -435,15 +449,13 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
 
   @override
   void showLocationPositions(AttendanceLocation attendanceLocation) {
-    // setCustomMarker();
     _controller?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
       target: LatLng(attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble()),
       zoom: 14.0,
     )));
     setState(() {
       _markers.add(Marker(
-          //  icon: customIcon,
-          markerId: MarkerId('Home'),
+          markerId: MarkerId(''),
           position: LatLng(attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble())));
     });
   }
@@ -460,30 +472,35 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
   }
 
   @override
-  void requestToTurnOnDeviceLocation(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () {
-          AppSettings.openLocationSettings();
-        });
+  void showRequestToTurnOnGpsView(String message) {
+    // Alert.showSimpleAlert(
+    //     context: context,
+    //     title: title,
+    //     message: message,
+    //     onPressed: () {
+    //       Geolocator.openLocationSettings();
+    //     });
   }
 
   @override
-  void requestToLocationPermissions(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () {
-          presenter.loadAttendanceDetails();
-        });
-  }
-
-  @override
-  void openAppSettings() {
-    AppSettings.openAppSettings();
+  void showRequestToEnableLocationView(String message) {
+    if (false) {
+      // Alert.showSimpleAlert(
+      //     context: context,
+      //     title: title,
+      //     message: message,
+      //     onPressed: () {
+      //       presenter.loadAttendanceDetails();
+      //     });
+    } else {
+      Alert.showSimpleAlert(
+          context: context,
+          title: "title",
+          message: message,
+          onPressed: () {
+            Geolocator.openAppSettings();
+          });
+    }
   }
 
   @override
@@ -510,7 +527,13 @@ class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsS
   }
 
   @override
-  void showErrorMessage(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
+  void showErrorAndRetryView(String title, String message) {
+    Alert.showSimpleAlert(
+        context: context,
+        title: title,
+        message: message,
+        onPressed: () {
+          presenter.loadAttendanceDetails();
+        });
   }
 }

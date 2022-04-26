@@ -53,7 +53,10 @@ class MyPortalScreen extends StatelessWidget {
                   ScreenPresenter.present(LeaveListScreen(), context);
                 },
               ),
-              Container(height: 200, margin: EdgeInsets.only(top: 160), child: AttendanceButton()),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: AttendanceButton(),
+              ),
             ],
           ),
         ),

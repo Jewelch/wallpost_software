@@ -9,6 +9,7 @@ class AttendanceDetails {
   DateTime? _punchInTime;
   DateTime? _punchOutTime;
   List<Break> _breaks = [];
+
   //TODO add attendance_punch_in_out status
 
   AttendanceDetails.fromJson(List<Map<String, dynamic>> jsonMapList) {
@@ -60,6 +61,10 @@ class AttendanceDetails {
     var activeBreak = _getActiveBreak();
     if (activeBreak == null) return null;
     return activeBreak.id;
+  }
+
+  bool get isNotPunchedIn {
+    return _punchInTime == null;
   }
 
   bool get isPunchedIn {

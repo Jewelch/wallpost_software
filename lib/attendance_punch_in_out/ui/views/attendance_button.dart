@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
@@ -22,17 +21,39 @@ class AttendanceButton extends StatefulWidget {
 }
 
 class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBindingObserver implements AttendanceView {
-  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: DISABLE_VIEW);
   late final AttendancePresenter presenter;
+  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: LOADER_VIEW);
+  final ItemNotifier<String> _countDownNotifier = ItemNotifier(defaultValue: "");
+
+  var _errorMessage = "";
+
+  // String _remainingTimeToPunchInString = "";
+
   String? _timeString;
-  String _locationAddress = "";
-  String? _remainingTimeToPunchInString;
   late Timer _countDownTimer;
   late Timer _currentTimer;
-  static const DISABLE_VIEW = 1;
-  static const PUNCH_IN_BUTTON_VIEW = 2;
-  static const PUNCH_OUT_BUTTON_VIEW = 3;
-  static const LOADER_VIEW = 4;
+  String _locationAddress = "";
+
+  /*
+  Types of views
+  1. Loader
+  2. error and retry (includes location soft denial as the presenter will re-initiate the permission approval)
+  3. GPSDisabledView + go to setts
+  4. location denied forever + go to setts
+
+
+  4. Timer view
+  5. punch in
+  6. punch out
+   */
+  static const LOADER_VIEW = 1;
+  static const ERROR_VIEW = 2;
+  static const GPS_DISABLED_VIEW = 3;
+  static const PERMISSION_DENIED_FOREVER_ERROR_VIEW = 4;
+  static const COUNT_DOWN_VIEW = 5;
+
+  static const PUNCH_IN_BUTTON_VIEW = 6;
+  static const PUNCH_OUT_BUTTON_VIEW = 7;
 
   @override
   void initState() {
@@ -54,35 +75,37 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed && presenter.shouldReloadDataWhenAppIsResumed()) {
       presenter.loadAttendanceDetails();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            ItemNotifiable<int>(
-              notifier: _viewTypeNotifier,
-              builder: (context, value) {
-                if (value == LOADER_VIEW) {
-                  return _buildLoader();
-                } else if (value == DISABLE_VIEW) {
-                  return _buildDisableView();
-                } else if (value == PUNCH_IN_BUTTON_VIEW) {
-                  return _buildPunchInButton();
-                } else if (value == PUNCH_OUT_BUTTON_VIEW) {
-                  return _buildPunchOutButton();
-                }
-                return Container();
-              },
-            )
-          ],
+    return Container(
+      height: 64,
+      width: MediaQuery.of(context).size.width,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: ItemNotifiable<int>(
+          notifier: _viewTypeNotifier,
+          builder: (context, viewType) {
+            if (viewType == LOADER_VIEW) return _buildLoader();
+
+            if (viewType == ERROR_VIEW) return _errorAndRetryButton();
+
+            if (viewType == GPS_DISABLED_VIEW) return _enableGpsButton();
+
+            if (viewType == PERMISSION_DENIED_FOREVER_ERROR_VIEW) return _grantLocationPermissionButton();
+
+            if (viewType == COUNT_DOWN_VIEW) return _buildCountDownView();
+
+            if (viewType == PUNCH_IN_BUTTON_VIEW) return _buildPunchInButton();
+
+            if (viewType == PUNCH_OUT_BUTTON_VIEW) return _buildPunchOutButton();
+
+            return Container();
+          },
         ),
       ),
     );
@@ -90,66 +113,60 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   Widget _buildLoader() {
     return Container(
-      margin: EdgeInsets.all(20),
-      width: MediaQuery.of(context).size.width,
-      height: 64,
-      decoration: BoxDecoration(
-        color: Colors.purple,
-        borderRadius: BorderRadius.all(
-          Radius.circular(20.0),
+      color: Colors.red,
+      child: Center(
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          backgroundColor: Colors.transparent,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
         ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              backgroundColor: Colors.transparent,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
-            ),
-          ),
-        ],
       ),
     );
   }
 
-  Widget _buildDisableView() {
-    if (_remainingTimeToPunchInString == null)
-      return Container(
-          margin: EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width,
-          height: 64,
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
-            ),
-          ),
-          child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Loading...To Punch In",
-                style: TextStyle(color: Colors.white),
-              )));
-    return Container(
-        margin: EdgeInsets.all(20),
-        width: MediaQuery.of(context).size.width,
-        height: 64,
-        decoration: BoxDecoration(
-          color: Colors.grey,
-          borderRadius: BorderRadius.all(
-            Radius.circular(20.0),
-          ),
-        ),
-        child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              "$_remainingTimeToPunchInString To Punch In",
-              style: TextStyle(color: Colors.white),
-            )));
+  Widget _errorAndRetryButton() {
+    return _errorButton(
+      title: _errorMessage,
+      onPressed: () => presenter.loadAttendanceDetails(),
+    );
+  }
+
+  Widget _enableGpsButton() {
+    return _errorButton(
+      title: _errorMessage,
+      onPressed: () => presenter.goToLocationSettings(),
+    );
+  }
+
+  Widget _grantLocationPermissionButton() {
+    return _errorButton(
+      title: _errorMessage,
+      onPressed: () => presenter.goToAppSettings(),
+    );
+  }
+
+  Widget _errorButton({required String title, required VoidCallback onPressed}) {
+    return MaterialButton(
+      elevation: 0,
+      highlightElevation: 0,
+      color: Colors.purple,
+      child: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.white),
+      ),
+      onPressed: onPressed,
+    );
+  }
+
+  Widget _buildCountDownView() {
+    return ItemNotifiable(
+      notifier: _countDownNotifier,
+      builder: (context, timeLeft) => Text(
+        "$timeLeft to punch in",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
   }
 
   Widget _buildPunchInButton() {
@@ -205,9 +222,8 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     final DateTime now = DateTime.now();
     final String formattedDateTime = _formatDateTime(now);
     if (this.mounted)
-      setState(() {
-        _timeString = formattedDateTime;
-      });
+      //TODO:
+      _timeString = formattedDateTime;
   }
 
   String _formatDateTime(DateTime dateTime) {
@@ -219,16 +235,13 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     _countDownTimer = new Timer.periodic(
       oneSec,
       (Timer timer) {
-        _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(_start.toInt());
+        //TODO
+        var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(_start.toInt());
         if (_start == 0) {
-          setState(() {
-            timer.cancel();
-            presenter.loadAttendanceDetails();
-          });
+          timer.cancel();
+          presenter.loadAttendanceDetails();
         } else {
-          setState(() {
-            _start--;
-          });
+          _start--;
         }
       },
     );
@@ -256,11 +269,11 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
   }
 
-  @override
-  void showTimeTillPunchIn(num seconds) {
-    _startCountDownTimer(seconds);
-    _viewTypeNotifier.notify(DISABLE_VIEW);
-  }
+  // @override
+  // void showTimeTillPunchIn(num seconds) {
+  //   _startCountDownTimer(seconds);
+  //   _viewTypeNotifier.notify(COUNT_DOWN_VIEW);
+  // }
 
   @override
   void showPunchInTime(String time) {}
@@ -269,35 +282,20 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   void showPunchOutTime(String time) {}
 
   @override
-  void showDisabledButton() {
-    _viewTypeNotifier.notify(DISABLE_VIEW);
+  void showCountDownView(int asdfadf) {
+    _viewTypeNotifier.notify(COUNT_DOWN_VIEW);
   }
 
   @override
-  void requestToTurnOnDeviceLocation(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () {
-          AppSettings.openLocationSettings();
-        });
+  void showRequestToTurnOnGpsView(String message) {
+    _errorMessage = message;
+    _viewTypeNotifier.notify(GPS_DISABLED_VIEW);
   }
 
   @override
-  void requestToLocationPermissions(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () {
-          presenter.loadAttendanceDetails();
-        });
-  }
-
-  @override
-  void openAppSettings() {
-    AppSettings.openAppSettings();
+  void showRequestToEnableLocationView(String message) {
+    _errorMessage = message;
+    _viewTypeNotifier.notify(PERMISSION_DENIED_FOREVER_ERROR_VIEW);
   }
 
   @override
@@ -313,28 +311,22 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   void showLocationPositions(AttendanceLocation attendanceLocation) {}
 
   @override
-  void showLocationAddress(String address) {
-    setState(() {
-      _locationAddress = address;
-    });
+  void showAddress(String address) {
+    // setState(() {
+    _locationAddress = address;
+    // });
   }
 
   @override
   void showAttendanceReport(AttendanceReport attendanceReport) {}
 
   @override
-  void doRefresh() {
-    presenter.loadAttendanceDetails();
-  }
+  void doRefresh() {}
 
   @override
-  void showError(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void showErrorMessage(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
+  void showErrorAndRetryView(String title, String message) {
+    _errorMessage = message;
+    _viewTypeNotifier.notify(ERROR_VIEW);
   }
 
   @override
