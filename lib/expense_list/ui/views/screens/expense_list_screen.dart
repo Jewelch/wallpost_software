@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/app_bars/request_app_bar.dart';
-import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
+import 'package:notifiable/item_notifiable.dart';
+import 'package:wallpost/_common_widgets/app_bars/app_bar_with_title.dart';
 import 'package:wallpost/expense_list/ui/models/expense_list_item_type.dart';
 import 'package:wallpost/expense_list/ui/presenters/expense_list_presenter.dart';
 import 'package:wallpost/expense_list/ui/view_contracts/expense_list_view.dart';
@@ -16,7 +16,7 @@ class ExpenseListScreen extends StatefulWidget {
 
 class _ExpenseListScreenState extends State<ExpenseListScreen> implements ExpenseListView {
   late ExpenseListPresenter _presenter;
-  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier();
+  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: 1);
   final _scrollController = ScrollController();
   final int viewTypeLoader = 1;
   final int viewTypeError = 2;

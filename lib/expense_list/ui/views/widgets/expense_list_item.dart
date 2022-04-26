@@ -15,7 +15,7 @@ class ExpenseListItem extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           width: 2,
-          color: AppColors.primaryContrastColor,
+          color: AppColors.defaultColorDarkContrastColor,
         ),
       ),
       child: Column(
@@ -38,7 +38,7 @@ class ExpenseListItem extends StatelessWidget {
                 children: [
                   Text(
                     "QAR",
-                    style: TextStyle(fontSize: 14, color: AppColors.labelColor),
+                    style: TextStyle(fontSize: 14, color: AppColors.locationAddressTextColor),
                   ),
                   Text(
                     " 3500",
@@ -57,13 +57,13 @@ class ExpenseListItem extends StatelessWidget {
                     Text(
                       "Request No -",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.labelColor),
+                          fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.locationAddressTextColor),
                       overflow: TextOverflow.ellipsis,
                     ),
                     Expanded(
                       child: Text(
                         " 19/00072",
-                        style: TextStyle(fontSize: 14, color: AppColors.labelColor),
+                        style: TextStyle(fontSize: 14, color: AppColors.locationAddressTextColor),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -75,12 +75,12 @@ class ExpenseListItem extends StatelessWidget {
                   Text(
                     "Date -",
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.labelColor),
+                        fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.locationAddressTextColor),
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     " 12 Dec 2021",
-                    style: TextStyle(fontSize: 14, color: AppColors.labelColor),
+                    style: TextStyle(fontSize: 14, color: AppColors.locationAddressTextColor),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
@@ -96,13 +96,13 @@ class ExpenseListItem extends StatelessWidget {
                     Text(
                       "Request by -",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.labelColor),
+                          fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.locationAddressTextColor),
                       overflow: TextOverflow.ellipsis,
                     ),
                     Expanded(
                       child: Text(
                         " Abdelrahman mohamed hassan mohamed",
-                        style: TextStyle(fontSize: 14, color: AppColors.labelColor),
+                        style: TextStyle(fontSize: 14, color: AppColors.locationAddressTextColor),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -116,12 +116,12 @@ class ExpenseListItem extends StatelessWidget {
               //   ],
               // ),
               // IconButton(onPressed: () {}, icon:
-              Icon(Icons.arrow_forward_ios_sharp,color: AppColors.labelColor,size: 16,)
+              Icon(Icons.arrow_forward_ios_sharp,color: AppColors.locationAddressTextColor,size: 16,)
               // )
 
             ],
           ),
-          Text("Approved",style: TextStyle(color: AppColors.pendingApprovalColor),)
+          Text("Approved",)
         ],
       ),
     );

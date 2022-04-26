@@ -102,6 +102,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
     } catch (e) {
       //ignore: usually, error is not thrown
     }
+    return null;
   }
 
   void _addFiles(List<File>? newFiles) {

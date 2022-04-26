@@ -35,4 +35,7 @@ class AppColors {
   static final Color resumeButtonColor = Color.fromRGBO(37, 208, 110, 1.0);
   static final Color locationAddressTextColor = Color.fromRGBO(217, 217, 217, 1.0);
   static final Color attendanceStatusColor = Color.fromRGBO(217, 217, 217, 1.0);
+
+  //expense requests colors
+  static final Color darkGrey = Color.fromRGBO(100, 100, 100, 1.0);
 }

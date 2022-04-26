@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/app_bars/request_app_bar.dart';
+import 'package:wallpost/_common_widgets/app_bars/app_bar_with_title.dart';
 import 'package:wallpost/_common_widgets/file_picker/file_picker_screen.dart';
-import 'package:wallpost/_common_widgets/notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/file_extension.dart';
@@ -25,13 +25,13 @@ class ExpenseRequestScreen extends StatefulWidget {
 
 class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
     implements ExpenseRequestsView {
-  final ItemNotifier<WidgetStatus> _loadingStatusNotifier = ItemNotifier(WidgetStatus.loading);
-  final ItemNotifier<bool> _subCategoriesNotifier = ItemNotifier(false);
-  final ItemNotifier<bool> _projectsNotifier = ItemNotifier(false);
-  final ItemNotifier<bool> _missingCategoryNotifier = ItemNotifier(false);
-  final ItemNotifier<bool> _missingSubCategoryNotifier = ItemNotifier(false);
-  final ItemNotifier<bool> _missingProjectNotifier = ItemNotifier(false);
-  final ItemNotifier<bool> _showLoaderNotifier = ItemNotifier(false);
+  final ItemNotifier<WidgetStatus> _loadingStatusNotifier = ItemNotifier(defaultValue: WidgetStatus.loading);
+  final ItemNotifier<bool> _subCategoriesNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _projectsNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _missingCategoryNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _missingSubCategoryNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _missingProjectNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _showLoaderNotifier = ItemNotifier(defaultValue: false);
 
   final _expenseRequest = ExpenseRequestModel();
 
@@ -55,7 +55,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
         notifier: _loadingStatusNotifier,
         builder: (_, status) {
           return LoadableWidget(
-            status: status!,
+            status: status,
             loadingWidget: ExpenseRequestLoader(),
             errorWidget: GestureDetector(
               onTap: () => _presenter.getCategories(),
@@ -76,7 +76,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                   notifier: _missingCategoryNotifier,
                   builder: (_, isCategoryMissing) => Column(
                     children: headerWithInput(
-                      showRequiredMessage: isCategoryMissing!,
+                      showRequiredMessage: isCategoryMissing,
                       required: true,
                       title: "Select the type of expense",
                       child: ExpenseCategorySelector(
@@ -94,12 +94,12 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                 ),
                 ItemNotifiable<bool>(
                   notifier: _subCategoriesNotifier,
-                  builder: (_, hasSubCategory) => hasSubCategory!
+                  builder: (_, hasSubCategory) => hasSubCategory
                       ? ItemNotifiable<bool>(
                           notifier: _missingSubCategoryNotifier,
                           builder: (_, isSubCategoryMissing) => Column(
                             children: headerWithInput(
-                              showRequiredMessage: isSubCategoryMissing!,
+                              showRequiredMessage: isSubCategoryMissing,
                               required: true,
                               title: "Select the sub type of expense",
                               child: ExpenseCategorySelector(
@@ -117,12 +117,12 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                 ItemNotifiable<bool>(
                     notifier: _projectsNotifier,
                     builder: (_, hasProject) {
-                      return hasProject!
+                      return hasProject
                           ? ItemNotifiable<bool>(
                               notifier: _missingProjectNotifier,
                               builder: (_, isProjectMissing) => Column(
                                 children: headerWithInput(
-                                  showRequiredMessage: isProjectMissing!,
+                                  showRequiredMessage: isProjectMissing,
                                   required: true,
                                   title: "Select the project",
                                   child: ExpenseCategorySelector(
@@ -220,14 +220,14 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
       },
       child: Container(
         decoration:
-            BoxDecoration(color: AppColors.presentColor, borderRadius: BorderRadius.circular(8)),
+            BoxDecoration(color: AppColors.punchInButtonColor, borderRadius: BorderRadius.circular(8)),
         margin: EdgeInsets.symmetric(horizontal: 20),
         width: MediaQuery.of(context).size.width,
         height: 40,
         child: ItemNotifiable<bool>(
           notifier: _showLoaderNotifier,
           builder: (_, isLoading) => Center(
-            child: isLoading!
+            child: isLoading
                 ? SizedBox(
                     width: 20,
                     height: 20,

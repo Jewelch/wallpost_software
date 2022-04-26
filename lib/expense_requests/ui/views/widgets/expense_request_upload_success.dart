@@ -39,7 +39,7 @@ class ExpenseRequestSubmittedSuccessScreen extends StatelessWidget {
             ),
             RoundedRectangleActionButton(
               title: 'Go back',
-              color: AppColors.successColor,
+              backgroundColor: AppColors.successColor,
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.of(context).push(

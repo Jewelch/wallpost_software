@@ -21,7 +21,7 @@ class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidge
       backgroundColor: Colors.white,
       title: Text(
         title,
-        style: TextStyle(color: AppColors.darkBlue, fontWeight: FontWeight.bold),
+        style: TextStyle(color: AppColors.defaultColorDark, fontWeight: FontWeight.bold),
       ),
       centerTitle: false,
       leading: Center(
@@ -30,11 +30,11 @@ class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidge
           height: 28,
           constraints: BoxConstraints(maxHeight: 28, maxWidth: 36),
           decoration:
-          BoxDecoration(color: AppColors.lightBlue, borderRadius: BorderRadius.circular(12)),
+          BoxDecoration(color: AppColors.defaultColor, borderRadius: BorderRadius.circular(12)),
           alignment: Alignment.center,
           child: Icon(
             Icons.arrow_back_ios_outlined,
-            color: AppColors.primaryContrastColor,
+            color: AppColors.textFieldBackgroundColor,
             size: 12,
           ),
         ),

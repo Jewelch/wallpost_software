@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
-import '../../../../_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class ExpenseRequestLoader extends StatelessWidget {
   @override
@@ -28,7 +28,7 @@ List<Widget> shimmerInputWithHeader() {
       children: [
         Container(
           decoration: BoxDecoration(
-              color: AppColors.primaryContrastColor, borderRadius: BorderRadius.circular(10)),
+              color: AppColors.shimmerColor, borderRadius: BorderRadius.circular(10)),
           height: 28,
           width: 160,
           constraints: BoxConstraints(maxWidth: 160, maxHeight: 28, minWidth: 8),
@@ -42,7 +42,7 @@ List<Widget> shimmerInputWithHeader() {
     Container(
       height: 80,
       constraints: BoxConstraints(maxWidth: 64, maxHeight: 40, minWidth: 8),
-      decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: AppColors.attendanceStatusColor, borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
       ),

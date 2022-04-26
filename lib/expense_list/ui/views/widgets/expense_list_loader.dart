@@ -12,30 +12,30 @@ class ExpenseListLoader extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.all(20),
         children: [
-          container(height: 40, padding: 0,margin: 0),
+          shimmerContainer(height: 40, padding: 0,margin: 0),
           SizedBox(height: 12),
-          container(),
-          container(),
-          container(),
-          container(),
-          container(),
-          container(),
-          container(),
-          container(),
-          container(),
+          shimmerContainer(),
+          shimmerContainer(),
+          shimmerContainer(),
+          shimmerContainer(),
+          shimmerContainer(),
+          shimmerContainer(),
+          shimmerContainer(),
+          shimmerContainer(),
+          shimmerContainer(),
         ],
       ),
     );
   }
 
-  container({double height = 120, double padding = 8, double margin = 8}) {
+  shimmerContainer({double height = 120, double padding = 8, double margin = 8}) {
     return Container(
       height: height,
       margin: EdgeInsets.symmetric(vertical: margin),
       padding: EdgeInsets.symmetric(horizontal: padding),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.primaryContrastColor,
+          color: AppColors.shimmerColor,
           borderRadius: BorderRadius.circular(8),
         ),
 
