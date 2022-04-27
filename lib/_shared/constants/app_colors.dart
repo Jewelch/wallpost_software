@@ -38,4 +38,7 @@ class AppColors {
 
   static final Color attendanceReportLatePunchInDayTextColor = Color.fromRGBO(255, 248, 166, 0.20);
   static final Color attendanceReportAbsenceDayTextColor = Color.fromRGBO(255, 248, 82, 0.29);
+
+  //expense requests colors
+  static final Color darkGrey = Color.fromRGBO(100, 100, 100, 1.0);
 }

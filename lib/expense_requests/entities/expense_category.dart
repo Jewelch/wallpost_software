@@ -22,7 +22,7 @@ class ExpenseCategory extends JSONInitializable {
 
   List<ExpenseCategory> _readSubCategories(Map<String, dynamic> jsonMap) {
     return Sift()
-        .readMapListFromMapWithDefaultValue(jsonMap, 'sub_categories', [])!
+        .readMapListFromMapWithDefaultValue(jsonMap, 'subCatagories', [])!
         .map((e) => ExpenseCategory.fromJson(e))
         .toList();
   }

@@ -1,6 +1,5 @@
-import 'package:wallpost/expense_requests/entities/expense_category.dart';
-
-var expenseCategoriesListResponse = [
+// TODO : get real response
+var expenseRequestsListResponse = [
   {
     "id": 1,
     "name": "Camp Expense",
@@ -35,9 +34,3 @@ var expenseCategoriesListResponse = [
     ]
   },
 ];
-var validExpenseCategoryMap = expenseCategoriesListResponse[0];
-
-var unValidExpenseCategoryMap = <String, dynamic>{};
-
-var mockExpenseCategories =
-    expenseCategoriesListResponse.map((e) => ExpenseCategory.fromJson(e)).toList();

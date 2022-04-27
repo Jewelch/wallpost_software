@@ -3,27 +3,32 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
-import 'package:wallpost/expense_requests/constants/expense_requests_urls.dart';
-import 'package:wallpost/expense_requests/entities/expense_category.dart';
+import 'package:wallpost/expense_list/constants/expense_list_urls.dart';
+import 'package:wallpost/expense_list/entities/expense_request.dart';
 
 
-class ExpenseCategoriesProvider {
+class ExpenseRequestsProvider {
   final NetworkAdapter _networkAdapter;
-  late String _sessionId;
   SelectedCompanyProvider _selectedCompanyProvider;
+  late String _sessionId;
+  final int _perPage = 15;
+  int _pageNumber = 1;
+  bool _didReachListEnd = false;
 
   bool isLoading = false;
 
-  ExpenseCategoriesProvider()
+  ExpenseRequestsProvider()
       : _networkAdapter = WPAPI(),
         _selectedCompanyProvider = SelectedCompanyProvider();
 
-  ExpenseCategoriesProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
+  ExpenseRequestsProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
-  Future<List<ExpenseCategory>> get() async {
+  // MARK: functions to get expense requests
+
+  Future<List<ExpenseRequest>> getNext() async {
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = ExpenseRequestsUrls.getExpenseCategoriesUrl(companyId);
+    var url = ExpenseListUrls.getEmployeeExpenses(companyId);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
     try {
@@ -36,10 +41,10 @@ class ExpenseCategoriesProvider {
     }
   }
 
-  Future<List<ExpenseCategory>> _processResponse(APIResponse apiResponse) async {
+  Future<List<ExpenseRequest>> _processResponse(APIResponse apiResponse) async {
     //returning empty list if the response is from another session
     if (apiResponse.apiRequest.requestId != _sessionId)
-      return Completer<List<ExpenseCategory>>().future;
+      return Completer<List<ExpenseRequest>>().future;
 
     if (apiResponse.data == null) throw InvalidResponseException();
 
@@ -49,16 +54,41 @@ class ExpenseCategoriesProvider {
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<ExpenseCategory> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<ExpenseRequest> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var categories = <ExpenseCategory>[];
+      var requests = <ExpenseRequest>[];
       for (var responseMap in responseMapList) {
-        var item = ExpenseCategory.fromJson(responseMap);
-        categories.add(item);
+        var item = ExpenseRequest.fromJson(responseMap);
+        requests.add(item);
       }
-      return categories;
+      _updatePaginationRelatedData(requests.length);
+      return requests;
     } catch (e) {
       throw InvalidResponseException();
     }
+  }
+
+  // MARK: functions to handle pagination
+
+  void _updatePaginationRelatedData(int noOfItemsReceived) {
+    if (noOfItemsReceived > 0) {
+      _pageNumber += 1;
+    }
+    if (noOfItemsReceived < _perPage) {
+      _didReachListEnd = true;
+    }
+  }
+
+  int getCurrentPageNumber() {
+    return _pageNumber;
+  }
+
+  bool get didReachListEnd => _didReachListEnd;
+
+  void reset() {
+    _pageNumber = 1;
+    _didReachListEnd = false;
+    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+    isLoading = false;
   }
 }
