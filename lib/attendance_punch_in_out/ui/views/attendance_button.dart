@@ -172,7 +172,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   Widget _buildPunchInButton() {
     return AttendanceRectangleRoundedActionButton(
       title: "Punch In",
-      subtitle: _locationAddress.length > 20 ? '${_locationAddress.substring(0, 20)}...' : _locationAddress,
+      locationAddress: _locationAddress.length > 20 ? '${_locationAddress.substring(0, 20)}...' : _locationAddress,
       status: "",
       time: _timeString,
       attendanceButtonColor: AppColors.punchInButtonColor,
@@ -190,7 +190,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   Widget _buildPunchOutButton() {
     return AttendanceRectangleRoundedActionButton(
       title: "Punch Out",
-      subtitle: _locationAddress.length > 20 ? '${_locationAddress.substring(0, 20)}...' : _locationAddress,
+      locationAddress: _locationAddress.length > 20 ? '${_locationAddress.substring(0, 20)}...' : _locationAddress,
       status: "",
       time: _timeString,
       attendanceButtonColor: AppColors.punchOutButtonColor,
@@ -312,9 +312,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void showAddress(String address) {
-    // setState(() {
     _locationAddress = address;
-    // });
   }
 
   @override

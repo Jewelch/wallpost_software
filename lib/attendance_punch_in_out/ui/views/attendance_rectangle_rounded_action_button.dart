@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class AttendanceRectangleRoundedActionButton extends StatelessWidget {
   final String? title;
-  final String? subtitle;
+  final String? locationAddress;
   final String? time;
   final String? status;
   final Color? attendanceButtonColor;
@@ -14,7 +14,7 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
 
   AttendanceRectangleRoundedActionButton({
     required this.title,
-    required this.subtitle,
+    required this.locationAddress,
     required this.time,
     this.status,
     required this.attendanceButtonColor,
@@ -44,7 +44,8 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
                 children: [
                   SizedBox(width: 20),
                   Icon(Icons.arrow_upward, size: 20, color: Colors.white),
-                  Text(" More", style: TextStyles.subTitleTextStyle.copyWith(color: Colors.white)),
+                  Text(" More",
+                      style: TextStyles.subTitleTextStyle.copyWith(color: Colors.white)),
                 ],
               ),
               onPressed: onMoreButtonPressed,
@@ -73,7 +74,8 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
                   SizedBox(
                     height: 2,
                   ),
-                  Text(subtitle!,
+                  Text(
+                      locationAddress!,
                       style: TextStyles.subTitleTextStyle.copyWith(color:AppColors.attendanceButtonSubTextColor)
                   )
                 ],
