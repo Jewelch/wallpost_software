@@ -73,20 +73,25 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
                   SizedBox(
                     height: 2,
                   ),
-                  Text(subtitle!, style: TextStyle(fontSize: 12, color: AppColors.locationAddressTextColor))
+                  Text(subtitle!,
+                      style: TextStyles.subTitleTextStyle.copyWith(color:AppColors.attendanceButtonSubTextColor)
+                  )
                 ],
               ),
               Column(
                 children: [
-                  //  Text( _timeString!,
-                  Text(time!, style: TextStyle(fontSize: 16, color: Colors.white)),
+                  Text(time!,
+                       style: TextStyles.titleTextStyle.copyWith(color: Colors.white)
+                  ),
                   SizedBox(
                     height: 2,
                   ),
 
                   if (status == null) Text(""),
                   if (status != null)
-                    Text(status!, style: TextStyle(fontSize: 12, color: AppColors.attendanceStatusColor))
+                    Text(status!,
+                        style: TextStyles.subTitleTextStyle.copyWith(color:AppColors.attendanceButtonSubTextColor)
+                    )
                 ],
               ),
             ]),
