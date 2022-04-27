@@ -9,11 +9,7 @@ class AttendanceUrls {
         '&scope=MY&date_from=$startDate&date_to=$endDate';
   }
 
-  static String punchInFromAppPermissionProviderUrl(String companyId, String employeeId) {
-    return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance_punch_in_out/punchInAllowedFromApp?';
-  }
-
-  static String punchInNowPermissionProviderUrl(String companyId, String employeeId) {
+  static String attendancePermissionsUrl(String companyId, String employeeId) {
     return '${BaseUrls.hrUrlV2()}/widget/is_allowed_punchin';
   }
 

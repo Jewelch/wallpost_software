@@ -12,12 +12,12 @@ import 'package:wallpost/attendance_punch_in_out/services/attendance_report_prov
 import 'package:wallpost/attendance_punch_in_out/services/break_end_marker.dart';
 import 'package:wallpost/attendance_punch_in_out/services/break_start_marker.dart';
 import 'package:wallpost/attendance_punch_in_out/services/location_provider.dart';
-import 'package:wallpost/attendance_punch_in_out/services/punch_in_from_app_permission_provider.dart';
 import 'package:wallpost/attendance_punch_in_out/services/punch_in_marker.dart';
-import 'package:wallpost/attendance_punch_in_out/services/punch_in_now_permission_provider.dart';
 import 'package:wallpost/attendance_punch_in_out/services/punch_out_marker.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/device_settings.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
+
+import '../../services/attendance_permissions_provider.dart';
 
 //TODO: Handle stale locations
 
@@ -25,8 +25,7 @@ class AttendancePresenter {
   final AttendanceView _view;
   final AttendanceDetailsProvider _attendanceDetailsProvider;
   final LocationProvider _locationProvider;
-  final PunchInFromAppPermissionProvider _punchInFromAppPermissionProvider;
-  final PunchInNowPermissionProvider _punchInNowPermissionProvider;
+  final AttendancePermissionsProvider _attendancePermissionsProvider;
   final AttendanceLocationValidator _attendanceLocationValidator;
   final PunchOutMarker _punchOutMarker;
   final PunchInMarker _punchInMarker;
@@ -43,8 +42,7 @@ class AttendancePresenter {
   AttendancePresenter(this._view)
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
         _locationProvider = LocationProvider(),
-        _punchInFromAppPermissionProvider = PunchInFromAppPermissionProvider(),
-        _punchInNowPermissionProvider = PunchInNowPermissionProvider(),
+        _attendancePermissionsProvider = AttendancePermissionsProvider(),
         _attendanceLocationValidator = AttendanceLocationValidator(),
         _punchInMarker = PunchInMarker(),
         _punchOutMarker = PunchOutMarker(),
@@ -57,8 +55,7 @@ class AttendancePresenter {
     this._view,
     this._attendanceDetailsProvider,
     this._locationProvider,
-    this._punchInFromAppPermissionProvider,
-    this._punchInNowPermissionProvider,
+    this._attendancePermissionsProvider,
     this._attendanceLocationValidator,
     this._punchInMarker,
     this._punchOutMarker,
@@ -100,27 +97,28 @@ class AttendancePresenter {
   }
 
   Future<void> _loadPunchInDetails() async {
-    var canPunchInFromApp = await _canMarkAttendanceFromApp();
     var canPunchInNow = await _canPunchInNow();
-    if (!canPunchInFromApp || !canPunchInNow) return;
+    if (!canPunchInNow) return;
 
     _attendanceLocation = await getLocation();
     if (_attendanceLocation == null) return;
 
     _view.showPunchInButton();
+    _view.hideBreakButton();
     _loadAddress();
   }
 
   Future<void> _loadPunchOutDetails() async {
-    var canPunchOutFromApp = await _canMarkAttendanceFromApp();
-    if (!canPunchOutFromApp) return;
-
-    _attendanceLocation = await getLocation();
-    if (_attendanceLocation == null) return;
-
-    _view.showPunchOutButton();
-    _loadAddress();
-    _loadBreakDetails();
+    //TODO
+    // var canPunchOutFromApp = await _canMarkAttendanceFromApp();
+    // if (!canPunchOutFromApp) return;
+    //
+    // _attendanceLocation = await getLocation();
+    // if (_attendanceLocation == null) return;
+    //
+    // _view.showPunchOutButton();
+    // _loadAddress();
+    // _loadBreakDetails();
   }
 
   void _loadBreakDetails() {
@@ -142,29 +140,22 @@ class AttendancePresenter {
 
   //MARK: Functions to get attendance permissions
 
-  Future<bool> _canMarkAttendanceFromApp() async {
-    try {
-      var punchInFromAppPermission = await _punchInFromAppPermissionProvider.canPunchInFromApp();
-      if (punchInFromAppPermission.isAllowed) return true;
-
-      _view.hideBreakButton();
-      _view.showErrorAndRetryView("Punch in from app disabled",
-          "You are not allowed to punch in from the app.\nPlease contact your HR or tap to reload.");
-      return false;
-    } on WPException catch (_) {
-      _view.showErrorAndRetryView("", "Failed to load punch in from app permission.\nTap to reload");
-      return false;
-    }
-  }
-
   Future<bool> _canPunchInNow() async {
     try {
-      var punchInNowPermission = await _punchInNowPermissionProvider.canPunchInNow();
-      if (punchInNowPermission.canPunchInNow) return true;
+      var attendancePermission = await _attendancePermissionsProvider.getPermissions();
 
-      _view.showCountDownView(punchInNowPermission.secondsTillPunchIn.toInt());
-      _view.hideBreakButton();
-      return false;
+      if (!attendancePermission.canPunchInFromApp) {
+        _view.showErrorAndRetryView("Punch in from app disabled",
+            "You are not allowed to punch in from the app.\nPlease contact your HR or tap to reload.");
+        return false;
+      }
+
+      if (!attendancePermission.canPunchInNow) {
+        _view.showCountDownView(attendancePermission.secondsTillPunchIn.toInt());
+        return false;
+      }
+
+      return true;
     } on WPException catch (_) {
       _view.showErrorAndRetryView(
           "Failed to load punch in permission", "Failed to load punch in permission.\nTap to reload");
