@@ -22,6 +22,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   late final AttendancePresenter presenter;
   final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: LOADER_VIEW);
   final ItemNotifier<String> _countDownNotifier = ItemNotifier(defaultValue: "");
+  final ItemNotifier<String> _locationAddressNotifier = ItemNotifier(defaultValue: "");
 
   var _errorMessage = "";
   String? _timeString;
@@ -191,40 +192,45 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   //MARK: Functions to build punch in and out buttons
-
   Widget _buildPunchInButton() {
-    return AttendanceRectangleRoundedActionButton(
-      title: "Punch In",
-      locationAddress: _locationAddress,
-      status: "", //TODO: remove this?
-      time: _timeString,
-      attendanceButtonColor: AttendanceColors.punchInButtonColor,
-      moreButtonColor: AttendanceColors.punchInMoreButtonColor,
-      onButtonPressed: () {
-        presenter.validateLocation(true);
-      },
-      onMoreButtonPressed: () {
-        _currentTimer.cancel();
-        ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
-      },
+    return ItemNotifiable(
+      notifier: _locationAddressNotifier,
+      builder: (context, address) => AttendanceRectangleRoundedActionButton(
+        title: "Punch In",
+        locationAddress:"$address",
+        status: "", //TODO: remove this?
+        time: _timeString,
+        attendanceButtonColor: AttendanceColors.punchInButtonColor,
+        moreButtonColor: AttendanceColors.punchInMoreButtonColor,
+        onButtonPressed: () {
+          presenter.validateLocation(true);
+        },
+        onMoreButtonPressed: () {
+          _currentTimer.cancel();
+          ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
+        },
+      ),
     );
   }
 
   Widget _buildPunchOutButton() {
-    return AttendanceRectangleRoundedActionButton(
-      title: "Punch Out",
-      locationAddress: _locationAddress,
-      status: "",
-      time: _timeString,
-      attendanceButtonColor: AttendanceColors.punchOutButtonColor,
-      moreButtonColor: AttendanceColors.punchOutMoreButtonColor,
-      onButtonPressed: () {
-        _doPunchOut();
-      },
-      onMoreButtonPressed: () {
-        _currentTimer.cancel();
-        ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
-      },
+    return ItemNotifiable(
+      notifier: _locationAddressNotifier,
+      builder: (context, address) =>  AttendanceRectangleRoundedActionButton(
+        title: "Punch Out",
+        locationAddress:"$address",
+        status: "",
+        time: _timeString,
+        attendanceButtonColor: AttendanceColors.punchOutButtonColor,
+        moreButtonColor: AttendanceColors.punchOutMoreButtonColor,
+        onButtonPressed: () {
+          _doPunchOut();
+        },
+        onMoreButtonPressed: () {
+          _currentTimer.cancel();
+          ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
+        },
+      ),
     );
   }
 
@@ -284,11 +290,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void showAddress(String address) {
-    //TODO: Add location address item notifier
-
-    //setstate - can we use item notifier?
-    //if not - then use set state.
-    _locationAddress = address;
+    _locationAddressNotifier.notify(address);
   }
 
   @override
@@ -314,6 +316,8 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     final DateTime now = DateTime.now();
     final String formattedDateTime = DateFormat('hh:mm a').format(now);
     //TODO: remove after testing if (this.mounted)
-    _timeString = formattedDateTime;
+      setState(() {
+        _timeString = formattedDateTime;
+      });
   }
 }
