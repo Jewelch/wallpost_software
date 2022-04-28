@@ -42,7 +42,7 @@ List<Widget> shimmerInputWithHeader() {
     Container(
       height: 80,
       constraints: BoxConstraints(maxWidth: 64, maxHeight: 40, minWidth: 8),
-      decoration: BoxDecoration(color: AppColors.attendanceButtonSubTextColor, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: Colors.purple, borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
       ),

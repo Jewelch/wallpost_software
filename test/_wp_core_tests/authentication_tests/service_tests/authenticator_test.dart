@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/_shared/constants/device_info.dart';
+import 'package:wallpost/_shared/device/device_info.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/user_management/constants/login_urls.dart';
 import 'package:wallpost/_wp_core/user_management/services/authenticator.dart';

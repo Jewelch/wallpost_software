@@ -34,7 +34,7 @@ List<Widget> headerWithInput({
     ),
     Container(
       decoration:
-      BoxDecoration(color: AppColors.attendanceButtonSubTextColor, borderRadius: BorderRadius.circular(8)),
+      BoxDecoration(color: Colors.purple, borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: child,

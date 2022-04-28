@@ -11,9 +11,11 @@ import 'package:wallpost/_common_widgets/app_bars/app_bar_with_back_button.dart'
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance_punch_in_out/constants/attendance_colors.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_report.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/presenters/attendance_presenter.dart';
+import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_detailed_view.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/company_list/views/companies_list_screen.dart';
@@ -23,20 +25,15 @@ class AttendanceButtonDetailsScreen extends StatefulWidget {
   const AttendanceButtonDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  _AttendanceButtonDetailsScreenState createState() =>
-      _AttendanceButtonDetailsScreenState();
+  _AttendanceButtonDetailsScreenState createState() => _AttendanceButtonDetailsScreenState();
 }
 
-class _AttendanceButtonDetailsScreenState
-    extends State<AttendanceButtonDetailsScreen>
+class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsScreen>
     with WidgetsBindingObserver
-    implements AttendanceView {
-  final ItemNotifier<int> _buttonTypeNotifier = ItemNotifier(
-      defaultValue: PUNCH_IN_BUTTON_VIEW);
-  final ItemNotifier<int> _breakButtonNotifier = ItemNotifier(
-      defaultValue: SHOW_BREAK_BUTTON_VIEW);
-  var _attendanceReportNotifier = ItemNotifier<AttendanceReport?>(
-      defaultValue: null);
+    implements AttendanceView, AttendanceDetailedView {
+  final ItemNotifier<int> _buttonTypeNotifier = ItemNotifier(defaultValue: PUNCH_IN_BUTTON_VIEW);
+  final ItemNotifier<int> _breakButtonNotifier = ItemNotifier(defaultValue: SHOW_BREAK_BUTTON_VIEW);
+  var _attendanceReportNotifier = ItemNotifier<AttendanceReport?>(defaultValue: null);
   late final AttendancePresenter presenter;
   GoogleMapController? _controller;
   Set<Marker> _markers = {};
@@ -52,12 +49,11 @@ class _AttendanceButtonDetailsScreenState
 
   @override
   void initState() {
-    presenter = AttendancePresenter(this);
+    presenter = AttendancePresenter(basicView: this, detailedView: this);
     presenter.loadAttendanceDetails();
     presenter.loadAttendanceReport();
     _timeString = _formatDateTime(DateTime.now());
-    _currentTimer =
-        Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
   }
@@ -88,66 +84,56 @@ class _AttendanceButtonDetailsScreenState
           width: 18,
           height: 18,
         ),
-        onLeadingButtonPressed: () =>
-            ScreenPresenter.presentAndRemoveAllPreviousScreens(
-                MyPortalScreen(), context),
+        onLeadingButtonPressed: () => ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context),
         textButton1: TextButton(
           child: Row(
             children: [
               Text(
-                '${SelectedCompanyProvider()
-                    .getSelectedCompanyForCurrentUser()
-                    .name} ',
-                style: TextStyle(color: AppColors.defaultColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700),
+                '${SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name} ',
+                style: TextStyle(color: AppColors.defaultColor, fontSize: 16, fontWeight: FontWeight.w700),
               ),
               Icon(Icons.keyboard_arrow_down_outlined, size: 28),
             ],
           ),
           onPressed: () {
-            ScreenPresenter.presentAndRemoveAllPreviousScreens(
-                CompanyListScreen(), context);
+            ScreenPresenter.presentAndRemoveAllPreviousScreens(CompanyListScreen(), context);
           },
         ),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
             child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
               children: [
-                Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Container(
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.55,
-                          child: _mapView(),
-                        ),
-                        Container(height: 70, color: Colors.transparent),
-                      ],
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.55,
+                      child: _mapView(),
                     ),
-                    Positioned(
-                      child: _buildAttendanceButton(),
-                      bottom: 0,
-                    ),
+                    Container(height: 70, color: Colors.transparent),
                   ],
                 ),
-                SizedBox(
-                  height: 16,
+                Positioned(
+                  child: _buildAttendanceButton(),
+                  bottom: 0,
                 ),
-                _buildBreakResumeButton(),
-                SizedBox(
-                  height: 8,
-                ),
-                _buildAttendanceReport()
               ],
-            )),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            _buildBreakResumeButton(),
+            SizedBox(
+              height: 8,
+            ),
+            _buildAttendanceReport()
+          ],
+        )),
       ),
     );
   }
@@ -219,7 +205,7 @@ class _AttendanceButtonDetailsScreenState
     return _actionButton(
       title: "Punch In",
       time: _timeString,
-      buttonColor:AppColors.punchInButtonColor ,
+      buttonColor: AttendanceColors.punchInButtonColor,
       onPressed: () => presenter.validateLocation(true),
     );
   }
@@ -228,13 +214,13 @@ class _AttendanceButtonDetailsScreenState
     return _actionButton(
       title: "Punch Out",
       time: _timeString,
-      buttonColor: AppColors.punchOutButtonColor,
-      onPressed: () =>  _doPunchOut(),
+      buttonColor: AttendanceColors.punchOutButtonColor,
+      onPressed: () => _doPunchOut(),
     );
   }
 
   Widget _actionButton(
-      {required String title, required String time,required Color buttonColor, required VoidCallback onPressed}) {
+      {required String title, required String time, required Color buttonColor, required VoidCallback onPressed}) {
     return MaterialButton(
       padding: EdgeInsets.all(24),
       elevation: 0,
@@ -293,7 +279,7 @@ class _AttendanceButtonDetailsScreenState
         style: TextStyle(fontSize: 16, color: Color(0xff003C81)),
       ),
       style: ElevatedButton.styleFrom(
-        primary: AppColors.breakButtonColor,
+        primary: AttendanceColors.breakButtonColor,
         elevation: 0,
         padding: EdgeInsets.only(left: 20, right: 20),
         shape: new RoundedRectangleBorder(
@@ -318,7 +304,7 @@ class _AttendanceButtonDetailsScreenState
         style: TextStyle(fontSize: 16, color: Colors.white),
       ),
       style: ElevatedButton.styleFrom(
-        primary: AppColors.resumeButtonColor,
+        primary: AttendanceColors.resumeButtonColor,
         elevation: 0,
         padding: EdgeInsets.only(left: 20, right: 20),
         shape: new RoundedRectangleBorder(
@@ -347,23 +333,19 @@ class _AttendanceButtonDetailsScreenState
                           if (attendanceReport.late == 1)
                             Text("${attendanceReport.late} Day",
                                 style: TextStyle(
-                                    color: AppColors
-                                        .attendanceReportLatePunchInDayTextColor,
+                                    color: AttendanceColors.attendanceReportLatePunchInDayTextColor,
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold)),
-                          if (attendanceReport.late == 0 ||
-                              attendanceReport.late > 1)
+                          if (attendanceReport.late == 0 || attendanceReport.late > 1)
                             Text("${attendanceReport.late} Days",
                                 style: TextStyle(
-                                    color: AppColors
-                                        .attendanceReportLatePunchInDayTextColor,
+                                    color: AttendanceColors.attendanceReportLatePunchInDayTextColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold)),
                           SizedBox(
                             height: 16,
                           ),
-                          Text("Late Punch In",
-                              style: TextStyle(color: Colors.black))
+                          Text("Late Punch In", style: TextStyle(color: Colors.black))
                         ],
                       ),
                       Column(
@@ -371,23 +353,17 @@ class _AttendanceButtonDetailsScreenState
                           if (attendanceReport.earlyLeave == 1)
                             Text(
                               "${attendanceReport.earlyLeave} Day",
-                              style: TextStyle(color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                          if (attendanceReport.earlyLeave == 0 ||
-                              attendanceReport.earlyLeave > 1)
+                          if (attendanceReport.earlyLeave == 0 || attendanceReport.earlyLeave > 1)
                             Text(
                               "${attendanceReport.earlyLeave} Days",
-                              style: TextStyle(color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           SizedBox(
                             height: 16,
                           ),
-                          Text("Early Punch Out",
-                              style: TextStyle(color: Colors.black))
+                          Text("Early Punch Out", style: TextStyle(color: Colors.black))
                         ],
                       ),
                       Column(
@@ -396,26 +372,22 @@ class _AttendanceButtonDetailsScreenState
                             Text(
                               "${attendanceReport.absents} Day",
                               style: TextStyle(
-                                  color: AppColors
-                                      .attendanceReportAbsenceDayTextColor,
+                                  color: AttendanceColors.attendanceReportAbsenceDayTextColor,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold),
                             ),
-                          if (attendanceReport.absents == 0 ||
-                              attendanceReport.absents > 1)
+                          if (attendanceReport.absents == 0 || attendanceReport.absents > 1)
                             Text(
                               "${attendanceReport.absents} Days",
                               style: TextStyle(
-                                  color: AppColors
-                                      .attendanceReportAbsenceDayTextColor,
+                                  color: AttendanceColors.attendanceReportAbsenceDayTextColor,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold),
                             ),
                           SizedBox(
                             height: 16,
                           ),
-                          Text(
-                              "Absences", style: TextStyle(color: Colors.black))
+                          Text("Absences", style: TextStyle(color: Colors.black))
                         ],
                       )
                     ],
@@ -490,16 +462,14 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showAddress(String address) {
-  }
+  void showAddress(String address) {}
 
   @override
   void showPunchOutTime(String time) {}
 
   @override
   void showCountDownView(int secondsTillPunchIn) {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(
-        MyPortalScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context);
   }
 
   @override
@@ -510,17 +480,14 @@ class _AttendanceButtonDetailsScreenState
 
   @override
   void showLocationPositions(AttendanceLocation attendanceLocation) {
-    _controller?.animateCamera(
-        CameraUpdate.newCameraPosition(new CameraPosition(
-          target: LatLng(attendanceLocation.latitude.toDouble(),
-              attendanceLocation.longitude.toDouble()),
-          zoom: 14.0,
-        )));
+    _controller?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
+      target: LatLng(attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble()),
+      zoom: 14.0,
+    )));
     setState(() {
       _markers.add(Marker(
           markerId: MarkerId(''),
-          position: LatLng(attendanceLocation.latitude.toDouble(),
-              attendanceLocation.longitude.toDouble())));
+          position: LatLng(attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble())));
     });
   }
 
@@ -568,8 +535,7 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showAlertToInvalidLocation(bool isForPunchIn, String title,
-      String message) {
+  void showAlertToInvalidLocation(bool isForPunchIn, String title, String message) {
     Alert.showSimpleAlertWithButtons(
       context: context,
       title: title,
@@ -600,5 +566,10 @@ class _AttendanceButtonDetailsScreenState
         onPressed: () {
           presenter.loadAttendanceDetails();
         });
+  }
+
+  @override
+  void showLocationOnMap(AttendanceLocation attendanceLocation) {
+    // TODO: implement showLocationOnMap
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_id.dart';
-import 'package:wallpost/_shared/constants/device_info.dart';
+import 'package:wallpost/_shared/device/device_info.dart';
 import 'package:wallpost/_wp_core/user_management/services/access_token_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 import 'package:wallpost/_wp_core/wpapi/services/nonce_provider.dart';

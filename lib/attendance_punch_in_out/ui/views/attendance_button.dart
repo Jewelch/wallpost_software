@@ -1,19 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.dart';
-import 'package:wallpost/attendance_punch_in_out/entities/attendance_report.dart';
-import 'package:wallpost/attendance_punch_in_out/services/time_to_punch_in_calculator.dart';
-import 'package:wallpost/attendance_punch_in_out/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_button_details.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_rectangle_rounded_action_button.dart';
 
+import '../../constants/attendance_colors.dart';
+import '../../services/time_to_punch_in_calculator.dart';
+import '../presenters/attendance_presenter.dart';
 import '../view_contracts/attendance_view.dart';
 
 class AttendanceButton extends StatefulWidget {
@@ -27,9 +24,6 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   final ItemNotifier<String> _countDownNotifier = ItemNotifier(defaultValue: "");
 
   var _errorMessage = "";
-
-  // String _remainingTimeToPunchInString = "";
-
   String? _timeString;
   late Timer _countDownTimer;
   late Timer _currentTimer;
@@ -58,9 +52,8 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void initState() {
-    presenter = AttendancePresenter(this);
+    presenter = AttendancePresenter(basicView: this);
     presenter.loadAttendanceDetails();
-    _timeString = _formatDateTime(DateTime.now());
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
   }
@@ -112,9 +105,11 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     );
   }
 
+  //MARK: Functions to build the loader
+
   Widget _buildLoader() {
     return Container(
-      color: Colors.red,
+      color: AttendanceColors.disabledButtonColor,
       child: Center(
         child: CircularProgressIndicator(
           strokeWidth: 2,
@@ -124,6 +119,8 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       ),
     );
   }
+
+  //MARK: Functions to build the error views
 
   Widget _errorAndRetryButton() {
     return _errorButton(
@@ -150,7 +147,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     return MaterialButton(
       elevation: 0,
       highlightElevation: 0,
-      color: Colors.purple,
+      color: AttendanceColors.disabledButtonColor,
       child: Text(
         title,
         textAlign: TextAlign.center,
@@ -160,24 +157,49 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     );
   }
 
+  //MARK: Functions to build the countdown view
+
   Widget _buildCountDownView() {
     return ItemNotifiable(
       notifier: _countDownNotifier,
-      builder: (context, timeLeft) => Text(
-        "$timeLeft to punch in",
-        style: TextStyle(color: Colors.white),
+      builder: (context, timeLeft) => Container(
+        color: AttendanceColors.disabledButtonColor,
+        child: Center(
+          child: Text(
+            "$timeLeft to punch in",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       ),
     );
   }
 
+  void _startCountDownTimer(num secondsTillPunchIn) {
+    var start = secondsTillPunchIn;
+    _countDownTimer = new Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      if (start == 0) {
+        timer.cancel();
+        presenter.loadAttendanceDetails();
+        return;
+      } else {
+        //TODO: Why is this empty at the start? That too only when the app runs for the first time.
+        var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(start.toInt());
+        _countDownNotifier.notify(_remainingTimeToPunchInString);
+        start--;
+      }
+    });
+  }
+
+  //MARK: Functions to build punch in and out buttons
+
   Widget _buildPunchInButton() {
     return AttendanceRectangleRoundedActionButton(
       title: "Punch In",
-      locationAddress: _locationAddress.length > 20 ? '${_locationAddress.substring(0, 20)}...' : _locationAddress,
-      status: "",
+      locationAddress: _locationAddress,
+      status: "", //TODO: remove this?
       time: _timeString,
-      attendanceButtonColor: AppColors.punchInButtonColor,
-      moreButtonColor: AppColors.punchInMoreButtonColor,
+      attendanceButtonColor: AttendanceColors.punchInButtonColor,
+      moreButtonColor: AttendanceColors.punchInMoreButtonColor,
       onButtonPressed: () {
         presenter.validateLocation(true);
       },
@@ -191,11 +213,11 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   Widget _buildPunchOutButton() {
     return AttendanceRectangleRoundedActionButton(
       title: "Punch Out",
-      locationAddress: _locationAddress.length > 20 ? '${_locationAddress.substring(0, 20)}...' : _locationAddress,
+      locationAddress: _locationAddress,
       status: "",
       time: _timeString,
-      attendanceButtonColor: AppColors.punchOutButtonColor,
-      moreButtonColor: AppColors.punchOutMoreButtonColor,
+      attendanceButtonColor: AttendanceColors.punchOutButtonColor,
+      moreButtonColor: AttendanceColors.punchOutMoreButtonColor,
       onButtonPressed: () {
         _doPunchOut();
       },
@@ -213,38 +235,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       message: " Do you really want to punch out ? ",
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () {
-        presenter.validateLocation(false);
-      },
-    );
-  }
-
-  void _getTime() {
-    final DateTime now = DateTime.now();
-    final String formattedDateTime = _formatDateTime(now);
-    if (this.mounted)
-      //TODO:
-      _timeString = formattedDateTime;
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    return DateFormat('hh:mm a').format(dateTime);
-  }
-
-  void _startCountDownTimer(num _start) {
-    const oneSec = const Duration(seconds: 1);
-    _countDownTimer = new Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        //TODO
-        var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(_start.toInt());
-        if (_start == 0) {
-          timer.cancel();
-          presenter.loadAttendanceDetails();
-        } else {
-          _start--;
-        }
-      },
+      buttonTwoOnPressed: () => presenter.validateLocation(false),
     );
   }
 
@@ -256,35 +247,9 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   @override
-  void hideLoader() {}
-
-  @override
-  void showPunchInButton() {
-    _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
-    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
-  }
-
-  @override
-  void showPunchOutButton() {
-    _viewTypeNotifier.notify(PUNCH_OUT_BUTTON_VIEW);
-    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
-  }
-
-  // @override
-  // void showTimeTillPunchIn(num seconds) {
-  //   _startCountDownTimer(seconds);
-  //   _viewTypeNotifier.notify(COUNT_DOWN_VIEW);
-  // }
-
-  @override
-  void showPunchInTime(String time) {}
-
-  @override
-  void showPunchOutTime(String time) {}
-
-  @override
-  void showCountDownView(int asdfadf) {
-    _viewTypeNotifier.notify(COUNT_DOWN_VIEW);
+  void showErrorAndRetryView(String title, String message) {
+    _errorMessage = message;
+    _viewTypeNotifier.notify(ERROR_VIEW);
   }
 
   @override
@@ -300,34 +265,30 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   @override
-  void showBreakButton() {}
-
-  @override
-  void hideBreakButton() {}
-
-  @override
-  void showResumeButton() {}
-
-  @override
-  void showLocationPositions(AttendanceLocation attendanceLocation) {}
-
-  @override
-  void showAddress(String address) {
-    setState(() {
-      _locationAddress = address;
-    });
+  void showCountDownView(int secondsTillPunchIn) {
+    _viewTypeNotifier.notify(COUNT_DOWN_VIEW);
+    _startCountDownTimer(secondsTillPunchIn);
   }
 
   @override
-  void showAttendanceReport(AttendanceReport attendanceReport) {}
+  void showPunchInButton() {
+    _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
+    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
+  }
 
   @override
-  void doRefresh() {}
+  void showPunchOutButton() {
+    _viewTypeNotifier.notify(PUNCH_OUT_BUTTON_VIEW);
+    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
+  }
 
   @override
-  void showErrorAndRetryView(String title, String message) {
-    _errorMessage = message;
-    _viewTypeNotifier.notify(ERROR_VIEW);
+  void showAddress(String address) {
+    //TODO: Add location address item notifier
+
+    //setstate - can we use item notifier?
+    //if not - then use set state.
+    _locationAddress = address;
   }
 
   @override
@@ -338,13 +299,21 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       message: message,
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () {
-        if (isForPunchIn) {
-          presenter.doPunchIn(false);
-        } else {
-          presenter.doPunchOut(false);
-        }
-      },
+      buttonTwoOnPressed: () => isForPunchIn ? presenter.doPunchIn(false) : presenter.doPunchOut(false),
     );
+  }
+
+  @override
+  void doRefresh() {
+    //TODO - add a refresh or reload button
+  }
+
+//MARK: Util functions
+
+  void _getCurrentTime() {
+    final DateTime now = DateTime.now();
+    final String formattedDateTime = DateFormat('hh:mm a').format(now);
+    //TODO: remove after testing if (this.mounted)
+    _timeString = formattedDateTime;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:wallpost/_shared/device/device_settings.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_details.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.dart';
@@ -14,15 +15,14 @@ import 'package:wallpost/attendance_punch_in_out/services/break_start_marker.dar
 import 'package:wallpost/attendance_punch_in_out/services/location_provider.dart';
 import 'package:wallpost/attendance_punch_in_out/services/punch_in_marker.dart';
 import 'package:wallpost/attendance_punch_in_out/services/punch_out_marker.dart';
-import 'package:wallpost/attendance_punch_in_out/ui/device_settings.dart';
+import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_detailed_view.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
 
 import '../../services/attendance_permissions_provider.dart';
 
-//TODO: Handle stale locations
-
 class AttendancePresenter {
-  final AttendanceView _view;
+  final AttendanceView basicView;
+  final AttendanceDetailedView? detailedView;
   final AttendanceDetailsProvider _attendanceDetailsProvider;
   final LocationProvider _locationProvider;
   final AttendancePermissionsProvider _attendancePermissionsProvider;
@@ -39,7 +39,7 @@ class AttendancePresenter {
   late AttendanceLocation? _attendanceLocation;
   var shouldReloadDataOnResume = false;
 
-  AttendancePresenter(this._view)
+  AttendancePresenter({required this.basicView, this.detailedView})
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
         _locationProvider = LocationProvider(),
         _attendancePermissionsProvider = AttendancePermissionsProvider(),
@@ -52,7 +52,8 @@ class AttendancePresenter {
         _deviceSettings = DeviceSettings();
 
   AttendancePresenter.initWith(
-    this._view,
+    this.basicView,
+    this.detailedView,
     this._attendanceDetailsProvider,
     this._locationProvider,
     this._attendancePermissionsProvider,
@@ -70,9 +71,9 @@ class AttendancePresenter {
   Future<void> loadAttendanceReport() async {
     try {
       var attendanceReport = await _attendanceReportProvider.getReport();
-      _view.showAttendanceReport(attendanceReport);
+      detailedView?.showAttendanceReport(attendanceReport);
     } on WPException catch (e) {
-      _view.showErrorAndRetryView("Getting attendance report is failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Getting attendance report is failed", e.userReadableMessage);
     }
   }
 
@@ -82,7 +83,7 @@ class AttendancePresenter {
     if (_attendanceDetailsProvider.isLoading) return;
 
     try {
-      _view.showLoader();
+      basicView.showLoader();
       _attendanceDetails = await _attendanceDetailsProvider.getDetails();
 
       if (_attendanceDetails.isNotPunchedIn)
@@ -91,7 +92,7 @@ class AttendancePresenter {
         _loadPunchOutDetails();
       else if (_attendanceDetails.isPunchedOut) _loadPunchedOutDetails();
     } on WPException catch (_) {
-      _view.showErrorAndRetryView(
+      basicView.showErrorAndRetryView(
           "Loading attendance details failed", "Failed to load attendance details.\nTap to reload");
     }
   }
@@ -103,8 +104,8 @@ class AttendancePresenter {
     _attendanceLocation = await getLocation();
     if (_attendanceLocation == null) return;
 
-    _view.showPunchInButton();
-    _view.hideBreakButton();
+    basicView.showPunchInButton();
+    detailedView?.hideBreakButton();
     _loadAddress();
   }
 
@@ -122,7 +123,7 @@ class AttendancePresenter {
   }
 
   void _loadBreakDetails() {
-    _attendanceDetails.isOnBreak ? _view.showResumeButton() : _view.showBreakButton();
+    _attendanceDetails.isOnBreak ? detailedView?.showResumeButton() : detailedView?.showBreakButton();
   }
 
   Future<void> _loadPunchedOutDetails() async {
@@ -145,19 +146,19 @@ class AttendancePresenter {
       var attendancePermission = await _attendancePermissionsProvider.getPermissions();
 
       if (!attendancePermission.canPunchInFromApp) {
-        _view.showErrorAndRetryView("Punch in from app disabled",
+        basicView.showErrorAndRetryView("Punch in from app disabled",
             "You are not allowed to punch in from the app.\nPlease contact your HR or tap to reload.");
         return false;
       }
 
       if (!attendancePermission.canPunchInNow) {
-        _view.showCountDownView(attendancePermission.secondsTillPunchIn.toInt());
+        basicView.showCountDownView(attendancePermission.secondsTillPunchIn.toInt());
         return false;
       }
 
       return true;
     } on WPException catch (_) {
-      _view.showErrorAndRetryView(
+      basicView.showErrorAndRetryView(
           "Failed to load punch in permission", "Failed to load punch in permission.\nTap to reload");
       return false;
     }
@@ -168,16 +169,16 @@ class AttendancePresenter {
   Future<AttendanceLocation?> getLocation() async {
     try {
       var attendanceLocation = await _locationProvider.getLocation();
-      _view.showLocationPositions(attendanceLocation);
+      detailedView?.showLocationOnMap(attendanceLocation);
       return attendanceLocation;
     } on LocationServicesDisabledException catch (e) {
-      _view.showRequestToTurnOnGpsView("Location service disabled.\nTap here to go to location settings");
+      basicView.showRequestToTurnOnGpsView("Location service disabled.\nTap here to go to location settings");
     } on LocationPermissionsDeniedException catch (e) {
-      _view.showRequestToEnableLocationView("Location permission denied.\nTap here to grant permission");
+      basicView.showRequestToEnableLocationView("Location permission denied.\nTap here to grant permission");
     } on LocationPermissionsPermanentlyDeniedException catch (e) {
-      _view.showRequestToEnableLocationView("Location permission denied.\nTap here to go to settings");
+      basicView.showRequestToEnableLocationView("Location permission denied.\nTap here to go to settings");
     } on LocationAcquisitionFailedException catch (e) {
-      _view.showErrorAndRetryView("Getting location failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Getting location failed", e.userReadableMessage);
     }
 
     return null;
@@ -193,7 +194,7 @@ class AttendancePresenter {
       address = "";
     }
 
-    _view.showAddress(address);
+    basicView.showAddress(address);
   }
 
   //MARK: Functions to mark attendance
@@ -202,9 +203,9 @@ class AttendancePresenter {
     try {
       //TODO:
       // await _punchInMarker.punchIn(_attendanceLocation, isLocationValid: isValid);
-      _view.doRefresh();
+      basicView.doRefresh();
     } on WPException catch (e) {
-      _view.showErrorAndRetryView("Punched in failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Punched in failed", e.userReadableMessage);
     }
   }
 
@@ -212,9 +213,9 @@ class AttendancePresenter {
     try {
       //TODO:
       // await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation, isLocationValid: isValid);
-      _view.doRefresh();
+      basicView.doRefresh();
     } on WPException catch (e) {
-      _view.showErrorAndRetryView("Punched out failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Punched out failed", e.userReadableMessage);
     }
   }
 
@@ -237,7 +238,7 @@ class AttendancePresenter {
       //           "Doing so will affect your performance. Would you still like to punch ${isForPunchIn ? 'in' : 'out'}?");
       // }
     } on WPException catch (e) {
-      _view.showErrorAndRetryView("Failed to validate your location", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Failed to validate your location", e.userReadableMessage);
     }
   }
 
@@ -247,10 +248,10 @@ class AttendancePresenter {
     try {
       //TODO:
       // await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation);
-      _view.doRefresh();
-      _view.showResumeButton();
+      basicView.doRefresh();
+      detailedView?.showResumeButton();
     } on WPException catch (e) {
-      _view.showErrorAndRetryView("Start break is failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Start break is failed", e.userReadableMessage);
     }
   }
 
@@ -258,20 +259,20 @@ class AttendancePresenter {
     try {
       //TODO:
       // await _breakEndMarker.endBreak(_attendanceDetails, _attendanceLocation);
-      _view.showBreakButton();
+      detailedView?.showBreakButton();
     } on WPException catch (e) {
-      _view.showErrorAndRetryView("End break is failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("End break is failed", e.userReadableMessage);
     }
   }
 
   // TODO -----
 
   void _showPunchInTime(AttendanceDetails attendanceDetails) {
-    _view.showPunchInTime(attendanceDetails.punchInTimeString);
+    detailedView?.showPunchInTime(attendanceDetails.punchInTimeString);
   }
 
   void _showPunchOutTime(AttendanceDetails attendanceDetails) {
-    _view.showPunchOutTime(attendanceDetails.punchOutTimeString);
+    detailedView?.showPunchOutTime(attendanceDetails.punchOutTimeString);
   }
 
   //MARK: Functions to go to settings
