@@ -198,7 +198,6 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       builder: (context, address) => AttendanceRectangleRoundedActionButton(
         title: "Punch In",
         locationAddress:"$address",
-        status: "", //TODO: remove this?
         time: _timeString,
         attendanceButtonColor: AttendanceColors.punchInButtonColor,
         moreButtonColor: AttendanceColors.punchInMoreButtonColor,
@@ -219,7 +218,6 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       builder: (context, address) =>  AttendanceRectangleRoundedActionButton(
         title: "Punch Out",
         locationAddress:"$address",
-        status: "",
         time: _timeString,
         attendanceButtonColor: AttendanceColors.punchOutButtonColor,
         moreButtonColor: AttendanceColors.punchOutMoreButtonColor,
@@ -315,7 +313,6 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   void _getCurrentTime() {
     final DateTime now = DateTime.now();
     final String formattedDateTime = DateFormat('hh:mm a').format(now);
-    //TODO: remove after testing if (this.mounted)
       setState(() {
         _timeString = formattedDateTime;
       });

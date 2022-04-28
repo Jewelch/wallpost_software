@@ -5,7 +5,6 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
   final String? title;
   final String? locationAddress;
   final String? time;
-  final String? status;
   final Color? attendanceButtonColor;
   final Color? moreButtonColor;
   final VoidCallback onButtonPressed;
@@ -15,7 +14,6 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
     required this.title,
     required this.locationAddress,
     required this.time,
-    this.status,
     required this.attendanceButtonColor,
     required this.moreButtonColor,
     required this.onButtonPressed,
@@ -77,14 +75,10 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
                   )
                 ],
               ),
-              Column(
-                children: [
-                  Text(time!, style: TextStyles.titleTextStyle.copyWith(color: Colors.white)),
-                  SizedBox(height: 8),
-                  if (status == null) Text(""),
-                  if (status != null) Text(status!, style: TextStyles.subTitleTextStyle.copyWith(color: Colors.purple))
-                ],
-              ),
+              Align(
+                  alignment: Alignment.topCenter,
+                  child:
+                    Text(time!, style: TextStyles.titleTextStyle.copyWith(color: Colors.white))),
             ]),
             onPressed: onButtonPressed,
           ),
