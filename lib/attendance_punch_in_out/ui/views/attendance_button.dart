@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
@@ -312,7 +313,9 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void showAddress(String address) {
-    _locationAddress = address;
+    setState(() {
+      _locationAddress = address;
+    });
   }
 
   @override

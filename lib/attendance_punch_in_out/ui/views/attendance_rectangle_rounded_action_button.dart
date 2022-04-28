@@ -26,81 +26,82 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
   //Height should be dynamic
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        new Positioned(
-          right: 0,
-          top: 0,
-          bottom: 0,
-          child: Container(
-            width: 120,
+    return Container(
+      child: Stack(
+        children: <Widget>[
+          new Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: Container(
+              width: 120,
+              child: MaterialButton(
+                elevation: 0,
+                highlightElevation: 0,
+                padding: EdgeInsets.only(left: 26),
+                color: moreButtonColor,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                child: Row(
+                  children: [
+                    SizedBox(width: 20),
+                    Icon(Icons.arrow_upward, size: 20, color: Colors.white),
+                    Text(" More",
+                        style: TextStyles.subTitleTextStyle.copyWith(color: Colors.white)),
+                  ],
+                ),
+                onPressed: onMoreButtonPressed,
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(right: 80),
             child: MaterialButton(
               elevation: 0,
               highlightElevation: 0,
-              padding: EdgeInsets.only(left: 26),
-              color: moreButtonColor,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-              child: Row(
-                children: [
-                  SizedBox(width: 20),
-                  Icon(Icons.arrow_upward, size: 20, color: Colors.white),
-                  Text(" More",
-                      style: TextStyles.subTitleTextStyle.copyWith(color: Colors.white)),
-                ],
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              color: attendanceButtonColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+                side: BorderSide(color: Colors.transparent),
               ),
-              onPressed: onMoreButtonPressed,
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(right: 80),
-          child: MaterialButton(
-            elevation: 0,
-            highlightElevation: 0,
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            color: attendanceButtonColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
-              side: BorderSide(color: Colors.transparent),
-            ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title!,
-                    style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                      locationAddress!,
-                      style: TextStyles.subTitleTextStyle.copyWith(color:AppColors.attendanceButtonSubTextColor)
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  Text(time!,
-                       style: TextStyles.titleTextStyle.copyWith(color: Colors.white)
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-
-                  if (status == null) Text(""),
-                  if (status != null)
-                    Text(status!,
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title!,
+                      style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                        locationAddress!,
                         style: TextStyles.subTitleTextStyle.copyWith(color:AppColors.attendanceButtonSubTextColor)
                     )
-                ],
-              ),
-            ]),
-            onPressed: onButtonPressed,
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(time!,
+                         style: TextStyles.titleTextStyle.copyWith(color: Colors.white)
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    if (status == null) Text(""),
+                    if (status != null)
+                      Text(status!,
+                          style: TextStyles.subTitleTextStyle.copyWith(color:AppColors.attendanceButtonSubTextColor)
+                      )
+                  ],
+                ),
+              ]),
+              onPressed: onButtonPressed,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
