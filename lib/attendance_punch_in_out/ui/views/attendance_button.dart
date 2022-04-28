@@ -270,6 +270,10 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void showCountDownView(int secondsTillPunchIn) {
+    // todo check it proper method or not
+    var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(secondsTillPunchIn.toInt());
+    _countDownNotifier.notify(_remainingTimeToPunchInString);
+
     _viewTypeNotifier.notify(COUNT_DOWN_VIEW);
     _startCountDownTimer(secondsTillPunchIn);
   }
