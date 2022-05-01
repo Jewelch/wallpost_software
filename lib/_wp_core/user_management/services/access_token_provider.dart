@@ -1,6 +1,6 @@
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/constants/base_urls.dart';
-import 'package:wallpost/_shared/constants/device_info.dart';
+import 'package:wallpost/_shared/device/device_info.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/_wp_core/user_management/repositories/user_repository.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';

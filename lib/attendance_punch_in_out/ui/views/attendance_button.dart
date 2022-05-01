@@ -1,19 +1,16 @@
 import 'dart:async';
 
-import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.dart';
-import 'package:wallpost/attendance_punch_in_out/entities/attendance_report.dart';
-import 'package:wallpost/attendance_punch_in_out/services/time_to_punch_in_calculator.dart';
-import 'package:wallpost/attendance_punch_in_out/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_button_details.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_rectangle_rounded_action_button.dart';
 
+import '../../constants/attendance_colors.dart';
+import '../../services/time_to_punch_in_calculator.dart';
+import '../presenters/attendance_presenter.dart';
 import '../view_contracts/attendance_view.dart';
 
 class AttendanceButton extends StatefulWidget {
@@ -22,23 +19,42 @@ class AttendanceButton extends StatefulWidget {
 }
 
 class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBindingObserver implements AttendanceView {
-  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: DISABLE_VIEW);
   late final AttendancePresenter presenter;
+  final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: LOADER_VIEW);
+  final ItemNotifier<String> _countDownNotifier = ItemNotifier(defaultValue: "");
+  final ItemNotifier<String> _locationAddressNotifier = ItemNotifier(defaultValue: "");
+
+  var _errorMessage = "";
   String? _timeString;
-  String _locationAddress = "";
-  String? _remainingTimeToPunchInString;
   late Timer _countDownTimer;
   late Timer _currentTimer;
-  static const DISABLE_VIEW = 1;
-  static const PUNCH_IN_BUTTON_VIEW = 2;
-  static const PUNCH_OUT_BUTTON_VIEW = 3;
-  static const LOADER_VIEW = 4;
+  String _locationAddress = "";
+
+  /*
+  Types of views
+  1. Loader
+  2. error and retry (includes location soft denial as the presenter will re-initiate the permission approval)
+  3. GPSDisabledView + go to setts
+  4. location denied forever + go to setts
+
+
+  4. Timer view
+  5. punch in
+  6. punch out
+   */
+  static const LOADER_VIEW = 1;
+  static const ERROR_VIEW = 2;
+  static const GPS_DISABLED_VIEW = 3;
+  static const PERMISSION_DENIED_FOREVER_ERROR_VIEW = 4;
+  static const COUNT_DOWN_VIEW = 5;
+
+  static const PUNCH_IN_BUTTON_VIEW = 6;
+  static const PUNCH_OUT_BUTTON_VIEW = 7;
 
   @override
   void initState() {
-    presenter = AttendancePresenter(this);
+    presenter = AttendancePresenter(basicView: this);
     presenter.loadAttendanceDetails();
-    _timeString = _formatDateTime(DateTime.now());
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
   }
@@ -54,137 +70,165 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed && presenter.shouldReloadDataWhenAppIsResumed()) {
       presenter.loadAttendanceDetails();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            ItemNotifiable<int>(
-              notifier: _viewTypeNotifier,
-              builder: (context, value) {
-                if (value == LOADER_VIEW) {
-                  return _buildLoader();
-                } else if (value == DISABLE_VIEW) {
-                  return _buildDisableView();
-                } else if (value == PUNCH_IN_BUTTON_VIEW) {
-                  return _buildPunchInButton();
-                } else if (value == PUNCH_OUT_BUTTON_VIEW) {
-                  return _buildPunchOutButton();
-                }
-                return Container();
-              },
-            )
-          ],
+    return Container(
+      height: 64,
+      width: MediaQuery.of(context).size.width,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: ItemNotifiable<int>(
+          notifier: _viewTypeNotifier,
+          builder: (context, viewType) {
+            if (viewType == LOADER_VIEW) return _buildLoader();
+
+            if (viewType == ERROR_VIEW) return _errorAndRetryButton();
+
+            if (viewType == GPS_DISABLED_VIEW) return _enableGpsButton();
+
+            if (viewType == PERMISSION_DENIED_FOREVER_ERROR_VIEW) return _grantLocationPermissionButton();
+
+            if (viewType == COUNT_DOWN_VIEW) return _buildCountDownView();
+
+            if (viewType == PUNCH_IN_BUTTON_VIEW) return _buildPunchInButton();
+
+            if (viewType == PUNCH_OUT_BUTTON_VIEW) return _buildPunchOutButton();
+
+            return Container();
+          },
         ),
       ),
     );
   }
+
+  //MARK: Functions to build the loader
 
   Widget _buildLoader() {
     return Container(
-      margin: EdgeInsets.all(20),
-      width: MediaQuery.of(context).size.width,
-      height: 64,
-      decoration: BoxDecoration(
-        color: Colors.purple,
-        borderRadius: BorderRadius.all(
-          Radius.circular(20.0),
+      color: AttendanceColors.disabledButtonColor,
+      child: Center(
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          backgroundColor: Colors.transparent,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
         ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              backgroundColor: Colors.transparent,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
-            ),
-          ),
-        ],
       ),
     );
   }
 
-  Widget _buildDisableView() {
-    if (_remainingTimeToPunchInString == null)
-      return Container(
-          margin: EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width,
-          height: 64,
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
-            ),
-          ),
-          child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Loading...To Punch In",
-                style: TextStyle(color: Colors.white),
-              )));
-    return Container(
-        margin: EdgeInsets.all(20),
-        width: MediaQuery.of(context).size.width,
-        height: 64,
-        decoration: BoxDecoration(
-          color: Colors.grey,
-          borderRadius: BorderRadius.all(
-            Radius.circular(20.0),
-          ),
-        ),
-        child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              "$_remainingTimeToPunchInString To Punch In",
-              style: TextStyle(color: Colors.white),
-            )));
+  //MARK: Functions to build the error views
+
+  Widget _errorAndRetryButton() {
+    return _errorButton(
+      title: _errorMessage,
+      onPressed: () => presenter.loadAttendanceDetails(),
+    );
   }
 
+  Widget _enableGpsButton() {
+    return _errorButton(
+      title: _errorMessage,
+      onPressed: () => presenter.goToLocationSettings(),
+    );
+  }
+
+  Widget _grantLocationPermissionButton() {
+    return _errorButton(
+      title: _errorMessage,
+      onPressed: () => presenter.goToAppSettings(),
+    );
+  }
+
+  Widget _errorButton({required String title, required VoidCallback onPressed}) {
+    return MaterialButton(
+      elevation: 0,
+      highlightElevation: 0,
+      color: AttendanceColors.disabledButtonColor,
+      child: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.white),
+      ),
+      onPressed: onPressed,
+    );
+  }
+
+  //MARK: Functions to build the countdown view
+
+  Widget _buildCountDownView() {
+    return ItemNotifiable(
+      notifier: _countDownNotifier,
+      builder: (context, timeLeft) => Container(
+        color: AttendanceColors.disabledButtonColor,
+        child: Center(
+          child: Text(
+            "$timeLeft to punch in",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _startCountDownTimer(num secondsTillPunchIn) {
+    var start = secondsTillPunchIn;
+    _countDownTimer = new Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      if (start == 0) {
+        timer.cancel();
+        presenter.loadAttendanceDetails();
+        return;
+      } else {
+        //TODO: Why is this empty at the start? That too only when the app runs for the first time.
+        var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(start.toInt());
+        _countDownNotifier.notify(_remainingTimeToPunchInString);
+        start--;
+      }
+    });
+  }
+
+  //MARK: Functions to build punch in and out buttons
   Widget _buildPunchInButton() {
-    return AttendanceRectangleRoundedActionButton(
-      title: "Punch In",
-      subtitle: _locationAddress.length > 20 ? '${_locationAddress.substring(0, 20)}...' : _locationAddress,
-      status: "",
-      time: _timeString,
-      attendanceButtonColor: AppColors.punchInButtonColor,
-      moreButtonColor: AppColors.punchInMoreButtonColor,
-      onButtonPressed: () {
-        presenter.validateLocation(true);
-      },
-      onMoreButtonPressed: () {
-        _currentTimer.cancel();
-        ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
-      },
+    return ItemNotifiable(
+      notifier: _locationAddressNotifier,
+      builder: (context, address) => AttendanceRectangleRoundedActionButton(
+        title: "Punch In",
+        locationAddress:"$address",
+        time: _timeString,
+        attendanceButtonColor: AttendanceColors.punchInButtonColor,
+        moreButtonColor: AttendanceColors.punchInMoreButtonColor,
+        onButtonPressed: () {
+          presenter.validateLocation(true);
+        },
+        onMoreButtonPressed: () {
+          _currentTimer.cancel();
+          ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
+        },
+      ),
     );
   }
 
   Widget _buildPunchOutButton() {
-    return AttendanceRectangleRoundedActionButton(
-      title: "Punch Out",
-      subtitle: _locationAddress.length > 20 ? '${_locationAddress.substring(0, 20)}...' : _locationAddress,
-      status: "",
-      time: _timeString,
-      attendanceButtonColor: AppColors.punchOutButtonColor,
-      moreButtonColor: AppColors.punchOutMoreButtonColor,
-      onButtonPressed: () {
-        _doPunchOut();
-      },
-      onMoreButtonPressed: () {
-        _currentTimer.cancel();
-        ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
-      },
+    return ItemNotifiable(
+      notifier: _locationAddressNotifier,
+      builder: (context, address) =>  AttendanceRectangleRoundedActionButton(
+        title: "Punch Out",
+        locationAddress:"$address",
+        time: _timeString,
+        attendanceButtonColor: AttendanceColors.punchOutButtonColor,
+        moreButtonColor: AttendanceColors.punchOutMoreButtonColor,
+        onButtonPressed: () {
+          _doPunchOut();
+        },
+        onMoreButtonPressed: () {
+          _currentTimer.cancel();
+          ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
+        },
+      ),
     );
   }
 
@@ -195,42 +239,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       message: " Do you really want to punch out ? ",
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () {
-        presenter.validateLocation(false);
-      },
-    );
-  }
-
-  void _getTime() {
-    final DateTime now = DateTime.now();
-    final String formattedDateTime = _formatDateTime(now);
-    if (this.mounted)
-      setState(() {
-        _timeString = formattedDateTime;
-      });
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    return DateFormat('hh:mm a').format(dateTime);
-  }
-
-  void _startCountDownTimer(num _start) {
-    const oneSec = const Duration(seconds: 1);
-    _countDownTimer = new Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(_start.toInt());
-        if (_start == 0) {
-          setState(() {
-            timer.cancel();
-            presenter.loadAttendanceDetails();
-          });
-        } else {
-          setState(() {
-            _start--;
-          });
-        }
-      },
+      buttonTwoOnPressed: () => presenter.validateLocation(false),
     );
   }
 
@@ -242,99 +251,48 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   @override
-  void hideLoader() {}
+  void showErrorAndRetryView(String title, String message) {
+    _errorMessage = message;
+    _viewTypeNotifier.notify(ERROR_VIEW);
+  }
+
+  @override
+  void showRequestToTurnOnGpsView(String message) {
+    _errorMessage = message;
+    _viewTypeNotifier.notify(GPS_DISABLED_VIEW);
+  }
+
+  @override
+  void showRequestToEnableLocationView(String message) {
+    _errorMessage = message;
+    _viewTypeNotifier.notify(PERMISSION_DENIED_FOREVER_ERROR_VIEW);
+  }
+
+  @override
+  void showCountDownView(int secondsTillPunchIn) {
+    // todo check it proper method or not
+    var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(secondsTillPunchIn.toInt());
+    _countDownNotifier.notify(_remainingTimeToPunchInString);
+
+    _viewTypeNotifier.notify(COUNT_DOWN_VIEW);
+    _startCountDownTimer(secondsTillPunchIn);
+  }
 
   @override
   void showPunchInButton() {
     _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
-    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
   }
 
   @override
   void showPunchOutButton() {
     _viewTypeNotifier.notify(PUNCH_OUT_BUTTON_VIEW);
-    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
   }
 
   @override
-  void showTimeTillPunchIn(num seconds) {
-    _startCountDownTimer(seconds);
-    _viewTypeNotifier.notify(DISABLE_VIEW);
-  }
-
-  @override
-  void showPunchInTime(String time) {}
-
-  @override
-  void showPunchOutTime(String time) {}
-
-  @override
-  void showDisabledButton() {
-    _viewTypeNotifier.notify(DISABLE_VIEW);
-  }
-
-  @override
-  void requestToTurnOnDeviceLocation(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () {
-          AppSettings.openLocationSettings();
-        });
-  }
-
-  @override
-  void requestToLocationPermissions(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () {
-          presenter.loadAttendanceDetails();
-        });
-  }
-
-  @override
-  void openAppSettings() {
-    AppSettings.openAppSettings();
-  }
-
-  @override
-  void showBreakButton() {}
-
-  @override
-  void hideBreakButton() {}
-
-  @override
-  void showResumeButton() {}
-
-  @override
-  void showLocationPositions(AttendanceLocation attendanceLocation) {}
-
-  @override
-  void showLocationAddress(String address) {
-    setState(() {
-      _locationAddress = address;
-    });
-  }
-
-  @override
-  void showAttendanceReport(AttendanceReport attendanceReport) {}
-
-  @override
-  void doRefresh() {
-    presenter.loadAttendanceDetails();
-  }
-
-  @override
-  void showError(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void showErrorMessage(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
+  void showAddress(String address) {
+    _locationAddressNotifier.notify(address);
   }
 
   @override
@@ -345,13 +303,22 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       message: message,
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () {
-        if (isForPunchIn) {
-          presenter.doPunchIn(false);
-        } else {
-          presenter.doPunchOut(false);
-        }
-      },
+      buttonTwoOnPressed: () => isForPunchIn ? presenter.doPunchIn(false) : presenter.doPunchOut(false),
     );
+  }
+
+  @override
+  void doRefresh() {
+    //TODO - add a refresh or reload button
+  }
+
+//MARK: Util functions
+
+  void _getCurrentTime() {
+    final DateTime now = DateTime.now();
+    final String formattedDateTime = DateFormat('hh:mm a').format(now);
+      setState(() {
+        _timeString = formattedDateTime;
+      });
   }
 }

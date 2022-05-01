@@ -20,6 +20,8 @@ extension DateUtils on DateTime {
   }
 }
 
+//TODO: Ameena - remove this. We already have the same function in DateUtil.
+//!!NOTE: Always check shared code before creating your own code. Or ask me!
 extension TimeUtils on TimeOfDay {
   String HHmmssString() {
     return "${this.hour}:${this.minute}:00";

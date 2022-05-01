@@ -25,14 +25,8 @@ class AppColors {
 
   static const Color filtersBackgroundColour = Color.fromRGBO(223, 240, 247, 1.0);
 
-  //MARK: Attendance colors
-  //TODO Attendance: Remove duplicates
-  static final Color punchInButtonColor = Color.fromRGBO(43, 186, 104, 1.0);
-  static final Color punchInMoreButtonColor = Color.fromRGBO(0, 152, 66, 1.0);
-  static final Color punchOutButtonColor = Color.fromRGBO(246, 42, 32, 1.0);
-  static final Color punchOutMoreButtonColor = Color.fromRGBO(226, 32, 23, 1.0);
-  static final Color breakButtonColor = Color.fromRGBO(223, 240, 247, 1.0);
-  static final Color resumeButtonColor = Color.fromRGBO(37, 208, 110, 1.0);
-  static final Color locationAddressTextColor = Color.fromRGBO(217, 217, 217, 1.0);
-  static final Color attendanceStatusColor = Color.fromRGBO(217, 217, 217, 1.0);
+
+
+  //expense requests colors
+  static final Color darkGrey = Color.fromRGBO(100, 100, 100, 1.0);
 }
