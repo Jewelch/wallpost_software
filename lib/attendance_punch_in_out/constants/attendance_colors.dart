@@ -9,6 +9,7 @@ class AttendanceColors {
   static final Color punchOutMoreButtonColor = Color.fromRGBO(226, 32, 23, 1.0);
   static final Color breakButtonColor = Color.fromRGBO(223, 240, 247, 1.0);
   static final Color resumeButtonColor = Color.fromRGBO(37, 208, 110, 1.0);
+  static final Color breakButtonTextColor = Color.fromRGBO(0, 60, 129,1);
   static final Color attendanceButtonSubTextColor = Color.fromRGBO(217, 217, 217, 1.0);
   static final Color locationAddressTextColor = Color.fromRGBO(217, 217, 217, 1.0);
 

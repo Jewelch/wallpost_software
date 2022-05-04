@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'app_bar_divider.dart';
+import '../../_common_widgets/app_bars/app_bar_divider.dart';
 
 class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidget {
   final TextButton textButton1;
@@ -30,19 +29,12 @@ class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidge
       bottom: showDivider ? AppBarDivider() : null,
       // Don't show the default leading button
       automaticallyImplyLeading: false,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(children: [
-            SizedBox(width: 20),
-            GestureDetector(
-                onTap: onLeadingButtonPressed,
-                child: _constraintLeadingWidgetToSize(leadingButton)),
-            SizedBox(width: 40),
-          ]),
+      leading: IconButton(
+        onPressed: onLeadingButtonPressed,
+        icon: Icon(Icons.arrow_back,color: AppColors.defaultColor,),
+      ),
+      title:
           textButton1,
-        ],
-      ), systemOverlayStyle: SystemUiOverlayStyle.dark,
     );
   }
 

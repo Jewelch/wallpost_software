@@ -43,7 +43,7 @@ class AttendanceDetailsProvider {
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     try {
-      var attendanceDetails = AttendanceDetails.fromJson([{}]);
+      var attendanceDetails = AttendanceDetails.fromJson(responseMapList);
       return attendanceDetails;
     } catch (e) {
       throw InvalidResponseException();
