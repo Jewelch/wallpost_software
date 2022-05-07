@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-List<Widget> headerWithInput({
+List<Widget> expenseInputWithHeader({
   required String title,
   required Widget child,
   bool required = false,
@@ -33,8 +33,9 @@ List<Widget> headerWithInput({
       height: 8,
     ),
     Container(
-      decoration:
-      BoxDecoration(color: Colors.purple, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+          color: AppColors.textFieldBackgroundColor,
+          borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: child,

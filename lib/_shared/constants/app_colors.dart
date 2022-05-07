@@ -26,7 +26,8 @@ class AppColors {
   static const Color filtersBackgroundColour = Color.fromRGBO(223, 240, 247, 1.0);
 
 
-
   //expense requests colors
   static final Color darkGrey = Color.fromRGBO(100, 100, 100, 1.0);
+  static final Color lightGrey = Color.fromRGBO(217, 217, 217, 1.0);
+  static final Color green = Color.fromRGBO(43, 186, 104, 1.0);
 }

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 
-class DateSelector extends StatelessWidget {
+class ExpenseDateSelector extends StatelessWidget {
   final void Function(DateTime) onDateSelected;
 
-  const DateSelector({Key? key, required this.onDateSelected}) : super(key: key);
+  const ExpenseDateSelector({Key? key, required this.onDateSelected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
