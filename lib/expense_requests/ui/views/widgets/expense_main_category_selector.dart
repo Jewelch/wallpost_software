@@ -5,7 +5,7 @@ import 'package:wallpost/expense_requests/entities/expense_category.dart';
 class ExpenseCategorySelector extends StatefulWidget {
   final List<ExpenseCategory> items;
   final void Function(ExpenseCategory?) onChanged;
-  final ExpenseCategory? value;
+  final ExpenseCategory? Function() value;
 
   const ExpenseCategorySelector(
       {Key? key, required this.items, required this.onChanged, required this.value})
@@ -26,15 +26,12 @@ class _ExpenseCategorySelectorState extends State<ExpenseCategorySelector> {
         widget.onChanged(mainCategory);
         setState(() {});
       },
-      icon: Padding(
-        padding: const EdgeInsets.only(right: 8),
-        child: Icon(
-          Icons.arrow_forward_ios_sharp,
-          color: AppColors.darkGrey,
-        ),
+      icon: Icon(
+        Icons.arrow_forward_ios_sharp,
+        color: AppColors.darkGrey,
       ),
       alignment: Alignment.centerRight,
-      value: widget.value,
+      value: widget.value(),
       underline: SizedBox(),
       isExpanded: true,
       style: TextStyle(color: AppColors.darkGrey),

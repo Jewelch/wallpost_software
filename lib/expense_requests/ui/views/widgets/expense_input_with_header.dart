@@ -33,9 +33,9 @@ List<Widget> expenseInputWithHeader({
       height: 8,
     ),
     Container(
+      height: 48,
       decoration: BoxDecoration(
-          color: AppColors.textFieldBackgroundColor,
-          borderRadius: BorderRadius.circular(8)),
+          color: AppColors.textFieldBackgroundColor, borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: child,

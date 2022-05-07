@@ -6,7 +6,6 @@ import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/expense_list/constants/expense_list_urls.dart';
 import 'package:wallpost/expense_list/entities/expense_request.dart';
 
-
 class ExpenseRequestsProvider {
   final NetworkAdapter _networkAdapter;
   SelectedCompanyProvider _selectedCompanyProvider;
@@ -48,13 +47,14 @@ class ExpenseRequestsProvider {
 
     if (apiResponse.data == null) throw InvalidResponseException();
 
-    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
+    if ((apiResponse.data is! Map<String, dynamic>) || apiResponse.data['detail'] == null)
+      throw WrongResponseFormatException();
 
-    var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
+    var responseMapList = apiResponse.data['detail'] as List;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<ExpenseRequest> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<ExpenseRequest> _readItemsFromResponse(List responseMapList) {
     try {
       var requests = <ExpenseRequest>[];
       for (var responseMap in responseMapList) {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/file_picker/file_picker_screen.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_screen.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_button.dart';
+import 'package:wallpost/expense_list/ui/views/screens/expense_list_screen.dart';
 import 'package:wallpost/expense_requests/ui/views/screens/expense_request_screen.dart';
 import 'package:wallpost/password_management/ui/views/change_password_screen.dart';
 
@@ -43,7 +43,14 @@ class MyPortalScreen extends StatelessWidget {
                 color: Colors.greenAccent,
                 child: Text('Go to expense request'),
                 onPressed: () async {
-                  // ScreenPresenter.present(ExpenseRequestScreen(), context);
+                  ScreenPresenter.present(ExpenseRequestScreen(), context);
+                },
+              ),
+              FlatButton(
+                color: Colors.greenAccent,
+                child: Text('Go to expense list'),
+                onPressed: () async {
+                  ScreenPresenter.present(ExpenseListScreen(), context);
                 },
               ),
               FlatButton(

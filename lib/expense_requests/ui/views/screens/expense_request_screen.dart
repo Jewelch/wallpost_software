@@ -27,18 +27,13 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
     implements ExpenseRequestsView {
   final ItemNotifier<WidgetStatus> _loadingStatusNotifier =
       ItemNotifier(defaultValue: WidgetStatus.loading);
-  final ItemNotifier<bool> _subCategoriesNotifier =
-      ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _projectsNotifier =
-      ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _missingCategoryNotifier =
-      ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _missingSubCategoryNotifier =
-      ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _missingProjectNotifier =
-      ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _showLoaderNotifier =
-      ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _subCategoriesNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _projectsNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _missingCategoryNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _missingSubCategoryNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _missingProjectNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _showLoaderNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<void> _rateNotifier = ItemNotifier(defaultValue: null);
 
   final _expenseRequest = ExpenseRequestModel();
 
@@ -54,6 +49,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.screenBackgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: _getBottomButton(),
@@ -66,9 +62,11 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
             loadingWidget: ExpenseRequestLoader(),
             errorWidget: GestureDetector(
               onTap: () => _presenter.getCategories(),
-              child: Container(
-                height: 100,
-                child: Text("Ops something went wrong \n\n tap here to retry"),
+              child: Center(
+                child: Container(
+                  height: 100,
+                  child: Text("Ops something went wrong \n\n tap here to retry"),
+                ),
               ),
             ),
             child: ListView(
@@ -77,8 +75,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                 ...expenseInputWithHeader(
                   required: true,
                   title: "Date",
-                  child: ExpenseDateSelector(
-                      onDateSelected: (date) => _expenseRequest.date = date),
+                  child: ExpenseDateSelector(onDateSelected: (date) => _expenseRequest.date = date),
                 ),
                 ItemNotifiable<bool>(
                   notifier: _missingCategoryNotifier,
@@ -95,7 +92,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                             _presenter.selectCategory(mainCategory);
                           }
                         },
-                        value: _expenseRequest.selectedMainCategory,
+                        value: () => _expenseRequest.selectedMainCategory,
                       ),
                     ),
                   ),
@@ -111,13 +108,11 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                               required: true,
                               title: "Select the sub type of expense",
                               child: ExpenseCategorySelector(
-                                items: _expenseRequest
-                                    .selectedMainCategory!.subCategories,
+                                items: _expenseRequest.selectedMainCategory!.subCategories,
                                 onChanged: (subCategory) {
-                                  _expenseRequest.selectedSubCategory =
-                                      subCategory;
+                                  _expenseRequest.selectedSubCategory = subCategory;
                                 },
-                                value: _expenseRequest.selectedSubCategory,
+                                value: () => _expenseRequest.selectedSubCategory,
                               ),
                             ),
                           ),
@@ -136,12 +131,11 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                                   required: true,
                                   title: "Select the project",
                                   child: ExpenseCategorySelector(
-                                    items: _expenseRequest
-                                        .selectedMainCategory!.projects,
+                                    items: _expenseRequest.selectedMainCategory!.projects,
                                     onChanged: (project) {
                                       _expenseRequest.selectedProject = project;
                                     },
-                                    value: _expenseRequest.selectedProject,
+                                    value: () => _expenseRequest.selectedProject,
                                   ),
                                 ),
                               ),
@@ -161,6 +155,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                     onChanged: (value) {
                       var amount = double.tryParse(value) ?? 0;
                       _expenseRequest.setAmount(amount);
+                      _rateNotifier.notify(null);
                     },
                   ),
                 ),
@@ -177,46 +172,52 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                     onChanged: (value) {
                       var quantity = int.tryParse(value) ?? 0;
                       _expenseRequest.quantity = quantity;
+                      _rateNotifier.notify(null);
                     },
                   ),
                 ),
                 ...expenseInputWithHeader(
                   title: "Total amount to claim is",
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: _expenseRequest.rate,
-                      hintStyle: TextStyle(color: AppColors.darkGrey),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: ItemNotifiable(
+                      notifier: _rateNotifier,
+                      builder: (c, f) => Text(
+                        _expenseRequest.rate.toString(),
+                      ),
                     ),
-                    keyboardType: TextInputType.number,
                   ),
                 ),
                 ...expenseInputWithHeader(
                   required: true,
                   title: "Upload supporting document",
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        _expenseRequest.file != null
-                            ? _expenseRequest.file!.name()
-                            : "",
-                        style: TextStyle(color: AppColors.darkGrey),
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          var files = await FilePickerScreen.present(context,
-                              filesType: [FileTypes.documents]);
-                          if ((files as List).isNotEmpty)
-                            _expenseRequest.file = files[0];
-                          setState(() {});
-                        },
-                        icon: Icon(
-                          Icons.attach_file,
-                          color: AppColors.darkGrey,
+                  child: GestureDetector(
+                    onTap: () async {
+                      var files =
+                          await FilePickerScreen.present(context, filesType: [FileTypes.documents]);
+                      if ((files as List).isNotEmpty) _expenseRequest.file = files[0];
+                      setState(() {});
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _expenseRequest.file != null ? _expenseRequest.file!.name() : "",
+                            style: TextStyle(color: AppColors.darkGrey),
+                          ),
                         ),
-                      )
-                    ],
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Icon(
+                              Icons.attach_file,
+                              color: AppColors.darkGrey,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -233,8 +234,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
         _presenter.sendExpenseRequest(_expenseRequest);
       },
       child: Container(
-        decoration: BoxDecoration(
-            color: AppColors.green, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(color: AppColors.green, borderRadius: BorderRadius.circular(8)),
         margin: EdgeInsets.symmetric(horizontal: 20),
         width: MediaQuery.of(context).size.width,
         height: 40,
@@ -248,8 +248,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
                       backgroundColor: Colors.transparent,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.white.withOpacity(0.7)),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
                     ),
                   )
                 : Text(
@@ -285,6 +284,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
   @override
   void showSubCategories(List<ExpenseCategory> subCategories) {
     _subCategoriesNotifier.notify(true);
+    _expenseRequest.selectedSubCategory = null;
   }
 
   @override
