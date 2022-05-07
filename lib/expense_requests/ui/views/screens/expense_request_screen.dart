@@ -12,10 +12,10 @@ import 'package:wallpost/expense_requests/entities/expense_category.dart';
 import 'package:wallpost/expense_requests/ui/models/expense_request_model.dart';
 import 'package:wallpost/expense_requests/ui/presenters/expense_request_presenter.dart';
 import 'package:wallpost/expense_requests/ui/view_contracts/expense_requests_view.dart';
-import 'package:wallpost/expense_requests/ui/views/widgets/date_selector.dart';
+import 'package:wallpost/expense_requests/ui/views/widgets/expense_date_selector.dart';
 import 'package:wallpost/expense_requests/ui/views/widgets/expense_main_category_selector.dart';
 import 'package:wallpost/expense_requests/ui/views/widgets/expense_request_upload_success.dart';
-import 'package:wallpost/expense_requests/ui/views/widgets/header_with_input.dart';
+import 'package:wallpost/expense_requests/ui/views/widgets/expense_input_with_header.dart';
 import 'package:wallpost/expense_requests/ui/views/widgets/expense_request_loader.dart';
 
 class ExpenseRequestScreen extends StatefulWidget {
@@ -25,13 +25,20 @@ class ExpenseRequestScreen extends StatefulWidget {
 
 class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
     implements ExpenseRequestsView {
-  final ItemNotifier<WidgetStatus> _loadingStatusNotifier = ItemNotifier(defaultValue: WidgetStatus.loading);
-  final ItemNotifier<bool> _subCategoriesNotifier = ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _projectsNotifier = ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _missingCategoryNotifier = ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _missingSubCategoryNotifier = ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _missingProjectNotifier = ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _showLoaderNotifier = ItemNotifier(defaultValue: false);
+  final ItemNotifier<WidgetStatus> _loadingStatusNotifier =
+      ItemNotifier(defaultValue: WidgetStatus.loading);
+  final ItemNotifier<bool> _subCategoriesNotifier =
+      ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _projectsNotifier =
+      ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _missingCategoryNotifier =
+      ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _missingSubCategoryNotifier =
+      ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _missingProjectNotifier =
+      ItemNotifier(defaultValue: false);
+  final ItemNotifier<bool> _showLoaderNotifier =
+      ItemNotifier(defaultValue: false);
 
   final _expenseRequest = ExpenseRequestModel();
 
@@ -67,15 +74,16 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
             child: ListView(
               padding: EdgeInsets.all(16),
               children: [
-                ...headerWithInput(
+                ...expenseInputWithHeader(
                   required: true,
                   title: "Date",
-                  child: DateSelector(onDateSelected: (date) => _expenseRequest.date = date),
+                  child: ExpenseDateSelector(
+                      onDateSelected: (date) => _expenseRequest.date = date),
                 ),
                 ItemNotifiable<bool>(
                   notifier: _missingCategoryNotifier,
                   builder: (_, isCategoryMissing) => Column(
-                    children: headerWithInput(
+                    children: expenseInputWithHeader(
                       showRequiredMessage: isCategoryMissing,
                       required: true,
                       title: "Select the type of expense",
@@ -98,14 +106,16 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                       ? ItemNotifiable<bool>(
                           notifier: _missingSubCategoryNotifier,
                           builder: (_, isSubCategoryMissing) => Column(
-                            children: headerWithInput(
+                            children: expenseInputWithHeader(
                               showRequiredMessage: isSubCategoryMissing,
                               required: true,
                               title: "Select the sub type of expense",
                               child: ExpenseCategorySelector(
-                                items: _expenseRequest.selectedMainCategory!.subCategories,
+                                items: _expenseRequest
+                                    .selectedMainCategory!.subCategories,
                                 onChanged: (subCategory) {
-                                  _expenseRequest.selectedSubCategory = subCategory;
+                                  _expenseRequest.selectedSubCategory =
+                                      subCategory;
                                 },
                                 value: _expenseRequest.selectedSubCategory,
                               ),
@@ -121,12 +131,13 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                           ? ItemNotifiable<bool>(
                               notifier: _missingProjectNotifier,
                               builder: (_, isProjectMissing) => Column(
-                                children: headerWithInput(
+                                children: expenseInputWithHeader(
                                   showRequiredMessage: isProjectMissing,
                                   required: true,
                                   title: "Select the project",
                                   child: ExpenseCategorySelector(
-                                    items: _expenseRequest.selectedMainCategory!.projects,
+                                    items: _expenseRequest
+                                        .selectedMainCategory!.projects,
                                     onChanged: (project) {
                                       _expenseRequest.selectedProject = project;
                                     },
@@ -137,7 +148,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                             )
                           : SizedBox();
                     }),
-                ...headerWithInput(
+                ...expenseInputWithHeader(
                   required: true,
                   title: "Enter the expense amount",
                   child: TextField(
@@ -153,7 +164,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                     },
                   ),
                 ),
-                ...headerWithInput(
+                ...expenseInputWithHeader(
                   required: true,
                   title: "Enter the total quantity",
                   child: TextField(
@@ -169,7 +180,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                     },
                   ),
                 ),
-                ...headerWithInput(
+                ...expenseInputWithHeader(
                   title: "Total amount to claim is",
                   child: TextField(
                     decoration: InputDecoration(
@@ -180,21 +191,24 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                     keyboardType: TextInputType.number,
                   ),
                 ),
-                ...headerWithInput(
+                ...expenseInputWithHeader(
                   required: true,
                   title: "Upload supporting document",
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        _expenseRequest.file != null ? _expenseRequest.file!.name() : "",
+                        _expenseRequest.file != null
+                            ? _expenseRequest.file!.name()
+                            : "",
                         style: TextStyle(color: AppColors.darkGrey),
                       ),
                       IconButton(
                         onPressed: () async {
                           var files = await FilePickerScreen.present(context,
                               filesType: [FileTypes.documents]);
-                          if ((files as List).isNotEmpty) _expenseRequest.file = files[0];
+                          if ((files as List).isNotEmpty)
+                            _expenseRequest.file = files[0];
                           setState(() {});
                         },
                         icon: Icon(
@@ -219,8 +233,8 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
         _presenter.sendExpenseRequest(_expenseRequest);
       },
       child: Container(
-        decoration:
-            BoxDecoration(color: AppColors.punchInButtonColor, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: AppColors.green, borderRadius: BorderRadius.circular(8)),
         margin: EdgeInsets.symmetric(horizontal: 20),
         width: MediaQuery.of(context).size.width,
         height: 40,
@@ -234,7 +248,8 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
                       backgroundColor: Colors.transparent,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.white.withOpacity(0.7)),
                     ),
                   )
                 : Text(

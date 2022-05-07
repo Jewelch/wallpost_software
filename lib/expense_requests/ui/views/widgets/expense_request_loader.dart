@@ -28,10 +28,12 @@ List<Widget> shimmerInputWithHeader() {
       children: [
         Container(
           decoration: BoxDecoration(
-              color: AppColors.shimmerColor, borderRadius: BorderRadius.circular(10)),
+              color: AppColors.shimmerColor,
+              borderRadius: BorderRadius.circular(10)),
           height: 28,
           width: 160,
-          constraints: BoxConstraints(maxWidth: 160, maxHeight: 28, minWidth: 8),
+          constraints:
+              BoxConstraints(maxWidth: 160, maxHeight: 28, minWidth: 8),
           child: SizedBox(),
         ),
       ],
@@ -42,7 +44,10 @@ List<Widget> shimmerInputWithHeader() {
     Container(
       height: 80,
       constraints: BoxConstraints(maxWidth: 64, maxHeight: 40, minWidth: 8),
-      decoration: BoxDecoration(color: AppColors.attendanceStatusColor, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+        color: AppColors.lightGrey,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
       ),
