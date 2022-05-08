@@ -6,7 +6,6 @@ import 'app_bar_divider.dart';
 class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-
   @override
   final Size preferredSize;
 
@@ -24,24 +23,25 @@ class AppBarWithBackButton extends StatelessWidget implements PreferredSizeWidge
         style: TextStyle(color: AppColors.defaultColorDark, fontWeight: FontWeight.bold),
       ),
       centerTitle: false,
-      leading: Center(
-        child: Container(
-          width: 36,
-          height: 28,
-          constraints: BoxConstraints(maxHeight: 28, maxWidth: 36),
-          decoration:
-          BoxDecoration(color: AppColors.defaultColor, borderRadius: BorderRadius.circular(12)),
-          alignment: Alignment.center,
-          child: Icon(
-            Icons.arrow_back_ios_outlined,
-            color: AppColors.textFieldBackgroundColor,
-            size: 12,
+      leading: GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: Center(
+          child: Container(
+            width: 36,
+            height: 28,
+            constraints: BoxConstraints(maxHeight: 28, maxWidth: 36),
+            decoration: BoxDecoration(
+                color: AppColors.defaultColor, borderRadius: BorderRadius.circular(12)),
+            alignment: Alignment.center,
+            child: Icon(
+              Icons.arrow_back_ios_outlined,
+              color: AppColors.textFieldBackgroundColor,
+              size: 12,
+            ),
           ),
         ),
       ),
       bottom: AppBarDivider(),
     );
   }
-
-
 }

@@ -14,7 +14,7 @@ class MockSelectedCompanyProvider extends Mock implements SelectedCompanyProvide
 class MockCompany extends Mock implements Company {}
 
 void main() {
-  var successfulResponse = expenseRequestsListResponse;
+  var successfulResponse = {"detail": expenseRequestsListResponse};
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockSelectedCompanyProvider = MockSelectedCompanyProvider();
   var expenseRequestsProvider =
@@ -34,8 +34,7 @@ void main() {
 
     var _ = await expenseRequestsProvider.getNext();
 
-    expect(
-        mockNetworkAdapter.apiRequest.url, ExpenseListUrls.getEmployeeExpenses(companyId));
+    expect(mockNetworkAdapter.apiRequest.url, ExpenseListUrls.getEmployeeExpenses(companyId));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
   });
 
@@ -118,9 +117,11 @@ void main() {
   });
 
   test('throws InvalidResponseException when entity mapping fails', () async {
-    mockNetworkAdapter.succeed([
-      <String, dynamic>{"miss_data": "anyWrongData"}
-    ]);
+    mockNetworkAdapter.succeed({
+      "detail": [
+        <String, dynamic>{"miss_data": "anyWrongData"}
+      ]
+    });
 
     try {
       var _ = await expenseRequestsProvider.getNext();

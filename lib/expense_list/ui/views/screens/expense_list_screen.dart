@@ -41,7 +41,9 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWithBackButton(title: "Expense Requests",),
+      appBar: AppBarWithBackButton(
+        title: "Expense Requests",
+      ),
       body: SafeArea(
         child: ItemNotifiable(
           notifier: _viewTypeNotifier,
@@ -64,11 +66,13 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
   }
 
   Widget _buildErrorView() {
-    return GestureDetector(
-      onTap: () => _presenter.getNextExpenses(),
-      child: Container(
-        height: 100,
-        child: Text(_presenter.errorMessage),
+    return Center(
+      child: GestureDetector(
+        onTap: () => _presenter.getNextExpenses(),
+        child: Container(
+          height: 100,
+          child: Text(_presenter.errorMessage),
+        ),
       ),
     );
   }
@@ -78,6 +82,9 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       children: [
+        SizedBox(
+          height: 24,
+        ),
         ListView.builder(
           shrinkWrap: true,
           controller: _scrollController,
@@ -117,6 +124,7 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
 
   @override
   void showErrorMessage(String message) {
+    print(message);
     _viewTypeNotifier.notify(viewTypeError);
   }
 
