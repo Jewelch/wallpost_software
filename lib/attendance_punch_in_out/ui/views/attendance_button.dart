@@ -280,7 +280,9 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void showPunchInButton() {
-    _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
+    Timer(Duration(seconds: 1), () {
+      _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
+    });
     _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
   }
 
