@@ -233,8 +233,10 @@ class Mocks {
     },
   ];
 
-  static Map<String, dynamic> punchInFromAppPermissionResponse = {
-    "punch_in_allowed": true,
+  static Map<String, dynamic> attendancePermissionResponse = {
+    "punch_in_allowed_from_app": true,
+    "remaining_in_min": randomBetween(1000, 5000),
+    "status": true,
   };
 
   static Map<String, dynamic> punchInNowPermissionResponse = {
