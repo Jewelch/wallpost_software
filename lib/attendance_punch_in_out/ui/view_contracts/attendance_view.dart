@@ -1,7 +1,7 @@
 abstract class AttendanceView {
   void showLoader();
 
-  void showErrorAndRetryView(String title, String message);
+  void showErrorAndRetryView(String message);
 
   void showRequestToTurnOnGpsView(String message);
 

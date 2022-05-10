@@ -73,7 +73,7 @@ class AttendancePresenter {
       var attendanceReport = await _attendanceReportProvider.getReport();
       detailedView?.showAttendanceReport(attendanceReport);
     } on WPException catch (e) {
-      basicView.showErrorAndRetryView("Getting attendance report is failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Getting attendance report is failed");
     }
   }
 
@@ -86,19 +86,16 @@ class AttendancePresenter {
       basicView.showLoader();
       _attendanceDetails = await _attendanceDetailsProvider.getDetails();
 
-      if (_attendanceDetails.isNotPunchedIn)
-        _loadPunchInDetails();
-      else if (_attendanceDetails.isPunchedIn)
-        _loadPunchOutDetails();
+      if (_attendanceDetails.isNotPunchedIn) _loadPunchInDetails();
+      else if (_attendanceDetails.isPunchedIn) _loadPunchOutDetails();
       else if (_attendanceDetails.isPunchedOut) _loadPunchedOutDetails();
     } on WPException catch (_) {
-      basicView.showErrorAndRetryView(
-          "Loading attendance details failed", "Failed to load attendance details.\nTap to reload");
+      basicView.showErrorAndRetryView("Failed to load attendance details.\nTap to reload");
     }
   }
 
   Future<void> _loadPunchInDetails() async {
-    var canPunchInNow = await _canPunchInNow();
+    var canPunchInNow = await _canMarkAttendanceFromApp();
     if (!canPunchInNow) return;
 
     _attendanceLocation = await getLocation();
@@ -110,16 +107,15 @@ class AttendancePresenter {
   }
 
   Future<void> _loadPunchOutDetails() async {
-    //TODO
-    // var canPunchOutFromApp = await _canMarkAttendanceFromApp();
-    // if (!canPunchOutFromApp) return;
-    //
-    // _attendanceLocation = await getLocation();
-    // if (_attendanceLocation == null) return;
-    //
-    // _view.showPunchOutButton();
-    // _loadAddress();
-    // _loadBreakDetails();
+    var canPunchOutFromApp = await _canMarkAttendanceFromApp();
+    if (!canPunchOutFromApp) return;
+
+    _attendanceLocation = await getLocation();
+    if (_attendanceLocation == null) return;
+
+    basicView.showPunchOutButton();
+    _loadAddress();
+    _loadBreakDetails();
   }
 
   void _loadBreakDetails() {
@@ -127,39 +123,31 @@ class AttendancePresenter {
   }
 
   Future<void> _loadPunchedOutDetails() async {
-    //TODO:
-    // _view.hideLoader();
-    // await _loadPunchOutDetails(_attendanceDetails);
-    /*
-       if (attendanceDetails.isPunchedOut) {
-      _showPunchInTime(attendanceDetails);
-      _showPunchOutTime(attendanceDetails);
-      _view.showDisabledButton();
-      _view.hideBreakButton();
-      */
+    _showPunchInTime();
+    _showPunchOutTime();
+    detailedView?.hideBreakButton();
   }
 
   //MARK: Functions to get attendance permissions
 
-  Future<bool> _canPunchInNow() async {
+  Future<bool> _canMarkAttendanceFromApp () async {
     try {
       var attendancePermission = await _attendancePermissionsProvider.getPermissions();
 
-      if (!attendancePermission.canPunchInFromApp) {
-        basicView.showErrorAndRetryView("Punch in from app disabled",
-            "You are not allowed to punch in from the app.\nPlease contact your HR or tap to reload.");
+      if (!attendancePermission.canMarkAttendancePermissionFromApp) {
+        basicView.showErrorAndRetryView(
+            "You are not allowed to mark attendance from the app.\nPlease contact your HR or tap to reload.");
         return false;
       }
 
-      if (!attendancePermission.canPunchInNow) {
+      if (!attendancePermission.canMarkAttendanceNow) {
         basicView.showCountDownView(attendancePermission.secondsTillPunchIn.toInt());
         return false;
       }
 
       return true;
     } on WPException catch (_) {
-      basicView.showErrorAndRetryView(
-          "Failed to load punch in permission", "Failed to load punch in permission.\nTap to reload");
+      basicView.showErrorAndRetryView("Failed to load permission for mark attendance.\nTap to reload");
       return false;
     }
   }
@@ -178,11 +166,13 @@ class AttendancePresenter {
     } on LocationPermissionsPermanentlyDeniedException catch (e) {
       basicView.showRequestToEnableLocationView("Location permission denied.\nTap here to go to settings");
     } on LocationAcquisitionFailedException catch (e) {
-      basicView.showErrorAndRetryView("Getting location failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Getting location failed");
     }
 
     return null;
   }
+
+  //MARK: Functions to load address
 
   Future<void> _loadAddress() async {
     var address = "";
@@ -197,48 +187,64 @@ class AttendancePresenter {
     basicView.showAddress(address);
   }
 
-  //MARK: Functions to mark attendance
+  //MARK: Functions to show punched in and out time
 
-  Future<void> doPunchIn(bool isValid) async {
+  void _showPunchInTime() {
+    detailedView?.showPunchInTime(_attendanceDetails.punchInTimeString);
+  }
+
+  void _showPunchOutTime() {
+    detailedView?.showPunchOutTime(_attendanceDetails.punchOutTimeString);
+  }
+
+  //MARK: Functions to check location is valid to mark attendance
+
+  Future<void> isValidatedLocation(bool isForPunchIn) async {
+    var isValidateLocation = await _validateAttendanceLocation(isForPunchIn);
+
+    if(isValidateLocation)
+
+      if(isForPunchIn) await markPunchIn(true);
+      else await markPunchOut(false);
+
+    else  basicView.showAlertToInvalidLocation(
+        true,
+        "Invalid location",
+        "You are not allowed to mark attendance outside the office location. " +
+            "Doing so will affect your performance. Would you still like to mark?");
+  }
+
+  Future<bool> _validateAttendanceLocation (bool isForPunchIn) async {
     try {
-      //TODO:
-      // await _punchInMarker.punchIn(_attendanceLocation, isLocationValid: isValid);
-      basicView.doRefresh();
-    } on WPException catch (e) {
-      basicView.showErrorAndRetryView("Punched in failed", e.userReadableMessage);
+      var attendanceLocationValidator=
+      await  _attendanceLocationValidator.validateLocation(_attendanceLocation!,isForPunchIn: isForPunchIn);
+
+      if(attendanceLocationValidator) return true;
+      else return false;
+
+    } on WPException catch (_) {
+      basicView.showErrorAndRetryView("Failed to validate your location");
+      return false;
     }
   }
 
-  Future<void> doPunchOut(bool isValid) async {
+//MARK: Functions to mark attendance
+
+  Future<void> markPunchIn(bool isLocationValid) async {
     try {
-      //TODO:
-      // await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation, isLocationValid: isValid);
+      await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
       basicView.doRefresh();
     } on WPException catch (e) {
-      basicView.showErrorAndRetryView("Punched out failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Punched in failed");
     }
   }
 
-  Future<void> validateLocation(bool isForPunchIn) async {
+  Future<void> markPunchOut(bool isLocationValid) async {
     try {
-      //TODO:
-      // var isLocationValid =
-      //await _attendanceLocationValidator.validateLocation(_attendanceLocation, isForPunchIn: isForPunchIn);
-      // if (isLocationValid) {
-      //   if (isForPunchIn) {
-      //     await doPunchIn(true);
-      //   } else {
-      //     await doPunchOut(true);
-      //   }
-      // } else {
-      //   _view.showAlertToInvalidLocation(
-      //       isForPunchIn,
-      //       "Invalid punch ${isForPunchIn ? 'in' : 'out'} location",
-      //       "You are not allowed to punch ${isForPunchIn ? 'in' : 'out'} outside the office location. " +
-      //           "Doing so will affect your performance. Would you still like to punch ${isForPunchIn ? 'in' : 'out'}?");
-      // }
+      await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
+      basicView.doRefresh();
     } on WPException catch (e) {
-      basicView.showErrorAndRetryView("Failed to validate your location", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Punched out failed");
     }
   }
 
@@ -251,7 +257,7 @@ class AttendancePresenter {
       basicView.doRefresh();
       detailedView?.showResumeButton();
     } on WPException catch (e) {
-      basicView.showErrorAndRetryView("Start break is failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("Start break is failed");
     }
   }
 
@@ -261,18 +267,8 @@ class AttendancePresenter {
       // await _breakEndMarker.endBreak(_attendanceDetails, _attendanceLocation);
       detailedView?.showBreakButton();
     } on WPException catch (e) {
-      basicView.showErrorAndRetryView("End break is failed", e.userReadableMessage);
+      basicView.showErrorAndRetryView("End break is failed");
     }
-  }
-
-  // TODO -----
-
-  void _showPunchInTime(AttendanceDetails attendanceDetails) {
-    detailedView?.showPunchInTime(attendanceDetails.punchInTimeString);
-  }
-
-  void _showPunchOutTime(AttendanceDetails attendanceDetails) {
-    detailedView?.showPunchOutTime(attendanceDetails.punchOutTimeString);
   }
 
   //MARK: Functions to go to settings

@@ -28,7 +28,6 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   String? _timeString;
   late Timer _countDownTimer;
   late Timer _currentTimer;
-  String _locationAddress = "";
 
   /*
   Types of views
@@ -183,7 +182,6 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
         presenter.loadAttendanceDetails();
         return;
       } else {
-        //TODO: Why is this empty at the start? That too only when the app runs for the first time.
         var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(start.toInt());
         _countDownNotifier.notify(_remainingTimeToPunchInString);
         start--;
@@ -192,6 +190,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   //MARK: Functions to build punch in and out buttons
+
   Widget _buildPunchInButton() {
     return ItemNotifiable(
       notifier: _locationAddressNotifier,
@@ -202,7 +201,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
         attendanceButtonColor: AttendanceColors.punchInButtonColor,
         moreButtonColor: AttendanceColors.punchInMoreButtonColor,
         onButtonPressed: () {
-          presenter.validateLocation(true);
+          presenter.isValidatedLocation(true);
         },
         onMoreButtonPressed: () {
           _currentTimer.cancel();
@@ -239,7 +238,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       message: " Do you really want to punch out ? ",
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () => presenter.validateLocation(false),
+      buttonTwoOnPressed: () => presenter.isValidatedLocation(false),
     );
   }
 
@@ -251,7 +250,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   @override
-  void showErrorAndRetryView(String title, String message) {
+  void showErrorAndRetryView( String message) {
     _errorMessage = message;
     _viewTypeNotifier.notify(ERROR_VIEW);
   }
@@ -270,7 +269,6 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
 
   @override
   void showCountDownView(int secondsTillPunchIn) {
-    // todo check it proper method or not
     var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(secondsTillPunchIn.toInt());
     _countDownNotifier.notify(_remainingTimeToPunchInString);
 
@@ -283,12 +281,16 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     Timer(Duration(seconds: 1), () {
       _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
     });
+
     _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
   }
 
   @override
   void showPunchOutButton() {
-    _viewTypeNotifier.notify(PUNCH_OUT_BUTTON_VIEW);
+    Timer(Duration(seconds: 1), () {
+      _viewTypeNotifier.notify(PUNCH_OUT_BUTTON_VIEW);
+    });
+
     _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
   }
 
@@ -305,7 +307,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       message: message,
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () => isForPunchIn ? presenter.doPunchIn(false) : presenter.doPunchOut(false),
+      buttonTwoOnPressed: () => isForPunchIn ? presenter.markPunchIn(false) : presenter.markPunchOut(false),
     );
   }
 

@@ -17,14 +17,12 @@ class LocationProvider {
       bool serviceEnabled;
       LocationPermission permission;
 
-      print("00000-----");
       //Checking if location services are enabled
       serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         throw LocationServicesDisabledException();
       }
 
-      print("11111-----");
       //Checking if location permissions are denied
       //If denied, we request the permission
       permission = await Geolocator.checkPermission();
@@ -34,12 +32,10 @@ class LocationProvider {
           throw LocationPermissionsDeniedException();
         }
       }
-      print("22222-----");
       // Permissions are denied forever
       if (permission == LocationPermission.deniedForever) {
         throw LocationPermissionsPermanentlyDeniedException();
       }
-      print("33333-----");
       // continue accessing the position of the device.
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       return AttendanceLocation(position.latitude, position.longitude);

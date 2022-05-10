@@ -283,7 +283,7 @@ class _AttendanceButtonDetailsScreenState
       title: "Punch In",
       time: _timeString,
       buttonColor: AttendanceColors.punchInButtonColor,
-      onPressed: () => presenter.validateLocation(true),
+      onPressed: () => presenter.isValidatedLocation(true),
     );
   }
 
@@ -304,7 +304,7 @@ class _AttendanceButtonDetailsScreenState
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () {
-        presenter.validateLocation(false);
+        presenter.isValidatedLocation(false);
       },
     );
   }
@@ -521,16 +521,16 @@ class _AttendanceButtonDetailsScreenState
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () {
         if (isForPunchIn) {
-          presenter.doPunchIn(false);
+          presenter.markPunchIn(false);
         } else {
-          presenter.doPunchOut(false);
+          presenter.markPunchOut(false);
         }
       },
     );
   }
 
   @override
-  void showErrorAndRetryView(String title, String message) {
+  void showErrorAndRetryView( String message) {
     _viewSelectorNotifier.notify(ERROR_VIEW);
     _errorMessage = message;
   }
