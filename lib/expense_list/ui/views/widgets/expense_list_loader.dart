@@ -36,9 +36,7 @@ class ExpenseListLoader extends StatelessWidget {
           color: AppColors.shimmerColor,
           borderRadius: BorderRadius.circular(8),
         ),
-
       ),
     );
   }
-
 }

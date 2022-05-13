@@ -22,7 +22,7 @@ class ExpenseRequestCreator {
   ExpenseRequestCreator.initWith(this._networkAdapter, this._fileUploader, this._companyProvider);
 
   Future execute(ExpenseRequestForm expenseRequest) async {
-    if(isExecuting) return;
+    if (isExecuting) return;
     isExecuting = true;
     String url = _prepareUrl();
     try {
@@ -55,7 +55,8 @@ class ExpenseRequestCreator {
 
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
-    if (apiResponse.data['sample_pdf'] == null || apiResponse.data['sample_pdf'] == '') throw FailedToSaveRequest();
+    if (apiResponse.data['sample_pdf'] == null || apiResponse.data['sample_pdf'] == '')
+      throw FailedToSaveRequest();
 
     var response = apiResponse.data as Map<String, dynamic>;
     return response['sample_pdf'].toString();

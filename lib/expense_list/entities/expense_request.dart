@@ -8,6 +8,8 @@ import 'package:wallpost/expense_list/entities/expense_request_status.dart';
 
 class ExpenseRequest extends JSONInitializable {
   late final String id;
+  late final String _category;
+  late final String _subCategory;
   late final String requestNo;
   late final Money totalAmount;
   late final DateTime createdAt;
@@ -15,10 +17,14 @@ class ExpenseRequest extends JSONInitializable {
   late final ExpenseRequestStatus status;
   late final String description;
 
+  String get title => _category + " " + _subCategory;
+
   ExpenseRequest.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       id = sift.readNumberFromMap(jsonMap, 'expense_id').toString();
+      _category = sift.readStringFromMap(jsonMap, 'main_category');
+      _subCategory = sift.readStringFromMapWithDefaultValue(jsonMap, 'sub_category', "")!;
       requestNo = sift.readStringFromMap(jsonMap, 'expense_request_no').toString();
       var amount = sift.readStringFromMap(jsonMap, 'total_amount');
       totalAmount = Money(double.parse(amount));

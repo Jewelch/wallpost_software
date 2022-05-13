@@ -216,11 +216,10 @@ main() {
     expect(verifyResult2.callCount, 1);
   });
 
-
   test('test calling execute while still executing the first call do nothing', () async {
     mockNetworkAdapter.succeed(successfulExecuteResponse);
 
-    var _ =  _requestExecutor.execute(expenseRequest);
+    var _ = _requestExecutor.execute(expenseRequest);
     _ = _requestExecutor.execute(expenseRequest);
     _ = _requestExecutor.execute(expenseRequest);
 
@@ -229,6 +228,4 @@ main() {
     expect(verifyResult.callCount, 1);
     expect(verifyResult2.callCount, 1);
   });
-
-
 }

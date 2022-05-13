@@ -264,7 +264,7 @@ main() {
 
     presenter.selectBrowsingFilter(ExpenseRequestsFilters.rejected);
     expect(presenter.getNumberOfListItems(), 4);
-    verify(()=>provider.expenseRequestsFilter);
+    verify(() => provider.expenseRequestsFilter);
     _verifyNoMoreInteractions();
   });
 }

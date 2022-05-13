@@ -208,11 +208,9 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
     try {
       expect(expenseRequestsProvider.getCurrentPageNumber(), 1);
-      await expenseRequestsProvider.getExpenseRequests(
-          filter: ExpenseRequestsFilters.approved);
+      await expenseRequestsProvider.getExpenseRequests(filter: ExpenseRequestsFilters.approved);
       expect(expenseRequestsProvider.getCurrentPageNumber(), 2);
-      await expenseRequestsProvider.getExpenseRequests(
-          filter: ExpenseRequestsFilters.approved);
+      await expenseRequestsProvider.getExpenseRequests(filter: ExpenseRequestsFilters.approved);
       expect(expenseRequestsProvider.getCurrentPageNumber(), 3);
       await expenseRequestsProvider.getExpenseRequests();
       expect(expenseRequestsProvider.getCurrentPageNumber(), 4);

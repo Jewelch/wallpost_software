@@ -338,8 +338,6 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
     _showLoaderNotifier.notify(false);
   }
 
-  // TODO Ask Obaid
-
   @override
   void onSendRequestsSuccessfully() {
     ScreenPresenter.present(ExpenseRequestSubmittedSuccessScreen(), context);
