@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/app_bars/app_bar_with_title.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/file_picker/file_picker_screen.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -53,7 +54,10 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
       backgroundColor: AppColors.screenBackgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: _getBottomButton(),
-      appBar: AppBarWithBackButton(title: "Expense Request"),
+      appBar: SimpleAppBar(
+        title: "Expense Request",
+        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
+      ),
       body: ItemNotifiable<WidgetStatus>(
         notifier: _loadingStatusNotifier,
         builder: (_, status) {

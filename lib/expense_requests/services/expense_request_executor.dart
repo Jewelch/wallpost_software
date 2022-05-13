@@ -66,7 +66,7 @@ class ExpenseRequestExecutor {
   Future<bool> _execute(ExpenseRequestForm expenseRequests, String url) async {
     var apiRequest = APIRequest(url);
     apiRequest.addParameter("expenseItems", [expenseRequests.toJson()]);
-    var apiResponse = await _networkAdapter.post(apiRequest);
+    var apiResponse = await _networkAdapter.postWithFormData(apiRequest);
     return _processResponse(apiResponse);
   }
 

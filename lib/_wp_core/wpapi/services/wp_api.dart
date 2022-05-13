@@ -7,7 +7,6 @@ import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_request_executor.dart';
 import 'package:wallpost/_wp_core/wpapi/services/nonce_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wpapi_response_processor.dart';
-
 export 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 
 class WPAPI implements NetworkAdapter {
@@ -23,7 +22,8 @@ class WPAPI implements NetworkAdapter {
     this._networkAdapter = NetworkRequestExecutor();
   }
 
-  WPAPI.initWith(this._deviceInfo, this._accessTokenProvider, this._nonceProvider, this._networkAdapter);
+  WPAPI.initWith(
+      this._deviceInfo, this._accessTokenProvider, this._nonceProvider, this._networkAdapter);
 
   @override
   Future<APIResponse> get(APIRequest apiRequest, {bool forceRefresh = false}) async {
@@ -71,6 +71,21 @@ class WPAPI implements NetworkAdapter {
   }
 
   @override
+  Future<APIResponse> postWithFormData(APIRequest apiRequest, {bool forceRefresh = false}) async {
+    apiRequest.addHeaders(await _buildWPHeaders(forceRefresh: forceRefresh, isFormData: true));
+    try {
+      var apiResponse = await _networkAdapter.postWithFormData(apiRequest);
+      return _processResponse(apiResponse, apiRequest);
+    } on APIException catch (exception) {
+      if (_shouldRefreshTokenOnException(exception)) {
+        return post(apiRequest, forceRefresh: true);
+      } else {
+        throw exception;
+      }
+    }
+  }
+
+  @override
   Future<APIResponse> postWithNonce(APIRequest apiRequest, {bool forceRefresh: true}) async {
     var wpHeaders = await _buildWPHeaders(forceRefresh: forceRefresh);
     var nonce = await _nonceProvider.getNonce(wpHeaders);
@@ -104,9 +119,10 @@ class WPAPI implements NetworkAdapter {
     }
   }
 
-  Future<Map<String, String>> _buildWPHeaders({bool forceRefresh = false}) async {
+  Future<Map<String, String>> _buildWPHeaders(
+      {bool forceRefresh = false, bool isFormData = false}) async {
     var headers = Map<String, String>();
-    headers['Content-Type'] = 'application/json';
+    headers['Content-Type'] = isFormData ? 'application/x-www-form-urlencoded;charset=utf-8' : 'application/json';
     headers['X-WallPost-Device-ID'] = await _deviceInfo.getDeviceId();
     headers['X-WallPost-App-ID'] = AppId.appId;
 

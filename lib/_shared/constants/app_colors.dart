@@ -31,4 +31,5 @@ class AppColors {
   static final Color textGrey = Color.fromRGBO(134, 129, 129, 1.0);
   static final Color green = Color.fromRGBO(43, 186, 104, 1.0);
   static final Color yellow = Color.fromRGBO(248, 162, 40, 1.0);
+  static final Color dropDownColor = Color.fromARGB(255, 223, 240, 247);
 }

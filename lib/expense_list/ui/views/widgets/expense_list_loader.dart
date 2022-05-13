@@ -10,10 +10,8 @@ class ExpenseListLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShimmerEffect(
       child: ListView(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         children: [
-          shimmerContainer(height: 40, padding: 0,margin: 0),
-          SizedBox(height: 12),
           shimmerContainer(),
           shimmerContainer(),
           shimmerContainer(),

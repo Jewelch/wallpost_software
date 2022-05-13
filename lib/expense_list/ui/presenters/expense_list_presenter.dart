@@ -1,5 +1,6 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/expense_list/entities/expense_request.dart';
+import 'package:wallpost/expense_list/entities/expense_requests_filters.dart';
 import 'package:wallpost/expense_list/services/expense_requests_provider.dart';
 import 'package:wallpost/expense_list/ui/view_contracts/expense_list_view.dart';
 
@@ -20,15 +21,22 @@ class ExpenseListPresenter {
     this._requestsProvider,
   );
 
-  Future getNextExpenses() async {
+  Future loadExpenseRequests({ExpenseRequestsFilters? filter}) async {
     _expenseRequests.isEmpty ? _view.showLoader() : _view.updateExpenseList();
     _resetErrors();
 
     try {
-      var expenses = await _requestsProvider.getNext();
+      var expenses = await _requestsProvider.getExpenseRequests(filter: filter);
       _handleResponse(expenses);
     } on WPException catch (e) {
       setError('${e.userReadableMessage}\n\nTap here to reload.');
+    }
+  }
+
+  Future selectBrowsingFilter(ExpenseRequestsFilters filter) async {
+    if (filter != currentFilter) {
+      _expenseRequests.clear();
+      await loadExpenseRequests(filter: filter);
     }
   }
 
@@ -54,7 +62,7 @@ class ExpenseListPresenter {
     _errorMessage = "";
   }
 
-  //MARK: Functions to get the list details
+//MARK: Functions to get the list details
 
   int getNumberOfListItems() {
     if (_expenseRequests.isEmpty) return 0;
@@ -76,7 +84,11 @@ class ExpenseListPresenter {
     return _expenseRequests[index];
   }
 
-  //MARK: Getters
+//MARK: Getters
 
   String get errorMessage => _errorMessage;
+
+  List<ExpenseRequestsFilters> get expenseRequestsFilters => ExpenseRequestsFilters.values;
+
+  ExpenseRequestsFilters get currentFilter => _requestsProvider.expenseRequestsFilter;
 }

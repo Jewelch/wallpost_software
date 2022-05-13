@@ -90,7 +90,7 @@ class ExpenseRequestPresenter {
   ExpenseRequestForm _getExpenseForm(ExpenseRequestModel expenseRequest) {
     return ExpenseRequestForm(
         parentCategory: expenseRequest.selectedMainCategory!.id,
-        category: expenseRequest.selectedSubCategory!.id,
+        category: expenseRequest.selectedSubCategory?.id ?? "",
         project: expenseRequest.selectedProject?.id ?? "",
         date: expenseRequest.date.yyyyMMdd2String(),
         description: expenseRequest.description,
