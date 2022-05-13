@@ -8,18 +8,18 @@ import 'package:wallpost/expense_requests/constants/expense_requests_urls.dart';
 import 'package:wallpost/expense_requests/entities/expense_request_form.dart';
 import 'package:wallpost/expense_requests/exeptions/failed_to_save_requet.dart';
 
-class ExpenseRequestExecutor {
+class ExpenseRequestCreator {
   WPFileUploader _fileUploader;
   NetworkAdapter _networkAdapter;
   SelectedCompanyProvider _companyProvider;
   bool isExecuting = false;
 
-  ExpenseRequestExecutor()
+  ExpenseRequestCreator()
       : _networkAdapter = WPAPI(),
         _fileUploader = WPFileUploader(),
         _companyProvider = SelectedCompanyProvider();
 
-  ExpenseRequestExecutor.initWith(this._networkAdapter, this._fileUploader, this._companyProvider);
+  ExpenseRequestCreator.initWith(this._networkAdapter, this._fileUploader, this._companyProvider);
 
   Future execute(ExpenseRequestForm expenseRequest) async {
     if(isExecuting) return;

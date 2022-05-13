@@ -5,7 +5,7 @@ import 'package:wallpost/company_core/entities/company.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/expense_requests/constants/expense_requests_urls.dart';
 import 'package:wallpost/expense_requests/exeptions/failed_to_save_requet.dart';
-import 'package:wallpost/expense_requests/services/expense_request_executor.dart';
+import 'package:wallpost/expense_requests/services/expense_request_creator.dart';
 import '../../_mocks/mock_network_adapter.dart';
 import '../_mocks/expense_request_mocks.dart';
 
@@ -22,8 +22,8 @@ main() {
   var successfulExecuteResponse = successFullAddingExpenseRequestResponse;
   var successfulUploadFileResponse = successFullUploadingFileResponse;
   var expenseRequest = getExpenseRequestForm();
-  ExpenseRequestExecutor _requestExecutor =
-      ExpenseRequestExecutor.initWith(mockNetworkAdapter, fileUploader, selectedCompanyProvider);
+  ExpenseRequestCreator _requestExecutor =
+      ExpenseRequestCreator.initWith(mockNetworkAdapter, fileUploader, selectedCompanyProvider);
 
   setUp(() {
     // set up selected company provider

@@ -3,21 +3,21 @@ import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/expense_requests/entities/expense_category.dart';
 import 'package:wallpost/expense_requests/entities/expense_request_form.dart';
 import 'package:wallpost/expense_requests/services/expense_categories_provider.dart';
-import 'package:wallpost/expense_requests/services/expense_request_executor.dart';
+import 'package:wallpost/expense_requests/services/expense_request_creator.dart';
 import 'package:wallpost/expense_requests/ui/models/expense_request_model.dart';
 import 'package:wallpost/expense_requests/ui/view_contracts/expense_requests_view.dart';
 
 class ExpenseRequestPresenter {
   ExpenseRequestsView _view;
   ExpenseCategoriesProvider _categoriesProvider;
-  ExpenseRequestExecutor _executor;
+  ExpenseRequestCreator _executor;
   List<ExpenseCategory> _expenseRequests = [];
 
   List<ExpenseCategory> get expenseRequests => _expenseRequests;
 
   ExpenseRequestPresenter(this._view)
       : _categoriesProvider = ExpenseCategoriesProvider(),
-        _executor = ExpenseRequestExecutor();
+        _executor = ExpenseRequestCreator();
 
   ExpenseRequestPresenter.initWith(
     this._view,
