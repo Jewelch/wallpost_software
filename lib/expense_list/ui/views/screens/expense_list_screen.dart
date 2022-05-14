@@ -76,7 +76,7 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
                     }).toList(),
                     value: _presenter.currentFilter,
                     onChanged: (filter) => setState(() {
-                      if (filter != null) _presenter.selectBrowsingFilter(filter);
+                      if (filter != null) _presenter.selectFilter(filter);
                     }),
                     icon: Center(
                       child: SvgPicture.asset(

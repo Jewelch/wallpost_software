@@ -222,12 +222,12 @@ main() {
     expect(presenter.getItemTypeAtIndex(3), ExpenseListItemType.EmptySpace);
   });
 
-  // MARK: filters test
+  // MARK: filtering test
 
-  test("show initial loader and loading requests when select browse filter", () async {
+  test("show initial loader and loading requests when select a filter", () async {
     _setUpProviderWithSuccessFullReturn(filter: ExpenseRequestsFilters.approved);
 
-    await presenter.selectBrowsingFilter(ExpenseRequestsFilters.approved);
+    await presenter.selectFilter(ExpenseRequestsFilters.approved);
 
     verifyInOrder([
       () => provider.expenseRequestsFilter,
@@ -238,31 +238,27 @@ main() {
     _verifyNoMoreInteractions();
   });
 
-  test("clearing the list when select a different filter", () async {
+  test("clearing the list when a different filter has been selected", () async {
     _setUpProviderWithSuccessFullReturn(filter: ExpenseRequestsFilters.approved);
     _setUpProviderWithSuccessFullReturn(filter: ExpenseRequestsFilters.rejected);
-    when(() => provider.expenseRequestsFilter).thenReturn(ExpenseRequestsFilters.all);
 
-    await presenter.selectBrowsingFilter(ExpenseRequestsFilters.approved);
-
+    await presenter.selectFilter(ExpenseRequestsFilters.approved);
     expect(presenter.getNumberOfListItems(), 4);
 
-    presenter.selectBrowsingFilter(ExpenseRequestsFilters.rejected);
+    presenter.selectFilter(ExpenseRequestsFilters.rejected);
     expect(presenter.getNumberOfListItems(), 0);
   });
 
   test("select the same filter do nothing", () async {
-    _setUpProviderWithSuccessFullReturn(filter: ExpenseRequestsFilters.approved);
     _setUpProviderWithSuccessFullReturn(filter: ExpenseRequestsFilters.rejected);
-    when(() => provider.expenseRequestsFilter).thenReturn(ExpenseRequestsFilters.all);
 
-    await presenter.selectBrowsingFilter(ExpenseRequestsFilters.approved);
-
+    await presenter.selectFilter(ExpenseRequestsFilters.rejected);
     expect(presenter.getNumberOfListItems(), 4);
-    when(() => provider.expenseRequestsFilter).thenReturn(ExpenseRequestsFilters.rejected);
     _clearAllInteractions();
 
-    presenter.selectBrowsingFilter(ExpenseRequestsFilters.rejected);
+    when(() => provider.expenseRequestsFilter).thenReturn(ExpenseRequestsFilters.rejected);
+    await presenter.selectFilter(ExpenseRequestsFilters.rejected);
+
     expect(presenter.getNumberOfListItems(), 4);
     verify(() => provider.expenseRequestsFilter);
     _verifyNoMoreInteractions();

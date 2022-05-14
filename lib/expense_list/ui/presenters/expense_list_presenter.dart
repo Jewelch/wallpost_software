@@ -33,7 +33,7 @@ class ExpenseListPresenter {
     }
   }
 
-  Future selectBrowsingFilter(ExpenseRequestsFilters filter) async {
+  Future selectFilter(ExpenseRequestsFilters filter) async {
     if (filter != currentFilter) {
       _expenseRequests.clear();
       await loadExpenseRequests(filter: filter);
