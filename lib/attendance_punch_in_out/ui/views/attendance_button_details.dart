@@ -574,7 +574,7 @@ class _AttendanceButtonDetailsScreenState
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () {
         if (isForPunchIn) {
-          presenter.markPunchIn(false);
+          presenter.markPunchIn(isLocationValid: false);
         } else {
           presenter.markPunchOut(false);
         }

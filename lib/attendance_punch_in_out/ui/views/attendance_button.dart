@@ -201,7 +201,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
         attendanceButtonColor: AttendanceColors.punchInButtonColor,
         moreButtonColor: AttendanceColors.punchInMoreButtonColor,
         onButtonPressed: () {
-          presenter.isValidatedLocation(true);
+          presenter.markPunchIn(isLocationValid : true);
         },
         onMoreButtonPressed: () {
           _currentTimer.cancel();
@@ -307,7 +307,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       message: message,
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () => isForPunchIn ? presenter.markPunchIn(false) : presenter.markPunchOut(false),
+      buttonTwoOnPressed: () => isForPunchIn ? presenter.markPunchIn(isLocationValid: false) : presenter.markPunchOut(false),
     );
   }
 

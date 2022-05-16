@@ -1,5 +1,6 @@
 import 'package:wallpost/_shared/device/device_settings.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/_wp_core/wpapi/exceptions/api_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_details.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.dart';
 import 'package:wallpost/attendance_punch_in_out/exception/location_acquisition_failed_exception.dart';
@@ -73,7 +74,8 @@ class AttendancePresenter {
       var attendanceReport = await _attendanceReportProvider.getReport();
       detailedView?.showAttendanceReport(attendanceReport);
     } on WPException {
-      basicView.showErrorAndRetryView("Getting attendance report is failed");
+      //TODO uncomment and fix
+      // detailedView?.showErrorAndRetryView("Getting attendance report is failed");
     }
   }
 
@@ -207,7 +209,7 @@ class AttendancePresenter {
     if (!isValidateLocation) return;
 
     if (isForPunchIn)
-      await markPunchIn(true);
+      await markPunchIn(isLocationValid: true);
     else
       await markPunchOut(true);
   }
@@ -218,11 +220,6 @@ class AttendancePresenter {
           await _attendanceLocationValidator.validateLocation(_attendanceLocation!, isForPunchIn: isForPunchIn);
 
       if (!attendanceLocationValidator) {
-        basicView.showAlertToInvalidLocation(
-            true,
-            "Invalid location",
-            "You are not allowed to mark attendance outside the office location. " +
-                "Doing so will affect your performance. Would you still like to mark?");
         return false;
       }
 
@@ -235,21 +232,42 @@ class AttendancePresenter {
 
 //MARK: Functions to mark attendance
 
-  Future<void> markPunchIn(bool isLocationValid) async {
+  Future<void> markPunchIn({required bool isLocationValid}) async {
     try {
       await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
-      basicView.doRefresh();
+      loadAttendanceDetails();
+      loadAttendanceReport();
     } on WPException catch (e) {
-      basicView.showErrorMessage("Punched in failed", e.userReadableMessage);
+      //TODO: Check error code after Niyas confirms the changes
+      if (e is ServerSentException && e.errorCode == 111) {
+        //location is invalid - show location invalid alert
+        basicView.showAlertToInvalidLocation(
+            true,
+            "Invalid location",
+            "You are not allowed to mark attendance outside the office location. " +
+                "Doing so will affect your performance. Would you still like to mark your attendance?");
+      } else {
+        basicView.showErrorMessage("Punch in failed", e.userReadableMessage);
+      }
     }
   }
 
   Future<void> markPunchOut(bool isLocationValid) async {
     try {
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
-      basicView.doRefresh();
+      loadAttendanceDetails();
+      loadAttendanceReport();
     } on WPException catch (e) {
-      basicView.showErrorMessage("Punched out failed", e.userReadableMessage);
+      if (e is ServerSentException && e.errorCode == 111) {
+        //TODO: Check error code after Niyas confirms the changes
+        basicView.showAlertToInvalidLocation(
+            true,
+            "Invalid location",
+            "You are not allowed to mark attendance outside the office location. " +
+                "Doing so will affect your performance. Would you still like to mark your attendance?");
+      } else {
+        basicView.showErrorMessage("Punch out failed", e.userReadableMessage);
+      }
     }
   }
 
