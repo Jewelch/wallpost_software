@@ -27,13 +27,11 @@ List<Widget> shimmerInputWithHeader() {
     Row(
       children: [
         Container(
-          decoration: BoxDecoration(
-              color: AppColors.shimmerColor,
-              borderRadius: BorderRadius.circular(10)),
+          decoration:
+              BoxDecoration(color: AppColors.shimmerColor, borderRadius: BorderRadius.circular(10)),
           height: 28,
           width: 160,
-          constraints:
-              BoxConstraints(maxWidth: 160, maxHeight: 28, minWidth: 8),
+          constraints: BoxConstraints(maxWidth: 160, maxHeight: 28, minWidth: 8),
           child: SizedBox(),
         ),
       ],

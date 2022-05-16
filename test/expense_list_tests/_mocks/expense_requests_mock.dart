@@ -1,4 +1,3 @@
-// TODO : get real response
 var expenseRequestsListResponse = [
   {
     "expense_id": 368,
@@ -8,7 +7,8 @@ var expenseRequestsListResponse = [
     "created_by": 612,
     "created_by_name": "Pramod  R",
     "status": "approved",
-    "description": ""
+    "description": "",
+    "main_category": "main category"
   },
   {
     "expense_id": 368,
@@ -18,6 +18,7 @@ var expenseRequestsListResponse = [
     "created_by": 612,
     "created_by_name": "Pramod  R",
     "status": "approved",
-    "description": ""
+    "description": "",
+    "main_category": "main category"
   },
 ];

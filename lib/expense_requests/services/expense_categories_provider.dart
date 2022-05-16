@@ -6,7 +6,6 @@ import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/expense_requests/constants/expense_requests_urls.dart';
 import 'package:wallpost/expense_requests/entities/expense_category.dart';
 
-
 class ExpenseCategoriesProvider {
   final NetworkAdapter _networkAdapter;
   late String _sessionId;

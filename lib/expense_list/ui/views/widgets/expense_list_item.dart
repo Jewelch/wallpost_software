@@ -32,7 +32,7 @@ class ExpenseListItem extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    _expenseRequest.description,
+                    _expenseRequest.title,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     overflow: TextOverflow.ellipsis,
                   ),

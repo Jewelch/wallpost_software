@@ -32,7 +32,7 @@ ExpenseRequestForm getExpenseRequestForm() {
 }
 
 ExpenseRequestModel getExpenseRequest() {
-  var expenseRequest =  ExpenseRequestModel();
+  var expenseRequest = ExpenseRequestModel();
   var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[0]);
   expenseRequest.selectedProject = category;
   expenseRequest.selectedSubCategory = category;
@@ -41,14 +41,14 @@ ExpenseRequestModel getExpenseRequest() {
 }
 
 ExpenseRequestModel getExpenseRequestWithMissedSubCategory() {
-  var expenseRequest =  ExpenseRequestModel();
+  var expenseRequest = ExpenseRequestModel();
   var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[0]);
   expenseRequest.selectedMainCategory = category;
   return expenseRequest;
 }
 
 ExpenseRequestModel getExpenseRequestWithMissedProject() {
-  var expenseRequest =  ExpenseRequestModel();
+  var expenseRequest = ExpenseRequestModel();
   var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[1]);
   expenseRequest.selectedMainCategory = category;
   return expenseRequest;
@@ -60,4 +60,3 @@ var successFullAddingExpenseRequestResponse = {
 };
 
 class MockExpenseCategory extends Mock implements ExpenseCategory {}
-

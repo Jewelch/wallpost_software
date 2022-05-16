@@ -64,6 +64,13 @@ class MockNetworkAdapter implements NetworkAdapter {
   }
 
   @override
+  Future<APIResponse> postWithFormData(APIRequest apiRequest) {
+    didCallPostWithNonce = true;
+    noOfTimesPostIsCalled++;
+    return _processRequest(apiRequest);
+  }
+
+  @override
   Future<APIResponse> put(APIRequest apiRequest) {
     didCallPut = true;
     noOfTimesPutIsCalled++;
@@ -89,4 +96,5 @@ class MockNetworkAdapter implements NetworkAdapter {
       throw _apiException!;
     }
   }
+
 }

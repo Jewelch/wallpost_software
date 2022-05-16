@@ -16,7 +16,8 @@ class ExpenseCategory extends JSONInitializable {
       subCategories = _readSubCategories(jsonMap);
       projects = _readProjects(jsonMap);
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast expense category response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast expense category response. Error message - ${e.errorMessage}');
     }
   }
 

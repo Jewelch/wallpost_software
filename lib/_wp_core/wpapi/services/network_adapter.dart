@@ -12,6 +12,8 @@ abstract class NetworkAdapter {
 
   Future<APIResponse> postWithNonce(APIRequest apiRequest);
 
+  Future<APIResponse> postWithFormData(APIRequest apiRequest);
+
   Future<APIResponse> put(APIRequest apiRequest);
 
   Future<APIResponse> delete(APIRequest apiRequest);

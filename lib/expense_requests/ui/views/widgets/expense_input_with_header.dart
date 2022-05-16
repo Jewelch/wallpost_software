@@ -19,7 +19,7 @@ List<Widget> expenseInputWithHeader({
         ),
         if (required)
           Text(
-            "*",
+            "  *",
             style: TextStyle(color: Colors.red),
           ),
         if (showRequiredMessage)

@@ -1,10 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:wallpost/_wp_core/wpapi/exceptions/request_exception.dart';
-import 'package:wallpost/_wp_core/wpapi/exceptions/unexpected_response_format_exception.dart';
 
 import 'network_adapter.dart';
 
@@ -38,6 +37,11 @@ class NetworkRequestExecutor implements NetworkAdapter {
   }
 
   @override
+  Future<APIResponse> postWithFormData(APIRequest apiRequest) async {
+    return executeRequestWithFormData(apiRequest, 'POST');
+  }
+
+  @override
   Future<APIResponse> put(APIRequest apiRequest) async {
     return executeRequest(apiRequest, 'PUT');
   }
@@ -64,6 +68,34 @@ class NetworkRequestExecutor implements NetworkAdapter {
     } on DioError catch (error) {
       throw _processError(error);
     }
+  }
+
+  Future<APIResponse> executeRequestWithFormData(APIRequest apiRequest, String method) async {
+    try {
+      HttpClient c = HttpClient();
+      var req = await c.postUrl(Uri.parse(apiRequest.url));
+      apiRequest.headers.forEach((key, value) {
+        req.headers.add(key, value);
+      });
+      req.add(_toFormShape(apiRequest.parameters));
+      var response = await req.close();
+      var stringResponse = await response.transform(utf8.decoder).join();
+      var res = json.decode(stringResponse);
+      return APIResponse(apiRequest, response.statusCode, res, {});
+    } on DioError catch (error) {
+      throw _processError(error);
+    }
+  }
+
+  List<int> _toFormShape(Map map) {
+    var parts = [];
+    map.forEach((key, value) {
+      parts.add('${Uri.encodeQueryComponent(key)}='
+          '${Uri.encodeQueryComponent(json.encode(value))}');
+    });
+    var formData = parts.join('&');
+
+    return utf8.encode(formData); // utf8 encode
   }
 
   Future<bool> _isConnected() {

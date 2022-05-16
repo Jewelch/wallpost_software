@@ -5,6 +5,7 @@ import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/expense_list/constants/expense_list_urls.dart';
 import 'package:wallpost/expense_list/entities/expense_request.dart';
+import 'package:wallpost/expense_list/entities/expense_requests_filters.dart';
 
 class ExpenseRequestsProvider {
   final NetworkAdapter _networkAdapter;
@@ -16,6 +17,8 @@ class ExpenseRequestsProvider {
 
   bool isLoading = false;
 
+  ExpenseRequestsFilters expenseRequestsFilter = ExpenseRequestsFilters.all;
+
   ExpenseRequestsProvider()
       : _networkAdapter = WPAPI(),
         _selectedCompanyProvider = SelectedCompanyProvider();
@@ -24,10 +27,12 @@ class ExpenseRequestsProvider {
 
   // MARK: functions to get expense requests
 
-  Future<List<ExpenseRequest>> getNext() async {
+  Future<List<ExpenseRequest>> getExpenseRequests({ExpenseRequestsFilters? filter}) async {
+    _resetIfRequestedWithDifferentFilter(filter);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = ExpenseListUrls.getEmployeeExpenses(companyId);
+    var url = ExpenseListUrls.getEmployeeExpenses(
+        companyId, _pageNumber, _perPage, expenseRequestsFilter);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
     try {
@@ -37,6 +42,13 @@ class ExpenseRequestsProvider {
     } on WPException {
       isLoading = false;
       rethrow;
+    }
+  }
+
+  void _resetIfRequestedWithDifferentFilter(ExpenseRequestsFilters? filter) {
+    if (filter != null && expenseRequestsFilter != filter) {
+      resetPagination();
+      expenseRequestsFilter = filter;
     }
   }
 
@@ -85,7 +97,7 @@ class ExpenseRequestsProvider {
 
   bool get didReachListEnd => _didReachListEnd;
 
-  void reset() {
+  void resetPagination() {
     _pageNumber = 1;
     _didReachListEnd = false;
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();

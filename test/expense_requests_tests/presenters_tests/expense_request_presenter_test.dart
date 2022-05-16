@@ -3,7 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/network_failure_exception.dart';
 import 'package:wallpost/expense_requests/exeptions/failed_to_save_requet.dart';
 import 'package:wallpost/expense_requests/services/expense_categories_provider.dart';
-import 'package:wallpost/expense_requests/services/expense_request_executor.dart';
+import 'package:wallpost/expense_requests/services/expense_request_creator.dart';
 import 'package:wallpost/expense_requests/ui/presenters/expense_request_presenter.dart';
 import 'package:wallpost/expense_requests/ui/view_contracts/expense_requests_view.dart';
 
@@ -12,7 +12,7 @@ import '../_mocks/expense_request_mocks.dart';
 
 class MockExpenseView extends Mock implements ExpenseRequestsView {}
 
-class MockExecutor extends Mock implements ExpenseRequestExecutor {}
+class MockExecutor extends Mock implements ExpenseRequestCreator {}
 
 class MockCategoryProvider extends Mock implements ExpenseCategoriesProvider {}
 
@@ -185,7 +185,8 @@ main() {
       view.showLoader,
       () => executor.execute(any()),
       view.hideLoader,
-      () => view.showErrorMessage("Failed to upload expense request",FailedToSaveRequest.USER_READABLE_MESSAGE),
+      () => view.showErrorMessage(
+          "Failed to upload expense request", FailedToSaveRequest.USER_READABLE_MESSAGE),
     ]);
   });
 }
