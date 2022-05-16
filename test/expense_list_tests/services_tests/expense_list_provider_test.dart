@@ -19,7 +19,7 @@ void main() {
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockSelectedCompanyProvider = MockSelectedCompanyProvider();
   var expenseRequestsProvider =
-      ExpenseRequestsProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+      ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
   var companyId = "13";
   var mockCompany = MockCompany();
 
@@ -163,26 +163,26 @@ void main() {
 
   test('expense requests filter is set to all at initialization', () {
     expenseRequestsProvider =
-        ExpenseRequestsProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+        ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
 
-    expect(expenseRequestsProvider.expenseRequestsFilter, ExpenseRequestsFilters.all);
+    expect(expenseRequestsProvider.requestStatusFilter, ExpenseRequestsFilters.all);
   });
 
   test(
       'expense requests filter is changed after calling loadingExpenseRequests with different filters',
       () {
     expenseRequestsProvider =
-        ExpenseRequestsProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+        ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
     mockNetworkAdapter.succeed(successfulResponse);
 
     expenseRequestsProvider.getExpenseRequests(filter: ExpenseRequestsFilters.approved);
 
-    expect(expenseRequestsProvider.expenseRequestsFilter, ExpenseRequestsFilters.approved);
+    expect(expenseRequestsProvider.requestStatusFilter, ExpenseRequestsFilters.approved);
   });
 
   test('reset pageNumber after calling loadingExpenseRequests with different filters', () async {
     expenseRequestsProvider =
-        ExpenseRequestsProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+        ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
     mockNetworkAdapter.succeed(successfulResponse);
     try {
       expect(expenseRequestsProvider.getCurrentPageNumber(), 1);
@@ -204,7 +204,7 @@ void main() {
   test('reset pageNumber after calling loadingExpenseRequests with same filters do nothing',
       () async {
     expenseRequestsProvider =
-        ExpenseRequestsProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+        ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
     mockNetworkAdapter.succeed(successfulResponse);
     try {
       expect(expenseRequestsProvider.getCurrentPageNumber(), 1);

@@ -10,7 +10,7 @@ import 'package:wallpost/expense_list/ui/view_contracts/expense_list_view.dart';
 
 class MockExpenseListView extends Mock implements ExpenseListView {}
 
-class MockExpenseRequestsProvider extends Mock implements ExpenseRequestsProvider {}
+class MockExpenseRequestsProvider extends Mock implements ExpenseRequestListProvider {}
 
 class MockExpenseRequest extends Mock implements ExpenseRequest {}
 
@@ -34,7 +34,7 @@ main() {
   setUp(() {
     _clearAllInteractions();
     presenter = ExpenseListPresenter.initWith(view, provider);
-    when(() => provider.expenseRequestsFilter).thenReturn(ExpenseRequestsFilters.all);
+    when(() => provider.requestStatusFilter).thenReturn(ExpenseRequestsFilters.all);
   });
 
   void _setUpProviderWithSuccessFullReturn({ExpenseRequestsFilters? filter}) {
@@ -230,7 +230,7 @@ main() {
     await presenter.selectFilter(ExpenseRequestsFilters.approved);
 
     verifyInOrder([
-      () => provider.expenseRequestsFilter,
+      () => provider.requestStatusFilter,
       () => view.showLoader(),
       () => provider.getExpenseRequests(filter: ExpenseRequestsFilters.approved),
       () => view.updateExpenseList(),
@@ -256,11 +256,11 @@ main() {
     expect(presenter.getNumberOfListItems(), 4);
     _clearAllInteractions();
 
-    when(() => provider.expenseRequestsFilter).thenReturn(ExpenseRequestsFilters.rejected);
+    when(() => provider.requestStatusFilter).thenReturn(ExpenseRequestsFilters.rejected);
     await presenter.selectFilter(ExpenseRequestsFilters.rejected);
 
     expect(presenter.getNumberOfListItems(), 4);
-    verify(() => provider.expenseRequestsFilter);
+    verify(() => provider.requestStatusFilter);
     _verifyNoMoreInteractions();
   });
 }

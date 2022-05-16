@@ -1,42 +1,35 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/expense_list/entities/expense_request.dart';
-import 'package:wallpost/expense_list/entities/expense_requests_filters.dart';
-import 'package:wallpost/expense_list/services/expense_requests_provider.dart';
+import 'package:wallpost/expense_list/entities/expense_request_status_filter.dart';
+import 'package:wallpost/expense_list/services/expense_request_list_provider.dart';
 import 'package:wallpost/expense_list/ui/view_contracts/expense_list_view.dart';
 
 import '../models/expense_list_item_type.dart';
 
 class ExpenseListPresenter {
   ExpenseListView _view;
-  ExpenseRequestsProvider _requestsProvider;
+  ExpenseRequestListProvider _requestsProvider;
   List<ExpenseRequest> _expenseRequests = [];
   String _errorMessage = "";
 
   List<ExpenseRequest> get expenseRequests => _expenseRequests;
+  ExpenseRequestStatusFilter _requestStatusFilter = ExpenseRequestStatusFilter.all;
 
-  ExpenseListPresenter(this._view) : _requestsProvider = ExpenseRequestsProvider();
+  ExpenseListPresenter(this._view) : _requestsProvider = ExpenseRequestListProvider();
 
-  ExpenseListPresenter.initWith(
-    this._view,
-    this._requestsProvider,
-  );
+  ExpenseListPresenter.initWith(this._view, this._requestsProvider);
 
-  Future loadExpenseRequests({ExpenseRequestsFilters? filter}) async {
+  Future loadExpenseRequests() async {
+    if (_requestsProvider.isLoading) return;
+
     _expenseRequests.isEmpty ? _view.showLoader() : _view.updateExpenseList();
     _resetErrors();
 
     try {
-      var expenses = await _requestsProvider.getExpenseRequests(filter: filter);
+      var expenses = await _requestsProvider.getExpenseRequests(_requestStatusFilter);
       _handleResponse(expenses);
     } on WPException catch (e) {
-      setError('${e.userReadableMessage}\n\nTap here to reload.');
-    }
-  }
-
-  Future selectFilter(ExpenseRequestsFilters filter) async {
-    if (filter != currentFilter) {
-      _expenseRequests.clear();
-      await loadExpenseRequests(filter: filter);
+      _setError('${e.userReadableMessage}\n\nTap here to reload.');
     }
   }
 
@@ -46,11 +39,11 @@ class ExpenseListPresenter {
     if (_expenseRequests.isNotEmpty) {
       _view.updateExpenseList();
     } else {
-      setError("There are no expense requests to show.\n\nTap here to reload.");
+      _setError("There are no expense requests to show.\n\nTap here to reload.");
     }
   }
 
-  void setError(String errorMessage) {
+  void _setError(String errorMessage) {
     _errorMessage = errorMessage;
     if (_expenseRequests.isEmpty)
       _view.showErrorMessage(errorMessage);
@@ -62,7 +55,22 @@ class ExpenseListPresenter {
     _errorMessage = "";
   }
 
-//MARK: Functions to get the list details
+  //MARK: Function to filter the list
+
+  Future selectFilter(ExpenseRequestStatusFilter filter) async {
+    _requestStatusFilter = filter;
+    refresh();
+  }
+
+  //MARK; Function to refresh the list
+
+  void refresh() {
+    _expenseRequests.clear();
+    _requestsProvider.reset();
+    loadExpenseRequests();
+  }
+
+  //MARK: Functions to get the list details
 
   int getNumberOfListItems() {
     if (_expenseRequests.isEmpty) return 0;
@@ -74,8 +82,7 @@ class ExpenseListPresenter {
 
     if (_errorMessage.isNotEmpty) return ExpenseListItemType.ErrorMessage;
 
-    if (_requestsProvider.isLoading || _requestsProvider.didReachListEnd == false)
-      return ExpenseListItemType.Loader;
+    if (_requestsProvider.isLoading || _requestsProvider.didReachListEnd == false) return ExpenseListItemType.Loader;
 
     return ExpenseListItemType.EmptySpace;
   }
@@ -84,11 +91,11 @@ class ExpenseListPresenter {
     return _expenseRequests[index];
   }
 
-//MARK: Getters
+  //MARK: Getters
 
   String get errorMessage => _errorMessage;
 
-  List<ExpenseRequestsFilters> get expenseRequestsFilters => ExpenseRequestsFilters.values;
+  List<ExpenseRequestStatusFilter> get expenseRequestsFilters => ExpenseRequestStatusFilter.values;
 
-  ExpenseRequestsFilters get currentFilter => _requestsProvider.expenseRequestsFilter;
+  ExpenseRequestStatusFilter get selectedStatusFilter => _requestStatusFilter;
 }

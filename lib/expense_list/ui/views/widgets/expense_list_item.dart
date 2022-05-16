@@ -64,8 +64,7 @@ class ExpenseListItem extends StatelessWidget {
                     children: [
                       Text(
                         "Request No - ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.darkGrey),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.darkGrey),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Expanded(
@@ -84,8 +83,7 @@ class ExpenseListItem extends StatelessWidget {
                     children: [
                       Text(
                         "Date -",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.darkGrey),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.darkGrey),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
@@ -106,8 +104,7 @@ class ExpenseListItem extends StatelessWidget {
                     children: [
                       Text(
                         "Request by - ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.darkGrey),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.darkGrey),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Expanded(
@@ -136,23 +133,20 @@ class ExpenseListItem extends StatelessWidget {
   }
 
   Text _getStatusText() {
-    var text = "";
-    var color = AppColors.successColor;
+    Color color;
     switch (_expenseRequest.status) {
       case ExpenseRequestStatus.approved:
-        text = "Approved";
+        color = AppColors.successColor;
         break;
       case ExpenseRequestStatus.pending:
-        text = "Pending";
         color = AppColors.yellow;
         break;
       case ExpenseRequestStatus.rejected:
-        text = "Rejected";
         color = AppColors.failureColor;
         break;
     }
     return Text(
-      text,
+      _expenseRequest.status.toReadableString(),
       style: TextStyle(color: color, fontWeight: FontWeight.bold),
     );
   }

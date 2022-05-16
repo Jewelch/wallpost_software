@@ -8,3 +8,22 @@ ExpenseRequestStatus fromStringToExpenseRequestStatus(String status) {
   if (status == 'rejected') return ExpenseRequestStatus.rejected;
   throw MappingException("Failed to cast ExpenseRequestStatus");
 }
+
+extension ToString on ExpenseRequestStatus {
+  String toReadableString() {
+    var string = "";
+    switch (this) {
+      case ExpenseRequestStatus.approved:
+        string = "Approved";
+        break;
+      case ExpenseRequestStatus.rejected:
+        string = "Rejected";
+        break;
+      case ExpenseRequestStatus.pending:
+        string = "Pending";
+        break;
+    }
+    return string;
+  }
+}
+

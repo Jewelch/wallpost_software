@@ -1,5 +1,5 @@
 abstract class ExpenseListView {
-  void updateExpenseList() {}
+  void updateExpenseList();
 
   void showErrorMessage(String message);
 
