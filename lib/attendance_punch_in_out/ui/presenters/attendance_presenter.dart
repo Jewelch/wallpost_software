@@ -72,7 +72,7 @@ class AttendancePresenter {
     try {
       var attendanceReport = await _attendanceReportProvider.getReport();
       detailedView?.showAttendanceReport(attendanceReport);
-    } on WPException catch (e) {
+    } on WPException {
       basicView.showErrorAndRetryView("Getting attendance report is failed");
     }
   }
@@ -86,9 +86,11 @@ class AttendancePresenter {
       basicView.showLoader();
       _attendanceDetails = await _attendanceDetailsProvider.getDetails();
 
-      if (_attendanceDetails.isNotPunchedIn) return _loadPunchInDetails();
-      else if (_attendanceDetails.isPunchedIn) return _loadPunchOutDetails();
-      else if (_attendanceDetails.isPunchedOut)return  _loadPunchedOutDetails();
+      if (_attendanceDetails.isNotPunchedIn)
+        return _loadPunchInDetails();
+      else if (_attendanceDetails.isPunchedIn)
+        return _loadPunchOutDetails();
+      else if (_attendanceDetails.isPunchedOut) return _loadPunchedOutDetails();
     } on WPException catch (_) {
       basicView.showErrorAndRetryView("Failed to load attendance details.\nTap to reload");
     }
@@ -133,7 +135,7 @@ class AttendancePresenter {
 
   //MARK: Functions to get attendance permissions
 
-  Future<bool> _getAttendancePermission () async {
+  Future<bool> _getAttendancePermission() async {
     try {
       var attendancePermission = await _attendancePermissionsProvider.getPermissions();
 
@@ -203,18 +205,20 @@ class AttendancePresenter {
 
   Future<void> isValidatedLocation(bool isForPunchIn) async {
     var isValidateLocation = await _validateAttendanceLocation(isForPunchIn);
-    if(!isValidateLocation) return;
+    if (!isValidateLocation) return;
 
-      if(isForPunchIn) await markPunchIn(true);
-      else await markPunchOut(true);
+    if (isForPunchIn)
+      await markPunchIn(true);
+    else
+      await markPunchOut(true);
   }
 
-  Future<bool> _validateAttendanceLocation (bool isForPunchIn) async {
+  Future<bool> _validateAttendanceLocation(bool isForPunchIn) async {
     try {
-      var attendanceLocationValidator=
-      await  _attendanceLocationValidator.validateLocation(_attendanceLocation!,isForPunchIn: isForPunchIn);
+      var attendanceLocationValidator =
+          await _attendanceLocationValidator.validateLocation(_attendanceLocation!, isForPunchIn: isForPunchIn);
 
-      if(!attendanceLocationValidator){
+      if (!attendanceLocationValidator) {
         basicView.showAlertToInvalidLocation(
             true,
             "Invalid location",
@@ -223,10 +227,9 @@ class AttendancePresenter {
         return false;
       }
 
-        return true;
-
+      return true;
     } on WPException catch (e) {
-      basicView.showErrorMessage("Failed to validate your location",e.userReadableMessage);
+      basicView.showErrorMessage("Failed to validate your location", e.userReadableMessage);
       return false;
     }
   }
@@ -238,7 +241,7 @@ class AttendancePresenter {
       await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
       basicView.doRefresh();
     } on WPException catch (e) {
-      basicView.showErrorMessage("Punched in failed",e.userReadableMessage);
+      basicView.showErrorMessage("Punched in failed", e.userReadableMessage);
     }
   }
 
@@ -247,7 +250,7 @@ class AttendancePresenter {
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
       basicView.doRefresh();
     } on WPException catch (e) {
-      basicView.showErrorMessage("Punched out failed",e.userReadableMessage);
+      basicView.showErrorMessage("Punched out failed", e.userReadableMessage);
     }
   }
 
@@ -255,20 +258,20 @@ class AttendancePresenter {
 
   Future<void> startBreak() async {
     try {
-       await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
+      await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
       basicView.doRefresh();
       detailedView?.showResumeButton();
     } on WPException catch (e) {
-      basicView.showErrorMessage("Start break is failed",e.userReadableMessage);
+      basicView.showErrorMessage("Start break is failed", e.userReadableMessage);
     }
   }
 
   Future<void> endBreak() async {
     try {
-       await _breakEndMarker.endBreak(_attendanceDetails, _attendanceLocation!);
+      await _breakEndMarker.endBreak(_attendanceDetails, _attendanceLocation!);
       detailedView?.showBreakButton();
     } on WPException catch (e) {
-      basicView.showErrorMessage("End break is failed",e.userReadableMessage);
+      basicView.showErrorMessage("End break is failed", e.userReadableMessage);
     }
   }
 
