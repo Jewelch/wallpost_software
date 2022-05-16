@@ -14,19 +14,19 @@ class AttendanceUrls {
   }
 
   static String attendanceLocationValidationUrl(String companyId, String employeeId, bool isPunchingIn) {
-    var url = '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance_punch_in_out/location/validate?';
+    var url = '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/location/validate?';
     url += '&flow_type=${isPunchingIn ? 'IN' : 'OUT'}';
     return url;
   }
 
   static String punchInUrl(String companyId, String employeeId, bool isLocationValid) {
-    var url = '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance_punch_in_out/punch_in';
+    var url = '${BaseUrls.hrUrlV2()}/widget/attendance/punch_in';
     if (isLocationValid == false) url += '?punchin_invalid_location=Y';
     return url;
   }
 
   static String punchOutUrl(String companyId, String employeeId, String attendanceId, bool isLocationValid) {
-    var url = '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance_punch_in_out/$attendanceId/punch_out';
+    var url = '${BaseUrls.hrUrlV2()}/widget/attendance/4xKmQeR32hn9fyb/punch_out ';
     if (isLocationValid == false) url += '?punchout_invalid_location=Y';
     return url;
   }

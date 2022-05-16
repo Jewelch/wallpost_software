@@ -15,6 +15,8 @@ abstract class AttendanceView {
 
   void showAddress(String address);
 
+  void showErrorMessage(String title,String message);
+
   void showAlertToInvalidLocation(bool isForPunchIn, String title, String message);
 
   void doRefresh();

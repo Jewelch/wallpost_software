@@ -282,7 +282,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
     });
 
-    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
+    _currentTimer = Timer.periodic(Duration(milliseconds: 1), (Timer t) => _getCurrentTime());
   }
 
   @override
@@ -291,7 +291,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       _viewTypeNotifier.notify(PUNCH_OUT_BUTTON_VIEW);
     });
 
-    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
+    _currentTimer = Timer.periodic(Duration(milliseconds: 1), (Timer t) => _getCurrentTime());
   }
 
   @override
@@ -312,8 +312,13 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   @override
+  void showErrorMessage(String title,String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
   void doRefresh() {
-    //TODO - add a refresh or reload button
+   presenter.loadAttendanceDetails();
   }
 
 //MARK: Util functions

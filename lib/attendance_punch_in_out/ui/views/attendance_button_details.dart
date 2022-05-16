@@ -12,6 +12,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/attendance_punch_in_out/constants/attendance_colors.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_report.dart';
+import 'package:wallpost/attendance_punch_in_out/services/time_to_punch_in_calculator.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_detailed_view.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
@@ -36,10 +37,12 @@ class _AttendanceButtonDetailsScreenState
   var _breakButtonNotifier = ItemNotifier<int>(defaultValue: SHOW_BREAK_BUTTON_VIEW);
   var _attendanceReportNotifier = ItemNotifier<AttendanceReport?>(defaultValue: null);
   var _locationOnMapNotifier = ItemNotifier<AttendanceLocation?>(defaultValue: null);
+  final ItemNotifier<String> _countDownNotifier = ItemNotifier(defaultValue: "");
 
   late final AttendancePresenter presenter;
   late String _timeString;
   late Timer _currentTimer;
+  late Timer _countDownTimer;
   var _errorMessage = "";
 
   static const LOADER_VIEW = 1;
@@ -50,12 +53,13 @@ class _AttendanceButtonDetailsScreenState
   static const GPS_DISABLED_VIEW = 4;
   static const PERMISSION_DENIED_FOREVER_ERROR_VIEW = 5;
 
-  static const PUNCH_IN_BUTTON_VIEW = 6;
-  static const PUNCH_OUT_BUTTON_VIEW = 7;
+  static const COUNT_DOWN_VIEW = 6;
+  static const PUNCH_IN_BUTTON_VIEW = 7;
+  static const PUNCH_OUT_BUTTON_VIEW = 8;
 
-  static const SHOW_BREAK_BUTTON_VIEW = 8;
-  static const HIDE_BREAK_BUTTON_VIEW = 9;
-  static const RESUME_BUTTON_VIEW = 10;
+  static const SHOW_BREAK_BUTTON_VIEW = 9;
+  static const HIDE_BREAK_BUTTON_VIEW = 10;
+  static const RESUME_BUTTON_VIEW = 11;
 
   @override
   void initState() {
@@ -72,6 +76,7 @@ class _AttendanceButtonDetailsScreenState
   @override
   void dispose() {
     _currentTimer.cancel();
+    _countDownTimer.cancel();
     WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
@@ -270,10 +275,44 @@ class _AttendanceButtonDetailsScreenState
 
           if (value == PUNCH_OUT_BUTTON_VIEW) return _buildPunchOutButton();
 
+          if (value == COUNT_DOWN_VIEW) return _buildCountDownView();
+
           return Container();
         },
       ),
     );
+  }
+
+  //MARK: Functions to build the countdown view
+
+  Widget _buildCountDownView() {
+    return ItemNotifiable(
+      notifier: _countDownNotifier,
+      builder: (context, timeLeft) => Container(
+        color: AttendanceColors.disabledButtonColor,
+        child: Center(
+          child: Text(
+            "$timeLeft to punch in",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _startCountDownTimer(num secondsTillPunchIn) {
+    var start = secondsTillPunchIn;
+    _countDownTimer = new Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      if (start == 0) {
+        timer.cancel();
+        presenter.loadAttendanceDetails();
+        return;
+      } else {
+        var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(start.toInt());
+        _countDownNotifier.notify(_remainingTimeToPunchInString);
+        start--;
+      }
+    });
   }
 
 //MARK: Functions to build punch in and out buttons
@@ -441,23 +480,35 @@ class _AttendanceButtonDetailsScreenState
   //MARK: View functions
 
   @override
-  void showBreakButton() {
-    _breakButtonNotifier.notify(SHOW_BREAK_BUTTON_VIEW);
-  }
-
-  @override
-  void hideBreakButton() {
-    _breakButtonNotifier.notify(HIDE_BREAK_BUTTON_VIEW);
-  }
-
-  @override
-  void showResumeButton() {
-    _breakButtonNotifier.notify(RESUME_BUTTON_VIEW);
-  }
-
-  @override
   void showLoader() {
     _viewSelectorNotifier.notify(LOADER_VIEW);
+  }
+
+  @override
+  void showErrorAndRetryView( String message) {
+    _viewSelectorNotifier.notify(ERROR_VIEW);
+    _errorMessage = message;
+  }
+
+  @override
+  void showRequestToTurnOnGpsView(String message) {
+    _viewSelectorNotifier.notify(GPS_DISABLED_VIEW);
+    _errorMessage = message;
+  }
+
+  @override
+  void showRequestToEnableLocationView(String message) {
+    _viewSelectorNotifier.notify(PERMISSION_DENIED_FOREVER_ERROR_VIEW);
+    _errorMessage = message;
+  }
+
+  @override
+  void showCountDownView(int secondsTillPunchIn) {
+    var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(secondsTillPunchIn.toInt());
+    _countDownNotifier.notify(_remainingTimeToPunchInString);
+
+    _buttonTypeNotifier.notify(COUNT_DOWN_VIEW);
+    _startCountDownTimer(secondsTillPunchIn);
   }
 
   @override
@@ -476,15 +527,29 @@ class _AttendanceButtonDetailsScreenState
   void showPunchInTime(String time) {}
 
   @override
-  void showAddress(String address) {}
-
-  @override
   void showPunchOutTime(String time) {}
 
   @override
-  void showCountDownView(int secondsTillPunchIn) {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(
-        MyPortalScreen(), context);
+  void showAddress(String address) {}
+
+  @override
+  void showLocationOnMap(AttendanceLocation attendanceLocation) {
+    _locationOnMapNotifier.notify(attendanceLocation);
+  }
+
+  @override
+  void showBreakButton() {
+    _breakButtonNotifier.notify(SHOW_BREAK_BUTTON_VIEW);
+  }
+
+  @override
+  void hideBreakButton() {
+    _breakButtonNotifier.notify(HIDE_BREAK_BUTTON_VIEW);
+  }
+
+  @override
+  void showResumeButton() {
+    _breakButtonNotifier.notify(RESUME_BUTTON_VIEW);
   }
 
   @override
@@ -496,18 +561,6 @@ class _AttendanceButtonDetailsScreenState
   void doRefresh() {
     presenter.loadAttendanceDetails();
     presenter.loadAttendanceReport();
-  }
-
-  @override
-  void showRequestToTurnOnGpsView(String message) {
-    _viewSelectorNotifier.notify(GPS_DISABLED_VIEW);
-    _errorMessage = message;
-  }
-
-  @override
-  void showRequestToEnableLocationView(String message) {
-    _viewSelectorNotifier.notify(PERMISSION_DENIED_FOREVER_ERROR_VIEW);
-    _errorMessage = message;
   }
 
   @override
@@ -530,14 +583,8 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showErrorAndRetryView( String message) {
-    _viewSelectorNotifier.notify(ERROR_VIEW);
-    _errorMessage = message;
-  }
-
-  @override
-  void showLocationOnMap(AttendanceLocation attendanceLocation) {
-    _locationOnMapNotifier.notify(attendanceLocation);
+  void showErrorMessage(String title,String message) {
+    // TODO: implement showErrorMessage
   }
 
   //MARK: Util functions
@@ -549,4 +596,5 @@ class _AttendanceButtonDetailsScreenState
       _timeString = formattedDateTime;
     });
   }
+
 }
