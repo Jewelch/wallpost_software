@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/expense_list/entities/expense_request.dart';
-import 'package:wallpost/expense_list/entities/expense_requests_filters.dart';
-import 'package:wallpost/expense_list/services/expense_requests_provider.dart';
+import 'package:wallpost/expense_list/entities/expense_request_status_filter.dart';
+import 'package:wallpost/expense_list/services/expense_request_list_provider.dart';
 import 'package:wallpost/expense_list/ui/models/expense_list_item_type.dart';
 import 'package:wallpost/expense_list/ui/presenters/expense_list_presenter.dart';
 import 'package:wallpost/expense_list/ui/view_contracts/expense_list_view.dart';
@@ -34,11 +34,12 @@ main() {
   setUp(() {
     _clearAllInteractions();
     presenter = ExpenseListPresenter.initWith(view, provider);
-    when(() => provider.requestStatusFilter).thenReturn(ExpenseRequestsFilters.all);
+    when(() => provider.isLoading).thenReturn(false);
   });
 
-  void _setUpProviderWithSuccessFullReturn({ExpenseRequestsFilters? filter}) {
-    when(() => provider.getExpenseRequests(filter: filter)).thenAnswer((_) => Future.value([
+  void _setUpProviderWithSuccessFullReturn(
+      {ExpenseRequestStatusFilter filter = ExpenseRequestStatusFilter.all}) {
+    when(() => provider.getExpenseRequests(filter)).thenAnswer((_) => Future.value([
           MockExpenseRequest(),
           MockExpenseRequest(),
           MockExpenseRequest(),
@@ -48,7 +49,7 @@ main() {
   // MARK: test functions
 
   test('fail to load expense requests', () async {
-    when(() => provider.getExpenseRequests())
+    when(() => provider.getExpenseRequests(ExpenseRequestStatusFilter.all))
         .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     await presenter.loadExpenseRequests();
@@ -56,8 +57,9 @@ main() {
     expect(presenter.errorMessage,
         "${InvalidResponseException().userReadableMessage}\n\nTap here to reload.");
     verifyInOrder([
+      () => provider.isLoading,
       () => view.showLoader(),
-      () => provider.getExpenseRequests(),
+      () => provider.getExpenseRequests(ExpenseRequestStatusFilter.all),
       () => view.showErrorMessage(
           "${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
@@ -65,13 +67,15 @@ main() {
   });
 
   test('successfully loading the expense requests list when there are no items', () async {
-    when(() => provider.getExpenseRequests()).thenAnswer((_) => Future.value([]));
+    when(() => provider.getExpenseRequests(ExpenseRequestStatusFilter.all))
+        .thenAnswer((_) => Future.value([]));
 
     await presenter.loadExpenseRequests();
 
     verifyInOrder([
+      () => provider.isLoading,
       () => view.showLoader(),
-      () => provider.getExpenseRequests(),
+      () => provider.getExpenseRequests(ExpenseRequestStatusFilter.all),
       () => view.showErrorMessage("There are no expense requests to show.\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractions();
@@ -83,8 +87,9 @@ main() {
     await presenter.loadExpenseRequests();
 
     verifyInOrder([
+      () => provider.isLoading,
       () => view.showLoader(),
-      () => provider.getExpenseRequests(),
+      () => provider.getExpenseRequests(ExpenseRequestStatusFilter.all),
       () => view.updateExpenseList(),
     ]);
     _verifyNoMoreInteractions();
@@ -93,7 +98,7 @@ main() {
   test('failure to load the next list of items', () async {
     _setUpProviderWithSuccessFullReturn();
     await presenter.loadExpenseRequests();
-    when(() => provider.getExpenseRequests())
+    when(() => provider.getExpenseRequests(ExpenseRequestStatusFilter.all))
         .thenAnswer((_) => Future.error(InvalidResponseException()));
     _clearAllInteractions();
 
@@ -102,8 +107,9 @@ main() {
     expect(presenter.errorMessage,
         "${InvalidResponseException().userReadableMessage}\n\nTap here to reload.");
     verifyInOrder([
+      () => provider.isLoading,
       () => view.updateExpenseList(),
-      () => provider.getExpenseRequests(),
+      () => provider.getExpenseRequests(ExpenseRequestStatusFilter.all),
       () => view.updateExpenseList(),
     ]);
     _verifyNoMoreInteractions();
@@ -112,26 +118,38 @@ main() {
   test('successfully loading the next list of items', () async {
     _setUpProviderWithSuccessFullReturn();
     await presenter.loadExpenseRequests();
-    when(() => provider.getExpenseRequests()).thenAnswer((_) => Future.value([
-          MockExpenseRequest(),
-          MockExpenseRequest(),
-          MockExpenseRequest(),
-        ]));
+    when(() => provider.getExpenseRequests(ExpenseRequestStatusFilter.all))
+        .thenAnswer((_) => Future.value([
+              MockExpenseRequest(),
+              MockExpenseRequest(),
+              MockExpenseRequest(),
+            ]));
     _clearAllInteractions();
 
     await presenter.loadExpenseRequests();
 
     expect(presenter.errorMessage, "");
     verifyInOrder([
+      () => provider.isLoading,
       () => view.updateExpenseList(),
-      () => provider.getExpenseRequests(),
+      () => provider.getExpenseRequests(ExpenseRequestStatusFilter.all),
       () => view.updateExpenseList(),
     ]);
     _verifyNoMoreInteractions();
   });
 
+  test('calling load expense requests when provider is loading do nothing', () async {
+    _setUpProviderWithSuccessFullReturn();
+    when(() => provider.isLoading).thenReturn(true);
+
+    await presenter.loadExpenseRequests();
+
+    verify(() => provider.isLoading);
+    _verifyNoMoreInteractions();
+  });
+
   test('resets the error message before loading the next list of items', () async {
-    when(() => provider.getExpenseRequests())
+    when(() => provider.getExpenseRequests(ExpenseRequestStatusFilter.all))
         .thenAnswer((_) => Future.error(InvalidResponseException()));
     await presenter.loadExpenseRequests();
     _setUpProviderWithSuccessFullReturn();
@@ -149,7 +167,7 @@ main() {
   });
 
   test('get number of expense list items when there are no items and an error occurs', () async {
-    when(() => provider.getExpenseRequests())
+    when(() => provider.getExpenseRequests(ExpenseRequestStatusFilter.all))
         .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     await presenter.loadExpenseRequests();
@@ -160,7 +178,7 @@ main() {
   test('get number of list items when there are some items and the provider is loading', () async {
     _setUpProviderWithSuccessFullReturn();
     when(() => provider.didReachListEnd).thenReturn(false);
-    when(() => provider.isLoading).thenReturn(true);
+    when(() => provider.isLoading).thenReturn(false);
 
     await presenter.loadExpenseRequests();
 
@@ -175,7 +193,7 @@ main() {
       () async {
     _setUpProviderWithSuccessFullReturn();
     when(() => provider.didReachListEnd).thenReturn(false);
-    when(() => provider.isLoading).thenReturn(true);
+    when(() => provider.isLoading).thenReturn(false);
 
     await presenter.loadExpenseRequests();
 
@@ -195,7 +213,7 @@ main() {
 
     await presenter.loadExpenseRequests();
 
-    when(() => provider.getExpenseRequests())
+    when(() => provider.getExpenseRequests(ExpenseRequestStatusFilter.all))
         .thenAnswer((_) => Future.error(InvalidResponseException()));
     await presenter.loadExpenseRequests();
 
@@ -222,45 +240,53 @@ main() {
     expect(presenter.getItemTypeAtIndex(3), ExpenseListItemType.EmptySpace);
   });
 
-  // MARK: filtering test
+  // MARK: refreshing test
 
-  test("show initial loader and loading requests when select a filter", () async {
-    _setUpProviderWithSuccessFullReturn(filter: ExpenseRequestsFilters.approved);
+  test(
+      'calling refresh clears the expense requests list, reset providers value and loading the requests again',
+      () async {
+    _setUpProviderWithSuccessFullReturn();
+    await presenter.loadExpenseRequests();
+    await presenter.loadExpenseRequests();
 
-    await presenter.selectFilter(ExpenseRequestsFilters.approved);
+    expect(presenter.getNumberOfListItems(), 7);
+    _clearAllInteractions();
+    await presenter.refresh();
 
+    expect(presenter.getNumberOfListItems(), 4);
     verifyInOrder([
-      () => provider.requestStatusFilter,
+      provider.reset,
+      () => provider.isLoading,
       () => view.showLoader(),
-      () => provider.getExpenseRequests(filter: ExpenseRequestsFilters.approved),
+      () => provider.getExpenseRequests(ExpenseRequestStatusFilter.all),
       () => view.updateExpenseList(),
     ]);
     _verifyNoMoreInteractions();
   });
 
-  test("clearing the list when a different filter has been selected", () async {
-    _setUpProviderWithSuccessFullReturn(filter: ExpenseRequestsFilters.approved);
-    _setUpProviderWithSuccessFullReturn(filter: ExpenseRequestsFilters.rejected);
+  // MARK: filtering test
 
-    await presenter.selectFilter(ExpenseRequestsFilters.approved);
+  test(
+      'select a filter change the selected filter and refresh the expense requests list with the new selected filter',
+      () async {
+    _setUpProviderWithSuccessFullReturn();
+    _setUpProviderWithSuccessFullReturn(filter: ExpenseRequestStatusFilter.pending);
+    await presenter.loadExpenseRequests();
+
     expect(presenter.getNumberOfListItems(), 4);
-
-    presenter.selectFilter(ExpenseRequestsFilters.rejected);
-    expect(presenter.getNumberOfListItems(), 0);
-  });
-
-  test("select the same filter do nothing", () async {
-    _setUpProviderWithSuccessFullReturn(filter: ExpenseRequestsFilters.rejected);
-
-    await presenter.selectFilter(ExpenseRequestsFilters.rejected);
-    expect(presenter.getNumberOfListItems(), 4);
+    expect(presenter.selectedStatusFilter, ExpenseRequestStatusFilter.all);
     _clearAllInteractions();
+    await presenter.selectFilter(ExpenseRequestStatusFilter.pending);
 
-    when(() => provider.requestStatusFilter).thenReturn(ExpenseRequestsFilters.rejected);
-    await presenter.selectFilter(ExpenseRequestsFilters.rejected);
-
+    expect(presenter.selectedStatusFilter, ExpenseRequestStatusFilter.pending);
     expect(presenter.getNumberOfListItems(), 4);
-    verify(() => provider.requestStatusFilter);
+    verifyInOrder([
+      provider.reset,
+      () => provider.isLoading,
+      () => view.showLoader(),
+      () => provider.getExpenseRequests(ExpenseRequestStatusFilter.pending),
+      () => view.updateExpenseList(),
+    ]);
     _verifyNoMoreInteractions();
   });
 }
