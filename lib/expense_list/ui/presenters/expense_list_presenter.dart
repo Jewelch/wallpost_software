@@ -59,7 +59,7 @@ class ExpenseListPresenter {
 
   Future selectFilter(ExpenseRequestStatusFilter filter) async {
     _requestStatusFilter = filter;
-    refresh();
+    await refresh();
   }
 
   //MARK; Function to refresh the list
