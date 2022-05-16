@@ -105,7 +105,7 @@ class AttendancePresenter {
 
     basicView.showPunchInButton();
     detailedView?.hideBreakButton();
-    _loadAddress();
+    _loadAddress(_attendanceLocation!);
   }
 
   Future<void> _loadPunchOutDetails() async {
@@ -116,7 +116,7 @@ class AttendancePresenter {
     if (_attendanceLocation == null) return;
 
     basicView.showPunchOutButton();
-    _loadAddress();
+    _loadAddress(_attendanceLocation!);
     _loadBreakDetails();
   }
 
@@ -179,14 +179,13 @@ class AttendancePresenter {
 
   //MARK: Functions to load address
 
-  Future<void> _loadAddress() async {
+  Future<void> _loadAddress(AttendanceLocation location) async {
     var address = "";
-    if (_attendanceLocation == null) address = "";
 
     try {
-      address = await _locationProvider.getLocationAddress(_attendanceLocation!);
+      address = await _locationProvider.getLocationAddress(location);
     } on LocationReverseGeocodingException {
-      address = "";
+      address = "${location.latitude}, ${location.longitude}";
     }
     basicView.showAddress(address);
   }
