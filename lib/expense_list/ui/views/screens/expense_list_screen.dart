@@ -133,9 +133,7 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
 
   Widget _buildListView() {
     return ListView.builder(
-      shrinkWrap: true,
       controller: _scrollController,
-      physics: BouncingScrollPhysics(),
       itemCount: _presenter.getNumberOfListItems(),
       itemBuilder: (context, index) {
         switch (_presenter.getItemTypeAtIndex(index)) {
