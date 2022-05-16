@@ -165,7 +165,7 @@ class AttendancePresenter {
     } on LocationServicesDisabledException catch (_) {
       basicView.showRequestToTurnOnGpsView("Location service disabled.\nTap here to go to location settings");
     } on LocationPermissionsDeniedException catch (_) {
-      basicView.showRequestToEnableLocationView("Location permission denied.\nTap here to grant permission");
+      basicView.showErrorAndRetryView("Location permission denied.\nTap here to grant permission");
     } on LocationPermissionsPermanentlyDeniedException catch (_) {
       basicView.showRequestToEnableLocationView("Location permission denied.\nTap here to go to settings");
     } on LocationAcquisitionFailedException catch (_) {
