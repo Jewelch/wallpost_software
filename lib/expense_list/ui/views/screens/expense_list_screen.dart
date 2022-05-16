@@ -52,56 +52,59 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
         leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 16),
-            Container(
-              height: 40,
-              margin: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: AppColors.dropDownColor,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Center(
-                child: DropdownButton<ExpenseRequestStatusFilter>(
-                  items: _presenter.expenseRequestsFilters.map((filter) {
-                    return DropdownMenuItem(
-                      value: filter,
-                      child: Text(filter.toReadableString()),
-                    );
-                  }).toList(),
-                  value: _presenter.selectedStatusFilter,
-                  onChanged: (filter) => setState(() {
-                    if (filter != null) _presenter.selectFilter(filter);
-                  }),
-                  icon: SvgPicture.asset(
-                    'assets/icons/down_arrow_icon.svg',
-                    color: AppColors.defaultColorDark,
-                    width: 14,
-                    height: 14,
+        child: RefreshIndicator(
+          onRefresh: _presenter.refresh,
+          child: Column(
+            children: [
+              SizedBox(height: 16),
+              Container(
+                height: 40,
+                margin: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: AppColors.dropDownColor,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  child: DropdownButton<ExpenseRequestStatusFilter>(
+                    items: _presenter.expenseRequestsFilters.map((filter) {
+                      return DropdownMenuItem(
+                        value: filter,
+                        child: Text(filter.toReadableString()),
+                      );
+                    }).toList(),
+                    value: _presenter.selectedStatusFilter,
+                    onChanged: (filter) => setState(() {
+                      if (filter != null) _presenter.selectFilter(filter);
+                    }),
+                    icon: SvgPicture.asset(
+                      'assets/icons/down_arrow_icon.svg',
+                      color: AppColors.defaultColorDark,
+                      width: 14,
+                      height: 14,
+                    ),
+                    style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDark),
+                    dropdownColor: AppColors.dropDownColor,
+                    underline: SizedBox(),
                   ),
-                  style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDark),
-                  dropdownColor: AppColors.dropDownColor,
-                  underline: SizedBox(),
                 ),
               ),
-            ),
-            SizedBox(height: 8),
-            Expanded(
-              child: ItemNotifiable(
-                notifier: _viewTypeNotifier,
-                builder: (context, viewType) {
-                  if (viewType == viewTypeLoader) {
-                    return _buildLoaderView();
-                  } else if (viewType == viewTypeError) {
-                    return _buildErrorView();
-                  } else {
-                    return _buildListView();
-                  }
-                },
+              SizedBox(height: 8),
+              Expanded(
+                child: ItemNotifiable(
+                  notifier: _viewTypeNotifier,
+                  builder: (context, viewType) {
+                    if (viewType == viewTypeLoader) {
+                      return _buildLoaderView();
+                    } else if (viewType == viewTypeError) {
+                      return _buildErrorView();
+                    } else {
+                      return _buildListView();
+                    }
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -149,7 +152,10 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 30),
                 height: 200,
-                child: Text(_presenter.errorMessage, textAlign: TextAlign.center,),
+                child: Text(
+                  _presenter.errorMessage,
+                  textAlign: TextAlign.center,
+                ),
               ),
             );
           case ExpenseListItemType.EmptySpace:
