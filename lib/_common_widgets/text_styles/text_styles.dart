@@ -15,10 +15,11 @@ class TextStyles {
       );
 
   static get headerCardLargeTextStyle => TextStyle(
-      fontWeight: FontWeight.w700,
-      color: AppColors.defaultColorDarkContrastColor,
-      fontSize: 28.0,
-      overflow: TextOverflow.ellipsis);
+        fontWeight: FontWeight.w700,
+        color: AppColors.defaultColorDarkContrastColor,
+        fontSize: 28.0,
+        overflow: TextOverflow.ellipsis,
+      );
 
   static get titleTextStyle => TextStyle(
         fontSize: 16,
@@ -28,6 +29,12 @@ class TextStyles {
   static get subTitleTextStyle => TextStyle(
         fontSize: 14,
         color: Colors.black,
+      );
+
+  static get subTitleTextStyleBold => TextStyle(
+        fontSize: 14,
+        color: Colors.black,
+        fontWeight: FontWeight.w600,
       );
 
   static get labelTextStyle => TextStyle(

@@ -43,7 +43,7 @@ class AttendanceListCard extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        attendanceListItem.getReadableDate(),
+                        attendanceListItem.getReadableDayOfDate(),
                         style: TextStyles.labelTextStyleBold.copyWith(
                           color: AppColors.defaultColorDark,
                           fontSize: 16.0,
@@ -87,9 +87,9 @@ class AttendanceListCard extends StatelessWidget {
 
   String dayAndTime() {
     if (attendanceListItem.status.toReadableString() != 'Absent') {
-      return '${attendanceListItem.getReadableDayOfDate()}, ${attendanceListItem.originalPunchInTime} to ${attendanceListItem.originalPunchOutTime}';
+      return '${attendanceListItem.getReadableWeekDayOfDate()}, ${attendanceListItem.getPunchInReadableTime()} to ${attendanceListItem.getPunchOutReadableTime()}';
     } else {
-      return '${attendanceListItem.getReadableDayOfDate()}';
+      return '${attendanceListItem.getReadableWeekDayOfDate()}';
     }
   }
 }
