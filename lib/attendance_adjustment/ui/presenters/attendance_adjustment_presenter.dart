@@ -19,7 +19,6 @@ class AttendanceAdjustmentPresenter {
   final Color presentColor = Color.fromRGBO(43, 186, 104, 1.0);
   final Color absentColor = Colors.red;
   final Color lateColor = Colors.purple;
-  final Color labelColor = Colors.yellow;
 
   late TimeOfDay _punchInTime = TimeOfDay(hour: 00, minute: 00);
   late TimeOfDay _punchOutTime = TimeOfDay(hour: 00, minute: 00);
@@ -27,10 +26,6 @@ class AttendanceAdjustmentPresenter {
   TimeOfDay? _adjustedPunchOutTime;
   AttendanceStatus? _adjustedStatus;
 
-  String? punchInAdjusted;
-  String? punchOutAdjusted;
-  Color adjustedPunchInColor = Colors.white;
-  Color adjustedPunchOutColor = Colors.white;
   late String status = _attendanceListItem.status.toReadableString();
   late Color statusColor = getStatusColor(_attendanceListItem.status);
 
@@ -70,30 +65,30 @@ class AttendanceAdjustmentPresenter {
     if (_adjustedStatus != null) {
       _punchInTime = adjustedPunchInTime;
       status = getAdjustedStatus()!;
+      statusColor = getStatusColor(_adjustedStatus!);
     }
-    // } else {
-    //   punchInAdjusted = '';
-    //   adjustedPunchInColor = Colors.white;
-    //   punchInTime = TimeOfDay(hour: 00, minute: 00);
-    // }
+    else {
+      _punchInTime = TimeOfDay(hour: 00, minute: 00);
+      status =  _attendanceListItem.status.toReadableString();
+      statusColor = getStatusColor(_attendanceListItem.status);
+
+    }
   }
 
   Future<void> adjustPunchOutTime(TimeOfDay adjustedPunchOutTime) async {
     await _loadAdjustedStatus(adjustedPunchInTime: _adjustedPunchInTime, adjustedPunchOutTime: adjustedPunchOutTime);
 
-    // this.adjustedPunchOutTime = adjustedPunchOutTime;
-    // await _loadAdjustedStatus();
-    // if (_adjustedStatus != null) {
-    //   status = getAdjustedStatus()!;
-    //   statusColor = getStatusColor(_adjustedStatus!);
-    //   punchOutAdjusted = ' - Adjusted';
-    //   adjustedPunchOutColor = AppColors.lightBlueColor;
-    //   punchOutTime = adjustedPunchOutTime;
-    // } else {
-    //   punchOutAdjusted = '';
-    //   adjustedPunchOutColor = Colors.white;
-    //   punchOutTime = TimeOfDay(hour: 00, minute: 00);
-    // }
+
+    if (_adjustedStatus != null) {
+      _punchOutTime = adjustedPunchOutTime;
+      status = getAdjustedStatus()!;
+      statusColor = getStatusColor(_adjustedStatus!);
+    }
+    else {
+        _punchOutTime = TimeOfDay(hour: 00, minute: 00);
+        status =  _attendanceListItem.status.toReadableString();
+        statusColor = getStatusColor(_attendanceListItem.status);
+    }
   }
 
   Future<void> _loadAdjustedStatus({TimeOfDay? adjustedPunchInTime, TimeOfDay? adjustedPunchOutTime}) async {
@@ -170,13 +165,6 @@ class AttendanceAdjustmentPresenter {
     return _punchOutTime;
   }
 
-  String getPeriod(TimeOfDay time) {
-    if (time.period == DayPeriod.am) {
-      return 'AM';
-    } else
-      return 'PM';
-  }
-
   String? getAdjustedStatus() {
     if (_adjustedStatus != null)
       return _adjustedStatus?.toReadableString();
@@ -200,12 +188,4 @@ class AttendanceAdjustmentPresenter {
     }
   }
 
-  Color getLabelColorForItem(AttendanceListItem attendanceItem) {
-    switch (attendanceItem.status) {
-      case AttendanceStatus.Late:
-        return lateColor;
-      default:
-        return labelColor;
-    }
-  }
 }
