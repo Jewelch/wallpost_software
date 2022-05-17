@@ -10,6 +10,8 @@ class LoginTextField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onFieldSubmitted;
+  final int? minLines;
+  final int? maxLines;
 
   LoginTextField({
     this.hint,
@@ -20,6 +22,8 @@ class LoginTextField extends StatelessWidget {
     this.controller,
     this.textInputAction,
     this.onFieldSubmitted,
+    this.minLines = 1,
+    this.maxLines = 1,
   });
 
   @override
@@ -33,6 +37,8 @@ class LoginTextField extends StatelessWidget {
         controller: controller,
         textInputAction: textInputAction,
         onFieldSubmitted: onFieldSubmitted,
+        minLines: minLines,
+        maxLines: maxLines,
         decoration: InputDecoration(
           isDense: true,
           fillColor: AppColors.textFieldBackgroundColor,

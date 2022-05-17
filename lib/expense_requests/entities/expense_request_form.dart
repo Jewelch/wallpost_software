@@ -29,7 +29,8 @@ class ExpenseRequestForm implements JSONConvertible {
   });
 
   @override
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "parentCategory": parentCategory,
         "category": category,
         "project": project,

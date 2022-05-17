@@ -15,18 +15,6 @@ class ExpenseRequest extends JSONInitializable {
   late final ExpenseRequestStatus status;
   late final String description;
 
-  ExpenseRequest(
-    this.id,
-    this._category,
-    this._subCategory,
-    this.requestNo,
-    this.totalAmount,
-    this.createdAt,
-    this.createdBy,
-    this.status,
-    this.description,
-  ) : super.fromJson({});
-
   ExpenseRequest.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {

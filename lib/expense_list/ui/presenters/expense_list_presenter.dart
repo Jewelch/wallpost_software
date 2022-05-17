@@ -59,15 +59,15 @@ class ExpenseListPresenter {
 
   Future selectFilter(ExpenseRequestStatusFilter filter) async {
     _requestStatusFilter = filter;
-    refresh();
+    await refresh();
   }
 
   //MARK; Function to refresh the list
 
-  void refresh() {
+  Future refresh() async {
     _expenseRequests.clear();
     _requestsProvider.reset();
-    loadExpenseRequests();
+    await loadExpenseRequests();
   }
 
   //MARK: Functions to get the list details
@@ -82,7 +82,8 @@ class ExpenseListPresenter {
 
     if (_errorMessage.isNotEmpty) return ExpenseListItemType.ErrorMessage;
 
-    if (_requestsProvider.isLoading || _requestsProvider.didReachListEnd == false) return ExpenseListItemType.Loader;
+    if (_requestsProvider.isLoading || _requestsProvider.didReachListEnd == false)
+      return ExpenseListItemType.Loader;
 
     return ExpenseListItemType.EmptySpace;
   }

@@ -23,6 +23,7 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
   late AttendanceListPresenter presenter;
 
   var _attendanceListNotifier = ItemNotifier<List<AttendanceListItem>>(defaultValue: []);
+  var _filtersBarVisibilityNotifier = ItemNotifier<bool>(defaultValue: true);
   var _showErrorNotifier = ItemNotifier<String>(defaultValue: "");
   var _viewTypeNotifier = ItemNotifier<int>(defaultValue: 0);
 
@@ -78,85 +79,95 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
   }
 
   Widget _monthAndYearFilter() {
-    return Container(
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: dropDownColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: DropdownButton(
-                  items: presenter.getMonthsList().map((month) {
-                    return DropdownMenuItem(
-                      value: month,
-                      child: Text(month),
-                    );
-                  }).toList(),
-                  value: presenter.getSelectedMonth(),
-                  onChanged: (month) => setState(() => presenter.selectMonth(month as String)),
-                  icon: SvgPicture.asset(
-                    'assets/icons/down_arrow_icon.svg',
-                    color: AppColors.defaultColorDark,
-                    width: 14,
-                    height: 14,
+    return ItemNotifiable <bool>(
+        notifier: _filtersBarVisibilityNotifier,
+        builder: (context, showFiltersBar) {
+      if(showFiltersBar == true) {
+        return Container(
+          padding: EdgeInsets.fromLTRB(20, 20, 20, 8),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: dropDownColor,
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDark),
-                  dropdownColor: dropDownColor,
-                  underline: SizedBox(),
-                  alignment: AlignmentDirectional.center,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: dropDownColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: DropdownButton(
-                  items: presenter.getYearsList().map((year) {
-                    return DropdownMenuItem(
-                      value: year,
-                      child: Text(
-                        '$year ',
-                        style: TextStyle(color: AppColors.defaultColorDark),
+                  child: Center(
+                    child: DropdownButton(
+                      items: presenter.getMonthsList().map((month) {
+                        return DropdownMenuItem(
+                          value: month,
+                          child: Text(month),
+                        );
+                      }).toList(),
+                      value: presenter.getSelectedMonth(),
+                      onChanged: (month) => setState(() => presenter.selectMonth(month as String)),
+                      icon: SvgPicture.asset(
+                        'assets/icons/down_arrow_icon.svg',
+                        color: AppColors.defaultColorDark,
+                        width: 14,
+                        height: 14,
                       ),
-                    );
-                  }).toList(),
-                  value: presenter.getSelectedYear(),
-                  onChanged: (year) {
-                    setState(() {
-                      presenter.selectYear(year as int);
-                      if (!presenter.getMonthsList().contains(presenter.getSelectedMonth()))
-                        presenter.selectMonth(presenter.getMonthsList().last);
-                    });
-                  },
-                  icon: SvgPicture.asset(
-                    'assets/icons/down_arrow_icon.svg',
-                    color: AppColors.defaultColorDark,
-                    width: 14,
-                    height: 14,
+                      style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDark),
+                      dropdownColor: dropDownColor,
+                      underline: SizedBox(),
+                      alignment: AlignmentDirectional.center,
+                    ),
                   ),
-                  style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDark),
-                  dropdownColor: dropDownColor,
-                  underline: SizedBox(),
                 ),
               ),
-            ),
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: dropDownColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: DropdownButton(
+                      items: presenter.getYearsList().map((year) {
+                        return DropdownMenuItem(
+                          value: year,
+                          child: Text(
+                            '$year ',
+                            style: TextStyle(color: AppColors.defaultColorDark),
+                          ),
+                        );
+                      }).toList(),
+                      value: presenter.getSelectedYear(),
+                      onChanged: (year) {
+                        setState(() {
+                          presenter.selectYear(year as int);
+                          if (!presenter.getMonthsList().contains(presenter.getSelectedMonth()))
+                            presenter.selectMonth(presenter
+                                .getMonthsList()
+                                .last);
+                        });
+                      },
+                      icon: SvgPicture.asset(
+                        'assets/icons/down_arrow_icon.svg',
+                        color: AppColors.defaultColorDark,
+                        width: 14,
+                        height: 14,
+                      ),
+                      style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDark),
+                      dropdownColor: dropDownColor,
+                      underline: SizedBox(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      }
+      else return Container();
+      }
     );
   }
 
@@ -189,18 +200,26 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
     return ItemNotifiable<String>(
       notifier: _showErrorNotifier,
       builder: (context, message) {
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextButton(
-              child: Text(
-                message,
-                textAlign: TextAlign.center,
-                style: TextStyles.titleTextStyle,
+        return Column(
+          children: [
+            AppBarDivider(),
+            _monthAndYearFilter(),
+            Expanded(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextButton(
+                    child: Text(
+                      message,
+                      textAlign: TextAlign.center,
+                      style: TextStyles.titleTextStyle,
+                    ),
+                    onPressed: () => presenter.refresh(),
+                  ),
+                ),
               ),
-              onPressed: () => presenter.refresh(),
             ),
-          ),
+          ],
         );
       },
     );
@@ -228,6 +247,7 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
 
   @override
   void showErrorMessage(String errorMessage) {
+    _filtersBarVisibilityNotifier.notify(false);
     _viewTypeNotifier.notify(ERROR_VIEW);
     _showErrorNotifier.notify(errorMessage);
   }

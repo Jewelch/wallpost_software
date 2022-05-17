@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-// import 'package:wallpost/_common_widgets/app_bars/simple_app_bar_old.dart';
+import 'package:wallpost/_common_widgets/app_bars/app_bar_divider.dart';
+import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
+import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
 import 'package:wallpost/_common_widgets/loader/loader.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_adjustment_presenter.dart';
@@ -20,12 +25,12 @@ class AttendanceAdjustmentScreen extends StatefulWidget {
 }
 
 class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen> implements AttendanceAdjustmentView {
-  var _reasonErrorNotifier = ItemNotifier<String>(defaultValue: "");
+  var _reasonErrorNotifier = ItemNotifier<String?>(defaultValue: null);
   var _reasonTextController = TextEditingController();
+  var _showLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
   late AttendanceAdjustmentPresenter presenter;
   late Loader loader;
 
-  final Color labelColor = Colors.yellow;
   final Color greyColor = Colors.grey;
 
   @override
@@ -39,41 +44,37 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // appBar: SimpleAppBarOld(
-      //   title: 'Adjust Attendance',
-      //   showDivider: true,
-      //   leadingButtons: [
-      //     //   IconButton(
-      //     //     color: Colors.white,
-      //     //     iconColor: AppColors.defaultColor,
-      //     //     iconName: 'assets/icons/close_icon.svg',
-      //     //     onPressed: () => Navigator.pop(context),
-      //     //   ),
-      //     // ],
-      //     // trailingButtons: [
-      //     //   IconButton(
-      //     //     color: Colors.white,
-      //     //     iconColor: AppColors.defaultColor,
-      //     //     iconName: 'assets/icons/check_mark_icon.svg',
-      //     //     onPressed: _submitAdjustment,
-      //     //   ),
-      //   ],
-      // ),
-      body: SingleChildScrollView(
-        reverse: true,
+      backgroundColor: Colors.white,
+      appBar: SimpleAppBar(
+        title: 'Adjust Attendance',
+        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
+      ),
+      body: SafeArea(
         child: Container(
-          color: Colors.white,
-          padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _dateAndStatus(),
-              _dottedLineDivider(),
-              _punchInTime(),
-              _adjustPunchInTime(),
-              _punchOutTime(),
-              _adjustPunchOutTime(),
-              _reasonForAdjustment(),
+              AppBarDivider(),
+              _attendanceInfo(),
+              AppBarDivider(),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(16,),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _adjustPunchTime(),
+                          _reasonForAdjustment(),
+                        ],
+                      ),
+                      _saveButton(),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -81,185 +82,92 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
     );
   }
 
-  Widget _dateAndStatus() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          widget.attendanceListItem.getReadableDate(),
-          style: TextStyle(color: AppColors.defaultColorDark),
-        ),
-        Text(
-          presenter.status,
-          style: TextStyle(color: presenter.statusColor),
-        ),
-      ],
-    );
-  }
-
-  Widget _dottedLineDivider() {
+  Widget _attendanceInfo() {
     return Container(
-      height: 24,
-      child: Row(
-        children: List.generate(
-            150 ~/ 2,
-            (index) => Expanded(
-                  child: Container(
-                    color: index % 2 == 0 ? Colors.grey : Colors.transparent,
-                    height: 1,
-                  ),
-                )),
-      ),
-    );
-  }
-
-  Widget _punchInTime() {
-    return Container(
-      padding: EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      padding: EdgeInsets.all(16),
+      child: Column(
         children: [
-          Text(
-            'Punched In',
-            style: TextStyle(color: presenter.getLabelColorForItem(widget.attendanceListItem)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(widget.attendanceListItem.getReadableDate(), style: TextStyles.subTitleTextStyleBold),
+              Text(presenter.status, style: TextStyles.subTitleTextStyleBold.copyWith(color: presenter.statusColor),),
+            ],
           ),
-          Text(
-            widget.attendanceListItem.originalPunchInTime,
-            style: TextStyle(color: labelColor),
+          SizedBox(height: 8,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Punched In', style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
+              Text('Punched Out', style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
+            ],
           ),
+          SizedBox(height: 4,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(widget.attendanceListItem.originalPunchInTime,
+                style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
+              Text(
+                widget.attendanceListItem.originalPunchOutTime,
+                style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
+            ],
+          )
         ],
       ),
     );
   }
 
-  Widget _adjustPunchInTime() {
-    return Container(
-      padding: EdgeInsets.only(top: 4.0, left: 4, right: 4),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        color: presenter.adjustedPunchInColor,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RichText(
-            text: TextSpan(children: [
-              TextSpan(
-                text: 'Adjust Punch In',
-                style: TextStyle(
-                  color: Colors.black,
+  Widget _adjustPunchTime() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Expanded(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+            Text('Adjust Punch In', style: TextStyles.subTitleTextStyleBold,),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: AppColors.textFieldBackgroundColor, elevation: 2),
+              onPressed: _pickPunchInTime,
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text( "${presenter.getPunchInTime().format(context)}",
+                      style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
+                    Icon(Icons.access_time, color: greyColor,),
+                  ],
                 ),
               ),
-              TextSpan(
-                text: presenter.punchInAdjusted ?? '',
-                style: TextStyle(color: AppColors.defaultColor, fontSize: 12),
-              ),
-            ]),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 12.0),
-            child: InkWell(
-              onTap: _pickPunchInTime,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    '${presenter.getPunchInTime().hourOfPeriod.toString().padLeft(2, "0")}',
-                    style: TextStyle(color: AppColors.defaultColorDark),
-                  ),
-                  Text(
-                    ':',
-                  ),
-                  Text(
-                    '${presenter.getPunchInTime().minute.toString().padLeft(2, "0")}',
-                    style: TextStyle(color: AppColors.defaultColorDark),
-                  ),
-                  Text(
-                    presenter.getPeriod(presenter.getPunchInTime()),
-                    style: TextStyle(color: AppColors.defaultColorDark),
-                  ),
-                ],
-              ),
             ),
-          ),
-          Divider(),
-        ],
-      ),
-    );
-  }
-
-  Widget _punchOutTime() {
-    return Container(
-      padding: EdgeInsets.only(bottom: 8.0, top: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Punched Out',
-            style: TextStyle(color: presenter.getLabelColorForItem(widget.attendanceListItem)),
-          ),
-          Text(
-            widget.attendanceListItem.originalPunchOutTime,
-            style: TextStyle(color: labelColor),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _adjustPunchOutTime() {
-    return Container(
-      padding: EdgeInsets.only(top: 4.0, left: 4, right: 4),
-      decoration: BoxDecoration(
-        color: presenter.adjustedPunchOutColor,
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
+          ]),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RichText(
-            text: TextSpan(children: [
-              TextSpan(
-                text: 'Adjust Punch Out',
-                style: TextStyle(color: Colors.black),
-              ),
-              TextSpan(
-                text: presenter.punchOutAdjusted ?? '',
-                style: TextStyle(color: AppColors.defaultColor, fontSize: 12),
-              ),
-            ]),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 12.0),
-            child: InkWell(
-              onTap: _pickPunchOutTime,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    '${presenter.getPunchOutTime().hourOfPeriod.toString().padLeft(2, "0")}',
-                    style: TextStyle(color: AppColors.defaultColorDark),
-                  ),
-                  Text(
-                    ':',
-                  ),
-                  Text(
-                    '${presenter.getPunchOutTime().minute.toString().padLeft(2, "0")}',
-                    style: TextStyle(color: AppColors.defaultColorDark),
-                  ),
-                  Text(
-                    presenter.getPeriod(presenter.getPunchOutTime()),
-                    style: TextStyle(color: AppColors.defaultColorDark),
-                  ),
-                ],
+        SizedBox(width: 20,),
+        Expanded(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+            Text('Adjust Punch Out', style: TextStyles.subTitleTextStyleBold,),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: AppColors.textFieldBackgroundColor, elevation: 2),
+              onPressed: _pickPunchOutTime,
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("${presenter.getPunchOutTime().format(context)}",
+                      style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
+                    Icon(Icons.access_time, color: greyColor,),
+                  ],
+                ),
               ),
             ),
-          ),
-          Divider(),
-        ],
-      ),
+          ]),
+        ),
+      ],
     );
   }
 
@@ -267,27 +175,34 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(padding: EdgeInsets.only(bottom: 12.0, top: 20), child: Text('Reason of adjustment')),
-        ItemNotifiable<String>(
+        Container(
+            padding: EdgeInsets.only(top: 20,bottom: 8),
+            child: Text('Reason of adjustment', style: TextStyles.subTitleTextStyleBold,)),
+        ItemNotifiable<String?>(
           notifier: _reasonErrorNotifier,
-          builder: (context, value) => Container(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: TextField(
-              controller: _reasonTextController,
-              minLines: 4,
-              keyboardType: TextInputType.multiline,
-              maxLines: 8,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: greyColor, width: 1.0),
-                ),
-                hintText: 'write your reason here',
-                errorText: value,
-              ),
-            ),
+          builder: (context, value) => LoginTextField(
+            hint: 'Write your reason here',
+            controller: _reasonTextController,
+            errorText: value,
+            minLines: 3,
+            maxLines: 8,
+            keyboardType: TextInputType.multiline,
+            textInputAction: TextInputAction.done,
           ),
-        )
+         ),
       ],
+    );
+  }
+
+  Widget _saveButton() {
+    return ItemNotifiable<bool>(
+      notifier: _showLoaderNotifier,
+      builder: (context, showLoader) => RoundedRectangleActionButton(
+        title: 'Save',
+        backgroundColor: AppColors.successColor,
+        onPressed: () => _submitAdjustment(),
+        showLoader: showLoader,
+      ),
     );
   }
 
@@ -311,12 +226,12 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
 
   @override
   void showLoader() {
-    loader.showLoadingIndicator("Loading...");
+    _showLoaderNotifier.notify(true);
   }
 
   @override
   void hideLoader() {
-    loader.hideOpenDialog();
+    _showLoaderNotifier.notify(false);
   }
 
   @override
@@ -342,10 +257,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   @override
   void onAdjustAttendanceSuccess(String title, String message) {
     Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () => ScreenPresenter.present(AttendanceListScreen(), context));
+        context: context, title: title, message: message, onPressed: () => ScreenPresenter.present(AttendanceListScreen(), context));
   }
 
   @override

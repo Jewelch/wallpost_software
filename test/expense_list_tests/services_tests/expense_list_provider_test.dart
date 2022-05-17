@@ -4,8 +4,8 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/company_core/entities/company.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/expense_list/constants/expense_list_urls.dart';
-import 'package:wallpost/expense_list/entities/expense_requests_filters.dart';
-import 'package:wallpost/expense_list/services/expense_requests_provider.dart';
+import 'package:wallpost/expense_list/entities/expense_request_status_filter.dart';
+import 'package:wallpost/expense_list/services/expense_request_list_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 import '../_mocks/expense_requests_mock.dart';
@@ -15,28 +15,26 @@ class MockSelectedCompanyProvider extends Mock implements SelectedCompanyProvide
 class MockCompany extends Mock implements Company {}
 
 void main() {
-  var successfulResponse = {"detail": expenseRequestsListResponse};
+  var successfulResponse = expenseRequestsListResponse;
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockSelectedCompanyProvider = MockSelectedCompanyProvider();
-  var expenseRequestsProvider =
-      ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+  var expenseRequestsProvider = ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
   var companyId = "13";
   var mockCompany = MockCompany();
 
   setUpAll(() {
     when(() => mockCompany.id).thenReturn(companyId);
-    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
-        .thenReturn(mockCompany);
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
   });
 
   test('api request is built correctly', () async {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await expenseRequestsProvider.getExpenseRequests();
+    var _ = await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
 
     expect(mockNetworkAdapter.apiRequest.url,
-        ExpenseListUrls.getEmployeeExpenses(companyId, 1, 15, ExpenseRequestsFilters.all));
+        ExpenseListUrls.getEmployeeExpenses(companyId, 1, 15, ExpenseRequestStatusFilter.all));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
   });
 
@@ -44,7 +42,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await expenseRequestsProvider.getExpenseRequests();
+      var _ = await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -54,7 +52,7 @@ void main() {
   test('test loading flag is set to true while the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    expenseRequestsProvider.getExpenseRequests();
+    expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
 
     expect(expenseRequestsProvider.isLoading, true);
   });
@@ -62,7 +60,7 @@ void main() {
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await expenseRequestsProvider.getExpenseRequests();
+    var _ = await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
 
     expect(expenseRequestsProvider.isLoading, false);
   });
@@ -71,7 +69,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await expenseRequestsProvider.getExpenseRequests();
+      var _ = await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       fail('failed to throw exception');
     } catch (_) {
       expect(expenseRequestsProvider.isLoading, false);
@@ -82,13 +80,13 @@ void main() {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
-    expenseRequestsProvider.getExpenseRequests().then((_) {
+    expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all).then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
     mockNetworkAdapter.succeed(successfulResponse);
-    expenseRequestsProvider.getExpenseRequests().then((_) {
+    expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all).then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -100,7 +98,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await expenseRequestsProvider.getExpenseRequests();
+      var _ = await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -111,7 +109,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      var _ = await expenseRequestsProvider.getExpenseRequests();
+      var _ = await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -119,14 +117,12 @@ void main() {
   });
 
   test('throws InvalidResponseException when entity mapping fails', () async {
-    mockNetworkAdapter.succeed({
-      "detail": [
-        <String, dynamic>{"miss_data": "anyWrongData"}
-      ]
-    });
+    mockNetworkAdapter.succeed([
+      <String, dynamic>{"miss_data": "anyWrongData"}
+    ]);
 
     try {
-      var _ = await expenseRequestsProvider.getExpenseRequests();
+      var _ = await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       print(e.runtimeType);
@@ -138,7 +134,7 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var requestItems = await expenseRequestsProvider.getExpenseRequests();
+      var requestItems = await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       expect(requestItems, isNotEmpty);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
@@ -147,73 +143,35 @@ void main() {
 
   test('page number is updated after each call', () async {
     mockNetworkAdapter.succeed(successfulResponse);
-    expenseRequestsProvider.resetPagination();
+    expenseRequestsProvider.reset();
     try {
       expect(expenseRequestsProvider.getCurrentPageNumber(), 1);
-      await expenseRequestsProvider.getExpenseRequests();
+      await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       expect(expenseRequestsProvider.getCurrentPageNumber(), 2);
-      await expenseRequestsProvider.getExpenseRequests();
+      await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       expect(expenseRequestsProvider.getCurrentPageNumber(), 3);
-      await expenseRequestsProvider.getExpenseRequests();
+      await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       expect(expenseRequestsProvider.getCurrentPageNumber(), 4);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
   });
 
-  test('expense requests filter is set to all at initialization', () {
-    expenseRequestsProvider =
-        ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
-
-    expect(expenseRequestsProvider.requestStatusFilter, ExpenseRequestsFilters.all);
-  });
-
-  test(
-      'expense requests filter is changed after calling loadingExpenseRequests with different filters',
-      () {
-    expenseRequestsProvider =
-        ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+  test('reset values after calling reset', () async {
     mockNetworkAdapter.succeed(successfulResponse);
-
-    expenseRequestsProvider.getExpenseRequests(filter: ExpenseRequestsFilters.approved);
-
-    expect(expenseRequestsProvider.requestStatusFilter, ExpenseRequestsFilters.approved);
-  });
-
-  test('reset pageNumber after calling loadingExpenseRequests with different filters', () async {
-    expenseRequestsProvider =
-        ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
-    mockNetworkAdapter.succeed(successfulResponse);
+    expenseRequestsProvider.reset();
     try {
-      expect(expenseRequestsProvider.getCurrentPageNumber(), 1);
-      await expenseRequestsProvider.getExpenseRequests();
-      expect(expenseRequestsProvider.getCurrentPageNumber(), 2);
-      await expenseRequestsProvider.getExpenseRequests();
-      expect(expenseRequestsProvider.getCurrentPageNumber(), 3);
-      await expenseRequestsProvider.getExpenseRequests();
+      await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
+      await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
+      await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       expect(expenseRequestsProvider.getCurrentPageNumber(), 4);
-      await expenseRequestsProvider.getExpenseRequests(filter: ExpenseRequestsFilters.approved);
-      expect(expenseRequestsProvider.getCurrentPageNumber(), 2);
-      await expenseRequestsProvider.getExpenseRequests();
-      expect(expenseRequestsProvider.getCurrentPageNumber(), 3);
-    } catch (e) {
-      fail('failed to complete successfully. exception thrown $e');
-    }
-  });
+      expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
 
-  test('reset pageNumber after calling loadingExpenseRequests with same filters do nothing',
-      () async {
-    expenseRequestsProvider =
-        ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
-    mockNetworkAdapter.succeed(successfulResponse);
-    try {
+      expenseRequestsProvider.reset();
+
+      expect(expenseRequestsProvider.isLoading, false);
+      expect(expenseRequestsProvider.didReachListEnd, false);
       expect(expenseRequestsProvider.getCurrentPageNumber(), 1);
-      await expenseRequestsProvider.getExpenseRequests(filter: ExpenseRequestsFilters.approved);
-      expect(expenseRequestsProvider.getCurrentPageNumber(), 2);
-      await expenseRequestsProvider.getExpenseRequests(filter: ExpenseRequestsFilters.approved);
-      expect(expenseRequestsProvider.getCurrentPageNumber(), 3);
-      await expenseRequestsProvider.getExpenseRequests();
-      expect(expenseRequestsProvider.getCurrentPageNumber(), 4);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }

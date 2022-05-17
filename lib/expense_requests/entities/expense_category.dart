@@ -8,6 +8,9 @@ class ExpenseCategory extends JSONInitializable {
   late final List<ExpenseCategory> subCategories;
   late final List<ExpenseCategory> projects;
 
+
+  ExpenseCategory(this.id, this.name, this.subCategories, this.projects):super.fromJson({});
+
   ExpenseCategory.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     try {
       var sift = Sift();
