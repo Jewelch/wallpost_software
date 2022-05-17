@@ -15,18 +15,16 @@ class MockSelectedCompanyProvider extends Mock implements SelectedCompanyProvide
 class MockCompany extends Mock implements Company {}
 
 void main() {
-  var successfulResponse =  expenseRequestsListResponse;
+  var successfulResponse = expenseRequestsListResponse;
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockSelectedCompanyProvider = MockSelectedCompanyProvider();
-  var expenseRequestsProvider =
-      ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+  var expenseRequestsProvider = ExpenseRequestListProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
   var companyId = "13";
   var mockCompany = MockCompany();
 
   setUpAll(() {
     when(() => mockCompany.id).thenReturn(companyId);
-    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
-        .thenReturn(mockCompany);
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
   });
 
   test('api request is built correctly', () async {
@@ -120,7 +118,7 @@ void main() {
 
   test('throws InvalidResponseException when entity mapping fails', () async {
     mockNetworkAdapter.succeed([
-        <String, dynamic>{"miss_data": "anyWrongData"}
+      <String, dynamic>{"miss_data": "anyWrongData"}
     ]);
 
     try {
@@ -136,8 +134,7 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var requestItems =
-          await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
+      var requestItems = await expenseRequestsProvider.getExpenseRequests(ExpenseRequestStatusFilter.all);
       expect(requestItems, isNotEmpty);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
