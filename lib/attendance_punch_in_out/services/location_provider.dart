@@ -55,7 +55,7 @@ class LocationProvider {
       List<Placemark> p = await placemarkFromCoordinates(
           attendanceLocation.latitude.toDouble(), attendanceLocation.longitude.toDouble());
       Placemark place = p[0];
-      return "${place.street} ${place.subLocality ?? place.locality}";
+      return "";
     } catch (e) {
       throw LocationReverseGeocodingException();
     }

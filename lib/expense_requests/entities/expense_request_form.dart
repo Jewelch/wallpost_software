@@ -42,3 +42,9 @@ class ExpenseRequestForm implements JSONConvertible {
         "total": total
       };
 }
+
+/*
+1. Add remarks field multiline
+2. make the view scrollable
+3. remove rate?
+ */
