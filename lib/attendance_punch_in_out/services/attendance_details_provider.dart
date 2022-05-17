@@ -39,11 +39,12 @@ class AttendanceDetailsProvider {
     //returning if the response is from another session
     if (apiResponse.apiRequest.requestId != _sessionId) return Completer<AttendanceDetails>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
+    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
-    var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
+    var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
-      var attendanceDetails = AttendanceDetails.fromJson(responseMapList);
+      var attendanceDetails = AttendanceDetails.fromJson(responseMap);
+      print(attendanceDetails);
       return attendanceDetails;
     } catch (e) {
       throw InvalidResponseException();

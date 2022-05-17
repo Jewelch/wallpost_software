@@ -89,6 +89,9 @@ class AttendancePresenter {
       basicView.showLoader();
       _attendanceDetails = await _attendanceDetailsProvider.getDetails();
 
+      var canMarkAttendance = await _getAttendancePermission(_attendanceDetails);
+      if (!canMarkAttendance) return;
+
       if (_attendanceDetails.isNotPunchedIn)
         return _loadPunchInDetails();
       else if (_attendanceDetails.isPunchedIn)
@@ -100,9 +103,6 @@ class AttendancePresenter {
   }
 
   Future<void> _loadPunchInDetails() async {
-    var canPunchInNow = await _getAttendancePermission();
-    if (!canPunchInNow) return;
-
     _attendanceLocation = await getLocation();
     if (_attendanceLocation == null) return;
 
@@ -112,9 +112,6 @@ class AttendancePresenter {
   }
 
   Future<void> _loadPunchOutDetails() async {
-    var canPunchOutFromApp = await _getAttendancePermission();
-    if (!canPunchOutFromApp) return;
-
     _attendanceLocation = await getLocation();
     if (_attendanceLocation == null) return;
 
@@ -129,8 +126,8 @@ class AttendancePresenter {
   }
 
   Future<void> _loadPunchedOutDetails() async {
-    var canPunchInFromApp = await _getAttendancePermission();
-    if (!canPunchInFromApp) return;
+    _attendanceLocation = await getLocation();
+    if (_attendanceLocation == null) return;
 
     _showPunchInTime();
     _showPunchOutTime();
@@ -139,26 +136,19 @@ class AttendancePresenter {
 
   //MARK: Functions to get attendance permissions
 
-  Future<bool> _getAttendancePermission() async {
-    try {
-      var attendancePermission = await _attendancePermissionsProvider.getPermissions();
-
-      if (!attendancePermission.canMarkAttendancePermissionFromApp) {
+  Future<bool> _getAttendancePermission(AttendanceDetails attendanceDetails) async {
+      if (!attendanceDetails.canMarkAttendancePermissionFromApp) {
         basicView.showErrorAndRetryView(
             "You are not allowed to mark attendance from the app.\nPlease contact your HR or tap to reload.");
         return false;
       }
 
-      if (!attendancePermission.canMarkAttendanceNow) {
-        basicView.showCountDownView(attendancePermission.secondsTillPunchIn.toInt());
+      if (!attendanceDetails.canMarkAttendanceNow) {
+        basicView.showCountDownView(attendanceDetails.secondsTillPunchIn.toInt());
         return false;
       }
 
       return true;
-    } on WPException catch (_) {
-      basicView.showErrorAndRetryView("Failed to load permission for mark attendance.\nTap to reload");
-      return false;
-    }
   }
 
   //MARK: Functions to get location

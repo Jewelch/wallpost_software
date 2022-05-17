@@ -1,31 +1,42 @@
 import 'package:intl/intl.dart';
 import 'package:sift/sift.dart';
+import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
+import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 import 'break.dart';
 
-class AttendanceDetails {
+class AttendanceDetails extends JSONInitializable {
   String? _id;
   String? _detailsId;
   DateTime? _punchInTime;
   DateTime? _punchOutTime;
   List<Break> _breaks = [];
 
+  late bool _canMarkAttendancePermissionFromApp;
+  late bool _canMarkAttendanceNow;
+  late num _secondsTillPunchIn;
+
   //TODO add attendance_punch_in_out status
 
-  AttendanceDetails.fromJson(List<Map<String, dynamic>> jsonMapList) {
+  AttendanceDetails.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
-    var currentAttendanceMap = sift.readMapFromListWithDefaultValue(jsonMapList, 0, {});
+    var attendanceInfoMapList = sift.readMapListFromMapWithDefaultValue(jsonMap, 'attendance_info', null);
+    var attendanceInfoMap = sift.readMapFromListWithDefaultValue(attendanceInfoMapList, 0, null);
     var attendanceDetailsMapList =
-        sift.readMapListFromMapWithDefaultValue(currentAttendanceMap, 'attendance_details', null);
+        sift.readMapListFromMapWithDefaultValue(attendanceInfoMap, 'attendance_details', null);
     var attendanceDetailsMap = sift.readMapFromListWithDefaultValue(attendanceDetailsMapList, 0, null);
     var breaksMapList = sift.readMapListFromMapWithDefaultValue(attendanceDetailsMap, 'attendance_intervals', null);
-    _id = sift.readStringFromMapWithDefaultValue(currentAttendanceMap, 'attendance_id', null);
+    var attendancePermissionMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'is_allowed_punchin', null);
+    _id = sift.readStringFromMapWithDefaultValue(attendanceInfoMap, 'attendance_id', null);
     _detailsId = sift.readStringFromMapWithDefaultValue(attendanceDetailsMap, 'attendance_details_id', null);
     _punchInTime =
         sift.readDateFromMapWithDefaultValue(attendanceDetailsMap, 'actual_punch_in', 'yyyy-MM-dd HH:mm:ss', null);
     _punchOutTime =
         sift.readDateFromMapWithDefaultValue(attendanceDetailsMap, 'actual_punch_out', 'yyyy-MM-dd HH:mm:ss', null);
     _breaks = _readBreakFromMapList(breaksMapList);
+    _canMarkAttendancePermissionFromApp = sift.readBooleanFromMap(attendancePermissionMap, 'punch_in_allowed_from_app');
+    _canMarkAttendanceNow = sift.readBooleanFromMap(attendancePermissionMap, 'status');
+    _secondsTillPunchIn = sift.readNumberFromMapWithDefaultValue(attendancePermissionMap, 'remaining_in_min', 0)!;
   }
 
   List<Break> _readBreakFromMapList(List<Map<String, dynamic>>? jsonMapList) {
@@ -78,6 +89,12 @@ class AttendanceDetails {
   bool get isOnBreak {
     return isPunchedIn == true && _getActiveBreak() != null;
   }
+
+  bool get canMarkAttendancePermissionFromApp => _canMarkAttendancePermissionFromApp;
+
+  bool get canMarkAttendanceNow => _canMarkAttendanceNow;
+
+  num get secondsTillPunchIn => _secondsTillPunchIn;
 
   //MARK: Util functions
 
