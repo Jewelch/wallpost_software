@@ -4,6 +4,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 List<Widget> expenseInputWithHeader({
   required String title,
   required Widget child,
+  double height = 48,
   bool required = false,
   bool showRequiredMessage = false,
 }) {
@@ -33,7 +34,7 @@ List<Widget> expenseInputWithHeader({
       height: 8,
     ),
     Container(
-      height: 48,
+      height: height,
       decoration: BoxDecoration(
           color: AppColors.textFieldBackgroundColor, borderRadius: BorderRadius.circular(8)),
       child: Padding(

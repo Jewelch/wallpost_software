@@ -95,7 +95,6 @@ class ExpenseRequestPresenter {
         date: expenseRequest.date.yyyyMMdd2String(),
         description: expenseRequest.description,
         quantity: expenseRequest.quantity.toString(),
-        rate: expenseRequest.rate.toString(),
         amount: expenseRequest.amount,
         file: expenseRequest.file,
         total: expenseRequest.total);

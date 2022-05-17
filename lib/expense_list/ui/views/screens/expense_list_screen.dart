@@ -69,18 +69,21 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
                     items: _presenter.expenseRequestsFilters.map((filter) {
                       return DropdownMenuItem(
                         value: filter,
-                        child: Text(filter.toReadableString()),
+                        child: Text(filter.toReadableString(),textAlign: TextAlign.start,),
                       );
                     }).toList(),
                     value: _presenter.selectedStatusFilter,
                     onChanged: (filter) => setState(() {
                       if (filter != null) _presenter.selectFilter(filter);
                     }),
-                    icon: SvgPicture.asset(
-                      'assets/icons/down_arrow_icon.svg',
-                      color: AppColors.defaultColorDark,
-                      width: 14,
-                      height: 14,
+                    icon: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: SvgPicture.asset(
+                        'assets/icons/down_arrow_icon.svg',
+                        color: AppColors.defaultColorDark,
+                        width: 14,
+                        height: 14,
+                      ),
                     ),
                     style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDark),
                     dropdownColor: AppColors.dropDownColor,

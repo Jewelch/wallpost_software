@@ -15,9 +15,7 @@ class ExpenseRequestModel {
   String get amount => _amount.toString();
   File? file;
 
-  String get rate => _amount.multiply(quantity).toString();
-
-  String get total => "";
+  String get total => _amount.multiply(quantity).toString();
 
   void setAmount(num amount) {
     _amount = Money(amount);

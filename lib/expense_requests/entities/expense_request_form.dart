@@ -9,7 +9,6 @@ class ExpenseRequestForm implements JSONConvertible {
   String date;
   String description;
   String quantity;
-  String rate;
   String amount;
   File? file;
   String fileString = "";
@@ -22,7 +21,6 @@ class ExpenseRequestForm implements JSONConvertible {
     required this.date,
     required this.description,
     required this.quantity,
-    required this.rate,
     required this.amount,
     required this.file,
     required this.total,
@@ -37,7 +35,7 @@ class ExpenseRequestForm implements JSONConvertible {
         "expense_date": date,
         "description": description,
         "quantity": quantity,
-        "rate": rate,
+        "rate": "",
         "amount": amount,
         "file": fileString,
         "total": total
