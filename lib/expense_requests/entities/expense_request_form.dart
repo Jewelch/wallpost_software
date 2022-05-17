@@ -29,7 +29,8 @@ class ExpenseRequestForm implements JSONConvertible {
   });
 
   @override
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "parentCategory": parentCategory,
         "category": category,
         "project": project,
@@ -42,9 +43,3 @@ class ExpenseRequestForm implements JSONConvertible {
         "total": total
       };
 }
-
-/*
-1. Add remarks field multiline
-2. make the view scrollable
-3. remove rate?
- */

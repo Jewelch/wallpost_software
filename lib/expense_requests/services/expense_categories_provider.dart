@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
@@ -37,11 +38,8 @@ class ExpenseCategoriesProvider {
 
   Future<List<ExpenseCategory>> _processResponse(APIResponse apiResponse) async {
     //returning empty list if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId)
-      return Completer<List<ExpenseCategory>>().future;
-
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<ExpenseCategory>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-
     if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
@@ -49,15 +47,36 @@ class ExpenseCategoriesProvider {
   }
 
   List<ExpenseCategory> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
-    try {
-      var categories = <ExpenseCategory>[];
-      for (var responseMap in responseMapList) {
-        var item = ExpenseCategory.fromJson(responseMap);
-        categories.add(item);
-      }
-      return categories;
-    } catch (e) {
-      throw InvalidResponseException();
-    }
+    var cat1 = ExpenseCategory("id1", "name1", [], []);
+
+    var cat2 = ExpenseCategory("id2", "name2", [
+      ExpenseCategory("id2a", "name2a", [], []),
+      ExpenseCategory("id2b", "name2b", [], []),
+    ], []);
+
+    var cat3 = ExpenseCategory("id3", "name3", [], [
+      ExpenseCategory("id3a", "name3a", [], []),
+      ExpenseCategory("id3b", "name3b", [], []),
+    ]);
+
+    var cat4 = ExpenseCategory("id4", "name4", [
+      ExpenseCategory("id4a", "name4a", [], []),
+      ExpenseCategory("id4b", "name4b", [], []),
+    ], [
+      ExpenseCategory("id44a", "name44a", [], []),
+      ExpenseCategory("id44b", "name44b", [], []),
+    ]);
+    return [cat1, cat2,cat3, cat4];
+
+    // try {
+    //   var categories = <ExpenseCategory>[];
+    //   for (var responseMap in responseMapList) {
+    //     var item = ExpenseCategory.fromJson(responseMap);
+    //     categories.add(item);
+    //   }
+    //   return categories;
+    // } catch (e) {
+    //   throw InvalidResponseException();
+    // }
   }
 }
