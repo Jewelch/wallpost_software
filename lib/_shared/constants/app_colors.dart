@@ -32,4 +32,11 @@ class AppColors {
   static final Color green = Color.fromRGBO(43, 186, 104, 1.0);
   static final Color yellow = Color.fromRGBO(248, 162, 40, 1.0);
   static final Color dropDownColor = Color.fromARGB(255, 223, 240, 247);
+
+  //attendance adjustment colors
+  static final Color greyColor = Color.fromARGB(255, 245, 245, 245);
+  static final Color greenButtonColor = Color.fromARGB(255, 37, 208, 110);
+  static final Color presentColor = Color.fromRGBO(37, 208, 110,1.0);
+  static final Color absentColor = Color.fromRGBO(246, 42, 32, 1.0);
+  static final Color lateColor = Color.fromRGBO(248, 166, 50, 1.0);
 }

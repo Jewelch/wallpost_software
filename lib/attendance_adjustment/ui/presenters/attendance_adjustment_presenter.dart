@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
@@ -15,10 +16,6 @@ class AttendanceAdjustmentPresenter {
   final AdjustedStatusProvider _adjustedStatusProvider;
   final AttendanceAdjustmentSubmitter _adjustmentSubmitter;
   final SelectedEmployeeProvider _selectedEmployeeProvider;
-
-  final Color presentColor = Color.fromRGBO(43, 186, 104, 1.0);
-  final Color absentColor = Colors.red;
-  final Color lateColor = Colors.purple;
 
   late TimeOfDay _punchInTime = TimeOfDay(hour: 00, minute: 00);
   late TimeOfDay _punchOutTime = TimeOfDay(hour: 00, minute: 00);
@@ -58,6 +55,9 @@ class AttendanceAdjustmentPresenter {
   //MARK: Function to get adjusted status of attendance_punch_in_out.
 
   Future<void> adjustPunchInTime(TimeOfDay adjustedPunchInTime) async {
+    _punchInTime = adjustedPunchInTime;
+    _view.onDidLoadAdjustedStatus();
+
     await _loadAdjustedStatus(adjustedPunchInTime: adjustedPunchInTime, adjustedPunchOutTime: _adjustedPunchOutTime);
 
     //if status was adjusted - set the adjusted time
@@ -76,8 +76,10 @@ class AttendanceAdjustmentPresenter {
   }
 
   Future<void> adjustPunchOutTime(TimeOfDay adjustedPunchOutTime) async {
-    await _loadAdjustedStatus(adjustedPunchInTime: _adjustedPunchInTime, adjustedPunchOutTime: adjustedPunchOutTime);
+    _punchOutTime = adjustedPunchOutTime;
+    _view.onDidLoadAdjustedStatus();
 
+    await _loadAdjustedStatus(adjustedPunchInTime: _adjustedPunchInTime, adjustedPunchOutTime: adjustedPunchOutTime);
 
     if (_adjustedStatus != null) {
       _punchOutTime = adjustedPunchOutTime;
@@ -95,17 +97,17 @@ class AttendanceAdjustmentPresenter {
     if (_adjustedStatusProvider.isLoading) return;
 
     try {
-      _view.showLoader();
+      _view.showStatusLoader();
       var adjustedStatusForm = AdjustedStatusForm(_attendanceListItem.date, adjustedPunchInTime, adjustedPunchOutTime);
       _adjustedStatus = await _adjustedStatusProvider.getAdjustedStatus(adjustedStatusForm);
 
       if (adjustedPunchInTime != null) this._adjustedPunchInTime = adjustedPunchInTime;
       if (adjustedPunchOutTime != null) this._adjustedPunchOutTime = adjustedPunchOutTime;
 
-      _view.hideLoader();
+      _view.hideStatusLoader();
       _view.onDidLoadAdjustedStatus();
     } on WPException catch (e) {
-      _view.hideLoader();
+      _view.hideStatusLoader();
       _adjustedStatus = null;
       _view.onDidLoadAdjustedStatus();
       _view.onGetAdjustedStatusFailed("Getting adjusted status failed", e.userReadableMessage);
@@ -178,13 +180,13 @@ class AttendanceAdjustmentPresenter {
       case AttendanceStatus.NoAction:
       case AttendanceStatus.OnTime:
       case AttendanceStatus.Break:
-        return presentColor;
+        return AppColors.presentColor;
       case AttendanceStatus.Late:
       case AttendanceStatus.HalfDay:
       case AttendanceStatus.EarlyLeave:
-        return lateColor;
+        return AppColors.lateColor;
       case AttendanceStatus.Absent:
-        return absentColor;
+        return AppColors.absentColor;
     }
   }
 

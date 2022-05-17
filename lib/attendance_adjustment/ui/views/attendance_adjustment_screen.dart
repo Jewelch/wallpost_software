@@ -28,6 +28,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   var _reasonErrorNotifier = ItemNotifier<String?>(defaultValue: null);
   var _reasonTextController = TextEditingController();
   var _showLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
+  var _statusLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
   late AttendanceAdjustmentPresenter presenter;
   late Loader loader;
 
@@ -58,20 +59,26 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
               _attendanceInfo(),
               AppBarDivider(),
               Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(16,),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                child: ItemNotifiable<bool>(
+                  notifier: _statusLoaderNotifier,
+                  builder: (context, value) =>IgnorePointer(
+                    ignoring: value ?  true: false,
+                    child: Container(
+                      padding: EdgeInsets.all(16,),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _adjustPunchTime(),
-                          _reasonForAdjustment(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _adjustPunchTime(),
+                              _reasonForAdjustment(),
+                            ],
+                          ),
+                          _saveButton(),
                         ],
                       ),
-                      _saveButton(),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -84,22 +91,35 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
 
   Widget _attendanceInfo() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.symmetric(horizontal: 16,vertical: 20),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.attendanceListItem.getReadableDate(), style: TextStyles.subTitleTextStyleBold),
-              Text(presenter.status, style: TextStyles.subTitleTextStyleBold.copyWith(color: presenter.statusColor),),
+              Text(widget.attendanceListItem.getReadableDate(), style: TextStyles.titleTextStyleBold),
+              ItemNotifiable<bool>(
+                        notifier: _statusLoaderNotifier,
+                        builder: (context, value) =>
+                            value ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                backgroundColor: AppColors.greenButtonColor,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+                              ),
+                            )
+                                :Text(presenter.status, style: TextStyles.titleTextStyleBold.copyWith(color: presenter.statusColor),),
+                       ),
             ],
           ),
-          SizedBox(height: 8,),
+          SizedBox(height: 12,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Punched In', style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
-              Text('Punched Out', style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
+              Text('Punched In', style: TextStyles.titleTextStyle.copyWith(color: AppColors.textGrey),),
+              Text('Punched Out', style: TextStyles.titleTextStyle.copyWith(color: AppColors.textGrey),),
             ],
           ),
           SizedBox(height: 4,),
@@ -107,10 +127,10 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(widget.attendanceListItem.originalPunchInTime,
-                style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
+                style: TextStyles.titleTextStyle.copyWith(color: AppColors.textGrey),),
               Text(
                 widget.attendanceListItem.originalPunchOutTime,
-                style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
+                style: TextStyles.titleTextStyle.copyWith(color: AppColors.textGrey),),
             ],
           )
         ],
@@ -122,52 +142,51 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Expanded(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-            Text('Adjust Punch In', style: TextStyles.subTitleTextStyleBold,),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: AppColors.textFieldBackgroundColor, elevation: 2),
-              onPressed: _pickPunchInTime,
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text( "${presenter.getPunchInTime().format(context)}",
-                      style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
-                    Icon(Icons.access_time, color: greyColor,),
-                  ],
-                ),
-              ),
-            ),
-          ]),
+        _buildPickAttendanceTime(
+          title: 'Adjust Punch In',
+          time: "${presenter.getPunchInTime().format(context)}",
+          onTap: _pickPunchInTime,
         ),
         SizedBox(width: 20,),
-        Expanded(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-            Text('Adjust Punch Out', style: TextStyles.subTitleTextStyleBold,),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: AppColors.textFieldBackgroundColor, elevation: 2),
-              onPressed: _pickPunchOutTime,
+        _buildPickAttendanceTime(
+            title:'Adjust Punch Out',
+            time: "${presenter.getPunchOutTime().format(context)}",
+            onTap: _pickPunchOutTime
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPickAttendanceTime({
+    String? title,
+    VoidCallback? onTap,
+    String? time,
+  }) {
+    return Expanded(
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title!, style: TextStyles.titleTextStyleBold,),
+            SizedBox(height: 4,),
+            InkWell(
+              onTap: onTap,
               child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.greyColor,
+                  borderRadius: BorderRadius.all(Radius.circular(10,)),
+                ),
+                padding: EdgeInsets.all(12,),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("${presenter.getPunchOutTime().format(context)}",
-                      style: TextStyles.subTitleTextStyle.copyWith(color: greyColor),),
-                    Icon(Icons.access_time, color: greyColor,),
+                    Text(time!,
+                      style: TextStyles.titleTextStyle.copyWith(color: AppColors.textGrey),),
+                    Icon(Icons.access_time, size: 22, color: AppColors.textGrey,),
                   ],
                 ),
               ),
             ),
           ]),
-        ),
-      ],
     );
   }
 
@@ -176,14 +195,15 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-            padding: EdgeInsets.only(top: 20,bottom: 8),
-            child: Text('Reason of adjustment', style: TextStyles.subTitleTextStyleBold,)),
+            padding: EdgeInsets.only(top: 16,bottom: 8),
+            child: Text('Reason of adjustment', style: TextStyles.titleTextStyleBold,)),
         ItemNotifiable<String?>(
           notifier: _reasonErrorNotifier,
           builder: (context, value) => LoginTextField(
             hint: 'Write your reason here',
             controller: _reasonTextController,
             errorText: value,
+            fillColor: AppColors.greyColor,
             minLines: 3,
             maxLines: 8,
             keyboardType: TextInputType.multiline,
@@ -197,11 +217,14 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   Widget _saveButton() {
     return ItemNotifiable<bool>(
       notifier: _showLoaderNotifier,
-      builder: (context, showLoader) => RoundedRectangleActionButton(
-        title: 'Save',
-        backgroundColor: AppColors.successColor,
-        onPressed: () => _submitAdjustment(),
-        showLoader: showLoader,
+      builder: (context, showLoader) => Container(
+        height: 40,
+        child: RoundedRectangleActionButton(
+          title: 'Save',
+          backgroundColor: AppColors.greenButtonColor,
+          onPressed: () => _submitAdjustment(),
+          showLoader: showLoader,
+        ),
       ),
     );
   }
@@ -232,6 +255,16 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   @override
   void hideLoader() {
     _showLoaderNotifier.notify(false);
+  }
+
+  @override
+  void showStatusLoader() {
+    _statusLoaderNotifier.notify(true);
+  }
+
+  @override
+  void hideStatusLoader() {
+    _statusLoaderNotifier.notify(false);
   }
 
   @override
@@ -269,4 +302,5 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   void onDidLoadAdjustedStatus() {
     setState(() {});
   }
+
 }

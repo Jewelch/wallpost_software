@@ -12,6 +12,7 @@ class LoginTextField extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final int? minLines;
   final int? maxLines;
+  final Color? fillColor;
 
   LoginTextField({
     this.hint,
@@ -24,6 +25,7 @@ class LoginTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.minLines = 1,
     this.maxLines = 1,
+    this.fillColor = AppColors.textFieldBackgroundColor,
   });
 
   @override
@@ -41,7 +43,7 @@ class LoginTextField extends StatelessWidget {
         maxLines: maxLines,
         decoration: InputDecoration(
           isDense: true,
-          fillColor: AppColors.textFieldBackgroundColor,
+          fillColor: fillColor,
           filled: true,
           hintText: hint,
           errorText: errorText,

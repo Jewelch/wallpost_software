@@ -26,6 +26,12 @@ class TextStyles {
         color: Colors.black,
       );
 
+  static get titleTextStyleBold => TextStyle(
+    fontSize: 16,
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+  );
+
   static get subTitleTextStyle => TextStyle(
         fontSize: 14,
         color: Colors.black,
@@ -34,7 +40,7 @@ class TextStyles {
   static get subTitleTextStyleBold => TextStyle(
         fontSize: 14,
         color: Colors.black,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w700,
       );
 
   static get labelTextStyle => TextStyle(
