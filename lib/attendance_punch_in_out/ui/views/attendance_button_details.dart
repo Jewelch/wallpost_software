@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -37,8 +38,10 @@ class _AttendanceButtonDetailsScreenState
   var _breakButtonNotifier = ItemNotifier<int>(defaultValue: SHOW_BREAK_BUTTON_VIEW);
   var _attendanceReportNotifier = ItemNotifier<AttendanceReport?>(defaultValue: null);
   var _locationOnMapNotifier = ItemNotifier<AttendanceLocation?>(defaultValue: null);
+  var _punchInTimeNotifier = ItemNotifier<String?>(defaultValue: null);
+  var _punchOutTimeNotifier = ItemNotifier<String?>(defaultValue: null);
   final ItemNotifier<String> _countDownNotifier = ItemNotifier(defaultValue: "");
-
+  var _viewSelectorReportNotifier = ItemNotifier<int>(defaultValue: 0);
   late final AttendancePresenter presenter;
   late String _timeString;
   late Timer _currentTimer;
@@ -61,11 +64,16 @@ class _AttendanceButtonDetailsScreenState
   static const HIDE_BREAK_BUTTON_VIEW = 10;
   static const RESUME_BUTTON_VIEW = 11;
 
+  static const REPORT_LOADER_VIEW = 12;
+  static const REPORT_ERROR_VIEW = 13;
+  static const REPORT_DATA_VIEW = 14;
+
+
   @override
   void initState() {
     presenter = AttendancePresenter(basicView: this, detailedView: this);
     presenter.loadAttendanceDetails();
-    // presenter.loadAttendanceReport();
+     presenter.loadAttendanceReport();
 
     _currentTimer =
         Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
@@ -141,7 +149,7 @@ class _AttendanceButtonDetailsScreenState
   Widget _buildLoader() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24),
-      height: 150,
+      height: 50,
       child: Center(
         child: CircularProgressIndicator(
           strokeWidth: 2,
@@ -176,11 +184,18 @@ class _AttendanceButtonDetailsScreenState
     );
   }
 
+  Widget _reportErrorAndRetryView() {
+    return _errorButton(
+      title: _errorMessage,
+      onPressed: () => presenter.loadAttendanceReport(),
+    );
+  }
+
   Widget _errorButton(
       {required String title, required VoidCallback onPressed}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24),
-      height: 150,
+      height: 80,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -214,7 +229,11 @@ class _AttendanceButtonDetailsScreenState
                   margin: EdgeInsets.only(right: 10),
                   child: _mapView(),
                 ),
-                Container(height: 70, color: Colors.transparent),
+                Container(
+                  margin: EdgeInsets.only(right: 24,left: 24),
+                    height: 70,
+                 child: _attendanceTime(),
+                ),
               ],
             ),
             Positioned(
@@ -230,6 +249,52 @@ class _AttendanceButtonDetailsScreenState
         Container(
             margin: EdgeInsets.all(20), child: _buildAttendanceReportView())
       ],
+    );
+  }
+
+  //MARK: Functions to punch in and out time view
+
+  Widget _attendanceTime(){
+    return  Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          children: [
+            _buildPunchInTime(),
+            Text("Punch In")
+          ],
+        ),
+        Column(
+          children: [
+            _buildPunchOutTime(),
+            Text("Punch Out")
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _buildPunchInTime(){
+    return ItemNotifiable<String?>(
+      notifier: _punchInTimeNotifier,
+      builder: (context, time) {
+        if(time!=null)
+        return Text(time);
+        else
+          return Text("___");
+      }
+    );
+  }
+
+  Widget _buildPunchOutTime(){
+    return ItemNotifiable<String?>(
+        notifier: _punchOutTimeNotifier,
+        builder: (context, time) {
+          if(time!=null)
+            return Text(time);
+          else
+            return Text("___");
+        }
     );
   }
 
@@ -441,15 +506,31 @@ class _AttendanceButtonDetailsScreenState
 
   //MARK: Functions to build attendance report
 
+
+
   Widget _buildAttendanceReportView() {
+    return ItemNotifiable<int?>(
+      notifier: _viewSelectorReportNotifier,
+      builder: (context, viewType) {
+         if (viewType == REPORT_LOADER_VIEW) return _buildLoader();
+
+        if (viewType == REPORT_ERROR_VIEW)  return _reportErrorAndRetryView();
+
+        if (viewType == REPORT_DATA_VIEW)  return _reportDataView();
+
+        return Container();
+      },
+    );
+  }
+
+  Widget _reportDataView(){
     return ItemNotifiable<AttendanceReport?>(
         notifier: _attendanceReportNotifier,
         builder: (context, attendanceReport) {
-          if ((attendanceReport != null)) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _attendanceReportDetails("Late Punch In", attendanceReport.late,
+                _attendanceReportDetails("Late Punch In", attendanceReport!.late,
                     AttendanceColors.attendanceReportLatePunchInDayTextColor),
                 _attendanceReportDetails("Early Punch Out",
                     attendanceReport.earlyLeave, Colors.black),
@@ -457,8 +538,7 @@ class _AttendanceButtonDetailsScreenState
                     AttendanceColors.attendanceReportAbsenceDayTextColor)
               ],
             );
-          } else
-            return Container();
+
         });
   }
 
@@ -467,9 +547,9 @@ class _AttendanceButtonDetailsScreenState
       children: [
         noOfDays == 1
             ? Text("$noOfDays Day",
-                style: TextStyles.titleTextStyle.copyWith(color: textColor))
+                style: TextStyles.titleTextStyle.copyWith(color: Colors.black))
             : Text("$noOfDays Days",
-                style: TextStyles.titleTextStyle.copyWith(color: textColor)),
+                style: TextStyles.titleTextStyle.copyWith(color: Colors.black)),
         SizedBox(height: 8),
         Text(title,
             style: TextStyles.titleTextStyle.copyWith(color: Colors.black))
@@ -478,6 +558,16 @@ class _AttendanceButtonDetailsScreenState
   }
 
   //MARK: View functions
+  @override
+  void showAttendanceReportLoader() {
+    _viewSelectorReportNotifier.notify(REPORT_LOADER_VIEW);
+  }
+
+  @override
+  void showAttendanceReportErrorAndRetryView(String message) {
+    _viewSelectorReportNotifier.notify(REPORT_ERROR_VIEW);
+    _errorMessage=message;
+  }
 
   @override
   void showLoader() {
@@ -524,10 +614,14 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showPunchInTime(String time) {}
+  void showPunchInTime(String time) {
+    _punchInTimeNotifier.notify(time);
+  }
 
   @override
-  void showPunchOutTime(String time) {}
+  void showPunchOutTime(String time) {
+    _punchOutTimeNotifier.notify(time);
+  }
 
   @override
   void showAddress(String address) {}
@@ -554,6 +648,7 @@ class _AttendanceButtonDetailsScreenState
 
   @override
   void showAttendanceReport(AttendanceReport attendanceReport) {
+    _viewSelectorReportNotifier.notify(REPORT_DATA_VIEW);
     _attendanceReportNotifier.notify(attendanceReport);
   }
 
@@ -596,5 +691,9 @@ class _AttendanceButtonDetailsScreenState
       _timeString = formattedDateTime;
     });
   }
+
+
+
+
 
 }

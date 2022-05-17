@@ -30,7 +30,7 @@ class AttendanceReportProvider {
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
-
+   // throw InvalidResponseException();
     try {
       var apiResponse = await _networkAdapter.get(apiRequest);
       isLoading = false;

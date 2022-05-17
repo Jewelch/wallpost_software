@@ -70,12 +70,13 @@ class AttendancePresenter {
   //MARK: Function to load attendance report
 
   Future<void> loadAttendanceReport() async {
+
     try {
+      detailedView?.showAttendanceReportLoader();
       var attendanceReport = await _attendanceReportProvider.getReport();
       detailedView?.showAttendanceReport(attendanceReport);
     } on WPException {
-      //TODO uncomment and fix
-      // detailedView?.showErrorAndRetryView("Getting attendance report is failed");
+      detailedView?.showAttendanceReportErrorAndRetryView("Failed to load report.\nTap to reload");
     }
   }
 
@@ -120,6 +121,7 @@ class AttendancePresenter {
     basicView.showPunchOutButton();
     _loadAddress(_attendanceLocation!);
     _loadBreakDetails();
+    _showPunchInTime();
   }
 
   void _loadBreakDetails() {
