@@ -38,9 +38,10 @@ class ExpenseRequestSubmittedSuccessScreen extends StatelessWidget {
               ),
             ),
             RoundedRectangleActionButton(
-              title: 'Go back',
+              title: 'Go to expense list',
               backgroundColor: AppColors.successColor,
               onPressed: () {
+                Navigator.pop(context);
                 Navigator.pop(context);
                 Navigator.of(context).push(
                   MaterialPageRoute(

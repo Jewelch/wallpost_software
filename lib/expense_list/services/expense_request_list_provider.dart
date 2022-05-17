@@ -63,10 +63,8 @@ class ExpenseRequestListProvider {
     try {
       var requests = <ExpenseRequest>[];
       for (var responseMap in responseMapList) {
-        print("read");
         var item = ExpenseRequest.fromJson(responseMap);
         requests.add(item);
-        print("add");
       }
       _updatePaginationRelatedData(requests.length);
       return requests;
