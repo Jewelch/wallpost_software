@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
@@ -32,8 +34,6 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
   late AttendanceAdjustmentPresenter presenter;
   late Loader loader;
 
-  final Color greyColor = Colors.grey;
-
   @override
   void initState() {
     loader = Loader(context);
@@ -63,20 +63,23 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
                   notifier: _statusLoaderNotifier,
                   builder: (context, value) =>IgnorePointer(
                     ignoring: value ?  true: false,
-                    child: Container(
-                      padding: EdgeInsets.all(16,),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _adjustPunchTime(),
-                              _reasonForAdjustment(),
-                            ],
-                          ),
-                          _saveButton(),
-                        ],
+                    child: BackdropFilter(
+                      filter: value ? ImageFilter.blur() : ImageFilter.blur(),
+                      child: Container(
+                        padding: EdgeInsets.all(16,),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _adjustPunchTime(),
+                                _reasonForAdjustment(),
+                              ],
+                            ),
+                            _saveButton(),
+                          ],
+                        ),
                       ),
                     ),
                   ),
