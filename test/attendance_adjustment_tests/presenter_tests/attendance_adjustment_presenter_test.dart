@@ -102,6 +102,7 @@ void main() {
 
     //then
     verifyInOrder([
+      () => view.onDidLoadAdjustedStatus(),
       () => adjustedStatusProvider.isLoading,
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -118,6 +119,7 @@ void main() {
 
     //then
     verifyInOrder([
+      () => view.onDidLoadAdjustedStatus(),
       () => adjustedStatusProvider.isLoading,
       () => view.showStatusLoader(),
       () => adjustedStatusProvider.getAdjustedStatus(any()),
@@ -140,6 +142,7 @@ void main() {
 
       //then
       verifyInOrder([
+        () => view.onDidLoadAdjustedStatus(),
         () => adjustedStatusProvider.isLoading,
         () => view.showStatusLoader(),
         () => adjustedStatusProvider.getAdjustedStatus(any()),
@@ -160,6 +163,7 @@ void main() {
 
     //then
     verifyInOrder([
+          () => view.onDidLoadAdjustedStatus(),
           () => adjustedStatusProvider.isLoading,
           () => view.showStatusLoader(),
           () => adjustedStatusProvider.getAdjustedStatus(any()),
@@ -182,6 +186,7 @@ void main() {
 
     //then
     verifyInOrder([
+          () => view.onDidLoadAdjustedStatus(),
           () => adjustedStatusProvider.isLoading,
           () => view.showStatusLoader(),
           () => adjustedStatusProvider.getAdjustedStatus(any()),
