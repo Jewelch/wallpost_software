@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
@@ -63,23 +62,20 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
                   notifier: _statusLoaderNotifier,
                   builder: (context, value) =>IgnorePointer(
                     ignoring: value ?  true: false,
-                    child: BackdropFilter(
-                      filter: value ? ImageFilter.blur() : ImageFilter.blur(),
-                      child: Container(
-                        padding: EdgeInsets.all(16,),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _adjustPunchTime(),
-                                _reasonForAdjustment(),
-                              ],
-                            ),
-                            _saveButton(),
-                          ],
-                        ),
+                    child: Container(
+                      padding: EdgeInsets.all(16,),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _adjustPunchTime(),
+                              _reasonForAdjustment(),
+                            ],
+                          ),
+                          _saveButton(),
+                        ],
                       ),
                     ),
                   ),
