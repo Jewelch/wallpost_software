@@ -40,7 +40,7 @@ class _AttendanceButtonDetailsScreenState
   var _locationOnMapNotifier = ItemNotifier<AttendanceLocation?>(defaultValue: null);
   var _punchInTimeNotifier = ItemNotifier<String?>(defaultValue: null);
   var _punchOutTimeNotifier = ItemNotifier<String?>(defaultValue: null);
-  final ItemNotifier<String> _countDownNotifier = ItemNotifier(defaultValue: "");
+  final ItemNotifier<String> _countDownTimeNotifier = ItemNotifier(defaultValue: "");
   var _viewSelectorReportNotifier = ItemNotifier<int>(defaultValue: 0);
   late final AttendancePresenter presenter;
   late String _timeString;
@@ -132,8 +132,7 @@ class _AttendanceButtonDetailsScreenState
 
             if (viewType == GPS_DISABLED_VIEW) return _enableGpsView();
 
-            if (viewType == PERMISSION_DENIED_FOREVER_ERROR_VIEW)
-              return _grantLocationPermissionView();
+            if (viewType == PERMISSION_DENIED_FOREVER_ERROR_VIEW) return _grantLocationPermissionView();
 
             if (viewType == DATA_VIEW) return _dataView();
 
@@ -230,9 +229,9 @@ class _AttendanceButtonDetailsScreenState
                   child: _mapView(),
                 ),
                 Container(
-                  margin: EdgeInsets.only(right: 24,left: 24),
-                    height: 70,
-                 child: _attendanceTime(),
+                  padding: EdgeInsets.symmetric(vertical: 12,horizontal: 24),
+                  height: 70,
+                 child: _buildAttendanceTimeView(),
                 ),
               ],
             ),
@@ -245,56 +244,11 @@ class _AttendanceButtonDetailsScreenState
         ),
         SizedBox(height: 16),
         Container(width: 140, child: _buildBreakButtonView()),
-        SizedBox(height: 8),
+        SizedBox(height: 16),
         Container(
-            margin: EdgeInsets.all(20), child: _buildAttendanceReportView())
+          padding: EdgeInsets.symmetric(horizontal: 12),
+             child: _buildAttendanceReportView())
       ],
-    );
-  }
-
-  //MARK: Functions to punch in and out time view
-
-  Widget _attendanceTime(){
-    return  Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          children: [
-            _buildPunchInTime(),
-            Text("Punch In")
-          ],
-        ),
-        Column(
-          children: [
-            _buildPunchOutTime(),
-            Text("Punch Out")
-          ],
-        )
-      ],
-    );
-  }
-
-  Widget _buildPunchInTime(){
-    return ItemNotifiable<String?>(
-      notifier: _punchInTimeNotifier,
-      builder: (context, time) {
-        if(time!=null)
-        return Text(time);
-        else
-          return Text("___");
-      }
-    );
-  }
-
-  Widget _buildPunchOutTime(){
-    return ItemNotifiable<String?>(
-        notifier: _punchOutTimeNotifier,
-        builder: (context, time) {
-          if(time!=null)
-            return Text(time);
-          else
-            return Text("___");
-        }
     );
   }
 
@@ -330,6 +284,54 @@ class _AttendanceButtonDetailsScreenState
     );
   }
 
+  Widget _buildAttendanceTimeView(){
+    return  Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          children: [
+            _buildPunchInTime(),
+            SizedBox(height: 2),
+            Text("Punch In",style: TextStyles.titleTextStyle)
+          ],
+        ),
+        Column(
+          children: [
+            _buildPunchOutTime(),
+            SizedBox(height: 2),
+            Text("Punch Out",style: TextStyles.titleTextStyle)
+          ],
+        )
+      ],
+    );
+  }
+
+//MARK: Functions to punch in and out time view
+
+  Widget _buildPunchInTime(){
+    return ItemNotifiable<String?>(
+        notifier: _punchInTimeNotifier,
+        builder: (context, time) {
+          if(time!=null)
+            return Text(time,style: TextStyles.titleTextStyleBold);
+          else
+            return Text("_ _ _");
+        }
+    );
+  }
+
+  Widget _buildPunchOutTime(){
+    return ItemNotifiable<String?>(
+        notifier: _punchOutTimeNotifier,
+        builder: (context, time) {
+          if(time!=null)
+            return Text(time,style: TextStyles.titleTextStyleBold);
+          else
+            return Text("_ _ _");
+        }
+    );
+  }
+
   Widget _buildAttendanceButtonView() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(100),
@@ -352,7 +354,7 @@ class _AttendanceButtonDetailsScreenState
 
   Widget _buildCountDownView() {
     return ItemNotifiable(
-      notifier: _countDownNotifier,
+      notifier: _countDownTimeNotifier,
       builder: (context, timeLeft) => Container(
         color: AttendanceColors.disabledButtonColor,
         child: Center(
@@ -374,7 +376,7 @@ class _AttendanceButtonDetailsScreenState
         return;
       } else {
         var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(start.toInt());
-        _countDownNotifier.notify(_remainingTimeToPunchInString);
+        _countDownTimeNotifier.notify(_remainingTimeToPunchInString);
         start--;
       }
     });
@@ -506,8 +508,6 @@ class _AttendanceButtonDetailsScreenState
 
   //MARK: Functions to build attendance report
 
-
-
   Widget _buildAttendanceReportView() {
     return ItemNotifiable<int?>(
       notifier: _viewSelectorReportNotifier,
@@ -516,14 +516,14 @@ class _AttendanceButtonDetailsScreenState
 
         if (viewType == REPORT_ERROR_VIEW)  return _reportErrorAndRetryView();
 
-        if (viewType == REPORT_DATA_VIEW)  return _reportDataView();
+        if (viewType == REPORT_DATA_VIEW)  return _attendanceReportDataView();
 
         return Container();
       },
     );
   }
 
-  Widget _reportDataView(){
+  Widget _attendanceReportDataView(){
     return ItemNotifiable<AttendanceReport?>(
         notifier: _attendanceReportNotifier,
         builder: (context, attendanceReport) {
@@ -531,11 +531,11 @@ class _AttendanceButtonDetailsScreenState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _attendanceReportDetails("Late Punch In", attendanceReport!.late,
-                    AttendanceColors.attendanceReportLatePunchInDayTextColor),
+                   Colors.deepOrange),
                 _attendanceReportDetails("Early Punch Out",
                     attendanceReport.earlyLeave, Colors.black),
                 _attendanceReportDetails("Absences", attendanceReport.absents,
-                    AttendanceColors.attendanceReportAbsenceDayTextColor)
+                   Colors.red)
               ],
             );
 
@@ -547,9 +547,9 @@ class _AttendanceButtonDetailsScreenState
       children: [
         noOfDays == 1
             ? Text("$noOfDays Day",
-                style: TextStyles.titleTextStyle.copyWith(color: Colors.black))
+                style: TextStyles.titleTextStyleBold.copyWith(color: textColor))
             : Text("$noOfDays Days",
-                style: TextStyles.titleTextStyle.copyWith(color: Colors.black)),
+                style: TextStyles.titleTextStyleBold.copyWith(color: textColor)),
         SizedBox(height: 8),
         Text(title,
             style: TextStyles.titleTextStyle.copyWith(color: Colors.black))
@@ -558,6 +558,7 @@ class _AttendanceButtonDetailsScreenState
   }
 
   //MARK: View functions
+
   @override
   void showAttendanceReportLoader() {
     _viewSelectorReportNotifier.notify(REPORT_LOADER_VIEW);
@@ -595,7 +596,7 @@ class _AttendanceButtonDetailsScreenState
   @override
   void showCountDownView(int secondsTillPunchIn) {
     var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(secondsTillPunchIn.toInt());
-    _countDownNotifier.notify(_remainingTimeToPunchInString);
+    _countDownTimeNotifier.notify(_remainingTimeToPunchInString);
 
     _buttonTypeNotifier.notify(COUNT_DOWN_VIEW);
     _startCountDownTimer(secondsTillPunchIn);
@@ -653,10 +654,7 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void doRefresh() {
-    presenter.loadAttendanceDetails();
-    presenter.loadAttendanceReport();
-  }
+  void doRefresh() {}
 
   @override
   void showAlertToInvalidLocation(

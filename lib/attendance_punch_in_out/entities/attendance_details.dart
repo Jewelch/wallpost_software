@@ -1,11 +1,9 @@
 import 'package:intl/intl.dart';
 import 'package:sift/sift.dart';
-import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
-import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 import 'break.dart';
 
-class AttendanceDetails extends JSONInitializable {
+class AttendanceDetails  {
   String? _id;
   String? _detailsId;
   DateTime? _punchInTime;
@@ -18,7 +16,7 @@ class AttendanceDetails extends JSONInitializable {
 
   //TODO add attendance_punch_in_out status
 
-  AttendanceDetails.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  AttendanceDetails.fromJson(Map<String, dynamic> jsonMap)  {
     var sift = Sift();
     var attendanceInfoMapList = sift.readMapListFromMapWithDefaultValue(jsonMap, 'attendance_info', null);
     var attendanceInfoMap = sift.readMapFromListWithDefaultValue(attendanceInfoMapList, 0, null);
