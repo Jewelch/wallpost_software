@@ -25,7 +25,6 @@ ExpenseRequestForm getExpenseRequestForm() {
       date: "date",
       description: "description",
       quantity: "1",
-      rate: "2",
       amount: "2",
       file: mockFile,
       total: "1");
