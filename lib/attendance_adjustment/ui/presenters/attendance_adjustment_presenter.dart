@@ -55,8 +55,8 @@ class AttendanceAdjustmentPresenter {
   //MARK: Function to get adjusted status of attendance_punch_in_out.
 
   Future<void> adjustPunchInTime(TimeOfDay adjustedPunchInTime) async {
-    // _punchInTime = adjustedPunchInTime;
-    // _view.onDidLoadAdjustedStatus();
+    _punchInTime = adjustedPunchInTime;
+    _view.onDidLoadAdjustedStatus();
 
     await _loadAdjustedStatus(adjustedPunchInTime: adjustedPunchInTime, adjustedPunchOutTime: _adjustedPunchOutTime);
 
@@ -64,7 +64,6 @@ class AttendanceAdjustmentPresenter {
 
     if (_adjustedStatus != null) {
       _punchInTime = adjustedPunchInTime;
-      _view.onDidLoadAdjustedStatus();
       status = getAdjustedStatus()!;
       statusColor = getStatusColor(_adjustedStatus!);
     }
