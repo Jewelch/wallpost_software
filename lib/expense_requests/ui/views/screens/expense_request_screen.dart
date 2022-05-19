@@ -357,7 +357,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
 
   @override
   void notifyMissingProject() {
-    _missingProjectNotifier.notify(false);
+    _missingProjectNotifier.notify(true);
   }
 
   @override
