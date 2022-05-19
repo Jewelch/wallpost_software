@@ -44,7 +44,6 @@ class AttendanceDetailsProvider {
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
       var attendanceDetails = AttendanceDetails.fromJson(responseMap);
-      print(attendanceDetails);
       return attendanceDetails;
     } catch (e) {
       throw InvalidResponseException();

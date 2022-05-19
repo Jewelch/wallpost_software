@@ -19,14 +19,11 @@ import 'package:wallpost/attendance_punch_in_out/services/punch_out_marker.dart'
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_detailed_view.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
 
-import '../../services/attendance_permissions_provider.dart';
-
 class AttendancePresenter {
   final AttendanceView basicView;
   final AttendanceDetailedView? detailedView;
   final AttendanceDetailsProvider _attendanceDetailsProvider;
   final LocationProvider _locationProvider;
-  final AttendancePermissionsProvider _attendancePermissionsProvider;
   final AttendanceLocationValidator _attendanceLocationValidator;
   final PunchOutMarker _punchOutMarker;
   final PunchInMarker _punchInMarker;
@@ -43,7 +40,6 @@ class AttendancePresenter {
   AttendancePresenter({required this.basicView, this.detailedView})
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
         _locationProvider = LocationProvider(),
-        _attendancePermissionsProvider = AttendancePermissionsProvider(),
         _attendanceLocationValidator = AttendanceLocationValidator(),
         _punchInMarker = PunchInMarker(),
         _punchOutMarker = PunchOutMarker(),
@@ -57,7 +53,6 @@ class AttendancePresenter {
     this.detailedView,
     this._attendanceDetailsProvider,
     this._locationProvider,
-    this._attendancePermissionsProvider,
     this._attendanceLocationValidator,
     this._punchInMarker,
     this._punchOutMarker,
@@ -92,11 +87,9 @@ class AttendancePresenter {
       var canMarkAttendance = await _getAttendancePermission(_attendanceDetails);
       if (!canMarkAttendance) return;
 
-      if (_attendanceDetails.isNotPunchedIn)
-        return _loadPunchInDetails();
-      else if (_attendanceDetails.isPunchedIn)
-        return _loadPunchOutDetails();
-      else if (_attendanceDetails.isPunchedOut) return _loadPunchedOutDetails();
+      if (_attendanceDetails.isNotPunchedIn) return _loadPunchInDetails();
+      else if (_attendanceDetails.isPunchedIn) return _loadPunchOutDetails(_attendanceDetails);
+      else if (_attendanceDetails.isPunchedOut) return _loadPunchedOutDetails(_attendanceDetails);
     } on WPException catch (_) {
       basicView.showErrorAndRetryView("Failed to load attendance details.\nTap to reload");
     }
@@ -111,26 +104,26 @@ class AttendancePresenter {
     _loadAddress(_attendanceLocation!);
   }
 
-  Future<void> _loadPunchOutDetails() async {
+  Future<void> _loadPunchOutDetails(AttendanceDetails attendanceDetails) async {
     _attendanceLocation = await getLocation();
     if (_attendanceLocation == null) return;
 
     basicView.showPunchOutButton();
     _loadAddress(_attendanceLocation!);
+    _showPunchInTime(attendanceDetails);
     _loadBreakDetails();
-    _showPunchInTime();
   }
 
   void _loadBreakDetails() {
     _attendanceDetails.isOnBreak ? detailedView?.showResumeButton() : detailedView?.showBreakButton();
   }
 
-  Future<void> _loadPunchedOutDetails() async {
+  Future<void> _loadPunchedOutDetails(AttendanceDetails attendanceDetails) async {
     _attendanceLocation = await getLocation();
     if (_attendanceLocation == null) return;
 
-    _showPunchInTime();
-    _showPunchOutTime();
+    _showPunchInTime(attendanceDetails);
+    _showPunchOutTime(attendanceDetails);
     detailedView?.hideBreakButton();
   }
 
@@ -186,12 +179,12 @@ class AttendancePresenter {
 
   //MARK: Functions to show punched in and out time
 
-  void _showPunchInTime() {
-    detailedView?.showPunchInTime(_attendanceDetails.punchInTimeString);
+  void _showPunchInTime(AttendanceDetails attendanceDetails) {
+    detailedView?.showPunchInTime(attendanceDetails.punchInTimeString);
   }
 
-  void _showPunchOutTime() {
-    detailedView?.showPunchOutTime(_attendanceDetails.punchOutTimeString);
+  void _showPunchOutTime(AttendanceDetails attendanceDetails) {
+    detailedView?.showPunchOutTime(attendanceDetails.punchOutTimeString);
   }
 
   //MARK: Functions to check location is valid to mark attendance
@@ -268,7 +261,8 @@ class AttendancePresenter {
   Future<void> startBreak() async {
     try {
       await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
-      basicView.doRefresh();
+      loadAttendanceDetails();
+      loadAttendanceReport();
       detailedView?.showResumeButton();
     } on WPException catch (e) {
       basicView.showErrorMessage("Start break is failed", e.userReadableMessage);

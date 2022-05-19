@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/attendance_punch_in_out/constants/attendance_colors.dart';
 
 class AttendanceRectangleRoundedActionButton extends StatelessWidget {
   final String? title;
@@ -69,7 +70,7 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     locationAddress!,
-                    style: TextStyles.subTitleTextStyle.copyWith(color: Colors.purple),
+                    style: TextStyles.subTitleTextStyle.copyWith(color: AttendanceColors.locationAddressTextColor),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   )
