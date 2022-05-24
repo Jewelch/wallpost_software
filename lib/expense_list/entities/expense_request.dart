@@ -19,7 +19,7 @@ class ExpenseRequest extends JSONInitializable {
     var sift = Sift();
     try {
       id = sift.readNumberFromMap(jsonMap, 'expense_id').toString();
-      _category = sift.readStringFromMap(jsonMap, 'main_category');
+      _category = sift.readStringFromMapWithDefaultValue(jsonMap, 'main_category', "")!;
       _subCategory = sift.readStringFromMapWithDefaultValue(jsonMap, 'sub_category', "")!;
       requestNo = sift.readStringFromMap(jsonMap, 'expense_request_no').toString();
       var amount = sift.readStringFromMap(jsonMap, 'total_amount');
@@ -30,7 +30,8 @@ class ExpenseRequest extends JSONInitializable {
       status = fromStringToExpenseRequestStatus(_status);
       description = sift.readStringFromMap(jsonMap, 'description');
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast ExpenseRequest response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast ExpenseRequest response. Error message - ${e.errorMessage}');
     }
   }
 
