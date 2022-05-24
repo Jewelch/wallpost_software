@@ -90,7 +90,7 @@ class AttendancePresenter {
       if (_attendanceDetails.isNotPunchedIn) return _loadPunchInDetails();
       else if (_attendanceDetails.isPunchedIn) return _loadPunchOutDetails(_attendanceDetails);
       else if (_attendanceDetails.isPunchedOut) return _loadPunchedOutDetails(_attendanceDetails);
-    } on WPException catch (_) {
+    } on WPException {
       basicView.showErrorAndRetryView("Failed to load attendance details.\nTap to reload");
     }
   }
@@ -151,13 +151,13 @@ class AttendancePresenter {
       var attendanceLocation = await _locationProvider.getLocation();
       detailedView?.showLocationOnMap(attendanceLocation);
       return attendanceLocation;
-    } on LocationServicesDisabledException catch (_) {
+    } on LocationServicesDisabledException {
       basicView.showRequestToTurnOnGpsView("Location service disabled.\nTap here to go to location settings");
-    } on LocationPermissionsDeniedException catch (_) {
+    } on LocationPermissionsDeniedException {
       basicView.showErrorAndRetryView("Location permission denied.\nTap here to grant permission");
-    } on LocationPermissionsPermanentlyDeniedException catch (_) {
+    } on LocationPermissionsPermanentlyDeniedException {
       basicView.showRequestToEnableLocationView("Location permission denied.\nTap here to go to settings");
-    } on LocationAcquisitionFailedException catch (_) {
+    } on LocationAcquisitionFailedException {
       basicView.showErrorAndRetryView("Getting location failed");
     }
 
@@ -262,8 +262,6 @@ class AttendancePresenter {
     try {
       await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
       loadAttendanceDetails();
-      loadAttendanceReport();
-      detailedView?.showResumeButton();
     } on WPException catch (e) {
       basicView.showErrorMessage("Start break is failed", e.userReadableMessage);
     }

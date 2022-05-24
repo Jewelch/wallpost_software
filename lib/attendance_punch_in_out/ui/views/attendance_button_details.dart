@@ -484,25 +484,31 @@ class _AttendanceButtonDetailsScreenState
       required Color buttonColor,
       required Color textColor,
       required VoidCallback onButtonPressed}) {
-    return MaterialButton(
-      elevation: 0,
-      highlightElevation: 0,
-      color: buttonColor,
-      child: Row(
-        children: [
-          Icon(
-            Icons.coffee_outlined,
-            color: textColor,
-            size: 18,
-          ),
-          SizedBox(width: 8),
-          Text(
-            title,
-            style: TextStyles.titleTextStyle.copyWith(color: textColor),
-          ),
-        ],
-      ),
+   return ElevatedButton(
+       child: Row(
+         mainAxisAlignment: MainAxisAlignment.center,
+         children: [
+           Icon(
+             Icons.coffee_outlined,
+             color: textColor,
+             size: 18,
+           ),
+           SizedBox(width: 8),
+           Text(
+             title,
+             style: TextStyles.titleTextStyle.copyWith(color: textColor),
+           ),
+         ],
+       ),
       onPressed: onButtonPressed,
+      style: ElevatedButton.styleFrom(
+        primary: buttonColor,
+        onPrimary: textColor,
+        elevation: 0.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+      ),
     );
   }
 
