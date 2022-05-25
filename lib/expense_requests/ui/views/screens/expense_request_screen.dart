@@ -265,7 +265,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen> implements 
           return RoundedRectangleActionButton(
             title: "Save",
             showLoader: isLoading,
-            backgroundColor: AppColors.green,
+            backgroundColor: AppColors.greenButtonColor,
             onPressed: () {
               _presenter.sendExpenseRequest(_expenseRequest);
             },

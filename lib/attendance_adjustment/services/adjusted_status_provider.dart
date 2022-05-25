@@ -13,6 +13,9 @@ class AdjustedStatusProvider {
   late String _sessionId;
   bool isLoading = false;
 
+
+  var firstRun = true;
+
   AdjustedStatusProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
 
   AdjustedStatusProvider()
@@ -31,6 +34,9 @@ class AdjustedStatusProvider {
     try {
       var apiResponse = await _networkAdapter.get(apiRequest);
       isLoading = false;
+
+if(firstRun == false) throw InvalidResponseException();
+      firstRun = false;
       return _processResponse(apiResponse);
     } on APIException catch (exception) {
       isLoading = false;
@@ -54,3 +60,6 @@ class AdjustedStatusProvider {
     }
   }
 }
+
+
+

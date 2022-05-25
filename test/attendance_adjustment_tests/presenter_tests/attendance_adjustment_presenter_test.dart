@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_adjustment_form.dart';
@@ -101,6 +102,7 @@ void main() {
 
     //then
     verifyInOrder([
+      () => view.onDidLoadAdjustedStatus(),
       () => adjustedStatusProvider.isLoading,
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -117,10 +119,11 @@ void main() {
 
     //then
     verifyInOrder([
+      () => view.onDidLoadAdjustedStatus(),
       () => adjustedStatusProvider.isLoading,
-      () => view.showLoader(),
+      () => view.showStatusLoader(),
       () => adjustedStatusProvider.getAdjustedStatus(any()),
-      () => view.hideLoader(),
+      () => view.hideStatusLoader(),
       () => view.onDidLoadAdjustedStatus(),
       () => view.onGetAdjustedStatusFailed(
           'Getting adjusted status failed', InvalidResponseException().userReadableMessage),
@@ -139,10 +142,11 @@ void main() {
 
       //then
       verifyInOrder([
+        () => view.onDidLoadAdjustedStatus(),
         () => adjustedStatusProvider.isLoading,
-        () => view.showLoader(),
+        () => view.showStatusLoader(),
         () => adjustedStatusProvider.getAdjustedStatus(any()),
-        () => view.hideLoader(),
+        () => view.hideStatusLoader(),
         () => view.onDidLoadAdjustedStatus(),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
@@ -159,10 +163,11 @@ void main() {
 
     //then
     verifyInOrder([
+          () => view.onDidLoadAdjustedStatus(),
           () => adjustedStatusProvider.isLoading,
-          () => view.showLoader(),
+          () => view.showStatusLoader(),
           () => adjustedStatusProvider.getAdjustedStatus(any()),
-          () => view.hideLoader(),
+          () => view.hideStatusLoader(),
           () => view.onDidLoadAdjustedStatus(),
           () => view.onGetAdjustedStatusFailed(
           'Getting adjusted status failed', InvalidResponseException().userReadableMessage),
@@ -181,10 +186,11 @@ void main() {
 
     //then
     verifyInOrder([
+          () => view.onDidLoadAdjustedStatus(),
           () => adjustedStatusProvider.isLoading,
-          () => view.showLoader(),
+          () => view.showStatusLoader(),
           () => adjustedStatusProvider.getAdjustedStatus(any()),
-          () => view.hideLoader(),
+          () => view.hideStatusLoader(),
           () => view.onDidLoadAdjustedStatus(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -306,9 +312,9 @@ void main() {
   });
 
   test('get status color', () {
-    expect(presenter.getStatusColor(AttendanceStatus.Present), presenter.presentColor);
-    expect(presenter.getStatusColor(AttendanceStatus.Late), presenter.lateColor);
-    expect(presenter.getStatusColor(AttendanceStatus.Absent), presenter.absentColor);
+    expect(presenter.getStatusColor(AttendanceStatus.Present), AppColors.presentColor);
+    expect(presenter.getStatusColor(AttendanceStatus.Late), AppColors.lateColor);
+    expect(presenter.getStatusColor(AttendanceStatus.Absent), AppColors.absentColor);
   });
 
 

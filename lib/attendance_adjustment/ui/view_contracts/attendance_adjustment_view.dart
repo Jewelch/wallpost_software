@@ -3,6 +3,10 @@ abstract class AttendanceAdjustmentView{
 
   void hideLoader();
 
+  void showStatusLoader();
+
+  void hideStatusLoader();
+
   void clearError();
 
   void onDidLoadAdjustedStatus();
