@@ -1,1 +1,1 @@
-enum WidgetStatus { loading, ready, error }
+enum ExpenseRequestFormViewType { loader, form, error }
