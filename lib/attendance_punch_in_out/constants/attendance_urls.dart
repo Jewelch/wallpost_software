@@ -21,13 +21,13 @@ class AttendanceUrls {
 
   static String punchInUrl(String companyId, String employeeId, bool isLocationValid) {
     var url = '${BaseUrls.hrUrlV2()}/widget/attendance/punch_in';
-    if (isLocationValid == false) url += '?punchin_invalid_location=Y';
+    if (isLocationValid == false) url += '?is_location_invalid=Y';
     return url;
   }
 
   static String punchOutUrl(String companyId, String employeeId, String attendanceId, bool isLocationValid) {
-    var url = '${BaseUrls.hrUrlV2()}/widget/attendance/4xKmQeR32hn9fyb/punch_out';
-    if (isLocationValid == false) url += '?punchout_invalid_location=Y';
+    var url = '${BaseUrls.hrUrlV2()}/widget/attendance/$attendanceId/punch_out';
+    if (isLocationValid == false) url += '?is_location_invalid=Y';
     return url;
   }
 

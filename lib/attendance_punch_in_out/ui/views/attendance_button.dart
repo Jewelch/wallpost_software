@@ -201,7 +201,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
         attendanceButtonColor: AttendanceColors.punchInButtonColor,
         moreButtonColor: AttendanceColors.punchInMoreButtonColor,
         onButtonPressed: () {
-          presenter.markPunchIn(isLocationValid : true);
+          presenter.markPunchIn(isLocationValid: true);
         },
         onMoreButtonPressed: () {
           _currentTimer.cancel();
@@ -235,10 +235,10 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
     Alert.showSimpleAlertWithButtons(
       context: context,
       title: "Punch Out",
-      message: " Do you really want to punch out ? ",
+      message: "Do you really want to punch out ? ",
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () => presenter.isValidatedLocation(false),
+      buttonTwoOnPressed: () => presenter.markPunchOut(isLocationValid: true),
     );
   }
 
@@ -300,14 +300,14 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   @override
-  void showAlertToInvalidLocation(bool isForPunchIn, String title, String message) {
+  void showAlertToMarkAttendanceWithInvalidLocation(bool isForPunchIn, String title, String message) {
     Alert.showSimpleAlertWithButtons(
       context: context,
       title: title,
       message: message,
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () => isForPunchIn ? presenter.markPunchIn(isLocationValid: false) : presenter.markPunchOut(false),
+      buttonTwoOnPressed: () => isForPunchIn ? presenter.markPunchIn(isLocationValid: false) : presenter.markPunchOut(isLocationValid: false),
     );
   }
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -73,7 +72,7 @@ class _AttendanceButtonDetailsScreenState
   void initState() {
     presenter = AttendancePresenter(basicView: this, detailedView: this);
     presenter.loadAttendanceDetails();
-     presenter.loadAttendanceReport();
+    presenter.loadAttendanceReport();
 
     _currentTimer =
         Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
@@ -92,8 +91,7 @@ class _AttendanceButtonDetailsScreenState
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed &&
-        presenter.shouldReloadDataWhenAppIsResumed()) {
+    if (state == AppLifecycleState.resumed && presenter.shouldReloadDataWhenAppIsResumed()) {
       presenter.loadAttendanceDetails();
     }
   }
@@ -389,7 +387,7 @@ class _AttendanceButtonDetailsScreenState
       title: "Punch In",
       time: _timeString,
       buttonColor: AttendanceColors.punchInButtonColor,
-      onPressed: () => presenter.isValidatedLocation(true),
+      onPressed: () => presenter.markPunchIn(isLocationValid: true),
     );
   }
 
@@ -410,7 +408,7 @@ class _AttendanceButtonDetailsScreenState
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () {
-        presenter.isValidatedLocation(false);
+        presenter.markPunchOut(isLocationValid: true);
       },
     );
   }
@@ -663,7 +661,7 @@ class _AttendanceButtonDetailsScreenState
   void doRefresh() {}
 
   @override
-  void showAlertToInvalidLocation(
+  void showAlertToMarkAttendanceWithInvalidLocation(
       bool isForPunchIn, String title, String message) {
     Alert.showSimpleAlertWithButtons(
       context: context,
@@ -673,9 +671,9 @@ class _AttendanceButtonDetailsScreenState
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () {
         if (isForPunchIn) {
-          presenter.markPunchIn(isLocationValid: false);
+          presenter.markPunchIn(isLocationValid: true);
         } else {
-          presenter.markPunchOut(false);
+          presenter.markPunchOut(isLocationValid: true);
         }
       },
     );
