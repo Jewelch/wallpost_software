@@ -17,16 +17,16 @@ class Approval extends JSONInitializable {
       var approvalType = '${sift.readStringFromMap(json, 'approvalType')}';
       _id = sift.readNumberFromMap(json, 'id');
       _companyId = sift.readNumberFromMap(json, 'company_id');
-      var detailsMap = sift.readMapfromMap(json , 'details');
+      var detailsMap = sift.readMapFromMap(json , 'details');
       switch (approvalType) {
         case "leaveApproval":
-          _details = LeaveApproval.fromJson(json['details']);
+          _details = LeaveApproval.fromJson(detailsMap);
           break;
         case "expenseRequestApproval":
-          _details = ExpenseRequestApproval.fromJson(json['details']);
+          _details = ExpenseRequestApproval.fromJson(detailsMap);
           break;
         case "attendanceAdjustment":
-          _details = AttendanceAdjustmentApproval.fromJson(json['details']);
+          _details = AttendanceAdjustmentApproval.fromJson(detailsMap);
           break;
       }
     } on SiftException catch (e) {

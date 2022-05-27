@@ -3,21 +3,26 @@ import 'dart:async';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/company_core/entities/company.dart';
+import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/dashboard_core/constants/dashboard_management_urls.dart';
 
 import '../entities/approval.dart';
 
 class ApprovalListProvider {
   final NetworkAdapter _networkAdapter;
+  final SelectedCompanyProvider _selectedCompanyProvider;
   final int _perPage = 15;
   int _pageNumber = 1;
   bool _didReachListEnd = false;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  ApprovalListProvider.initWith(this._networkAdapter);
+  ApprovalListProvider.initWith(
+      this._networkAdapter, this._selectedCompanyProvider);
 
-  ApprovalListProvider() : _networkAdapter = WPAPI();
+  ApprovalListProvider()
+      : _networkAdapter = WPAPI(),
+        _selectedCompanyProvider = SelectedCompanyProvider();
 
   void reset() {
     _pageNumber = 1;
@@ -26,8 +31,9 @@ class ApprovalListProvider {
     isLoading = false;
   }
 
-  Future<List<Approval>> getNext({Company? company}) async {
-    var url = DashboardManagementUrls.getApprovalsUrl(company?.id, _pageNumber, _perPage);
+  Future<List<Approval>> getNext() async {
+    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
+    var url = DashboardManagementUrls.getApprovalsUrl(companyId, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
 
     isLoading = true;
@@ -43,15 +49,18 @@ class ApprovalListProvider {
 
   Future<List<Approval>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<Approval>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId)
+      return Completer<List<Approval>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>)
+      throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<Approval> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<Approval> _readItemsFromResponse(
+      List<Map<String, dynamic>> responseMapList) {
     try {
       var approvalsList = <Approval>[];
       for (var responseMap in responseMapList) {

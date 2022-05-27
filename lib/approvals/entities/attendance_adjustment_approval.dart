@@ -25,19 +25,18 @@ class AttendanceAdjustmentApproval implements JSONInitializable{
 
     try{
       var sift = Sift();
-      var detailsMap = sift.readMapFromMap(jsonMap, "details");
 
-      _attendanceId = sift.readStringFromMap(detailsMap, 'attendance_id');
-      _empId = sift.readNumberFromMap(detailsMap, 'emp_id') ;
-      _name =sift.readStringFromMap(detailsMap, 'name') ;
-      _date = sift.readStringFromMap(detailsMap, 'date');
-      _punchIn =sift.readStringFromMapWithDefaultValue(detailsMap, 'punch_in',null);
-      _punchOut = sift.readStringFromMapWithDefaultValue(detailsMap, 'punch_out');
-      _workStatus =sift.readStringFromMapWithDefaultValue(detailsMap, 'work_status',null) ;
-      _adjustedPunchIn = sift.readStringFromMapWithDefaultValue(detailsMap, 'adjusted_punchin',null);
-      _adjustedPunchOut =sift.readStringFromMap(detailsMap, 'adjusted_punchout') ;
-      _adjustedStatus = sift.readStringFromMap(detailsMap, 'adjusted_status') ;
-      _reason =sift.readStringFromMap(detailsMap, 'reason') ;
+      _attendanceId = sift.readStringFromMap(jsonMap, 'attendance_id');
+      _empId = sift.readNumberFromMap(jsonMap, 'emp_id') ;
+      _name =sift.readStringFromMap(jsonMap, 'name') ;
+      _date = sift.readStringFromMap(jsonMap, 'date');
+      _punchIn =sift.readStringFromMapWithDefaultValue(jsonMap, 'punch_in',null);
+      _punchOut = sift.readStringFromMapWithDefaultValue(jsonMap, 'punch_out');
+      _workStatus =sift.readStringFromMapWithDefaultValue(jsonMap, 'work_status',null) ;
+      _adjustedPunchIn = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_punchin',null);
+      _adjustedPunchOut =sift.readStringFromMap(jsonMap, 'adjusted_punchout') ;
+      _adjustedStatus = sift.readStringFromMap(jsonMap, 'adjusted_status') ;
+      _reason =sift.readStringFromMap(jsonMap, 'reason') ;
     } on SiftException catch (e) {
       throw MappingException('Failed to cast AttendanceAdjustmentApproval response. Error message - ${e.errorMessage}');
     }

@@ -24,20 +24,19 @@ class ExpenseRequestApproval  implements JSONInitializable{
    ExpenseRequestApproval.fromJson(Map<String, dynamic> jsonMap){
      try {
        var sift = Sift();
-       var detailsMap = sift.readMapFromMap(jsonMap, "details");
 
        _expenseRequestNumber =
-           sift.readStringFromMap(detailsMap, 'expense_request_no');
-       _totalAmount = sift.readStringFromMap(detailsMap, 'total_amount');
-       _createdAt = sift.readStringFromMap(detailsMap, 'created_at');
-       _createdById = sift.readNumberFromMap(detailsMap, 'created_by_id');
-       _createdByName = sift.readStringFromMap(detailsMap, 'created_by_name');
-       _mainCategory = sift.readStringFromMapWithDefaultValue(detailsMap, 'main_category',null);
-       _subCategory = sift.readStringFromMapWithDefaultValue(detailsMap, 'sub_category',null);
-       _description = sift.readStringFromMap(detailsMap, 'description');
-       _status = sift.readStringFromMap(detailsMap, 'status');
-       _statusMessage = sift.readStringFromMap(detailsMap, 'status_message');
-       _statusUser = sift.readStringFromMap(detailsMap, 'status_user');
+           sift.readStringFromMap(jsonMap, 'expense_request_no');
+       _totalAmount = sift.readStringFromMap(jsonMap, 'total_amount');
+       _createdAt = sift.readStringFromMap(jsonMap, 'created_at');
+       _createdById = sift.readNumberFromMap(jsonMap, 'created_by_id');
+       _createdByName = sift.readStringFromMap(jsonMap, 'created_by_name');
+       _mainCategory = sift.readStringFromMapWithDefaultValue(jsonMap, 'main_category',null);
+       _subCategory = sift.readStringFromMapWithDefaultValue(jsonMap, 'sub_category',null);
+       _description = sift.readStringFromMap(jsonMap, 'description');
+       _status = sift.readStringFromMap(jsonMap, 'status');
+       _statusMessage = sift.readStringFromMap(jsonMap, 'status_message');
+       _statusUser = sift.readStringFromMap(jsonMap, 'status_user');
      } on SiftException catch (e) {
        throw MappingException('Failed to cast ExpenseRequestApproval response. Error message - ${e.errorMessage}');
      }

@@ -19,18 +19,17 @@ class LeaveApproval  implements JSONInitializable{
   LeaveApproval.fromJson(Map<String, dynamic> jsonMap) {
     try {
       var sift = Sift();
-      var detailsMap = sift.readMapFromMap(jsonMap, "details");
 
-      _employeeId = sift.readNumberFromMap(detailsMap, 'employee_id');
-      _leaveDays = sift.readNumberFromMap(detailsMap, 'leave_days');
-      _leaveFrom = sift.readStringFromMap(detailsMap, 'leave_from');
-      _leaveTo = sift.readStringFromMap(detailsMap, 'leave_to');
-      _status = sift.readNumberFromMap(detailsMap, 'status');
-      _attachDoc = sift.readStringFromMap(detailsMap, 'attach_doc');
-      _createdOn = sift.readStringFromMap(detailsMap, 'created_on');
-      _approveRequestBy = sift.readStringFromMap(detailsMap, 'approve_request_by');
-      _decisionStatus = sift.readStringFromMap(detailsMap, 'decision_status');
-      _rejectMessage = sift.readStringFromMapWithDefaultValue(detailsMap, 'reject_message',null);
+      _employeeId = sift.readNumberFromMap(jsonMap, 'employee_id');
+      _leaveDays = sift.readNumberFromMap(jsonMap, 'leave_days');
+      _leaveFrom = sift.readStringFromMap(jsonMap, 'leave_from');
+      _leaveTo = sift.readStringFromMap(jsonMap, 'leave_to');
+      _status = sift.readNumberFromMap(jsonMap, 'status');
+      _attachDoc = sift.readStringFromMap(jsonMap, 'attach_doc');
+      _createdOn = sift.readStringFromMap(jsonMap, 'created_on');
+      _approveRequestBy = sift.readStringFromMap(jsonMap, 'approve_request_by');
+      _decisionStatus = sift.readStringFromMap(jsonMap, 'decision_status');
+      _rejectMessage = sift.readStringFromMapWithDefaultValue(jsonMap, 'reject_message',null);
 
 
     } on SiftException catch (e) {

@@ -348,7 +348,7 @@ class _MyPortalScreenState extends State<MyPortalScreen> with SingleTickerProvid
                     child: ItemNotifiable<List<Approval>>(
                       notifier: _approvalsListNotifier,
                       builder: (context, approvalsList) {
-                        if (approvalsList.isEmpty)
+                        if (_presenter.isEmpty())
                           return Center(
                             child: Padding(
                               padding: const EdgeInsets.all(24.0),
@@ -422,7 +422,6 @@ class _MyPortalScreenState extends State<MyPortalScreen> with SingleTickerProvid
       return LeaveApprovalTile(approval.details);
     }
 
-
     if (approval.isExpReqApp()) {
       return ExpenseRequestApprovalTile(approval.details);
     }
@@ -430,76 +429,8 @@ class _MyPortalScreenState extends State<MyPortalScreen> with SingleTickerProvid
     if(approval.isAtAdApproval()) {
       return AttendanceAdjustmentApprovalTile(approval.details);
     }
-    //
-    //
-    // switch (approval.approvalType) {
-    //   case "leaveApproval":
-    // //approval.leaveDetails!.approveRequestBy!;
-    //   case "expenseRequestApproval":
-    //     //approval.expenseRequestApprovalDetails!.createdByName!;
-    //   case "attendanceAdjustment":
-    //     ;//approval.attendanceAdjustmentDetail!.name!;
-    // }
-
-
-
-
-
-
     return SizedBox();
 
-
-
-    // return Padding(
-    //   padding: const EdgeInsets.all(10.0),
-    //   child: Container(
-    //     decoration: BoxDecoration(
-    //         border: Border.all(
-    //           color: DashboardColors.portalItemRedColor.withOpacity(0.6),
-    //         ),
-    //         color: DashboardColors.portalItemRedColor.withOpacity(0.6),
-    //         borderRadius: BorderRadius.all(Radius.circular(20))),
-    //     height: 180,
-    //     width: 140,
-    //     child: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //       children: [
-    //         Padding(
-    //           padding: const EdgeInsets.only(top: 8.0, left: 20.0),
-    //           child: Text(
-    //             _presenter.getApprovalType(approval),
-    //             style: TextStyles.subTitleTextStyle.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-    //           ),
-    //         ),
-    //         SizedBox(height: 5),
-    //         Padding(
-    //           padding: const EdgeInsets.only(top: 8.0, left: 16.0),
-    //           child: Text(
-    //             "by",
-    //             style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
-    //           ),
-    //         ),
-    //         Padding(
-    //           padding: const EdgeInsets.only(left: 16.0),
-    //           child: Text(
-    //             _presenter.createdBy(approval),
-    //             style: TextStyles.subTitleTextStyle
-    //                 .copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13.0),
-    //           ),
-    //         ),
-    //         SizedBox(height: 5),
-    //         Padding(
-    //           padding: const EdgeInsets.only(bottom: 8.0, left: 16.0),
-    //           child: Text(
-    //             _presenter.valueOf(approval),
-    //             style: TextStyles.subTitleTextStyle.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-    //           ),
-    //         )
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 
   Widget _topBar() {

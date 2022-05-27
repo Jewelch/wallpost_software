@@ -64,46 +64,7 @@ class MyPortalPresenter {
     return _errorMessage != null;
   }
 
-  String getApprovalType(Approval approval) {
-    // switch (approval.approvalType) {
-    //   case "leaveApproval":
-    //     return "Leave Approval";
-    //   case "expenseRequestApproval":
-    //     return "Expense Request Approval";
-    //   case "attendanceAdjustment":
-    //     return "Attendance Adjustment";
-    // }
-    return "";
+  bool isEmpty() {
+    return approvals.isEmpty;
   }
-
-  String createdBy(Approval approval) {
-    // switch (approval.approvalType) {
-    //   case "leaveApproval":
-    //     return "la";//approval.leaveDetails!.approveRequestBy!;
-    //   case "expenseRequestApproval":
-    //     return "er";//approval.expenseRequestApprovalDetails!.createdByName!;
-    //   case "attendanceAdjustment":
-    //     return "a";//approval.attendanceAdjustmentDetail!.name!;
-    // }
-    return "";
-  }
-
-  String valueOf(Approval approval) {
-    // switch (approval.approvalType) {
-    //   case "leaveApproval":
-    //     return "lv";//'${approval.leaveDetails!.leaveDays.toString()} days';
-    //   case "expenseRequestApproval":
-    //     return "erv";//'\$ ${approval.expenseRequestApprovalDetails!.totalAmount!} ';
-    //   case "attendanceAdjustment":
-    //     return "aav";//approval.attendanceAdjustmentDetail!.reason!;
-    // }
-    return "";
-  }
-
-
-
-
-
-
-
 }
