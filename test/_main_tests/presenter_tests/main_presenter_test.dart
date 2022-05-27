@@ -93,7 +93,7 @@ void main() {
       () => currentUserProvider.isLoggedIn(),
       () => view.setStatusBarColor(true),
       () => selectedCompanyProvider.isCompanySelected(),
-      () => view.goToDashboardScreen()
+      () => view.goToMyPortalScreen()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });

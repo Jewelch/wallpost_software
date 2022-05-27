@@ -97,6 +97,7 @@ class FinancialSummaryCard extends StatelessWidget {
           ),
         ],
       ),
+      color: AppColors.defaultColorDark,
     );
   }
 

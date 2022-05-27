@@ -1,15 +1,14 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/attendance_punch_in_out/constants/app_bar_with_back_button.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance_punch_in_out/constants/app_bar_with_back_button.dart';
 import 'package:wallpost/attendance_punch_in_out/constants/attendance_colors.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_report.dart';
@@ -19,18 +18,17 @@ import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_de
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/company_list/views/companies_list_screen.dart';
-import 'package:wallpost/dashboard/ui/my_portal_screen.dart';
+
+import '../../../dashboard/ui/my_portal/views/my_portal_screen.dart';
 
 class AttendanceButtonDetailsScreen extends StatefulWidget {
   const AttendanceButtonDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  _AttendanceButtonDetailsScreenState createState() =>
-      _AttendanceButtonDetailsScreenState();
+  _AttendanceButtonDetailsScreenState createState() => _AttendanceButtonDetailsScreenState();
 }
 
-class _AttendanceButtonDetailsScreenState
-    extends State<AttendanceButtonDetailsScreen>
+class _AttendanceButtonDetailsScreenState extends State<AttendanceButtonDetailsScreen>
     with WidgetsBindingObserver
     implements AttendanceView, AttendanceDetailedView {
   var _viewSelectorNotifier = ItemNotifier<int>(defaultValue: 0);
@@ -68,15 +66,13 @@ class _AttendanceButtonDetailsScreenState
   static const REPORT_ERROR_VIEW = 13;
   static const REPORT_DATA_VIEW = 14;
 
-
   @override
   void initState() {
     presenter = AttendancePresenter(basicView: this, detailedView: this);
     presenter.loadAttendanceDetails();
-     presenter.loadAttendanceReport();
+    presenter.loadAttendanceReport();
 
-    _currentTimer =
-        Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
+    _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
   }
@@ -92,8 +88,7 @@ class _AttendanceButtonDetailsScreenState
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed &&
-        presenter.shouldReloadDataWhenAppIsResumed()) {
+    if (state == AppLifecycleState.resumed && presenter.shouldReloadDataWhenAppIsResumed()) {
       presenter.loadAttendanceDetails();
     }
   }
@@ -103,23 +98,19 @@ class _AttendanceButtonDetailsScreenState
     return Scaffold(
       appBar: AppBarWithBackButton(
         leadingButton: BackButton(color: Colors.black),
-        onLeadingButtonPressed: () =>
-            ScreenPresenter.presentAndRemoveAllPreviousScreens(
-                MyPortalScreen(), context),
+        onLeadingButtonPressed: () => ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context),
         textButton1: TextButton(
             child: Row(
               children: [
                 Text(
                   '${SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name}',
-                  style: TextStyles.screenTitleTextStyle
-                      .copyWith(color: AppColors.defaultColor),
+                  style: TextStyles.screenTitleTextStyle.copyWith(color: AppColors.defaultColor),
                 ),
                 SizedBox(width: 2),
                 Icon(Icons.keyboard_arrow_down_outlined, size: 28),
               ],
             ),
-            onPressed: () => ScreenPresenter.presentAndRemoveAllPreviousScreens(
-                CompanyListScreen(), context)),
+            onPressed: () => ScreenPresenter.presentAndRemoveAllPreviousScreens(CompanyListScreen(), context)),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -153,8 +144,7 @@ class _AttendanceButtonDetailsScreenState
         child: CircularProgressIndicator(
           strokeWidth: 2,
           backgroundColor: AttendanceColors.disabledButtonColor,
-          valueColor:
-              AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
         ),
       ),
     );
@@ -190,8 +180,7 @@ class _AttendanceButtonDetailsScreenState
     );
   }
 
-  Widget _errorButton(
-      {required String title, required VoidCallback onPressed}) {
+  Widget _errorButton({required String title, required VoidCallback onPressed}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24),
       height: 80,
@@ -229,25 +218,22 @@ class _AttendanceButtonDetailsScreenState
                   child: _mapView(),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 12,horizontal: 24),
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                   height: 70,
-                 child: _buildAttendanceTimeView(),
+                  child: _buildAttendanceTimeView(),
                 ),
               ],
             ),
             Positioned(
               bottom: 0,
-              child: Container(
-                  width: 140, height: 140, child: _buildAttendanceButtonView()),
+              child: Container(width: 140, height: 140, child: _buildAttendanceButtonView()),
             ),
           ],
         ),
         SizedBox(height: 16),
         Container(width: 140, child: _buildBreakButtonView()),
         SizedBox(height: 16),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-             child: _buildAttendanceReportView())
+        Container(padding: EdgeInsets.symmetric(horizontal: 12), child: _buildAttendanceReportView())
       ],
     );
   }
@@ -270,37 +256,27 @@ class _AttendanceButtonDetailsScreenState
             tiltGesturesEnabled: false,
             rotateGesturesEnabled: false,
             initialCameraPosition: CameraPosition(
-              target: LatLng(
-                  location!.latitude.toDouble(), location.longitude.toDouble()),
+              target: LatLng(location!.latitude.toDouble(), location.longitude.toDouble()),
               zoom: 14.0,
             ),
             markers: Set<Marker>()
               ..add(Marker(
                 markerId: MarkerId(''),
-                position: LatLng(location.latitude.toDouble(),
-                    location.longitude.toDouble()),
+                position: LatLng(location.latitude.toDouble(), location.longitude.toDouble()),
               )),
           )),
     );
   }
 
-  Widget _buildAttendanceTimeView(){
-    return  Row(
+  Widget _buildAttendanceTimeView() {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
-          children: [
-            _buildPunchInTime(),
-            SizedBox(height: 2),
-            Text("Punch In",style: TextStyles.titleTextStyle)
-          ],
+          children: [_buildPunchInTime(), SizedBox(height: 2), Text("Punch In", style: TextStyles.titleTextStyle)],
         ),
         Column(
-          children: [
-            _buildPunchOutTime(),
-            SizedBox(height: 2),
-            Text("Punch Out",style: TextStyles.titleTextStyle)
-          ],
+          children: [_buildPunchOutTime(), SizedBox(height: 2), Text("Punch Out", style: TextStyles.titleTextStyle)],
         )
       ],
     );
@@ -308,28 +284,26 @@ class _AttendanceButtonDetailsScreenState
 
 //MARK: Functions to punch in and out time view
 
-  Widget _buildPunchInTime(){
+  Widget _buildPunchInTime() {
     return ItemNotifiable<String?>(
         notifier: _punchInTimeNotifier,
         builder: (context, time) {
-          if(time!=null)
-            return Text(time,style: TextStyles.titleTextStyleBold);
+          if (time != null)
+            return Text(time, style: TextStyles.titleTextStyleBold);
           else
             return Text("_ _ _");
-        }
-    );
+        });
   }
 
-  Widget _buildPunchOutTime(){
+  Widget _buildPunchOutTime() {
     return ItemNotifiable<String?>(
         notifier: _punchOutTimeNotifier,
         builder: (context, time) {
-          if(time!=null)
-            return Text(time,style: TextStyles.titleTextStyleBold);
+          if (time != null)
+            return Text(time, style: TextStyles.titleTextStyleBold);
           else
             return Text("_ _ _");
-        }
-    );
+        });
   }
 
   Widget _buildAttendanceButtonView() {
@@ -416,10 +390,7 @@ class _AttendanceButtonDetailsScreenState
   }
 
   Widget _actionButton(
-      {required String title,
-      required String time,
-      required Color buttonColor,
-      required VoidCallback onPressed}) {
+      {required String title, required String time, required Color buttonColor, required VoidCallback onPressed}) {
     return MaterialButton(
       padding: EdgeInsets.all(20),
       elevation: 0,
@@ -484,22 +455,22 @@ class _AttendanceButtonDetailsScreenState
       required Color buttonColor,
       required Color textColor,
       required VoidCallback onButtonPressed}) {
-   return ElevatedButton(
-       child: Row(
-         mainAxisAlignment: MainAxisAlignment.center,
-         children: [
-           Icon(
-             Icons.coffee_outlined,
-             color: textColor,
-             size: 18,
-           ),
-           SizedBox(width: 8),
-           Text(
-             title,
-             style: TextStyles.titleTextStyle.copyWith(color: textColor),
-           ),
-         ],
-       ),
+    return ElevatedButton(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.coffee_outlined,
+            color: textColor,
+            size: 18,
+          ),
+          SizedBox(width: 8),
+          Text(
+            title,
+            style: TextStyles.titleTextStyle.copyWith(color: textColor),
+          ),
+        ],
+      ),
       onPressed: onButtonPressed,
       style: ElevatedButton.styleFrom(
         primary: buttonColor,
@@ -518,33 +489,29 @@ class _AttendanceButtonDetailsScreenState
     return ItemNotifiable<int?>(
       notifier: _viewSelectorReportNotifier,
       builder: (context, viewType) {
-         if (viewType == REPORT_LOADER_VIEW) return _buildLoader();
+        if (viewType == REPORT_LOADER_VIEW) return _buildLoader();
 
-        if (viewType == REPORT_ERROR_VIEW)  return _reportErrorAndRetryView();
+        if (viewType == REPORT_ERROR_VIEW) return _reportErrorAndRetryView();
 
-        if (viewType == REPORT_DATA_VIEW)  return _attendanceReportDataView();
+        if (viewType == REPORT_DATA_VIEW) return _attendanceReportDataView();
 
         return Container();
       },
     );
   }
 
-  Widget _attendanceReportDataView(){
+  Widget _attendanceReportDataView() {
     return ItemNotifiable<AttendanceReport?>(
         notifier: _attendanceReportNotifier,
         builder: (context, attendanceReport) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _attendanceReportDetails("Late Punch In", attendanceReport!.late,
-                   Colors.deepOrange),
-                _attendanceReportDetails("Early Punch Out",
-                    attendanceReport.earlyLeave, Colors.black),
-                _attendanceReportDetails("Absences", attendanceReport.absents,
-                   Colors.red)
-              ],
-            );
-
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _attendanceReportDetails("Late Punch In", attendanceReport!.late, Colors.deepOrange),
+              _attendanceReportDetails("Early Punch Out", attendanceReport.earlyLeave, Colors.black),
+              _attendanceReportDetails("Absences", attendanceReport.absents, Colors.red)
+            ],
+          );
         });
   }
 
@@ -552,13 +519,10 @@ class _AttendanceButtonDetailsScreenState
     return Column(
       children: [
         noOfDays == 1
-            ? Text("$noOfDays Day",
-                style: TextStyles.titleTextStyleBold.copyWith(color: textColor))
-            : Text("$noOfDays Days",
-                style: TextStyles.titleTextStyleBold.copyWith(color: textColor)),
+            ? Text("$noOfDays Day", style: TextStyles.titleTextStyleBold.copyWith(color: textColor))
+            : Text("$noOfDays Days", style: TextStyles.titleTextStyleBold.copyWith(color: textColor)),
         SizedBox(height: 8),
-        Text(title,
-            style: TextStyles.titleTextStyle.copyWith(color: Colors.black))
+        Text(title, style: TextStyles.titleTextStyle.copyWith(color: Colors.black))
       ],
     );
   }
@@ -573,7 +537,7 @@ class _AttendanceButtonDetailsScreenState
   @override
   void showAttendanceReportErrorAndRetryView(String message) {
     _viewSelectorReportNotifier.notify(REPORT_ERROR_VIEW);
-    _errorMessage=message;
+    _errorMessage = message;
   }
 
   @override
@@ -582,7 +546,7 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showErrorAndRetryView( String message) {
+  void showErrorAndRetryView(String message) {
     _viewSelectorNotifier.notify(ERROR_VIEW);
     _errorMessage = message;
   }
@@ -663,8 +627,7 @@ class _AttendanceButtonDetailsScreenState
   void doRefresh() {}
 
   @override
-  void showAlertToInvalidLocation(
-      bool isForPunchIn, String title, String message) {
+  void showAlertToInvalidLocation(bool isForPunchIn, String title, String message) {
     Alert.showSimpleAlertWithButtons(
       context: context,
       title: title,
@@ -682,7 +645,7 @@ class _AttendanceButtonDetailsScreenState
   }
 
   @override
-  void showErrorMessage(String title,String message) {
+  void showErrorMessage(String title, String message) {
     // TODO: implement showErrorMessage
   }
 
@@ -695,9 +658,4 @@ class _AttendanceButtonDetailsScreenState
       _timeString = formattedDateTime;
     });
   }
-
-
-
-
-
 }

@@ -5,8 +5,9 @@ import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_list/views/companies_list_screen.dart';
-import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 import 'package:wallpost/login/ui/views/login_screen.dart';
+
+import '../../../dashboard/ui/my_portal/views/my_portal_screen.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key? key}) : super(key: key);
@@ -53,6 +54,6 @@ class _MainScreenState extends State<MainScreen> implements MainView {
 
   @override
   void goToDashboardScreen() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context);
   }
 }
