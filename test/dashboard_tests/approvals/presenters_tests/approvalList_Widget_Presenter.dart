@@ -2,35 +2,33 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
-import 'package:wallpost/dashboard/ui/my_portal/presenters/my_portal_presenter.dart';
-import 'package:wallpost/dashboard/ui/my_portal/view_contracts/my_portal_view.dart';
-import 'package:wallpost/approvals/entities/Approvals.dart';
-import 'package:wallpost/dashboard_core/services/approvals_provider.dart';
+import 'package:wallpost/approvals/entities/approval.dart';
+import 'package:wallpost/approvals/services/approval_list_provider.dart';
+import 'package:wallpost/approvals/ui/presenters/approval_list_widget_presenter.dart';
+import 'package:wallpost/approvals/ui/view_contracts/approval_list_widget_view.dart';
 import '../../../_mocks/mock_company.dart';
 
-class MockPortalView extends Mock implements MyPortalView {}
+class MockApprovalListWidgetView extends Mock implements ApprovalListWidgetView {}
 
-class MockApprovalsProvider extends Mock implements SelectedCompanyApprovalsListProvider {}
+class MockApprovalsProvider extends Mock implements ApprovalListProvider {}
 
 class MockCurrentUserProvider extends Mock implements CurrentUserProvider {}
-
-class MockApprovals extends Mock implements Approvals {}
 
 class MockApprovalItem extends Mock implements Approval {}
 
 
 void main() {
-  var view = MockPortalView();
+  var view = MockApprovalListWidgetView();
   var mockApprovalsProvider = MockApprovalsProvider();
   var mockCurrentUserProvider = MockCurrentUserProvider();
 
-  late MyPortalPresenter presenter;
+  late ApprovalListWidgetPresenter presenter;
 
-  var mockCompany = MockCompany();
-  var emptyApprovals = MockApprovals();
-  var approvals = MockApprovals();
+
   var approval1 = MockApprovalItem();
   var approval2 = MockApprovalItem();
+  var approvals = [approval1,approval2];
+
 
   List<Approval> _approvalsList = [approval1, approval2];
 
@@ -39,7 +37,6 @@ void main() {
     when(() => approval2.id).thenReturn(2);
     when(() => approval1.companyId).thenReturn(1);
     when(() => approval2.companyId).thenReturn(2);
-    when(() => approvals.approvals).thenReturn(_approvalsList);
   });
 
   void _resetAllMockInteractions() {
@@ -56,9 +53,8 @@ void main() {
 
   setUp(() {
     _resetAllMockInteractions();
-    presenter = MyPortalPresenter.initWith(
+    presenter = ApprovalListWidgetPresenter.initWith(
       view,
-      mockCurrentUserProvider,
       mockApprovalsProvider,
     );
   });
@@ -89,11 +85,10 @@ void main() {
     //given
     when(() => mockApprovalsProvider.isLoading).thenReturn(false);
     when(() => mockApprovalsProvider.didReachListEnd).thenReturn(false);
-    when(() => emptyApprovals.approvals).thenReturn([]);
     when(() => mockApprovalsProvider.actionsCount).thenReturn(0);
 
     when(() => mockApprovalsProvider.getNext())
-        .thenAnswer((_) => Future.value(emptyApprovals));
+        .thenAnswer((_) => Future.value([]));
 
     //when
     await presenter.loadApprovals();
@@ -104,12 +99,13 @@ void main() {
       () => mockApprovalsProvider.didReachListEnd,
       () => mockApprovalsProvider.getNext(),
       () => view.onDidLoadData(),
-      () => view.onDidLoadApprovals(emptyApprovals),
       () => mockApprovalsProvider.actionsCount,
-      () => view.onDidLoadActionsCount(0)
+      () => view.onDidLoadActionsCount(0),
+      ()=> view.onDidLoadApprovals([])
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
+
 
 
   test(
@@ -118,7 +114,6 @@ void main() {
         //given
             when(() => mockApprovalsProvider.isLoading).thenReturn(false);
             when(() => mockApprovalsProvider.didReachListEnd).thenReturn(false);
-            when(() => approvals.approvals).thenReturn(_approvalsList);
             when(() => mockApprovalsProvider.actionsCount).thenReturn(2);
 
             when(() => mockApprovalsProvider.getNext())
@@ -132,9 +127,9 @@ void main() {
               () => mockApprovalsProvider.didReachListEnd,
               () => mockApprovalsProvider.getNext(),
               () => view.onDidLoadData(),
-              () => view.onDidLoadApprovals(approvals),
               () => mockApprovalsProvider.actionsCount,
-              () => view.onDidLoadActionsCount(2)
+              () => view.onDidLoadActionsCount(2),
+              () => view.onDidLoadApprovals(approvals),
         ]);
         _verifyNoMoreInteractionsOnAllMocks();
       });

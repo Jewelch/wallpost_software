@@ -7,6 +7,8 @@ import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_request_executor.dart';
 import 'package:wallpost/_wp_core/wpapi/services/nonce_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wpapi_response_processor.dart';
+
+import '../../../approvals/services/wpapi_metadata_processor.dart';
 export 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 
 class WPAPI implements NetworkAdapter {
@@ -135,7 +137,9 @@ class WPAPI implements NetworkAdapter {
 
   APIResponse _processResponse(APIResponse response, APIRequest apiRequest) {
     var responseData = WPAPIResponseProcessor().processResponse(response);
-    return APIResponse(apiRequest, response.statusCode, responseData, {});
+    var metaData = WPAPIMetaDataProcessor().processResponse(response);
+
+    return APIResponse(apiRequest, response.statusCode, responseData, metaData);
   }
 
   bool _shouldRefreshTokenOnException(APIException apiException) {

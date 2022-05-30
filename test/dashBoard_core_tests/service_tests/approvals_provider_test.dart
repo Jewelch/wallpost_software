@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
+import 'package:wallpost/approvals/services/approval_list_provider.dart';
 import 'package:wallpost/company_core/entities/company.dart';
 import 'package:wallpost/dashboard_core/constants/dashboard_management_urls.dart';
-import 'package:wallpost/dashboard_core/services/approvals_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 import '../../dashBoard_core_tests/mocks.dart';
-import '../../expense_requests_tests/services_tests/expense_request_executer_test.dart';
+import '../../expense_list_tests/services_tests/expense_list_provider_test.dart';
 
 class MockPortalActionAlertProvider extends Mock {}
 
@@ -20,10 +20,10 @@ void main() {
 
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockSelectedCompany = MockSelectedCompanyProvider();
-  late SelectedCompanyApprovalsListProvider portalActionProvider;
+  late ApprovalListProvider portalActionProvider;
 
   setUpAll(() {
-    portalActionProvider = SelectedCompanyApprovalsListProvider.initWith(mockNetworkAdapter, mockSelectedCompany);
+    portalActionProvider = ApprovalListProvider.initWith(mockNetworkAdapter, mockSelectedCompany);
   });
 
   setUp(() {
@@ -44,7 +44,7 @@ void main() {
 
     var _ = await portalActionProvider.getNext();
 
-    expect(mockNetworkAdapter.apiRequest.url, DashboardManagementUrls.getCompanyApprovals("15", 1, 30));
+    expect(mockNetworkAdapter.apiRequest.url, DashboardManagementUrls.getApprovalsUrl("15", 1, 15));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
   });
 
@@ -109,7 +109,7 @@ void main() {
     var mockCompany = MockCompany();
     when(() => mockCompany.id).thenReturn("15");
     when(mockSelectedCompany.getSelectedCompanyForCurrentUser).thenReturn(mockCompany);
-    mockNetworkAdapter.succeed(successfulResponse);
+    mockNetworkAdapter.succeed(successfulResponse,metaData: successfulMetaDataResponse);
 
     try {
       var _ = await portalActionProvider.getNext();

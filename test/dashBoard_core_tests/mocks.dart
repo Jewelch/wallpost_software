@@ -1,5 +1,5 @@
 class Mocks {
-  static List<dynamic> approvalsResponse = [
+  static List<Map<String,dynamic>> approvalsResponse = [
     {
       "approvalType": "leaveApproval",
       "id": 865,

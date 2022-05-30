@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/company_core/entities/company.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/dashboard_core/constants/dashboard_management_urls.dart';
 
+import '../../_shared/exceptions/mapping_exception.dart';
 import '../entities/approval.dart';
 
 class ApprovalListProvider {
@@ -16,6 +18,7 @@ class ApprovalListProvider {
   bool _didReachListEnd = false;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
+  late num actionsCount ;
 
   ApprovalListProvider.initWith(
       this._networkAdapter, this._selectedCompanyProvider);
@@ -56,7 +59,22 @@ class ApprovalListProvider {
       throw WrongResponseFormatException();
 
     var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
+    var metaDataMap = apiResponse.metaData;
+    _processMetadata(metaDataMap);
+
     return _readItemsFromResponse(responseMapList);
+  }
+
+  void _processMetadata(Map<String, dynamic>? metaDataMap) {
+
+    var sift = Sift();
+    try {
+      actionsCount =  sift.readNumberFromMap(metaDataMap, "total");
+
+
+    } on SiftException catch (e) {
+      throw MappingException('Failed to cast Approval response. Error message - ${e.errorMessage}');
+    }
   }
 
   List<Approval> _readItemsFromResponse(
@@ -88,4 +106,6 @@ class ApprovalListProvider {
   }
 
   bool get didReachListEnd => _didReachListEnd;
+
+
 }
