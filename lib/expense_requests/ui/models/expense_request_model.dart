@@ -9,15 +9,22 @@ class ExpenseRequestModel {
   ExpenseCategory? selectedProject;
   DateTime date = DateTime.now();
   String description = "";
-  int quantity = 0;
+  int _quantity = 0;
   Money _amount = Money.zero();
 
   String get amount => _amount.toString();
+  int get quantity => _quantity;
   File? file;
 
-  String get total => _amount.multiply(quantity).toString();
+  String get total => _amount.multiply(_quantity).toString();
 
-  void setAmount(num amount) {
+  void setAmount(String amountString) {
+    num amount = num.tryParse(amountString) ?? 0;
     _amount = Money(amount);
+  }
+
+  void setQuantity(String quantityString) {
+    int quantity = int.tryParse(quantityString) ?? 0;
+    _quantity = quantity;
   }
 }

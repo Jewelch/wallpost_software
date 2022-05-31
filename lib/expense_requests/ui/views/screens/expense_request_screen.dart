@@ -9,8 +9,9 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/file_extension.dart';
 import 'package:wallpost/expense_requests/entities/expense_category.dart';
+import 'package:wallpost/expense_requests/ui/models/expense_request_form_validator.dart';
 import 'package:wallpost/expense_requests/ui/models/expense_request_model.dart';
-import 'package:wallpost/expense_requests/ui/models/widget_status.dart';
+import 'package:wallpost/expense_requests/ui/models/expense_request_form_view_type.dart';
 import 'package:wallpost/expense_requests/ui/presenters/expense_request_presenter.dart';
 import 'package:wallpost/expense_requests/ui/view_contracts/expense_requests_view.dart';
 import 'package:wallpost/expense_requests/ui/views/widgets/expense_date_selector.dart';
@@ -24,17 +25,16 @@ class ExpenseRequestScreen extends StatefulWidget {
   State<ExpenseRequestScreen> createState() => _ExpenseRequestScreenState();
 }
 
-class _ExpenseRequestScreenState extends State<ExpenseRequestScreen> implements ExpenseRequestsView {
+class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
+    implements ExpenseRequestsView {
   final ItemNotifier<ExpenseRequestFormViewType> _viewTypeNotifier =
       ItemNotifier(defaultValue: ExpenseRequestFormViewType.loader);
+  final ItemNotifier<bool> _showLoaderNotifier = ItemNotifier(defaultValue: false);
 
   final ItemNotifier<bool> _subCategoriesNotifier = ItemNotifier(defaultValue: false);
   final ItemNotifier<bool> _projectsNotifier = ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _missingCategoryNotifier = ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _missingSubCategoryNotifier = ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _missingProjectNotifier = ItemNotifier(defaultValue: false);
-  final ItemNotifier<bool> _showLoaderNotifier = ItemNotifier(defaultValue: false);
-  final ItemNotifier<void> _rateNotifier = ItemNotifier(defaultValue: null);
+  final ItemNotifier<void> _totalNotifier = ItemNotifier(defaultValue: null);
+  late final ItemNotifier<ExpenseRequestFormValidator> _validationNotifier;
 
   String _errorMessage = "";
 
@@ -45,6 +45,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen> implements 
   @override
   void initState() {
     super.initState();
+    _validationNotifier = ItemNotifier(defaultValue: ExpenseRequestFormValidator(_expenseRequest));
     _presenter = ExpenseRequestPresenter(this);
     _presenter.getCategories();
   }
@@ -99,163 +100,164 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen> implements 
   }
 
   Widget _form() {
-    return ListView(
-      padding: EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 24),
-      children: [
-        expenseInputWithHeader(
-          required: true,
-          title: "Date",
-          child: ExpenseDateSelector(onDateSelected: (date) => _expenseRequest.date = date),
-        ),
-        ItemNotifiable<bool>(
-          notifier: _missingCategoryNotifier,
-          builder: (_, isCategoryMissing) => expenseInputWithHeader(
-            showRequiredMessage: isCategoryMissing,
-            required: true,
-            title: "Select the type of expense",
-            child: ExpenseCategorySelector(
-              items: _presenter.expenseRequests,
-              onChanged: (mainCategory) {
-                _expenseRequest.selectedMainCategory = mainCategory;
-                if (mainCategory != null) {
-                  _presenter.selectCategory(mainCategory);
-                }
-              },
-              value: () => _expenseRequest.selectedMainCategory,
-            ),
-          ),
-        ),
-        ItemNotifiable<bool>(
-          notifier: _subCategoriesNotifier,
-          builder: (_, hasSubCategory) => hasSubCategory
-              ? ItemNotifiable<bool>(
-                  notifier: _missingSubCategoryNotifier,
-                  builder: (_, isSubCategoryMissing) => expenseInputWithHeader(
-                    showRequiredMessage: isSubCategoryMissing,
-                    required: true,
-                    title: "Select the sub type of expense",
-                    child: ExpenseCategorySelector(
-                      items: _expenseRequest.selectedMainCategory!.subCategories,
-                      onChanged: (subCategory) {
-                        _expenseRequest.selectedSubCategory = subCategory;
-                      },
-                      value: () => _expenseRequest.selectedSubCategory,
-                    ),
-                  ),
-                )
-              : SizedBox(),
-        ),
-        ItemNotifiable<bool>(
-            notifier: _projectsNotifier,
-            builder: (_, hasProject) {
-              return hasProject
-                  ? ItemNotifiable<bool>(
-                      notifier: _missingProjectNotifier,
-                      builder: (_, isProjectMissing) => expenseInputWithHeader(
-                            showRequiredMessage: isProjectMissing,
-                            required: true,
-                            title: "Select the project",
-                            child: ExpenseCategorySelector(
-                              items: _expenseRequest.selectedMainCategory!.projects,
-                              onChanged: (project) => _expenseRequest.selectedProject = project,
-                              value: () => _expenseRequest.selectedProject,
-                            ),
-                          ))
-                  : SizedBox();
-            }),
-        expenseInputWithHeader(
-          title: "Enter the expense amount",
-          child: TextField(
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: _expenseRequest.amount,
-              hintStyle: TextStyle(color: AppColors.darkGrey),
-            ),
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              var amount = double.tryParse(value) ?? 0;
-              _expenseRequest.setAmount(amount);
-              _rateNotifier.notify(null);
-            },
-          ),
-        ),
-        expenseInputWithHeader(
-          title: "Enter the total quantity",
-          child: TextField(
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: _expenseRequest.quantity.toString(),
-              hintStyle: TextStyle(color: AppColors.darkGrey),
-            ),
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              var quantity = int.tryParse(value) ?? 0;
-              _expenseRequest.quantity = quantity;
-              _rateNotifier.notify(null);
-            },
-          ),
-        ),
-        expenseInputWithHeader(
-          title: "Total amount to claim is",
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: ItemNotifiable(
-              notifier: _rateNotifier,
-              builder: (c, f) => Text(
-                _expenseRequest.amount.toString(),
+    return ItemNotifiable<ExpenseRequestFormValidator>(
+        notifier: _validationNotifier,
+        builder: (context, validator) {
+          return ListView(
+            padding: EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 24),
+            children: [
+              ExpenseInputWithHeader(
+                required: true,
+                title: "Date",
+                child: ExpenseDateSelector(onDateSelected: (date) => _expenseRequest.date = date),
               ),
-            ),
-          ),
-        ),
-        expenseInputWithHeader(
-          title: "Upload supporting document",
-          child: GestureDetector(
-            onTap: () async {
-              var files = await FilePickerScreen.present(context, filesType: [FileTypes.documents]);
-              if ((files as List).isNotEmpty) _expenseRequest.file = files[0];
-              setState(() {});
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    _expenseRequest.file != null ? _expenseRequest.file!.name() : "",
-                    style: TextStyle(color: AppColors.darkGrey),
+              ExpenseInputWithHeader(
+                missingMessage: validator.mainCategoryMissingError,
+                required: true,
+                title: "Select the type of expense",
+                child: ExpenseCategorySelector(
+                  items: _presenter.expenseRequests,
+                  onChanged: (mainCategory) {
+                    _expenseRequest.selectedMainCategory = mainCategory;
+                    if (mainCategory != null) {
+                      _presenter.selectCategory(mainCategory);
+                    }
+                  },
+                  value: () => _expenseRequest.selectedMainCategory,
+                ),
+              ),
+              ItemNotifiable<bool>(
+                notifier: _subCategoriesNotifier,
+                builder: (_, hasSubCategory) => hasSubCategory
+                    ? ExpenseInputWithHeader(
+                        missingMessage: validator.subCategoryMissingError,
+                        required: true,
+                        title: "Select the sub type of expense",
+                        child: ExpenseCategorySelector(
+                          items: _expenseRequest.selectedMainCategory!.subCategories,
+                          onChanged: (subCategory) {
+                            _expenseRequest.selectedSubCategory = subCategory;
+                          },
+                          value: () => _expenseRequest.selectedSubCategory,
+                        ),
+                      )
+                    : SizedBox(),
+              ),
+              ItemNotifiable<bool>(
+                notifier: _projectsNotifier,
+                builder: (_, hasProject) {
+                  return hasProject
+                      ? ExpenseInputWithHeader(
+                          missingMessage: validator.projectMissingError,
+                          required: true,
+                          title: "Select the project",
+                          child: ExpenseCategorySelector(
+                            items: _expenseRequest.selectedMainCategory!.projects,
+                            onChanged: (project) => _expenseRequest.selectedProject = project,
+                            value: () => _expenseRequest.selectedProject,
+                          ),
+                        )
+                      : SizedBox();
+                },
+              ),
+              ExpenseInputWithHeader(
+                required: true,
+                missingMessage: validator.amountMissingError,
+                title: "Enter the expense amount",
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: _expenseRequest.amount,
+                    hintStyle: TextStyle(color: AppColors.darkGrey),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    _expenseRequest.setAmount(value);
+                    _totalNotifier.notify(null);
+                  },
+                ),
+              ),
+              ExpenseInputWithHeader(
+                required: true,
+                missingMessage: validator.quantityMissingError,
+                title: "Enter the total quantity",
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: _expenseRequest.quantity.toString(),
+                    hintStyle: TextStyle(color: AppColors.darkGrey),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    _expenseRequest.setQuantity(value);
+                    _totalNotifier.notify(null);
+                  },
+                ),
+              ),
+              ExpenseInputWithHeader(
+                title: "Total amount to claim is",
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: ItemNotifiable(
+                    notifier: _totalNotifier,
+                    builder: (c, f) => Text(
+                      _expenseRequest.total.toString(),
+                    ),
                   ),
                 ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Icon(
-                      Icons.attach_file,
-                      color: AppColors.darkGrey,
-                    ),
+              ),
+              ExpenseInputWithHeader(
+                required: true,
+                missingMessage: validator.fileMissingError,
+                title: "Upload supporting document",
+                child: GestureDetector(
+                  onTap: () async {
+                    var files =
+                        await FilePickerScreen.present(context, filesType: [FileTypes.documents]);
+                    if (files == null) return;
+                    if ((files as List).isNotEmpty) _expenseRequest.file = files[0];
+                    setState(() {});
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _expenseRequest.file != null ? _expenseRequest.file!.name() : "",
+                          style: TextStyle(color: AppColors.darkGrey),
+                        ),
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Icon(
+                            Icons.attach_file,
+                            color: AppColors.darkGrey,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
-          ),
-        ),
-        expenseInputWithHeader(
-          height: 100,
-          title: "Remarks",
-          child: TextField(
-            minLines: 3,
-            maxLines: 3,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: _expenseRequest.description.toString(),
-              hintStyle: TextStyle(color: AppColors.darkGrey),
-            ),
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              _expenseRequest.description = value;
-            },
-          ),
-        )
-      ],
-    );
+                ),
+              ),
+              ExpenseInputWithHeader(
+                height: 100,
+                title: "Remarks",
+                child: TextField(
+                  minLines: 3,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: _expenseRequest.description.toString(),
+                    hintStyle: TextStyle(color: AppColors.darkGrey),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) => _expenseRequest.description = value,
+                ),
+              )
+            ],
+          );
+        });
   }
 
   Widget _saveButton() {
@@ -315,24 +317,12 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen> implements 
 
   @override
   void resetErrors() {
-    _missingCategoryNotifier.notify(false);
-    _missingSubCategoryNotifier.notify(false);
-    _missingProjectNotifier.notify(false);
+    _validationNotifier.notify(ExpenseRequestFormValidator(_expenseRequest));
   }
 
   @override
-  void notifyMissingMainCategory() {
-    _missingCategoryNotifier.notify(true);
-  }
-
-  @override
-  void notifyMissingSubCategory() {
-    _missingSubCategoryNotifier.notify(true);
-  }
-
-  @override
-  void notifyMissingProject() {
-    _missingProjectNotifier.notify(true);
+  void notifyValidationErrors(ExpenseRequestFormValidator validator) {
+    _validationNotifier.notify(validator);
   }
 
   @override

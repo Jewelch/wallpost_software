@@ -30,26 +30,15 @@ ExpenseRequestForm getExpenseRequestForm() {
       total: "1");
 }
 
-ExpenseRequestModel getExpenseRequest() {
+ExpenseRequestModel getValidExpenseRequestModel() {
   var expenseRequest = ExpenseRequestModel();
-  var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[0]);
+  var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[2]);
   expenseRequest.selectedProject = category;
   expenseRequest.selectedSubCategory = category;
   expenseRequest.selectedMainCategory = category;
-  return expenseRequest;
-}
-
-ExpenseRequestModel getExpenseRequestWithMissedSubCategory() {
-  var expenseRequest = ExpenseRequestModel();
-  var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[0]);
-  expenseRequest.selectedMainCategory = category;
-  return expenseRequest;
-}
-
-ExpenseRequestModel getExpenseRequestWithMissedProject() {
-  var expenseRequest = ExpenseRequestModel();
-  var category = ExpenseCategory.fromJson(expenseCategoriesListResponse[1]);
-  expenseRequest.selectedMainCategory = category;
+  expenseRequest.file = File("path");
+  expenseRequest.setAmount("1");
+  expenseRequest.setQuantity("1");
   return expenseRequest;
 }
 

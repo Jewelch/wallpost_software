@@ -4,6 +4,8 @@ import 'package:wallpost/_wp_core/wpapi/exceptions/network_failure_exception.dar
 import 'package:wallpost/expense_requests/exeptions/failed_to_save_requet.dart';
 import 'package:wallpost/expense_requests/services/expense_categories_provider.dart';
 import 'package:wallpost/expense_requests/services/expense_request_creator.dart';
+import 'package:wallpost/expense_requests/ui/models/expense_request_form_validator.dart';
+import 'package:wallpost/expense_requests/ui/models/expense_request_model.dart';
 import 'package:wallpost/expense_requests/ui/presenters/expense_request_presenter.dart';
 import 'package:wallpost/expense_requests/ui/view_contracts/expense_requests_view.dart';
 
@@ -24,6 +26,7 @@ main() {
 
   setUpAll(() {
     registerFallbackValue(getExpenseRequestForm());
+    registerFallbackValue(ExpenseRequestFormValidator(ExpenseRequestModel()));
   });
 
   void _verifyNoMoreInteractionsOnAllMocks() {
@@ -101,7 +104,7 @@ main() {
 
   test("notify view to reset all errors when start sending new expense request", () async {
     when(() => executor.execute(any())).thenAnswer((invocation) => Future.value(true));
-    var expenseRequest = getExpenseRequest();
+    var expenseRequest = getValidExpenseRequestModel();
     expenseRequest.selectedMainCategory = null;
 
     await presenter.sendExpenseRequest(expenseRequest);
@@ -114,54 +117,99 @@ main() {
   });
 
   test(
-      "notify missing main category when try to send expense request with missed main category data",
+      "validate missing main category when try to send expense request with missed main category value",
       () async {
     when(() => executor.execute(any())).thenAnswer((invocation) => Future.value(true));
-    var expenseRequest = getExpenseRequest();
+    var expenseRequest = getValidExpenseRequestModel();
     expenseRequest.selectedMainCategory = null;
 
     await presenter.sendExpenseRequest(expenseRequest);
 
-    verifyInOrder([
-      view.resetErrors,
-      view.notifyMissingMainCategory,
-    ]);
+    verify(view.resetErrors);
+    var verificationResult = verify(() => view.notifyValidationErrors(captureAny()));
+    verificationResult.called(1);
+    verificationResult.captured[0].mainCategoryMissingError = "Please select a type";
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("notify missing sub category when try to send expense request with missed sub category data",
+  test(
+      "validate missing sub category when try to send expense request with missed sub category value",
       () async {
     when(() => executor.execute(any())).thenAnswer((invocation) => Future.value(true));
-    var expenseRequest = getExpenseRequestWithMissedSubCategory();
+    var expenseRequest = getValidExpenseRequestModel();
     expenseRequest.selectedSubCategory = null;
 
     await presenter.sendExpenseRequest(expenseRequest);
 
-    verifyInOrder([
-      view.resetErrors,
-      view.notifyMissingSubCategory,
-    ]);
+    verify(view.resetErrors);
+    var verificationResult = verify(() => view.notifyValidationErrors(captureAny()));
+    verificationResult.called(1);
+    verificationResult.captured[0].subCategoryMissingError = "Please select a sub type";
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("notify missing project when try to send expense request with missed project data",
+  test("validate missing project when try to send expense request with missed project value",
       () async {
     when(() => executor.execute(any())).thenAnswer((invocation) => Future.value(true));
-    var expenseRequest = getExpenseRequestWithMissedProject();
-    expenseRequest.selectedSubCategory = null;
+    var expenseRequest = getValidExpenseRequestModel();
+    expenseRequest.selectedProject = null;
 
     await presenter.sendExpenseRequest(expenseRequest);
 
-    verifyInOrder([
-      view.resetErrors,
-      view.notifyMissingProject,
-    ]);
+    verify(view.resetErrors);
+    var verificationResult = verify(() => view.notifyValidationErrors(captureAny()));
+    verificationResult.called(1);
+    verificationResult.captured[0].projectMissingError = "Please select a project";
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("validate missing amount when try to send expense request with un valid amount value",
+      () async {
+    when(() => executor.execute(any())).thenAnswer((invocation) => Future.value(true));
+    var expenseRequest = getValidExpenseRequestModel();
+    expenseRequest.setAmount("0");
+
+    await presenter.sendExpenseRequest(expenseRequest);
+
+    verify(view.resetErrors);
+    var verificationResult = verify(() => view.notifyValidationErrors(captureAny()));
+    verificationResult.called(1);
+    verificationResult.captured[0].amountMissingError = "Please enter an amount";
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("validate missing quantity when try to send expense request with un valid quantity value",
+      () async {
+    when(() => executor.execute(any())).thenAnswer((invocation) => Future.value(true));
+    var expenseRequest = getValidExpenseRequestModel();
+    expenseRequest.setQuantity("0");
+
+    await presenter.sendExpenseRequest(expenseRequest);
+
+    verify(view.resetErrors);
+    var verificationResult = verify(() => view.notifyValidationErrors(captureAny()));
+    verificationResult.called(1);
+    verificationResult.captured[0].quantityMissingError = "Please enter a quantity";
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("validate missing file when try to send expense request with out attchment", () async {
+    when(() => executor.execute(any())).thenAnswer((invocation) => Future.value(true));
+    var expenseRequest = getValidExpenseRequestModel();
+    expenseRequest.file = null;
+
+    await presenter.sendExpenseRequest(expenseRequest);
+
+    verify(view.resetErrors);
+    var verificationResult = verify(() => view.notifyValidationErrors(captureAny()));
+    verificationResult.called(1);
+    verificationResult.captured[0].fileMissingError = "Please attach a document";
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
   test("send expense request successfully", () async {
     when(() => executor.execute(any())).thenAnswer((invocation) => Future.value(true));
-    var expenseRequest = getExpenseRequest();
+    var expenseRequest = getValidExpenseRequestModel();
 
     await presenter.sendExpenseRequest(expenseRequest);
 
@@ -176,7 +224,7 @@ main() {
 
   test("send expense request fails and throw exception", () async {
     when(() => executor.execute(any())).thenAnswer((invocation) => throw FailedToSaveRequest());
-    var expenseRequest = getExpenseRequest();
+    var expenseRequest = getValidExpenseRequestModel();
 
     await presenter.sendExpenseRequest(expenseRequest);
 
