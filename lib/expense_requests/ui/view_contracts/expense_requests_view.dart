@@ -1,4 +1,5 @@
 import 'package:wallpost/expense_requests/entities/expense_category.dart';
+import 'package:wallpost/expense_requests/ui/models/expense_request_form_validator.dart';
 
 abstract class ExpenseRequestsView {
 
@@ -39,11 +40,7 @@ abstract class ExpenseRequestsView {
 
   void resetErrors();
 
-  void notifyMissingMainCategory();
-
-  void notifyMissingSubCategory();
-
-  void notifyMissingProject();
+  void notifyValidationErrors(ExpenseRequestFormValidator validator);
 
   void showLoader();
 
