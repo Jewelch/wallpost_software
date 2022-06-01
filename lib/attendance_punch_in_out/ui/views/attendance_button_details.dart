@@ -407,9 +407,7 @@ class _AttendanceButtonDetailsScreenState
       message: " Do you really want to punch out? ",
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () {
-        presenter.markPunchOut(isLocationValid: true);
-      },
+      buttonTwoOnPressed:()=> presenter.markPunchOut(isLocationValid: true)
     );
   }
 
@@ -661,27 +659,20 @@ class _AttendanceButtonDetailsScreenState
   void doRefresh() {}
 
   @override
-  void showAlertToMarkAttendanceWithInvalidLocation(
-      bool isForPunchIn, String title, String message) {
+  void showAlertToMarkAttendanceWithInvalidLocation(bool isForPunchIn, String title, String message) {
     Alert.showSimpleAlertWithButtons(
       context: context,
       title: title,
       message: message,
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () {
-        if (isForPunchIn) {
-          presenter.markPunchIn(isLocationValid: true);
-        } else {
-          presenter.markPunchOut(isLocationValid: true);
-        }
-      },
+      buttonTwoOnPressed: () => isForPunchIn ? presenter.markPunchIn(isLocationValid: false) : presenter.markPunchOut(isLocationValid: false),
     );
   }
 
   @override
   void showErrorMessage(String title,String message) {
-    // TODO: implement showErrorMessage
+    Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 
   //MARK: Util functions

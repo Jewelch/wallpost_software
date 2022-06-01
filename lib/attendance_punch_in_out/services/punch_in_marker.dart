@@ -21,6 +21,7 @@ class PunchInMarker {
     if (isLoading) return;
 
     var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
+    print(employee.v1Id);
     var url = AttendanceUrls.punchInUrl(employee.companyId, employee.v1Id, isLocationValid);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
@@ -32,6 +33,7 @@ class PunchInMarker {
       isLoading = false;
       return;
     } on APIException catch (exception) {
+      print(exception);
       isLoading = false;
       throw exception;
     }

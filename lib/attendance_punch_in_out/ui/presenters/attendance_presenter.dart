@@ -121,7 +121,7 @@ class AttendancePresenter {
   Future<void> _loadPunchedOutDetails(AttendanceDetails attendanceDetails) async {
     _attendanceLocation = await getLocation();
     if (_attendanceLocation == null) return;
-
+    //basicView.showCountDownView(30);
     _showPunchInTime(attendanceDetails);
     _showPunchOutTime(attendanceDetails);
     detailedView?.hideBreakButton();
@@ -195,14 +195,8 @@ class AttendancePresenter {
       loadAttendanceDetails();
       loadAttendanceReport();
     } on WPException catch (e) {
-      //TODO: Check error code after Niyas confirms the changes
-      if (e is ServerSentException && e.errorCode == 200) {
-        //location is invalid - show location invalid alert
-        basicView.showAlertToMarkAttendanceWithInvalidLocation(
-            true,
-            "Invalid location",
-            "You are not allowed to punch in outside the office location. " +
-                "Doing so will affect your performance. Would you still like to punch in?");
+      if (e is ServerSentException ) {
+        basicView.showAlertToMarkAttendanceWithInvalidLocation(true, "Invalid location", e.userReadableMessage);
       } else {
         basicView.showErrorMessage("Punch in failed", e.userReadableMessage);
       }
@@ -215,13 +209,12 @@ class AttendancePresenter {
       loadAttendanceDetails();
       loadAttendanceReport();
     } on WPException catch (e) {
-      if (e is ServerSentException && e.errorCode == 200) {
-        //TODO: Check error code after Niyas confirms the changes
-        basicView.showAlertToMarkAttendanceWithInvalidLocation(
-            false,
-            "Invalid location",
-            "You are not allowed to punch out outside the office location. " +
-                "Doing so will affect your performance. Would you still like to punch out?");
+      if (e is ServerSentException) {
+        if(e.userReadableMessage.contains("5 minutes")){
+          basicView.showErrorMessage("Not allowed to punch out", e.userReadableMessage);
+        }else{
+          basicView.showAlertToMarkAttendanceWithInvalidLocation(false, "Invalid location", e.userReadableMessage);
+        }
       } else {
         basicView.showErrorMessage("Punch out failed", e.userReadableMessage);
       }
