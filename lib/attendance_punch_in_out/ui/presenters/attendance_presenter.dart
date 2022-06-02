@@ -9,7 +9,6 @@ import 'package:wallpost/attendance_punch_in_out/exception/location_permission_d
 import 'package:wallpost/attendance_punch_in_out/exception/location_permission_permanently_denied_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/services/attendance_details_provider.dart';
-import 'package:wallpost/attendance_punch_in_out/services/attendance_location_validator.dart';
 import 'package:wallpost/attendance_punch_in_out/services/attendance_report_provider.dart';
 import 'package:wallpost/attendance_punch_in_out/services/break_end_marker.dart';
 import 'package:wallpost/attendance_punch_in_out/services/break_start_marker.dart';
@@ -24,7 +23,6 @@ class AttendancePresenter {
   final AttendanceDetailedView? detailedView;
   final AttendanceDetailsProvider _attendanceDetailsProvider;
   final LocationProvider _locationProvider;
-  final AttendanceLocationValidator _attendanceLocationValidator;
   final PunchOutMarker _punchOutMarker;
   final PunchInMarker _punchInMarker;
   final BreakStartMarker _breakStartMarker;
@@ -40,7 +38,6 @@ class AttendancePresenter {
   AttendancePresenter({required this.basicView, this.detailedView})
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
         _locationProvider = LocationProvider(),
-        _attendanceLocationValidator = AttendanceLocationValidator(),
         _punchInMarker = PunchInMarker(),
         _punchOutMarker = PunchOutMarker(),
         _breakStartMarker = BreakStartMarker(),
@@ -53,7 +50,6 @@ class AttendancePresenter {
     this.detailedView,
     this._attendanceDetailsProvider,
     this._locationProvider,
-    this._attendanceLocationValidator,
     this._punchInMarker,
     this._punchOutMarker,
     this._breakStartMarker,
@@ -121,7 +117,7 @@ class AttendancePresenter {
   Future<void> _loadPunchedOutDetails(AttendanceDetails attendanceDetails) async {
     _attendanceLocation = await getLocation();
     if (_attendanceLocation == null) return;
-    //basicView.showCountDownView(30);
+
     _showPunchInTime(attendanceDetails);
     _showPunchOutTime(attendanceDetails);
     detailedView?.hideBreakButton();
@@ -138,7 +134,7 @@ class AttendancePresenter {
 
       if (!attendanceDetails.canMarkAttendanceNow) {
         basicView.showCountDownView(attendanceDetails.secondsTillPunchIn.toInt());
-        return false;
+        return true;
       }
 
       return true;
@@ -160,7 +156,6 @@ class AttendancePresenter {
     } on LocationAcquisitionFailedException {
       basicView.showErrorAndRetryView("Getting location failed");
     }
-
     return null;
   }
 
@@ -192,8 +187,9 @@ class AttendancePresenter {
   Future<void> markPunchIn({required bool isLocationValid}) async {
     try {
       await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
-      loadAttendanceDetails();
-      loadAttendanceReport();
+
+     // loadAttendanceDetails();
+    //  loadAttendanceReport();
     } on WPException catch (e) {
       if (e is ServerSentException ) {
         basicView.showAlertToMarkAttendanceWithInvalidLocation(true, "Invalid location", e.userReadableMessage);
@@ -206,15 +202,16 @@ class AttendancePresenter {
   Future<void> markPunchOut({required bool isLocationValid}) async {
     try {
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
-      loadAttendanceDetails();
-      loadAttendanceReport();
+
+     // loadAttendanceDetails();
+    //  loadAttendanceReport();
     } on WPException catch (e) {
       if (e is ServerSentException) {
-        if(e.userReadableMessage.contains("5 minutes")){
+        if(e.userReadableMessage.contains("5 minutes"))
           basicView.showErrorMessage("Not allowed to punch out", e.userReadableMessage);
-        }else{
+        else
           basicView.showAlertToMarkAttendanceWithInvalidLocation(false, "Invalid location", e.userReadableMessage);
-        }
+
       } else {
         basicView.showErrorMessage("Punch out failed", e.userReadableMessage);
       }
