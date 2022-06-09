@@ -26,7 +26,7 @@ class AttendanceUrls {
   }
 
   static String punchOutUrl(String companyId, String employeeId, String attendanceId, bool isLocationValid) {
-    var url = '${BaseUrls.hrUrlV2()}/widget/attendance/4xKmQeR32hn9fyb/punch_out';
+    var url = '${BaseUrls.hrUrlV2()}/widget/attendance/$attendanceId/punch_out';
     if (isLocationValid == false) url += '?punchout_invalid_location=Y';
     return url;
   }

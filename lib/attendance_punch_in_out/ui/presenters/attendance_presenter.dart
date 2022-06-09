@@ -9,7 +9,6 @@ import 'package:wallpost/attendance_punch_in_out/exception/location_permission_d
 import 'package:wallpost/attendance_punch_in_out/exception/location_permission_permanently_denied_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/services/attendance_details_provider.dart';
-import 'package:wallpost/attendance_punch_in_out/services/attendance_location_validator.dart';
 import 'package:wallpost/attendance_punch_in_out/services/attendance_report_provider.dart';
 import 'package:wallpost/attendance_punch_in_out/services/break_end_marker.dart';
 import 'package:wallpost/attendance_punch_in_out/services/break_start_marker.dart';
@@ -24,7 +23,6 @@ class AttendancePresenter {
   final AttendanceDetailedView? detailedView;
   final AttendanceDetailsProvider _attendanceDetailsProvider;
   final LocationProvider _locationProvider;
-  final AttendanceLocationValidator _attendanceLocationValidator;
   final PunchOutMarker _punchOutMarker;
   final PunchInMarker _punchInMarker;
   final BreakStartMarker _breakStartMarker;
@@ -40,7 +38,6 @@ class AttendancePresenter {
   AttendancePresenter({required this.basicView, this.detailedView})
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
         _locationProvider = LocationProvider(),
-        _attendanceLocationValidator = AttendanceLocationValidator(),
         _punchInMarker = PunchInMarker(),
         _punchOutMarker = PunchOutMarker(),
         _breakStartMarker = BreakStartMarker(),
@@ -53,7 +50,6 @@ class AttendancePresenter {
     this.detailedView,
     this._attendanceDetailsProvider,
     this._locationProvider,
-    this._attendanceLocationValidator,
     this._punchInMarker,
     this._punchOutMarker,
     this._breakStartMarker,
@@ -138,7 +134,7 @@ class AttendancePresenter {
 
       if (!attendanceDetails.canMarkAttendanceNow) {
         basicView.showCountDownView(attendanceDetails.secondsTillPunchIn.toInt());
-        return false;
+        return true;
       }
 
       return true;
@@ -160,7 +156,6 @@ class AttendancePresenter {
     } on LocationAcquisitionFailedException {
       basicView.showErrorAndRetryView("Getting location failed");
     }
-
     return null;
   }
 
@@ -187,69 +182,36 @@ class AttendancePresenter {
     detailedView?.showPunchOutTime(attendanceDetails.punchOutTimeString);
   }
 
-  //MARK: Functions to check location is valid to mark attendance
-
-  Future<void> isValidatedLocation(bool isForPunchIn) async {
-    var isValidateLocation = await _validateAttendanceLocation(isForPunchIn);
-    if (!isValidateLocation) return;
-
-    if (isForPunchIn)
-      await markPunchIn(isLocationValid: true);
-    else
-      await markPunchOut(true);
-  }
-
-  Future<bool> _validateAttendanceLocation(bool isForPunchIn) async {
-    try {
-      var attendanceLocationValidator =
-          await _attendanceLocationValidator.validateLocation(_attendanceLocation!, isForPunchIn: isForPunchIn);
-
-      if (!attendanceLocationValidator) {
-        return false;
-      }
-
-      return true;
-    } on WPException catch (e) {
-      basicView.showErrorMessage("Failed to validate your location", e.userReadableMessage);
-      return false;
-    }
-  }
-
 //MARK: Functions to mark attendance
 
   Future<void> markPunchIn({required bool isLocationValid}) async {
     try {
       await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
-      loadAttendanceDetails();
-      loadAttendanceReport();
+
+     // loadAttendanceDetails();
+    //  loadAttendanceReport();
     } on WPException catch (e) {
-      //TODO: Check error code after Niyas confirms the changes
-      if (e is ServerSentException && e.errorCode == 111) {
-        //location is invalid - show location invalid alert
-        basicView.showAlertToInvalidLocation(
-            true,
-            "Invalid location",
-            "You are not allowed to mark attendance outside the office location. " +
-                "Doing so will affect your performance. Would you still like to mark your attendance?");
+      if (e is ServerSentException ) {
+        basicView.showAlertToMarkAttendanceWithInvalidLocation(true, "Invalid location", e.userReadableMessage);
       } else {
         basicView.showErrorMessage("Punch in failed", e.userReadableMessage);
       }
     }
   }
 
-  Future<void> markPunchOut(bool isLocationValid) async {
+  Future<void> markPunchOut({required bool isLocationValid}) async {
     try {
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
-      loadAttendanceDetails();
-      loadAttendanceReport();
+
+     // loadAttendanceDetails();
+    //  loadAttendanceReport();
     } on WPException catch (e) {
-      if (e is ServerSentException && e.errorCode == 111) {
-        //TODO: Check error code after Niyas confirms the changes
-        basicView.showAlertToInvalidLocation(
-            true,
-            "Invalid location",
-            "You are not allowed to mark attendance outside the office location. " +
-                "Doing so will affect your performance. Would you still like to mark your attendance?");
+      if (e is ServerSentException) {
+        if(e.userReadableMessage.contains("5 minutes"))
+          basicView.showErrorMessage("Not allowed to punch out", e.userReadableMessage);
+        else
+          basicView.showAlertToMarkAttendanceWithInvalidLocation(false, "Invalid location", e.userReadableMessage);
+
       } else {
         basicView.showErrorMessage("Punch out failed", e.userReadableMessage);
       }

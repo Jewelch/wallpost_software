@@ -9,6 +9,10 @@ class Money {
     _amount = amount;
   }
 
+  Money.fromString(String amount) {
+    _amount = num.parse(amount);
+  }
+
   //MARK: Functions to perform math operations
 
   Money add(Money other) {
@@ -48,4 +52,3 @@ class Money {
     return _amount.toStringAsFixed(2);
   }
 }
-

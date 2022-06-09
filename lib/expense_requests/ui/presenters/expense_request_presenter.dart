@@ -4,6 +4,7 @@ import 'package:wallpost/expense_requests/entities/expense_category.dart';
 import 'package:wallpost/expense_requests/entities/expense_request_form.dart';
 import 'package:wallpost/expense_requests/services/expense_categories_provider.dart';
 import 'package:wallpost/expense_requests/services/expense_request_creator.dart';
+import 'package:wallpost/expense_requests/ui/models/expense_request_form_validator.dart';
 import 'package:wallpost/expense_requests/ui/models/expense_request_model.dart';
 import 'package:wallpost/expense_requests/ui/view_contracts/expense_requests_view.dart';
 
@@ -69,22 +70,10 @@ class ExpenseRequestPresenter {
 
   bool _isExpenseRequestValid(ExpenseRequestModel expenseRequest) {
     _view.resetErrors();
-    if (expenseRequest.selectedMainCategory == null) {
-      _view.notifyMissingMainCategory();
-      return false;
-    }
-    if (expenseRequest.selectedSubCategory == null &&
-        expenseRequest.selectedMainCategory!.subCategories.isNotEmpty) {
-      _view.notifyMissingSubCategory();
-      return false;
-    }
-    if (expenseRequest.selectedProject == null &&
-        expenseRequest.selectedMainCategory!.projects.isNotEmpty) {
-      _view.notifyMissingProject();
-      return false;
-    }
-
-    return true;
+    var validator = ExpenseRequestFormValidator(expenseRequest);
+    bool isValid = validator.validate();
+    if (!isValid) _view.notifyValidationErrors(validator);
+    return isValid;
   }
 
   ExpenseRequestForm _getExpenseForm(ExpenseRequestModel expenseRequest) {
