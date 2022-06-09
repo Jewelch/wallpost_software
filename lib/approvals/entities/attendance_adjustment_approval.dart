@@ -1,13 +1,10 @@
-import 'package:dio/dio.dart';
 import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
-import 'package:wallpost/approvals/entities/approval.dart';
 
 import '../../_shared/exceptions/mapping_exception.dart';
+import 'approval.dart';
 
-class AttendanceAdjustmentApproval implements JSONInitializable{
-  late num _id;
-  late num _companyId;
+class AttendanceAdjustmentApproval extends Approval implements JSONInitializable {
   late String _attendanceId;
   late num _empId;
   late String _name;
@@ -20,30 +17,25 @@ class AttendanceAdjustmentApproval implements JSONInitializable{
   late String _adjustedStatus;
   late String _reason;
 
-
-  AttendanceAdjustmentApproval.fromJson(Map<String, dynamic> jsonMap){
-
-    try{
-      var sift = Sift();
-
-      _attendanceId = sift.readStringFromMap(jsonMap, 'attendance_id');
-      _empId = sift.readNumberFromMap(jsonMap, 'emp_id') ;
-      _name =sift.readStringFromMap(jsonMap, 'name') ;
-      _date = sift.readStringFromMap(jsonMap, 'date');
-      _punchIn =sift.readStringFromMapWithDefaultValue(jsonMap, 'punch_in',null);
-      _punchOut = sift.readStringFromMapWithDefaultValue(jsonMap, 'punch_out');
-      _workStatus =sift.readStringFromMapWithDefaultValue(jsonMap, 'work_status',null) ;
-      _adjustedPunchIn = sift.readStringFromMapWithDefaultValue(jsonMap, 'adjusted_punchin',null);
-      _adjustedPunchOut =sift.readStringFromMap(jsonMap, 'adjusted_punchout') ;
-      _adjustedStatus = sift.readStringFromMap(jsonMap, 'adjusted_status') ;
-      _reason =sift.readStringFromMap(jsonMap, 'reason') ;
+  AttendanceAdjustmentApproval.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+    var sift = Sift();
+    try {
+      var detailsMap = sift.readMapFromMap(jsonMap, 'details');
+      _attendanceId = sift.readStringFromMap(detailsMap, 'attendance_id');
+      _empId = sift.readNumberFromMap(detailsMap, 'emp_id');
+      _name = sift.readStringFromMap(detailsMap, 'name');
+      _date = sift.readStringFromMap(detailsMap, 'date');
+      _punchIn = sift.readStringFromMapWithDefaultValue(detailsMap, 'punch_in', null);
+      _punchOut = sift.readStringFromMapWithDefaultValue(detailsMap, 'punch_out');
+      _workStatus = sift.readStringFromMapWithDefaultValue(detailsMap, 'work_status', null);
+      _adjustedPunchIn = sift.readStringFromMapWithDefaultValue(detailsMap, 'adjusted_punchin', null);
+      _adjustedPunchOut = sift.readStringFromMap(detailsMap, 'adjusted_punchout');
+      _adjustedStatus = sift.readStringFromMap(detailsMap, 'adjusted_status');
+      _reason = sift.readStringFromMap(detailsMap, 'reason');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast AttendanceAdjustmentApproval response. Error message - ${e.errorMessage}');
     }
-
   }
-
-
 
   String get attendanceId => _attendanceId;
 
@@ -66,5 +58,4 @@ class AttendanceAdjustmentApproval implements JSONInitializable{
   String get adjustedStatus => _adjustedStatus;
 
   String get reason => _reason;
-
 }

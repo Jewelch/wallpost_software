@@ -1,48 +1,51 @@
-
-
 import 'package:sift/Sift.dart';
-import 'package:wallpost/approvals/entities/approval.dart';
 
 import '../../_shared/exceptions/mapping_exception.dart';
 import '../../_shared/json_serialization_base/json_initializable.dart';
+import 'approval.dart';
 
-class ExpenseRequestApproval  implements JSONInitializable{
-  late num _id;
-  late num _companyId;
-   late String  _expenseRequestNumber ;
-   late String _totalAmount ;
-   late String _createdAt ;
-   late num _createdById ;
-   late String _createdByName ;
-   late String? _mainCategory ;
-   late String? _subCategory ;
-   late String _description ;
-   late String _status ;
-   late String _statusMessage ;
-   late String _statusUser ;
+class ExpenseRequestApproval extends Approval implements JSONInitializable {
+  late String _expenseRequestNumber;
 
-   ExpenseRequestApproval.fromJson(Map<String, dynamic> jsonMap){
-     try {
-       var sift = Sift();
+  late String _totalAmount;
 
-       _expenseRequestNumber =
-           sift.readStringFromMap(jsonMap, 'expense_request_no');
-       _totalAmount = sift.readStringFromMap(jsonMap, 'total_amount');
-       _createdAt = sift.readStringFromMap(jsonMap, 'created_at');
-       _createdById = sift.readNumberFromMap(jsonMap, 'created_by_id');
-       _createdByName = sift.readStringFromMap(jsonMap, 'created_by_name');
-       _mainCategory = sift.readStringFromMapWithDefaultValue(jsonMap, 'main_category',null);
-       _subCategory = sift.readStringFromMapWithDefaultValue(jsonMap, 'sub_category',null);
-       _description = sift.readStringFromMap(jsonMap, 'description');
-       _status = sift.readStringFromMap(jsonMap, 'status');
-       _statusMessage = sift.readStringFromMap(jsonMap, 'status_message');
-       _statusUser = sift.readStringFromMap(jsonMap, 'status_user');
-     } on SiftException catch (e) {
-       throw MappingException('Failed to cast ExpenseRequestApproval response. Error message - ${e.errorMessage}');
-     }
+  late String _createdAt;
 
-   }
+  late num _createdById;
 
+  late String _createdByName;
+
+  late String? _mainCategory;
+
+  late String? _subCategory;
+
+  late String _description;
+
+  late String _status;
+
+  late String _statusMessage;
+
+  late String _statusUser;
+
+  ExpenseRequestApproval.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+    try {
+      var sift = Sift();
+      var detailsMap = sift.readMapFromMap(jsonMap, 'details');
+      _expenseRequestNumber = sift.readStringFromMap(detailsMap, 'expense_request_no');
+      _totalAmount = sift.readStringFromMap(detailsMap, 'total_amount');
+      _createdAt = sift.readStringFromMap(detailsMap, 'created_at');
+      _createdById = sift.readNumberFromMap(detailsMap, 'created_by_id');
+      _createdByName = sift.readStringFromMap(detailsMap, 'created_by_name');
+      _mainCategory = sift.readStringFromMapWithDefaultValue(detailsMap, 'main_category', null);
+      _subCategory = sift.readStringFromMapWithDefaultValue(detailsMap, 'sub_category', null);
+      _description = sift.readStringFromMap(detailsMap, 'description');
+      _status = sift.readStringFromMap(detailsMap, 'status');
+      _statusMessage = sift.readStringFromMap(detailsMap, 'status_message');
+      _statusUser = sift.readStringFromMap(detailsMap, 'status_user');
+    } on SiftException catch (e) {
+      throw MappingException('Failed to cast ExpenseRequestApproval response. Error message - ${e.errorMessage}');
+    }
+  }
 
   String get expenseRequestNumber => _expenseRequestNumber;
 
@@ -65,5 +68,4 @@ class ExpenseRequestApproval  implements JSONInitializable{
   String get statusMessage => _statusMessage;
 
   String get statusUser => _statusUser;
-
 }

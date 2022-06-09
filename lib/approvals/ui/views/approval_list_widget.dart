@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
+import 'package:wallpost/approvals/entities/attendance_adjustment_approval.dart';
+import 'package:wallpost/approvals/entities/expense_request_approval.dart';
+import 'package:wallpost/approvals/entities/leave_approval.dart';
 import 'package:wallpost/approvals/ui/presenters/approval_list_widget_presenter.dart';
 import 'package:wallpost/approvals/ui/view_contracts/approval_list_widget_view.dart';
 
@@ -20,7 +23,8 @@ class ApprovalsListWidget extends StatefulWidget {
   State<ApprovalsListWidget> createState() => _ApprovalsListWidgetState();
 }
 
-class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleTickerProviderStateMixin
+class _ApprovalsListWidgetState extends State<ApprovalsListWidget>
+    with SingleTickerProviderStateMixin
     implements ApprovalListWidgetView {
   late ApprovalListWidgetPresenter _presenter;
   late ScrollController _scrollController;
@@ -56,7 +60,6 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
     _tabController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -214,15 +217,16 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
 
   Widget _item(Approval approval) {
     if (approval.isLeaveApproval()) {
-      return LeaveApprovalTile(approval.details);
+      return LeaveApprovalTile(approval as LeaveApproval);
     }
 
     if (approval.isExpReqApp()) {
-      return ExpenseRequestApprovalTile(approval.details);
+      return ExpenseRequestApprovalTile(approval as ExpenseRequestApproval);
     }
 
     if (approval.isAtAdApproval()) {
-      return AttendanceAdjustmentApprovalTile(approval.details);
+      return AttendanceAdjustmentApprovalTile(
+          approval as AttendanceAdjustmentApproval);
     }
     return SizedBox();
   }
@@ -251,8 +255,7 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _presenter.loadApprovals();
       }
     });

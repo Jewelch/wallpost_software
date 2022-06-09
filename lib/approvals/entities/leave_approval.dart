@@ -1,42 +1,40 @@
 import 'package:sift/sift.dart';
-import 'package:wallpost/approvals/entities/approval.dart';
+
 import '../../_shared/exceptions/mapping_exception.dart';
 import '../../_shared/json_serialization_base/json_initializable.dart';
+import 'approval.dart';
 
-class LeaveApproval  implements JSONInitializable{
-  //need leave id and other things that are needed for approval - check with niyas
+class LeaveApproval extends Approval implements JSONInitializable {
   late num _employeeId; //string
-  late num  _leaveDays;
+  late num _leaveDays;
   late String _leaveFrom; // date
   late String _leaveTo; // date
-  late num _status; //TODO: dynamic? - maybe string?
-  late String _attachDoc; //_attachDocUrl
+  late num _status;
+  late String _attachDoc;
   late String _createdOn; // date
-  late String _approveRequestBy; // what is this? check with niyas
-  late String _decisionStatus; //nullable?
-  late String? _rejectMessage; //TODO: dynamic? Maybe string?
+  late String _approveRequestBy;
+  late String _decisionStatus;
+  late String? _rejectMessage;
 
-  LeaveApproval.fromJson(Map<String, dynamic> jsonMap) {
+  LeaveApproval.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     try {
       var sift = Sift();
 
-      _employeeId = sift.readNumberFromMap(jsonMap, 'employee_id');
-      _leaveDays = sift.readNumberFromMap(jsonMap, 'leave_days');
-      _leaveFrom = sift.readStringFromMap(jsonMap, 'leave_from');
-      _leaveTo = sift.readStringFromMap(jsonMap, 'leave_to');
-      _status = sift.readNumberFromMap(jsonMap, 'status');
-      _attachDoc = sift.readStringFromMap(jsonMap, 'attach_doc');
-      _createdOn = sift.readStringFromMap(jsonMap, 'created_on');
-      _approveRequestBy = sift.readStringFromMap(jsonMap, 'approve_request_by');
-      _decisionStatus = sift.readStringFromMap(jsonMap, 'decision_status');
-      _rejectMessage = sift.readStringFromMapWithDefaultValue(jsonMap, 'reject_message',null);
-
-
+      var detailsMap = sift.readMapFromMap(jsonMap, 'details');
+      _employeeId = sift.readNumberFromMap(detailsMap, 'employee_id');
+      _leaveDays = sift.readNumberFromMap(detailsMap, 'leave_days');
+      _leaveFrom = sift.readStringFromMap(detailsMap, 'leave_from');
+      _leaveTo = sift.readStringFromMap(detailsMap, 'leave_to');
+      _status = sift.readNumberFromMap(detailsMap, 'status');
+      _attachDoc = sift.readStringFromMap(detailsMap, 'attach_doc');
+      _createdOn = sift.readStringFromMap(detailsMap, 'created_on');
+      _approveRequestBy = sift.readStringFromMap(detailsMap, 'approve_request_by');
+      _decisionStatus = sift.readStringFromMap(detailsMap, 'decision_status');
+      _rejectMessage = sift.readStringFromMapWithDefaultValue(detailsMap, 'reject_message', null);
     } on SiftException catch (e) {
       throw MappingException('Failed to cast LeaveApproval response. Error message - ${e.errorMessage}');
     }
   }
-
 
   num get employeeId => _employeeId;
 
@@ -57,5 +55,4 @@ class LeaveApproval  implements JSONInitializable{
   String get decisionStatus => _decisionStatus;
 
   String? get rejectMessage => _rejectMessage;
-
 }
