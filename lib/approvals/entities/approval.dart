@@ -7,50 +7,32 @@ import '../../_shared/json_serialization_base/json_initializable.dart';
 import 'attendance_adjustment_approval.dart';
 
 class Approval extends JSONInitializable {
-  late num _id;
-  late num _companyId;
-  late dynamic _details;
+  late String _id;
+  late String _companyId;
 
-  Approval.fromJson(dynamic json) : super.fromJson(json) {
-    var sift = Sift();
+  Approval.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
     try {
-      var approvalType = '${sift.readStringFromMap(json, 'approvalType')}';
-      _id = sift.readNumberFromMap(json, 'id');
-      _companyId = sift.readNumberFromMap(json, 'company_id');
-      var detailsMap = sift.readMapFromMap(json , 'details');
-      switch (approvalType) {
-        case "leaveApproval":
-          _details = LeaveApproval.fromJson(detailsMap);
-          break;
-        case "expenseRequestApproval":
-          _details = ExpenseRequestApproval.fromJson(detailsMap);
-          break;
-        case "attendanceAdjustment":
-          _details = AttendanceAdjustmentApproval.fromJson(detailsMap);
-          break;
-      }
+      var sift = Sift();
+      _id = '${sift.readNumberFromMap(jsonMap, 'id')}';
+      _companyId = '${sift.readNumberFromMap(jsonMap, 'company_id')}';
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Approval response. Error message - ${e.errorMessage}');
     }
   }
 
-  // String? get approvalType => _approvalType;
-
-  num get id => _id;
-
-  num get companyId => _companyId;
-
-  dynamic get details => _details;
-
   bool isLeaveApproval() {
-    return _details is LeaveApproval;
+    return this is LeaveApproval;
   }
 
   bool isAtAdApproval() {
-    return _details is AttendanceAdjustmentApproval;
+    return this is AttendanceAdjustmentApproval;
   }
 
   bool isExpReqApp() {
-    return _details is ExpenseRequestApproval;
+    return this is ExpenseRequestApproval;
   }
+
+  String get id => _id;
+
+  String get companyId => _companyId;
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
+import 'package:wallpost/approvals/entities/attendance_adjustment_approval.dart';
+import 'package:wallpost/approvals/entities/expense_request_approval.dart';
+import 'package:wallpost/approvals/entities/leave_approval.dart';
 import 'package:wallpost/approvals/ui/presenters/approval_list_widget_presenter.dart';
 import 'package:wallpost/approvals/ui/view_contracts/approval_list_widget_view.dart';
 
@@ -20,7 +23,8 @@ class ApprovalsListWidget extends StatefulWidget {
   State<ApprovalsListWidget> createState() => _ApprovalsListWidgetState();
 }
 
-class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleTickerProviderStateMixin
+class _ApprovalsListWidgetState extends State<ApprovalsListWidget>
+    with SingleTickerProviderStateMixin
     implements ApprovalListWidgetView {
   late ApprovalListWidgetPresenter _presenter;
   late ScrollController _scrollController;
@@ -56,7 +60,6 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
     _tabController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -97,8 +100,7 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
                         indicatorSize: TabBarIndicatorSize.label,
                         indicator: const UnderlineTabIndicator(
                           insets: EdgeInsets.all(8.0),
-                          borderSide:
-                              BorderSide(color: Colors.white, width: 3.0),
+                          borderSide: BorderSide(color: Colors.white, width: 3.0),
                         ),
                         tabs: <Widget>[
                           Tab(
@@ -108,8 +110,7 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
                                 'Actions ($actionCount)',
                                 maxLines: 1,
                                 style: TextStyles.subTitleTextStyle.copyWith(
-                                    color:
-                                        index == 0 ? Colors.white : Colors.grey,
+                                    color: index == 0 ? Colors.white : Colors.grey,
                                     fontSize: index == 0 ? 14.0 : 13.0,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -126,12 +127,10 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
                 children: [
                   Text(
                     "All",
-                    style: TextStyles.titleTextStyle
-                        .copyWith(color: Colors.white, fontSize: 18.0),
+                    style: TextStyles.titleTextStyle.copyWith(color: Colors.white, fontSize: 18.0),
                   ),
                   SizedBox(width: 10),
-                  SvgPicture.asset('assets/icons/right_arrow_icon.svg',
-                      height: 16, width: 16, color: Colors.white)
+                  SvgPicture.asset('assets/icons/right_arrow_icon.svg', height: 16, width: 16, color: Colors.white)
                 ],
               ),
             ),
@@ -159,9 +158,7 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               SvgPicture.asset('assets/icons/celebration.svg',
-                                  height: 24,
-                                  width: 24,
-                                  color: AppColors.screenBackgroundColor),
+                                  height: 24, width: 24, color: AppColors.screenBackgroundColor),
                               SizedBox(width: 15),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -169,13 +166,9 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
                                 children: [
                                   Text("Congrats!",
                                       style: TextStyles.screenTitleTextStyle
-                                          .copyWith(
-                                              color: Colors.white,
-                                              fontSize: 22.0,
-                                              fontWeight: FontWeight.w900)),
+                                          .copyWith(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.w900)),
                                   Text("All actions cleared so far.",
-                                      style: TextStyles.titleTextStyle
-                                          .copyWith(color: Colors.white)),
+                                      style: TextStyles.titleTextStyle.copyWith(color: Colors.white)),
                                 ],
                               )
                             ],
@@ -214,15 +207,15 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
 
   Widget _item(Approval approval) {
     if (approval.isLeaveApproval()) {
-      return LeaveApprovalTile(approval.details);
+      return LeaveApprovalTile(approval as LeaveApproval);
     }
 
     if (approval.isExpReqApp()) {
-      return ExpenseRequestApprovalTile(approval.details);
+      return ExpenseRequestApprovalTile(approval as ExpenseRequestApproval);
     }
 
     if (approval.isAtAdApproval()) {
-      return AttendanceAdjustmentApprovalTile(approval.details);
+      return AttendanceAdjustmentApprovalTile(approval as AttendanceAdjustmentApproval);
     }
     return SizedBox();
   }
@@ -251,8 +244,7 @@ class _ApprovalsListWidgetState  extends State<ApprovalsListWidget> with SingleT
 
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _presenter.loadApprovals();
       }
     });
