@@ -208,6 +208,7 @@ class _ApprovalsListWidgetState extends State<ApprovalsListWidget>
   Widget _item(Approval approval) {
     if (approval.isLeaveApproval()) {
       return LeaveApprovalTile(approval as LeaveApproval);
+
     }
 
     if (approval.isExpReqApp()) {

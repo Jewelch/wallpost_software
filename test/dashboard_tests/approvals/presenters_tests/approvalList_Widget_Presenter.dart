@@ -6,7 +6,6 @@ import 'package:wallpost/approvals/entities/approval.dart';
 import 'package:wallpost/approvals/services/approval_list_provider.dart';
 import 'package:wallpost/approvals/ui/presenters/approval_list_widget_presenter.dart';
 import 'package:wallpost/approvals/ui/view_contracts/approval_list_widget_view.dart';
-import '../../../_mocks/mock_company.dart';
 
 class MockApprovalListWidgetView extends Mock implements ApprovalListWidgetView {}
 
@@ -33,10 +32,10 @@ void main() {
   List<Approval> _approvalsList = [approval1, approval2];
 
   setUpAll(() {
-    when(() => approval1.id).thenReturn(1);
-    when(() => approval2.id).thenReturn(2);
-    when(() => approval1.companyId).thenReturn(1);
-    when(() => approval2.companyId).thenReturn(2);
+    when(() => approval1.id).thenReturn("1");
+    when(() => approval2.id).thenReturn("2");
+    when(() => approval1.companyId).thenReturn("1");
+    when(() => approval2.companyId).thenReturn("2");
   });
 
   void _resetAllMockInteractions() {
