@@ -188,8 +188,8 @@ class AttendancePresenter {
     try {
       await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
 
-     // loadAttendanceDetails();
-    //  loadAttendanceReport();
+      loadAttendanceDetails();
+      loadAttendanceReport();
     } on WPException catch (e) {
       if (e is ServerSentException ) {
         basicView.showAlertToMarkAttendanceWithInvalidLocation(true, "Invalid location", e.userReadableMessage);
@@ -203,8 +203,8 @@ class AttendancePresenter {
     try {
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
 
-     // loadAttendanceDetails();
-    //  loadAttendanceReport();
+      loadAttendanceDetails();
+      loadAttendanceReport();
     } on WPException catch (e) {
       if (e is ServerSentException) {
         if(e.userReadableMessage.contains("5 minutes"))

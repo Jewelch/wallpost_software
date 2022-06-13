@@ -357,7 +357,7 @@ class _AttendanceButtonDetailsScreenState
         color: AttendanceColors.disabledButtonColor,
         child: Center(
           child: Text(
-            "$timeLeft to punch in",
+            "$timeLeft\nto punch in",
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -600,6 +600,7 @@ class _AttendanceButtonDetailsScreenState
     var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(secondsTillPunchIn.toInt());
     _countDownTimeNotifier.notify(_remainingTimeToPunchInString);
 
+    _viewSelectorNotifier.notify(DATA_VIEW);
     _buttonTypeNotifier.notify(COUNT_DOWN_VIEW);
     _startCountDownTimer(secondsTillPunchIn);
   }
