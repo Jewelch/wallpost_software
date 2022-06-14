@@ -72,10 +72,6 @@ class AttendanceDetails  {
     return activeBreak.id;
   }
 
-  bool get isCannotPunchedIn {
-    return _punchInTime == null && _punchOutTime == null;
-  }
-
   bool get isNotPunchedIn {
     return _punchInTime == null && _canMarkAttendanceNow==true;
   }

@@ -160,32 +160,6 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('shows remaining time to punch in  when the user is not punched in and cannot punch in now', () async {
-    //given
-    var attendance = MockAttendanceDetails();
-    var attendanceLocation = MockAttendanceLocation();
-    when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-    when(() => attendance.isNotPunchedIn).thenReturn(true);
-    when(() => attendance.canMarkAttendancePermissionFromApp).thenReturn(true);
-    when(() => attendance.canMarkAttendanceNow).thenReturn(false);
-    when(() => attendance.secondsTillPunchIn).thenReturn(123);
-    when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(attendance));
-    when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.value(attendanceLocation));
-    when(() => mockLocationProvider.getLocationAddress(any())).thenAnswer((_) => Future.value("address"));
-
-    // when
-    await presenter.loadAttendanceDetails();
-
-    //then
-    verifyInOrder([
-      () => mockAttendanceDetailsProvider.isLoading,
-      () => view.showLoader(),
-      () => mockAttendanceDetailsProvider.getDetails(),
-      () => view.showCountDownView(123),
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
   test('shows request to turn on gps when location service disabled', () async {
     //given
     var attendance = MockAttendanceDetails();
