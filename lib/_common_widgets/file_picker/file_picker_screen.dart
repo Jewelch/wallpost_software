@@ -90,16 +90,17 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
             ),
           if (files.isNotEmpty)
             SizedBox(
-              height: 16,
+              height: 32,
             ),
           if (files.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Center(
                 child: RoundedIconButton(
+                  width: 100,
                   backgroundColor: AppColors.greenButtonColor,
                   iconName: 'assets/icons/check_mark_icon.svg',
-                  iconSize: 20,
+                  iconSize: 32,
                   onPressed: () => Navigator.of(context).pop(files),
                 ),
               ),
