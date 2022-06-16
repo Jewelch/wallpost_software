@@ -217,18 +217,18 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                       ),
                     ),
                   ),
-                  ExpenseInputWithHeader(
-                    required: true,
-                    missingMessage: validator.fileMissingError,
-                    title: "Upload supporting document",
-                    child: GestureDetector(
-                      onTap: () async {
-                        var files = await FilePickerScreen.present(context,
-                            filesType: [FileTypes.documents]);
-                        if (files == null) return;
-                        if ((files as List).isNotEmpty) _expenseRequest.file = files[0];
-                        setState(() {});
-                      },
+                  GestureDetector(
+                    onTap: () async {
+                      var files =
+                          await FilePickerScreen.present(context, filesType: [FileTypes.documents]);
+                      if (files == null) return;
+                      if ((files as List).isNotEmpty) _expenseRequest.file = files[0];
+                      setState(() {});
+                    },
+                    child: ExpenseInputWithHeader(
+                      required: true,
+                      missingMessage: validator.fileMissingError,
+                      title: "Upload supporting document",
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
