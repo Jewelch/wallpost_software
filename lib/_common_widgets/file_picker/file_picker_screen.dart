@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/file_extension.dart';
 import '../screen_presenter/modal_sheet_presenter.dart';
 
@@ -31,7 +33,7 @@ class FilePickerScreen extends StatefulWidget {
 }
 
 class _FilePickerScreenState extends State<FilePickerScreen> {
-  final List<File> files =  [];
+  final List<File> files = [];
 
   @override
   Widget build(BuildContext context) {
@@ -71,19 +73,37 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
                 _addFiles(audios);
               },
             ),
-          if(files.isNotEmpty)
+          if (files.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Selected Files:"),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Wrap(
+                children: [
+                  Text("Selected File${widget.allowMultiple ? 's' : ''}:"),
+                  ...files.map((file) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Text(
+                          file.name() + '  ',
+                        ),
+                      )),
+                ],
+              ),
             ),
-          ...files.map((file) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(file.name(),),
-          )),
-          ListTile(
-            title: Text("finish"),
-            onTap: () => Navigator.of(context).pop(files),
-          ),
+          if (files.isNotEmpty)
+            SizedBox(
+              height: 16,
+            ),
+          if (files.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Center(
+                child: RoundedIconButton(
+                  backgroundColor: AppColors.greenButtonColor,
+                  iconName: 'assets/icons/check_mark_icon.svg',
+                  iconSize: 20,
+                  onPressed: () => Navigator.of(context).pop(files),
+                ),
+              ),
+            ),
         ],
       ),
     );
