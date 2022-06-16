@@ -52,10 +52,11 @@ class ExpenseRequestCreator {
 
   String _processUploadFileResponse(APIResponse apiResponse) {
     if (apiResponse.data == null) throw InvalidResponseException();
+    print(apiResponse.data);
 
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
-    if (apiResponse.data['sample_pdf'] == null || apiResponse.data['sample_pdf'] == '')
+    if ((apiResponse.data['sample_pdf'] == null || apiResponse.data['sample_pdf'] == '') && (apiResponse.data['IMG_0004_jpeg'] == null || apiResponse.data['IMG_0004_jpeg'] == ''))
       throw FailedToSaveRequest();
 
     var response = apiResponse.data as Map<String, dynamic>;
