@@ -9,6 +9,7 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
   final Color? attendanceButtonColor;
   final Color? moreButtonColor;
   final VoidCallback onButtonPressed;
+  final VoidCallback onRefreshPressed;
   final VoidCallback onMoreButtonPressed;
 
   AttendanceRectangleRoundedActionButton({
@@ -18,6 +19,7 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
     required this.attendanceButtonColor,
     required this.moreButtonColor,
     required this.onButtonPressed,
+    required this.onRefreshPressed,
     required this.onMoreButtonPressed,
   });
 
@@ -60,28 +62,52 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
               side: BorderSide(color: Colors.transparent),
             ),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title!,
-                    style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
+              InkWell(
+                onTap: onButtonPressed,
+                child: Container(
+                  padding: EdgeInsets.zero,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title!,
+                        style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        locationAddress!,
+                        style: TextStyles.subTitleTextStyle.copyWith(color: AttendanceColors.locationAddressTextColor),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    ],
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    locationAddress!,
-                    style: TextStyles.subTitleTextStyle.copyWith(color: AttendanceColors.locationAddressTextColor),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  )
-                ],
+                ),
               ),
-              Align(
-                  alignment: Alignment.topCenter,
-                  child:
-                    Text(time!, style: TextStyles.titleTextStyle.copyWith(color: Colors.white))),
+              InkWell(
+                onTap: onRefreshPressed,
+                child: Container(
+                  child: Column(
+                    children: [
+                      Text(time!, style: TextStyles.titleTextStyle.copyWith(color: Colors.white)),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Text("Refresh", style: TextStyles.subTitleTextStyle.copyWith(color: Colors.white)),
+                          SizedBox(width: 2),
+                          Icon(Icons.refresh, size: 14, color: Colors.white),
+                        ],
+                      )
+                    ],
+                    // children: Align(
+                    //     alignment: Alignment.topCenter,
+                    //     child:
+                    //       Text(time!, style: TextStyles.titleTextStyle.copyWith(color: Colors.white))),
+                  ),
+                ),
+              ),
             ]),
-            onPressed: onButtonPressed,
+            onPressed: (){},
           ),
         ),
       ],
