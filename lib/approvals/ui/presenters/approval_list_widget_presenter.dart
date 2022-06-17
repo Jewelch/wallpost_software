@@ -7,7 +7,7 @@ class ApprovalListWidgetPresenter {
   final ApprovalListWidgetView _view;
   final ApprovalListProvider _provider;
   List approvals = [];
-  String? _errorMessage;
+  String _errorMessage = "";
 
   ApprovalListWidgetPresenter(this._view) : _provider = ApprovalListProvider();
 
@@ -15,17 +15,19 @@ class ApprovalListWidgetPresenter {
 
   Future<void> loadApprovals() async {
     if (_provider.isLoading || _provider.didReachListEnd) return;
+    if(approvals.isEmpty) _view.onLoad();
 
     try {
       var approvalsList = await _provider.getNext();
       approvals.addAll(approvalsList);
-
+      _resetErrors();
       _view.onDidLoadData();
       _view.onDidLoadActionsCount(_provider.actionsCount);
       _view.onDidLoadApprovals(approvalsList);
     } on WPException catch (e) {
-      _errorMessage = e.userReadableMessage;
-      _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
+      approvals.clear();
+      _errorMessage = '${e.userReadableMessage}\n\nTap here to reload.';
+      _view.showErrorMessage(_errorMessage);
     }
   }
 
@@ -47,14 +49,16 @@ class ApprovalListWidgetPresenter {
   }
 
   void _resetErrors() {
-    _errorMessage = null;
+    _errorMessage = "";
   }
 
   bool _hasErrors() {
-    return _errorMessage != null;
+    return _errorMessage.isNotEmpty;
   }
 
   bool isEmpty() {
     return approvals.isEmpty;
   }
+
+  String get errorMessage => _errorMessage;
 }

@@ -9,19 +9,16 @@ class LeaveApproval extends Approval implements JSONInitializable {
   late num _leaveDays;
   late String _leaveFrom; // date
   late String _leaveTo; // date
-  late num _status; //TODO: dynamic? - maybe string?
-  late String _attachDoc; //_attachDocUrl
+  late num _status;
+  late String _attachDoc;
   late String _createdOn; // date
-  late String _approveRequestBy; // what is this? check with niyas
-  late String _decisionStatus; //nullable?
-  late String? _rejectMessage; //TODO: dynamic? Maybe string?
+  late String _approveRequestBy;
+  late String _decisionStatus;
+  late String? _rejectMessage;
 
   LeaveApproval.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     try {
       var sift = Sift();
-
-      //for reading dates
-      // sift.readDateFromMap(jsonMap, "leaveFrom", "yyyy/MM/dd");
 
       var detailsMap = sift.readMapFromMap(jsonMap, 'details');
       _employeeId = sift.readNumberFromMap(detailsMap, 'employee_id');

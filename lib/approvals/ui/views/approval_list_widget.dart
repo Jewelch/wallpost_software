@@ -100,7 +100,8 @@ class _ApprovalsListWidgetState extends State<ApprovalsListWidget>
                         indicatorSize: TabBarIndicatorSize.label,
                         indicator: const UnderlineTabIndicator(
                           insets: EdgeInsets.all(8.0),
-                          borderSide: BorderSide(color: Colors.white, width: 3.0),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 3.0),
                         ),
                         tabs: <Widget>[
                           Tab(
@@ -110,7 +111,8 @@ class _ApprovalsListWidgetState extends State<ApprovalsListWidget>
                                 'Actions ($actionCount)',
                                 maxLines: 1,
                                 style: TextStyles.subTitleTextStyle.copyWith(
-                                    color: index == 0 ? Colors.white : Colors.grey,
+                                    color:
+                                        index == 0 ? Colors.white : Colors.grey,
                                     fontSize: index == 0 ? 14.0 : 13.0,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -127,10 +129,12 @@ class _ApprovalsListWidgetState extends State<ApprovalsListWidget>
                 children: [
                   Text(
                     "All",
-                    style: TextStyles.titleTextStyle.copyWith(color: Colors.white, fontSize: 18.0),
+                    style: TextStyles.titleTextStyle
+                        .copyWith(color: Colors.white, fontSize: 18.0),
                   ),
                   SizedBox(width: 10),
-                  SvgPicture.asset('assets/icons/right_arrow_icon.svg', height: 16, width: 16, color: Colors.white)
+                  SvgPicture.asset('assets/icons/right_arrow_icon.svg',
+                      height: 16, width: 16, color: Colors.white)
                 ],
               ),
             ),
@@ -158,7 +162,9 @@ class _ApprovalsListWidgetState extends State<ApprovalsListWidget>
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               SvgPicture.asset('assets/icons/celebration.svg',
-                                  height: 24, width: 24, color: AppColors.screenBackgroundColor),
+                                  height: 24,
+                                  width: 24,
+                                  color: AppColors.screenBackgroundColor),
                               SizedBox(width: 15),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -166,9 +172,13 @@ class _ApprovalsListWidgetState extends State<ApprovalsListWidget>
                                 children: [
                                   Text("Congrats!",
                                       style: TextStyles.screenTitleTextStyle
-                                          .copyWith(color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.w900)),
+                                          .copyWith(
+                                              color: Colors.white,
+                                              fontSize: 22.0,
+                                              fontWeight: FontWeight.w900)),
                                   Text("All actions cleared so far.",
-                                      style: TextStyles.titleTextStyle.copyWith(color: Colors.white)),
+                                      style: TextStyles.titleTextStyle
+                                          .copyWith(color: Colors.white)),
                                 ],
                               )
                             ],
@@ -208,7 +218,6 @@ class _ApprovalsListWidgetState extends State<ApprovalsListWidget>
   Widget _item(Approval approval) {
     if (approval.isLeaveApproval()) {
       return LeaveApprovalTile(approval as LeaveApproval);
-
     }
 
     if (approval.isExpReqApp()) {
@@ -216,7 +225,8 @@ class _ApprovalsListWidgetState extends State<ApprovalsListWidget>
     }
 
     if (approval.isAtAdApproval()) {
-      return AttendanceAdjustmentApprovalTile(approval as AttendanceAdjustmentApproval);
+      return AttendanceAdjustmentApprovalTile(
+          approval as AttendanceAdjustmentApproval);
     }
     return SizedBox();
   }
