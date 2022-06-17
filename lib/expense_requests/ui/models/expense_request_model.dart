@@ -13,6 +13,7 @@ class ExpenseRequestModel {
   Money _amount = Money.zero();
 
   String get amount => _amount.toString();
+
   int get quantity => _quantity;
   File? file;
 
@@ -24,7 +25,7 @@ class ExpenseRequestModel {
   }
 
   void setQuantity(String quantityString) {
-    int quantity = int.tryParse(quantityString) ?? 0;
+    int quantity = int.tryParse(quantityString) ?? _quantity;
     _quantity = quantity;
   }
 }

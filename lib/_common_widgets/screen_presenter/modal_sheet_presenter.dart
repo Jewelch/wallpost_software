@@ -56,7 +56,8 @@ class _ModalSheetScreen extends StatefulWidget {
   });
 
   @override
-  __ModalSheetScreenState createState() => __ModalSheetScreenState(modalSheetController: controller);
+  __ModalSheetScreenState createState() =>
+      __ModalSheetScreenState(modalSheetController: controller);
 }
 
 class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTickerProviderStateMixin {
@@ -128,7 +129,7 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                               ),
                               RoundedIconButton(
                                 iconName: 'assets/icons/close_icon.svg',
-                                iconSize: 14,
+                                iconSize: 20,
                                 onPressed: () => close(),
                               ),
                               SizedBox(width: 8),
