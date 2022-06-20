@@ -1,12 +1,14 @@
 import 'dart:io';
+import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_icon_button.dart';
+import 'package:wallpost/_common_widgets/file_picker/image_from_camera_pciker.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/file_extension.dart';
 import '../screen_presenter/modal_sheet_presenter.dart';
 
-enum FileTypes { images, videos, documents, audios }
+enum FileTypes { images, videos, documents, audios, camera }
 
 class FilePickerScreen extends StatefulWidget {
   final bool allowMultiple;
@@ -41,6 +43,22 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (widget.filesType.contains(FileTypes.camera))
+            ListTile(
+              title: Text("Camera"),
+              onTap: () async {
+                final cameras = await availableCameras();
+                var imagePath = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ImageFromCameraPickerScreen(camera: cameras.first),
+                  ),
+                );
+                if (imagePath != null) {
+                  files.add(File(imagePath));
+                }
+                setState(() {});
+              },
+            ),
           if (widget.filesType.contains(FileTypes.images))
             ListTile(
               title: Text("Image"),

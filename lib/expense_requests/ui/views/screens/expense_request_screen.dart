@@ -219,8 +219,8 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                   ),
                   GestureDetector(
                     onTap: () async {
-                      var files =
-                          await FilePickerScreen.present(context, filesType: [FileTypes.documents]);
+                      var files = await FilePickerScreen.present(context,
+                          filesType: [FileTypes.documents, FileTypes.images, FileTypes.camera]);
                       if (files == null) return;
                       if ((files as List).isNotEmpty) _expenseRequest.file = files[0];
                       setState(() {});

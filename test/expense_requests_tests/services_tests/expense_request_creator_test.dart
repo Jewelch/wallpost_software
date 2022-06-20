@@ -75,7 +75,7 @@ main() {
     verifyNever(() => fileUploader.upload(any()));
   });
 
-  test('file uploader fails and throws exception', () async {
+  test('throws NetworkFailureException when file uploader fails', () async {
     when(() => fileUploader.upload(any()))
         .thenAnswer((invocation) => throw NetworkFailureException());
 

@@ -23,7 +23,7 @@ main() {
 
     model.setQuantity("10");
 
-    expect(model.amount, "100.11");
+    expect(model.quantity, 10);
   });
 
   test('set un valid quantity', () {

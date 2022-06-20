@@ -47,5 +47,7 @@
 		<false/>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+    <string>WallPost needs access to your camera to capture photos that you would like to upload.</string>
 </dict>
 </plist>

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_main/ui/views/main_screen.dart';
 import 'package:wallpost/notifications/services/app_badge_updater.dart';
 
-void main() => runApp(WallPostApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(WallPostApp());
+}
 
 class WallPostApp extends StatefulWidget with WidgetsBindingObserver {
   @override
@@ -17,7 +20,7 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
   @override
   initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override

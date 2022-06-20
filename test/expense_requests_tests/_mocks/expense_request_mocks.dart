@@ -15,7 +15,7 @@ class MockFile extends Mock implements File {}
 var mockFile = MockFile();
 
 var successFullUploadingFileResponse = {
-  "sample_pdf": "file1",
+  "any": "file1",
 };
 
 ExpenseRequestForm getExpenseRequestForm() {
