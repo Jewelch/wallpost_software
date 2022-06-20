@@ -203,6 +203,9 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
         onButtonPressed: () {
           presenter.markPunchIn(isLocationValid: true);
         },
+        onRefreshPressed: (){
+          presenter.loadAttendanceDetails();
+        },
         onMoreButtonPressed: () {
           _currentTimer.cancel();
           ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
@@ -222,6 +225,9 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
         moreButtonColor: AttendanceColors.punchOutMoreButtonColor,
         onButtonPressed: () {
           _doPunchOut();
+        },
+        onRefreshPressed: (){
+          presenter.loadAttendanceDetails();
         },
         onMoreButtonPressed: () {
           _currentTimer.cancel();

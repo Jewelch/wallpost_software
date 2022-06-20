@@ -10,7 +10,7 @@ import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
-  List<Map<String, dynamic>> successfulResponse = Mocks.punchedOutAttendanceDetailsResponse;
+ Map<String, dynamic> successfulResponse = Mocks.punchedOutAttendanceDetailsResponse;
   var mockEmployee = MockEmployee();
   var mockEmployeeProvider = MockEmployeeProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
