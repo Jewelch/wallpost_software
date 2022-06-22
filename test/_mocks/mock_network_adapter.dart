@@ -6,7 +6,7 @@ class MockNetworkAdapter implements NetworkAdapter {
   late bool _shouldSucceed;
   dynamic _data;
   int _delay = 0;
-  Map<String, Object> _metadata = {};
+  dynamic _metadata ;
   APIException? _apiException;
   late APIRequest _apiRequest;
   var didCallGet = false;
@@ -31,9 +31,10 @@ class MockNetworkAdapter implements NetworkAdapter {
     onComplete = null;
   }
 
-  void succeed(dynamic data, {int afterDelayInMilliSeconds = 0}) {
+  void succeed(dynamic data , {int afterDelayInMilliSeconds = 0,dynamic metaData }) {
     _shouldSucceed = true;
     _data = data;
+    _metadata = metaData;
     _delay = afterDelayInMilliSeconds;
   }
 

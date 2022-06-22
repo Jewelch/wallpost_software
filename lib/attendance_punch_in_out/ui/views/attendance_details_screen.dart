@@ -18,7 +18,8 @@ import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_de
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/company_list/views/companies_list_screen.dart';
-import 'package:wallpost/dashboard/ui/my_portal_screen.dart';
+
+import '../../../dashboard/ui/my_portal/views/my_portal_screen.dart';
 
 class AttendanceDetailsScreen extends StatefulWidget {
   const AttendanceDetailsScreen({Key? key}) : super(key: key);

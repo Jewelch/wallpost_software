@@ -141,6 +141,7 @@ void main() {
     _verifyNoMoreInteractions();
   });
 
+
   test('resets the error message before loading the next list of items', () async {
     //given
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.error(InvalidResponseException()));

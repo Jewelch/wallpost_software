@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/dashboard/ui/my_portal_screen.dart';
+import 'package:wallpost/dashboard/ui/my_portal/views/my_portal_screen.dart';
 import 'package:wallpost/dashboard/ui/requests_screen.dart';
 // import 'package:wallpost/my_portal/ui/employee_my_portal_screen.dart';
 // import 'package:wallpost/my_portal/ui/sales_my_portal_screen.dart';
