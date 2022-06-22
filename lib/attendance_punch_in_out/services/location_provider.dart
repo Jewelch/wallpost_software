@@ -32,13 +32,16 @@ class LocationProvider {
           throw LocationPermissionsDeniedException();
         }
       }
-      // Permissions are denied forever
+
+      //Permissions are denied forever
       if (permission == LocationPermission.deniedForever) {
         throw LocationPermissionsPermanentlyDeniedException();
       }
-      // continue accessing the position of the device.
+
+      //Continue accessing the position of the device.
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       return AttendanceLocation(position.latitude, position.longitude);
+
     } catch (e) {
       if (e is LocationServicesDisabledException ||
           e is LocationPermissionsDeniedException ||

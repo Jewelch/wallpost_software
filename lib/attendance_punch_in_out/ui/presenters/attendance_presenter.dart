@@ -27,13 +27,12 @@ class AttendancePresenter {
   final PunchInMarker _punchInMarker;
   final BreakStartMarker _breakStartMarker;
   final BreakEndMarker _breakEndMarker;
-  late AttendanceReportProvider _attendanceReportProvider;
-
+  final AttendanceReportProvider _attendanceReportProvider;
   final DeviceSettings _deviceSettings;
 
   late AttendanceDetails _attendanceDetails;
   late AttendanceLocation? _attendanceLocation;
-  var shouldReloadDataOnResume = false;
+  var _shouldReloadDataOnResume = false;
 
   AttendancePresenter({required this.basicView, this.detailedView})
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
@@ -61,7 +60,6 @@ class AttendancePresenter {
   //MARK: Function to load attendance report
 
   Future<void> loadAttendanceReport() async {
-
     try {
       detailedView?.showAttendanceReportLoader();
       var attendanceReport = await _attendanceReportProvider.getReport();
@@ -80,14 +78,28 @@ class AttendancePresenter {
       basicView.showLoader();
       _attendanceDetails = await _attendanceDetailsProvider.getDetails();
 
-      var canMarkAttendance = await _getAttendancePermission(_attendanceDetails);
-      if (!canMarkAttendance) return;
-
-      if (_attendanceDetails.isNotPunchedIn) return _loadPunchInDetails();
-      else if (_attendanceDetails.isPunchedIn) return _loadPunchOutDetails(_attendanceDetails);
-      else if (_attendanceDetails.isPunchedOut) return _loadPunchedOutDetails(_attendanceDetails);
+      if (_attendanceDetails.canMarkAttendanceFromApp) {
+        if (!_attendanceDetails.canMarkAttendanceNow) {
+          _showTimeTillPunchIn();
+        }
+        await _loadAttendanceViews();
+      } else {
+        _showCannotPunchInFromAppMessage();
+      }
     } on WPException {
       basicView.showErrorAndRetryView("Failed to load attendance details.\nTap to reload");
+    }
+  }
+
+  //MARK: Functions to get attendance permissions
+
+  Future<void> _loadAttendanceViews() async {
+    if (_attendanceDetails.isNotPunchedIn) {
+      await _loadPunchInDetails();
+    } else if (_attendanceDetails.isPunchedIn) {
+      await _loadPunchOutDetails(_attendanceDetails);
+    } else if (_attendanceDetails.isPunchedOut) {
+      await _loadPunchedOutDetails(_attendanceDetails);
     }
   }
 
@@ -97,7 +109,7 @@ class AttendancePresenter {
 
     basicView.showPunchInButton();
     detailedView?.hideBreakButton();
-    _loadAddress(_attendanceLocation!);
+    await _loadAddress(_attendanceLocation!);
   }
 
   Future<void> _loadPunchOutDetails(AttendanceDetails attendanceDetails) async {
@@ -105,12 +117,8 @@ class AttendancePresenter {
     if (_attendanceLocation == null) return;
 
     basicView.showPunchOutButton();
-    _loadAddress(_attendanceLocation!);
+    await  _loadAddress(_attendanceLocation!);
     _showPunchInTime(attendanceDetails);
-    _loadBreakDetails();
-  }
-
-  void _loadBreakDetails() {
     _attendanceDetails.isOnBreak ? detailedView?.showResumeButton() : detailedView?.showBreakButton();
   }
 
@@ -123,21 +131,13 @@ class AttendancePresenter {
     detailedView?.hideBreakButton();
   }
 
-  //MARK: Functions to get attendance permissions
+  void _showCannotPunchInFromAppMessage() async {
+    basicView.showErrorAndRetryView(
+        "You are not allowed to mark attendance from the app.\nPlease contact your HR or tap to reload.");
+  }
 
-  Future<bool> _getAttendancePermission(AttendanceDetails attendanceDetails) async {
-      if (!attendanceDetails.canMarkAttendancePermissionFromApp) {
-        basicView.showErrorAndRetryView(
-            "You are not allowed to mark attendance from the app.\nPlease contact your HR or tap to reload.");
-        return false;
-      }
-
-      if (!attendanceDetails.canMarkAttendanceNow) {
-        basicView.showCountDownView(attendanceDetails.secondsTillPunchIn.toInt());
-        return true;
-      }
-
-      return true;
+  void _showTimeTillPunchIn() async {
+    basicView.showCountDownView(_attendanceDetails.secondsTillPunchIn.toInt());
   }
 
   //MARK: Functions to get location
@@ -188,10 +188,10 @@ class AttendancePresenter {
     try {
       await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
 
-      loadAttendanceDetails();
-      loadAttendanceReport();
+      await loadAttendanceDetails();
+      await loadAttendanceReport();
     } on WPException catch (e) {
-      if (e is ServerSentException ) {
+      if (e is ServerSentException) {
         basicView.showAlertToMarkAttendanceWithInvalidLocation(true, "Invalid location", e.userReadableMessage);
       } else {
         basicView.showErrorMessage("Punch in failed", e.userReadableMessage);
@@ -203,15 +203,14 @@ class AttendancePresenter {
     try {
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
 
-      loadAttendanceDetails();
-      loadAttendanceReport();
+      await loadAttendanceDetails();
+      await loadAttendanceReport();
     } on WPException catch (e) {
       if (e is ServerSentException) {
-        if(e.userReadableMessage.contains("5 minutes"))
+        if (e.userReadableMessage.contains("5 minutes"))
           basicView.showErrorMessage("Not allowed to punch out", e.userReadableMessage);
         else
           basicView.showAlertToMarkAttendanceWithInvalidLocation(false, "Invalid location", e.userReadableMessage);
-
       } else {
         basicView.showErrorMessage("Punch out failed", e.userReadableMessage);
       }
@@ -241,18 +240,18 @@ class AttendancePresenter {
   //MARK: Functions to go to settings
 
   void goToLocationSettings() {
-    shouldReloadDataOnResume = true;
+    _shouldReloadDataOnResume = true;
     _deviceSettings.goToLocationSettings();
   }
 
   void goToAppSettings() {
-    shouldReloadDataOnResume = true;
+    _shouldReloadDataOnResume = true;
     _deviceSettings.goToAppSettings();
   }
 
   bool shouldReloadDataWhenAppIsResumed() {
-    var reloadData = shouldReloadDataOnResume;
-    shouldReloadDataOnResume = false;
+    var reloadData = _shouldReloadDataOnResume;
+    _shouldReloadDataOnResume = false;
     return reloadData;
   }
 }

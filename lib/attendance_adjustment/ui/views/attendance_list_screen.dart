@@ -36,7 +36,7 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
   @override
   void initState() {
     presenter = AttendanceListPresenter(this);
-    WidgetsBinding.instance?.addPostFrameCallback((_) => presenter.loadAttendanceList());
+    WidgetsBinding.instance.addPostFrameCallback((_) => presenter.loadAttendanceList());
     super.initState();
   }
 

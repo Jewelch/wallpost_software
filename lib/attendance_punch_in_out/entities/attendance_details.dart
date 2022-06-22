@@ -3,20 +3,17 @@ import 'package:sift/sift.dart';
 
 import 'break.dart';
 
-class AttendanceDetails  {
+class AttendanceDetails {
   String? _id;
   String? _detailsId;
   DateTime? _punchInTime;
   DateTime? _punchOutTime;
   List<Break> _breaks = [];
-
-  late bool _canMarkAttendancePermissionFromApp;
+  late bool _canMarkAttendanceFromApp;
   late bool _canMarkAttendanceNow;
   late num _secondsTillPunchIn;
 
-  //TODO add attendance_punch_in_out status
-
-  AttendanceDetails.fromJson(Map<String, dynamic> jsonMap)  {
+  AttendanceDetails.fromJson(Map<String, dynamic> jsonMap) {
     var sift = Sift();
     var attendanceInfoMapList = sift.readMapListFromMapWithDefaultValue(jsonMap, 'attendance_info', null);
     var attendanceInfoMap = sift.readMapFromListWithDefaultValue(attendanceInfoMapList, 0, null);
@@ -32,7 +29,7 @@ class AttendanceDetails  {
     _punchOutTime =
         sift.readDateFromMapWithDefaultValue(attendanceDetailsMap, 'actual_punch_out', 'yyyy-MM-dd HH:mm:ss', null);
     _breaks = _readBreakFromMapList(breaksMapList);
-    _canMarkAttendancePermissionFromApp = sift.readBooleanFromMap(attendancePermissionMap, 'punch_in_allowed_from_app');
+    _canMarkAttendanceFromApp = sift.readBooleanFromMap(attendancePermissionMap, 'punch_in_allowed_from_app');
     _canMarkAttendanceNow = sift.readBooleanFromMap(attendancePermissionMap, 'status');
     _secondsTillPunchIn = sift.readNumberFromMapWithDefaultValue(attendancePermissionMap, 'remaining_in_min', 0)!;
   }
@@ -54,26 +51,10 @@ class AttendanceDetails  {
     return items;
   }
 
-  String? get attendanceId => _id;
-
-  String? get attendanceDetailsId => _detailsId;
-
-  String get punchInTimeString => _convertTimeToString(_punchInTime);
-
-  String get punchOutTimeString => _convertTimeToString(_punchOutTime);
-
-  String get activeBreakStartTimeString {
-    return _convertTimeToString(_getActiveBreak()?.startTime);
-  }
-
-  String? get activeBreakId {
-    var activeBreak = _getActiveBreak();
-    if (activeBreak == null) return null;
-    return activeBreak.id;
-  }
+  //MARK: Getters
 
   bool get isNotPunchedIn {
-    return _punchInTime == null && _canMarkAttendanceNow==true;
+    return _punchInTime == null && _canMarkAttendanceNow == true;
   }
 
   bool get isPunchedIn {
@@ -88,7 +69,25 @@ class AttendanceDetails  {
     return isPunchedIn == true && _getActiveBreak() != null;
   }
 
-  bool get canMarkAttendancePermissionFromApp => _canMarkAttendancePermissionFromApp;
+  String? get activeBreakId {
+    var activeBreak = _getActiveBreak();
+    if (activeBreak == null) return null;
+    return activeBreak.id;
+  }
+
+  String get activeBreakStartTimeString {
+    return _convertTimeToString(_getActiveBreak()?.startTime);
+  }
+
+  String? get attendanceId => _id;
+
+  String? get attendanceDetailsId => _detailsId;
+
+  String get punchInTimeString => _convertTimeToString(_punchInTime);
+
+  String get punchOutTimeString => _convertTimeToString(_punchOutTime);
+
+  bool get canMarkAttendanceFromApp => _canMarkAttendanceFromApp;
 
   bool get canMarkAttendanceNow => _canMarkAttendanceNow;
 

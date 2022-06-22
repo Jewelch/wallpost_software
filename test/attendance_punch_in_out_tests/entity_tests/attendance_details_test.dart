@@ -29,19 +29,19 @@ void main() {
 
     var attendanceDetails = AttendanceDetails.fromJson(Mocks.punchedInAttendanceResponse);
     expect(attendanceDetails.isPunchedIn, true);
-    expect(attendanceDetails.canMarkAttendancePermissionFromApp, true);
+    expect(attendanceDetails.canMarkAttendanceFromApp, true);
     expect(attendanceDetails.canMarkAttendanceNow, true);
     expect(attendanceDetails.isOnBreak, false);
 
     attendanceDetails = AttendanceDetails.fromJson(Mocks.punchedInAttendanceWithActiveBreakResponse);
     expect(attendanceDetails.isPunchedIn, true);
-    expect(attendanceDetails.canMarkAttendancePermissionFromApp, true);
+    expect(attendanceDetails.canMarkAttendanceFromApp, true);
     expect(attendanceDetails.canMarkAttendanceNow, true);
     expect(attendanceDetails.isOnBreak, true);
 
     attendanceDetails = AttendanceDetails.fromJson(Mocks.punchedOutAttendanceDetailsResponse);
     expect(attendanceDetails.isPunchedIn, false);
-    expect(attendanceDetails.canMarkAttendancePermissionFromApp, true);
+    expect(attendanceDetails.canMarkAttendanceFromApp, true);
     expect(attendanceDetails.canMarkAttendanceNow, true);
     expect(attendanceDetails.isOnBreak, false);
   });

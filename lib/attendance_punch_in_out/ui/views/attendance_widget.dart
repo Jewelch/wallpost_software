@@ -5,64 +5,51 @@ import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
-import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_button_details.dart';
-import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_rectangle_rounded_action_button.dart';
+import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_action_button.dart';
+import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_details_screen.dart';
 
 import '../../constants/attendance_colors.dart';
 import '../../services/time_to_punch_in_calculator.dart';
 import '../presenters/attendance_presenter.dart';
 import '../view_contracts/attendance_view.dart';
 
-class AttendanceButton extends StatefulWidget {
+class AttendanceWidget extends StatefulWidget {
   @override
-  State<AttendanceButton> createState() => _AttendanceButtonState();
+  State<AttendanceWidget> createState() => _AttendanceWidgetState();
 }
 
-class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBindingObserver implements AttendanceView {
+class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBindingObserver implements AttendanceView {
   late final AttendancePresenter presenter;
   final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: LOADER_VIEW);
   final ItemNotifier<String> _countDownNotifier = ItemNotifier(defaultValue: "");
   final ItemNotifier<String> _locationAddressNotifier = ItemNotifier(defaultValue: "");
+
+  static const LOADER_VIEW = 1;
+  static const ERROR_VIEW = 2;
+  static const GPS_DISABLED_VIEW = 3;
+  static const PERMISSION_DENIED_FOREVER_ERROR_VIEW = 4;
+  static const COUNT_DOWN_VIEW = 5;
+  static const PUNCH_IN_BUTTON_VIEW = 6;
+  static const PUNCH_OUT_BUTTON_VIEW = 7;
 
   var _errorMessage = "";
   String? _timeString;
   late Timer _countDownTimer;
   late Timer _currentTimer;
 
-  /*
-  Types of views
-  1. Loader
-  2. error and retry (includes location soft denial as the presenter will re-initiate the permission approval)
-  3. GPSDisabledView + go to setts
-  4. location denied forever + go to setts
-
-
-  4. Timer view
-  5. punch in
-  6. punch out
-   */
-  static const LOADER_VIEW = 1;
-  static const ERROR_VIEW = 2;
-  static const GPS_DISABLED_VIEW = 3;
-  static const PERMISSION_DENIED_FOREVER_ERROR_VIEW = 4;
-  static const COUNT_DOWN_VIEW = 5;
-
-  static const PUNCH_IN_BUTTON_VIEW = 6;
-  static const PUNCH_OUT_BUTTON_VIEW = 7;
-
   @override
   void initState() {
     presenter = AttendancePresenter(basicView: this);
     presenter.loadAttendanceDetails();
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     _currentTimer.cancel();
     _countDownTimer.cancel();
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -194,21 +181,21 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   Widget _buildPunchInButton() {
     return ItemNotifiable(
       notifier: _locationAddressNotifier,
-      builder: (context, address) => AttendanceRectangleRoundedActionButton(
+      builder: (context, address) => AttendanceActionButton(
         title: "Punch In",
-        locationAddress:"$address",
+        locationAddress: "$address",
         time: _timeString,
         attendanceButtonColor: AttendanceColors.punchInButtonColor,
         moreButtonColor: AttendanceColors.punchInMoreButtonColor,
         onButtonPressed: () {
           presenter.markPunchIn(isLocationValid: true);
         },
-        onRefreshPressed: (){
+        onRefreshPressed: () {
           presenter.loadAttendanceDetails();
         },
         onMoreButtonPressed: () {
           _currentTimer.cancel();
-          ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
+          ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceDetailsScreen(), context);
         },
       ),
     );
@@ -217,21 +204,21 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   Widget _buildPunchOutButton() {
     return ItemNotifiable(
       notifier: _locationAddressNotifier,
-      builder: (context, address) =>  AttendanceRectangleRoundedActionButton(
+      builder: (context, address) => AttendanceActionButton(
         title: "Punch Out",
-        locationAddress:"$address",
+        locationAddress: "$address",
         time: _timeString,
         attendanceButtonColor: AttendanceColors.punchOutButtonColor,
         moreButtonColor: AttendanceColors.punchOutMoreButtonColor,
         onButtonPressed: () {
           _doPunchOut();
         },
-        onRefreshPressed: (){
+        onRefreshPressed: () {
           presenter.loadAttendanceDetails();
         },
         onMoreButtonPressed: () {
           _currentTimer.cancel();
-          ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceButtonDetailsScreen(), context);
+          ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceDetailsScreen(), context);
         },
       ),
     );
@@ -256,7 +243,7 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   }
 
   @override
-  void showErrorAndRetryView( String message) {
+  void showErrorAndRetryView(String message) {
     _errorMessage = message;
     _viewTypeNotifier.notify(ERROR_VIEW);
   }
@@ -313,18 +300,19 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
       message: message,
       buttonOneTitle: "Cancel",
       buttonTwoTitle: "Yes",
-      buttonTwoOnPressed: () => isForPunchIn ? presenter.markPunchIn(isLocationValid: false) : presenter.markPunchOut(isLocationValid: false),
+      buttonTwoOnPressed: () =>
+          isForPunchIn ? presenter.markPunchIn(isLocationValid: false) : presenter.markPunchOut(isLocationValid: false),
     );
   }
 
   @override
-  void showErrorMessage(String title,String message) {
+  void showErrorMessage(String title, String message) {
     Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 
   @override
   void doRefresh() {
-   presenter.loadAttendanceDetails();
+    presenter.loadAttendanceDetails();
   }
 
 //MARK: Util functions
@@ -332,8 +320,8 @@ class _AttendanceButtonState extends State<AttendanceButton> with WidgetsBinding
   void _getCurrentTime() {
     final DateTime now = DateTime.now();
     final String formattedDateTime = DateFormat('hh:mm a').format(now);
-      setState(() {
-        _timeString = formattedDateTime;
-      });
+    setState(() {
+      _timeString = formattedDateTime;
+    });
   }
 }

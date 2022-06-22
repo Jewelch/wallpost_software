@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallpost/_main/ui/views/main_screen.dart';
 import 'package:wallpost/notifications/services/app_badge_updater.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
   runApp(WallPostApp());
 }
 

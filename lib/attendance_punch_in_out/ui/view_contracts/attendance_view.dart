@@ -1,7 +1,7 @@
 abstract class AttendanceView {
   void showLoader();
 
-  void showErrorMessage(String title,String message);
+  void showErrorMessage(String title, String message);
 
   void showErrorAndRetryView(String message);
 

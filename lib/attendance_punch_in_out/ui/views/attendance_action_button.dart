@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/attendance_punch_in_out/constants/attendance_colors.dart';
 
-class AttendanceRectangleRoundedActionButton extends StatelessWidget {
+class AttendanceActionButton extends StatelessWidget {
   final String? title;
   final String? locationAddress;
   final String? time;
@@ -12,7 +12,7 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
   final VoidCallback onRefreshPressed;
   final VoidCallback onMoreButtonPressed;
 
-  AttendanceRectangleRoundedActionButton({
+  AttendanceActionButton({
     required this.title,
     required this.locationAddress,
     required this.time,
@@ -99,15 +99,11 @@ class AttendanceRectangleRoundedActionButton extends StatelessWidget {
                         ],
                       )
                     ],
-                    // children: Align(
-                    //     alignment: Alignment.topCenter,
-                    //     child:
-                    //       Text(time!, style: TextStyles.titleTextStyle.copyWith(color: Colors.white))),
                   ),
                 ),
               ),
             ]),
-            onPressed: (){},
+            onPressed: () {},
           ),
         ),
       ],
