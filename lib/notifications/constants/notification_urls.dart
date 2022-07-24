@@ -1,4 +1,4 @@
-import 'package:wallpost/_shared/constants/base_urls.dart';
+ import 'package:wallpost/_shared/constants/base_urls.dart';
 
 class NotificationUrls {
   static String unreadNotificationsCountUrl() {
@@ -16,4 +16,5 @@ class NotificationUrls {
   static String markSingleNotificationsAsReadUrl(String notificationId) {
     return '${BaseUrls.baseUrlV2()}/notifications/$notificationId?';
   }
+
 }

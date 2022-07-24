@@ -6,4 +6,6 @@ abstract class MainView {
   void goToCompaniesListScreen();
 
   void goToDashboardScreen();
+
+  void onError(String message);
 }

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "845989000773",
+    "project_id": "flutterfcmtest-22bc6",
+    "storage_bucket": "flutterfcmtest-22bc6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845989000773:android:65e7d819ae72aef66e952c",
+        "android_client_info": {
+          "package_name": "com.SMIT.WallPostSoftware"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "845989000773-i99oeru3d12mqqit28uhrcnigltbstkp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRyT9UTZ1gfEmsqNClOD-TK-9IMKerjFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "845989000773-i99oeru3d12mqqit28uhrcnigltbstkp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "845989000773-440j6ekf9jsf0ga9ffp2o080r16bg46r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firebaseTest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

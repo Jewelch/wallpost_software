@@ -1,4 +1,4 @@
-package com.smit.wallpost
+package com.SMIT.WallPostSoftware
 
 import io.flutter.embedding.android.FlutterActivity
 

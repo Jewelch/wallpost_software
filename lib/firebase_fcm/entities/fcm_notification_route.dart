@@ -1,0 +1,1 @@
+enum FcmNotificationRoute{expenseRequest,leaveRequest,attendanceAdjustment}
