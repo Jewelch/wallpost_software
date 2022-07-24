@@ -6,7 +6,7 @@ import 'package:wallpost/_wp_core/wpapi/services/wp_file_uploader.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/expense_requests/constants/expense_requests_urls.dart';
 import 'package:wallpost/expense_requests/entities/expense_request_form.dart';
-import 'package:wallpost/expense_requests/exeptions/failed_to_save_requet.dart';
+import 'package:wallpost/expense_requests/exeptions/failed_to_upload_requet.dart';
 
 class ExpenseRequestCreator {
   WPFileUploader _fileUploader;
@@ -57,7 +57,7 @@ class ExpenseRequestCreator {
 
     var response = (apiResponse.data as Map<String, dynamic>).values;
 
-    if (response.isEmpty) throw FailedToSaveRequest();
+    if (response.isEmpty) throw FailedToUploadRequest();
 
     return response.first.toString();
   }
@@ -76,7 +76,7 @@ class ExpenseRequestCreator {
 
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
-    if (apiResponse.data['status'] != "success") throw FailedToSaveRequest();
+    if (apiResponse.data['status'] != "success") throw FailedToUploadRequest();
     return true;
   }
 }

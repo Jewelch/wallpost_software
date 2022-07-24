@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/company_core/entities/company.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 import 'package:wallpost/expense_requests/constants/expense_requests_urls.dart';
-import 'package:wallpost/expense_requests/exeptions/failed_to_save_requet.dart';
+import 'package:wallpost/expense_requests/exeptions/failed_to_upload_requet.dart';
 import 'package:wallpost/expense_requests/services/expense_request_creator.dart';
 import '../../_mocks/mock_network_adapter.dart';
 import '../_mocks/expense_request_mocks.dart';
@@ -16,6 +16,7 @@ class MockSelectedCompanyProvider extends Mock implements SelectedCompanyProvide
 class MockApiResponse extends Mock implements APIResponse {}
 
 main() {
+  var mockApiResponse = MockApiResponse();
   var selectedCompanyProvider = MockSelectedCompanyProvider();
   var fileUploader = MockFileUploader();
   var mockNetworkAdapter = MockNetworkAdapter();
@@ -31,7 +32,6 @@ main() {
     when(() => mockCompany.id).thenReturn("1");
     when(selectedCompanyProvider.getSelectedCompanyForCurrentUser).thenReturn(mockCompany);
     // set up file Uploader
-    var mockApiResponse = MockApiResponse();
     when(() => mockApiResponse.data).thenReturn(successfulUploadFileResponse);
     when(() => fileUploader.upload(any()))
         .thenAnswer((invocation) => Future.value(mockApiResponse));
@@ -88,7 +88,6 @@ main() {
   });
 
   test('throws InvalidResponseException when file uploader response is null', () async {
-    var mockApiResponse = MockApiResponse();
     when(() => mockApiResponse.data).thenReturn(null);
     when(() => fileUploader.upload(any()))
         .thenAnswer((invocation) => Future.value(mockApiResponse));
@@ -103,7 +102,6 @@ main() {
 
   test('throws WrongResponseFormatException when file uploader response has wrong format',
       () async {
-    var mockApiResponse = MockApiResponse();
     when(() => mockApiResponse.data).thenReturn('wrong response format');
     when(() => fileUploader.upload(any()))
         .thenAnswer((invocation) => Future.value(mockApiResponse));
@@ -116,18 +114,17 @@ main() {
     }
   });
 
-  test('throws FailedToSaveRequest when file uploader response is not the successful response',
+  test('throws FailedToUploadRequest when file uploader response is not the successful response',
       () async {
-    var mockApiResponse = MockApiResponse();
     when(() => mockApiResponse.data).thenReturn(<String, dynamic>{});
     when(() => fileUploader.upload(any()))
         .thenAnswer((invocation) => Future.value(mockApiResponse));
 
     try {
       var _ = await _requestExecutor.execute(expenseRequest);
-      fail('failed to throw FailedToSaveRequest');
+      fail('failed to throw FailedToUploadRequest');
     } catch (e) {
-      expect(e is FailedToSaveRequest, true);
+      expect(e is FailedToUploadRequest, true);
     }
   });
 
@@ -165,7 +162,7 @@ main() {
     }
   });
 
-  test('throws FailedToSaveRequest when network adapter response is not the success response',
+  test('throws FailedToUploadRequest when network adapter response is not the right response',
       () async {
     mockNetworkAdapter.succeed(<String, dynamic>{});
 
@@ -173,7 +170,7 @@ main() {
       var _ = await _requestExecutor.execute(expenseRequest);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
-      expect(e is FailedToSaveRequest, true);
+      expect(e is FailedToUploadRequest, true);
     }
   });
 

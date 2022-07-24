@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/network_failure_exception.dart';
-import 'package:wallpost/expense_requests/exeptions/failed_to_save_requet.dart';
+import 'package:wallpost/expense_requests/exeptions/failed_to_upload_requet.dart';
 import 'package:wallpost/expense_requests/services/expense_categories_provider.dart';
 import 'package:wallpost/expense_requests/services/expense_request_creator.dart';
 import 'package:wallpost/expense_requests/ui/models/expense_request_form_validator.dart';
@@ -223,7 +223,7 @@ main() {
   });
 
   test("send expense request fails and throw exception", () async {
-    when(() => executor.execute(any())).thenAnswer((invocation) => throw FailedToSaveRequest());
+    when(() => executor.execute(any())).thenAnswer((invocation) => throw FailedToUploadRequest());
     var expenseRequest = getValidExpenseRequestModel();
 
     await presenter.sendExpenseRequest(expenseRequest);
@@ -234,7 +234,7 @@ main() {
       () => executor.execute(any()),
       view.hideLoader,
       () => view.showErrorMessage(
-          "Failed to upload expense request", FailedToSaveRequest.USER_READABLE_MESSAGE),
+          "Failed to upload expense request", FailedToUploadRequest.USER_READABLE_MESSAGE),
     ]);
   });
 }
