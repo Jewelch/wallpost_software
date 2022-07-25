@@ -7,8 +7,7 @@ import 'package:wallpost/approvals/services/approval_list_provider.dart';
 import 'package:wallpost/approvals/ui/presenters/approval_list_widget_presenter.dart';
 import 'package:wallpost/approvals/ui/view_contracts/approval_list_widget_view.dart';
 
-class MockApprovalListWidgetView extends Mock
-    implements ApprovalListWidgetView {}
+class MockApprovalListWidgetView extends Mock implements ApprovalListWidgetView {}
 
 class MockApprovalsProvider extends Mock implements ApprovalListProvider {}
 
@@ -17,17 +16,13 @@ class MockCurrentUserProvider extends Mock implements CurrentUserProvider {}
 class MockApprovalItem extends Mock implements Approval {}
 
 void main() {
-  var view = MockApprovalListWidgetView();
-  var mockApprovalsProvider = MockApprovalsProvider();
-  var mockCurrentUserProvider = MockCurrentUserProvider();
-
-  late ApprovalListWidgetPresenter presenter;
-
   var approval1 = MockApprovalItem();
   var approval2 = MockApprovalItem();
   var approvals = [approval1, approval2];
-
-  List<Approval> _approvalsList = [approval1, approval2];
+  var view = MockApprovalListWidgetView();
+  var mockApprovalsProvider = MockApprovalsProvider();
+  var mockCurrentUserProvider = MockCurrentUserProvider();
+  late ApprovalListWidgetPresenter presenter;
 
   setUpAll(() {
     when(() => approval1.id).thenReturn("1");
@@ -78,20 +73,17 @@ void main() {
       () => mockApprovalsProvider.didReachListEnd,
       () => view.onLoad(),
       () => mockApprovalsProvider.getNext(),
-      () => view.showErrorMessage(
-          "${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
+      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('retrieving approvals Successfully with empty list', () async {
+  test('retrieving approvals successfully with empty list', () async {
     //given
     when(() => mockApprovalsProvider.isLoading).thenReturn(false);
     when(() => mockApprovalsProvider.didReachListEnd).thenReturn(false);
     when(() => mockApprovalsProvider.actionsCount).thenReturn(0);
-
-    when(() => mockApprovalsProvider.getNext())
-        .thenAnswer((_) => Future.value([]));
+    when(() => mockApprovalsProvider.getNext()).thenAnswer((_) => Future.value([]));
 
     //when
     await presenter.loadApprovals();
@@ -116,8 +108,7 @@ void main() {
     when(() => mockApprovalsProvider.didReachListEnd).thenReturn(false);
     when(() => mockApprovalsProvider.actionsCount).thenReturn(2);
 
-    when(() => mockApprovalsProvider.getNext())
-        .thenAnswer((_) => Future.value(approvals));
+    when(() => mockApprovalsProvider.getNext()).thenAnswer((_) => Future.value(approvals));
     //when
     await presenter.loadApprovals();
 
@@ -140,18 +131,15 @@ void main() {
     when(() => mockApprovalsProvider.isLoading).thenReturn(false);
     when(() => mockApprovalsProvider.didReachListEnd).thenReturn(false);
     when(() => mockApprovalsProvider.actionsCount).thenReturn(2);
-    when(() => mockApprovalsProvider.getNext())
-        .thenAnswer((_) => Future.value(approvals));
+    when(() => mockApprovalsProvider.getNext()).thenAnswer((_) => Future.value(approvals));
     await presenter.loadApprovals();
-    when(() => mockApprovalsProvider.getNext())
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => mockApprovalsProvider.getNext()).thenAnswer((_) => Future.error(InvalidResponseException()));
     _clearAllInteractions();
 
     //when
     await presenter.loadApprovals();
 
-    expect(presenter.errorMessage,
-        "${InvalidResponseException().userReadableMessage}\n\nTap here to reload.");
+    expect(presenter.errorMessage, "${InvalidResponseException().userReadableMessage}\n\nTap here to reload.");
     //then
     verifyInOrder([
       () => mockApprovalsProvider.isLoading,
@@ -162,17 +150,14 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-
   test('successfully loading the next list of items', () async {
     //given
     when(() => mockApprovalsProvider.isLoading).thenReturn(false);
     when(() => mockApprovalsProvider.didReachListEnd).thenReturn(false);
     when(() => mockApprovalsProvider.actionsCount).thenReturn(2);
-    when(() => mockApprovalsProvider.getNext())
-        .thenAnswer((_) => Future.value(approvals));
+    when(() => mockApprovalsProvider.getNext()).thenAnswer((_) => Future.value(approvals));
     await presenter.loadApprovals();
-    when(() => mockApprovalsProvider.getNext())
-        .thenAnswer((_) => Future.value(approvals));
+    when(() => mockApprovalsProvider.getNext()).thenAnswer((_) => Future.value(approvals));
     _clearAllInteractions();
 
     //when

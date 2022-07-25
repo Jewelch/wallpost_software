@@ -1,23 +1,23 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
-import 'package:wallpost/leave/entities/leave_list_filters.dart';
-import 'package:wallpost/leave/entities/leave_list_item.dart';
-import 'package:wallpost/leave/services/leave_list_provider.dart';
-import 'package:wallpost/leave/ui/models/leave_list_view_type.dart';
-import 'package:wallpost/leave/ui/presenters/leave_list_presenter.dart';
-import 'package:wallpost/leave/ui/view_contracts/leave_list_view.dart';
+import 'package:wallpost/leave_approvals/entities/leave_approval.dart';
+import 'package:wallpost/leave_approvals/entities/leave_approval_status.dart';
+import 'package:wallpost/leave_approvals/services/leave_approval_list_provider.dart';
+import 'package:wallpost/leave_approvals/ui/models/leave_approval_list_view_type.dart';
+import 'package:wallpost/leave_approvals/ui/presenters/leave_approval_list_presenter.dart';
+import 'package:wallpost/leave_approvals/ui/view_contracts/leave_approval_list_view.dart';
 
-class MockLeaveListView extends Mock implements LeaveListView {}
+class MockLeaveApprovalListView extends Mock implements LeaveApprovalListView {}
 
-class MockLeaveListProvider extends Mock implements LeaveListProvider {}
+class MockLeaveApprovalListProvider extends Mock implements LeaveApprovalListProvider {}
 
-class MockLeaveListItem extends Mock implements LeaveListItem {}
+class MockLeaveApproval extends Mock implements LeaveApproval {}
 
 void main() {
-  var view = MockLeaveListView();
-  var leaveListProvider = MockLeaveListProvider();
-  late LeaveListPresenter presenter;
+  var view = MockLeaveApprovalListView();
+  var leaveListProvider = MockLeaveApprovalListProvider();
+  late LeaveApprovalListPresenter presenter;
 
   void _verifyNoMoreInteractions() {
     verifyNoMoreInteractions(view);
@@ -30,12 +30,12 @@ void main() {
   }
 
   setUpAll(() {
-    registerFallbackValue(LeaveListFilters());
+    registerFallbackValue(LeaveApprovalStatus.all);
   });
 
   setUp(() {
     _clearAllInteractions();
-    presenter = LeaveListPresenter.initWith(view, leaveListProvider);
+    presenter = LeaveApprovalListPresenter.initWith(view, leaveListProvider);
   });
 
   //MARK: Tests for loading the list
@@ -51,7 +51,7 @@ void main() {
     expect(presenter.errorMessage, "${InvalidResponseException().userReadableMessage}\n\nTap here to reload.");
     verifyInOrder([
       () => view.showLoader(),
-      () => leaveListProvider.getNext(any()),
+      () => leaveListProvider.getNext(LeaveApprovalStatus.all),
       () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractions();
@@ -68,7 +68,7 @@ void main() {
     verifyInOrder([
       () => view.showLoader(),
       () => leaveListProvider.getNext(any()),
-      () => view.showErrorMessage("There are no leaves to show.\n\nTap here to reload."),
+      () => view.showErrorMessage("There are no leave approvals to show.\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -76,8 +76,8 @@ void main() {
   test('successfully loading the leave list with items', () async {
     //given
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
-          MockLeaveListItem(),
-          MockLeaveListItem(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
         ]));
 
     //when
@@ -95,8 +95,8 @@ void main() {
   test('failure to load the next list of items', () async {
     //given
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
-          MockLeaveListItem(),
-          MockLeaveListItem(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
         ]));
     await presenter.getNext();
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.error(InvalidResponseException()));
@@ -118,14 +118,14 @@ void main() {
   test('successfully loading the next list of items', () async {
     //given
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
-          MockLeaveListItem(),
-          MockLeaveListItem(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
         ]));
     await presenter.getNext();
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
-          MockLeaveListItem(),
-          MockLeaveListItem(),
-          MockLeaveListItem(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
         ]));
     _clearAllInteractions();
 
@@ -134,22 +134,21 @@ void main() {
 
     //then
     verifyInOrder([
-          () => view.updateLeaveList(),
+      () => view.updateLeaveList(),
       () => leaveListProvider.getNext(any()),
       () => view.updateLeaveList(),
     ]);
     _verifyNoMoreInteractions();
   });
 
-
   test('resets the error message before loading the next list of items', () async {
     //given
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.error(InvalidResponseException()));
     await presenter.getNext();
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
-          MockLeaveListItem(),
-          MockLeaveListItem(),
-          MockLeaveListItem(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
         ]));
     _clearAllInteractions();
 
@@ -178,9 +177,9 @@ void main() {
   test('get number of list items when there are some items and the provider is loading', () async {
     //when
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
-          MockLeaveListItem(),
-          MockLeaveListItem(),
-          MockLeaveListItem(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
         ]));
     await presenter.getNext();
     when(() => leaveListProvider.didReachListEnd).thenReturn(false);
@@ -188,18 +187,18 @@ void main() {
 
     //then
     expect(presenter.getNumberOfListItems(), 4);
-    expect(presenter.getItemTypeAtIndex(0), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(1), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(2), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(3), LeaveListViewType.Loader);
+    expect(presenter.getItemTypeAtIndex(0), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(1), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(2), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(3), LeaveApprovalListViewType.Loader);
   });
 
   test('get number of list items when there are some items and the provider has more items', () async {
     //when
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
-          MockLeaveListItem(),
-          MockLeaveListItem(),
-          MockLeaveListItem(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
         ]));
     await presenter.getNext();
     when(() => leaveListProvider.didReachListEnd).thenReturn(false);
@@ -207,19 +206,19 @@ void main() {
 
     //then
     expect(presenter.getNumberOfListItems(), 4);
-    expect(presenter.getItemTypeAtIndex(0), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(1), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(2), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(3), LeaveListViewType.Loader);
+    expect(presenter.getItemTypeAtIndex(0), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(1), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(2), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(3), LeaveApprovalListViewType.Loader);
   });
 
   test('get number of list items when there are some items and the provider has more items but fails to load them',
       () async {
     //given
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
-          MockLeaveListItem(),
-          MockLeaveListItem(),
-          MockLeaveListItem(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
         ]));
     await presenter.getNext();
     when(() => leaveListProvider.didReachListEnd).thenReturn(false);
@@ -231,18 +230,18 @@ void main() {
 
     //then
     expect(presenter.getNumberOfListItems(), 4);
-    expect(presenter.getItemTypeAtIndex(0), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(1), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(2), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(3), LeaveListViewType.ErrorMessage);
+    expect(presenter.getItemTypeAtIndex(0), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(1), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(2), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(3), LeaveApprovalListViewType.ErrorMessage);
   });
 
   test('get number of list items when there are some items and the provider has no more items', () async {
     //when
     when(() => leaveListProvider.getNext(any())).thenAnswer((_) => Future.value([
-          MockLeaveListItem(),
-          MockLeaveListItem(),
-          MockLeaveListItem(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
+          MockLeaveApproval(),
         ]));
     await presenter.getNext();
     when(() => leaveListProvider.didReachListEnd).thenReturn(true);
@@ -250,9 +249,9 @@ void main() {
 
     //then
     expect(presenter.getNumberOfListItems(), 4);
-    expect(presenter.getItemTypeAtIndex(0), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(1), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(2), LeaveListViewType.LeaveListItem);
-    expect(presenter.getItemTypeAtIndex(3), LeaveListViewType.EmptySpace);
+    expect(presenter.getItemTypeAtIndex(0), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(1), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(2), LeaveApprovalListViewType.List);
+    expect(presenter.getItemTypeAtIndex(3), LeaveApprovalListViewType.EmptySpace);
   });
 }

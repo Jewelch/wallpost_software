@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
-import 'package:wallpost/leave/ui/models/leave_list_item_type.dart';
+import 'package:wallpost/leave/ui/models/leave_list_view_type.dart';
 import 'package:wallpost/leave/ui/view_contracts/leave_list_view.dart';
 import 'package:wallpost/leave/ui/views/leave_list_item_tile.dart';
 
@@ -78,13 +78,13 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
         itemCount: _presenter.getNumberOfListItems(),
         itemBuilder: (context, index) {
           switch (_presenter.getItemTypeAtIndex(index)) {
-            case LeaveListItemType.LeaveListItem:
+            case LeaveListViewType.LeaveListItem:
               return LeaveListItemTile(_presenter.getLeaveListItemAtIndex(index));
-            case LeaveListItemType.Loader:
+            case LeaveListViewType.Loader:
               return Container(
                 child: CircularProgressIndicator(),
               );
-            case LeaveListItemType.ErrorMessage:
+            case LeaveListViewType.ErrorMessage:
               return GestureDetector(
                 onTap: () => _presenter.getNext(),
                 child: Container(
@@ -92,7 +92,7 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
                   child: Text(_presenter.errorMessage),
                 ),
               );
-            case LeaveListItemType.EmptySpace:
+            case LeaveListViewType.EmptySpace:
               return Container();
           }
         },

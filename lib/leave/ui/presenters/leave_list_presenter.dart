@@ -3,7 +3,7 @@ import 'package:wallpost/leave/entities/leave_list_filters.dart';
 import 'package:wallpost/leave/services/leave_list_provider.dart';
 
 import '../../entities/leave_list_item.dart';
-import '../models/leave_list_item_type.dart';
+import '../models/leave_list_view_type.dart';
 import '../view_contracts/leave_list_view.dart';
 
 class LeaveListPresenter {
@@ -58,14 +58,14 @@ class LeaveListPresenter {
     return _leaveItems.length + 1;
   }
 
-  LeaveListItemType getItemTypeAtIndex(int index) {
-    if (index < _leaveItems.length) return LeaveListItemType.LeaveListItem;
+  LeaveListViewType getItemTypeAtIndex(int index) {
+    if (index < _leaveItems.length) return LeaveListViewType.LeaveListItem;
 
-    if (_errorMessage.isNotEmpty) return LeaveListItemType.ErrorMessage;
+    if (_errorMessage.isNotEmpty) return LeaveListViewType.ErrorMessage;
 
-    if (_leaveListProvider.isLoading || _leaveListProvider.didReachListEnd == false) return LeaveListItemType.Loader;
+    if (_leaveListProvider.isLoading || _leaveListProvider.didReachListEnd == false) return LeaveListViewType.Loader;
 
-    return LeaveListItemType.EmptySpace;
+    return LeaveListViewType.EmptySpace;
   }
 
   LeaveListItem getLeaveListItemAtIndex(int index) {

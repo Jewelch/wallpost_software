@@ -91,8 +91,8 @@ class ApprovalListProvider {
     var sift = Sift();
     var approvalType = sift.readStringFromMap(responseMap, 'approvalType');
     switch (approvalType) {
-      case "leaveApproval":
-        return LeaveApproval.fromJson(responseMap);
+      // case "leaveApproval":
+      //   return LeaveApproval.fromJson(responseMap);
       case "expenseRequestApproval":
         return ExpenseRequestApproval.fromJson(responseMap);
       case "attendanceAdjustment":

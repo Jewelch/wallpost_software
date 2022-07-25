@@ -21,7 +21,7 @@ class Approval extends JSONInitializable {
   }
 
   bool isLeaveApproval() {
-    return this is LeaveApproval;
+    return false;
   }
 
   bool isAtAdApproval() {

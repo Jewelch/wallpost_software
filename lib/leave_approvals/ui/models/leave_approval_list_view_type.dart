@@ -1,5 +1,5 @@
-enum LeaveListItemType {
-  LeaveListItem,
+enum LeaveApprovalListViewType {
+  List,
   Loader,
   ErrorMessage,
   EmptySpace,

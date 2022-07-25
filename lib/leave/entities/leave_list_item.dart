@@ -16,6 +16,7 @@ class LeaveListItem extends JSONInitializable {
   String? _rejectionReason;
   String? _cancellationReason;
 
+  //TODO: Saeed Munavir - clean up this class
   LeaveListItem() : super.fromJson({}) {
     _leaveId = "${DateTime.now().millisecondsSinceEpoch}";
     _applicantName = "name";

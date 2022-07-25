@@ -4,6 +4,8 @@ import 'package:sift/sift.dart';
 import 'break.dart';
 
 class AttendanceDetails {
+  //if not applicable - the user does not have access to attendance module or does not have to mark attendance
+  late bool _isAttendanceApplicable; 
   String? _id;
   String? _detailsId;
   DateTime? _punchInTime;
@@ -22,6 +24,7 @@ class AttendanceDetails {
     var attendanceDetailsMap = sift.readMapFromListWithDefaultValue(attendanceDetailsMapList, 0, null);
     var breaksMapList = sift.readMapListFromMapWithDefaultValue(attendanceDetailsMap, 'attendance_intervals', null);
     var attendancePermissionMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'is_allowed_punchin', null);
+    _isAttendanceApplicable = sift.readBooleanFromMap(jsonMap, "is_punching_required");
     _id = sift.readStringFromMapWithDefaultValue(attendanceInfoMap, 'attendance_id', null);
     _detailsId = sift.readStringFromMapWithDefaultValue(attendanceDetailsMap, 'attendance_details_id', null);
     _punchInTime =

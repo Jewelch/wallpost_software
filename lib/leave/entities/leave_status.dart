@@ -9,7 +9,7 @@ enum LeaveStatus {
 }
 
 extension LeaveStatusExtension on LeaveStatus {
-  String stringValue() {
+  String toReadableString() {
     if (this == LeaveStatus.pendingApproval) {
       return 'Pending Approval';
     } else if (this == LeaveStatus.approved) {
