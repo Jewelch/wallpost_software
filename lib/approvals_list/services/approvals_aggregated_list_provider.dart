@@ -5,7 +5,6 @@ import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/approvals_list/entities/approval_aggregated.dart';
 import 'package:wallpost/dashboard_core/constants/dashboard_management_urls.dart';
 
-
 class ApprovalsAggregatedListProvider {
   final NetworkAdapter _networkAdapter;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
@@ -13,8 +12,7 @@ class ApprovalsAggregatedListProvider {
 
   ApprovalsAggregatedListProvider.initWith(this._networkAdapter);
 
-  ApprovalsAggregatedListProvider()
-      : _networkAdapter = WPAPI();
+  ApprovalsAggregatedListProvider() : _networkAdapter = WPAPI();
 
   void reset() {
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
@@ -52,13 +50,11 @@ class ApprovalsAggregatedListProvider {
       var approvalsList = <ApprovalAggregated>[];
       for (var responseMap in responseMapList) {
         ApprovalAggregated? approvalAggregated = ApprovalAggregated.fromJson(responseMap);
-          approvalsList.add(approvalAggregated);
+        approvalsList.add(approvalAggregated);
       }
       return approvalsList;
     } catch (e) {
       throw InvalidResponseException();
     }
   }
-
-
 }

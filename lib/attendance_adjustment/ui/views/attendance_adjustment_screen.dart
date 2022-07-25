@@ -62,9 +62,7 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
                   builder: (context, value) => IgnorePointer(
                     ignoring: value ? true : false,
                     child: Container(
-                      padding: EdgeInsets.all(
-                        16,
-                      ),
+                      padding: EdgeInsets.all(16),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

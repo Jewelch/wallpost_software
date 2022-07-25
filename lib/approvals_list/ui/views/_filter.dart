@@ -1,4 +1,4 @@
-import 'package:dropdown_button2/custom_dropdown_button2.dart';
+// import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 
@@ -30,7 +30,15 @@ class _FilterState extends State<Filter> {
     return ItemNotifiable<String?>(
       notifier: _selectedValueNotifier,
       builder: (context, selectedValue) {
-        return CustomDropdownButton2(
+        return Container();
+      },
+    );
+  }
+}
+
+
+/*
+CustomDropdownButton2(
           hint: widget.hint,
           hintColor: AppColors.defaultColorDark,
           hintFontSize: 16.0,
@@ -53,8 +61,5 @@ class _FilterState extends State<Filter> {
             _selectedValueNotifier.notify(value);
             widget.onClicked(value);
           }
-        );
-      },
-    );
-  }
-}
+        )
+ */

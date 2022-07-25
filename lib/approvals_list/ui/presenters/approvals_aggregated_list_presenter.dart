@@ -1,8 +1,8 @@
-
 import "package:collection/collection.dart";
 import 'package:wallpost/approvals_list/entities/approval_aggregated.dart';
 import 'package:wallpost/approvals_list/services/approvals_aggregated_list_provider.dart';
 import 'package:wallpost/approvals_list/ui/view_contracts/approvals_list_view.dart';
+
 import '../../../_shared/exceptions/wp_exception.dart';
 
 class ApprovalsListPresenter {
@@ -13,8 +13,7 @@ class ApprovalsListPresenter {
   String _moduleKeyFilter = "";
   String _companyKeyFilter = "";
 
-  ApprovalsListPresenter(this._view)
-      : _provider = ApprovalsAggregatedListProvider();
+  ApprovalsListPresenter(this._view) : _provider = ApprovalsAggregatedListProvider();
 
   ApprovalsListPresenter.initWith(this._view, this._provider);
 
@@ -29,8 +28,8 @@ class ApprovalsListPresenter {
       _resetErrors();
       _view.onDidLoadData();
 
-      List<String> companies = getCompaniesAvailable(approvalsList);
-      List<String> modules = getModulesAvailable(approvalsList);
+      List<String> companies = _getCompaniesAvailable(approvalsList);
+      List<String> modules = _getModulesAvailable(approvalsList);
 
       _view.onDidLoadCompanies(companies);
       _view.onDidLoadModules(modules);
@@ -43,16 +42,15 @@ class ApprovalsListPresenter {
     }
   }
 
-  List<String> getCompaniesAvailable(List<ApprovalAggregated> approvalsList) {
-    final companyNames =
-        approvalsList.groupListsBy((element) => element.companyName);
+  List<String> _getCompaniesAvailable(List<ApprovalAggregated> approvalsList) {
+    final companyNames = approvalsList.groupListsBy((element) => element.companyName);
     var names = companyNames.keys.toList();
     names.insert(0, " All Companies ");
     _companyKeyFilter = names[0];
     return names;
   }
 
-  List<String> getModulesAvailable(List<ApprovalAggregated> approvalsList) {
+  List<String> _getModulesAvailable(List<ApprovalAggregated> approvalsList) {
     final moduleNames = approvalsList.groupListsBy((element) => element.module);
     var names = moduleNames.keys.toList();
     names.insert(0, " All Modules ");
@@ -69,10 +67,6 @@ class ApprovalsListPresenter {
     _errorMessage = "";
   }
 
-  bool _hasErrors() {
-    return _errorMessage.isNotEmpty;
-  }
-
   bool isEmpty() {
     return approvals.isEmpty;
   }
@@ -87,17 +81,11 @@ class ApprovalsListPresenter {
       _companyKeyFilter = company;
     }
     var filteredList = approvals;
-    if(_companyKeyFilter != " All Companies "){
-      filteredList =  approvals
-          .where((company) =>
-      (company.companyName == _companyKeyFilter))
-          .toList();
+    if (_companyKeyFilter != " All Companies ") {
+      filteredList = approvals.where((company) => (company.companyName == _companyKeyFilter)).toList();
     }
-    if(_moduleKeyFilter != " All Modules "){
-      filteredList
-          .where((company) =>
-      (company.module == _moduleKeyFilter))
-          .toList();
+    if (_moduleKeyFilter != " All Modules ") {
+      filteredList.where((company) => (company.module == _moduleKeyFilter)).toList();
     }
     showApprovalsList(filteredList);
   }
@@ -105,7 +93,7 @@ class ApprovalsListPresenter {
   void showApprovalsList(List<ApprovalAggregated> approvals) {
     if (approvals.isNotEmpty) {
       _view.onDidLoadApprovals(approvals);
-    }else {
+    } else {
       _view.showErrorMessage("There are no approvals.\n\nTap here to reload.");
     }
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/my_portal_header_card.dart';
-import 'package:wallpost/approvals/ui/views/approval_list_widget.dart';
+// import 'package:wallpost/approvals/ui/views/approval_list_widget.dart';
 import 'package:wallpost/dashboard/constants/dashboard_colors.dart';
 import 'package:wallpost/dashboard/ui/my_portal/view_contracts/my_portal_view.dart';
 import 'package:wallpost/dashboard/ui/my_portal/views/list_tiles/attendance_adjustment_approval_tile.dart';
@@ -15,7 +15,7 @@ import '../../../../_common_widgets/filter_views/multi_select_filter_chips.dart'
 import '../../../../_common_widgets/list_view/loader_list_tile.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../_shared/constants/app_colors.dart';
-import '../../../../approvals/entities/approval.dart';
+// import '../../../../approvals/entities/approval.dart';
 import '../presenters/my_portal_presenter.dart';
 
 class MyPortalScreen extends StatefulWidget {
@@ -23,18 +23,18 @@ class MyPortalScreen extends StatefulWidget {
   _MyPortalScreenState createState() => _MyPortalScreenState();
 }
 
-class _MyPortalScreenState extends State<MyPortalScreen> implements MyPortalView {
+class _MyPortalScreenState extends State<MyPortalScreen> {
 
 
-  late MyPortalPresenter _presenter;
-  var _approvalsListNotifier = ItemNotifier<List<Approval>>(defaultValue: []);
+  // late MyPortalPresenter _presenter;
+  // var _approvalsListNotifier = ItemNotifier<List<Approval>>(defaultValue: []);
 
 
 
 
   @override
   void initState() {
-    _presenter = MyPortalPresenter(this);
+    // _presenter = MyPortalPresenter(this);
     super.initState();
   }
 
@@ -252,7 +252,7 @@ class _MyPortalScreenState extends State<MyPortalScreen> implements MyPortalView
           content: DefaultTabController(
             initialIndex: 0,
             length: 0,
-            child: ApprovalsListWidget(),
+            child: Container(),
           ),
         ),
       ],
@@ -266,15 +266,15 @@ class _MyPortalScreenState extends State<MyPortalScreen> implements MyPortalView
 
   Widget _appBar() {
     return MyPortalAppBar(
-      profileImageUrl: _presenter.getProfileImageUrl(),
+      profileImageUrl: "_presenter.getProfileImageUrl()",
       onAddButtonPressed: () {},
     );
   }
 
-  @override
-  void onDidLoadApprovals(List<Approval> approvalsList) {
-    _approvalsListNotifier.notify(approvalsList);
-  }
+  // @override
+  // void onDidLoadApprovals(List<Approval> approvalsList) {
+  //   _approvalsListNotifier.notify(approvalsList);
+  // }
 
 
 }
