@@ -41,7 +41,7 @@ class FireBaseTokenUpdater {
     if (apiResponse.apiRequest.requestId != _sessionId) return Completer<void>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
-    if (apiResponse.data['user_id'] == null) throw WrongResponseFormatException();
+    if (!(apiResponse.data as Map<String, dynamic>).containsKey("user_id")) throw WrongResponseFormatException();
     FcmNotificationListener.listen();
   }
 }
