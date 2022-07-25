@@ -116,5 +116,16 @@ main() {
     expect(verifyResult.callCount, 1);
   });
 
-  test("success", () async {});
+  test("success", () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    try {
+      var _ = await firebaseTokenUpdater.updateToken();
+    } catch (e) {
+      fail('test should not reach here');
+    }
+
+    var verifyResult = verify(() => mockDeviceTokenProvider.getDeviceToken());
+    expect(verifyResult.callCount, 1);
+  });
 }
