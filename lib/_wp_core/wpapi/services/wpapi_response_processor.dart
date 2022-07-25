@@ -4,11 +4,11 @@ import 'package:wallpost/_wp_core/wpapi/exceptions/server_sent_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/unexpected_response_format_exception.dart';
 
 class WPAPIResponseProcessor {
-  dynamic processResponse(APIResponse response) {
+  Map<String, dynamic> processResponse(APIResponse response) {
     return _parseResponseData(response.data);
   }
 
-  dynamic _parseResponseData(dynamic responseData) {
+  Map<String, dynamic> _parseResponseData(dynamic responseData) {
     if (responseData is! Map<String, dynamic>) {
       throw UnexpectedResponseFormatException();
     }
@@ -31,16 +31,22 @@ class WPAPIResponseProcessor {
     return false;
   }
 
-  dynamic _readWPResponseDataFromResponse(Map<String, dynamic> responseMap) {
+  Map<String, dynamic> _readWPResponseDataFromResponse(Map<String, dynamic> responseMap) {
     if (responseMap['status'] != 'success') {
       throw ServerSentException(responseMap['message'], responseMap['errorCode'] ?? 0);
     }
 
+    dynamic response;
     if ((responseMap['data'] is List<dynamic>)) {
-      return _parseDataList(responseMap['data']);
+      response = _parseDataList(responseMap['data']);
     } else {
-      return responseMap['data'];
+      response = responseMap['data'];
     }
+
+    Map<String, dynamic> processedResponse = {};
+    processedResponse["response"] = response;
+    processedResponse["metadata"] = _parseMetadata(responseMap);
+    return processedResponse;
   }
 
   List<Map<String, dynamic>> _parseDataList(List<dynamic> responseDataList) {
@@ -55,5 +61,13 @@ class WPAPIResponseProcessor {
       }
     }
     return items;
+  }
+
+  Map<String, dynamic>? _parseMetadata(Map<String, dynamic> responseMap) {
+    var metadata = responseMap["metadata"];
+
+    if (metadata == null) return null;
+    if (!(metadata is Map<String, dynamic>)) return null;
+    return metadata;
   }
 }

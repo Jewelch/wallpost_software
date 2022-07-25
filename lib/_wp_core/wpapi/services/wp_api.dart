@@ -8,7 +8,6 @@ import 'package:wallpost/_wp_core/wpapi/services/network_request_executor.dart';
 import 'package:wallpost/_wp_core/wpapi/services/nonce_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wpapi_response_processor.dart';
 
-import '../../../approvals/services/wpapi_metadata_processor.dart';
 export 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 
 class WPAPI implements NetworkAdapter {
@@ -24,8 +23,7 @@ class WPAPI implements NetworkAdapter {
     this._networkAdapter = NetworkRequestExecutor();
   }
 
-  WPAPI.initWith(
-      this._deviceInfo, this._accessTokenProvider, this._nonceProvider, this._networkAdapter);
+  WPAPI.initWith(this._deviceInfo, this._accessTokenProvider, this._nonceProvider, this._networkAdapter);
 
   @override
   Future<APIResponse> get(APIRequest apiRequest, {bool forceRefresh = false}) async {
@@ -121,8 +119,7 @@ class WPAPI implements NetworkAdapter {
     }
   }
 
-  Future<Map<String, String>> _buildWPHeaders(
-      {bool forceRefresh = false, bool isFormData = false}) async {
+  Future<Map<String, String>> _buildWPHeaders({bool forceRefresh = false, bool isFormData = false}) async {
     var headers = Map<String, String>();
     headers['Content-Type'] = isFormData ? 'application/x-www-form-urlencoded;charset=utf-8' : 'application/json';
     headers['X-WallPost-Device-ID'] = await _deviceInfo.getDeviceId();
@@ -136,10 +133,10 @@ class WPAPI implements NetworkAdapter {
   }
 
   APIResponse _processResponse(APIResponse response, APIRequest apiRequest) {
-    var responseData = WPAPIResponseProcessor().processResponse(response);
-    var metaData = WPAPIMetaDataProcessor().processResponse(response);
-
-    return APIResponse(apiRequest, response.statusCode, responseData, metaData);
+    var processedResponse = WPAPIResponseProcessor().processResponse(response);
+    var responseData = processedResponse["response"];
+    var metadata = processedResponse["metadata"];
+    return APIResponse(apiRequest, response.statusCode, responseData, metadata);
   }
 
   bool _shouldRefreshTokenOnException(APIException apiException) {

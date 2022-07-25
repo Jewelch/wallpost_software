@@ -3,7 +3,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_id.dart';
 import 'package:wallpost/_shared/device/device_info.dart';
 import 'package:wallpost/_wp_core/user_management/services/access_token_provider.dart';
-import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 import 'package:wallpost/_wp_core/wpapi/services/nonce_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
@@ -20,7 +19,7 @@ class MockNonceProvider extends Mock implements NonceProvider {}
 void main() {
   var simpleWpResponse = {
     "status": "success",
-    "data": {"some": "data"}
+    "data": {"some": "data"},
   };
   late APIRequest apiRequest;
   var mockDeviceInfo = MockDeviceInfo();
@@ -199,6 +198,22 @@ void main() {
         expect((error).errorCode, 1004);
       }
     });
+  });
+
+  group('test successful data processing', () {
+    setUp(() {
+      when(() => mockAccessTokenProvider.getToken(forceRefresh: any(named: 'forceRefresh')))
+          .thenAnswer((_) => Future.value("someAuthToken"));
+    });
+
+    test('processing simple map response', () async {
+      mockNetworkAdapter.succeed(simpleWpResponse);
+
+      var response = await wpApi.post(apiRequest);
+
+      expect(response.data is Map<String, dynamic>, true);
+      expect(response.data, {"some": "data"});
+    });
 
     test('converting empty response data list to List<Map<String, dynamic>>', () async {
       mockNetworkAdapter.succeed({"status": "success", "data": []});
@@ -237,6 +252,41 @@ void main() {
         {'userId': 1},
         {'userId': 2}
       ]);
+    });
+
+    test('processing response with missing metadata', () async {
+      var responseWithoutMetadata = simpleWpResponse;
+      mockNetworkAdapter.succeed(responseWithoutMetadata);
+
+      var response = await wpApi.post(apiRequest);
+
+      expect(response.metaData, null);
+    });
+
+    test('processing response with metadata of the wrong format', () async {
+      var responseWithoutWrongMetadataType = {
+        "status": "success",
+        "data": {"some": "data"},
+        "metadata": "wrong type of metadata",
+      };
+      mockNetworkAdapter.succeed(responseWithoutWrongMetadataType);
+
+      var response = await wpApi.post(apiRequest);
+
+      expect(response.metaData, null);
+    });
+
+    test('processing response with some metadata', () async {
+      var responseWithMetadata = {
+        "status": "success",
+        "data": {"some": "data"},
+        "metadata": {"some": "metadata"},
+      };
+      mockNetworkAdapter.succeed(responseWithMetadata);
+
+      var response = await wpApi.post(apiRequest);
+
+      expect(response.metaData, {"some": "metadata"});
     });
   });
 }
