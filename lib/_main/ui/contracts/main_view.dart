@@ -7,5 +7,4 @@ abstract class MainView {
 
   void goToDashboardScreen();
 
-  void onError(String message);
 }

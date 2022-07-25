@@ -53,13 +53,10 @@ class MainPresenter {
     }
   }
 
-  // TODO:Abdo check with Obaid how to show error and is this a good place to call token updater
   void _updateToken() async {
     try {
       await _fireBaseTokenUpdater.updateToken();
-    } on WPException catch (error) {
-      _view.onError(error.userReadableMessage);
-    }
+    } on WPException {}
   }
 }
 /*

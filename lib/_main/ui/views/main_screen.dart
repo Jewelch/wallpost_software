@@ -56,9 +56,4 @@ class _MainScreenState extends State<MainScreen> implements MainView {
     ScreenPresenter.presentAndRemoveAllPreviousScreens(DashboardScreen(), context);
   }
 
-  // TODO: Abdo check with Obaid
-  @override
-  void onError(String message) {
-    // TODO: implement onError
-  }
 }

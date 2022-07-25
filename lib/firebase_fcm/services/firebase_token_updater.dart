@@ -4,6 +4,7 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/firebase_fcm/constants/firebase_urls.dart';
+import 'package:wallpost/firebase_fcm/entities/fcm_notification_listener.dart';
 import 'package:wallpost/firebase_fcm/utils/firebase_device_token_provider.dart';
 
 class FireBaseTokenUpdater {
@@ -41,5 +42,6 @@ class FireBaseTokenUpdater {
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
     if (apiResponse.data['user_id'] == null) throw WrongResponseFormatException();
+    FcmNotificationListener.listen();
   }
 }
