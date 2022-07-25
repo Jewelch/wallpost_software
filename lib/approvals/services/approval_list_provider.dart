@@ -69,7 +69,7 @@ class ApprovalListProvider {
     try {
       actionsCount = sift.readNumberFromMap(metaDataMap, "total");
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast Approval response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast Action data metadata response. Error message - ${e.errorMessage}');
     }
   }
 
@@ -91,8 +91,8 @@ class ApprovalListProvider {
     var sift = Sift();
     var approvalType = sift.readStringFromMap(responseMap, 'approvalType');
     switch (approvalType) {
-      // case "leaveApproval":
-      //   return LeaveApproval.fromJson(responseMap);
+      case "leaveApproval":
+        return LeaveApproval.fromJson(responseMap);
       case "expenseRequestApproval":
         return ExpenseRequestApproval.fromJson(responseMap);
       case "attendanceAdjustment":

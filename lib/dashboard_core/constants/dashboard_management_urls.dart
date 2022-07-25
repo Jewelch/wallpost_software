@@ -14,4 +14,8 @@ class DashboardManagementUrls {
     if (companyId != null) url += "&company_id=$companyId";
     return url;
   }
+
+  static String getApprovalAggregatedListUrl() {
+    return '${BaseUrls.hrUrlV2()}/widget/approvals_aggregated_list';
+  }
 }
