@@ -2,6 +2,7 @@ import 'package:wallpost/company_core/entities/company_list_item.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 
 abstract class CompaniesListView {
+
   void showLoader();
 
   void showErrorMessage(String message);
@@ -13,4 +14,6 @@ abstract class CompaniesListView {
   void updateCompanyList(List<CompanyListItem> companies);
 
   void goToCompanyDetailScreen();
+
+  void goToApprovalsListScreen();
 }

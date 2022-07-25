@@ -69,7 +69,7 @@ class ApprovalListProvider {
     try {
       actionsCount = sift.readNumberFromMap(metaDataMap, "total");
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast Approval response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast Action data metadata response. Error message - ${e.errorMessage}');
     }
   }
 
