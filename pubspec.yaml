@@ -33,9 +33,11 @@ dependencies:
   notifiable: 1.0.5
   google_maps_flutter: ^2.1.8
   camera: 0.9.8+1
-  camera_avfoundation: 0.9.8+1
+  camera_avfoundation:
   path_provider:
   path:
+  firebase_core: ^1.19.2
+  firebase_messaging: ^12.0.0
 
 dev_dependencies:
   flutter_test:

@@ -56,4 +56,5 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   void goToDashboardScreen() {
     ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context);
   }
+
 }

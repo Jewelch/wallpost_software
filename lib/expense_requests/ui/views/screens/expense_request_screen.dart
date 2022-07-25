@@ -233,6 +233,7 @@ class _ExpenseRequestScreenState extends State<ExpenseRequestScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
+                            flex:2,
                             child: Text(
                               _expenseRequest.file != null ? _expenseRequest.file!.name() : "",
                               style: TextStyle(color: AppColors.darkGrey),

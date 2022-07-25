@@ -1,0 +1,155 @@
+{
+  "project_info": {
+    "project_number": "353563317841",
+    "firebase_url": "https://wallpost-d1fbb.firebaseio.com",
+    "project_id": "wallpost-d1fbb",
+    "storage_bucket": "wallpost-d1fbb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353563317841:android:9902525e5b3bc193",
+        "android_client_info": {
+          "package_name": "com.SMIT.WallPostSoftware"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353563317841-iht9q8q2irathue012gikc9pbva0dm1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdy318q7kPUcBlPmPLGVt92Po0MUExi7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353563317841-7rutmi9c8k3p74eaf6691rp5midn7noa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "353563317841-38prnadir50lnm720bnv0bt9j436t66r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smit.ushopclub"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353563317841:android:cde5a5d138c1dfc2bc8a70",
+        "android_client_info": {
+          "package_name": "com.smit.jamaicawallpost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353563317841-iht9q8q2irathue012gikc9pbva0dm1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdy318q7kPUcBlPmPLGVt92Po0MUExi7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353563317841-7rutmi9c8k3p74eaf6691rp5midn7noa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "353563317841-38prnadir50lnm720bnv0bt9j436t66r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smit.ushopclub"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353563317841:android:f134bcb0b88bc2f5",
+        "android_client_info": {
+          "package_name": "com.smit.ooredoowallpost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353563317841-iht9q8q2irathue012gikc9pbva0dm1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdy318q7kPUcBlPmPLGVt92Po0MUExi7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353563317841-7rutmi9c8k3p74eaf6691rp5midn7noa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "353563317841-38prnadir50lnm720bnv0bt9j436t66r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smit.ushopclub"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353563317841:android:bde201f64e320df0bc8a70",
+        "android_client_info": {
+          "package_name": "com.smit.tunisiawallpost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353563317841-iht9q8q2irathue012gikc9pbva0dm1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdy318q7kPUcBlPmPLGVt92Po0MUExi7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353563317841-7rutmi9c8k3p74eaf6691rp5midn7noa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "353563317841-38prnadir50lnm720bnv0bt9j436t66r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smit.ushopclub"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

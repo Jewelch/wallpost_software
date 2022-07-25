@@ -2,8 +2,10 @@ import 'dart:core';
 
 import 'package:wallpost/_main/services/repository_initializer.dart';
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
+import 'package:wallpost/firebase_fcm/services/firebase_token_updater.dart';
 import 'package:wallpost/notifications/services/app_badge_updater.dart';
 
 class MainPresenter {
@@ -12,12 +14,14 @@ class MainPresenter {
   final CurrentUserProvider _currentUserProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
   final AppBadgeUpdater _appBadgeUpdater;
+  final FireBaseTokenUpdater _fireBaseTokenUpdater;
 
   MainPresenter(this._view)
       : _repositoryInitializer = RepositoryInitializer(),
         _currentUserProvider = CurrentUserProvider(),
         _selectedCompanyProvider = SelectedCompanyProvider(),
-        _appBadgeUpdater = AppBadgeUpdater();
+        _appBadgeUpdater = AppBadgeUpdater(),
+        _fireBaseTokenUpdater = FireBaseTokenUpdater();
 
   MainPresenter.initWith(
     this._view,
@@ -25,6 +29,7 @@ class MainPresenter {
     this._currentUserProvider,
     this._selectedCompanyProvider,
     this._appBadgeUpdater,
+    this._fireBaseTokenUpdater,
   );
 
   Future<void> processLaunchTasksAndShowLandingScreen() async {
@@ -35,6 +40,7 @@ class MainPresenter {
     if (isLoggedIn == false) {
       _view.goToLoginScreen();
     } else {
+      _updateToken();
       _showLandingScreenForLoggedInUser();
     }
   }
@@ -45,6 +51,12 @@ class MainPresenter {
     } else {
       _view.goToCompaniesListScreen();
     }
+  }
+
+  void _updateToken() async {
+    try {
+      await _fireBaseTokenUpdater.updateToken();
+    } on WPException {}
   }
 }
 /*

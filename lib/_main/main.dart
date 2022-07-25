@@ -1,11 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallpost/_main/ui/views/main_screen.dart';
 import 'package:wallpost/notifications/services/app_badge_updater.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.setMockInitialValues({});
+  await Firebase.initializeApp();
   runApp(WallPostApp());
 }
 

@@ -6,4 +6,5 @@ abstract class MainView {
   void goToCompaniesListScreen();
 
   void goToDashboardScreen();
+
 }
