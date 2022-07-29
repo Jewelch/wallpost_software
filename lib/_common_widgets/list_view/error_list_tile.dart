@@ -14,8 +14,12 @@ class ErrorListTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FlatButton(
-              padding: EdgeInsets.all(12).copyWith(bottom: 0),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.transparent,
+                padding:  EdgeInsets.all(12).copyWith(bottom: 0),
+                backgroundColor: Colors.transparent,
+              ),
               child: Text(
                 message,
                 textAlign: TextAlign.center,

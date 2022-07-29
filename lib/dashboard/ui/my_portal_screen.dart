@@ -18,43 +18,55 @@ class MyPortalScreen extends StatelessWidget {
           child: Column(
             children: [
               Text('My Portal Screen'),
-              FlatButton(
-                color: Colors.red,
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
                 child: Text('Logout'),
                 onPressed: () {
                   LogoutHandler().logout(context);
                 },
               ),
-              FlatButton(
-                color: Colors.blueAccent,
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                ),
                 child: Text('Change password'),
                 onPressed: () {
                   ScreenPresenter.present(ChangePasswordScreen(), context);
                 },
               ),
-              FlatButton(
-                color: Colors.greenAccent,
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.greenAccent,
+                ),
                 child: Text('Adjust Attendance'),
                 onPressed: () {
                   ScreenPresenter.present(AttendanceListScreen(), context);
                 },
               ),
-              FlatButton(
-                color: Colors.greenAccent,
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.greenAccent,
+                ),
                 child: Text('Go to expense request'),
                 onPressed: () async {
                   ScreenPresenter.present(ExpenseRequestScreen(), context);
                 },
               ),
-              FlatButton(
-                color: Colors.greenAccent,
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.greenAccent,
+                ),
                 child: Text('Go to expense list'),
                 onPressed: () async {
                   ScreenPresenter.present(ExpenseListScreen(), context);
                 },
               ),
-              FlatButton(
-                color: Colors.greenAccent,
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.greenAccent,
+                ),
                 child: Text('Go to leave  list'),
                 onPressed: () {
                   ScreenPresenter.present(LeaveListScreen(), context);

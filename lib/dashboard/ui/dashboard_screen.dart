@@ -165,11 +165,12 @@ class NavBarItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 84,
-      child: FlatButton(
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: EdgeInsets.only(top: 10, bottom: 6, left: 0, right: 4),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.transparent,
+          padding: EdgeInsets.only(top: 10, bottom: 6, left: 0, right: 4),
+          backgroundColor: Colors.transparent,
+        ),
         onPressed: onPressed,
         child: Container(
           child: Column(

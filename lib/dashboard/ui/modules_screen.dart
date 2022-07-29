@@ -10,8 +10,10 @@ class ModulesScreen extends StatelessWidget {
           child: Column(
             children: [
               Text('Modules Screen'),
-              FlatButton(
-                color: Colors.red,
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
                 child: Text('Logout'),
                 onPressed: () {
                   LogoutHandler().logout(context);
