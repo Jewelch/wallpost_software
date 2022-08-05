@@ -58,7 +58,7 @@ void main() {
   test('retrieving aggregated approvals failed', () async {
     //given
     when(() => mockApprovalsAggregatedListProvider.isLoading).thenReturn(false);
-    when(() => mockApprovalsAggregatedListProvider.get()).thenAnswer(
+    when(() => mockApprovalsAggregatedListProvider.get(null)).thenAnswer(
           (realInvocation) => Future.error(InvalidResponseException()),
     );
 
@@ -69,7 +69,7 @@ void main() {
     verifyInOrder([
           () => mockApprovalsAggregatedListProvider.isLoading,
           () => view.onLoad(),
-          () => mockApprovalsAggregatedListProvider.get(),
+          () => mockApprovalsAggregatedListProvider.get(null),
           () => view.showErrorMessage(
           "${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
@@ -80,7 +80,7 @@ void main() {
           () async {
         //given
         when(() => mockApprovalsAggregatedListProvider.isLoading).thenReturn(false);
-        when(() => mockApprovalsAggregatedListProvider.get())
+        when(() => mockApprovalsAggregatedListProvider.get(null))
             .thenAnswer((_) => Future.value([]));
 
         //when
@@ -90,7 +90,7 @@ void main() {
         verifyInOrder([
               () => mockApprovalsAggregatedListProvider.isLoading,
               () => view.onLoad(),
-              () => mockApprovalsAggregatedListProvider.get(),
+              () => mockApprovalsAggregatedListProvider.get(null),
               () => view.onDidLoadCompanies([" All Companies "]),
               () => view.onDidLoadModules([" All Modules "]),
               () => view
@@ -105,7 +105,7 @@ void main() {
           () async {
         //given
         when(() => mockApprovalsAggregatedListProvider.isLoading).thenReturn(false);
-        when(() => mockApprovalsAggregatedListProvider.get())
+        when(() => mockApprovalsAggregatedListProvider.get(null))
             .thenAnswer((_) => Future.value([approvalAggregated1,approvalAggregated2]));
         when(() => approvalAggregated1.companyId).thenReturn(1);
         when(() => approvalAggregated2.companyId).thenReturn(2);
@@ -117,7 +117,7 @@ void main() {
         verifyInOrder([
               () => mockApprovalsAggregatedListProvider.isLoading,
               () => view.onLoad(),
-              () => mockApprovalsAggregatedListProvider.get(),
+              () => mockApprovalsAggregatedListProvider.get(null),
               () => view.onDidLoadCompanies([" All Companies ","company 1","company 2"]),
               () => view.onDidLoadModules([" All Modules ","module 1","module 2"]),
               ()=> view.onDidLoadApprovals([approvalAggregated1,approvalAggregated2])
@@ -131,7 +131,7 @@ void main() {
   test('performing search successfully', () async {
     //given
     when(() => mockApprovalsAggregatedListProvider.isLoading).thenReturn(false);
-    when(() => mockApprovalsAggregatedListProvider.get())
+    when(() => mockApprovalsAggregatedListProvider.get(null))
         .thenAnswer((_) => Future.value([approvalAggregated1,approvalAggregated2]));
     when(() => approvalAggregated1.companyId).thenReturn(1);
     when(() => approvalAggregated2.companyId).thenReturn(2);
