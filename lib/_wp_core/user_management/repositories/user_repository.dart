@@ -8,23 +8,20 @@ class UserRepository {
 
   static UserRepository? _singleton;
 
-  //ignore: unused_element
-  UserRepository._();
-
-  static Future<void> initRepo() async {
-    await getInstance()._readUserData();
-  }
-
-  static UserRepository getInstance() {
-    if (_singleton == null) {
-      _singleton = UserRepository.initWith(SecureSharedPrefs());
-    }
-    return _singleton!;
-  }
+  UserRepository._() : this.initWith(SecureSharedPrefs());
 
   UserRepository.initWith(SecureSharedPrefs sharedPrefs) {
     _sharedPrefs = sharedPrefs;
     _readUserData();
+  }
+
+  static UserRepository getInstance() {
+    if (_singleton == null) _singleton = UserRepository._();
+    return _singleton!;
+  }
+
+  static Future<void> initRepo() async {
+    await getInstance()._readUserData();
   }
 
   void saveNewCurrentUser(User user) async {
@@ -73,7 +70,7 @@ class UserRepository {
     }
   }
 
-  void _saveUsersData() {
+  Future<void> _saveUsersData() async {
     List<Map<String, dynamic>> usersDataList = [];
     for (User user in _users.values) {
       usersDataList.add(user.toJson());
