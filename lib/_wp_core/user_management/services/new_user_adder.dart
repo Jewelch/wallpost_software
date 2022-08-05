@@ -12,7 +12,7 @@ class NewUserAdder {
     _userRepository = userRepository;
   }
 
-  void addUser(User user) {
-    return _userRepository.saveNewCurrentUser(user);
+  Future<void> addUser(User user) async {
+    return await _userRepository.saveNewCurrentUser(user);
   }
 }

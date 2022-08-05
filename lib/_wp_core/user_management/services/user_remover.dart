@@ -12,7 +12,7 @@ class UserRemover {
     _userRepository = userRepository;
   }
 
-  void removeUser(User user) {
-    return _userRepository.removeUser(user);
+  Future<void> removeUser(User user) async {
+    return await _userRepository.removeUser(user);
   }
 }

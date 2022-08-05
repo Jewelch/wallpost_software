@@ -24,10 +24,10 @@ class UserRepository {
     await getInstance()._readUserData();
   }
 
-  void saveNewCurrentUser(User user) async {
+  Future<void> saveNewCurrentUser(User user) async {
     _users[user.username] = user;
     _currentUsername = user.username;
-    _saveUsersData();
+    await _saveUsersData();
   }
 
   User? getCurrentUser() {
@@ -38,12 +38,12 @@ class UserRepository {
     return _users.values.toList();
   }
 
-  void updateUser(User user) async {
+  Future<void> updateUser(User user) async {
     _users[user.username] = user;
-    _saveUsersData();
+    await _saveUsersData();
   }
 
-  void removeUser(User user) async {
+  Future<void> removeUser(User user) async {
     _users.remove(user.username);
     if (_users.keys.length > 0) {
       _currentUsername = _users.keys.toList()[0];
@@ -51,7 +51,7 @@ class UserRepository {
       _currentUsername = null;
     }
 
-    _saveUsersData();
+    await _saveUsersData();
   }
 
   Future<void> _readUserData() async {
@@ -76,7 +76,7 @@ class UserRepository {
       usersDataList.add(user.toJson());
     }
 
-    _sharedPrefs.saveMap('users', {'allUsers': usersDataList});
-    _sharedPrefs.saveMap('currentUser', {'username': _currentUsername});
+    await _sharedPrefs.saveMap('users', {'allUsers': usersDataList});
+    await _sharedPrefs.saveMap('currentUser', {'username': _currentUsername});
   }
 }

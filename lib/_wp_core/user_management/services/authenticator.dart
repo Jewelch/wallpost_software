@@ -59,7 +59,7 @@ class Authenticator {
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
       var user = User.fromJson(responseMap);
-      _newUserAdder.addUser(user);
+      await _newUserAdder.addUser(user);
       return user;
     } catch (e) {
       throw InvalidResponseException();
