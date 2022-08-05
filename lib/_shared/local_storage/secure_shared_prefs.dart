@@ -7,7 +7,7 @@ class SecureSharedPrefs {
   final encryptionKey = 'PeShVmYq3t6w9z@C';
   final initializationVector = IV.fromLength(16);
 
-  void saveMap(String key, Map data) async {
+  Future<void> saveMap(String key, Map data) async {
     var mapString = json.encode(data);
     var encryptedMapString = _encryptString(mapString);
     var preferences = await SharedPreferences.getInstance();
