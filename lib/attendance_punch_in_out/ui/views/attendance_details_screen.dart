@@ -98,7 +98,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
     return Scaffold(
       appBar: AppBarWithBackButton(
         leadingButton: BackButton(color: Colors.black),
-        onLeadingButtonPressed: () => ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context),
+        onLeadingButtonPressed: () => ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(null), context),
         textButton1: TextButton(
             child: Row(
               children: [

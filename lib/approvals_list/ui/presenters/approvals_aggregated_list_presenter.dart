@@ -22,11 +22,10 @@ class ApprovalsListPresenter {
     if (approvals.isEmpty) _view.onLoad();
 
     try {
-      var approvalsList = await _provider.get();
+      var approvalsList = await _provider.get(null);
 
       approvals.addAll(approvalsList);
       _resetErrors();
-      _view.onDidLoadData();
 
       List<String> companies = _getCompaniesAvailable(approvalsList);
       List<String> modules = _getModulesAvailable(approvalsList);

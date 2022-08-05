@@ -4,7 +4,12 @@ class AppColors {
   static const Color defaultColor = Color.fromRGBO(24, 152, 224, 1.0);
   static const Color defaultColorWithTransparency = Color.fromRGBO(24, 152, 224, 0.6);
   static const Color defaultColorDark = Color.fromRGBO(6, 62, 127, 1.0);
-  static const Color defaultColorDarkContrastColor = Color.fromRGBO(119, 155, 189, 1.0);
+  static const Color defaultColorDarkContrastColor = Color.fromRGBO(
+      119, 155, 189, 1.0);
+
+  static const Color punchInDarkGreenColor = Color.fromRGBO(0, 152, 66, 1.0);
+  static final Color greenButtonColor = Color.fromRGBO(43, 186, 104, 1.0);
+
 
   //MARK: Screen colors
   static const Color screenBackgroundColor = Colors.white;
@@ -30,7 +35,13 @@ class AppColors {
 
   static const Color filtersBackgroundColour = Color.fromRGBO(223, 240, 247, 1.0);
 
-  static final Color greenButtonColor = Color.fromRGBO(43, 186, 104, 1.0);
+  static const Color portalItemRedColor = Color.fromRGBO(246, 42, 32, 1.0);
+
+  static const Color portalTitleRedColor = Color.fromRGBO(191, 10, 10, 1.0);
+
+  static const Color noActionsGreen = Color.fromRGBO(74, 240, 145, 1.0);
+
+
 
   //expense requests colors
   static final Color darkGrey = Color.fromRGBO(100, 100, 100, 1.0);

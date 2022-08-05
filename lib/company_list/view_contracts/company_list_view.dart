@@ -13,7 +13,7 @@ abstract class CompaniesListView {
 
   void updateCompanyList(List<CompanyListItem> companies);
 
-  void goToCompanyDetailScreen();
+  void goToCompanyDetailScreen(String companyId);
 
   void goToApprovalsListScreen();
 }

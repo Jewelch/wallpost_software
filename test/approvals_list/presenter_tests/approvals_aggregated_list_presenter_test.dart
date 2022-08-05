@@ -91,7 +91,6 @@ void main() {
               () => mockApprovalsAggregatedListProvider.isLoading,
               () => view.onLoad(),
               () => mockApprovalsAggregatedListProvider.get(),
-              () => view.onDidLoadData(),
               () => view.onDidLoadCompanies([" All Companies "]),
               () => view.onDidLoadModules([" All Modules "]),
               () => view
@@ -119,7 +118,6 @@ void main() {
               () => mockApprovalsAggregatedListProvider.isLoading,
               () => view.onLoad(),
               () => mockApprovalsAggregatedListProvider.get(),
-              () => view.onDidLoadData(),
               () => view.onDidLoadCompanies([" All Companies ","company 1","company 2"]),
               () => view.onDidLoadModules([" All Modules ","module 1","module 2"]),
               ()=> view.onDidLoadApprovals([approvalAggregated1,approvalAggregated2])
@@ -127,6 +125,7 @@ void main() {
         ]);
         _verifyNoMoreInteractionsOnAllMocks();
       });
+
 
 
   test('performing search successfully', () async {

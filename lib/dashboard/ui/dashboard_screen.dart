@@ -1,16 +1,21 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 // import 'package:wallpost/_routing/route_names.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/ui/my_portal/views/my_portal_screen.dart';
 import 'package:wallpost/dashboard/ui/requests_screen.dart';
-// import 'package:wallpost/my_portal/ui/employee_my_portal_screen.dart';
-// import 'package:wallpost/my_portal/ui/sales_my_portal_screen.dart';
 import 'package:wallpost/notifications/ui/views/notifications_screen.dart';
 
 import 'modules_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
+
+  final String? companyId;
+  const DashboardScreen(this.companyId);
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -20,6 +25,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
   List<Widget> _screens = [];
   GlobalKey btnKey2 = GlobalKey();
+
 
   @override
   void initState() {
@@ -41,7 +47,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _initScreens() {
-    _screens.add(MyPortalScreen());
+    _screens.add(MyPortalScreen(widget.companyId));
     _screens.add(ModulesScreen());
     _screens.add(RequestsScreen());
     _screens.add(NotificationsScreen());

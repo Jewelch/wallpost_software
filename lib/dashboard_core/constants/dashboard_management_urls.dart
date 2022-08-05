@@ -15,7 +15,11 @@ class DashboardManagementUrls {
     return url;
   }
 
-  static String getApprovalAggregatedListUrl() {
-    return '${BaseUrls.hrUrlV2()}/widget/approvals_aggregated_list';
+  static String getApprovalAggregatedListUrl(String? companyId) {
+  //  return '${BaseUrls.hrUrlV2()}/widget/approvals_aggregated_list';
+
+    var url = '${BaseUrls.hrUrlV2()}/widget/approvals_aggregated_list';
+    if (companyId != null) url += "?company_id=$companyId";
+    return url;
   }
 }

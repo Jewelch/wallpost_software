@@ -312,9 +312,9 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   }
 
   @override
-  void goToCompanyDetailScreen() {
+  void goToCompanyDetailScreen(String companyId) {
     ScreenPresenter.presentAndRemoveAllPreviousScreens(
-        DashboardScreen(), context);
+        DashboardScreen(companyId), context);
   }
 
   @override

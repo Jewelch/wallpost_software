@@ -19,8 +19,8 @@ class ApprovalsAggregatedListProvider {
     isLoading = false;
   }
 
-  Future<List<ApprovalAggregated>> get() async {
-    var url = DashboardManagementUrls.getApprovalAggregatedListUrl();
+  Future<List<ApprovalAggregated>> get(String? companyId) async {
+    var url = DashboardManagementUrls.getApprovalAggregatedListUrl(companyId);
     var apiRequest = APIRequest.withId(url, _sessionId);
 
     isLoading = true;

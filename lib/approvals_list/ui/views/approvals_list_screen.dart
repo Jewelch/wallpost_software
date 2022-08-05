@@ -32,10 +32,6 @@ class _ApprovalsListScreenState extends State<ApprovalsListScreen>
     super.initState();
   }
 
-  // final List<String> allCompanies = ['Company 1', 'Company 2 ', 'Company 3'];
-  //
-  // final List<String> modules = ['Hr', 'My Portal', 'Finance'];
-
   String? selectedValue;
 
   late ScrollController _scrollController;
@@ -205,12 +201,8 @@ class _ApprovalsListScreenState extends State<ApprovalsListScreen>
 
   @override
   void onDidLoadApprovals(List<ApprovalAggregated> approvals) {
-    _approvalsListNotifier.notify(approvals);
-  }
-
-  @override
-  void onDidLoadData() {
     _viewSelectorNotifier.notify(DATA_VIEW);
+    _approvalsListNotifier.notify(approvals);
   }
 
   @override

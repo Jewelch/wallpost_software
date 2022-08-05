@@ -133,16 +133,8 @@ class CompanyListPresenter {
     _selectedGroup = null;
   }
 
-  //MARK: Functions to select a company
-
   selectCompany(CompanyListItem company) async {
-    //TODO: Remove this and move this API call to the dashboard?
-    _view.showLoader();
-    try {
-      var _ = await CompanyDetailsProvider().getCompanyDetails(company.id);
-      _view.goToCompanyDetailScreen();
-    } on WPException catch (e) {
-    }
+      _view.goToCompanyDetailScreen(company.id);
   }
 
   //MARK: Getters
