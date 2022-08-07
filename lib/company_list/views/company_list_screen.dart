@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
+import 'package:notifiable/notifiable.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
@@ -19,14 +22,14 @@ import 'package:wallpost/company_list/views/financial_summary_card.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 
 import '../../_common_widgets/search_bar/search_bar.dart';
+import '../../dashboard/ui/left_menu_screen.dart';
 
 class CompanyListScreen extends StatefulWidget {
   @override
   _CompanyListScreenState createState() => _CompanyListScreenState();
 }
 
-class _CompanyListScreenState extends State<CompanyListScreen>
-    implements CompaniesListView {
+class _CompanyListScreenState extends State<CompanyListScreen> implements CompaniesListView {
   static const LOADER_VIEW = 1;
   static const ERROR_VIEW = 2;
   static const DATA_VIEW = 3;
@@ -35,10 +38,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   var _errorMessage = "";
   var _viewSelectorNotifier = ItemNotifier<int>(defaultValue: 0);
   var _filtersBarVisibilityNotifier = ItemNotifier<bool>(defaultValue: false);
-  var _financialSummaryNotifier =
-      ItemNotifier<FinancialSummary?>(defaultValue: null);
-  var _companyListNotifier =
-      ItemNotifier<List<CompanyListItem>>(defaultValue: []);
+  var _companyListNotifier = Notifier();
 
   @override
   void initState() {
@@ -52,20 +52,18 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     return OnTapKeyboardDismisser(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(
-          child: ItemNotifiable<int>(
-            notifier: _viewSelectorNotifier,
-            builder: (context, viewType) {
-              if (viewType == LOADER_VIEW) {
-                return CompanyListLoader();
-              } else if (viewType == ERROR_VIEW) {
-                return _errorAndRetryView();
-              } else if (viewType == DATA_VIEW) {
-                return _dataView();
-              }
-              return Container();
-            },
-          ),
+        body: ItemNotifiable<int>(
+          notifier: _viewSelectorNotifier,
+          builder: (context, viewType) {
+            if (viewType == LOADER_VIEW) {
+              return CompanyListLoader();
+            } else if (viewType == ERROR_VIEW) {
+              return _errorAndRetryView();
+            } else if (viewType == DATA_VIEW) {
+              return _dataView();
+            }
+            return Container();
+          },
         ),
       ),
     );
@@ -76,7 +74,6 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   Widget _errorAndRetryView() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24),
-      height: 150,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -103,7 +100,6 @@ class _CompanyListScreenState extends State<CompanyListScreen>
         SizedBox(height: 10),
         _topBar(),
         SizedBox(height: 10),
-        _financialSummaryView(),
         Expanded(child: _companyList()),
         _approvalCountBanner(),
       ],
@@ -115,14 +111,14 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   Widget _topBar() {
     return ItemNotifiable<bool>(
       notifier: _filtersBarVisibilityNotifier,
-      builder: (context, showFiltersBar) =>
-          showFiltersBar ? _filtersBar() : _appBar(),
+      builder: (context, showFiltersBar) => showFiltersBar ? _filtersBar() : _appBar(),
     );
   }
 
   Widget _appBar() {
     return CompanyListAppBar(
       profileImageUrl: presenter.getProfileImageUrl(),
+      onLeftMenuButtonPressed: () => LeftMenuScreen.show(context),
       onSearchButtonPressed: () => _filtersBarVisibilityNotifier.notify(true),
     );
   }
@@ -130,29 +126,26 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   Widget _filtersBar() {
     return Column(
       children: [
+        SizedBox(height: 36),
         Row(
           children: <Widget>[
             Expanded(
               child: SearchBar(
                 hint: 'Search',
-                onSearchTextChanged: (searchText) =>
-                    presenter.performSearch(searchText),
+                onSearchTextChanged: (searchText) => presenter.performSearch(searchText),
               ),
             ),
             GestureDetector(
-              onTap: () => {
-                presenter.performSearch(""),
-                presenter.clearGroupSelection(),
-                _filtersBarVisibilityNotifier.notify(false)
+              onTap: () {
+                presenter.clearFiltersAndUpdateViews();
+                _filtersBarVisibilityNotifier.notify(false);
               },
-              child: Text("Cancel",
-                  style:
-                      TextStyle(color: AppColors.cautionColor, fontSize: 18)),
+              child: Text("Cancel", style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.cautionColor)),
             ),
             SizedBox(width: 12),
           ],
         ),
-        if (presenter.shouldShowCompanyGroupsFilter()) SizedBox(height: 8),
+        if (presenter.shouldShowCompanyGroupsFilter()) SizedBox(height: 12),
         if (presenter.shouldShowCompanyGroupsFilter())
           Container(
             height: 40,
@@ -167,41 +160,35 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     );
   }
 
-  //MARK: Functions to build the financial summary view
-
-  Widget _financialSummaryView() {
-    return ItemNotifiable<FinancialSummary?>(
-      notifier: _financialSummaryNotifier,
-      builder: (context, summary) =>
-          summary != null ? FinancialSummaryCard(summary) : Container(),
-    );
-  }
-
   //MARK: Functions to build the company list
 
   Widget _companyList() {
-    return ItemNotifiable<List<CompanyListItem>>(
+    return Notifiable(
       notifier: _companyListNotifier,
-      builder: (context, companyList) {
-        if (companyList.isEmpty)
+      builder: (context) {
+        if (presenter.getNumberOfRows() == 0)
           return _noCompaniesView();
         else
-          return _companyListView(companyList);
+          return _companyListView();
       },
     );
   }
 
-  Widget _companyListView(List<CompanyListItem> companies) {
+  Widget _companyListView() {
     return RefreshIndicator(
       onRefresh: () => presenter.refresh(),
       child: ListView.separated(
-        physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics()),
-        itemCount: companies.length,
+        padding: EdgeInsets.zero,
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        itemCount: presenter.getNumberOfRows(),
         itemBuilder: (context, index) {
-          return _getCompanyCard(companies[index]);
+          if (presenter.getItemAtIndex(index) is FinancialSummary)
+            return FinancialSummaryCard(presenter, presenter.getItemAtIndex(index));
+          else
+            return _getCompanyCard(presenter.getItemAtIndex(index));
         },
-        separatorBuilder: (BuildContext context, int index) => Divider(),
+        separatorBuilder: (BuildContext context, int index) =>
+            index == 0 ? Container() : Divider(color: AppColors.dividerColor),
       ),
     );
   }
@@ -214,6 +201,7 @@ class _CompanyListScreenState extends State<CompanyListScreen>
       );
     } else {
       return CompanyListCardWithRevenue(
+        presenter: presenter,
         company: companyListItem,
         onPressed: () => presenter.selectCompany(companyListItem),
       );
@@ -245,37 +233,30 @@ class _CompanyListScreenState extends State<CompanyListScreen>
     if (presenter.getApprovalCount() == 0) return SizedBox();
 
     return GestureDetector(
-      onTap: () => goToApprovalsListScreen(),
+      onTap: () => presenter.showAggregatedApprovals(),
       child: Container(
-        height: 50,
-        color: AppColors.bannerBackgroundColor,
+        height: Platform.isAndroid ? 50 : 80,
+        padding: EdgeInsets.only(bottom: Platform.isAndroid ? 0 : 30, left: 6, right: 6),
+        decoration: BoxDecoration(
+          color: AppColors.bannerBackgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.bannerBackgroundColor.withOpacity(0.9),
+              offset: Offset(0, 0),
+              blurRadius: 5,
+              spreadRadius: 0,
+            ),
+          ],
+        ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(width: 10),
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: SvgPicture.asset(
-                'assets/icons/exclamation_icon.svg',
-                color: Colors.white,
-                width: 14,
-                height: 18,
-              ),
-            ),
+            SvgPicture.asset('assets/icons/exclamation_icon.svg', color: Colors.white, width: 16, height: 16),
             SizedBox(width: 10),
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text("Approvals",
-                  style: TextStyle(color: Colors.white, fontSize: 18)),
-            ),
+            Text("Approvals", style: TextStyles.titleTextStyle.copyWith(color: Colors.white)),
             new Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                "${presenter.getApprovalCount()}",
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            ),
+            Text("${presenter.getApprovalCount()}", style: TextStyle(color: Colors.white, fontSize: 18)),
             SizedBox(width: 10)
           ],
         ),
@@ -302,19 +283,13 @@ class _CompanyListScreenState extends State<CompanyListScreen>
   }
 
   @override
-  void updateFinancialSummary(FinancialSummary? groupSummary) {
-    _financialSummaryNotifier.notify(groupSummary);
+  void updateCompanyList() {
+    _companyListNotifier.notify();
   }
 
   @override
-  void updateCompanyList(List<CompanyListItem> companies) {
-    _companyListNotifier.notify(companies);
-  }
-
-  @override
-  void goToCompanyDetailScreen() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(
-        DashboardScreen(), context);
+  void goToCompanyDetailScreen(String companyId) {
+    ScreenPresenter.present(DashboardScreen(companyId), context);
   }
 
   @override

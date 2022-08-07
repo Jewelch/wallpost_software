@@ -17,16 +17,3 @@ Module? initializeModuleFromString(String string) {
 
   return null;
 }
-
-extension ModuleExtension on Module {
-  String toReadableString() {
-    switch (this) {
-      case Module.Task:
-        return _TASK_MODULE_STRING;
-      case Module.Hr:
-        return _HR_MODULE_STRING;
-      case Module.Performance:
-        return _PERFORMANCE_MODULE_STRING;
-    }
-  }
-}

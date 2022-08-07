@@ -3,7 +3,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/company_core/constants/company_management_urls.dart';
 import 'package:wallpost/company_core/repositories/company_repository.dart';
-import 'package:wallpost/company_core/services/allowed_wp_actions_provider.dart';
 import 'package:wallpost/company_core/services/company_details_provider.dart';
 
 import '../../_mocks/mock_company.dart';
@@ -15,29 +14,27 @@ import '../mocks.dart';
 
 class MockCompanyRepository extends Mock implements CompanyRepository {}
 
-class MockAllowedWpActionsProvider extends Mock implements AllowedWPActionsProvider {}
-
 void main() {
   Map<String, dynamic> successfulResponse = Mocks.companyDetailsResponse;
   var mockUser = MockUser();
   var mockUserProvider = MockCurrentUserProvider();
   var mockCompanyRepository = MockCompanyRepository();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var mockAllowedWpActions = MockAllowedWpActionsProvider();
   var companyDetailsProvider = CompanyDetailsProvider.initWith(
-      mockUserProvider, mockCompanyRepository, mockNetworkAdapter, mockAllowedWpActions);
+    mockUserProvider,
+    mockCompanyRepository,
+    mockNetworkAdapter,
+  );
 
   setUpAll(() {
     registerFallbackValue(MockUser());
     registerFallbackValue(MockCompany());
     registerFallbackValue(MockEmployee());
     when(() => mockUserProvider.getCurrentUser()).thenReturn(mockUser);
-    when(() => mockAllowedWpActions.get(any())).thenAnswer((_) => Future.value(null));
   });
 
   setUp(() {
     reset(mockCompanyRepository);
-    clearInteractions(mockAllowedWpActions);
   });
 
   test('api request is built and executed correctly', () async {
@@ -119,7 +116,6 @@ void main() {
     try {
       var _ = await companyDetailsProvider.getCompanyDetails('1234');
       verify(() => mockCompanyRepository.selectCompanyAndEmployeeForUser(any(), any(), any())).called(1);
-      verify(() => mockAllowedWpActions.get("1234")).called(1);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }

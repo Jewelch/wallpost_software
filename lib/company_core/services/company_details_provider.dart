@@ -7,23 +7,19 @@ import 'package:wallpost/company_core/constants/company_management_urls.dart';
 import 'package:wallpost/company_core/entities/company.dart';
 import 'package:wallpost/company_core/entities/employee.dart';
 import 'package:wallpost/company_core/repositories/company_repository.dart';
-import 'package:wallpost/company_core/services/allowed_wp_actions_provider.dart';
 
 class CompanyDetailsProvider {
   final CurrentUserProvider _currentUserProvider;
   final CompanyRepository _companyRepository;
-  final AllowedWPActionsProvider _allowedActionsProvider;
   final NetworkAdapter _networkAdapter;
   bool isLoading = false;
   late String _sessionId;
 
-  CompanyDetailsProvider.initWith(
-      this._currentUserProvider, this._companyRepository, this._networkAdapter, this._allowedActionsProvider);
+  CompanyDetailsProvider.initWith(this._currentUserProvider, this._companyRepository, this._networkAdapter);
 
   CompanyDetailsProvider()
       : _currentUserProvider = CurrentUserProvider(),
         _companyRepository = CompanyRepository.getInstance(),
-        _allowedActionsProvider = AllowedWPActionsProvider(),
         _networkAdapter = WPAPI();
 
   Future<void> getCompanyDetails(String companyId) async {
@@ -53,7 +49,6 @@ class CompanyDetailsProvider {
       var company = Company.fromJson(responseMap);
       var employee = Employee.fromJson(responseMap);
       _companyRepository.selectCompanyAndEmployeeForUser(company, employee, _currentUserProvider.getCurrentUser());
-      // await _allowedActionsProvider.get(employee.companyId);
       return null;
     } catch (e) {
       throw InvalidResponseException();

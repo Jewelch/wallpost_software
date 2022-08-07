@@ -44,7 +44,6 @@ class CompanyListCardWithoutRev extends StatelessWidget {
       width: 100,
       height: 100,
       padding: EdgeInsets.all(6),
-      // Border width
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: borderRadius,
@@ -53,7 +52,7 @@ class CompanyListCardWithoutRev extends StatelessWidget {
       child: ClipRRect(
         borderRadius: borderRadius,
         child: SizedBox.fromSize(
-          size: Size.fromRadius(44), // Image radius
+          size: Size.fromRadius(44),
           child: CachedNetworkImage(
             imageUrl: company.logoUrl,
             placeholder: (context, url) => Center(child: Icon(Icons.camera_alt)),

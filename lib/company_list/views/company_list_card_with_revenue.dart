@@ -1,14 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/company_core/entities/company_list_item.dart';
+import 'package:wallpost/company_list/models/financial_details.dart';
+import 'package:wallpost/company_list/presenters/company_list_presenter.dart';
 
 class CompanyListCardWithRevenue extends StatelessWidget {
+  final CompanyListPresenter presenter;
   final CompanyListItem company;
   final VoidCallback onPressed;
 
-  CompanyListCardWithRevenue({required this.company, required this.onPressed});
+  CompanyListCardWithRevenue({required this.presenter, required this.company, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +35,8 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8.0, bottom: 4),
                     alignment: Alignment.centerLeft,
                     child: _tile(
-                      company.financialSummary?.profitLoss ?? "",
-                      "Profit & Loss",
-                      Color(0xff25D06E),
-                      company.financialSummary?.receivableOverdue ?? "",
-                      "Receivables Overdue",
-                      Color(0xffF62A20),
+                      presenter.getProfitLossDetails(company.financialSummary),
+                      presenter.getOverdueReceivablesDetails(company.financialSummary),
                     ),
                   ),
                 ),
@@ -47,12 +45,9 @@ class CompanyListCardWithRevenue extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8.0, bottom: 4),
                     alignment: Alignment.centerLeft,
                     child: _tile(
-                        company.financialSummary?.cashAvailability ?? "",
-                        "Fund Availability",
-                        Color(0xff25D06E),
-                        company.financialSummary?.payableOverdue ?? "",
-                        "Payables Overdue",
-                        Color(0xffF62A20)),
+                      presenter.getAvailableFundsDetails(company.financialSummary),
+                      presenter.getOverduePayablesDetails(company.financialSummary),
+                    ),
                   ),
                 ),
               ],
@@ -67,8 +62,8 @@ class CompanyListCardWithRevenue extends StatelessWidget {
   Widget _companyLogo() {
     final borderRadius = BorderRadius.circular(20);
     return Container(
-      width: 100,
-      height: 100,
+      width: 90,
+      height: 90,
       padding: EdgeInsets.all(6),
       // Border width
       decoration: BoxDecoration(
@@ -79,7 +74,7 @@ class CompanyListCardWithRevenue extends StatelessWidget {
       child: ClipRRect(
         borderRadius: borderRadius,
         child: SizedBox.fromSize(
-          size: Size.fromRadius(44), // Image radius
+          size: Size.fromRadius(44),
           child: CachedNetworkImage(
             imageUrl: company.logoUrl,
             placeholder: (context, url) => Center(child: Icon(Icons.camera_alt)),
@@ -90,37 +85,29 @@ class CompanyListCardWithRevenue extends StatelessWidget {
     );
   }
 
-  Widget _tile(
-    String valueTop,
-    String labelTop,
-    Color colorTop,
-    String valueBottom,
-    String labelBottom,
-    Color colorBottom,
-  ) {
+  Widget _tile(FinancialDetails topFinancialDetails, FinancialDetails bottomFinancialDetails) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        tileDetails(valueTop, labelTop, colorTop),
+        tileDetails(topFinancialDetails),
         SizedBox(height: 8),
-        tileDetails(valueBottom, labelBottom, colorBottom)
+        tileDetails(bottomFinancialDetails),
       ],
     );
   }
 
-  Widget tileDetails(
-    String value,
-    String label,
-    Color color,
-  ) {
+  Widget tileDetails(FinancialDetails financialDetails) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          value,
-          style: TextStyles.titleTextStyle.copyWith(fontWeight: FontWeight.bold, color: color),
+          financialDetails.value,
+          style: TextStyles.titleTextStyle.copyWith(
+            fontWeight: FontWeight.bold,
+            color: financialDetails.textColor,
+          ),
         ),
-        Text(label, style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
+        Text(financialDetails.label, style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
       ],
     );
   }

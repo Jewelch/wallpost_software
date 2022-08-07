@@ -22,12 +22,8 @@ class CompanyListProvider {
         _companyRepository = CompanyRepository.getInstance(),
         _networkAdapter = WPAPI();
 
-  void reset() {
-    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
-    isLoading = false;
-  }
-
   Future<CompanyList> get() async {
+    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var url = CompanyManagementUrls.getCompaniesUrl();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;

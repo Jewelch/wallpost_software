@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/dashboard/ui/left_menu_screen.dart';
 
 import '../../_common_widgets/buttons/rounded_icon_button.dart';
 
 class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String profileImageUrl;
+  final VoidCallback onLeftMenuButtonPressed;
   final VoidCallback onSearchButtonPressed;
 
   @override
@@ -16,6 +16,7 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   CompanyListAppBar({
     required this.profileImageUrl,
+    required this.onLeftMenuButtonPressed,
     required this.onSearchButtonPressed,
   }) : preferredSize = Size.fromHeight(56);
 
@@ -40,7 +41,7 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
               Expanded(
                 child: Center(
                     child: Text(
-                  "Group Dashboard",
+                  "Group Summary",
                   style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
                 )),
               ),
@@ -56,14 +57,14 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _menuButton(BuildContext context) {
     return GestureDetector(
-      onTap: () => LeftMenuScreen.show(context),
+      onTap: onLeftMenuButtonPressed,
       child: Container(
         child: Stack(
           clipBehavior: Clip.none,
           alignment: AlignmentDirectional.bottomEnd,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(12),
               child: SizedBox(
                 width: 40,
                 height: 40,
@@ -102,6 +103,10 @@ class CompanyListAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _searchButton() {
     return RoundedIconButton(
+      width: 46,
+      height: 40,
+      iconSize: 16,
+      borderRadius: 14,
       iconName: 'assets/icons/search_icon.svg',
       onPressed: onSearchButtonPressed,
     );

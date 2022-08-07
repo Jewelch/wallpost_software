@@ -1,10 +1,9 @@
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
-import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 import 'package:wallpost/company_core/entities/module.dart';
 
-class Company extends JSONInitializable implements JSONConvertible {
+class Company extends JSONInitializable {
   late String _id;
   late String _accountNumber;
   late String _name;
@@ -57,40 +56,33 @@ class Company extends JSONInitializable implements JSONConvertible {
     return modules;
   }
 
-  @override
-  Map<String, dynamic> toJson() {
-    Map companyInfoMap = {};
-    companyInfoMap['js_date_format'] = _dateFormat;
-    companyInfoMap['currency'] = _currency;
-    companyInfoMap['show_timesheet_icon'] = _showTimeSheet;
-    companyInfoMap['time_zone'] = _timezone;
-    companyInfoMap['allowed_radius'] = _allowedPunchInRadiusInMeters;
-    companyInfoMap['is_trial'] = _isTrial ? 'true' : 'false';
+  String get fileUploadPath => _fileUploadPath;
 
-    Map<String, dynamic> jsonMap = {
-      'company_info': companyInfoMap,
-      'company_id': int.parse(_id),
-      'account_no': int.parse(_accountNumber),
-      'company_name': _name,
-      'short_name': _shortName,
-      'commercial_name': _commercialName,
-      'company_logo': _logoUrl,
-      'show_revenue': _shouldShowRevenue ? 1 : 0,
-      'packages': _modules.map((e) => e.toReadableString()).toList(),
-      'absolute_upload_path': _fileUploadPath,
-    };
-    return jsonMap;
-  }
+  bool get isTrial => _isTrial;
 
-  String get id => _id;
+  num get allowedPunchInRadiusInMeters => _allowedPunchInRadiusInMeters;
 
-  String get name => _name;
+  String get timezone => _timezone;
 
-  String get shortName => _shortName;
+  bool get showTimeSheet => _showTimeSheet;
+
+  List<Module> get modules => _modules;
 
   bool get shouldShowRevenue => _shouldShowRevenue;
 
   String get currency => _currency;
 
   String get dateFormat => _dateFormat.replaceAll('D', 'd').replaceAll('Y', 'y');
+
+  String get logoUrl => _logoUrl;
+
+  String get commercialName => _commercialName;
+
+  String get shortName => _shortName;
+
+  String get name => _name;
+
+  String get accountNumber => _accountNumber;
+
+  String get id => _id;
 }

@@ -8,12 +8,21 @@ class Mocks {
         "name": "Group Summary",
         "default_currency": "USD",
         "is_default": 0,
-        "group_companies": ["2", " 6", " 3", " 7", " 5", " 4", " 1"],
+        "group_companies": [
+          "80",
+          " 46",
+          " 83",
+          " 44",
+          " 19",
+          " 85",
+          " 2",
+          " 59",
+        ],
         "group_summary": {
-          "cashAvailability": 617100.12,
-          "receivableOverdue": 2117666.3144,
-          "payableOverdue": 644238.1764000001,
-          "profitLoss": 0
+          "cashAvailability": "-17.6M",
+          "receivableOverdue": "25B",
+          "payableOverdue": "1.7M",
+          "profitLoss": "-623.5M"
         }
       },
       {
@@ -21,148 +30,176 @@ class Mocks {
         "name": "Partial Company",
         "default_currency": "USD",
         "is_default": 0,
-        "group_companies": ["5", "6"],
+        "group_companies": [
+          "5",
+          "44",
+          "45",
+          "59",
+          "43",
+        ],
         "group_summary": {
-          "cashAvailability": 0,
-          "receivableOverdue": 444.08000000000004,
-          "payableOverdue": 0,
-          "profitLoss": 0
+          "cashAvailability": "868.2K",
+          "receivableOverdue": "2M",
+          "payableOverdue": "235.4K",
+          "profitLoss": "1.3M"
         }
       },
       {
         "group_id": 2,
-        "name": "Test Group",
+        "name": "Manufacturing & Retail",
         "default_currency": "USD",
         "is_default": 1,
-        "group_companies": ["2", "3", "5"],
+        "group_companies": [
+          "2",
+          "14",
+          "15",
+          "40",
+          "19",
+          "60",
+          "63",
+          "64",
+          "76",
+        ],
         "group_summary": {
-          "cashAvailability": 362300.12,
-          "receivableOverdue": 2090755.7944,
-          "payableOverdue": 644165.3764000001,
-          "profitLoss": 0
+          "cashAvailability": "-14.9M",
+          "receivableOverdue": "10.4M",
+          "payableOverdue": "1.1M",
+          "profitLoss": "-13.6M"
         }
-      }
+      },
     ],
     "companies": [
       {
+        "company_id": 80,
+        "company_name": "Aadidas",
+        "notifications": 0,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/80/DOC183964_nologo.jpg",
+        "approval_count": 0,
+        "approval_types": [],
+        "financial_summary": {
+          "currency": "MXN",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": "0",
+          "receivableOverdue": "0",
+          "payableOverdue": "0",
+          "profitLoss": "0",
+          "profitLossPerc": "0"
+        }
+      },
+      {
+        "company_id": 46,
+        "company_name": "Advisory LLC - test",
+        "notifications": 5,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/46/DOC112471_CompanyLogo.png",
+        "approval_count": 8,
+        "approval_types": [
+          {"count": 8, "type": "hr", "module_name": "leaveRequest"}
+        ],
+        "financial_summary": {
+          "currency": "BGN",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": "9.9M",
+          "receivableOverdue": "32.3K",
+          "payableOverdue": "67.3K",
+          "profitLoss": "14.7K",
+          "profitLossPerc": "51.854325587935"
+        }
+      },
+      {
+        "company_id": 83,
+        "company_name": "Agro",
+        "notifications": 0,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/83/DOC184055_nologo.jpg",
+        "approval_count": 0,
+        "approval_types": [],
+        "financial_summary": {
+          "currency": "MXN",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": "186.1K",
+          "receivableOverdue": "0",
+          "payableOverdue": "0",
+          "profitLoss": "0",
+          "profitLossPerc": "0"
+        }
+      },
+      {
+        "company_id": 44,
+        "company_name": "Alpha Accounting Alone (test)",
+        "notifications": 0,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/44/DOC5438_nologo.jpg",
+        "approval_count": 0,
+        "approval_types": [],
+        "financial_summary": {
+          "currency": "USD",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": "899.8K",
+          "receivableOverdue": "1000",
+          "payableOverdue": "0",
+          "profitLoss": "0",
+          "profitLossPerc": "0"
+        }
+      },
+      {
+        "company_id": 19,
+        "company_name": "Amina_Georgia(test)",
+        "notifications": 49,
+        "company_logo":
+            "https://s3.amazonaws.com/wallpostsoftware/120843/19/DOC125410_DOC107494_MicrosoftTeams-image (11).png",
+        "approval_count": 35,
+        "approval_types": [
+          {"count": 35, "type": "hr", "module_name": "leaveRequest"}
+        ],
+        "financial_summary": {
+          "currency": "QAR",
+          "actual_revenue_display": "1,628,790",
+          "overall_revenue": 19012,
+          "cashAvailability": "-1.1M",
+          "receivableOverdue": "2M",
+          "payableOverdue": "2.6M",
+          "profitLoss": "869.8K",
+          "profitLossPerc": "51.926309756913"
+        }
+      },
+      {
+        "company_id": 85,
+        "company_name": "Aster Accounts",
+        "notifications": 0,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/85/DOC249788_nologo.jpg",
+        "approval_count": 0,
+        "approval_types": [],
+        "financial_summary": {
+          "currency": "EGP",
+          "actual_revenue_display": "0",
+          "overall_revenue": 0,
+          "cashAvailability": "0",
+          "receivableOverdue": "0",
+          "payableOverdue": "0",
+          "profitLoss": "0",
+          "profitLossPerc": "0"
+        }
+      },
+      {
         "company_id": 2,
         "company_name": "B+Company (Test)",
-        "notifications": 84,
-        "approval_count": 16,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/2/DOC328_logo.jpg",
-        "financial_summary": {
-          "currency": "QAR",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": 99533,
-          "receivableOverdue": 574261.46,
-          "payableOverdue": 176968.51,
-          "profitLoss": 0,
-          "profitLossPerc": 0
-        }
-      },
-      {
-        "company_id": 6,
-        "company_name": "Construction- & Co",
-        "notifications": 0,
+        "notifications": 407,
+        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/2/DOC4318_logo.jpg",
         "approval_count": 0,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/6/DOC371_nologo.jpg",
+        "approval_types": [],
         "financial_summary": {
-          "currency": "QAR",
+          "currency": "AED",
           "actual_revenue_display": "0",
           "overall_revenue": 0,
-          "cashAvailability": 0,
-          "receivableOverdue": 0,
-          "payableOverdue": 0,
-          "profitLoss": 0,
-          "profitLossPerc": 0
+          "cashAvailability": "-54M",
+          "receivableOverdue": "36.4M",
+          "payableOverdue": "983.2K",
+          "profitLoss": "-50.8M",
+          "profitLossPerc": "-47.5K"
         }
       },
-      {
-        "company_id": 3,
-        "company_name": "Construction-Company (Test)",
-        "notifications": 0,
-        "approval_count": 0,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/3/DOC15_nologo.jpg",
-        "financial_summary": {
-          "currency": "QAR",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": 0,
-          "receivableOverdue": 0,
-          "payableOverdue": 0,
-          "profitLoss": 0,
-          "profitLossPerc": 0
-        }
-      },
-      {
-        "company_id": 7,
-        "company_name": "Contracting Co (Test)",
-        "notifications": 0,
-        "approval_count": 0,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/7/DOC78_nologo.jpg",
-        "financial_summary": {
-          "currency": "QAR",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": 0,
-          "receivableOverdue": 0,
-          "payableOverdue": 0,
-          "profitLoss": 0,
-          "profitLossPerc": 0
-        }
-      },
-      {
-        "company_id": 5,
-        "company_name": "Ne Company[Test]",
-        "notifications": 0,
-        "approval_count": 0,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/5/DOC368_nologo.jpg",
-        "financial_summary": {
-          "currency": "QAR",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": 0,
-          "receivableOverdue": 122,
-          "payableOverdue": 0,
-          "profitLoss": 0,
-          "profitLossPerc": 0
-        }
-      },
-      {
-        "company_id": 4,
-        "company_name": "Real Estate[Test]",
-        "notifications": 0,
-        "approval_count": 0,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/4/DOC15_nologo.jpg",
-        "financial_summary": {
-          "currency": "QAR",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": 0,
-          "receivableOverdue": 0,
-          "payableOverdue": 0,
-          "profitLoss": 0,
-          "profitLossPerc": 0
-        }
-      },
-      {
-        "company_id": 1,
-        "company_name": "Test-company[Advisory]",
-        "notifications": 36,
-        "approval_count": 20,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/1/DOC1_nologo.jpg",
-        "financial_summary": {
-          "currency": "QAR",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": 70000,
-          "receivableOverdue": 7393,
-          "payableOverdue": 20,
-          "profitLoss": 0,
-          "profitLossPerc": 0
-        }
-      }
     ]
   };
 
@@ -256,137 +293,44 @@ class Mocks {
     "payroll_wps_supported": true,
     "show_revenue": 0,
     "short_name": randomString(10),
+    "request_items": [
+      {
+        "display_name": "Task",
+        "name": "myportal_create_task",
+        "sub_module": "myportal_create_task",
+        "visibility": true,
+      },
+      {
+        "display_name": "Disciplinary Action",
+        "name": "disciplinary_request",
+        "sub_module": "disciplinary_action",
+        "visibility": true
+      },
+      {
+        "display_name": "Employment Certificate",
+        "name": "time_off_request",
+        "sub_module": "time_off",
+        "visibility": true
+      },
+      {
+        "display_name": "Expense Request",
+        "name": "expense_request",
+        "sub_module": "expense_request",
+        "visibility": true
+      },
+      {
+        "display_name": "Experience Certificate",
+        "name": "experience_certificate_request",
+        "sub_module": "payroll",
+        "visibility": true
+      },
+      {"display_name": "Item Request", "name": "item_request", "sub_module": "item_request", "visibility": true},
+      {
+        "display_name": "Leave Encashment",
+        "name": "leave_encashment",
+        "sub_module": "leave_encashment",
+        "visibility": true
+      },
+    ]
   };
-
-  static List<Map<String,dynamic>> wpActionsListResponse = [
-    {
-      "display_name": "Task",
-      "name": "myportal_create_task",
-      "sub_module": "myportal_create_task",
-      "visibility": true
-    },
-    {
-      "display_name": "Disciplinary Action",
-      "name": "disciplinary_request",
-      "sub_module": "disciplinary_action",
-      "visibility": true
-    },
-    {
-      "display_name": "Employment Certificate",
-      "name": "time_off_request",
-      "sub_module": "time_off",
-      "visibility": true
-    },
-    {
-      "display_name": "Expense Request",
-      "name": "expense_request",
-      "sub_module": "expense_request",
-      "visibility": true
-    },
-    {
-      "display_name": "Experience Certificate",
-      "name": "experience_certificate_request",
-      "sub_module": "payroll",
-      "visibility": true
-    },
-    {
-      "display_name": "Item Request",
-      "name": "item_request",
-      "sub_module": "item_request",
-      "visibility": true
-    },
-    {
-      "display_name": "Leave Encashment",
-      "name": "leave_encashment",
-      "sub_module": "leave_encashment",
-      "visibility": true
-    },
-    {
-      "display_name": "Leave Request",
-      "name": "leave_request",
-      "sub_module": "leave",
-      "visibility": true
-    },
-    {
-      "display_name": "Letter to Obtain Visa",
-      "name": "obtain_visa_request",
-      "sub_module": "obtain_visa_request",
-      "visibility": true
-    },
-    {
-      "display_name": "Loan",
-      "name": "loan_request",
-      "sub_module": "salary_advance_loan",
-      "visibility": true
-    },
-    {
-      "display_name": "Manpower Outsourcing",
-      "name": "punch_in_out",
-      "sub_module": "punch_in_out",
-      "visibility": false
-    },
-    {
-      "display_name": "Overtime Request",
-      "name": "overtime_request",
-      "sub_module": "overtime_request",
-      "visibility": true
-    },
-    {
-      "display_name": "Punch In/Out Outside Office",
-      "name": "punch_in_out",
-      "sub_module": "attendance_punch_in_out",
-      "visibility": true
-    },
-    {
-      "display_name": "Resignation Request",
-      "name": "resignation_request",
-      "sub_module": "end_of_service",
-      "visibility": true
-    },
-    {
-      "display_name": "Salary Advance",
-      "name": "salary_advance_loan",
-      "sub_module": "salary_advance_loan",
-      "visibility": true
-    },
-    {
-      "display_name": "Salary Certificate",
-      "name": "salary_certificate_request",
-      "sub_module": "payroll",
-      "visibility": true
-    },
-    {
-      "display_name": "Secondment Request",
-      "name": "secondment_request",
-      "sub_module": "secondment",
-      "visibility": true
-    },
-    {
-      "display_name": "Support Ticket",
-      "name": "support_ticket",
-      "sub_module": "support_ticket",
-      "visibility": true
-    },
-    {
-      "display_name": "Termination Request",
-      "name": "termination_request",
-      "sub_module": "end_of_service",
-      "visibility": true
-    },
-    {
-      "display_name": "Time Off",
-      "name": "time_off_request",
-      "sub_module": "time_off",
-      "visibility": true
-    },
-    {
-      "display_name": "Timesheet Adjustment",
-      "name": "timesheet_adjustment",
-      "sub_module": "timesheet",
-      "visibility": true
-    }
-  ];
 }
-
-
-

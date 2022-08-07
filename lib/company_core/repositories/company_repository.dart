@@ -1,4 +1,3 @@
-import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/company_core/entities/company.dart';
 import 'package:wallpost/company_core/entities/company_list.dart';
@@ -6,29 +5,18 @@ import 'package:wallpost/company_core/entities/company_list_item.dart';
 import 'package:wallpost/company_core/entities/employee.dart';
 
 class CompanyRepository {
-  late SecureSharedPrefs _sharedPrefs;
   Map<String, Map> _userCompanies = {};
 
   static CompanyRepository? _singleton;
 
-  // ignore: unused_element
   CompanyRepository._();
 
-  static Future<void> initRepo() async {
-    await getInstance()._readCompaniesData();
-  }
-
   static CompanyRepository getInstance() {
-    if (_singleton == null) {
-      _singleton = CompanyRepository.withSharedPrefs(SecureSharedPrefs());
-    }
+    if (_singleton == null) _singleton = CompanyRepository._();
     return _singleton!;
   }
 
-  CompanyRepository.withSharedPrefs(SecureSharedPrefs sharedPrefs) {
-    _sharedPrefs = sharedPrefs;
-    _readCompaniesData();
-  }
+  CompanyRepository.initWith();
 
   //MARK: Functions to save companies for a user
 
@@ -40,8 +28,6 @@ class CompanyRepository {
       'selectedEmployee':
           _shouldRetainEmployeeSelection(user, companyList.companies) ? getSelectedEmployeeForUser(user) : null,
     };
-
-    _saveCompaniesData();
   }
 
   bool _shouldRetainCompanySelection(User user, List<CompanyListItem> newCompanies) {
@@ -75,7 +61,6 @@ class CompanyRepository {
 
     _userCompanies[user.username]!['selectedCompany'] = company;
     _userCompanies[user.username]!['selectedEmployee'] = employee;
-    _saveCompaniesData();
   }
 
   Company? getSelectedCompanyForUser(User user) {
@@ -94,8 +79,6 @@ class CompanyRepository {
 
   void removeCompaniesForUser(User user) {
     _userCompanies.remove(user.username);
-
-    _saveCompaniesData();
   }
 
   //MARK: Util functions
@@ -107,65 +90,5 @@ class CompanyRepository {
   bool _doesListContainCompanyWithId(List<CompanyListItem> companies, String companyId) {
     var filteredCompanies = companies.where((company) => company.id == companyId);
     return filteredCompanies.length > 0;
-  }
-
-  //MARK: Functions to read user companies data from the storage
-
-  Future<void> _readCompaniesData() async {
-    var allUsersCompaniesMap = await _sharedPrefs.getMap('allUsersCompanies');
-
-    if (allUsersCompaniesMap == null) return;
-
-    for (String key in allUsersCompaniesMap.keys) {
-      var username = key;
-      Map companiesData = allUsersCompaniesMap[key];
-      _userCompanies[username] = _readCompaniesFromMap(username, companiesData);
-    }
-  }
-
-  Map _readCompaniesFromMap(String username, Map companiesData) {
-    Map<String, dynamic> companyListMap = companiesData['companyList'];
-    var companyList = CompanyList.fromJson(companyListMap);
-
-    Map<String, dynamic>? selectedCompanyMap = companiesData['selectedCompany'];
-    var selectedCompany = selectedCompanyMap == null ? null : Company.fromJson(selectedCompanyMap);
-
-    Map<String, dynamic>? selectedEmployeeMap = companiesData['selectedEmployee'];
-    var selectedEmployee = selectedEmployeeMap == null ? null : Employee.fromJson(selectedEmployeeMap);
-
-    return {
-      'companyList': companyList,
-      'selectedCompany': selectedCompany,
-      'selectedEmployee': selectedEmployee,
-    };
-  }
-
-  //MARK: Functions to save user companies data to the storage
-
-  void _saveCompaniesData() {
-    Map allUsersCompaniesMap = {};
-
-    for (String key in _userCompanies.keys) {
-      var username = key;
-      Map userCompanyListMap = _userCompanies[key]!;
-      allUsersCompaniesMap[username] = _convertCompanyListToMap(userCompanyListMap);
-    }
-    _sharedPrefs.saveMap('allUsersCompanies', allUsersCompaniesMap);
-  }
-
-  Map _convertCompanyListToMap(Map userCompanyListMap) {
-    CompanyList companyList = userCompanyListMap['companyList'];
-
-    Company? selectedCompany = userCompanyListMap['selectedCompany'];
-    Map? selectedCompanyMap = selectedCompany == null ? null : selectedCompany.toJson();
-
-    Employee? selectedEmployee = userCompanyListMap['selectedEmployee'];
-    Map? selectedEmployeeMap = selectedEmployee == null ? null : selectedEmployee.toJson();
-
-    return {
-      'companyList': companyList.toJson(),
-      'selectedCompany': selectedCompanyMap,
-      'selectedEmployee': selectedEmployeeMap,
-    };
   }
 }

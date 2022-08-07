@@ -1,9 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/company_core/entities/role.dart';
 
 main() {
-  test("test initializing Roles from string successfully", () {
+  test("returns null if role cannot be initialized", () {
+    var wrongRoleString = "wrongRole";
+
+    var role = initializeRoleFromString(wrongRoleString);
+
+    expect(role, null);
+  });
+
+  test("test initializing roles from string successfully", () {
     var managerString = "general_manager";
     var ownerString = "owner";
     var taskManagerString = "task_line_manager";
@@ -15,30 +22,5 @@ main() {
     expect(role1, Role.GeneralManager);
     expect(role2, Role.Owner);
     expect(role3, Role.TaskLineManager);
-  });
-
-  test("test initializing Roles from wrong data throw mapping exception", () {
-    var wrongRoleString = "wrongEmployee";
-
-    try {
-      initializeRoleFromString(wrongRoleString);
-      assert(false);
-    } catch (e) {
-      expect(e is MappingException, true);
-    }
-  });
-
-  test("test convert Roles to string", () {
-    var managerRole = Role.GeneralManager;
-    var ownerRole = Role.Owner;
-    var taskManagerRole = Role.TaskLineManager;
-
-    var managerString = managerRole.toReadableString();
-    var ownerString = ownerRole.toReadableString();
-    var taskManagerString = taskManagerRole.toReadableString();
-
-    expect(managerString, "general_manager");
-    expect(ownerString, "owner");
-    expect(taskManagerString, "task_line_manager");
   });
 }
