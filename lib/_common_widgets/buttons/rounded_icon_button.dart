@@ -8,6 +8,7 @@ class RoundedIconButton extends StatelessWidget {
   final Color? iconColor;
   final double width;
   final double height;
+  final double borderRadius;
   final Color? backgroundColor;
   final VoidCallback? onPressed;
 
@@ -17,6 +18,7 @@ class RoundedIconButton extends StatelessWidget {
     this.iconColor = Colors.white,
     this.width = 50,
     this.height = 40,
+    this.borderRadius = 16,
     this.backgroundColor,
     this.onPressed,
   });
@@ -28,9 +30,11 @@ class RoundedIconButton extends StatelessWidget {
       height: height,
       child: TextButton(
         style: ButtonStyle(
-          fixedSize: MaterialStateProperty.resolveWith<Size>((Set<MaterialState> states) {
-            return Size(width, height);
-          },),
+          fixedSize: MaterialStateProperty.resolveWith<Size>(
+            (Set<MaterialState> states) {
+              return Size(width, height);
+            },
+          ),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
@@ -41,7 +45,7 @@ class RoundedIconButton extends StatelessWidget {
               }
             },
           ),
-          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0))),
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius))),
           padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
         ),
         child: SvgPicture.asset(

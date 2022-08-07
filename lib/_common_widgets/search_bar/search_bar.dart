@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/constants/app_images.dart';
 
@@ -20,14 +21,19 @@ class SearchBar extends StatelessWidget {
       height: 44,
       margin: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: AppColors.textFieldBackgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        color: AppColors.filtersBackgroundColour,
       ),
       width: double.infinity,
       child: Row(
         children: [
           SizedBox(width: 12),
-          SvgPicture.asset(AppImages.searchIcon, width: 18, height: 18),
+          SvgPicture.asset(
+            AppImages.searchIcon,
+            width: 18,
+            height: 18,
+            color: AppColors.defaultColorDark,
+          ),
           Expanded(
             child: TextField(
               controller: controller,
@@ -36,6 +42,7 @@ class SearchBar extends StatelessWidget {
               textAlignVertical: TextAlignVertical(y: 1),
               decoration: InputDecoration(
                 hintText: hint,
+                hintStyle: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDarkContrastColor),
                 border: OutlineInputBorder(borderSide: BorderSide.none),
                 suffixIcon: controller.text.isEmpty
                     ? null
@@ -49,7 +56,7 @@ class SearchBar extends StatelessWidget {
                         },
                       ),
               ),
-              style: TextStyle(fontSize: 16),
+              style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDark),
               onChanged: onSearchTextChanged,
             ),
           ),

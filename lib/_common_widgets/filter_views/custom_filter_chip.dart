@@ -54,7 +54,7 @@ class CustomFilterChip extends StatelessWidget {
 
   ShapeBorder _buildBorder() {
     double borderRadius = 0;
-    if (shape == CustomFilterChipShape.roundedRectangle) borderRadius = 16.0;
+    if (shape == CustomFilterChipShape.roundedRectangle) borderRadius = 12.0;
     if (shape == CustomFilterChipShape.capsule) borderRadius = 100.0;
 
     return RoundedRectangleBorder(
