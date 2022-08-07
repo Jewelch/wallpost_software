@@ -4,7 +4,7 @@ description: WallPost Mobile App
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.5'
 
 dependencies:
   flutter:
@@ -15,29 +15,30 @@ dependencies:
   sift: 1.0.10
   encrypt: 5.0.1
   shared_preferences: 2.0.15
-  device_info_plus: 4.0.0
-  package_info_plus: 1.4.2
+  device_info_plus: ^4.0.1
+  package_info_plus: ^1.4.3
   dio: ^4.0.6
   pretty_dio_logger: 1.2.0-beta-1
   flutter_keyboard_visibility: ^5.3.0
   flutter_svg: ^1.1.0
   flutter_statusbarcolor_ns: 0.4.0
   intl: 0.17.0
-  geolocator: ^8.2.1
+  geolocator: ^9.0.1
   geocoding: ^2.0.4
   mime_type: 1.0.0
   cached_network_image: ^3.2.1
   flutter_app_badger: ^1.4.0
   shimmer: 2.0.0
-  file_picker: ^4.6.1
+  file_picker: ^5.0.1
   notifiable: 1.0.5
   google_maps_flutter: ^2.1.8
-  camera: 0.9.8+1
+  camera: ^0.10.0
   camera_avfoundation:
   path_provider:
   path:
   firebase_core: ^1.19.2
   firebase_messaging: ^12.0.0
+  dropdown_button2: ^1.4.0
 
 dev_dependencies:
   flutter_test:
@@ -54,7 +55,15 @@ flutter:
   fonts:
     - family: PTSans
       fonts:
-        - asset: fonts/PTSans-Bold.ttf
-        - asset: fonts/PTSans-BoldItalic.ttf
-        - asset: fonts/PTSans-Italic.ttf
-        - asset: fonts/PTSans-Regular.ttf
+        - asset: fonts/Roboto-Black.ttf
+        - asset: fonts/Roboto-BlackItalic.ttf
+        - asset: fonts/Roboto-Bold.ttf
+        - asset: fonts/Roboto-BoldItalic.ttf
+        - asset: fonts/Roboto-Italic.ttf
+        - asset: fonts/Roboto-Light.ttf
+        - asset: fonts/Roboto-LightItalic.ttf
+        - asset: fonts/Roboto-Medium.ttf
+        - asset: fonts/Roboto-MediumItalic.ttf
+        - asset: fonts/Roboto-Regular.ttf
+        - asset: fonts/Roboto-Thin.ttf
+        - asset: fonts/Roboto-ThinItalic.ttf
