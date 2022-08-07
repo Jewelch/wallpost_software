@@ -3,8 +3,7 @@ abstract class MainView {
 
   void goToLoginScreen();
 
-  void goToCompaniesListScreen();
+  void goToCompanyListScreen();
 
   void goToDashboardScreen();
-
 }

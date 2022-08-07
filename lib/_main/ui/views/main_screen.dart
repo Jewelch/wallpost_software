@@ -4,7 +4,7 @@ import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_sette
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/company_list/views/companies_list_screen.dart';
+import 'package:wallpost/company_list/views/company_list_screen.dart';
 import 'package:wallpost/login/ui/views/login_screen.dart';
 
 import '../../../dashboard/ui/my_portal/views/my_portal_screen.dart';
@@ -16,8 +16,19 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> implements MainView {
+class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver implements MainView {
   late MainPresenter presenter;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        presenter.updateBadgeCount();
+        break;
+      default:
+        break;
+    }
+  }
 
   @override
   void initState() {
@@ -39,7 +50,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
 
   @override
   void setStatusBarColor(bool isLoggedIn) {
-    StatusBarColorSetter.setColorToWhite();
+    StatusBarColorSetter().setColorToWhite();
   }
 
   @override
@@ -48,13 +59,12 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   }
 
   @override
-  void goToCompaniesListScreen() {
+  void goToCompanyListScreen() {
     ScreenPresenter.presentAndRemoveAllPreviousScreens(CompanyListScreen(), context);
   }
 
   @override
   void goToDashboardScreen() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(null), context);
   }
-
 }

@@ -2,73 +2,42 @@ import 'dart:core';
 
 import 'package:wallpost/_main/services/repository_initializer.dart';
 import 'package:wallpost/_main/ui/contracts/main_view.dart';
-import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
-import 'package:wallpost/company_core/services/selected_company_provider.dart';
-import 'package:wallpost/firebase_fcm/services/firebase_token_updater.dart';
 import 'package:wallpost/notifications/services/app_badge_updater.dart';
+import 'package:wallpost/notifications_core/services/notification_center.dart';
 
 class MainPresenter {
   final MainView _view;
-  final RepositoryInitializer _repositoryInitializer;
   final CurrentUserProvider _currentUserProvider;
-  final SelectedCompanyProvider _selectedCompanyProvider;
+  final RepositoryInitializer _repositoryInitializer;
   final AppBadgeUpdater _appBadgeUpdater;
-  final FireBaseTokenUpdater _fireBaseTokenUpdater;
+  final NotificationCenter _notificationCenter;
 
   MainPresenter(this._view)
-      : _repositoryInitializer = RepositoryInitializer(),
-        _currentUserProvider = CurrentUserProvider(),
-        _selectedCompanyProvider = SelectedCompanyProvider(),
-        _appBadgeUpdater = AppBadgeUpdater(),
-        _fireBaseTokenUpdater = FireBaseTokenUpdater();
+      : _currentUserProvider = CurrentUserProvider(),
+        _repositoryInitializer = RepositoryInitializer(),
+        _notificationCenter = NotificationCenter.getInstance(),
+        _appBadgeUpdater = AppBadgeUpdater();
 
   MainPresenter.initWith(
     this._view,
-    this._repositoryInitializer,
     this._currentUserProvider,
-    this._selectedCompanyProvider,
+    this._repositoryInitializer,
+    this._notificationCenter,
     this._appBadgeUpdater,
-    this._fireBaseTokenUpdater,
   );
 
   Future<void> processLaunchTasksAndShowLandingScreen() async {
     await _repositoryInitializer.initializeRepos();
+    _notificationCenter.setupAndHandlePushNotifications();
     _appBadgeUpdater.updateBadgeCount();
+
     var isLoggedIn = _currentUserProvider.isLoggedIn();
     _view.setStatusBarColor(isLoggedIn);
-    if (isLoggedIn == false) {
-      _view.goToLoginScreen();
-    } else {
-      _updateToken();
-      _showLandingScreenForLoggedInUser();
-    }
+    isLoggedIn ? _view.goToCompanyListScreen() : _view.goToLoginScreen();
   }
 
-  void _showLandingScreenForLoggedInUser() {
-    // if (_selectedCompanyProvider.isCompanySelected()) {
-    //   _view.goToDashboardScreen();
-    // } else {
-    //   _view.goToCompaniesListScreen();
-    // }
-     _view.goToCompaniesListScreen();
-  }
-
-  void _updateToken() async {
-    try {
-      await _fireBaseTokenUpdater.updateToken();
-    } on WPException {}
+  void updateBadgeCount() {
+    _appBadgeUpdater.updateBadgeCount();
   }
 }
-/*
-  //   TODO: when app opens
-//    1. reload companies
-//    cases
-//        a. nothing has changed, do nothing - can be found comparing old list with new
-//
-//        else
-//        b. companies added or removed or replaced -
-//            i. store the new data
-//            ii. check if the currently selected company has been removed - if yes- launch company selection screen and show alert
-//                'Looks like you do not have access to this company any more. Please select another company from the list.'
- */
