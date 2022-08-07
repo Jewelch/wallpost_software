@@ -9,7 +9,7 @@ import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dism
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/approvals_list/ui/views/aggregated_approvals_list_screen.dart';
+import 'package:wallpost/aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
 import 'package:wallpost/company_core/entities/company_list_item.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 import 'package:wallpost/company_list/presenters/company_list_presenter.dart';
