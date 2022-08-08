@@ -7,7 +7,7 @@ class HeaderCard extends StatelessWidget {
   final Widget content;
   final Color color;
 
-  HeaderCard({required this.content, required this.color});
+  HeaderCard({required this.content, this.color = AppColors.headerCardColor});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class HeaderCard extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: AppColors.defaultColor.withOpacity(0.03),
+            color: AppColors.headerCarsShadowColor.withOpacity(0.03),
             offset: Offset(0, 0),
             blurRadius: 10,
             spreadRadius: 0,

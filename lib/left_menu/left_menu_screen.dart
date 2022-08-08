@@ -10,9 +10,9 @@ import 'package:wallpost/_wp_core/user_management/services/current_user_provider
 import 'package:wallpost/notifications/ui/views/notifications_screen.dart';
 import 'package:wallpost/password_management/ui/views/change_password_screen.dart';
 
-import '../../_common_widgets/buttons/rounded_back_button.dart';
-import '../../_common_widgets/custom_shapes/curve_bottom_to_top.dart';
-import '../../_shared/constants/app_colors.dart';
+import '../_common_widgets/buttons/rounded_back_button.dart';
+import '../_common_widgets/custom_shapes/header_card.dart';
+import '../_shared/constants/app_colors.dart';
 
 class LeftMenuScreen extends StatefulWidget {
   const LeftMenuScreen({Key? key}) : super(key: key);
@@ -39,12 +39,9 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
         leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
       ),
       body: SafeArea(
-        child: ListView(
+        child: Column(
           children: [
-            SizedBox(height: 40),
             _userImageAndName(),
-            SizedBox(height: 40),
-            CurveBottomToTop(),
             _listItem(
               title: 'Change Password',
               iconName: 'assets/icons/settings_icon.svg',
@@ -66,6 +63,7 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
               onTap: logout,
               color: AppColors.cautionColor,
             ),
+            Divider(),
           ],
         ),
       ),
@@ -73,37 +71,40 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
   }
 
   Widget _userImageAndName() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 2),
-            borderRadius: BorderRadius.circular(60),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(60),
-            child: CachedNetworkImage(
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
-              imageUrl: CurrentUserProvider().getCurrentUser().profileImageUrl,
-              placeholder: (context, url) => Image.asset(
-                'assets/icons/user_image_placeholder.png',
-                width: 48,
-                height: 48,
+    return HeaderCard(
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white, width: 2),
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(60),
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                imageUrl: CurrentUserProvider().getCurrentUser().profileImageUrl,
+                placeholder: (context, url) => Image.asset(
+                  'assets/icons/user_image_placeholder.png',
+                  width: 48,
+                  height: 48,
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
           ),
-        ),
-        SizedBox(height: 12),
-        Text(
-          CurrentUserProvider().getCurrentUser().fullName,
-          style: TextStyles.titleTextStyle,
-        ),
-      ],
+          SizedBox(height: 16),
+          Text(
+            CurrentUserProvider().getCurrentUser().fullName,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyles.headerCardSubHeadingTextStyle,
+          ),
+        ],
+      ),
     );
   }
 

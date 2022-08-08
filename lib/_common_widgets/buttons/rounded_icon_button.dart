@@ -16,9 +16,9 @@ class RoundedIconButton extends StatelessWidget {
     required this.iconName,
     this.iconSize = 20,
     this.iconColor = Colors.white,
-    this.width = 50,
+    this.width = 46,
     this.height = 40,
-    this.borderRadius = 16,
+    this.borderRadius = 14,
     this.backgroundColor,
     this.onPressed,
   });

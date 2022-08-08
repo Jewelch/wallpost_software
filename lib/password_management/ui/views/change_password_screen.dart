@@ -23,7 +23,7 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements ChangePasswordView {
   late ChangePasswordPresenter presenter;
-  var _showLogoNotifier = ItemNotifier<bool>(defaultValue: true);
+  var _showProfileImageNotifier = ItemNotifier<bool>(defaultValue: true);
   var _currentPasswordErrorNotifier = ItemNotifier<String?>(defaultValue: null);
   var _newPasswordErrorNotifier = ItemNotifier<String?>(defaultValue: null);
   var _confirmPasswordErrorNotifier = ItemNotifier<String?>(defaultValue: null);
@@ -36,7 +36,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
   @override
   void initState() {
     presenter = ChangePasswordPresenter(this);
-    KeyboardVisibilityController().onChange.listen((visibility) => _showLogoNotifier.notify(!visibility));
+    KeyboardVisibilityController().onChange.listen((visibility) => _showProfileImageNotifier.notify(!visibility));
     super.initState();
   }
 
@@ -72,14 +72,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
 
   Widget _profileImageAndNameWidget() {
     return ItemNotifiable<bool>(
-      notifier: _showLogoNotifier,
-      builder: (context, showLogo) => AnimatedContainer(
+      notifier: _showProfileImageNotifier,
+      builder: (context, showProfileImage) => AnimatedContainer(
         duration: Duration(milliseconds: 100),
         curve: Curves.easeInOut,
         width: double.infinity,
         child: Center(
           child: Container(
-            height: showLogo ? 220 : 0,
+            height: showProfileImage ? 220 : 0,
             padding: EdgeInsets.symmetric(horizontal: 12),
             child: Center(
               child: Column(
@@ -98,6 +98,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
                         child: ClipOval(
                           child: FadeInImage.assetNetwork(
                               fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
                               placeholder: "assets/icons/user_image_placeholder.png",
                               image: presenter.getProfileImage()),
                         ),
@@ -113,7 +114,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> implements 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
-                      'You need to type in your current password to make sure its not someone else trying to access your data',
+                      'You need to type in your current password to make sure its not someone else trying to access your data.',
                       style: TextStyles.subTitleTextStyle,
                       textAlign: TextAlign.center,
                     ),

@@ -22,7 +22,7 @@ import 'package:wallpost/company_list/views/financial_summary_card.dart';
 import 'package:wallpost/dashboard/ui/dashboard_screen.dart';
 
 import '../../_common_widgets/search_bar/search_bar.dart';
-import '../../dashboard/ui/left_menu_screen.dart';
+import '../../left_menu/left_menu_screen.dart';
 
 class CompanyListScreen extends StatefulWidget {
   @override
