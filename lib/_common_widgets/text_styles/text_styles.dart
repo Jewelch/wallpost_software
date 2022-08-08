@@ -50,46 +50,40 @@ class TextStyles {
   //MARK: Header card text styles
 
   static get headerCardHeadingTextStyle => TextStyle(
-    fontWeight: FontWeight.w700,
-    color: Colors.white,
-    fontSize: 30.0,
-  );
+        fontWeight: FontWeight.w700,
+        color: Colors.white,
+        fontSize: 30.0,
+      );
 
   static get headerCardSubHeadingTextStyle => TextStyle(
-    fontWeight: FontWeight.w400,
-    color: Colors.white,
-    fontSize: 20.0,
-  );
+        fontWeight: FontWeight.w400,
+        color: Colors.white,
+        fontSize: 20.0,
+      );
 
   static get headerCardMainValueTextStyle => TextStyle(
-    fontWeight: FontWeight.w700,
-    color: Colors.black,
-    fontSize: 28.0,
-    overflow: TextOverflow.ellipsis,
-  );
+        fontWeight: FontWeight.w700,
+        color: Colors.black,
+        fontSize: 28.0,
+        overflow: TextOverflow.ellipsis,
+      );
 
   static get headerCardMainLabelTextStyle => TextStyle(
-    fontSize: 16,
-    color: AppColors.defaultColorDarkContrastColor,
-    fontWeight: FontWeight.w600,
-  );
+        fontSize: 16,
+        color: AppColors.defaultColorDarkContrastColor,
+        fontWeight: FontWeight.w600,
+      );
 
   static get headerCardSubValueTextStyle => TextStyle(
-    fontWeight: FontWeight.w700,
-    color: Colors.black,
-    fontSize: 16.0,
-    overflow: TextOverflow.ellipsis,
-  );
+        fontWeight: FontWeight.w700,
+        color: Colors.black,
+        fontSize: 16.0,
+        overflow: TextOverflow.ellipsis,
+      );
 
   static get headerCardSubLabelTextStyle => TextStyle(
-    fontWeight: FontWeight.w300,
-    color: AppColors.defaultColorDarkContrastColor,
-    fontSize: 11.0,
-  );
-
-
-
+        fontWeight: FontWeight.w300,
+        color: AppColors.defaultColorDarkContrastColor,
+        fontSize: 11.0,
+      );
 }
-
-//header card heading ts
-//header card subheading ts
