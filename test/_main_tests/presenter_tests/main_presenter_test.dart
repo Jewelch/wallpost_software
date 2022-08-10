@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_main/services/repository_initializer.dart';
-import 'package:wallpost/_main/ui/contracts/main_view.dart';
 import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
+import 'package:wallpost/_main/ui/view_contracts/main_view.dart';
 import 'package:wallpost/notifications/services/app_badge_updater.dart';
 import 'package:wallpost/notifications_core/services/notification_center.dart';
 
