@@ -2,25 +2,22 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/approvals_list/entities/approval_aggregated.dart';
-import 'package:wallpost/dashboard_core/constants/dashboard_management_urls.dart';
+import 'package:wallpost/aggregated_approvals_list/constants/aggregated_approval_urls.dart';
 
-class ApprovalsAggregatedListProvider {
+import '../entities/aggregated_approval.dart';
+
+class AggregatedApprovalsListProvider {
   final NetworkAdapter _networkAdapter;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  ApprovalsAggregatedListProvider.initWith(this._networkAdapter);
+  AggregatedApprovalsListProvider.initWith(this._networkAdapter);
 
-  ApprovalsAggregatedListProvider() : _networkAdapter = WPAPI();
+  AggregatedApprovalsListProvider() : _networkAdapter = WPAPI();
 
-  void reset() {
+  Future<List<AggregatedApproval>> getAllApprovals({String? companyId}) async {
+    var url = AggregatedApprovalUrls.getAggregatedApprovalsListUrl(companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
-    isLoading = false;
-  }
-
-  Future<List<ApprovalAggregated>> get() async {
-    var url = DashboardManagementUrls.getApprovalAggregatedListUrl();
     var apiRequest = APIRequest.withId(url, _sessionId);
 
     isLoading = true;
@@ -34,9 +31,9 @@ class ApprovalsAggregatedListProvider {
     }
   }
 
-  Future<List<ApprovalAggregated>> _processResponse(APIResponse apiResponse) async {
+  Future<List<AggregatedApproval>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<ApprovalAggregated>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<AggregatedApproval>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
@@ -45,11 +42,11 @@ class ApprovalsAggregatedListProvider {
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<ApprovalAggregated> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<AggregatedApproval> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var approvalsList = <ApprovalAggregated>[];
+      var approvalsList = <AggregatedApproval>[];
       for (var responseMap in responseMapList) {
-        ApprovalAggregated? approvalAggregated = ApprovalAggregated.fromJson(responseMap);
+        AggregatedApproval? approvalAggregated = AggregatedApproval.fromJson(responseMap);
         approvalsList.add(approvalAggregated);
       }
       return approvalsList;

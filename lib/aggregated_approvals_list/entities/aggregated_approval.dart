@@ -3,7 +3,7 @@ import 'package:sift/Sift.dart';
 import '../../_shared/exceptions/mapping_exception.dart';
 import '../../_shared/json_serialization_base/json_initializable.dart';
 
-class ApprovalAggregated extends JSONInitializable {
+class AggregatedApproval extends JSONInitializable {
   late num _companyId;
   late String _companyName;
   late String _approvalType;
@@ -12,11 +12,7 @@ class ApprovalAggregated extends JSONInitializable {
   late String _moduleColor;
   late num _approvalCount;
 
-  ApprovalAggregated.builder(this._companyId, this._companyName, this._approvalType, this._module, this._moduleId,
-      this._moduleColor, this._approvalCount)
-      : super.fromJson(Map());
-
-  ApprovalAggregated.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
+  AggregatedApproval.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
     try {
       var sift = Sift();
       _companyId = sift.readNumberFromMap(jsonMap, 'comapnyId');

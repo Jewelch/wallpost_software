@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../_shared/constants/app_colors.dart';
+
+class DropdownFilter extends StatelessWidget {
+  final List<String> items;
+  final String? selectedValue;
+  final ValueChanged<String>? onChanged;
+
+  DropdownFilter({required this.items, this.selectedValue, this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: AppColors.filtersBackgroundColour,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: DropdownButton<String>(
+        items: items.map((item) {
+          return DropdownMenuItem(
+            value: item,
+            child: Text(item, style: TextStyle(color: AppColors.defaultColorDark, overflow: TextOverflow.ellipsis)),
+          );
+        }).toList(),
+        isExpanded: true,
+        value: selectedValue,
+        style: TextStyle(overflow: TextOverflow.fade),
+        onChanged: (selectedValue) {
+          if (onChanged != null) onChanged!(selectedValue!);
+        },
+        underline: SizedBox(),
+        dropdownColor: AppColors.filtersBackgroundColour,
+        icon: SvgPicture.asset(
+          'assets/icons/down_arrow_icon.svg',
+          color: AppColors.defaultColorDark,
+          width: 14,
+          height: 14,
+        ),
+      ),
+    );
+  }
+}

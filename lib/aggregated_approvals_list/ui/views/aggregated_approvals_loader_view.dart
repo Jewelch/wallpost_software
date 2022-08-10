@@ -1,54 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 
-class ApprovalsAggregatedListLoader extends StatelessWidget {
-  const ApprovalsAggregatedListLoader({Key? key}) : super(key: key);
+class AggregatedApprovalsLoaderView extends StatelessWidget {
+  const AggregatedApprovalsLoaderView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ShimmerEffect(
       child: ListView(
         children: [
-          _appBar(context),
-          _tile(context),
+          _filters(),
+          _tile(),
           SizedBox(height: 8),
-          _tile(context),
+          _tile(),
           SizedBox(height: 8),
-          _tile(context),
+          _tile(),
           SizedBox(height: 8),
-          _tile(context),
+          _tile(),
           SizedBox(height: 8),
-          _tile(context),
+          _tile(),
           SizedBox(height: 8),
-          _tile(context),
+          _tile(),
           SizedBox(height: 8),
-          _tile(context),
+          _tile(),
           SizedBox(height: 8),
-          _tile(context),
+          _tile(),
           SizedBox(height: 8),
-          _tile(context),
+          _tile(),
         ],
       ),
     );
   }
 
-  Widget _tile(BuildContext context) {
+  Widget _tile() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: _emptyContainer(height: 80, width: 80, cornerRadius: 20),
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
+      child: _emptyContainer(height: 80, width: 80, cornerRadius: 10),
     );
   }
 
-  Widget _appBar(BuildContext context) {
+  Widget _filters() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 8),
       child: Row(
         children: [
-          _emptyContainer(height: 40, width: 40, cornerRadius: 10),
-          SizedBox(width: 40),
-          Expanded(child: _emptyContainer(height: 26, cornerRadius: 6)),
-          SizedBox(width: 40),
-          _emptyContainer(height: 40, width: 40, cornerRadius: 10),
+          Expanded(child: _emptyContainer(height: 50, cornerRadius: 10)),
+          SizedBox(width: 12),
+          Expanded(child: _emptyContainer(height: 50, cornerRadius: 10)),
         ],
       ),
     );
