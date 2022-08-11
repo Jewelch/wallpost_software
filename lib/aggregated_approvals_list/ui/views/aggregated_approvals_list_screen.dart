@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/filter_views/dropdown_filter.dart';
@@ -196,7 +197,11 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
               ),
             ),
             SizedBox(width: 8),
-            Icon(Icons.navigate_next, color: Colors.black),
+            SvgPicture.asset(
+              "assets/icons/arrow_right_icon.svg",
+              width: 16,
+              height: 16,
+            ),
             SizedBox(width: 12),
           ],
         ),
