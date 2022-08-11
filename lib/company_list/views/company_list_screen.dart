@@ -288,8 +288,8 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   @override
-  void goToCompanyDetailScreen(String companyId) {
-    ScreenPresenter.present(DashboardScreen(companyId), context);
+  void goToCompanyDetailScreen(CompanyListItem companyListItem) {
+    ScreenPresenter.present(DashboardScreen(companyListItem), context);
   }
 
   @override

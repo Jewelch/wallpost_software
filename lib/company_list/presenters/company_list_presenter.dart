@@ -123,7 +123,7 @@ class CompanyListPresenter {
   //MARK: Functions to perform selections
 
   void selectCompany(CompanyListItem company) async {
-    _view.goToCompanyDetailScreen(company.id);
+    _view.goToCompanyDetailScreen(company);
   }
 
   void showAggregatedApprovals() {

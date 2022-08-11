@@ -562,7 +562,7 @@ void main() {
 
       //then
       verifyInOrder([
-        () => view.goToCompanyDetailScreen("1"),
+        () => view.goToCompanyDetailScreen(company1),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });

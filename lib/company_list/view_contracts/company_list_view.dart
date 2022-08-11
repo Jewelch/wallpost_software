@@ -1,3 +1,5 @@
+import '../../company_core/entities/company_list_item.dart';
+
 abstract class CompaniesListView {
   void showLoader();
 
@@ -7,7 +9,7 @@ abstract class CompaniesListView {
 
   void updateCompanyList();
 
-  void goToCompanyDetailScreen(String companyId);
+  void goToCompanyDetailScreen(CompanyListItem companyListItem);
 
   void goToApprovalsListScreen();
 }
