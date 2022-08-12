@@ -76,7 +76,11 @@ class UserRepository {
       usersDataList.add(user.toJson());
     }
 
-    await _sharedPrefs.saveMap('users', {'allUsers': usersDataList});
-    await _sharedPrefs.saveMap('currentUser', {'username': _currentUsername});
+    try {
+      await _sharedPrefs.saveMap('users', {'allUsers': usersDataList});
+      await _sharedPrefs.saveMap('currentUser', {'username': _currentUsername});
+    } catch (e) {
+      //do nothing
+    }
   }
 }

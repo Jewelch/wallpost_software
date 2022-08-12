@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/local_storage/secure_shared_prefs.dart';
 import 'package:wallpost/_wp_core/user_management/repositories/user_repository.dart';
 
@@ -55,13 +56,34 @@ void main() {
     expect(userRepository.getAllUsers()[0].username, 'someUserName');
   });
 
-  test('saving new current user, saves user in memory as well as locally', () async {
+  test('failure to save the user locally, saves the user only in memory', () async {
     when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    when(() => mockSharedPrefs.saveMap(any(), any())).thenAnswer((_) => Future.error(MappingException("")));
     await _initUserRepoAndWaitForInitialization();
     when(() => mockUser.toJson()).thenReturn({'user': 'json'});
     when(() => mockUser.username).thenReturn('someUserName');
 
-    userRepository.saveNewCurrentUser(mockUser);
+    await userRepository.saveNewCurrentUser(mockUser);
+    var verificationResult = verify(() => mockSharedPrefs.saveMap(captureAny(), captureAny()));
+
+    verificationResult.called(1);
+    expect(verificationResult.captured[0], 'users');
+    expect(verificationResult.captured[1], {
+      'allUsers': [
+        {'user': 'json'}
+      ]
+    });
+    expect(userRepository.getCurrentUser(), mockUser);
+  });
+
+  test('saving new current user, saves user in memory as well as locally', () async {
+    when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    when(() => mockSharedPrefs.saveMap(any(), any())).thenAnswer((_) => Future.value(null));
+    await _initUserRepoAndWaitForInitialization();
+    when(() => mockUser.toJson()).thenReturn({'user': 'json'});
+    when(() => mockUser.username).thenReturn('someUserName');
+
+    await userRepository.saveNewCurrentUser(mockUser);
     var verificationResult = verify(() => mockSharedPrefs.saveMap(captureAny(), captureAny()));
 
     verificationResult.called(2);
@@ -78,6 +100,7 @@ void main() {
 
   test('saving a user with that already exists, replaces it', () async {
     when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    when(() => mockSharedPrefs.saveMap(any(), any())).thenAnswer((_) => Future.value(null));
     await _initUserRepoAndWaitForInitialization();
     var mockUser1 = MockUser();
     var mockUser2 = MockUser();
@@ -86,9 +109,9 @@ void main() {
     when(() => mockUser1.toJson()).thenReturn({'user1': 'json'});
     when(() => mockUser2.toJson()).thenReturn({'user2': 'json'});
 
-    userRepository.saveNewCurrentUser(mockUser1);
+    await userRepository.saveNewCurrentUser(mockUser1);
     clearInteractions(mockSharedPrefs);
-    userRepository.saveNewCurrentUser(mockUser2);
+    await userRepository.saveNewCurrentUser(mockUser2);
     var verificationResult = verify(() => mockSharedPrefs.saveMap(captureAny(), captureAny()));
 
     expect(verificationResult.captured[1], {
@@ -101,6 +124,7 @@ void main() {
 
   test('updating user info, updates the user info, and stores it locally', () async {
     when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    when(() => mockSharedPrefs.saveMap(any(), any())).thenAnswer((_) => Future.value(null));
     await _initUserRepoAndWaitForInitialization();
     when(() => mockUser.toJson()).thenReturn({'user': 'json'});
     when(() => mockUser.username).thenReturn('someUserName');
@@ -108,7 +132,7 @@ void main() {
     when(() => mockUser.toJson()).thenReturn({'updated': 'data'});
     reset(mockSharedPrefs);
 
-    userRepository.updateUser(mockUser);
+    await userRepository.updateUser(mockUser);
     var verificationResult = verify(() => mockSharedPrefs.saveMap(captureAny(), captureAny()));
 
     verificationResult.called(2);
@@ -124,13 +148,14 @@ void main() {
 
   test('removing a user when only one user exists clears all the data', () async {
     when(() => mockSharedPrefs.getMap(any())).thenAnswer((_) => Future.value(null));
+    when(() => mockSharedPrefs.saveMap(any(), any())).thenAnswer((_) => Future.value(null));
     await _initUserRepoAndWaitForInitialization();
     when(() => mockUser.username).thenReturn('someUserName');
     when(() => mockUser.toJson()).thenReturn({});
-    userRepository.saveNewCurrentUser(mockUser);
+    await userRepository.saveNewCurrentUser(mockUser);
     clearInteractions(mockSharedPrefs);
 
-    userRepository.removeUser(mockUser);
+    await userRepository.removeUser(mockUser);
     var verificationResult = verify(() => mockSharedPrefs.saveMap(captureAny(), captureAny()));
 
     verificationResult.called(2);
@@ -138,6 +163,7 @@ void main() {
     expect(verificationResult.captured[1], {'allUsers': []});
     expect(verificationResult.captured[2], 'currentUser');
     expect(verificationResult.captured[3], {'username': null});
+
     expect(userRepository.getCurrentUser(), null);
   });
 
