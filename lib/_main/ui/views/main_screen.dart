@@ -37,9 +37,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver imp
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: AppColors.defaultColor,
-      ),
+      body: Container(color: AppColors.screenBackgroundColor),
     );
   }
 

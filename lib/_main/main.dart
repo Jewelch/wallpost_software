@@ -20,12 +20,12 @@ void main() async {
   runApp(WallPostApp());
 }
 
-class WallPostApp extends StatefulWidget with WidgetsBindingObserver {
+class WallPostApp extends StatefulWidget {
   @override
   _WallPostAppState createState() => _WallPostAppState();
 }
 
-class _WallPostAppState extends State<WallPostApp> {
+class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,10 +39,16 @@ class _WallPostAppState extends State<WallPostApp> {
   initState() {
     //waiting for build to complete
     Future.microtask(() => setStatusBarColor());
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
   void setStatusBarColor() {
     StatusBarColorSetter().setColorToWhite();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) StatusBarColorSetter().setColorToWhite();
   }
 }
