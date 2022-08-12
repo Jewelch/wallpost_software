@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
-import 'package:wallpost/_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
 import 'package:wallpost/_main/ui/view_contracts/main_view.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -45,11 +44,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver imp
   }
 
   //MARK: View functions
-
-  @override
-  void setStatusBarColor(bool isLoggedIn) {
-    StatusBarColorSetter().setColorToWhite();
-  }
 
   @override
   void goToLoginScreen() {

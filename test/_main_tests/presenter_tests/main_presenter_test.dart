@@ -49,16 +49,15 @@ void main() {
     when(() => currentUserProvider.isLoggedIn()).thenReturn(false);
 
     //when
-    await presenter.processLaunchTasksAndShowLandingScreen();
+    await presenter.processLaunchTasksAndShowLandingScreen(delayBeforeSettingUpNotificationsAndAppBadge: 0);
 
     //then
     verifyInOrder([
       () => repoInitializer.initializeRepos(),
+      () => currentUserProvider.isLoggedIn(),
+      () => view.goToLoginScreen(),
       () => notificationCenter.setupAndHandlePushNotifications(),
       () => badgeUpdater.updateBadgeCount(),
-      () => currentUserProvider.isLoggedIn(),
-      () => view.setStatusBarColor(false),
-      () => view.goToLoginScreen(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -68,16 +67,15 @@ void main() {
     when(() => currentUserProvider.isLoggedIn()).thenReturn(true);
 
     //when
-    await presenter.processLaunchTasksAndShowLandingScreen();
+    await presenter.processLaunchTasksAndShowLandingScreen(delayBeforeSettingUpNotificationsAndAppBadge: 0);
 
     //then
     verifyInOrder([
       () => repoInitializer.initializeRepos(),
+      () => currentUserProvider.isLoggedIn(),
+      () => view.goToCompanyListScreen(),
       () => notificationCenter.setupAndHandlePushNotifications(),
       () => badgeUpdater.updateBadgeCount(),
-      () => currentUserProvider.isLoggedIn(),
-      () => view.setStatusBarColor(true),
-      () => view.goToCompanyListScreen(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });

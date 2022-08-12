@@ -27,14 +27,19 @@ class MainPresenter {
     this._appBadgeUpdater,
   );
 
-  Future<void> processLaunchTasksAndShowLandingScreen() async {
+  Future<void> processLaunchTasksAndShowLandingScreen({int delayBeforeSettingUpNotificationsAndAppBadge = 5}) async {
+    //initializing repos
     await _repositoryInitializer.initializeRepos();
-    _notificationCenter.setupAndHandlePushNotifications();
-    _appBadgeUpdater.updateBadgeCount();
 
+    //navigating based on login status
     var isLoggedIn = _currentUserProvider.isLoggedIn();
-    _view.setStatusBarColor(isLoggedIn);
     isLoggedIn ? _view.goToCompanyListScreen() : _view.goToLoginScreen();
+
+    //setup push notifications and update badge count
+    await Future.delayed(Duration(seconds: delayBeforeSettingUpNotificationsAndAppBadge)).then((value) {
+      _notificationCenter.setupAndHandlePushNotifications();
+      updateBadgeCount();
+    });
   }
 
   void updateBadgeCount() {
