@@ -51,7 +51,7 @@ class AccessTokenProvider {
     }
   }
 
-  String? _processResponse(APIResponse apiResponse, User user) {
+  Future<String?> _processResponse(APIResponse apiResponse, User user) async {
     if (apiResponse.data == null || apiResponse.data is! Map<String, dynamic>) {
       return null;
     }
@@ -64,7 +64,7 @@ class AccessTokenProvider {
       var expirationTimeStamp = sift.readNumberFromMap(dataMap, 'token_expiry');
 
       user.updateAccessToken(token, expirationTimeStamp);
-      _userRepository.updateUser(user);
+      await _userRepository.updateUser(user);
 
       return user.session.accessToken;
     } catch (e) {

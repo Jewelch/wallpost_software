@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/device/device_info.dart';
@@ -115,6 +113,7 @@ void main() {
     test('successfully getting a new auth token from the API', () async {
       var user = User.fromJson(Mocks.userMapWithInactiveSession);
       when(() => mockUserRepository.getCurrentUser()).thenReturn(user);
+      when(() => mockUserRepository.updateUser(any())).thenAnswer((_) => Future.value(null));
       mockNetworkAdapter.succeed({'status': 'success', 'data': Mocks.refreshSessionResponse});
 
       var accessToken = await accessTokenProvider.getToken();
@@ -127,6 +126,7 @@ void main() {
     test('force refresh even if the local token has not expired', () async {
       var user = User.fromJson(Mocks.loginResponse);
       when(() => mockUserRepository.getCurrentUser()).thenReturn(user);
+      when(() => mockUserRepository.updateUser(any())).thenAnswer((_) => Future.value(null));
       mockNetworkAdapter.succeed({'status': 'success', 'data': Mocks.refreshSessionResponse});
 
       var accessToken = await accessTokenProvider.getToken(forceRefresh: true);
