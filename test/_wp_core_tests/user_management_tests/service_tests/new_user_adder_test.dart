@@ -17,6 +17,8 @@ void main() {
   });
 
   test('adding a user adds it to the user repository', () async {
+    when(() => mockUserRepository.saveNewCurrentUser(any())).thenAnswer((_) => Future.value(null));
+
     newUserAdder.addUser(mockUser);
 
     expect(verify(() => mockUserRepository.saveNewCurrentUser(captureAny())).captured.single, mockUser);
