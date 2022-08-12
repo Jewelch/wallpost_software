@@ -35,6 +35,7 @@ void main() {
 
   setUp(() {
     reset(mockNewUserAdder);
+    when(() => mockNewUserAdder.addUser(any())).thenAnswer((_) => Future.value(null));
   });
 
   test('api request is built correctly', () async {
@@ -54,7 +55,7 @@ void main() {
     expect(mockNetworkAdapter.apiRequest.parameters['deviceos'], 'someDeviceOS');
     expect(mockNetworkAdapter.apiRequest.parameters['devicemodel'], 'someDeviceModel');
     expect(mockNetworkAdapter.apiRequest.parameters['appversion'], 'someAppVersion');
-    });
+  });
 
   test('throws exception when network adapter fails', () async {
     mockNetworkAdapter.fail(NetworkFailureException());
