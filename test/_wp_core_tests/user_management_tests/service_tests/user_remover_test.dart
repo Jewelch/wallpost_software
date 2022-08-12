@@ -17,6 +17,8 @@ void main() {
   });
 
   test('removing current user', () async {
+    when(() => mockUserRepository.removeUser(any())).thenAnswer((_) => Future.value(null));
+
     userRemover.removeUser(mockUser);
 
     expect(verify(() => mockUserRepository.removeUser(captureAny())).captured.single, mockUser);
