@@ -14,22 +14,50 @@ class FinancialSummary extends JSONInitializable {
     var sift = Sift();
     try {
       _currency = sift.readStringFromMap(jsonMap, "currency");
-      _profitLoss = _currency + " " + sift.readStringFromMap(jsonMap, 'profitLoss');
-      _fundAvailability = _currency + " " + sift.readStringFromMap(jsonMap, 'cashAvailability');
-      _receivableOverdue = _currency + " " + sift.readStringFromMap(jsonMap, 'receivableOverdue');
-      _payableOverdue = _currency + " " + sift.readStringFromMap(jsonMap, 'payableOverdue');
+      _profitLoss = sift.readStringFromMap(jsonMap, 'profitLoss');
+      _fundAvailability = sift.readStringFromMap(jsonMap, 'cashAvailability');
+      _receivableOverdue = sift.readStringFromMap(jsonMap, 'receivableOverdue');
+      _payableOverdue = sift.readStringFromMap(jsonMap, 'payableOverdue');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast FinancialSummary response. Error message - ${e.errorMessage}');
     }
   }
 
+  bool isInProfit() {
+    return _isZero(_profitLoss) || _isGreaterThanZero(_profitLoss);
+  }
+
+  bool areFundsAvailable() {
+    return _isGreaterThanZero(_fundAvailability);
+  }
+
+  bool areReceivablesOverdue() {
+    return _isGreaterThanZero(_receivableOverdue);
+  }
+
+  bool arePayablesOverdue() {
+    return _isGreaterThanZero(_payableOverdue);
+  }
+
+  bool _isZero(String value) {
+    return value == "0";
+  }
+
+  bool _isLessThanZero(String value) {
+    return value.contains("-");
+  }
+
+  bool _isGreaterThanZero(String value) {
+    return !(_isLessThanZero(value) || _isZero(value));
+  }
+
   String get currency => _currency;
 
-  String get profitLoss => _profitLoss;
+  String get profitLoss => "$currency $profitLoss";
 
-  String get availableFunds => _fundAvailability;
+  String get availableFunds => "$currency $_fundAvailability";
 
-  String get receivableOverdue => _receivableOverdue;
+  String get receivableOverdue => "$currency $_receivableOverdue";
 
-  String get payableOverdue => _payableOverdue;
+  String get payableOverdue => "$currency $_payableOverdue";
 }

@@ -154,69 +154,48 @@ class CompanyListPresenter {
 
   //MARK: Functions to get financial details
 
-  FinancialDetails getProfitLossDetails(FinancialSummary? financialSummary, {bool isForHeaderCard = false}) {
-    if (financialSummary == null) return _emptyFinancialDetails();
+  FinancialDetails getProfitLossDetails(FinancialSummary? summary, {bool isForHeaderCard = false}) {
+    if (summary == null) return _emptyFinancialDetails();
 
     return FinancialDetails.name(
       label: "Profit & Loss",
-      value: financialSummary.profitLoss,
-      textColor: _isLessThanZero(financialSummary.profitLoss)
-          ? _failureColor(isForHeaderCard)
-          : _successColor(isForHeaderCard),
+      value: summary.profitLoss,
+      textColor: summary.isInProfit() ? _successColor(isForHeaderCard) : _failureColor(isForHeaderCard),
     );
   }
 
-  FinancialDetails getAvailableFundsDetails(FinancialSummary? financialSummary, {bool isForHeaderCard = false}) {
-    if (financialSummary == null) return _emptyFinancialDetails();
+  FinancialDetails getAvailableFundsDetails(FinancialSummary? summary, {bool isForHeaderCard = false}) {
+    if (summary == null) return _emptyFinancialDetails();
 
     return FinancialDetails.name(
       label: "Available Funds",
-      value: financialSummary.availableFunds,
-      textColor: _isLessThanZero(financialSummary.availableFunds) ||
-              _isZero(financialSummary.currency, financialSummary.availableFunds)
-          ? _failureColor(isForHeaderCard)
-          : _successColor(isForHeaderCard),
+      value: summary.availableFunds,
+      textColor: summary.areFundsAvailable() ? _successColor(isForHeaderCard) : _failureColor(isForHeaderCard),
     );
   }
 
-  FinancialDetails getOverdueReceivablesDetails(FinancialSummary? financialSummary, {bool isForHeaderCard = false}) {
-    if (financialSummary == null) return _emptyFinancialDetails();
+  FinancialDetails getOverdueReceivablesDetails(FinancialSummary? summary, {bool isForHeaderCard = false}) {
+    if (summary == null) return _emptyFinancialDetails();
 
     return FinancialDetails.name(
       label: "Receivables Overdue",
-      value: financialSummary.receivableOverdue,
-      textColor: _isGreaterThanZero(financialSummary.currency, financialSummary.receivableOverdue)
-          ? _failureColor(isForHeaderCard)
-          : _successColor(isForHeaderCard),
+      value: summary.receivableOverdue,
+      textColor: summary.areReceivablesOverdue() ? _failureColor(isForHeaderCard) : _successColor(isForHeaderCard),
     );
   }
 
-  FinancialDetails getOverduePayablesDetails(FinancialSummary? financialSummary, {bool isForHeaderCard = false}) {
-    if (financialSummary == null) return _emptyFinancialDetails();
+  FinancialDetails getOverduePayablesDetails(FinancialSummary? summary, {bool isForHeaderCard = false}) {
+    if (summary == null) return _emptyFinancialDetails();
 
     return FinancialDetails.name(
       label: "Payables Overdue",
-      value: financialSummary.payableOverdue,
-      textColor: _isGreaterThanZero(financialSummary.currency, financialSummary.payableOverdue)
-          ? _failureColor(isForHeaderCard)
-          : _successColor(isForHeaderCard),
+      value: summary.payableOverdue,
+      textColor: summary.arePayablesOverdue() ? _failureColor(isForHeaderCard) : _successColor(isForHeaderCard),
     );
   }
 
   FinancialDetails _emptyFinancialDetails() {
     return FinancialDetails.name(label: "", value: "", textColor: Colors.transparent);
-  }
-
-  bool _isZero(String currency, String value) {
-    return value == currency + " 0";
-  }
-
-  bool _isLessThanZero(String value) {
-    return value.contains("-");
-  }
-
-  bool _isGreaterThanZero(String currency, String value) {
-    return !(_isLessThanZero(value) || _isZero(currency, value));
   }
 
   Color _successColor(bool isForHeaderCard) {
