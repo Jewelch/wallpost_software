@@ -5,6 +5,7 @@ import 'package:wallpost/_wp_core/user_management/services/current_user_provider
 import 'package:wallpost/company_core/entities/company_list.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 import 'package:wallpost/company_core/services/company_list_provider.dart';
+import 'package:wallpost/company_core/services/company_selector.dart';
 import 'package:wallpost/company_list/models/financial_details.dart';
 import 'package:wallpost/company_list/view_contracts/company_list_view.dart';
 
@@ -15,18 +16,21 @@ class CompanyListPresenter {
   final CompaniesListView _view;
   final CurrentUserProvider _currentUserProvider;
   final CompanyListProvider _companyListProvider;
+  final CompanySelector _companySelector;
   late CompanyList _companyList;
   var _searchText = "";
   CompanyGroup? _selectedGroup;
 
   CompanyListPresenter(this._view)
       : _currentUserProvider = CurrentUserProvider(),
-        _companyListProvider = CompanyListProvider();
+        _companyListProvider = CompanyListProvider(),
+        _companySelector = CompanySelector();
 
   CompanyListPresenter.initWith(
     this._view,
     this._currentUserProvider,
     this._companyListProvider,
+    this._companySelector,
   );
 
   //MARK: Functions to load company list
@@ -123,6 +127,7 @@ class CompanyListPresenter {
   //MARK: Functions to perform selections
 
   void selectCompany(Company company) async {
+    _companySelector.selectCompanyForCurrentUser(company);
     _view.goToCompanyDetailScreen(company);
   }
 

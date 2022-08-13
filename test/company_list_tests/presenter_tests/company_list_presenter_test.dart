@@ -7,6 +7,7 @@ import 'package:wallpost/company_core/entities/company_group.dart';
 import 'package:wallpost/company_core/entities/company_list.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 import 'package:wallpost/company_core/services/company_list_provider.dart';
+import 'package:wallpost/company_core/services/company_selector.dart';
 import 'package:wallpost/company_list/models/financial_details.dart';
 import 'package:wallpost/company_list/presenters/company_list_presenter.dart';
 import 'package:wallpost/company_list/view_contracts/company_list_view.dart';
@@ -19,6 +20,8 @@ class MockCompaniesListView extends Mock implements CompaniesListView {}
 class MockCompaniesListProvider extends Mock implements CompanyListProvider {}
 
 class MockCompanyList extends Mock implements CompanyList {}
+
+class MockCompanySelector extends Mock implements CompanySelector {}
 
 class MockFinancialSummary extends Mock implements FinancialSummary {}
 
@@ -35,6 +38,7 @@ void main() {
   var view = MockCompaniesListView();
   var mockCurrentUserProvider = MockCurrentUserProvider();
   var mockCompaniesListProvider = MockCompaniesListProvider();
+  var mockCompanySelector = MockCompanySelector();
   late CompanyListPresenter presenter;
 
   void _resetAllMockInteractions() {
@@ -68,6 +72,7 @@ void main() {
       view,
       mockCurrentUserProvider,
       mockCompaniesListProvider,
+      mockCompanySelector,
     );
   });
 
@@ -526,6 +531,7 @@ void main() {
 
       //then
       verifyInOrder([
+        () => mockCompanySelector.selectCompanyForCurrentUser(company1),
         () => view.goToCompanyDetailScreen(company1),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
