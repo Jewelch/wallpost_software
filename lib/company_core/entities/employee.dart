@@ -62,6 +62,14 @@ class Employee extends JSONInitializable {
     return actions;
   }
 
+  bool isOwner() {
+    return _roles.contains(Role.Owner);
+  }
+
+  bool isGM() {
+    return _roles.contains(Role.GeneralManager);
+  }
+
   List<WPAction> get allowedActions => _allowedActions;
 
   String get departmentRank => _departmentRank;
