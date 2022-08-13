@@ -3,6 +3,9 @@ import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 import 'package:wallpost/company_core/entities/module.dart';
 
+import 'employee.dart';
+import 'financial_summary.dart';
+
 class Company extends JSONInitializable {
   late String _id;
   late String _accountNumber;
@@ -12,34 +15,31 @@ class Company extends JSONInitializable {
   late String _logoUrl;
   late String _dateFormat;
   late String _currency;
-  late bool _shouldShowRevenue;
   late List<Module> _modules;
-  late bool _showTimeSheet;
-  late String _timezone;
-  late num _allowedPunchInRadiusInMeters;
   late bool _isTrial;
-  late String _fileUploadPath;
+  late num _approvalCount;
+  FinancialSummary? _financialSummary;
+  late Employee _employee;
 
   Company.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var companyInfoMap = sift.readMapFromMap(jsonMap, 'company_info');
-      _id = '${sift.readNumberFromMap(jsonMap, 'company_id')}';
-      _accountNumber = '${sift.readNumberFromMap(jsonMap, 'account_no')}';
-      _name = sift.readStringFromMap(jsonMap, 'company_name');
-      _shortName = sift.readStringFromMap(jsonMap, 'short_name');
-      _commercialName = sift.readStringFromMap(jsonMap, 'commercial_name');
-      _logoUrl = sift.readStringFromMap(jsonMap, 'company_logo');
+      var financialSummaryMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'financial_summary', null);
+      _id = '${sift.readNumberFromMap(companyInfoMap, 'company_id')}';
+      _accountNumber = '${sift.readNumberFromMap(companyInfoMap, 'account_no')}';
+      _name = sift.readStringFromMap(companyInfoMap, 'company_name');
+      _shortName = sift.readStringFromMap(companyInfoMap, 'short_name');
+      _commercialName = sift.readStringFromMap(companyInfoMap, 'commercial_name');
+      _logoUrl = sift.readStringFromMap(companyInfoMap, 'company_logo');
       _dateFormat = sift.readStringFromMap(companyInfoMap, 'js_date_format');
       _currency = sift.readStringFromMap(companyInfoMap, 'currency');
-      _shouldShowRevenue = sift.readNumberFromMap(jsonMap, 'show_revenue') == 0 ? false : true;
-      var _packages = sift.readStringListFromMap(jsonMap, 'packages');
+      var _packages = sift.readStringListFromMap(companyInfoMap, 'packages');
       _modules = _initModules(_packages);
-      _showTimeSheet = sift.readBooleanFromMap(companyInfoMap, 'show_timesheet_icon');
-      _timezone = sift.readStringFromMap(companyInfoMap, 'time_zone');
-      _allowedPunchInRadiusInMeters = sift.readNumberFromMap(companyInfoMap, 'allowed_radius');
-      _isTrial = sift.readStringFromMap(companyInfoMap, 'is_trial') == 'true';
-      _fileUploadPath = sift.readStringFromMap(jsonMap, 'absolute_upload_path');
+      _isTrial = sift.readBooleanFromMap(companyInfoMap, 'is_trial');
+      _approvalCount = sift.readNumberFromMap(companyInfoMap, 'approval_count');
+      if (financialSummaryMap != null) _financialSummary = FinancialSummary.fromJson(financialSummaryMap);
+      _employee = Employee.fromJson(jsonMap);
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Company response. Error message - ${e.errorMessage}');
     } on MappingException {
@@ -56,33 +56,29 @@ class Company extends JSONInitializable {
     return modules;
   }
 
-  String get fileUploadPath => _fileUploadPath;
-
-  bool get isTrial => _isTrial;
-
-  num get allowedPunchInRadiusInMeters => _allowedPunchInRadiusInMeters;
-
-  String get timezone => _timezone;
-
-  bool get showTimeSheet => _showTimeSheet;
-
-  List<Module> get modules => _modules;
-
-  bool get shouldShowRevenue => _shouldShowRevenue;
-
-  String get currency => _currency;
-
-  String get dateFormat => _dateFormat.replaceAll('D', 'd').replaceAll('Y', 'y');
-
-  String get logoUrl => _logoUrl;
-
-  String get commercialName => _commercialName;
-
-  String get shortName => _shortName;
-
-  String get name => _name;
+  String get id => _id;
 
   String get accountNumber => _accountNumber;
 
-  String get id => _id;
+  String get name => _name;
+
+  String get shortName => _shortName;
+
+  String get commercialName => _commercialName;
+
+  String get logoUrl => _logoUrl;
+
+  String get dateFormat => _dateFormat;
+
+  String get currency => _currency;
+
+  List<Module> get modules => _modules;
+
+  bool get isTrial => _isTrial;
+
+  num get approvalCount => _approvalCount;
+
+  FinancialSummary? get financialSummary => _financialSummary;
+
+  Employee get employee => _employee;
 }

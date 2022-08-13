@@ -5,7 +5,7 @@ import '../mocks.dart';
 
 main() {
   test("is owner", () {
-    var ownerMap = Mocks.companyDetailsResponse;
+    var ownerMap = Mocks.companiesListResponse["companies"][0];
     ownerMap["employee"]["Roles"] = ["owner"];
 
     var employee = Employee.fromJson(ownerMap);
@@ -15,7 +15,7 @@ main() {
   });
 
   test("is general manager", () {
-    var gmMap = Mocks.companyDetailsResponse;
+    var gmMap = Mocks.companiesListResponse["companies"][0];
     gmMap["employee"]["Roles"] = ["general_manager"];
 
     var employee = Employee.fromJson(gmMap);

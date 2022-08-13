@@ -13,27 +13,21 @@ class Employee extends JSONInitializable {
   late String _designation;
   late List<Role> _roles;
   late String? _lineManager;
-  late String _departmentRank;
   late List<WPAction> _allowedActions;
 
   Employee.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var employeeMap = sift.readMapFromMap(jsonMap, 'employee');
-      var departmentRankMap = sift.readMapFromMap(jsonMap, 'department_rank');
-      var allowedActionsMapList = sift.readMapListFromMap(jsonMap, 'request_items');
+      var allowedActionsMapList = sift.readMapListFromMap(employeeMap, 'request_items');
       _v1Id = '${sift.readNumberFromMap(employeeMap, 'employment_id_v1')}';
       _v2Id = sift.readStringFromMap(employeeMap, 'employment_id');
-      _companyId = '${sift.readNumberFromMap(jsonMap, 'company_id')}';
       _employeeName = sift.readStringFromMap(employeeMap, 'name');
       _employeeEmail = sift.readStringFromMap(employeeMap, 'email_id_office');
       _designation = sift.readStringFromMap(employeeMap, 'designation');
       var roleStrings = sift.readStringListFromMap(employeeMap, "Roles");
       _roles = _initRoles(roleStrings);
       _lineManager = sift.readStringFromMapWithDefaultValue(employeeMap, 'line_manager', null);
-      var rank = sift.readNumberFromMapWithDefaultValue(departmentRankMap, 'rank', null);
-      var rankOutOf = sift.readNumberFromMapWithDefaultValue(departmentRankMap, 'out_of', null);
-      _departmentRank = (rank == null || rankOutOf == null) ? '' : '$rank/$rankOutOf';
       _allowedActions = _initAllowedActions(allowedActionsMapList);
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Employee response. Error message - ${e.errorMessage}');
@@ -70,23 +64,21 @@ class Employee extends JSONInitializable {
     return _roles.contains(Role.GeneralManager);
   }
 
-  List<WPAction> get allowedActions => _allowedActions;
-
-  String get departmentRank => _departmentRank;
-
-  String? get lineManager => _lineManager;
-
-  List<Role> get roles => _roles;
-
-  String get designation => _designation;
-
-  String get employeeEmail => _employeeEmail;
-
-  String get employeeName => _employeeName;
-
-  String get companyId => _companyId;
+  String get v1Id => _v1Id;
 
   String get v2Id => _v2Id;
 
-  String get v1Id => _v1Id;
+  String get companyId => _companyId;
+
+  String get employeeName => _employeeName;
+
+  String get employeeEmail => _employeeEmail;
+
+  String get designation => _designation;
+
+  List<Role> get roles => _roles;
+
+  String? get lineManager => _lineManager;
+
+  List<WPAction> get allowedActions => _allowedActions;
 }

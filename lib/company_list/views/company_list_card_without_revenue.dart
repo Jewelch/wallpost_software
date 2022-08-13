@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/company_core/entities/company_list_item.dart';
+
+import '../../company_core/entities/company.dart';
 
 class CompanyListCardWithoutRev extends StatelessWidget {
-  final CompanyListItem company;
+  final Company company;
   final VoidCallback onPressed;
 
   CompanyListCardWithoutRev({required this.company, required this.onPressed});

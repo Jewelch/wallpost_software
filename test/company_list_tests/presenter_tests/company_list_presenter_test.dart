@@ -5,14 +5,13 @@ import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/_shared/extensions/color_extensions.dart';
 import 'package:wallpost/company_core/entities/company_group.dart';
 import 'package:wallpost/company_core/entities/company_list.dart';
-import 'package:wallpost/company_core/entities/company_list_item.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
-import 'package:wallpost/company_core/services/company_details_provider.dart';
 import 'package:wallpost/company_core/services/company_list_provider.dart';
 import 'package:wallpost/company_list/models/financial_details.dart';
 import 'package:wallpost/company_list/presenters/company_list_presenter.dart';
 import 'package:wallpost/company_list/view_contracts/company_list_view.dart';
 
+import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_current_user_provider.dart';
 
 class MockCompaniesListView extends Mock implements CompaniesListView {}
@@ -21,17 +20,13 @@ class MockCompaniesListProvider extends Mock implements CompanyListProvider {}
 
 class MockCompanyList extends Mock implements CompanyList {}
 
-class MockCompanyListItem extends Mock implements CompanyListItem {}
-
 class MockFinancialSummary extends Mock implements FinancialSummary {}
 
 class MockCompanyGroup extends Mock implements CompanyGroup {}
 
-class MockCompanyDetailsProvider extends Mock implements CompanyDetailsProvider {}
-
 void main() {
-  late MockCompanyListItem company1;
-  late MockCompanyListItem company2;
+  late MockCompany company1;
+  late MockCompany company2;
   late MockCompanyGroup companyGroup1;
   late MockCompanyGroup companyGroup2;
   late MockFinancialSummary financialSummary;
@@ -54,15 +49,9 @@ void main() {
     verifyNoMoreInteractions(mockCompaniesListProvider);
   }
 
-  MockFinancialSummary _createMockFinancialSummary() {
-    var summary = MockFinancialSummary();
-    when(() => summary.currency).thenReturn("USD");
-    return summary;
-  }
-
   setUp(() {
-    company1 = MockCompanyListItem();
-    company2 = MockCompanyListItem();
+    company1 = MockCompany();
+    company2 = MockCompany();
     companyGroup1 = MockCompanyGroup();
     companyGroup2 = MockCompanyGroup();
     financialSummary = MockFinancialSummary();
@@ -414,22 +403,17 @@ void main() {
 
   group('tests for getting financial data', () {
     test('getting profit and loss financial details', () async {
-      var negativeSummary = _createMockFinancialSummary();
+      var negativeSummary = MockFinancialSummary();
       when(() => negativeSummary.profitLoss).thenReturn("USD -40");
+      when(() => negativeSummary.isInProfit()).thenReturn(false);
       var details1 = presenter.getProfitLossDetails(negativeSummary);
       expect(details1.label, "Profit & Loss");
       expect(details1.value, "USD -40");
       expect(details1.textColor.isEqualTo(AppColors.failureColor), true);
 
-      var zeroSummary = _createMockFinancialSummary();
-      when(() => zeroSummary.profitLoss).thenReturn("USD 0");
-      var details2 = presenter.getProfitLossDetails(zeroSummary);
-      expect(details2.label, "Profit & Loss");
-      expect(details2.value, "USD 0");
-      expect(details2.textColor.isEqualTo(AppColors.successColor), true);
-
-      var positiveSummary = _createMockFinancialSummary();
+      var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.profitLoss).thenReturn("USD 440");
+      when(() => positiveSummary.isInProfit()).thenReturn(true);
       var details3 = presenter.getProfitLossDetails(positiveSummary);
       expect(details3.label, "Profit & Loss");
       expect(details3.value, "USD 440");
@@ -437,22 +421,17 @@ void main() {
     });
 
     test('getting profit and loss financial details for header card', () async {
-      var negativeSummary = _createMockFinancialSummary();
+      var negativeSummary = MockFinancialSummary();
       when(() => negativeSummary.profitLoss).thenReturn("USD -40");
+      when(() => negativeSummary.isInProfit()).thenReturn(false);
       var details1 = presenter.getProfitLossDetails(negativeSummary, isForHeaderCard: true);
       expect(details1.label, "Profit & Loss");
       expect(details1.value, "USD -40");
       expect(details1.textColor.isEqualTo(AppColors.headerCardFailureColor), true);
 
-      var zeroSummary = _createMockFinancialSummary();
-      when(() => zeroSummary.profitLoss).thenReturn("USD 0");
-      var details2 = presenter.getProfitLossDetails(zeroSummary, isForHeaderCard: true);
-      expect(details2.label, "Profit & Loss");
-      expect(details2.value, "USD 0");
-      expect(details2.textColor.isEqualTo(AppColors.headerCardSuccessColor), true);
-
-      var positiveSummary = _createMockFinancialSummary();
+      var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.profitLoss).thenReturn("USD 440");
+      when(() => positiveSummary.isInProfit()).thenReturn(true);
       var details3 = presenter.getProfitLossDetails(positiveSummary, isForHeaderCard: true);
       expect(details3.label, "Profit & Loss");
       expect(details3.value, "USD 440");
@@ -460,22 +439,17 @@ void main() {
     });
 
     test('getting available funds financial details', () async {
-      var negativeSummary = _createMockFinancialSummary();
+      var negativeSummary = MockFinancialSummary();
       when(() => negativeSummary.availableFunds).thenReturn("USD -40");
+      when(() => negativeSummary.areFundsAvailable()).thenReturn(false);
       var details1 = presenter.getAvailableFundsDetails(negativeSummary);
       expect(details1.label, "Available Funds");
       expect(details1.value, "USD -40");
       expect(details1.textColor.isEqualTo(AppColors.failureColor), true);
 
-      var zeroSummary = _createMockFinancialSummary();
-      when(() => zeroSummary.availableFunds).thenReturn("USD 0");
-      var details2 = presenter.getAvailableFundsDetails(zeroSummary);
-      expect(details2.label, "Available Funds");
-      expect(details2.value, "USD 0");
-      expect(details2.textColor.isEqualTo(AppColors.failureColor), true);
-
-      var positiveSummary = _createMockFinancialSummary();
+      var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.availableFunds).thenReturn("USD 440");
+      when(() => positiveSummary.areFundsAvailable()).thenReturn(true);
       var details3 = presenter.getAvailableFundsDetails(positiveSummary);
       expect(details3.label, "Available Funds");
       expect(details3.value, "USD 440");
@@ -483,22 +457,17 @@ void main() {
     });
 
     test('getting overdue receivables financial details', () async {
-      var negativeSummary = _createMockFinancialSummary();
+      var negativeSummary = MockFinancialSummary();
       when(() => negativeSummary.receivableOverdue).thenReturn("USD -40");
+      when(() => negativeSummary.areReceivablesOverdue()).thenReturn(false);
       var details1 = presenter.getOverdueReceivablesDetails(negativeSummary);
       expect(details1.label, "Receivables Overdue");
       expect(details1.value, "USD -40");
       expect(details1.textColor.isEqualTo(AppColors.successColor), true);
 
-      var zeroSummary = _createMockFinancialSummary();
-      when(() => zeroSummary.receivableOverdue).thenReturn("USD 0");
-      var details2 = presenter.getOverdueReceivablesDetails(zeroSummary);
-      expect(details2.label, "Receivables Overdue");
-      expect(details2.value, "USD 0");
-      expect(details2.textColor.isEqualTo(AppColors.successColor), true);
-
-      var positiveSummary = _createMockFinancialSummary();
+      var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.receivableOverdue).thenReturn("USD 440");
+      when(() => positiveSummary.areReceivablesOverdue()).thenReturn(true);
       var details3 = presenter.getOverdueReceivablesDetails(positiveSummary);
       expect(details3.label, "Receivables Overdue");
       expect(details3.value, "USD 440");
@@ -506,22 +475,17 @@ void main() {
     });
 
     test('getting overdue payables financial details', () async {
-      var negativeSummary = _createMockFinancialSummary();
+      var negativeSummary = MockFinancialSummary();
       when(() => negativeSummary.payableOverdue).thenReturn("USD -40");
+      when(() => negativeSummary.arePayablesOverdue()).thenReturn(false);
       var details1 = presenter.getOverduePayablesDetails(negativeSummary);
       expect(details1.label, "Payables Overdue");
       expect(details1.value, "USD -40");
       expect(details1.textColor.isEqualTo(AppColors.successColor), true);
 
-      var zeroSummary = _createMockFinancialSummary();
-      when(() => zeroSummary.payableOverdue).thenReturn("USD 0");
-      var details2 = presenter.getOverduePayablesDetails(zeroSummary);
-      expect(details2.label, "Payables Overdue");
-      expect(details2.value, "USD 0");
-      expect(details2.textColor.isEqualTo(AppColors.successColor), true);
-
-      var positiveSummary = _createMockFinancialSummary();
+      var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.payableOverdue).thenReturn("USD 440");
+      when(() => positiveSummary.arePayablesOverdue()).thenReturn(true);
       var details3 = presenter.getOverduePayablesDetails(positiveSummary);
       expect(details3.label, "Payables Overdue");
       expect(details3.value, "USD 440");

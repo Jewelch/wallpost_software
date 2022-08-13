@@ -10,7 +10,6 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
-import 'package:wallpost/company_core/entities/company_list_item.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 import 'package:wallpost/company_list/presenters/company_list_presenter.dart';
 import 'package:wallpost/company_list/view_contracts/company_list_view.dart';
@@ -21,6 +20,7 @@ import 'package:wallpost/company_list/views/company_list_loader.dart';
 import 'package:wallpost/company_list/views/financial_summary_card.dart';
 
 import '../../_common_widgets/search_bar/search_bar.dart';
+import '../../company_core/entities/company.dart';
 import '../../dashboard/dashboard_screen.dart';
 import '../../left_menu/left_menu_screen.dart';
 
@@ -193,7 +193,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     );
   }
 
-  Widget _getCompanyCard(CompanyListItem companyListItem) {
+  Widget _getCompanyCard(Company companyListItem) {
     if (companyListItem.financialSummary == null) {
       return CompanyListCardWithoutRev(
         company: companyListItem,
@@ -288,9 +288,9 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   }
 
   @override
-  void goToCompanyDetailScreen(CompanyListItem companyListItem) {
+  void goToCompanyDetailScreen(Company company) {
     ScreenPresenter.present(
-      DashboardScreen(companyListItem.id, companyListItem.name),
+      DashboardScreen(company.id, company.name),
       context,
       slideDirection: SlideDirection.fromBottom,
     );

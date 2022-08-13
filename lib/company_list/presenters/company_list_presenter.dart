@@ -3,12 +3,12 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/company_core/entities/company_list.dart';
-import 'package:wallpost/company_core/entities/company_list_item.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 import 'package:wallpost/company_core/services/company_list_provider.dart';
 import 'package:wallpost/company_list/models/financial_details.dart';
 import 'package:wallpost/company_list/view_contracts/company_list_view.dart';
 
+import '../../company_core/entities/company.dart';
 import '../../company_core/entities/company_group.dart';
 
 class CompanyListPresenter {
@@ -56,7 +56,7 @@ class CompanyListPresenter {
     }
   }
 
-  List<CompanyListItem> _getFilteredCompanies() {
+  List<Company> _getFilteredCompanies() {
     var allCompanies = _companyList.companies;
     var companyIdsFilteredByGroup = _selectedGroup?.companyIds ?? allCompanies.map((c) => c.id).toList();
     var companiesFilteredByGroup = allCompanies.where((c) => companyIdsFilteredByGroup.contains(c.id)).toList();
@@ -122,7 +122,7 @@ class CompanyListPresenter {
 
   //MARK: Functions to perform selections
 
-  void selectCompany(CompanyListItem company) async {
+  void selectCompany(Company company) async {
     _view.goToCompanyDetailScreen(company);
   }
 

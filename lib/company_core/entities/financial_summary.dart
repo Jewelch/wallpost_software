@@ -51,13 +51,11 @@ class FinancialSummary extends JSONInitializable {
     return !(_isLessThanZero(value) || _isZero(value));
   }
 
-  String get currency => _currency;
+  String get profitLoss => "$_currency $_profitLoss";
 
-  String get profitLoss => "$currency $profitLoss";
+  String get availableFunds => "$_currency $_fundAvailability";
 
-  String get availableFunds => "$currency $_fundAvailability";
+  String get receivableOverdue => "$_currency $_receivableOverdue";
 
-  String get receivableOverdue => "$currency $_receivableOverdue";
-
-  String get payableOverdue => "$currency $_payableOverdue";
+  String get payableOverdue => "$_currency $_payableOverdue";
 }

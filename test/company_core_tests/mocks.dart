@@ -70,32 +70,49 @@ class Mocks {
     ],
     "companies": [
       {
-        "company_id": 80,
-        "company_name": "Aadidas",
-        "notifications": 0,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/80/DOC183964_nologo.jpg",
-        "approval_count": 0,
-        "approval_types": [],
-        "financial_summary": {
-          "currency": "MXN",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": "0",
-          "receivableOverdue": "0",
-          "payableOverdue": "0",
-          "profitLoss": "0",
-          "profitLossPerc": "0"
-        }
-      },
-      {
-        "company_id": 46,
-        "company_name": "Advisory LLC - test",
-        "notifications": 5,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/46/DOC112471_CompanyLogo.png",
-        "approval_count": 8,
-        "approval_types": [
-          {"count": 8, "type": "hr", "module_name": "leaveRequest"}
-        ],
+        "company_info": {
+          "company_id": 13,
+          "account_no": 123123,
+          "company_name": "Smart Management - Qatar",
+          "short_name": "Smart Management - Qatar",
+          "commercial_name": "Smart Management - Qatar",
+          "company_logo": "https://s3.amazonaws.com/wallpostsoftware/123123/13/DOC71284_SMIT Logo.PNG",
+          "js_date_format": "yyyy-mm-dd",
+          "currency": "USD",
+          "packages": ["hr", "task", "timesheet"],
+          "is_trial": true,
+          "approval_count": 8
+        },
+        "employee": {
+          "employment_id": "gEBrqqLflxXRNQT",
+          "name": "Obaid Mohamed",
+          "designation": "IOS Developer",
+          "email_id_office": "mahmed@wallpostsoftware.com",
+          "image": "DOC_3e1be345-9506-4a8e-a66e-9b214200e691.png",
+          "employment_id_v1": 2123,
+          "line_manager": "Ishaque Sethikunhi Ameen",
+          "Roles": ["task_line_manager"],
+          "request_items": [
+            {
+              "display_name": "Disciplinary Action",
+              "name": "disciplinary_request",
+              "sub_module": "disciplinary_action",
+              "visibility": true
+            },
+            {
+              "display_name": "Employment Certificate",
+              "name": "time_off_request",
+              "sub_module": "time_off",
+              "visibility": true
+            },
+            {
+              "display_name": "Expense Request",
+              "name": "expense_request",
+              "sub_module": "expense_request",
+              "visibility": true
+            }
+          ]
+        },
         "financial_summary": {
           "currency": "BGN",
           "actual_revenue_display": "0",
@@ -108,98 +125,51 @@ class Mocks {
         }
       },
       {
-        "company_id": 83,
-        "company_name": "Agro",
-        "notifications": 0,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/83/DOC184055_nologo.jpg",
-        "approval_count": 0,
-        "approval_types": [],
-        "financial_summary": {
-          "currency": "MXN",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": "186.1K",
-          "receivableOverdue": "0",
-          "payableOverdue": "0",
-          "profitLoss": "0",
-          "profitLossPerc": "0"
-        }
-      },
-      {
-        "company_id": 44,
-        "company_name": "Alpha Accounting Alone (test)",
-        "notifications": 0,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/44/DOC5438_nologo.jpg",
-        "approval_count": 0,
-        "approval_types": [],
-        "financial_summary": {
+        "company_info": {
+          "company_id": 13,
+          "account_no": 123123,
+          "company_name": "Smart Management - Qatar",
+          "short_name": "Smart Management - Qatar",
+          "commercial_name": "Smart Management - Qatar",
+          "company_logo": "https://s3.amazonaws.com/wallpostsoftware/123123/13/DOC71284_SMIT Logo.PNG",
+          "js_date_format": "yyyy-mm-dd",
           "currency": "USD",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": "899.8K",
-          "receivableOverdue": "1000",
-          "payableOverdue": "0",
-          "profitLoss": "0",
-          "profitLossPerc": "0"
-        }
-      },
-      {
-        "company_id": 19,
-        "company_name": "Amina_Georgia(test)",
-        "notifications": 49,
-        "company_logo":
-            "https://s3.amazonaws.com/wallpostsoftware/120843/19/DOC125410_DOC107494_MicrosoftTeams-image (11).png",
-        "approval_count": 35,
-        "approval_types": [
-          {"count": 35, "type": "hr", "module_name": "leaveRequest"}
-        ],
-        "financial_summary": {
-          "currency": "QAR",
-          "actual_revenue_display": "1,628,790",
-          "overall_revenue": 19012,
-          "cashAvailability": "-1.1M",
-          "receivableOverdue": "2M",
-          "payableOverdue": "2.6M",
-          "profitLoss": "869.8K",
-          "profitLossPerc": "51.926309756913"
-        }
-      },
-      {
-        "company_id": 85,
-        "company_name": "Aster Accounts",
-        "notifications": 0,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/85/DOC249788_nologo.jpg",
-        "approval_count": 0,
-        "approval_types": [],
-        "financial_summary": {
-          "currency": "EGP",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": "0",
-          "receivableOverdue": "0",
-          "payableOverdue": "0",
-          "profitLoss": "0",
-          "profitLossPerc": "0"
-        }
-      },
-      {
-        "company_id": 2,
-        "company_name": "B+Company (Test)",
-        "notifications": 407,
-        "company_logo": "https://s3.amazonaws.com/wallpostsoftware/120843/2/DOC4318_logo.jpg",
-        "approval_count": 0,
-        "approval_types": [],
-        "financial_summary": {
-          "currency": "AED",
-          "actual_revenue_display": "0",
-          "overall_revenue": 0,
-          "cashAvailability": "-54M",
-          "receivableOverdue": "36.4M",
-          "payableOverdue": "983.2K",
-          "profitLoss": "-50.8M",
-          "profitLossPerc": "-47.5K"
-        }
-      },
+          "packages": ["hr", "task", "timesheet"],
+          "is_trial": true,
+          "approval_count": 8
+        },
+        "employee": {
+          "employment_id": "gEBrqqLflxXRNQT",
+          "name": "Obaid Mohamed",
+          "designation": "IOS Developer",
+          "email_id_office": "mahmed@wallpostsoftware.com",
+          "image": "DOC_3e1be345-9506-4a8e-a66e-9b214200e691.png",
+          "employment_id_v1": 2123,
+          "line_manager": "Ishaque Sethikunhi Ameen",
+          "Roles": ["task_line_manager"],
+          "request_items": [
+            {
+              "display_name": "Disciplinary Action",
+              "name": "disciplinary_request",
+              "sub_module": "disciplinary_action",
+              "visibility": true
+            },
+            {
+              "display_name": "Employment Certificate",
+              "name": "time_off_request",
+              "sub_module": "time_off",
+              "visibility": true
+            },
+            {
+              "display_name": "Expense Request",
+              "name": "expense_request",
+              "sub_module": "expense_request",
+              "visibility": true
+            }
+          ]
+        },
+        "financial_summary": null,
+      }
     ]
   };
 
@@ -324,7 +294,6 @@ class Mocks {
         "sub_module": "payroll",
         "visibility": true
       },
-      {"display_name": "Item Request", "name": "item_request", "sub_module": "item_request", "visibility": true},
       {
         "display_name": "Leave Encashment",
         "name": "leave_encashment",
@@ -334,3 +303,15 @@ class Mocks {
     ]
   };
 }
+//
+// add more company info, emplpyee info, and request items to group dashboard?
+// will it make the API slow? if yes, then how slow?
+//
+//
+// oR!
+//
+// if we add financial summary to company - does it make sense? I think we can
+//
+//     for oowner - we need financial summary YES,
+//
+//

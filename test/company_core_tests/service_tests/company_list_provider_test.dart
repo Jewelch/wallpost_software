@@ -95,17 +95,17 @@ void main() {
   test('success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    try {
-      var companyList = await companyListProvider.get();
-      expect(companyList.groups.length, 2);
-      expect(companyList.companies.length, 7);
-      verifyInOrder([
-        () => mockCurrentUserProvider.getCurrentUser(),
-        () => mockCompanyRepository.saveCompanyListForUser(companyList, any())
-      ]);
-      _verifyNoMoreInteractions();
-    } catch (e) {
-      fail('failed to complete successfully. exception thrown $e');
-    }
+    var companyList = await companyListProvider.get();
+    expect(companyList.groups.length, 2);
+    expect(companyList.companies.length, 2);
+    expect(companyList.companies[0].employee, isNotNull);
+    expect(companyList.companies[0].financialSummary, isNotNull);
+    expect(companyList.companies[1].employee, isNotNull);
+    expect(companyList.companies[1].financialSummary, isNull);
+    verifyInOrder([
+      () => mockCurrentUserProvider.getCurrentUser(),
+      () => mockCompanyRepository.saveCompanyListForUser(companyList, any())
+    ]);
+    _verifyNoMoreInteractions();
   });
 }
