@@ -19,7 +19,7 @@ class Employee extends JSONInitializable {
     var sift = Sift();
     try {
       var employeeMap = sift.readMapFromMap(jsonMap, 'employee');
-      var allowedActionsMapList = sift.readMapListFromMap(employeeMap, 'request_items');
+      var allowedActionsMapList = sift.readMapListFromMap(jsonMap, 'request_items');
       _v1Id = '${sift.readNumberFromMap(employeeMap, 'employment_id_v1')}';
       _v2Id = sift.readStringFromMap(employeeMap, 'employment_id');
       _employeeName = sift.readStringFromMap(employeeMap, 'name');

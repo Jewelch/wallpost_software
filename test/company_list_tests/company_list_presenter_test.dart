@@ -12,8 +12,8 @@ import 'package:wallpost/company_list/models/financial_details.dart';
 import 'package:wallpost/company_list/presenters/company_list_presenter.dart';
 import 'package:wallpost/company_list/view_contracts/company_list_view.dart';
 
-import '../../_mocks/mock_company.dart';
-import '../../_mocks/mock_current_user_provider.dart';
+import '../_mocks/mock_company.dart';
+import '../_mocks/mock_current_user_provider.dart';
 
 class MockCompaniesListView extends Mock implements CompaniesListView {}
 
@@ -432,7 +432,7 @@ void main() {
       var details1 = presenter.getProfitLossDetails(negativeSummary, isForHeaderCard: true);
       expect(details1.label, "Profit & Loss");
       expect(details1.value, "USD -40");
-      expect(details1.textColor.isEqualTo(AppColors.headerCardFailureColor), true);
+      expect(details1.textColor.isEqualTo(AppColors.failureColorForDarkDefaultColorBg), true);
 
       var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.profitLoss).thenReturn("USD 440");
@@ -440,7 +440,7 @@ void main() {
       var details3 = presenter.getProfitLossDetails(positiveSummary, isForHeaderCard: true);
       expect(details3.label, "Profit & Loss");
       expect(details3.value, "USD 440");
-      expect(details3.textColor.isEqualTo(AppColors.headerCardSuccessColor), true);
+      expect(details3.textColor.isEqualTo(AppColors.successColorForDarkDefaultColorBg), true);
     });
 
     test('getting available funds financial details', () async {

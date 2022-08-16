@@ -24,10 +24,10 @@ class FinancialSummaryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(width: 20),
-              Text("Summary", style: TextStyles.headerCardHeadingTextStyle),
+              Text("Financials", style: TextStyles.headerCardHeadingTextStyle),
               Expanded(
                 child: Text(
-                  "YTD ${AppYears.years().first}",
+                  "YTD   ${AppYears.years().first}",
                   textAlign: TextAlign.end,
                   style: TextStyles.headerCardSubHeadingTextStyle,
                 ),

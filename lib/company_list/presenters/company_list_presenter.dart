@@ -204,11 +204,11 @@ class CompanyListPresenter {
   }
 
   Color _successColor(bool isForHeaderCard) {
-    return isForHeaderCard ? AppColors.headerCardSuccessColor : AppColors.successColor;
+    return isForHeaderCard ? AppColors.successColorForDarkDefaultColorBg : AppColors.successColor;
   }
 
   Color _failureColor(bool isForHeaderCard) {
-    return isForHeaderCard ? AppColors.headerCardFailureColor : AppColors.failureColor;
+    return isForHeaderCard ? AppColors.failureColorForDarkDefaultColorBg : AppColors.failureColor;
   }
 
   //MARK: Getters
@@ -237,3 +237,5 @@ class CompanyListPresenter {
     return approvalCount.toInt();
   }
 }
+
+

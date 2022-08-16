@@ -36,7 +36,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   late CompanyListPresenter presenter;
 
   var _errorMessage = "";
-  var _viewSelectorNotifier = ItemNotifier<int>(defaultValue: 0);
+  var _viewSelectorNotifier = ItemNotifier<int>(defaultValue: LOADER_VIEW);
   var _filtersBarVisibilityNotifier = ItemNotifier<bool>(defaultValue: false);
   var _companyListNotifier = Notifier();
 
@@ -72,13 +72,14 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   //MARK: Functions to build the error and retry view
 
   Widget _errorAndRetryView() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
+    return Column(
+      children: [
+        SizedBox(height: 10),
+        _appBarWithoutSearchButton(),
+        SizedBox(height: 10),
+        Expanded(
+          child: Container(
+            child: TextButton(
               child: Text(
                 _errorMessage,
                 textAlign: TextAlign.center,
@@ -86,9 +87,9 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
               ),
               onPressed: () => presenter.refresh(),
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -111,15 +112,23 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   Widget _topBar() {
     return ItemNotifiable<bool>(
       notifier: _filtersBarVisibilityNotifier,
-      builder: (context, showFiltersBar) => showFiltersBar ? _filtersBar() : _appBar(),
+      builder: (context, showFiltersBar) => showFiltersBar ? _filtersBar() : _appBarWithSearchButton(),
     );
   }
 
-  Widget _appBar() {
+  Widget _appBarWithSearchButton() {
     return CompanyListAppBar(
       profileImageUrl: presenter.getProfileImageUrl(),
       onLeftMenuButtonPressed: () => LeftMenuScreen.show(context),
       onSearchButtonPressed: () => _filtersBarVisibilityNotifier.notify(true),
+    );
+  }
+
+  Widget _appBarWithoutSearchButton() {
+    return CompanyListAppBar(
+      profileImageUrl: presenter.getProfileImageUrl(),
+      onLeftMenuButtonPressed: () => LeftMenuScreen.show(context),
+      onSearchButtonPressed: () {},
     );
   }
 

@@ -1,5 +1,3 @@
-import 'package:random_string/random_string.dart';
-
 class Mocks {
   static Map<String, dynamic> companiesListResponse = {
     "groups": [
@@ -70,6 +68,7 @@ class Mocks {
     ],
     "companies": [
       {
+        "approval_count": 8,
         "company_info": {
           "company_id": 13,
           "account_no": 123123,
@@ -81,7 +80,6 @@ class Mocks {
           "currency": "USD",
           "packages": ["hr", "task", "timesheet"],
           "is_trial": true,
-          "approval_count": 8
         },
         "employee": {
           "employment_id": "gEBrqqLflxXRNQT",
@@ -92,27 +90,27 @@ class Mocks {
           "employment_id_v1": 2123,
           "line_manager": "Ishaque Sethikunhi Ameen",
           "Roles": ["task_line_manager"],
-          "request_items": [
-            {
-              "display_name": "Disciplinary Action",
-              "name": "disciplinary_request",
-              "sub_module": "disciplinary_action",
-              "visibility": true
-            },
-            {
-              "display_name": "Employment Certificate",
-              "name": "time_off_request",
-              "sub_module": "time_off",
-              "visibility": true
-            },
-            {
-              "display_name": "Expense Request",
-              "name": "expense_request",
-              "sub_module": "expense_request",
-              "visibility": true
-            }
-          ]
         },
+        "request_items": [
+          {
+            "display_name": "Disciplinary Action",
+            "name": "disciplinary_request",
+            "sub_module": "disciplinary_action",
+            "visibility": true
+          },
+          {
+            "display_name": "Employment Certificate",
+            "name": "time_off_request",
+            "sub_module": "time_off",
+            "visibility": true
+          },
+          {
+            "display_name": "Expense Request",
+            "name": "expense_request",
+            "sub_module": "expense_request",
+            "visibility": true
+          }
+        ],
         "financial_summary": {
           "currency": "BGN",
           "actual_revenue_display": "0",
@@ -125,6 +123,7 @@ class Mocks {
         }
       },
       {
+        "approval_count": 8,
         "company_info": {
           "company_id": 13,
           "account_no": 123123,
@@ -136,7 +135,6 @@ class Mocks {
           "currency": "USD",
           "packages": ["hr", "task", "timesheet"],
           "is_trial": true,
-          "approval_count": 8
         },
         "employee": {
           "employment_id": "gEBrqqLflxXRNQT",
@@ -147,171 +145,29 @@ class Mocks {
           "employment_id_v1": 2123,
           "line_manager": "Ishaque Sethikunhi Ameen",
           "Roles": ["task_line_manager"],
-          "request_items": [
-            {
-              "display_name": "Disciplinary Action",
-              "name": "disciplinary_request",
-              "sub_module": "disciplinary_action",
-              "visibility": true
-            },
-            {
-              "display_name": "Employment Certificate",
-              "name": "time_off_request",
-              "sub_module": "time_off",
-              "visibility": true
-            },
-            {
-              "display_name": "Expense Request",
-              "name": "expense_request",
-              "sub_module": "expense_request",
-              "visibility": true
-            }
-          ]
         },
+        "request_items": [
+          {
+            "display_name": "Disciplinary Action",
+            "name": "disciplinary_request",
+            "sub_module": "disciplinary_action",
+            "visibility": true
+          },
+          {
+            "display_name": "Employment Certificate",
+            "name": "time_off_request",
+            "sub_module": "time_off",
+            "visibility": true
+          },
+          {
+            "display_name": "Expense Request",
+            "name": "expense_request",
+            "sub_module": "expense_request",
+            "visibility": true
+          }
+        ],
         "financial_summary": null,
       }
     ]
   };
-
-  static Map<String, dynamic> companyDetailsResponse = {
-    "absolute_upload_path": randomString(10),
-    "account_no": randomBetween(1000, 5000),
-    "commercial_name": randomString(10),
-    "company_id": 1234,
-    "company_info": {
-      "allowed_radius": randomBetween(1000, 5000),
-      "approval_flow_settings": true,
-      "calendar_settings": true,
-      "change_company": true,
-      "change_user": true,
-      "client_auth_key": randomString(10),
-      "company_name": randomString(10),
-      "company_settings": true,
-      "currency": randomString(10),
-      "date_format": randomString(10),
-      "date_separator": randomString(10),
-      "date_time_settings": true,
-      "employee_user_manager": true,
-      "erp_access": randomString(10),
-      "external_account_settings": true,
-      "fullName": randomString(10),
-      "has_signature": true,
-      "is_trial": 'true',
-      "js_date_format": randomString(10),
-      "manage_wallpost": true,
-      "packages": {
-        "crm": {
-          "features": randomString(10),
-          "package": randomString(10),
-          "users": randomString(10),
-        },
-        "finance": {
-          "features": randomString(10),
-          "package": randomString(10),
-          "users": randomString(10),
-        },
-        "hr": {
-          "features": randomString(10),
-          "package": randomString(10),
-          "users": randomString(10),
-        },
-        "performance": {
-          "features": randomString(10),
-          "package": randomString(10),
-          "users": randomString(10),
-        },
-        "task": {
-          "features": randomString(10),
-          "package": randomString(10),
-          "users": randomString(10),
-        },
-      },
-      "pricing_url": randomString(10),
-      "profile_image": randomString(10),
-      "report_settings": true,
-      "salutation": randomString(10),
-      "setup_link": true,
-      "show_calender_icon": true,
-      "show_timesheet_icon": true,
-      "switch_account": true,
-      "time_zone": randomString(10),
-      "user_id": randomString(10),
-      "user_manager": true,
-    },
-    "company_logo": randomString(10),
-    "company_name": randomString(10),
-    "department_rank": {
-      "out_of": randomBetween(1000, 5000),
-      "rank": randomBetween(1000, 5000),
-    },
-    "employee": {
-      "designation": randomString(10),
-      "email_id_office": randomString(10),
-      "employment_id": randomString(10),
-      "employment_id_v1": randomBetween(1000, 5000),
-      "image": randomString(10),
-      "line_manager": randomString(10),
-      "name": randomString(10),
-      "Roles": [
-        "general_manager",
-        "owner",
-      ],
-    },
-    "general_manager": randomBetween(1000, 5000),
-    "owners": randomString(10),
-    "packages": ['task', 'hr'],
-    "payroll_wps_supported": true,
-    "show_revenue": 0,
-    "short_name": randomString(10),
-    "request_items": [
-      {
-        "display_name": "Task",
-        "name": "myportal_create_task",
-        "sub_module": "myportal_create_task",
-        "visibility": true,
-      },
-      {
-        "display_name": "Disciplinary Action",
-        "name": "disciplinary_request",
-        "sub_module": "disciplinary_action",
-        "visibility": true
-      },
-      {
-        "display_name": "Employment Certificate",
-        "name": "time_off_request",
-        "sub_module": "time_off",
-        "visibility": true
-      },
-      {
-        "display_name": "Expense Request",
-        "name": "expense_request",
-        "sub_module": "expense_request",
-        "visibility": true
-      },
-      {
-        "display_name": "Experience Certificate",
-        "name": "experience_certificate_request",
-        "sub_module": "payroll",
-        "visibility": true
-      },
-      {
-        "display_name": "Leave Encashment",
-        "name": "leave_encashment",
-        "sub_module": "leave_encashment",
-        "visibility": true
-      },
-    ]
-  };
 }
-//
-// add more company info, emplpyee info, and request items to group dashboard?
-// will it make the API slow? if yes, then how slow?
-//
-//
-// oR!
-//
-// if we add financial summary to company - does it make sense? I think we can
-//
-//     for oowner - we need financial summary YES,
-//
-//

@@ -16,7 +16,6 @@ class Company extends JSONInitializable {
   late String _dateFormat;
   late String _currency;
   late List<Module> _modules;
-  late bool _isTrial;
   late num _approvalCount;
   FinancialSummary? _financialSummary;
   late Employee _employee;
@@ -36,8 +35,7 @@ class Company extends JSONInitializable {
       _currency = sift.readStringFromMap(companyInfoMap, 'currency');
       var _packages = sift.readStringListFromMap(companyInfoMap, 'packages');
       _modules = _initModules(_packages);
-      _isTrial = sift.readBooleanFromMap(companyInfoMap, 'is_trial');
-      _approvalCount = sift.readNumberFromMap(companyInfoMap, 'approval_count');
+      _approvalCount = sift.readNumberFromMap(jsonMap, 'approval_count');
       if (financialSummaryMap != null) _financialSummary = FinancialSummary.fromJson(financialSummaryMap);
       _employee = Employee.fromJson(jsonMap);
     } on SiftException catch (e) {
@@ -73,8 +71,6 @@ class Company extends JSONInitializable {
   String get currency => _currency;
 
   List<Module> get modules => _modules;
-
-  bool get isTrial => _isTrial;
 
   num get approvalCount => _approvalCount;
 
