@@ -8,6 +8,12 @@ class TextStyles {
         fontWeight: FontWeight.bold,
       );
 
+  static get extraLargeTitleTextStyleBold => TextStyle(
+        fontSize: 22,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      );
+
   static get largeTitleTextStyleBold => TextStyle(
         fontSize: 18,
         color: Colors.black,

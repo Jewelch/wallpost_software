@@ -6,7 +6,6 @@ import 'package:wallpost/company_core/entities/financial_summary.dart';
 import 'package:wallpost/company_core/repositories/company_repository.dart';
 
 import '../../_mocks/mock_company.dart';
-import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_user.dart';
 
 class MockFinancialSummary extends Mock implements FinancialSummary {}
@@ -25,15 +24,12 @@ void main() {
     [mockCompaniesGroup1, mockCompaniesGroup2],
     [mockCompany1, mockCompany2],
   );
-  var mockEmployee = MockEmployee();
   late CompanyRepository companyRepository;
 
   setUpAll(() {
     when(() => mockUser.username).thenReturn('someUserName');
     when(() => mockCompany1.id).thenReturn('1');
     when(() => mockCompany2.id).thenReturn('2');
-    when(() => mockCompany1.id).thenReturn('1');
-    when(() => mockEmployee.companyId).thenReturn('1');
   });
 
   setUp(() {

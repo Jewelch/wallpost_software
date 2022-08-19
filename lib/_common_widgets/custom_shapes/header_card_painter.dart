@@ -1,5 +1,4 @@
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 
 class HeaderCardPainter extends CustomPainter {
   final Color color;

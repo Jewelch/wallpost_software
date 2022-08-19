@@ -7,7 +7,6 @@ import 'package:wallpost/company_core/entities/wp_action.dart';
 class Employee extends JSONInitializable {
   late String _v1Id;
   late String _v2Id;
-  late String _companyId;
   late String _employeeName;
   late String _employeeEmail;
   late String _designation;
@@ -67,8 +66,6 @@ class Employee extends JSONInitializable {
   String get v1Id => _v1Id;
 
   String get v2Id => _v2Id;
-
-  String get companyId => _companyId;
 
   String get employeeName => _employeeName;
 

@@ -34,7 +34,7 @@ class DropdownFilter extends StatelessWidget {
         underline: SizedBox(),
         dropdownColor: AppColors.filtersBackgroundColour,
         icon: SvgPicture.asset(
-          'assets/icons/down_arrow_icon.svg',
+          'assets/icons/arrow_down_icon.svg',
           color: AppColors.defaultColorDark,
           width: 14,
           height: 14,
