@@ -10,7 +10,7 @@ class AggregatedApproval extends JSONInitializable {
   late String _module;
   late String _moduleId;
   late String _moduleColor;
-  late num _approvalCount;
+  late int _approvalCount;
 
   AggregatedApproval.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
     try {
@@ -21,7 +21,7 @@ class AggregatedApproval extends JSONInitializable {
       _module = sift.readStringFromMap(jsonMap, 'module');
       _moduleId = sift.readStringFromMap(jsonMap, 'moduleId');
       _moduleColor = sift.readStringFromMap(jsonMap, 'moduleColor');
-      _approvalCount = sift.readNumberFromMap(jsonMap, 'approvalCount');
+      _approvalCount = sift.readNumberFromMap(jsonMap, 'approvalCount').toInt();
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Approval response. Error message - ${e.errorMessage}');
     }
@@ -39,5 +39,5 @@ class AggregatedApproval extends JSONInitializable {
 
   String get moduleColor => _moduleColor;
 
-  num get approvalCount => _approvalCount;
+  int get approvalCount => _approvalCount;
 }

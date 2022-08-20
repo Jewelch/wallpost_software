@@ -6,6 +6,7 @@ import '../../../_shared/exceptions/wp_exception.dart';
 import '../../services/aggregated_approvals_list_provider.dart';
 
 class AggregatedApprovalsListPresenter {
+  final String? companyId;
   final AggregatedApprovalsListView _view;
   final AggregatedApprovalsListProvider _provider;
   List<AggregatedApproval> approvals = [];
@@ -13,9 +14,9 @@ class AggregatedApprovalsListPresenter {
   late String _selectedCompanyName;
   late String _selectedModuleName;
 
-  AggregatedApprovalsListPresenter(this._view) : _provider = AggregatedApprovalsListProvider();
+  AggregatedApprovalsListPresenter(this._view, {this.companyId}) : _provider = AggregatedApprovalsListProvider();
 
-  AggregatedApprovalsListPresenter.initWith(this._view, this._provider);
+  AggregatedApprovalsListPresenter.initWith(this._view, this._provider, {this.companyId});
 
   Future<void> loadApprovalsList() async {
     if (_provider.isLoading) return;
@@ -24,7 +25,11 @@ class AggregatedApprovalsListPresenter {
     _resetFilters();
 
     try {
-      approvals = await _provider.getAllApprovals();
+      if (companyId == null) {
+        approvals = await _provider.getAllApprovals();
+      } else {
+        approvals = await _provider.getAllApprovals(companyId: companyId);
+      }
 
       if (approvals.isEmpty) {
         _view.showErrorMessage("There are no pending approvals.\n\nTap here to reload.");
@@ -49,6 +54,10 @@ class AggregatedApprovalsListPresenter {
   }
 
   //MARK: Filter functions
+
+  bool shouldShowCompanyFilter() {
+    return companyId == null;
+  }
 
   filter({String? companyName, String? moduleName}) {
     if (companyName != null) _selectedCompanyName = companyName;

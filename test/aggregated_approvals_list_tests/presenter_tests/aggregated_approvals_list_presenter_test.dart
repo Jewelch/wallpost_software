@@ -84,7 +84,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('successfully getting approvals', () async {
+  test('successfully getting approvals for all companies', () async {
     //given
     var approval1 = MockAggregatedApproval();
     var approval2 = MockAggregatedApproval();
@@ -106,6 +106,42 @@ void main() {
       () => view.onDidLoadApprovals(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('successfully getting approvals for given company id', () async {
+    //given
+    var approval1 = MockAggregatedApproval();
+    var approval2 = MockAggregatedApproval();
+    var approvals = [approval1, approval2];
+    when(() => approvalsProvider.isLoading).thenReturn(false);
+    when(() => approvalsProvider.getAllApprovals(companyId: any(named: "companyId")))
+        .thenAnswer((_) => Future.value(approvals));
+    presenter = AggregatedApprovalsListPresenter.initWith(view, approvalsProvider, companyId: "someCompanyId");
+
+    //when
+    await presenter.loadApprovalsList();
+
+    //then
+    expect(presenter.getNumberOfRows(), 2);
+    expect(presenter.getItemAtIndex(0), approval1);
+    expect(presenter.getItemAtIndex(1), approval2);
+    verifyInOrder([
+      () => approvalsProvider.isLoading,
+      () => view.showLoader(),
+      () => approvalsProvider.getAllApprovals(companyId: "someCompanyId"),
+      () => view.onDidLoadApprovals(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('should show company filter when showing approvals for all companies', () async {
+    expect(presenter.shouldShowCompanyFilter(), true);
+  });
+
+  test('should show company filter when showing approvals for selected company', () async {
+    presenter = AggregatedApprovalsListPresenter.initWith(view, approvalsProvider, companyId: "someCompanyId");
+
+    expect(presenter.shouldShowCompanyFilter(), false);
   });
 
   test('getting company and module names', () async {

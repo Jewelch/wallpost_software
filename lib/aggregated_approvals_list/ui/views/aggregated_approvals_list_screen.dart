@@ -14,6 +14,10 @@ import '../../../_shared/extensions/color_utils.dart';
 import '../../entities/aggregated_approval.dart';
 
 class AggregatedApprovalsListScreen extends StatefulWidget {
+  final String? companyId;
+
+  AggregatedApprovalsListScreen({this.companyId});
+
   @override
   _AggregatedApprovalsListScreenState createState() => _AggregatedApprovalsListScreenState();
 }
@@ -33,7 +37,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
   @override
   void initState() {
     _scrollController = ScrollController();
-    _presenter = AggregatedApprovalsListPresenter(this);
+    _presenter = AggregatedApprovalsListPresenter(this, companyId: widget.companyId);
     _presenter.loadApprovalsList();
     super.initState();
   }
@@ -131,14 +135,15 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
       padding: EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
-          Expanded(
-            child: DropdownFilter(
-              items: _presenter.getCompanyNames(),
-              selectedValue: _presenter.getSelectedCompanyName(),
-              onChanged: (companyName) => _presenter.filter(companyName: companyName),
+          if (_presenter.shouldShowCompanyFilter())
+            Expanded(
+              child: DropdownFilter(
+                items: _presenter.getCompanyNames(),
+                selectedValue: _presenter.getSelectedCompanyName(),
+                onChanged: (companyName) => _presenter.filter(companyName: companyName),
+              ),
             ),
-          ),
-          SizedBox(width: 12),
+          if (_presenter.shouldShowCompanyFilter()) SizedBox(width: 12),
           Expanded(
             child: DropdownFilter(
               items: _presenter.getModuleNames(),
