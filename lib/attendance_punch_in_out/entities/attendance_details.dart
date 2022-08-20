@@ -1,11 +1,12 @@
 import 'package:intl/intl.dart';
 import 'package:sift/sift.dart';
 
+import '../../_shared/exceptions/mapping_exception.dart';
 import 'break.dart';
 
 class AttendanceDetails {
   //if not applicable - the user does not have access to attendance module or does not have to mark attendance
-  late bool _isAttendanceApplicable; 
+  late bool _isAttendanceApplicable;
   String? _id;
   String? _detailsId;
   DateTime? _punchInTime;
@@ -17,24 +18,28 @@ class AttendanceDetails {
 
   AttendanceDetails.fromJson(Map<String, dynamic> jsonMap) {
     var sift = Sift();
-    var attendanceInfoMapList = sift.readMapListFromMapWithDefaultValue(jsonMap, 'attendance_info', null);
-    var attendanceInfoMap = sift.readMapFromListWithDefaultValue(attendanceInfoMapList, 0, null);
-    var attendanceDetailsMapList =
-        sift.readMapListFromMapWithDefaultValue(attendanceInfoMap, 'attendance_details', null);
-    var attendanceDetailsMap = sift.readMapFromListWithDefaultValue(attendanceDetailsMapList, 0, null);
-    var breaksMapList = sift.readMapListFromMapWithDefaultValue(attendanceDetailsMap, 'attendance_intervals', null);
-    var attendancePermissionMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'is_allowed_punchin', null);
-    _isAttendanceApplicable = sift.readBooleanFromMap(jsonMap, "is_punching_required");
-    _id = sift.readStringFromMapWithDefaultValue(attendanceInfoMap, 'attendance_id', null);
-    _detailsId = sift.readStringFromMapWithDefaultValue(attendanceDetailsMap, 'attendance_details_id', null);
-    _punchInTime =
-        sift.readDateFromMapWithDefaultValue(attendanceDetailsMap, 'actual_punch_in', 'yyyy-MM-dd HH:mm:ss', null);
-    _punchOutTime =
-        sift.readDateFromMapWithDefaultValue(attendanceDetailsMap, 'actual_punch_out', 'yyyy-MM-dd HH:mm:ss', null);
-    _breaks = _readBreakFromMapList(breaksMapList);
-    _canMarkAttendanceFromApp = sift.readBooleanFromMap(attendancePermissionMap, 'punch_in_allowed_from_app');
-    _canMarkAttendanceNow = sift.readBooleanFromMap(attendancePermissionMap, 'status');
-    _secondsTillPunchIn = sift.readNumberFromMapWithDefaultValue(attendancePermissionMap, 'remaining_in_min', 0)!;
+    try {
+      var attendanceInfoMapList = sift.readMapListFromMapWithDefaultValue(jsonMap, 'attendance_info', null);
+      var attendanceInfoMap = sift.readMapFromListWithDefaultValue(attendanceInfoMapList, 0, null);
+      var attendanceDetailsMapList =
+          sift.readMapListFromMapWithDefaultValue(attendanceInfoMap, 'attendance_details', null);
+      var attendanceDetailsMap = sift.readMapFromListWithDefaultValue(attendanceDetailsMapList, 0, null);
+      var breaksMapList = sift.readMapListFromMapWithDefaultValue(attendanceDetailsMap, 'attendance_intervals', null);
+      var attendancePermissionMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'is_allowed_punchin', null);
+      _isAttendanceApplicable = sift.readStringFromMap(jsonMap, "is_punching_required") == 'true';
+      _id = sift.readStringFromMapWithDefaultValue(attendanceInfoMap, 'attendance_id', null);
+      _detailsId = sift.readStringFromMapWithDefaultValue(attendanceDetailsMap, 'attendance_details_id', null);
+      _punchInTime =
+          sift.readDateFromMapWithDefaultValue(attendanceDetailsMap, 'actual_punch_in', 'yyyy-MM-dd HH:mm:ss', null);
+      _punchOutTime =
+          sift.readDateFromMapWithDefaultValue(attendanceDetailsMap, 'actual_punch_out', 'yyyy-MM-dd HH:mm:ss', null);
+      _breaks = _readBreakFromMapList(breaksMapList);
+      _canMarkAttendanceFromApp = sift.readBooleanFromMap(attendancePermissionMap, 'punch_in_allowed_from_app');
+      _canMarkAttendanceNow = sift.readBooleanFromMap(attendancePermissionMap, 'status');
+      _secondsTillPunchIn = sift.readNumberFromMapWithDefaultValue(attendancePermissionMap, 'remaining_in_min', 0)!;
+    } on SiftException catch (e) {
+      throw MappingException('Failed to cast AttendanceDetails response. Error message - ${e.errorMessage}');
+    }
   }
 
   List<Break> _readBreakFromMapList(List<Map<String, dynamic>>? jsonMapList) {
@@ -81,6 +86,8 @@ class AttendanceDetails {
   String get activeBreakStartTimeString {
     return _convertTimeToString(_getActiveBreak()?.startTime);
   }
+
+  bool get isAttendanceApplicable => _isAttendanceApplicable;
 
   String? get attendanceId => _id;
 

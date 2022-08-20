@@ -1,29 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/constants/attendance_urls.dart';
 import 'package:wallpost/attendance_punch_in_out/services/attendance_report_provider.dart';
 
-import '../../_mocks/mock_employee.dart';
-import '../../_mocks/mock_employee_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
   List<Map<String, dynamic>> successfulResponse = Mocks.attendanceReportResponse;
-  var mockEmployee = MockEmployee();
-  var mockEmployeeProvider = MockEmployeeProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var attendanceReportProvider = AttendanceReportProvider.initWith(mockEmployeeProvider, mockNetworkAdapter);
+  var attendanceReportProvider = AttendanceReportProvider.initWith(mockNetworkAdapter);
   var startDate = DateFormat('yyyy-MM-dd').format(DateTime(DateTime.now().year, DateTime.now().month, 1));
   var endDate = DateFormat('yyyy-MM-dd').format(DateTime(DateTime.now().year, DateTime.now().month + 1, 0));
-
-  setUpAll(() {
-    when(() => mockEmployee.companyId).thenReturn('someCompanyId');
-    when(() => mockEmployee.v1Id).thenReturn('v1EmpId');
-    when(() => mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
-  });
 
   test('api request is built and executed correctly', () async {
     Map<String, dynamic> requestParams = {};
@@ -31,8 +20,7 @@ void main() {
 
     var _ = await attendanceReportProvider.getReport();
 
-    expect(mockNetworkAdapter.apiRequest.url,
-        AttendanceUrls.attendanceReportUrl('someCompanyId', 'v1EmpId', startDate, endDate));
+    expect(mockNetworkAdapter.apiRequest.url, AttendanceUrls.attendanceReportUrl(startDate, endDate));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });

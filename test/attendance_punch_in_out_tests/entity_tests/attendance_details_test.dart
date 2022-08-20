@@ -21,28 +21,28 @@ void main() {
   });
 
   test('different stages of attendance_punch_in_out', () async {
-    // var attendanceDetails = AttendanceDetails.fromJson(Mocks.noAttendanceResponse);
-    // expect(attendanceDetails.isPunchedIn, false);
-    // expect(attendanceDetails.canMarkAttendancePermissionFromApp, true);
-    // expect(attendanceDetails.canMarkAttendanceNow, false);
-    // expect(attendanceDetails.isOnBreak, false);
+    var attendanceDetails = AttendanceDetails.fromJson(Mocks.noAttendanceResponse);
+    expect(attendanceDetails.isNotPunchedIn, true);
+    expect(attendanceDetails.isPunchedIn, false);
+    expect(attendanceDetails.isPunchedOut, false);
+    expect(attendanceDetails.isOnBreak, false);
 
-    var attendanceDetails = AttendanceDetails.fromJson(Mocks.punchedInAttendanceResponse);
+    attendanceDetails = AttendanceDetails.fromJson(Mocks.punchedInAttendanceResponse);
+    expect(attendanceDetails.isNotPunchedIn, false);
     expect(attendanceDetails.isPunchedIn, true);
-    expect(attendanceDetails.canMarkAttendanceFromApp, true);
-    expect(attendanceDetails.canMarkAttendanceNow, true);
+    expect(attendanceDetails.isPunchedOut, false);
     expect(attendanceDetails.isOnBreak, false);
 
     attendanceDetails = AttendanceDetails.fromJson(Mocks.punchedInAttendanceWithActiveBreakResponse);
+    expect(attendanceDetails.isNotPunchedIn, false);
     expect(attendanceDetails.isPunchedIn, true);
-    expect(attendanceDetails.canMarkAttendanceFromApp, true);
-    expect(attendanceDetails.canMarkAttendanceNow, true);
+    expect(attendanceDetails.isPunchedOut, false);
     expect(attendanceDetails.isOnBreak, true);
 
     attendanceDetails = AttendanceDetails.fromJson(Mocks.punchedOutAttendanceDetailsResponse);
+    expect(attendanceDetails.isNotPunchedIn, false);
     expect(attendanceDetails.isPunchedIn, false);
-    expect(attendanceDetails.canMarkAttendanceFromApp, true);
-    expect(attendanceDetails.canMarkAttendanceNow, true);
+    expect(attendanceDetails.isPunchedOut, true);
     expect(attendanceDetails.isOnBreak, false);
   });
 }

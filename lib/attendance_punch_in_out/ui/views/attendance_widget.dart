@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_action_button.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/views/attendance_details_screen.dart';
 
@@ -34,8 +35,8 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
 
   var _errorMessage = "";
   String? _timeString;
-  late Timer _countDownTimer;
-  late Timer _currentTimer;
+  Timer? _countDownTimer;
+  Timer? _currentTimer;
 
   @override
   void initState() {
@@ -47,10 +48,14 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
 
   @override
   void dispose() {
-    _currentTimer.cancel();
-    _countDownTimer.cancel();
+    _cancelTimers();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  void _cancelTimers() {
+    _currentTimer?.cancel();
+    _countDownTimer?.cancel();
   }
 
   @override
@@ -64,7 +69,17 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 64,
+      height: 70,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: AttendanceColors.buttonShadowColor.withOpacity(0.3),
+            offset: Offset(0, 0),
+            blurRadius: 20,
+            spreadRadius: 0,
+          ),
+        ],
+      ),
       width: MediaQuery.of(context).size.width,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -153,8 +168,8 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
         color: AttendanceColors.disabledButtonColor,
         child: Center(
           child: Text(
-            "$timeLeft to punch in",
-            style: TextStyle(color: Colors.white),
+            "$timeLeft To Punch In",
+            style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
           ),
         ),
       ),
@@ -184,7 +199,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
       builder: (context, address) => AttendanceActionButton(
         title: "Punch In",
         locationAddress: "$address",
-        time: _timeString,
+        time: _timeString ?? "",
         attendanceButtonColor: AttendanceColors.punchInButtonColor,
         moreButtonColor: AttendanceColors.punchInMoreButtonColor,
         onButtonPressed: () {
@@ -194,8 +209,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
           presenter.loadAttendanceDetails();
         },
         onMoreButtonPressed: () {
-          _currentTimer.cancel();
-          ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceDetailsScreen(), context);
+          ScreenPresenter.present(AttendanceDetailsScreen(), context);
         },
       ),
     );
@@ -207,7 +221,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
       builder: (context, address) => AttendanceActionButton(
         title: "Punch Out",
         locationAddress: "$address",
-        time: _timeString,
+        time: _timeString ?? "",
         attendanceButtonColor: AttendanceColors.punchOutButtonColor,
         moreButtonColor: AttendanceColors.punchOutMoreButtonColor,
         onButtonPressed: () {
@@ -217,8 +231,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
           presenter.loadAttendanceDetails();
         },
         onMoreButtonPressed: () {
-          _currentTimer.cancel();
-          ScreenPresenter.presentAndRemoveAllPreviousScreens(AttendanceDetailsScreen(), context);
+          ScreenPresenter.present(AttendanceDetailsScreen(), context);
         },
       ),
     );
@@ -228,8 +241,8 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
     Alert.showSimpleAlertWithButtons(
       context: context,
       title: "Punch Out",
-      message: "Do you really want to punch out ? ",
-      buttonOneTitle: "Cancel",
+      message: "Are you sure you want to punch out?",
+      buttonOneTitle: "No",
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () => presenter.markPunchOut(isLocationValid: true),
     );
@@ -298,7 +311,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
       context: context,
       title: title,
       message: message,
-      buttonOneTitle: "Cancel",
+      buttonOneTitle: "No",
       buttonTwoTitle: "Yes",
       buttonTwoOnPressed: () =>
           isForPunchIn ? presenter.markPunchIn(isLocationValid: false) : presenter.markPunchOut(isLocationValid: false),
@@ -315,7 +328,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
     presenter.loadAttendanceDetails();
   }
 
-//MARK: Util functions
+  //MARK: Util functions
 
   void _getCurrentTime() {
     final DateTime now = DateTime.now();

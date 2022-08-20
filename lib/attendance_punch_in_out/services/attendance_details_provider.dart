@@ -4,23 +4,18 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance_punch_in_out/constants/attendance_urls.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_details.dart';
-import 'package:wallpost/company_core/services/selected_employee_provider.dart';
 
 class AttendanceDetailsProvider {
-  final SelectedEmployeeProvider _selectedEmployeeProvider;
   final NetworkAdapter _networkAdapter;
   bool isLoading = false;
   late String _sessionId;
 
-  AttendanceDetailsProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
+  AttendanceDetailsProvider.initWith(this._networkAdapter);
 
-  AttendanceDetailsProvider()
-      : _selectedEmployeeProvider = SelectedEmployeeProvider(),
-        _networkAdapter = WPAPI();
+  AttendanceDetailsProvider() : _networkAdapter = WPAPI();
 
   Future<AttendanceDetails> getDetails() async {
-    var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-    var url = AttendanceUrls.getAttendanceDetailsUrl(employee.companyId, employee.v1Id);
+    var url = AttendanceUrls.getAttendanceDetailsUrl();
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;

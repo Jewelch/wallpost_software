@@ -5,38 +5,31 @@ import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance_punch_in_out/constants/attendance_urls.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_report.dart';
-import 'package:wallpost/company_core/services/selected_employee_provider.dart';
 
 class AttendanceReportProvider {
-  final SelectedEmployeeProvider _selectedEmployeeProvider;
   final NetworkAdapter _networkAdapter;
-  bool isLoading = false;
+  bool _isLoading = false;
   late String _sessionId;
 
-  AttendanceReportProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
+  AttendanceReportProvider.initWith(this._networkAdapter);
 
-  AttendanceReportProvider()
-      : _selectedEmployeeProvider = SelectedEmployeeProvider(),
-        _networkAdapter = WPAPI();
+  AttendanceReportProvider() : _networkAdapter = WPAPI();
 
   Future<AttendanceReport> getReport() async {
-    var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-    var companyId = employee.companyId;
-    var employeeId = employee.v1Id;
     var startDate = _getFirstDayOfCurrentMonth().yyyyMMddString();
     var endDate = _getLastDayOfCurrentMonth().yyyyMMddString();
 
-    var url = AttendanceUrls.attendanceReportUrl(companyId, employeeId, startDate, endDate);
+    var url = AttendanceUrls.attendanceReportUrl(startDate, endDate);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
-    isLoading = true;
+    _isLoading = true;
 
     try {
       var apiResponse = await _networkAdapter.get(apiRequest);
-      isLoading = false;
+      _isLoading = false;
       return _processResponse(apiResponse);
     } on APIException catch (exception) {
-      isLoading = false;
+      _isLoading = false;
       throw exception;
     }
   }
@@ -67,4 +60,6 @@ class AttendanceReportProvider {
       throw InvalidResponseException();
     }
   }
+
+  bool get isLoading => _isLoading;
 }

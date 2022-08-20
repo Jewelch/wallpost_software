@@ -5,8 +5,6 @@ import 'package:wallpost/attendance_punch_in_out/entities/attendance_details.dar
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.dart';
 import 'package:wallpost/attendance_punch_in_out/services/punch_out_marker.dart';
 
-import '../../_mocks/mock_employee.dart';
-import '../../_mocks/mock_employee_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 
 class MockAttendanceDetails extends Mock implements AttendanceDetails {}
@@ -17,17 +15,12 @@ void main() {
   Map<String, dynamic> successfulResponse = {};
   var mockAttendanceDetails = MockAttendanceDetails();
   var mockLocation = MockLocation();
-  var mockEmployee = MockEmployee();
-  var mockEmployeeProvider = MockEmployeeProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var punchOutMarker = PunchOutMarker.initWith(mockEmployeeProvider, mockNetworkAdapter);
+  var punchOutMarker = PunchOutMarker.initWith(mockNetworkAdapter);
 
   setUpAll(() {
     when(() => mockAttendanceDetails.attendanceId).thenReturn('someAttendanceId');
     when(() => mockLocation.toJson()).thenReturn({'location': 'info'});
-    when(() => mockEmployee.companyId).thenReturn('someCompanyId');
-    when(() => mockEmployee.v1Id).thenReturn('v1EmpId');
-    when(() => mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
   });
 
   setUp(() {
@@ -41,8 +34,7 @@ void main() {
 
     var _ = await punchOutMarker.punchOut(mockAttendanceDetails, mockLocation, isLocationValid: true);
 
-    expect(mockNetworkAdapter.apiRequest.url,
-        AttendanceUrls.punchOutUrl('someCompanyId', 'v1EmpId', 'someAttendanceId', true));
+    expect(mockNetworkAdapter.apiRequest.url, AttendanceUrls.punchOutUrl('someAttendanceId', true));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallPut, true);
   });
@@ -58,14 +50,22 @@ void main() {
     }
   });
 
-  test('does nothing when a subsequent call is made and the service is running', () async {
-    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
+  test('response is ignored if it is from another session', () async {
+    var didReceiveResponseForTheSecondRequest = false;
 
-    punchOutMarker.punchOut(mockAttendanceDetails, mockLocation, isLocationValid: true);
-    punchOutMarker.punchOut(mockAttendanceDetails, mockLocation, isLocationValid: true);
+    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 500);
+    punchOutMarker.punchOut(mockAttendanceDetails, mockLocation, isLocationValid: true).then((_) {
+      fail('Received the response for the first request. '
+          'This response should be ignored as the session id has changed');
+    });
+
+    mockNetworkAdapter.succeed(successfulResponse);
+    punchOutMarker.punchOut(mockAttendanceDetails, mockLocation, isLocationValid: true).then((_) {
+      didReceiveResponseForTheSecondRequest = true;
+    });
 
     await Future.delayed(Duration(milliseconds: 100));
-    expect(mockNetworkAdapter.noOfTimesPutIsCalled, 1);
+    expect(didReceiveResponseForTheSecondRequest, true);
   });
 
   test('success', () async {

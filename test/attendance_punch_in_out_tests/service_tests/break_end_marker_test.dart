@@ -5,8 +5,6 @@ import 'package:wallpost/attendance_punch_in_out/entities/attendance_details.dar
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.dart';
 import 'package:wallpost/attendance_punch_in_out/services/break_end_marker.dart';
 
-import '../../_mocks/mock_employee.dart';
-import '../../_mocks/mock_employee_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 
 class MockAttendanceDetails extends Mock implements AttendanceDetails {}
@@ -17,10 +15,8 @@ void main() {
   Map<String, dynamic> successfulResponse = {};
   var mockAttendanceDetails = MockAttendanceDetails();
   var mockLocation = MockLocation();
-  var mockEmployee = MockEmployee();
-  var mockEmployeeProvider = MockEmployeeProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var breakEndMarker = BreakEndMarker.initWith(mockEmployeeProvider, mockNetworkAdapter);
+  var breakEndMarker = BreakEndMarker.initWith(mockNetworkAdapter);
 
   setUp(() {
     mockNetworkAdapter.reset();
@@ -30,9 +26,6 @@ void main() {
   setUpAll(() {
     when(() => mockAttendanceDetails.attendanceDetailsId).thenReturn('someAttendanceDetailsId');
     when(() => mockLocation.toJson()).thenReturn({'location': 'info'});
-    when(() => mockEmployee.companyId).thenReturn('someCompanyId');
-    when(() => mockEmployee.v1Id).thenReturn('v1EmpId');
-    when(() => mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
   });
 
   test('api request is built and executed correctly', () async {
@@ -42,8 +35,7 @@ void main() {
 
     var _ = await breakEndMarker.endBreak(mockAttendanceDetails, mockLocation);
 
-    expect(mockNetworkAdapter.apiRequest.url,
-        AttendanceUrls.breakEndUrl('someCompanyId', 'v1EmpId', 'someAttendanceDetailsId', 'someBreakId'));
+    expect(mockNetworkAdapter.apiRequest.url, AttendanceUrls.breakEndUrl('someAttendanceDetailsId', 'someBreakId'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallPut, true);
   });
@@ -59,14 +51,22 @@ void main() {
     }
   });
 
-  test('does nothing when a subsequent call is made and the service is running', () async {
-    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
+  test('response is ignored if it is from another session', () async {
+    var didReceiveResponseForTheSecondRequest = false;
 
-    breakEndMarker.endBreak(mockAttendanceDetails, mockLocation);
-    breakEndMarker.endBreak(mockAttendanceDetails, mockLocation);
+    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 500);
+    breakEndMarker.endBreak(mockAttendanceDetails, mockLocation).then((_) {
+      fail('Received the response for the first request. '
+          'This response should be ignored as the session id has changed');
+    });
+
+    mockNetworkAdapter.succeed(successfulResponse);
+    breakEndMarker.endBreak(mockAttendanceDetails, mockLocation).then((_) {
+      didReceiveResponseForTheSecondRequest = true;
+    });
 
     await Future.delayed(Duration(milliseconds: 100));
-    expect(mockNetworkAdapter.noOfTimesPutIsCalled, 1);
+    expect(didReceiveResponseForTheSecondRequest, true);
   });
 
   test('does nothing when there is no active break', () async {

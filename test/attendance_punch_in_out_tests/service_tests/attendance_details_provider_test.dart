@@ -1,29 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/attendance_punch_in_out/constants/attendance_urls.dart';
 import 'package:wallpost/attendance_punch_in_out/services/attendance_details_provider.dart';
 
-import '../../_mocks/mock_employee.dart';
-import '../../_mocks/mock_employee_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
- Map<String, dynamic> successfulResponse = Mocks.punchedOutAttendanceDetailsResponse;
-  var mockEmployee = MockEmployee();
-  var mockEmployeeProvider = MockEmployeeProvider();
+  Map<String, dynamic> successfulResponse = Mocks.punchedOutAttendanceDetailsResponse;
   var mockNetworkAdapter = MockNetworkAdapter();
-  var attendanceDetailsProvider = AttendanceDetailsProvider.initWith(
-    mockEmployeeProvider,
-    mockNetworkAdapter,
-  );
-
-  setUpAll(() {
-    when(() => mockEmployee.v1Id).thenReturn('v1EmpId');
-    when(() => mockEmployee.companyId).thenReturn('someCompanyId');
-    when(() => mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
-  });
+  var attendanceDetailsProvider = AttendanceDetailsProvider.initWith(mockNetworkAdapter);
 
   test('api request is built and executed correctly', () async {
     Map<String, dynamic> requestParams = {};
@@ -31,7 +17,7 @@ void main() {
 
     var _ = await attendanceDetailsProvider.getDetails();
 
-    expect(mockNetworkAdapter.apiRequest.url, AttendanceUrls.getAttendanceDetailsUrl('someCompanyId', 'v1EmpId'));
+    expect(mockNetworkAdapter.apiRequest.url, AttendanceUrls.getAttendanceDetailsUrl());
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -84,6 +70,17 @@ void main() {
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
+    }
+  });
+
+  test('throws InvalidResponseException when response mapping fails', () async {
+    mockNetworkAdapter.succeed(Map<String, dynamic>());
+
+    try {
+      var _ = await attendanceDetailsProvider.getDetails();
+      fail('failed to throw InvalidResponseException');
+    } catch (e) {
+      expect(e is InvalidResponseException, true);
     }
   });
 

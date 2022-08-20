@@ -5,10 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/attendance_punch_in_out/constants/app_bar_with_back_button.dart';
 import 'package:wallpost/attendance_punch_in_out/constants/attendance_colors.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_location.dart';
 import 'package:wallpost/attendance_punch_in_out/entities/attendance_report.dart';
@@ -16,10 +13,9 @@ import 'package:wallpost/attendance_punch_in_out/services/time_to_punch_in_calcu
 import 'package:wallpost/attendance_punch_in_out/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_detailed_view.dart';
 import 'package:wallpost/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
-import 'package:wallpost/company_core/services/selected_company_provider.dart';
-import 'package:wallpost/company_list/views/companies_list_screen.dart';
 
-import '../../../dashboard/ui/my_portal/views/my_portal_screen.dart';
+import '../../../_common_widgets/app_bars/simple_app_bar.dart';
+import '../../../_common_widgets/buttons/rounded_back_button.dart';
 
 class AttendanceDetailsScreen extends StatefulWidget {
   const AttendanceDetailsScreen({Key? key}) : super(key: key);
@@ -96,21 +92,9 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWithBackButton(
-        leadingButton: BackButton(color: Colors.black),
-        onLeadingButtonPressed: () => ScreenPresenter.presentAndRemoveAllPreviousScreens(MyPortalScreen(), context),
-        textButton1: TextButton(
-            child: Row(
-              children: [
-                Text(
-                  '${SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name}',
-                  style: TextStyles.screenTitleTextStyle.copyWith(color: AppColors.defaultColor),
-                ),
-                SizedBox(width: 2),
-                Icon(Icons.keyboard_arrow_down_outlined, size: 28),
-              ],
-            ),
-            onPressed: () => ScreenPresenter.presentAndRemoveAllPreviousScreens(CompanyListScreen(), context)),
+      appBar: SimpleAppBar(
+        title: "Approvals",
+        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -650,5 +634,11 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
     setState(() {
       _timeString = formattedDateTime;
     });
+  }
+
+
+  @override
+  void showBreakLoader() {
+
   }
 }

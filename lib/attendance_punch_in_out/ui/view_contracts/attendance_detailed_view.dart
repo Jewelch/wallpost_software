@@ -10,9 +10,11 @@ abstract class AttendanceDetailedView {
 
   void showPunchOutTime(String time);
 
-  void showBreakButton();
+  void showBreakLoader();
 
   void hideBreakButton();
+
+  void showBreakButton();
 
   void showResumeButton();
 

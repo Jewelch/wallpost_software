@@ -1,7 +1,11 @@
 import 'package:random_string/random_string.dart';
 
 class Mocks {
-  static Map<String, dynamic> noAttendanceResponse = {};
+  static Map<String, dynamic> noAttendanceResponse = {
+    "attendance_info": [],
+    "is_allowed_punchin": {"status": true, "punch_in_allowed_from_app": true},
+    "is_punching_required": "true",
+  };
 
   static Map<String, dynamic> punchedInAttendanceResponse = {
     "attendance_info": [
@@ -30,11 +34,8 @@ class Mocks {
         "work_status": randomString(10),
       },
     ],
-    "is_allowed_punchin": {
-      "punch_in_allowed_from_app": true,
-      "remaining_in_min": randomBetween(1000, 5000),
-      "status": true,
-    }
+    "is_allowed_punchin": {"status": true, "punch_in_allowed_from_app": true},
+    "is_punching_required": "true",
   };
 
   static Map<String, dynamic> punchedInAttendanceWithActiveBreakResponse = {
@@ -117,7 +118,8 @@ class Mocks {
         "work_status": randomString(10),
       },
     ],
-    "is_allowed_punchin": {"status": true, "punch_in_allowed_from_app": true}
+    "is_allowed_punchin": {"status": true, "punch_in_allowed_from_app": true},
+    "is_punching_required": "true",
   };
 
   static Map<String, dynamic> punchedOutAttendanceDetailsResponse = {
@@ -200,7 +202,8 @@ class Mocks {
         "work_status": randomString(10),
       }
     ],
-    "is_allowed_punchin": {"status": true, "punch_in_allowed_from_app": true}
+    "is_allowed_punchin": {"status": true, "punch_in_allowed_from_app": true},
+    "is_punching_required": "true",
   };
 
   static List<Map<String, dynamic>> attendanceReportResponse = [
@@ -245,15 +248,4 @@ class Mocks {
       "WorkingDays": randomBetween(1000, 5000),
     },
   ];
-
-  static Map<String, dynamic> attendancePermissionResponse = {
-    "punch_in_allowed_from_app": true,
-    "remaining_in_min": randomBetween(1000, 5000),
-    "status": true,
-  };
-
-  static Map<String, dynamic> punchInNowPermissionResponse = {
-    "remaining_in_min": randomBetween(1000, 5000),
-    "status": true,
-  };
 }
