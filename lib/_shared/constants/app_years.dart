@@ -1,5 +1,21 @@
+import 'dart:core';
+
 class AppYears {
   static int _startYear = 2015;
+  static List<String> _monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
 
   static List<int> years() {
     List<int> years = [];
@@ -11,24 +27,13 @@ class AppYears {
   }
 
   static List<String> currentAndPastMonthsOfTheCurrentYear(int year) {
-    List<String> months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-
     if (year == DateTime.now().year) {
-      return months.sublist(0, DateTime.now().month);
+      return _monthNames.sublist(0, DateTime.now().month);
     } else
-      return months;
+      return _monthNames;
+  }
+
+  static String getCurrentMonth() {
+    return _monthNames[DateTime.now().month];
   }
 }
