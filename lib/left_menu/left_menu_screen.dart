@@ -88,11 +88,7 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
                 fit: BoxFit.cover,
                 alignment: Alignment.topCenter,
                 imageUrl: CurrentUserProvider().getCurrentUser().profileImageUrl,
-                placeholder: (context, url) => Image.asset(
-                  'assets/icons/user_image_placeholder.png',
-                  width: 48,
-                  height: 48,
-                ),
+                placeholder: (context, url) => Container(color: AppColors.defaultColorDarkContrastColor),
                 errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             ),
@@ -101,7 +97,7 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
           Text(
             CurrentUserProvider().getCurrentUser().fullName,
             overflow: TextOverflow.ellipsis,
-            style: TextStyles.headerCardSubHeadingTextStyle,
+            style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
           ),
         ],
       ),
@@ -157,9 +153,9 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
       context: context,
       title: "Logout",
       message: "Are you sure you want to log out?",
-      buttonOneTitle: "Yes",
-      buttonTwoTitle: "Cancel",
-      buttonOneOnPressed: () {
+      buttonOneTitle: "Cancel",
+      buttonTwoTitle: "Yes",
+      buttonTwoOnPressed: () {
         LogoutHandler().logout(context);
       },
     );
