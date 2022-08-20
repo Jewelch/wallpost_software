@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
+import 'package:wallpost/attendance_punch_in_out/services/attendance_details_provider.dart';
 import 'package:wallpost/company_core/entities/company_list.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
 import 'package:wallpost/company_core/services/company_list_provider.dart';
@@ -17,6 +18,8 @@ class CompanyListPresenter {
   final CurrentUserProvider _currentUserProvider;
   final CompanyListProvider _companyListProvider;
   final CompanySelector _companySelector;
+  final AttendanceDetailsProvider _attendanceDetailsProvider;
+
   late CompanyList _companyList;
   var _searchText = "";
   CompanyGroup? _selectedGroup;
@@ -24,14 +27,27 @@ class CompanyListPresenter {
   CompanyListPresenter(this._view)
       : _currentUserProvider = CurrentUserProvider(),
         _companyListProvider = CompanyListProvider(),
-        _companySelector = CompanySelector();
+        _companySelector = CompanySelector(),
+        _attendanceDetailsProvider = AttendanceDetailsProvider();
 
   CompanyListPresenter.initWith(
     this._view,
     this._currentUserProvider,
     this._companyListProvider,
     this._companySelector,
+    this._attendanceDetailsProvider,
   );
+
+  //MARK: Functions to load attendance
+
+  Future<void> loadAttendanceDetails() async {
+    try {
+      var attendanceDetails = await _attendanceDetailsProvider.getDetails();
+      if (attendanceDetails.isAttendanceApplicable) _view.showAttendanceWidget();
+    } on WPException {
+      //do nothing
+    }
+  }
 
   //MARK: Functions to load company list
 
@@ -237,5 +253,3 @@ class CompanyListPresenter {
     return approvalCount.toInt();
   }
 }
-
-

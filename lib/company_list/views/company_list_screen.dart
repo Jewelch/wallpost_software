@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
+import 'package:wallpost/_common_widgets/banners/bottom_banner.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
@@ -20,6 +18,7 @@ import 'package:wallpost/company_list/views/company_list_loader.dart';
 import 'package:wallpost/company_list/views/financial_summary_card.dart';
 
 import '../../_common_widgets/search_bar/search_bar.dart';
+import '../../attendance_punch_in_out/ui/views/attendance_widget.dart';
 import '../../company_core/entities/company.dart';
 import '../../dashboard/dashboard_screen.dart';
 import '../../left_menu/left_menu_screen.dart';
@@ -39,11 +38,13 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   var _viewSelectorNotifier = ItemNotifier<int>(defaultValue: LOADER_VIEW);
   var _filtersBarVisibilityNotifier = ItemNotifier<bool>(defaultValue: false);
   var _companyListNotifier = Notifier();
+  var _attendanceWidgetNotifier = ItemNotifier<bool>(defaultValue: false);
 
   @override
   void initState() {
     presenter = CompanyListPresenter(this);
     presenter.loadCompanies();
+    presenter.loadAttendanceDetails();
     super.initState();
   }
 
@@ -102,7 +103,12 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         _topBar(),
         SizedBox(height: 10),
         Expanded(child: _companyList()),
-        _approvalCountBanner(),
+        _attendanceView(),
+        if (presenter.getApprovalCount() > 0)
+          BottomBanner(
+            approvalCount: presenter.getApprovalCount(),
+            onTap: () => presenter.showAggregatedApprovals(),
+          ),
       ],
     );
   }
@@ -236,40 +242,22 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
     );
   }
 
-  //MARK: Functions to build the approval count banner
+  //MARK: Function to build the attendance view
 
-  Widget _approvalCountBanner() {
-    if (presenter.getApprovalCount() == 0) return SizedBox();
-
-    return GestureDetector(
-      onTap: () => presenter.showAggregatedApprovals(),
-      child: Container(
-        height: Platform.isAndroid ? 50 : 80,
-        padding: EdgeInsets.only(bottom: Platform.isAndroid ? 0 : 30, left: 6, right: 6),
-        decoration: BoxDecoration(
-          color: AppColors.bannerBackgroundColor,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.bannerBackgroundColor.withOpacity(0.9),
-              offset: Offset(0, 0),
-              blurRadius: 5,
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(width: 10),
-            SvgPicture.asset('assets/icons/exclamation_icon.svg', color: Colors.white, width: 16, height: 16),
-            SizedBox(width: 10),
-            Text("Approvals", style: TextStyles.titleTextStyle.copyWith(color: Colors.white)),
-            new Spacer(),
-            Text("${presenter.getApprovalCount()}", style: TextStyle(color: Colors.white, fontSize: 18)),
-            SizedBox(width: 10)
-          ],
-        ),
-      ),
+  Widget _attendanceView() {
+    return ItemNotifiable<bool>(
+      notifier: _attendanceWidgetNotifier,
+      builder: (context, shouldShowAttendanceWidget) {
+        if (shouldShowAttendanceWidget) {
+          return Container(
+            color: Colors.white,
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+            child: AttendanceWidget(),
+          );
+        } else {
+          return Container();
+        }
+      },
     );
   }
 
@@ -308,5 +296,10 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
   @override
   void goToApprovalsListScreen() {
     ScreenPresenter.present(AggregatedApprovalsListScreen(), context);
+  }
+
+  @override
+  void showAttendanceWidget() {
+    _attendanceWidgetNotifier.notify(true);
   }
 }

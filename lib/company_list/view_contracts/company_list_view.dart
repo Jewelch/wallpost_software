@@ -12,4 +12,6 @@ abstract class CompaniesListView {
   void goToCompanyDetailScreen(Company companyListItem);
 
   void goToApprovalsListScreen();
+
+  void showAttendanceWidget();
 }

@@ -3,6 +3,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/_shared/extensions/color_extensions.dart';
+import 'package:wallpost/attendance_punch_in_out/entities/attendance_details.dart';
+import 'package:wallpost/attendance_punch_in_out/services/attendance_details_provider.dart';
 import 'package:wallpost/company_core/entities/company_group.dart';
 import 'package:wallpost/company_core/entities/company_list.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
@@ -27,6 +29,10 @@ class MockFinancialSummary extends Mock implements FinancialSummary {}
 
 class MockCompanyGroup extends Mock implements CompanyGroup {}
 
+class MockAttendanceDetailsProvider extends Mock implements AttendanceDetailsProvider {}
+
+class MockAttendanceDetails extends Mock implements AttendanceDetails {}
+
 void main() {
   late MockCompany company1;
   late MockCompany company2;
@@ -39,18 +45,21 @@ void main() {
   var mockCurrentUserProvider = MockCurrentUserProvider();
   var mockCompaniesListProvider = MockCompaniesListProvider();
   var mockCompanySelector = MockCompanySelector();
+  var mockAttendanceProvider = MockAttendanceDetailsProvider();
   late CompanyListPresenter presenter;
 
   void _resetAllMockInteractions() {
     clearInteractions(view);
     clearInteractions(mockCurrentUserProvider);
     clearInteractions(mockCompaniesListProvider);
+    clearInteractions(mockAttendanceProvider);
   }
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
     verifyNoMoreInteractions(mockCurrentUserProvider);
     verifyNoMoreInteractions(mockCompaniesListProvider);
+    verifyNoMoreInteractions(mockAttendanceProvider);
   }
 
   setUp(() {
@@ -73,6 +82,7 @@ void main() {
       mockCurrentUserProvider,
       mockCompaniesListProvider,
       mockCompanySelector,
+      mockAttendanceProvider,
     );
   });
 
@@ -158,6 +168,58 @@ void main() {
         () => mockCompaniesListProvider.get(),
         () => view.onDidLoadData(),
         () => view.updateCompanyList(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+  });
+
+  group('tests for loading attendance', () {
+    test('failure to load attendance details does nothing', () async {
+      //given
+      when(() => mockAttendanceProvider.isLoading).thenReturn(false);
+      when(() => mockAttendanceProvider.getDetails()).thenAnswer((_) => Future.error(InvalidResponseException()));
+
+      //when
+      await presenter.loadAttendanceDetails();
+
+      //then
+      verifyInOrder([
+        () => mockAttendanceProvider.getDetails(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('loading attendance details when attendance is not applicable does nothing', () async {
+      //given
+      var attendanceDetails = MockAttendanceDetails();
+      when(() => attendanceDetails.isAttendanceApplicable).thenReturn(false);
+      when(() => mockAttendanceProvider.isLoading).thenReturn(false);
+      when(() => mockAttendanceProvider.getDetails()).thenAnswer((_) => Future.value(attendanceDetails));
+
+      //when
+      await presenter.loadAttendanceDetails();
+
+      //then
+      verifyInOrder([
+        () => mockAttendanceProvider.getDetails(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('loading attendance details when attendance is applicable shows the attendance widget', () async {
+      //given
+      var attendanceDetails = MockAttendanceDetails();
+      when(() => attendanceDetails.isAttendanceApplicable).thenReturn(true);
+      when(() => mockAttendanceProvider.isLoading).thenReturn(false);
+      when(() => mockAttendanceProvider.getDetails()).thenAnswer((_) => Future.value(attendanceDetails));
+
+      //when
+      await presenter.loadAttendanceDetails();
+
+      //then
+      verifyInOrder([
+        () => mockAttendanceProvider.getDetails(),
+        () => view.showAttendanceWidget(),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
@@ -504,9 +566,9 @@ void main() {
     }
 
     test('returns empty financial data when summary is null', () async {
-      var profitLossDetails = presenter.getOverduePayablesDetails(null);
-      var availableFundsDetails = presenter.getOverduePayablesDetails(null);
-      var receivablesOverdueDetails = presenter.getOverduePayablesDetails(null);
+      var profitLossDetails = presenter.getProfitLossDetails(null);
+      var availableFundsDetails = presenter.getAvailableFundsDetails(null);
+      var receivablesOverdueDetails = presenter.getOverdueReceivablesDetails(null);
       var payablesOverdueDetails = presenter.getOverduePayablesDetails(null);
 
       _assertIsEmptyFinancialDetail(profitLossDetails);
@@ -546,6 +608,53 @@ void main() {
         () => view.goToApprovalsListScreen(),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
+    });
+  });
+
+  group('tests for getters', () {
+    test('should not show company groups if there are no groups', () async {
+      //given
+      var companyList = MockCompanyList();
+      when(() => companyList.groups).thenReturn([]);
+      when(() => companyList.companies).thenReturn([company1, company2]);
+      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+      await presenter.loadCompanies();
+
+      //when
+      var shouldShowGroups = presenter.shouldShowCompanyGroupsFilter();
+
+      //then
+      expect(shouldShowGroups, false);
+    });
+
+    test('should not show company groups if there are no groups', () async {
+      //given
+      var companyList = MockCompanyList();
+      when(() => companyList.groups).thenReturn([MockCompanyGroup()]);
+      when(() => companyList.companies).thenReturn([company1, company2]);
+      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+      await presenter.loadCompanies();
+
+      //when
+      var shouldShowGroups = presenter.shouldShowCompanyGroupsFilter();
+
+      //then
+      expect(shouldShowGroups, true);
+    });
+
+    test('getting total approval count', () async {
+      //given
+      when(() => company1.approvalCount).thenReturn(5);
+      when(() => company2.approvalCount).thenReturn(13);
+      when(() => companyList.companies).thenReturn([company1, company2]);
+      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(companyList));
+      await presenter.loadCompanies();
+
+      //when
+      var totalApprovalCount = presenter.getApprovalCount();
+
+      //then
+      expect(totalApprovalCount, 18);
     });
   });
 }

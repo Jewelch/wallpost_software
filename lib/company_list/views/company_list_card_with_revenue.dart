@@ -66,7 +66,6 @@ class CompanyListCardWithRevenue extends StatelessWidget {
       width: 90,
       height: 90,
       padding: EdgeInsets.all(6),
-      // Border width
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: borderRadius,
