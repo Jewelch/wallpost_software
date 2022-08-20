@@ -7,8 +7,6 @@ class StatusBarColorSetter {
       var statusBarColor = Colors.white;
       FlutterStatusbarcolor.setStatusBarColor(statusBarColor, animate: false);
       FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-      FlutterStatusbarcolor.setNavigationBarColor(statusBarColor);
-      FlutterStatusbarcolor.setNavigationBarWhiteForeground(false);
     } catch (e) {
       //do nothing
     }
