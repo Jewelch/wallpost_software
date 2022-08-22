@@ -31,7 +31,7 @@ class Company extends JSONInitializable {
       _shortName = sift.readStringFromMap(companyInfoMap, 'short_name');
       _commercialName = sift.readStringFromMap(companyInfoMap, 'commercial_name');
       _logoUrl = sift.readStringFromMap(companyInfoMap, 'company_logo');
-      _dateFormat = sift.readStringFromMap(companyInfoMap, 'js_date_format');
+      _dateFormat = _initDateFormat(companyInfoMap);
       _currency = sift.readStringFromMap(companyInfoMap, 'currency');
       var _packages = sift.readStringListFromMap(companyInfoMap, 'packages');
       _modules = _initModules(_packages);
@@ -43,6 +43,13 @@ class Company extends JSONInitializable {
     } on MappingException {
       rethrow;
     }
+  }
+
+  String _initDateFormat(Map<String, dynamic> companyInfoMap) {
+    var dateFormat = Sift().readStringFromMap(companyInfoMap, 'js_date_format');
+    dateFormat = dateFormat.replaceAll("D", "d");
+    dateFormat = dateFormat.replaceAll("Y", "y");
+    return dateFormat;
   }
 
   List<Module> _initModules(List<String> moduleStrings) {

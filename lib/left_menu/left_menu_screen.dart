@@ -61,7 +61,7 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
               iconName: 'assets/icons/logout_box_arrow_icon.svg',
               showArrow: false,
               onTap: logout,
-              color: AppColors.cautionColor,
+              color: AppColors.red,
             ),
             Divider(),
           ],

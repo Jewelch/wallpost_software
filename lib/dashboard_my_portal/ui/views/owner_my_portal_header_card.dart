@@ -25,7 +25,7 @@ class OwnerMyPortalHeaderCard extends StatelessWidget {
               Text("Financials", style: TextStyles.headerCardHeadingTextStyle),
               Expanded(
                 child: Text(
-                  "YTD   ${AppYears.years().first}",
+                  "YTD   ${AppYears().years().last}",
                   textAlign: TextAlign.end,
                   style: TextStyles.headerCardSubHeadingTextStyle,
                 ),
@@ -48,8 +48,8 @@ class OwnerMyPortalHeaderCard extends StatelessWidget {
                   textAlign: TextAlign.end,
                   style: TextStyles.headerCardMainValueTextStyle.copyWith(
                     color: _financialSummary.isInProfit()
-                        ? AppColors.successColorForDarkDefaultColorBg
-                        : AppColors.failureColorForDarkDefaultColorBg,
+                        ? AppColors.greenOnDarkDefaultColorBg
+                        : AppColors.redOnDarkDefaultColorBg,
                   ),
                 ),
               ),
@@ -78,8 +78,8 @@ class OwnerMyPortalHeaderCard extends StatelessWidget {
                     _financialSummary.availableFunds,
                     "Available Funds",
                     _financialSummary.areFundsAvailable()
-                        ? AppColors.successColorForDarkDefaultColorBg
-                        : AppColors.failureColorForDarkDefaultColorBg,
+                        ? AppColors.greenOnDarkDefaultColorBg
+                        : AppColors.redOnDarkDefaultColorBg,
                   ),
                 ),
                 Flexible(
@@ -87,8 +87,8 @@ class OwnerMyPortalHeaderCard extends StatelessWidget {
                     _financialSummary.receivableOverdue,
                     "Receivables Overdue",
                     _financialSummary.areReceivablesOverdue()
-                        ? AppColors.failureColorForDarkDefaultColorBg
-                        : AppColors.successColorForDarkDefaultColorBg,
+                        ? AppColors.redOnDarkDefaultColorBg
+                        : AppColors.greenOnDarkDefaultColorBg,
                   ),
                 ),
                 Flexible(
@@ -96,8 +96,8 @@ class OwnerMyPortalHeaderCard extends StatelessWidget {
                     _financialSummary.payableOverdue,
                     "Payables Overdue",
                     _financialSummary.arePayablesOverdue()
-                        ? AppColors.failureColorForDarkDefaultColorBg
-                        : AppColors.successColorForDarkDefaultColorBg,
+                        ? AppColors.redOnDarkDefaultColorBg
+                        : AppColors.greenOnDarkDefaultColorBg,
                   ),
                 ),
               ],

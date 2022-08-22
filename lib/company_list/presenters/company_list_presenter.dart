@@ -220,11 +220,11 @@ class CompanyListPresenter {
   }
 
   Color _successColor(bool isForHeaderCard) {
-    return isForHeaderCard ? AppColors.successColorForDarkDefaultColorBg : AppColors.successColor;
+    return isForHeaderCard ? AppColors.greenOnDarkDefaultColorBg : AppColors.green;
   }
 
   Color _failureColor(bool isForHeaderCard) {
-    return isForHeaderCard ? AppColors.failureColorForDarkDefaultColorBg : AppColors.failureColor;
+    return isForHeaderCard ? AppColors.redOnDarkDefaultColorBg : AppColors.red;
   }
 
   //MARK: Getters

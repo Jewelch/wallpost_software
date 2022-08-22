@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:notifiable/item_notifiable.dart';
-import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/app_bars/app_bar_divider.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
-import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
-import 'package:wallpost/_common_widgets/loader/loader.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/_common_widgets/form_widgets/form_text_field.dart';
+import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_adjustment_presenter.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_adjustment_view.dart';
-import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_screen.dart';
+
+import '../../../_common_widgets/alert/alert.dart';
 
 class AttendanceAdjustmentScreen extends StatefulWidget {
   final AttendanceListItem attendanceListItem;
@@ -25,17 +23,13 @@ class AttendanceAdjustmentScreen extends StatefulWidget {
 }
 
 class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen> implements AttendanceAdjustmentView {
-  var _reasonErrorNotifier = ItemNotifier<String?>(defaultValue: null);
-  var _reasonTextController = TextEditingController();
-  var _showLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
-  var _statusLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
-  late AttendanceAdjustmentPresenter presenter;
-  late Loader loader;
+  late AttendanceAdjustmentPresenter _presenter;
+  late TextEditingController _reasonTextController;
 
   @override
   void initState() {
-    loader = Loader(context);
-    presenter = AttendanceAdjustmentPresenter(this, widget.attendanceListItem);
+    _presenter = AttendanceAdjustmentPresenter(this, widget.attendanceListItem);
+    _reasonTextController = TextEditingController(text: _presenter.getReason());
     super.initState();
   }
 
@@ -48,157 +42,147 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
         title: 'Adjust Attendance',
         leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
       ),
-      body: SafeArea(
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppBarDivider(),
-              _attendanceInfo(),
-              AppBarDivider(),
-              Expanded(
-                child: ItemNotifiable<bool>(
-                  notifier: _statusLoaderNotifier,
-                  builder: (context, value) => IgnorePointer(
-                    ignoring: value ? true : false,
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _adjustPunchTime(),
-                              _reasonForAdjustment(),
-                            ],
-                          ),
-                          _saveButton(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+      body: OnTapKeyboardDismisser(
+        child: SafeArea(
+          child: AbsorbPointer(
+            absorbing: _presenter.shouldDisableFormEntry(),
+            child: _form(),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _form() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AppBarDivider(),
+        SizedBox(height: 20),
+        _attendanceInfo(),
+        SizedBox(height: 20),
+        AppBarDivider(),
+        SizedBox(height: 30),
+        _adjustedTimeFields(),
+        SizedBox(height: 30),
+        _reasonForAdjustment(),
+        Expanded(child: Container()),
+        _saveButton(),
+        SizedBox(height: 20),
+      ],
     );
   }
 
   Widget _attendanceInfo() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: 12),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.attendanceListItem.getReadableDate(), style: TextStyles.titleTextStyleBold),
-              ItemNotifiable<bool>(
-                notifier: _statusLoaderNotifier,
-                builder: (context, value) => value
-                    ? SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          backgroundColor: AppColors.greenButtonColor,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
-                        ),
-                      )
-                    : Text(
-                        presenter.status,
-                        style: TextStyles.titleTextStyleBold.copyWith(color: presenter.statusColor),
-                      ),
-              ),
+              Text(_presenter.getAttendanceDate(), style: TextStyles.titleTextStyleBold),
+              if (_presenter.isLoadingAdjustedStatus())
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    backgroundColor: AppColors.green,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+                  ),
+                ),
+              if (!_presenter.isLoadingAdjustedStatus())
+                Text(
+                  _presenter.getAdjustedStatus(),
+                  style: TextStyles.titleTextStyleBold.copyWith(
+                    color: _presenter.getAdjustedStatusColor(),
+                  ),
+                )
             ],
           ),
-          SizedBox(
-            height: 12,
-          ),
+          SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Punched In',
-                style: TextStyles.titleTextStyle.copyWith(color: AppColors.textGrey),
-              ),
-              Text(
-                'Punched Out',
-                style: TextStyles.titleTextStyle.copyWith(color: AppColors.textGrey),
-              ),
+              Text('Punch In Time', style: TextStyles.subTitleTextStyle),
+              Text('Punch Out Time', style: TextStyles.subTitleTextStyle),
             ],
           ),
-          SizedBox(
-            height: 4,
-          ),
+          SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                widget.attendanceListItem.originalPunchInTime,
-                style: TextStyles.titleTextStyle.copyWith(color: AppColors.textGrey),
-              ),
-              Text(
-                widget.attendanceListItem.originalPunchOutTime,
-                style: TextStyles.titleTextStyle.copyWith(color: AppColors.textGrey),
-              ),
+              Text(_presenter.getPunchInTimeString(), style: TextStyles.titleTextStyle),
+              Text(_presenter.getPunchOutTimeString(), style: TextStyles.titleTextStyle),
             ],
-          )
+          ),
+          if (_presenter.getApprovalInfo().isNotEmpty) SizedBox(height: 20),
+          if (_presenter.getApprovalInfo().isNotEmpty)
+            Text(
+              _presenter.getApprovalInfo(),
+              style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.red),
+            ),
         ],
       ),
     );
   }
 
-  Widget _adjustPunchTime() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+  Widget _adjustedTimeFields() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildPickAttendanceTime(
-          title: 'Adjust Punch In',
-          time: "${presenter.getPunchInTime().format(context)}",
-          onTap: _pickPunchInTime,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SizedBox(width: 12),
+            _buildAdjustedTimeField(
+              title: 'Adjust Punch In',
+              time: _presenter.getAdjustedPunchInTimeString(),
+              onTap: _pickPunchInTime,
+            ),
+            SizedBox(width: 20),
+            _buildAdjustedTimeField(
+              title: 'Adjust Punch Out',
+              time: _presenter.getAdjustedPunchOutTimeString(),
+              onTap: _pickPunchOutTime,
+            ),
+            SizedBox(width: 12),
+          ],
         ),
-        SizedBox(
-          width: 20,
-        ),
-        _buildPickAttendanceTime(
-            title: 'Adjust Punch Out',
-            time: "${presenter.getPunchOutTime().format(context)}",
-            onTap: _pickPunchOutTime),
+        SizedBox(height: 6),
+        if (_presenter.getAdjustedTimeError() != null)
+          Text(
+            "      ${_presenter.getAdjustedTimeError()}",
+            style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.red),
+          ),
       ],
     );
   }
 
-  Widget _buildPickAttendanceTime({
-    String? title,
-    VoidCallback? onTap,
-    String? time,
+  Widget _buildAdjustedTimeField({
+    required String title,
+    required String time,
+    required VoidCallback onTap,
   }) {
     return Expanded(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(
-          title!,
-          style: TextStyles.titleTextStyleBold,
-        ),
-        SizedBox(height: 4),
+        Text(title, style: TextStyles.titleTextStyleBold),
+        SizedBox(height: 8),
         InkWell(
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.textFieldBackgroundColor,
-              borderRadius: BorderRadius.all(Radius.circular(
-                10,
-              )),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             padding: EdgeInsets.all(12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(time!, style: TextStyles.titleTextStyle.copyWith(color: AppColors.textGrey)),
-                Icon(Icons.access_time, size: 22, color: AppColors.textGrey),
+                Text(time, style: TextStyles.titleTextStyle.copyWith()),
+                Icon(Icons.access_time, size: 22),
               ],
             ),
           ),
@@ -207,121 +191,121 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
     );
   }
 
+  void _pickPunchInTime() async {
+    TimeOfDay? adjustedTime = await showTimePicker(
+      context: context,
+      initialTime: _presenter.adjustedPunchInTime,
+    );
+
+    if (adjustedTime != null) _presenter.loadAdjustedStatus(adjustedPunchInTime: adjustedTime);
+  }
+
+  void _pickPunchOutTime() async {
+    TimeOfDay? adjustedTime = await showTimePicker(
+      context: context,
+      initialTime: _presenter.adjustedPunchOutTime,
+    );
+
+    if (adjustedTime != null) _presenter.loadAdjustedStatus(adjustedPunchOutTime: adjustedTime);
+  }
+
   Widget _reasonForAdjustment() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-            padding: EdgeInsets.only(top: 16, bottom: 8),
-            child: Text(
-              'Reason of adjustment',
-              style: TextStyles.titleTextStyleBold,
-            )),
-        ItemNotifiable<String?>(
-          notifier: _reasonErrorNotifier,
-          builder: (context, value) => LoginTextField(
+    return Padding(
+      padding: const EdgeInsets.only(left: 12, right: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Reason of adjustment', style: TextStyles.titleTextStyleBold),
+          SizedBox(height: 8),
+          FormTextField(
             hint: 'Write your reason here',
             controller: _reasonTextController,
-            errorText: value,
+            errorText: _presenter.getReasonError(),
             minLines: 3,
             maxLines: 8,
             keyboardType: TextInputType.multiline,
             textInputAction: TextInputAction.done,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _saveButton() {
-    return ItemNotifiable<bool>(
-      notifier: _showLoaderNotifier,
-      builder: (context, showLoader) => Container(
-        height: 40,
-        child: RoundedRectangleActionButton(
-          title: 'Save',
-          backgroundColor: AppColors.greenButtonColor,
-          onPressed: () => _submitAdjustment(),
-          showLoader: showLoader,
-        ),
+          )
+        ],
       ),
     );
   }
 
-  void _pickPunchInTime() async {
-    TimeOfDay? adjustedTime = await showTimePicker(context: context, initialTime: presenter.getPunchInTime());
-    if (adjustedTime != null) {
-      presenter.adjustPunchInTime(adjustedTime);
-    }
+  Widget _saveButton() {
+    return Container(
+      padding: EdgeInsets.only(left: 12, right: 12),
+      child: RoundedRectangleActionButton(
+        title: 'Save',
+        disabled: _presenter.shouldDisableFormEntry(),
+        backgroundColor: AppColors.green,
+        onPressed: () => _presenter.submitAdjustment(_reasonTextController.text),
+        showLoader: _presenter.isSubmittingAdjustment(),
+      ),
+    );
   }
 
-  void _pickPunchOutTime() async {
-    TimeOfDay? adjustedTime = await showTimePicker(context: context, initialTime: presenter.getPunchOutTime());
-    if (adjustedTime != null) {
-      presenter.adjustPunchOutTime(adjustedTime);
-    }
-  }
+  //MARK: View functions
 
-  void _submitAdjustment() {
-    presenter.submitAdjustment(_reasonTextController.text);
+  @override
+  void showAdjustedStatusLoader() {
+    setState(() {});
   }
 
   @override
-  void showLoader() {
-    _showLoaderNotifier.notify(true);
+  void updateAdjustedPunchInAndOutTime() {
+    setState(() {});
   }
 
   @override
-  void hideLoader() {
-    _showLoaderNotifier.notify(false);
-  }
-
-  @override
-  void showStatusLoader() {
-    _statusLoaderNotifier.notify(true);
-  }
-
-  @override
-  void hideStatusLoader() {
-    _statusLoaderNotifier.notify(false);
-  }
-
-  @override
-  void clearError() {
-    _reasonErrorNotifier.notify("");
-  }
-
-  @override
-  void notifyInvalidReason(String message) {
-    _reasonErrorNotifier.notify(message);
-  }
-
-  @override
-  void notifyInvalidAdjustedStatus(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void onGetAdjustedStatusFailed(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void onAdjustAttendanceSuccess(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context,
-        title: title,
-        message: message,
-        onPressed: () => ScreenPresenter.present(AttendanceListScreen(), context));
-  }
-
-  @override
-  void onAdjustAttendanceFailed(String title, String message) {
+  void onDidFailToLoadAdjustedStatus(String title, String message) {
+    setState(() {});
     Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 
   @override
   void onDidLoadAdjustedStatus() {
     setState(() {});
+  }
+
+  @override
+  void notifyNoAdjustmentMade() {
+    setState(() {});
+  }
+
+  @override
+  void notifyInvalidReason() {
+    setState(() {});
+  }
+
+  @override
+  void clearAdjustedTimeInputError() {
+    setState(() {});
+  }
+
+  @override
+  void clearReasonInputError() {
+    setState(() {});
+  }
+
+  @override
+  void showFormSubmissionLoader() {
+    setState(() {});
+  }
+
+  @override
+  void onDidFailToAdjustAttendance(String title, String message) {
+    setState(() {});
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
+  void onDidAdjustAttendanceSuccessfully(String title, String message) {
+    setState(() {});
+    Alert.showSimpleAlert(
+      context: context,
+      title: title,
+      message: message,
+      onPressed: () => Navigator.pop(context, true),
+    );
   }
 }

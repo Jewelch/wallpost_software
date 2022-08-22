@@ -38,7 +38,9 @@ class _TabChipsState extends State<TabChips> {
               shape: CustomFilterChipShape.roundedRectangle,
               backgroundColor: widget.chipBackgroundColor,
               borderColor: widget.chipBackgroundColor,
-              onPressed: () => widget.onItemSelected,
+              onPressed: () {
+                widget.onItemSelected?.call(index);
+              },
             ),
           );
         },

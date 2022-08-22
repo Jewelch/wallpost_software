@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-extension DateUtils on DateTime {
+extension DateExtension on DateTime {
   String yyyyMMddString() {
     return DateFormat('yyyy-MM-dd').format(this);
-  }
-
-  String yyyyMMdd2String() {
-    return DateFormat('dd/MM/yyyy').format(this);
   }
 
   // ignore: non_constant_identifier_names
@@ -15,19 +11,20 @@ extension DateUtils on DateTime {
     return DateFormat('HH:mm:ss').format(this);
   }
 
+  // ignore: non_constant_identifier_names
   String HHmmString() {
     return DateFormat('HH:mm').format(this);
   }
 }
 
-//TODO: Ameena - remove this. We already have the same function in DateUtil.
-//!!NOTE: Always check shared code before creating your own code. Or ask me!
-extension TimeUtils on TimeOfDay {
-  String HHmmssString() {
-    return "${this.hour}:${this.minute}:00";
-  }
-
+extension TimeExtension on TimeOfDay {
+  // ignore: non_constant_identifier_names
   String HHmmString() {
     return "${this.hour.toString().padLeft(2, "0")}:${this.minute.toString().padLeft(2, "0")}";
+  }
+
+  String hhmmaString() {
+    DateTime date = DateFormat("hh:mm").parse("${this.hour}:${this.minute}");
+    return DateFormat("h:mm a").format(date);
   }
 }

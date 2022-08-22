@@ -22,7 +22,7 @@ class RoundedRectangleActionButton extends StatelessWidget {
     this.textColor = Colors.white,
     this.disabledTextColor = Colors.white60,
     this.backgroundColor = AppColors.defaultColor,
-    this.disabledBackgroundColor = AppColors.defaultColorWithTransparency,
+    this.disabledBackgroundColor = AppColors.disabledButtonColor,
     this.borderColor,
     required this.onPressed,
     this.disabled = false,

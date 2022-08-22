@@ -5,39 +5,34 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
-import 'package:wallpost/company_core/services/selected_employee_provider.dart';
+import 'package:wallpost/company_core/services/selected_company_provider.dart';
 
 class AttendanceListProvider {
-  final SelectedEmployeeProvider _selectedEmployeeProvider;
+  final SelectedCompanyProvider _selectedCompanyProvider;
   final NetworkAdapter _networkAdapter;
   late String _sessionId;
-  bool isLoading = false;
+  bool _isLoading = false;
 
-  AttendanceListProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
+  AttendanceListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
   AttendanceListProvider()
-      : _selectedEmployeeProvider = SelectedEmployeeProvider(),
+      : _selectedCompanyProvider = SelectedCompanyProvider(),
         _networkAdapter = WPAPI();
 
-  void reset() {
-    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
-    isLoading = false;
-  }
-
   Future<List<AttendanceListItem>> get(int month, int year) async {
-    var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-
-    var url = AttendanceAdjustmentUrls.getAttendanceListsUrl(employee.companyId, employee.v1Id, month, year);
+    var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
+    var employee = company.employee;
+    var url = AttendanceAdjustmentUrls.getAttendanceListsUrl(company.id, employee.v1Id, month, year);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
-    isLoading = true;
+    _isLoading = true;
 
     try {
       var apiResponse = await _networkAdapter.get(apiRequest);
-      isLoading = false;
+      _isLoading = false;
       return _processResponse(apiResponse);
     } on APIException catch (exception) {
-      isLoading = false;
+      _isLoading = false;
       throw exception;
     }
   }
@@ -78,4 +73,6 @@ class AttendanceListProvider {
           attendanceItem.punchOutTime == null;
     });
   }
+
+  bool get isLoading => _isLoading;
 }

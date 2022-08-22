@@ -1,41 +1,41 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color defaultColor = Color.fromRGBO(24, 152, 224, 1.0);
-  static const Color defaultColorWithTransparency = Color.fromRGBO(24, 152, 224, 0.6);
-  static const Color defaultColorDark = Color.fromRGBO(6, 62, 127, 1.0);
-  static const Color defaultColorDarkContrastColor = Color.fromRGBO(119, 155, 189, 1.0);
+  static const Color defaultColor = Color.fromRGBO(0, 150, 227, 1.0);
+  static const Color defaultColorWithTransparency = Color.fromRGBO(0, 150, 227, 0.6);
+  static const Color defaultColorDark = Color.fromRGBO(0, 60, 129, 1.0);
+  static const Color defaultColorDarkContrastColor = Color.fromRGBO(135, 169, 199, 1.0);
+
+  //MARK: Button colors
+  static const Color disabledButtonColor = Color.fromRGBO(210, 210, 210, 1.0);
 
   //MARK: Screen colors
   static const Color screenBackgroundColor = Colors.white;
+
+  //MARK: Module colors
+  static const Color myPortalColor = Color.fromRGBO(191, 10, 10, 1.0);
 
   //MARK: Text field colors
   static const Color textFieldBackgroundColor = Color.fromRGBO(237, 237, 237, 1.0);
   static const Color textFieldBorderColor = Color.fromRGBO(220, 220, 220, 0);
   static const Color textFieldFocusedBorderColor = AppColors.defaultColor;
-  static const Color textFieldErrorBorderColor = Color.fromRGBO(212, 28, 28, 1.0);
 
   //MARK: Outcome colors
-  static const Color successColor = Color.fromRGBO(43, 186, 104, 1.0);
-  static const Color failureColor = Color.fromRGBO(212, 28, 28, 1.0);
-  static const Color headerCardSuccessColor = Color.fromRGBO(83, 238, 148, 1.0);
-  static const Color headerCardFailureColor = Color.fromRGBO(250, 104, 100, 1.0);
+  static const Color green = Color.fromRGBO(51, 190, 114, 1.0);
+  static final Color yellow = Color.fromRGBO(248, 166, 50, 1.0);
+  static const Color red = Color.fromRGBO(243, 45, 44, 1.0);
+  static const Color greenOnDarkDefaultColorBg = Color.fromRGBO(74, 240, 145, 1.0);
+  static const Color redOnDarkDefaultColorBg = Color.fromRGBO(250, 104, 100, 1.0);
 
-
+  //MARK: Shimmer colors
   static const Color shimmerColor = Color.fromRGBO(240, 240, 240, 1.0);
 
-  static const Color bannerBackgroundColor = Color.fromRGBO(248, 162, 40, 1.0);
+  //MARK: List item colors
+  static const Color listItemBorderColor = Color.fromRGBO(237, 237, 237, 1.0);
 
-  static const Color cautionColor = Color.fromRGBO(212, 28, 28, 1.0);
-
+  //MARK: Filter colors
   static const Color filtersBackgroundColour = Color.fromRGBO(223, 240, 247, 1.0);
 
-  static final Color greenButtonColor = Color.fromRGBO(43, 186, 104, 1.0);
-
-  //expense requests colors
-  static final Color darkGrey = Color.fromRGBO(100, 100, 100, 1.0);
-  static final Color lightGrey = Color.fromRGBO(217, 217, 217, 1.0);
-  static final Color textGrey = Color.fromRGBO(134, 129, 129, 1.0);
-  static final Color yellow = Color.fromRGBO(248, 162, 40, 1.0);
-  static final Color dropDownColor = Color.fromARGB(255, 223, 240, 247);
+  //MARK: Banner colors
+  static const Color bannerBackgroundColor = Color.fromRGBO(248, 162, 40, 1.0);
 }

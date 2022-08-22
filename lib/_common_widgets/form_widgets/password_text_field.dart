@@ -17,7 +17,7 @@ class PasswordTextField extends StatefulWidget {
     this.hint,
     this.obscureText = false,
     this.errorText,
-    this.errorColor = AppColors.failureColor,
+    this.errorColor = AppColors.red,
     this.keyboardType = TextInputType.text,
     this.controller,
     this.textInputAction,
@@ -80,10 +80,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(
-              color: AppColors.textFieldErrorBorderColor,
-              width: 1,
-            ),
+            borderSide: BorderSide(color: AppColors.red, width: 1),
           ),
           errorStyle: TextStyle(fontSize: 14, color: widget.errorColor),
           suffixIcon: IconButton(

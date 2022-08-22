@@ -4,7 +4,7 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
-import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
+import 'package:wallpost/_common_widgets/form_widgets/form_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -102,7 +102,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> implements Forgot
           SizedBox(height: 16),
           ItemNotifiable<String?>(
             notifier: _accountNumberErrorNotifier,
-            builder: (context, value) => LoginTextField(
+            builder: (context, value) => FormTextField(
               controller: _accountNumberTextController,
               hint: "Account Number",
               errorText: value,
@@ -113,7 +113,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> implements Forgot
           SizedBox(height: 16),
           ItemNotifiable<String?>(
             notifier: _emailErrorNotifier,
-            builder: (context, value) => LoginTextField(
+            builder: (context, value) => FormTextField(
               controller: _emailTextController,
               hint: "Email",
               errorText: value,

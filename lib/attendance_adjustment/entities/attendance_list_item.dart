@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
@@ -45,7 +44,7 @@ class AttendanceListItem extends JSONInitializable {
       statusString = sift.readStringFromMap(jsonMap, 'adjusted_status');
     }
 
-    AttendanceStatus? status = initializeAttendanceStatusFromString(statusString);
+    AttendanceStatus? status = AttendanceStatus.initFromString(statusString);
     if (status == null) {
       throw MappingException("Failed to cast AttendanceListItem response. Error message - could not initialize status");
     }
@@ -55,9 +54,13 @@ class AttendanceListItem extends JSONInitializable {
 
   //MARK: Getters
 
+  bool isApprovalPending() {
+    return _approvalStatus == "Pending";
+  }
+
   num? get id => _id;
 
-  String? get attendanceID => _attendanceId;
+  String? get attendanceId => _attendanceId;
 
   DateTime get date => _date;
 
@@ -65,67 +68,13 @@ class AttendanceListItem extends JSONInitializable {
 
   DateTime? get punchOutTime => _punchOutTime;
 
-  String get originalPunchInTime => _convertTimeToString(_originalPunchInTime);
+  DateTime? get originalPunchInTime => _originalPunchInTime;
 
-  String get originalPunchOutTime => _convertTimeToString(_originalPunchOutTime);
+  DateTime? get originalPunchOutTime => _originalPunchOutTime;
 
   AttendanceStatus get status => _status;
 
-  String? get approvalStatus => _approvalStatus;
-
-  String get adjustmentReason => _adjustmentReason ?? "";
+  String? get adjustmentReason => _adjustmentReason;
 
   String? get approverName => _approverName;
-
-  String getReadableDate() {
-    return _convertDateToString(_date);
-  }
-
-  String getReadableDayOfDate() {
-    return _convertDateToDayString(_date);
-  }
-
-  String getReadableMonthOfDate() {
-    return _convertDateToMonthString(_date);
-  }
-
-  String getReadableWeekDayOfDate() {
-    return _convertDateToWeekDayString(_date);
-  }
-
-  String getPunchInReadableTime() {
-    return _convertTimeToString(_punchInTime);
-  }
-
-  String getPunchOutReadableTime() {
-    return _convertTimeToString(_punchOutTime);
-  }
-
-  //MARK: Util functions
-
-  String _convertTimeToString(DateTime? time) {
-    if (time == null) return '';
-    return DateFormat('hh:mm a').format(time);
-  }
-
-  String _convertDateToString(DateTime? date) {
-    if (date == null) return '';
-    return DateFormat('dd-MMM-yyyy').format(date);
-  }
-
-  String _convertDateToDayString(DateTime? date) {
-    if (date == null) return '';
-    return DateFormat('dd').format(date);
-  }
-
-  String _convertDateToMonthString(DateTime? date) {
-    if (date == null) return '';
-    return DateFormat('MMM').format(date);
-  }
-
-  String _convertDateToWeekDayString(DateTime? date) {
-    if (date == null) return '';
-    return  DateFormat('EEEE').format(date);
-  }
-
 }

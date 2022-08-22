@@ -476,7 +476,7 @@ void main() {
       var details1 = presenter.getProfitLossDetails(negativeSummary);
       expect(details1.label, "Profit & Loss");
       expect(details1.value, "USD -40");
-      expect(details1.textColor.isEqualTo(AppColors.failureColor), true);
+      expect(details1.textColor.isEqualTo(AppColors.red), true);
 
       var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.profitLoss).thenReturn("USD 440");
@@ -484,7 +484,7 @@ void main() {
       var details3 = presenter.getProfitLossDetails(positiveSummary);
       expect(details3.label, "Profit & Loss");
       expect(details3.value, "USD 440");
-      expect(details3.textColor.isEqualTo(AppColors.successColor), true);
+      expect(details3.textColor.isEqualTo(AppColors.green), true);
     });
 
     test('getting profit and loss financial details for header card', () async {
@@ -494,7 +494,7 @@ void main() {
       var details1 = presenter.getProfitLossDetails(negativeSummary, isForHeaderCard: true);
       expect(details1.label, "Profit & Loss");
       expect(details1.value, "USD -40");
-      expect(details1.textColor.isEqualTo(AppColors.failureColorForDarkDefaultColorBg), true);
+      expect(details1.textColor.isEqualTo(AppColors.redOnDarkDefaultColorBg), true);
 
       var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.profitLoss).thenReturn("USD 440");
@@ -502,7 +502,7 @@ void main() {
       var details3 = presenter.getProfitLossDetails(positiveSummary, isForHeaderCard: true);
       expect(details3.label, "Profit & Loss");
       expect(details3.value, "USD 440");
-      expect(details3.textColor.isEqualTo(AppColors.successColorForDarkDefaultColorBg), true);
+      expect(details3.textColor.isEqualTo(AppColors.greenOnDarkDefaultColorBg), true);
     });
 
     test('getting available funds financial details', () async {
@@ -512,7 +512,7 @@ void main() {
       var details1 = presenter.getAvailableFundsDetails(negativeSummary);
       expect(details1.label, "Available Funds");
       expect(details1.value, "USD -40");
-      expect(details1.textColor.isEqualTo(AppColors.failureColor), true);
+      expect(details1.textColor.isEqualTo(AppColors.red), true);
 
       var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.availableFunds).thenReturn("USD 440");
@@ -520,7 +520,7 @@ void main() {
       var details3 = presenter.getAvailableFundsDetails(positiveSummary);
       expect(details3.label, "Available Funds");
       expect(details3.value, "USD 440");
-      expect(details3.textColor.isEqualTo(AppColors.successColor), true);
+      expect(details3.textColor.isEqualTo(AppColors.green), true);
     });
 
     test('getting overdue receivables financial details', () async {
@@ -530,7 +530,7 @@ void main() {
       var details1 = presenter.getOverdueReceivablesDetails(negativeSummary);
       expect(details1.label, "Receivables Overdue");
       expect(details1.value, "USD -40");
-      expect(details1.textColor.isEqualTo(AppColors.successColor), true);
+      expect(details1.textColor.isEqualTo(AppColors.green), true);
 
       var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.receivableOverdue).thenReturn("USD 440");
@@ -538,7 +538,7 @@ void main() {
       var details3 = presenter.getOverdueReceivablesDetails(positiveSummary);
       expect(details3.label, "Receivables Overdue");
       expect(details3.value, "USD 440");
-      expect(details3.textColor.isEqualTo(AppColors.failureColor), true);
+      expect(details3.textColor.isEqualTo(AppColors.red), true);
     });
 
     test('getting overdue payables financial details', () async {
@@ -548,7 +548,7 @@ void main() {
       var details1 = presenter.getOverduePayablesDetails(negativeSummary);
       expect(details1.label, "Payables Overdue");
       expect(details1.value, "USD -40");
-      expect(details1.textColor.isEqualTo(AppColors.successColor), true);
+      expect(details1.textColor.isEqualTo(AppColors.green), true);
 
       var positiveSummary = MockFinancialSummary();
       when(() => positiveSummary.payableOverdue).thenReturn("USD 440");
@@ -556,7 +556,7 @@ void main() {
       var details3 = presenter.getOverduePayablesDetails(positiveSummary);
       expect(details3.label, "Payables Overdue");
       expect(details3.value, "USD 440");
-      expect(details3.textColor.isEqualTo(AppColors.failureColor), true);
+      expect(details3.textColor.isEqualTo(AppColors.red), true);
     });
 
     void _assertIsEmptyFinancialDetail(FinancialDetails financialDetails) {

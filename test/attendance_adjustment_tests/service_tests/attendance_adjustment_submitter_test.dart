@@ -1,34 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_adjustment_form.dart';
-import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/services/attendance_adjustment_submitter.dart';
 
+import '../../_mocks/mock_company.dart';
+import '../../_mocks/mock_company_provider.dart';
 import '../../_mocks/mock_employee.dart';
-import '../../_mocks/mock_employee_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
 
 void main() {
   Map<String, dynamic> successfulResponse = {};
   late AttendanceAdjustmentForm adjustmentForm;
   var mockEmployee = MockEmployee();
-  var mockEmployeeProvider = MockEmployeeProvider();
+  var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var attendanceAdjustmentSubmitter = AttendanceAdjustmentSubmitter.initWith(mockEmployeeProvider, mockNetworkAdapter);
+  var attendanceAdjustmentSubmitter = AttendanceAdjustmentSubmitter.initWith(
+    mockCompanyProvider,
+    mockNetworkAdapter,
+  );
 
   setUpAll(() {
-    when(() => mockEmployee.companyId).thenReturn('someCompanyId');
+    var company = MockCompany();
+    when(() => company.id).thenReturn('someCompanyId');
+    when(() => company.employee).thenReturn(mockEmployee);
     when(() => mockEmployee.v1Id).thenReturn('v1EmpId');
-    when(() => mockEmployeeProvider.getSelectedEmployeeForCurrentUser()).thenReturn(mockEmployee);
+    when(() => mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
 
     var attendanceDate = DateTime(2020, 1, 1);
     TimeOfDay adjustedPunchInTime = TimeOfDay(hour: 8, minute: 0);
-    TimeOfDay adjustedPunchOutTime =  TimeOfDay(hour: 17, minute: 0);
+    TimeOfDay adjustedPunchOutTime = TimeOfDay(hour: 17, minute: 0);
     var adjustedStatus = AttendanceStatus.Present;
     adjustmentForm = AttendanceAdjustmentForm(
       mockEmployee,
+      "someCompanyId",
       attendanceDate,
       "some work",
       adjustedPunchInTime,
@@ -53,7 +60,7 @@ void main() {
       'reason': "some work",
       'adjusted_punchin': '08:00',
       'adjusted_punchout': '17:00',
-      'adjusted_status': 'present',
+      'adjusted_status': 'PRESENT',
       'employee_id': 'v1EmpId',
       'company_id': 'someCompanyId',
     });
@@ -87,5 +94,24 @@ void main() {
     attendanceAdjustmentSubmitter.submitAdjustment(adjustmentForm);
 
     expect(attendanceAdjustmentSubmitter.isLoading, true);
+  });
+
+  test('test loading flag is reset after success', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    await attendanceAdjustmentSubmitter.submitAdjustment(adjustmentForm);
+
+    expect(attendanceAdjustmentSubmitter.isLoading, false);
+  });
+
+  test('test loading flag is reset after failure', () async {
+    mockNetworkAdapter.fail(NetworkFailureException());
+
+    try {
+      await attendanceAdjustmentSubmitter.submitAdjustment(adjustmentForm);
+      fail('failed to throw exception');
+    } catch (_) {
+      expect(attendanceAdjustmentSubmitter.isLoading, false);
+    }
   });
 }

@@ -52,9 +52,9 @@ class OwnerMyPortalDashboardPresenter {
 
   AbsenteesData getAbsenteesData() {
     if (_ownerMyPortalData.absentees > 0) {
-      return AbsenteesData(_ownerMyPortalData.absentees, AppColors.failureColor);
+      return AbsenteesData(_ownerMyPortalData.absentees, AppColors.red);
     } else {
-      return AbsenteesData(_ownerMyPortalData.absentees, AppColors.successColor);
+      return AbsenteesData(_ownerMyPortalData.absentees, AppColors.green);
     }
   }
 
@@ -74,15 +74,15 @@ class OwnerMyPortalDashboardPresenter {
     return [
       GraphValue(
         _ownerMyPortalData.lowPerformanceCutoff(),
-        AppColors.graphLowValueColor.withOpacity(0.3),
+        AppColors.red.withOpacity(0.3),
       ),
       GraphValue(
         _ownerMyPortalData.mediumPerformanceCutoff() - _ownerMyPortalData.lowPerformanceCutoff(),
-        AppColors.graphMediumValueColor.withOpacity(0.3),
+        AppColors.yellow.withOpacity(0.3),
       ),
       GraphValue(
         100 - _ownerMyPortalData.mediumPerformanceCutoff(),
-        AppColors.graphHighValueColor.withOpacity(0.3),
+        AppColors.green.withOpacity(0.3),
       ),
     ];
   }
@@ -92,7 +92,7 @@ class OwnerMyPortalDashboardPresenter {
       return [
         GraphValue(
           _ownerMyPortalData.companyPerformance.toInt(),
-          AppColors.graphLowValueColor,
+          AppColors.red,
         ),
         GraphValue(
           100 - _ownerMyPortalData.companyPerformance.toInt(),
@@ -103,11 +103,11 @@ class OwnerMyPortalDashboardPresenter {
       return [
         GraphValue(
           _ownerMyPortalData.lowPerformanceCutoff(),
-          AppColors.graphLowValueColor,
+          AppColors.red,
         ),
         GraphValue(
           _ownerMyPortalData.companyPerformance.toInt() - _ownerMyPortalData.lowPerformanceCutoff(),
-          AppColors.graphMediumValueColor,
+          AppColors.yellow,
         ),
         GraphValue(
           100 - _ownerMyPortalData.companyPerformance.toInt(),
@@ -118,15 +118,15 @@ class OwnerMyPortalDashboardPresenter {
       return [
         GraphValue(
           _ownerMyPortalData.lowPerformanceCutoff(),
-          AppColors.graphLowValueColor,
+          AppColors.red,
         ),
         GraphValue(
           _ownerMyPortalData.mediumPerformanceCutoff() - _ownerMyPortalData.lowPerformanceCutoff(),
-          AppColors.graphMediumValueColor,
+          AppColors.yellow,
         ),
         GraphValue(
           _ownerMyPortalData.companyPerformance.toInt() - _ownerMyPortalData.mediumPerformanceCutoff(),
-          AppColors.graphHighValueColor,
+          AppColors.green,
         ),
         GraphValue(
           100 - _ownerMyPortalData.companyPerformance.toInt(),
@@ -140,17 +140,17 @@ class OwnerMyPortalDashboardPresenter {
     if (_ownerMyPortalData.isCompanyPerformanceLow()) {
       return GraphValue(
         _ownerMyPortalData.companyPerformance.toInt(),
-        AppColors.graphLowValueColor,
+        AppColors.red,
       );
     } else if (_ownerMyPortalData.isCompanyPerformanceMedium()) {
       return GraphValue(
         _ownerMyPortalData.companyPerformance.toInt(),
-        AppColors.graphMediumValueColor,
+        AppColors.yellow,
       );
     } else {
       return GraphValue(
         _ownerMyPortalData.companyPerformance.toInt(),
-        AppColors.graphHighValueColor,
+        AppColors.green,
       );
     }
   }

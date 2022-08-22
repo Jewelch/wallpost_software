@@ -2,44 +2,43 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
+import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
 import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
-import 'package:wallpost/attendance__core/entities/attendance_status.dart';
-import 'package:wallpost/company_core/services/selected_employee_provider.dart';
+import 'package:wallpost/company_core/services/selected_company_provider.dart';
 
 class AdjustedStatusProvider {
-  final SelectedEmployeeProvider _selectedEmployeeProvider;
+  final SelectedCompanyProvider _selectedCompanyProvider;
   final NetworkAdapter _networkAdapter;
   late String _sessionId;
-  bool isLoading = false;
+  bool _isLoading = false;
 
-
-  var firstRun = true;
-
-  AdjustedStatusProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
+  AdjustedStatusProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
   AdjustedStatusProvider()
-      : _selectedEmployeeProvider = SelectedEmployeeProvider(),
+      : _selectedCompanyProvider = SelectedCompanyProvider(),
         _networkAdapter = WPAPI();
 
   Future<AttendanceStatus> getAdjustedStatus(AdjustedStatusForm adjustedStatusForm) async {
-    var employee = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser();
-
-    var url = AttendanceAdjustmentUrls.getAdjustedStatusUrl(employee.companyId, employee.v1Id, adjustedStatusForm.date,
-        adjustedStatusForm.adjustedPunchInTime, adjustedStatusForm.adjustedPunchOutTime);
+    var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
+    var employee = company.employee;
+    var url = AttendanceAdjustmentUrls.getAdjustedStatusUrl(
+      company.id,
+      employee.v1Id,
+      adjustedStatusForm.date,
+      adjustedStatusForm.adjustedPunchInTime,
+      adjustedStatusForm.adjustedPunchOutTime,
+    );
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
-    isLoading = true;
+    _isLoading = true;
 
     try {
       var apiResponse = await _networkAdapter.get(apiRequest);
-      isLoading = false;
-
-if(firstRun == false) throw InvalidResponseException();
-      firstRun = false;
+      _isLoading = false;
       return _processResponse(apiResponse);
     } on APIException catch (exception) {
-      isLoading = false;
+      _isLoading = false;
       throw exception;
     }
   }
@@ -51,7 +50,7 @@ if(firstRun == false) throw InvalidResponseException();
     if (apiResponse.data is! String) throw WrongResponseFormatException();
 
     var adjustedStatusString = apiResponse.data as String;
-    var adjustedStatus = initializeAttendanceStatusFromString(adjustedStatusString);
+    var adjustedStatus = AttendanceStatus.initFromString(adjustedStatusString);
 
     if (adjustedStatus != null) {
       return adjustedStatus;
@@ -59,7 +58,6 @@ if(firstRun == false) throw InvalidResponseException();
       throw InvalidResponseException();
     }
   }
+
+  bool get isLoading => _isLoading;
 }
-
-
-

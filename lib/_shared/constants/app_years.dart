@@ -1,8 +1,8 @@
 import 'dart:core';
 
 class AppYears {
-  static int _startYear = 2015;
-  static List<String> _monthNames = [
+  int _startYear = 2015;
+  List<String> _monthNames = [
     'January',
     'February',
     'March',
@@ -17,23 +17,23 @@ class AppYears {
     'December'
   ];
 
-  static List<int> years() {
+  List<int> years() {
     List<int> years = [];
     var currentYear = DateTime.now().year;
-    for (int i = currentYear; i >= _startYear; i--) {
+    for (int i = _startYear; i <= currentYear; i++) {
       years.add(i);
     }
     return years;
   }
 
-  static List<String> currentAndPastMonthsOfTheCurrentYear(int year) {
+  List<String> currentAndPastMonthsOfTheCurrentYear(int year) {
     if (year == DateTime.now().year) {
       return _monthNames.sublist(0, DateTime.now().month);
     } else
       return _monthNames;
   }
 
-  static String getCurrentMonth() {
+  String getCurrentMonth() {
     return _monthNames[DateTime.now().month];
   }
 }

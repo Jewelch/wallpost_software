@@ -17,7 +17,7 @@ class ChangePasswordSuccessScreen extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.successColor, width: 3),
+                  border: Border.all(color: AppColors.green, width: 3),
                   borderRadius: BorderRadius.circular(50)),
               child: Container(
                 margin: EdgeInsets.all(10),
@@ -38,7 +38,7 @@ class ChangePasswordSuccessScreen extends StatelessWidget {
             ),
             RoundedRectangleActionButton(
               title: 'Go back',
-              backgroundColor: AppColors.successColor,
+              backgroundColor: AppColors.green,
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pop(context);

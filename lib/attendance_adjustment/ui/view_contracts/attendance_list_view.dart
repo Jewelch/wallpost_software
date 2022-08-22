@@ -3,13 +3,11 @@ import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dar
 abstract class AttendanceListView {
   void showLoader();
 
-  void hideLoader();
+  void onDidFailToLoadAttendanceList(String errorMessage);
 
-  void showAttendanceList(List<AttendanceListItem> attendanceList);
+  void showNoAttendanceMessage(String message);
 
-  void showNoListMessage(String message);
+  void onDidLoadAttendanceList();
 
-  void showErrorMessage(String errorMessage);
-
-  void goToAdjustmentScreen(int index,AttendanceListItem attendanceList);
+  void goToAdjustmentScreen(AttendanceListItem attendanceList);
 }

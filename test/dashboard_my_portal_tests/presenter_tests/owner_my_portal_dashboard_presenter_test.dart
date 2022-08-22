@@ -119,7 +119,7 @@ void main() {
 
     //then
     expect(presenter.getAbsenteesData().numberOfAbsentees, 0);
-    expect(presenter.getAbsenteesData().countTextColor, AppColors.successColor);
+    expect(presenter.getAbsenteesData().countTextColor, AppColors.green);
   });
 
   test('getting absentees data when there are absentees', () async {
@@ -132,7 +132,7 @@ void main() {
 
     //then
     expect(presenter.getAbsenteesData().numberOfAbsentees, 10);
-    expect(presenter.getAbsenteesData().countTextColor, AppColors.failureColor);
+    expect(presenter.getAbsenteesData().countTextColor, AppColors.red);
   });
 
   test('getting total approval count', () async {
@@ -165,13 +165,13 @@ void main() {
 
     //then
     expect(cutoffSections[0].value, data.lowPerformanceCutoff());
-    expect(cutoffSections[0].color, AppColors.graphLowValueColor.withOpacity(0.3));
+    expect(cutoffSections[0].color, AppColors.red.withOpacity(0.3));
 
     expect(cutoffSections[1].value, data.mediumPerformanceCutoff() - data.lowPerformanceCutoff());
-    expect(cutoffSections[1].color, AppColors.graphMediumValueColor.withOpacity(0.3));
+    expect(cutoffSections[1].color, AppColors.yellow.withOpacity(0.3));
 
     expect(cutoffSections[2].value, 100 - data.mediumPerformanceCutoff());
-    expect(cutoffSections[2].color, AppColors.graphHighValueColor.withOpacity(0.3));
+    expect(cutoffSections[2].color, AppColors.green.withOpacity(0.3));
   });
 
   test('getting graph values for low performance', () async {
@@ -189,12 +189,12 @@ void main() {
     //then
     expect(graphSections.length, 2);
     expect(graphSections[0].value, 40);
-    expect(graphSections[0].color, AppColors.graphLowValueColor);
+    expect(graphSections[0].color, AppColors.red);
     expect(graphSections[1].value, 60);
     expect(graphSections[1].color, Colors.transparent);
 
     expect(presenter.getCompanyPerformance().value, 40);
-    expect(presenter.getCompanyPerformance().color, AppColors.graphLowValueColor);
+    expect(presenter.getCompanyPerformance().color, AppColors.red);
   });
 
   test('getting graph values for medium performance', () async {
@@ -212,14 +212,14 @@ void main() {
     //then
     expect(graphSections.length, 3);
     expect(graphSections[0].value, data.lowPerformanceCutoff());
-    expect(graphSections[0].color, AppColors.graphLowValueColor);
+    expect(graphSections[0].color, AppColors.red);
     expect(graphSections[1].value, 5);
-    expect(graphSections[1].color, AppColors.graphMediumValueColor);
+    expect(graphSections[1].color, AppColors.yellow);
     expect(graphSections[2].value, 30);
     expect(graphSections[2].color, Colors.transparent);
 
     expect(presenter.getCompanyPerformance().value, 70);
-    expect(presenter.getCompanyPerformance().color, AppColors.graphMediumValueColor);
+    expect(presenter.getCompanyPerformance().color, AppColors.yellow);
   });
 
   test('getting graph values for high performance', () async {
@@ -237,15 +237,15 @@ void main() {
     //then
     expect(graphSections.length, 4);
     expect(graphSections[0].value, data.lowPerformanceCutoff());
-    expect(graphSections[0].color, AppColors.graphLowValueColor);
+    expect(graphSections[0].color, AppColors.red);
     expect(graphSections[1].value, data.mediumPerformanceCutoff() - data.lowPerformanceCutoff());
-    expect(graphSections[1].color, AppColors.graphMediumValueColor);
+    expect(graphSections[1].color, AppColors.yellow);
     expect(graphSections[2].value, 16);
-    expect(graphSections[2].color, AppColors.graphHighValueColor);
+    expect(graphSections[2].color, AppColors.green);
     expect(graphSections[3].value, 5);
     expect(graphSections[3].color, Colors.transparent);
 
     expect(presenter.getCompanyPerformance().value, 95);
-    expect(presenter.getCompanyPerformance().color, AppColors.graphHighValueColor);
+    expect(presenter.getCompanyPerformance().color, AppColors.green);
   });
 }

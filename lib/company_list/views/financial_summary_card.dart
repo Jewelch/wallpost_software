@@ -27,7 +27,7 @@ class FinancialSummaryCard extends StatelessWidget {
               Text("Financials", style: TextStyles.headerCardHeadingTextStyle),
               Expanded(
                 child: Text(
-                  "YTD   ${AppYears.years().first}",
+                  "YTD   ${AppYears().years().last}",
                   textAlign: TextAlign.end,
                   style: TextStyles.headerCardSubHeadingTextStyle,
                 ),

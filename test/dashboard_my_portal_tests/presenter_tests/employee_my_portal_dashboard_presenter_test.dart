@@ -123,13 +123,13 @@ void main() {
 
     //then
     expect(cutoffSections[0].value, data.lowPerformanceCutoff());
-    expect(cutoffSections[0].color, AppColors.graphLowValueColor.withOpacity(0.3));
+    expect(cutoffSections[0].color, AppColors.red.withOpacity(0.3));
 
     expect(cutoffSections[1].value, data.mediumPerformanceCutoff() - data.lowPerformanceCutoff());
-    expect(cutoffSections[1].color, AppColors.graphMediumValueColor.withOpacity(0.3));
+    expect(cutoffSections[1].color, AppColors.yellow.withOpacity(0.3));
 
     expect(cutoffSections[2].value, 100 - data.mediumPerformanceCutoff());
-    expect(cutoffSections[2].color, AppColors.graphHighValueColor.withOpacity(0.3));
+    expect(cutoffSections[2].color, AppColors.green.withOpacity(0.3));
   });
 
   group('tests for getting ytd performance graph values', () {
@@ -148,12 +148,12 @@ void main() {
       //then
       expect(graphSections.length, 2);
       expect(graphSections[0].value, 40);
-      expect(graphSections[0].color, AppColors.graphLowValueColor);
+      expect(graphSections[0].color, AppColors.red);
       expect(graphSections[1].value, 60);
       expect(graphSections[1].color, Colors.transparent);
 
       expect(presenter.getYTDPerformance().value, 40);
-      expect(presenter.getYTDPerformance().color, AppColors.graphLowValueColor);
+      expect(presenter.getYTDPerformance().color, AppColors.red);
     });
 
     test('getting graph values for medium ytd performance', () async {
@@ -171,14 +171,14 @@ void main() {
       //then
       expect(graphSections.length, 3);
       expect(graphSections[0].value, data.lowPerformanceCutoff());
-      expect(graphSections[0].color, AppColors.graphLowValueColor);
+      expect(graphSections[0].color, AppColors.red);
       expect(graphSections[1].value, 5);
-      expect(graphSections[1].color, AppColors.graphMediumValueColor);
+      expect(graphSections[1].color, AppColors.yellow);
       expect(graphSections[2].value, 30);
       expect(graphSections[2].color, Colors.transparent);
 
       expect(presenter.getYTDPerformance().value, 70);
-      expect(presenter.getYTDPerformance().color, AppColors.graphMediumValueColor);
+      expect(presenter.getYTDPerformance().color, AppColors.yellow);
     });
 
     test('getting graph values for high ytd performance', () async {
@@ -196,16 +196,16 @@ void main() {
       //then
       expect(graphSections.length, 4);
       expect(graphSections[0].value, data.lowPerformanceCutoff());
-      expect(graphSections[0].color, AppColors.graphLowValueColor);
+      expect(graphSections[0].color, AppColors.red);
       expect(graphSections[1].value, data.mediumPerformanceCutoff() - data.lowPerformanceCutoff());
-      expect(graphSections[1].color, AppColors.graphMediumValueColor);
+      expect(graphSections[1].color, AppColors.yellow);
       expect(graphSections[2].value, 16);
-      expect(graphSections[2].color, AppColors.graphHighValueColor);
+      expect(graphSections[2].color, AppColors.green);
       expect(graphSections[3].value, 5);
       expect(graphSections[3].color, Colors.transparent);
 
       expect(presenter.getYTDPerformance().value, 95);
-      expect(presenter.getYTDPerformance().color, AppColors.graphHighValueColor);
+      expect(presenter.getYTDPerformance().color, AppColors.green);
     });
   });
 
@@ -221,7 +221,7 @@ void main() {
 
       //then
       expect(presenter.getCurrentMonthPerformance().value, 40);
-      expect(presenter.getCurrentMonthPerformance().color, AppColors.graphLowValueColor);
+      expect(presenter.getCurrentMonthPerformance().color, AppColors.red);
     });
 
     test('getting current month performance value for medium performance', () async {
@@ -235,7 +235,7 @@ void main() {
 
       //then
       expect(presenter.getCurrentMonthPerformance().value, 70);
-      expect(presenter.getCurrentMonthPerformance().color, AppColors.graphMediumValueColor);
+      expect(presenter.getCurrentMonthPerformance().color, AppColors.yellow);
     });
 
     test('getting current month performance value for high performance', () async {
@@ -249,7 +249,7 @@ void main() {
 
       //then
       expect(presenter.getCurrentMonthPerformance().value, 95);
-      expect(presenter.getCurrentMonthPerformance().color, AppColors.graphHighValueColor);
+      expect(presenter.getCurrentMonthPerformance().color, AppColors.green);
     });
   });
 
@@ -265,7 +265,7 @@ void main() {
 
       //then
       expect(presenter.getCurrentMonthAttendancePerformance().value, 40);
-      expect(presenter.getCurrentMonthAttendancePerformance().color, AppColors.graphLowValueColor);
+      expect(presenter.getCurrentMonthAttendancePerformance().color, AppColors.red);
     });
 
     test('getting current month attendance performance value for medium performance', () async {
@@ -279,7 +279,7 @@ void main() {
 
       //then
       expect(presenter.getCurrentMonthAttendancePerformance().value, 70);
-      expect(presenter.getCurrentMonthAttendancePerformance().color, AppColors.graphMediumValueColor);
+      expect(presenter.getCurrentMonthAttendancePerformance().color, AppColors.yellow);
     });
 
     test('getting current month attendance performance value for high performance', () async {
@@ -293,7 +293,7 @@ void main() {
 
       //then
       expect(presenter.getCurrentMonthAttendancePerformance().value, 95);
-      expect(presenter.getCurrentMonthAttendancePerformance().color, AppColors.graphHighValueColor);
+      expect(presenter.getCurrentMonthAttendancePerformance().color, AppColors.green);
     });
   });
 }

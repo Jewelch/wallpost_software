@@ -155,7 +155,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
                 presenter.clearFiltersAndUpdateViews();
                 _filtersBarVisibilityNotifier.notify(false);
               },
-              child: Text("Cancel", style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.cautionColor)),
+              child: Text("Cancel", style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.red)),
             ),
             SizedBox(width: 12),
           ],
@@ -202,8 +202,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
           else
             return _getCompanyCard(presenter.getItemAtIndex(index));
         },
-        separatorBuilder: (BuildContext context, int index) =>
-            index == 0 ? Container() : Divider(color: AppColors.dividerColor),
+        separatorBuilder: (BuildContext context, int index) => index == 0 ? Container() : Divider(),
       ),
     );
   }

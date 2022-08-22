@@ -116,7 +116,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
               child: Center(
                 child: RoundedIconButton(
                   width: 100,
-                  backgroundColor: AppColors.greenButtonColor,
+                  backgroundColor: AppColors.green,
                   iconName: 'assets/icons/check_mark_icon.svg',
                   iconSize: 32,
                   onPressed: () => Navigator.of(context).pop(files),

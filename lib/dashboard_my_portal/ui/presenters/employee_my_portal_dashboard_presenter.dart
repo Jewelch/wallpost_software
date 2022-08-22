@@ -57,15 +57,15 @@ class EmployeeMyPortalDashboardPresenter {
     return [
       GraphValue(
         _employeeMyPortalData.lowPerformanceCutoff(),
-        AppColors.graphLowValueColor.withOpacity(0.3),
+        AppColors.red.withOpacity(0.3),
       ),
       GraphValue(
         _employeeMyPortalData.mediumPerformanceCutoff() - _employeeMyPortalData.lowPerformanceCutoff(),
-        AppColors.graphMediumValueColor.withOpacity(0.3),
+        AppColors.yellow.withOpacity(0.3),
       ),
       GraphValue(
         100 - _employeeMyPortalData.mediumPerformanceCutoff(),
-        AppColors.graphHighValueColor.withOpacity(0.3),
+        AppColors.green.withOpacity(0.3),
       ),
     ];
   }
@@ -75,7 +75,7 @@ class EmployeeMyPortalDashboardPresenter {
       return [
         GraphValue(
           _employeeMyPortalData.ytdPerformance.toInt(),
-          AppColors.graphLowValueColor,
+          AppColors.red,
         ),
         GraphValue(
           100 - _employeeMyPortalData.ytdPerformance.toInt(),
@@ -86,11 +86,11 @@ class EmployeeMyPortalDashboardPresenter {
       return [
         GraphValue(
           _employeeMyPortalData.lowPerformanceCutoff(),
-          AppColors.graphLowValueColor,
+          AppColors.red,
         ),
         GraphValue(
           _employeeMyPortalData.ytdPerformance.toInt() - _employeeMyPortalData.lowPerformanceCutoff(),
-          AppColors.graphMediumValueColor,
+          AppColors.yellow,
         ),
         GraphValue(
           100 - _employeeMyPortalData.ytdPerformance.toInt(),
@@ -101,15 +101,15 @@ class EmployeeMyPortalDashboardPresenter {
       return [
         GraphValue(
           _employeeMyPortalData.lowPerformanceCutoff(),
-          AppColors.graphLowValueColor,
+          AppColors.red,
         ),
         GraphValue(
           _employeeMyPortalData.mediumPerformanceCutoff() - _employeeMyPortalData.lowPerformanceCutoff(),
-          AppColors.graphMediumValueColor,
+          AppColors.yellow,
         ),
         GraphValue(
           _employeeMyPortalData.ytdPerformance.toInt() - _employeeMyPortalData.mediumPerformanceCutoff(),
-          AppColors.graphHighValueColor,
+          AppColors.green,
         ),
         GraphValue(
           100 - _employeeMyPortalData.ytdPerformance.toInt(),
@@ -123,17 +123,17 @@ class EmployeeMyPortalDashboardPresenter {
     if (_employeeMyPortalData.isYTDPerformanceLow()) {
       return GraphValue(
         _employeeMyPortalData.ytdPerformance.toInt(),
-        AppColors.graphLowValueColor,
+        AppColors.red,
       );
     } else if (_employeeMyPortalData.isYTDPerformanceMedium()) {
       return GraphValue(
         _employeeMyPortalData.ytdPerformance.toInt(),
-        AppColors.graphMediumValueColor,
+        AppColors.yellow,
       );
     } else {
       return GraphValue(
         _employeeMyPortalData.ytdPerformance.toInt(),
-        AppColors.graphHighValueColor,
+        AppColors.green,
       );
     }
   }
@@ -142,17 +142,17 @@ class EmployeeMyPortalDashboardPresenter {
     if (_employeeMyPortalData.isCurrentMonthPerformanceLow()) {
       return GraphValue(
         _employeeMyPortalData.currentMonthPerformance.toInt(),
-        AppColors.graphLowValueColor,
+        AppColors.red,
       );
     } else if (_employeeMyPortalData.isCurrentMonthPerformanceMedium()) {
       return GraphValue(
         _employeeMyPortalData.currentMonthPerformance.toInt(),
-        AppColors.graphMediumValueColor,
+        AppColors.yellow,
       );
     } else {
       return GraphValue(
         _employeeMyPortalData.currentMonthPerformance.toInt(),
-        AppColors.graphHighValueColor,
+        AppColors.green,
       );
     }
   }
@@ -161,17 +161,17 @@ class EmployeeMyPortalDashboardPresenter {
     if (_employeeMyPortalData.isCurrentMonthAttendancePerformanceLow()) {
       return GraphValue(
         _employeeMyPortalData.currentMonthAttendancePerformance.toInt(),
-        AppColors.graphLowValueColor,
+        AppColors.red,
       );
     } else if (_employeeMyPortalData.isCurrentMonthAttendancePerformanceMedium()) {
       return GraphValue(
         _employeeMyPortalData.currentMonthAttendancePerformance.toInt(),
-        AppColors.graphMediumValueColor,
+        AppColors.yellow,
       );
     } else {
       return GraphValue(
         _employeeMyPortalData.currentMonthAttendancePerformance.toInt(),
-        AppColors.graphHighValueColor,
+        AppColors.green,
       );
     }
   }

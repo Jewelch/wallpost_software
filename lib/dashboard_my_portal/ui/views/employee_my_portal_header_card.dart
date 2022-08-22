@@ -28,7 +28,7 @@ class EmployeeMyPortalHeaderCard extends StatelessWidget {
               Text("My\nPerformance", style: TextStyles.headerCardHeadingTextStyle),
               Expanded(
                 child: Text(
-                  "YTD   ${AppYears.years().first}",
+                  "YTD   ${AppYears().years().last}",
                   textAlign: TextAlign.end,
                   style: TextStyles.headerCardSubHeadingTextStyle,
                 ),
@@ -45,14 +45,14 @@ class EmployeeMyPortalHeaderCard extends StatelessWidget {
               Expanded(
                 child: _performanceTile(
                   _presenter.getCurrentMonthPerformance(),
-                  "${AppYears.getCurrentMonth()}\nPerformance",
+                  "${AppYears().getCurrentMonth()}\nPerformance",
                 ),
               ),
               SizedBox(width: 12),
               Expanded(
                 child: _performanceTile(
                   _presenter.getCurrentMonthAttendancePerformance(),
-                  "${AppYears.getCurrentMonth()}\nAttendance",
+                  "${AppYears().getCurrentMonth()}\nAttendance",
                 ),
               ),
               SizedBox(width: 20),

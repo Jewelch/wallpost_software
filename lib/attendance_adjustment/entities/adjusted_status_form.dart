@@ -8,10 +8,10 @@ class AdjustedStatusForm implements JSONConvertible {
   final TimeOfDay? adjustedPunchOutTime;
 
   AdjustedStatusForm(
-      this.date,
-      this.adjustedPunchInTime,
-      this.adjustedPunchOutTime,
-      );
+    this.date,
+    this.adjustedPunchInTime,
+    this.adjustedPunchOutTime,
+  );
 
   @override
   Map<String, dynamic> toJson() {
@@ -19,8 +19,6 @@ class AdjustedStatusForm implements JSONConvertible {
       'date': date.yyyyMMddString(),
       'adjusted_punchin': adjustedPunchInTime != null ? adjustedPunchInTime!.HHmmString() : null,
       'adjusted_punchout': adjustedPunchOutTime != null ? adjustedPunchOutTime!.HHmmString() : null,
-
     };
-
   }
 }

@@ -6,16 +6,17 @@ import 'package:wallpost/company_core/entities/employee.dart';
 
 class AttendanceAdjustmentForm implements JSONConvertible {
   final Employee employee;
+  final String companyId;
   final DateTime date;
   final String reason;
   final TimeOfDay? adjustedPunchInTime;
   final TimeOfDay? adjustedPunchOutTime;
 
-
   final AttendanceStatus adjustedStatus;
 
   AttendanceAdjustmentForm(
     this.employee,
+    this.companyId,
     this.date,
     this.reason,
     this.adjustedPunchInTime,
@@ -33,7 +34,7 @@ class AttendanceAdjustmentForm implements JSONConvertible {
       'adjusted_punchout': adjustedPunchOutTime != null ? adjustedPunchOutTime!.HHmmString() : null,
       'adjusted_status': adjustedStatus.toRawString(),
       'employee_id': employee.v1Id,
-      'company_id': employee.companyId,
+      'company_id': companyId,
     };
   }
 }

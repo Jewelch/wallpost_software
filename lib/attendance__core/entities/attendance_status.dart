@@ -1,36 +1,43 @@
-const _PRESENT_STRING = "present";
-const _LATE_STRING = "late";
-const _ABSENT_STRING = "absent";
-const _NO_ACTION_STRING = "noaction";
-const _BREAK_STRING = "break";
-const _HALF_DAY_STRING = "halfday";
-const _EARLY_LEAVE_STRING = "earlyleave";
-const _ON_TIME_STRING = "ontime";
+const _PRESENT_STRING = "PRESENT";
+const _LATE_STRING = "LATE";
+const _ABSENT_STRING = "ABSENT";
+const _NO_ACTION_STRING = "NOACTION";
+const _BREAK_STRING = "BREAK";
+const _HALF_DAY_STRING = "HALFDAY";
+const _EARLY_LEAVE_STRING = "EARLYLEAVE";
+const _ON_TIME_STRING = "ONTIME";
 
-enum AttendanceStatus { Present, Late, Absent, NoAction, Break, HalfDay, EarlyLeave, OnTime }
+enum AttendanceStatus {
+  Present,
+  Late,
+  Absent,
+  NoAction,
+  Break,
+  HalfDay,
+  EarlyLeave,
+  OnTime;
 
-AttendanceStatus? initializeAttendanceStatusFromString(String string) {
-  if (string.toLowerCase() == _PRESENT_STRING) {
-    return AttendanceStatus.Present;
-  } else if (string.toLowerCase() == _LATE_STRING) {
-    return AttendanceStatus.Late;
-  } else if (string.toLowerCase() == _ABSENT_STRING) {
-    return AttendanceStatus.Absent;
-  } else if (string.toLowerCase() == _NO_ACTION_STRING) {
-    return AttendanceStatus.NoAction;
-  } else if (string.toLowerCase() == _BREAK_STRING) {
-    return AttendanceStatus.Break;
-  } else if (string.toLowerCase() == _HALF_DAY_STRING) {
-    return AttendanceStatus.HalfDay;
-  } else if (string.toLowerCase() == _EARLY_LEAVE_STRING) {
-    return AttendanceStatus.EarlyLeave;
-  } else if (string.toLowerCase() == _ON_TIME_STRING) {
-    return AttendanceStatus.OnTime;
+  static AttendanceStatus? initFromString(String string) {
+    if (string == _PRESENT_STRING) {
+      return AttendanceStatus.Present;
+    } else if (string == _LATE_STRING) {
+      return AttendanceStatus.Late;
+    } else if (string == _ABSENT_STRING) {
+      return AttendanceStatus.Absent;
+    } else if (string == _NO_ACTION_STRING) {
+      return AttendanceStatus.NoAction;
+    } else if (string == _BREAK_STRING) {
+      return AttendanceStatus.Break;
+    } else if (string == _HALF_DAY_STRING) {
+      return AttendanceStatus.HalfDay;
+    } else if (string == _EARLY_LEAVE_STRING) {
+      return AttendanceStatus.EarlyLeave;
+    } else if (string == _ON_TIME_STRING) {
+      return AttendanceStatus.OnTime;
+    }
+    return null;
   }
-  return null;
-}
 
-extension AttendanceStatusExtension on AttendanceStatus {
   String toRawString() {
     switch (this) {
       case AttendanceStatus.Present:

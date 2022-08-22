@@ -59,7 +59,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
             } else if (viewType == ERROR_VIEW) {
               return _errorAndRetryView();
             } else if (viewType == NO_MATCHING_ITEMS_VIEW) {
-              return noMatchingItemsView();
+              return _noMatchingItemsView();
             } else if (viewType == DATA_VIEW) {
               return _dataView();
             }
@@ -88,7 +88,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
     );
   }
 
-  Column noMatchingItemsView() {
+  Column _noMatchingItemsView() {
     return Column(
       children: [
         SizedBox(height: 20),
@@ -122,7 +122,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
                 scrollDirection: Axis.vertical,
                 itemCount: _presenter.getNumberOfRows(),
                 itemBuilder: (context, index) {
-                  return _item(_presenter.getItemAtIndex(index));
+                  return _listItem(_presenter.getItemAtIndex(index));
                 }),
           ),
         ),
@@ -130,33 +130,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
     );
   }
 
-  Widget _companyAndModuleFilter() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        children: [
-          if (_presenter.shouldShowCompanyFilter())
-            Expanded(
-              child: DropdownFilter(
-                items: _presenter.getCompanyNames(),
-                selectedValue: _presenter.getSelectedCompanyName(),
-                onChanged: (companyName) => _presenter.filter(companyName: companyName),
-              ),
-            ),
-          if (_presenter.shouldShowCompanyFilter()) SizedBox(width: 12),
-          Expanded(
-            child: DropdownFilter(
-              items: _presenter.getModuleNames(),
-              selectedValue: _presenter.getSelectedModuleName(),
-              onChanged: (moduleName) => _presenter.filter(moduleName: moduleName),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _item(AggregatedApproval aggregatedApproval) {
+  Widget _listItem(AggregatedApproval aggregatedApproval) {
     return Container(
       height: 90,
       margin: EdgeInsets.only(top: 16, left: 12, right: 12),
@@ -210,6 +184,32 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
             SizedBox(width: 12),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _companyAndModuleFilter() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: [
+          if (_presenter.shouldShowCompanyFilter())
+            Expanded(
+              child: DropdownFilter(
+                items: _presenter.getCompanyNames(),
+                selectedValue: _presenter.getSelectedCompanyName(),
+                onChanged: (companyName) => _presenter.filter(companyName: companyName),
+              ),
+            ),
+          if (_presenter.shouldShowCompanyFilter()) SizedBox(width: 12),
+          Expanded(
+            child: DropdownFilter(
+              items: _presenter.getModuleNames(),
+              selectedValue: _presenter.getSelectedModuleName(),
+              onChanged: (moduleName) => _presenter.filter(moduleName: moduleName),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,23 +1,23 @@
-abstract class AttendanceAdjustmentView{
-  void showLoader();
+abstract class AttendanceAdjustmentView {
+  void showAdjustedStatusLoader();
 
-  void hideLoader();
+  void updateAdjustedPunchInAndOutTime();
 
-  void showStatusLoader();
-
-  void hideStatusLoader();
-
-  void clearError();
+  void onDidFailToLoadAdjustedStatus(String title, String message);
 
   void onDidLoadAdjustedStatus();
 
-  void onGetAdjustedStatusFailed(String title, String userReadableMessage);
+  void notifyNoAdjustmentMade();
 
-  void notifyInvalidReason(String message);
+  void notifyInvalidReason();
 
-  void notifyInvalidAdjustedStatus(String title, String userReadableMessage);
+  void clearAdjustedTimeInputError();
 
-  void onAdjustAttendanceSuccess(String title, String message);
+  void clearReasonInputError();
 
-  void onAdjustAttendanceFailed(String title, String userReadableMessage);
+  void showFormSubmissionLoader();
+
+  void onDidFailToAdjustAttendance(String title, String message);
+
+  void onDidAdjustAttendanceSuccessfully(String title, String message);
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-class LoginTextField extends StatelessWidget {
+class FormTextField extends StatelessWidget {
   final String? hint;
   final bool obscureText;
   final String? errorText;
@@ -13,7 +13,7 @@ class LoginTextField extends StatelessWidget {
   final int? minLines;
   final int? maxLines;
 
-  LoginTextField({
+  FormTextField({
     this.hint,
     this.obscureText = false,
     this.errorText,
@@ -69,12 +69,9 @@ class LoginTextField extends StatelessWidget {
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(
-              color: AppColors.textFieldErrorBorderColor,
-              width: 1,
-            ),
+            borderSide: BorderSide(color: AppColors.red, width: 1),
           ),
-          errorStyle: TextStyle(fontSize: 14, color: AppColors.textFieldErrorBorderColor),
+          errorStyle: TextStyle(fontSize: 14, color: AppColors.red),
         ),
       ),
     );

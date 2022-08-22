@@ -1,91 +1,98 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dart';
 import 'package:wallpost/attendance_adjustment/services/attendance_list_provider.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_list_view.dart';
 
+import '../../../_shared/constants/app_colors.dart';
 import '../../../attendance__core/entities/attendance_status.dart';
 
 class AttendanceListPresenter {
   final AttendanceListView _view;
   final AttendanceListProvider _attendanceListProvider;
+  final AppYears _yearsAndMonthsProvider;
   List<AttendanceListItem> _attendanceList = [];
 
-  final Color presentColor = Color.fromRGBO(43, 186, 104, 1.0);
-  final Color absentColor = Colors.red;
-  final Color lateColor = Colors.orangeAccent;
-  late int _selectedYear = DateTime.now().year;
-  late String _selectedMonth = AppYears.currentAndPastMonthsOfTheCurrentYear(_selectedYear).last;
+  late int _selectedYear;
+  late String _selectedMonth;
 
   AttendanceListPresenter(this._view)
       : _attendanceListProvider = AttendanceListProvider(),
-        _selectedYear = AppYears.years().first;
+        _yearsAndMonthsProvider = AppYears() {
+    _initYearAndMonth();
+  }
 
-  AttendanceListPresenter.initWith(
-    this._view,
-    this._attendanceListProvider,
-  ) : _selectedYear = AppYears.years().first;
+  AttendanceListPresenter.initWith(this._view, this._attendanceListProvider, this._yearsAndMonthsProvider) {
+    _initYearAndMonth();
+  }
+
+  void _initYearAndMonth() {
+    _selectedYear = _yearsAndMonthsProvider.years().last;
+    _selectedMonth = _yearsAndMonthsProvider.currentAndPastMonthsOfTheCurrentYear(_selectedYear).last;
+  }
 
   //MARK: Function to load the attendance_punch_in_out list
 
   Future<void> loadAttendanceList() async {
     if (_attendanceListProvider.isLoading) return;
 
-    _attendanceList.clear();
     _view.showLoader();
     try {
-      var monthNumber = AppYears.currentAndPastMonthsOfTheCurrentYear(_selectedYear).indexOf((_selectedMonth)) + 1;
-      var attendanceList = await _attendanceListProvider.get(monthNumber, _selectedYear);
-      _attendanceList.addAll(attendanceList);
+      var monthNumber = getMonthsListOfSelectedYear().indexOf((_selectedMonth)) + 1;
+      _attendanceList = await _attendanceListProvider.get(monthNumber, _selectedYear);
 
       if (_attendanceList.isNotEmpty) {
-        _view.showAttendanceList(_attendanceList);
+        _view.onDidLoadAttendanceList();
       } else {
-        _view.showNoListMessage("There is no attendance for $_selectedMonth $_selectedYear.\n\nTap here to reload.");
+        _view.showNoAttendanceMessage(
+            "There is no attendance for $_selectedMonth $_selectedYear.\n\nTap here to reload.");
       }
-      _view.hideLoader();
     } on WPException catch (e) {
-      _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
-      _view.hideLoader();
+      _view.onDidFailToLoadAttendanceList("${e.userReadableMessage}\n\nTap here to reload.");
     }
   }
 
-  //MARK: Function to refresh the attendance_punch_in_out list
+  //MARK: Functions to get list details
 
-  refresh() {
-    _attendanceListProvider.reset();
-    loadAttendanceList();
+  int getNumberOfListItems() {
+    return _attendanceList.length;
   }
 
-  //MARK: Functions to select year and month filters
-
-  void selectYear(int year) {
-    _selectedYear = year;
-    refresh();
+  AttendanceListItem getItemAtIndex(int index) {
+    return _attendanceList[index];
   }
 
-  void selectMonth(String month) {
-    _selectedMonth = month;
-    refresh();
+  //MARK: Functions to get list item details
+
+  String getListItemTitle(AttendanceListItem attendanceListItem) {
+    if (attendanceListItem.status == AttendanceStatus.Absent) {
+      return _getDayName(attendanceListItem.date);
+    } else {
+      return '${_getDayName(attendanceListItem.date)}, ${_convertTimeToString(attendanceListItem.punchInTime)} to ${_convertTimeToString(attendanceListItem.punchOutTime)}';
+    }
   }
 
-  //MARK: Getters
-
-  List<int> getYearsList() {
-    return AppYears.years();
+  String getMonth(AttendanceListItem attendanceListItem) {
+    return DateFormat('MMM').format(attendanceListItem.date);
   }
 
-  List<String> getMonthsList() {
-    return AppYears.currentAndPastMonthsOfTheCurrentYear(_selectedYear);
+  String getDay(AttendanceListItem attendanceListItem) {
+    return DateFormat('dd').format(attendanceListItem.date);
   }
 
-  String getSelectedMonth() {
-    return _selectedMonth;
+  String _getDayName(DateTime dateTime) {
+    return DateFormat('EEEE').format(dateTime);
   }
 
-  int getSelectedYear() {
-    return _selectedYear;
+  String _convertTimeToString(DateTime? time) {
+    if (time == null) return '';
+    return DateFormat('hh:mm a').format(time);
+  }
+
+  String getStatus(AttendanceListItem attendanceListItem) {
+    return attendanceListItem.status.toReadableString();
   }
 
   Color getStatusColorForItem(AttendanceListItem attendanceItem) {
@@ -94,13 +101,50 @@ class AttendanceListPresenter {
       case AttendanceStatus.NoAction:
       case AttendanceStatus.OnTime:
       case AttendanceStatus.Break:
-        return presentColor;
+        return AppColors.green;
       case AttendanceStatus.Late:
       case AttendanceStatus.HalfDay:
       case AttendanceStatus.EarlyLeave:
-        return lateColor;
+        return AppColors.yellow;
       case AttendanceStatus.Absent:
-        return absentColor;
+        return AppColors.red;
     }
+  }
+
+  String getApprovalInfo(AttendanceListItem attendanceListItem) {
+    if (attendanceListItem.isApprovalPending() && attendanceListItem.approverName != null) {
+      return "Pending Approval with ${attendanceListItem.approverName}";
+    }
+
+    return "";
+  }
+
+  //MARK: Functions to get and select filters
+
+  List<String> getYearsList() {
+    return _yearsAndMonthsProvider.years().map((e) => "$e").toList();
+  }
+
+  List<String> getMonthsListOfSelectedYear() {
+    return _yearsAndMonthsProvider.currentAndPastMonthsOfTheCurrentYear(_selectedYear);
+  }
+
+  Future<void> selectYear(int year) async {
+    _selectedYear = year;
+    if (!getMonthsListOfSelectedYear().contains(_selectedMonth)) _selectedMonth = getMonthsListOfSelectedYear().last;
+    await loadAttendanceList();
+  }
+
+  Future<void> selectMonth(String month) async {
+    _selectedMonth = month;
+    await loadAttendanceList();
+  }
+
+  String getSelectedMonth() {
+    return _selectedMonth;
+  }
+
+  String getSelectedYear() {
+    return "$_selectedYear";
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
+import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_screen.dart';
 
 import '../../../_common_widgets/banners/bottom_banner.dart';
 import '../../../_common_widgets/custom_shapes/curve_bottom_to_top.dart';
@@ -142,7 +143,15 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
               color: Colors.white,
               child: TabChips(
                 titles: ["Leave", "Expense", "Payroll Adjustment"],
-                onItemSelected: (index) => {},
+                onItemSelected: (index) {
+                  if (index == 0) {
+                    //TODO
+                  } else if (index == 1) {
+                    //TODO
+                  } else if (index == 2) {
+                    ScreenPresenter.present(AttendanceListScreen(), context);
+                  }
+                },
               ),
             ),
           ],
