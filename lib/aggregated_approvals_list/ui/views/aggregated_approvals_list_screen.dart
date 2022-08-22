@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/filter_views/dropdown_filter.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/aggregated_approvals_list/ui/presenters/aggregated_approvals_list_presenter.dart';
@@ -11,6 +12,7 @@ import 'package:wallpost/aggregated_approvals_list/ui/views/aggregated_approvals
 
 import '../../../_common_widgets/buttons/rounded_back_button.dart';
 import '../../../_shared/extensions/color_utils.dart';
+import '../../../attendance_adjustment_approval/ui/attendance_adjustment_approval_list_screen.dart';
 import '../../entities/aggregated_approval.dart';
 
 class AggregatedApprovalsListScreen extends StatefulWidget {
@@ -139,7 +141,11 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
         border: Border.all(width: 1, color: AppColors.listItemBorderColor),
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          if (aggregatedApproval.isAttendanceAdjustmentApproval()) {
+            ScreenPresenter.present(AttendanceAdjustmentApprovalListScreen(), context);
+          }
+        },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

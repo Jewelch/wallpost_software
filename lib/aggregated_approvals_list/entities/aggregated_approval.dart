@@ -8,7 +8,6 @@ class AggregatedApproval extends JSONInitializable {
   late String _companyName;
   late String _approvalType;
   late String _module;
-  late String _moduleId;
   late String _moduleColor;
   late int _approvalCount;
 
@@ -19,12 +18,23 @@ class AggregatedApproval extends JSONInitializable {
       _companyName = sift.readStringFromMap(jsonMap, 'companyName');
       _approvalType = sift.readStringFromMap(jsonMap, 'approvalType');
       _module = sift.readStringFromMap(jsonMap, 'module');
-      _moduleId = sift.readStringFromMap(jsonMap, 'moduleId');
       _moduleColor = sift.readStringFromMap(jsonMap, 'moduleColor');
       _approvalCount = sift.readNumberFromMap(jsonMap, 'approvalCount').toInt();
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Approval response. Error message - ${e.errorMessage}');
     }
+  }
+
+  bool isAttendanceAdjustmentApproval() {
+    return _approvalType == "Attendance Adjustment";
+  }
+
+  bool isExpenseRequestApproval() {
+    return _approvalType == "́Expense";
+  }
+
+  bool isLeaveRequestApproval() {
+    return _approvalType == "Leave";
   }
 
   num get companyId => _companyId;
@@ -34,8 +44,6 @@ class AggregatedApproval extends JSONInitializable {
   String get approvalType => _approvalType;
 
   String get module => _module;
-
-  String get moduleId => _moduleId;
 
   String get moduleColor => _moduleColor;
 

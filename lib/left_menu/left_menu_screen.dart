@@ -89,7 +89,7 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
                 alignment: Alignment.topCenter,
                 imageUrl: CurrentUserProvider().getCurrentUser().profileImageUrl,
                 placeholder: (context, url) => Container(color: AppColors.defaultColorDarkContrastColor),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+                errorWidget: (context, url, error) => Container(color: AppColors.defaultColorDarkContrastColor),
               ),
             ),
           ),

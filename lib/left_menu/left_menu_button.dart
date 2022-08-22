@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -23,13 +24,12 @@ class LeftMenuButton extends StatelessWidget {
               child: SizedBox(
                 width: 40,
                 height: 40,
-                child: Container(
-                  child: FadeInImage.assetNetwork(
-                    placeholder: 'assets/logo/placeholder.jpg',
-                    image: profileImageUrl,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topCenter,
-                  ),
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                  imageUrl: profileImageUrl,
+                  placeholder: (context, url) => Container(color: AppColors.defaultColorDarkContrastColor),
+                  errorWidget: (context, url, error) => Container(color: AppColors.defaultColorDarkContrastColor),
                 ),
               ),
             ),
