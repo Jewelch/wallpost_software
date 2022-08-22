@@ -1,11 +1,11 @@
 const _HR_MODULE_STRING = "hr";
 
 enum Module {
-  Hr,
-}
+  Hr;
 
-Module? initializeModuleFromString(String string) {
-  if (string.toLowerCase() == _HR_MODULE_STRING) return Module.Hr;
+  static Module? initFromString(String string) {
+    if (string.toLowerCase() == _HR_MODULE_STRING) return Module.Hr;
 
-  return null;
+    return null;
+  }
 }

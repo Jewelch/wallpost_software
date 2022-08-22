@@ -55,7 +55,7 @@ class Company extends JSONInitializable {
   List<Module> _initModules(List<String> moduleStrings) {
     List<Module> modules = [];
     moduleStrings.forEach((moduleString) {
-      var module = initializeModuleFromString(moduleString);
+      var module = Module.initFromString(moduleString);
       if (module != null) modules.add(module);
     });
     return modules;
