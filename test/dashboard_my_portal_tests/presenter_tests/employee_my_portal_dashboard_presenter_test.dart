@@ -8,8 +8,9 @@ import 'package:wallpost/dashboard_my_portal/services/employee_my_portal_data_pr
 import 'package:wallpost/dashboard_my_portal/ui/presenters/employee_my_portal_dashboard_presenter.dart';
 import 'package:wallpost/dashboard_my_portal/ui/view_contracts/employee_my_portal_view.dart';
 
+import '../../_mocks/mock_company.dart';
+import '../../_mocks/mock_company_provider.dart';
 import '../../_mocks/mock_network_adapter.dart';
-import '../../expense_list_tests/services_tests/expense_list_provider_test.dart';
 import '../mocks.dart';
 
 class MockEmployeeMyPortalView extends Mock implements EmployeeMyPortalView {}
@@ -23,7 +24,7 @@ class MockEmployeeMyPortalDataProvider extends Mock implements EmployeeMyPortalD
 void main() {
   late MockEmployeeMyPortalView view;
   late MockEmployeeMyPortalDataProvider dataProvider;
-  late MockSelectedCompanyProvider companyProvider;
+  late MockCompanyProvider companyProvider;
   late EmployeeMyPortalDashboardPresenter presenter;
 
   void _verifyNoMoreInteractionsOnAllMocks() {
@@ -35,7 +36,7 @@ void main() {
   setUp(() {
     view = MockEmployeeMyPortalView();
     dataProvider = MockEmployeeMyPortalDataProvider();
-    companyProvider = MockSelectedCompanyProvider();
+    companyProvider = MockCompanyProvider();
     var company = MockCompany();
     when(() => company.id).thenReturn("someCompanyId");
     when(() => companyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
