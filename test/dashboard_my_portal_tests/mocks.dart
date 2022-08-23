@@ -21,7 +21,6 @@ class Mocks {
       }
     ],
     "financial_summary": {
-      "currency": "BGN",
       "actual_revenue_display": "0",
       "overall_revenue": 0,
       "cashAvailability": "9.9M",

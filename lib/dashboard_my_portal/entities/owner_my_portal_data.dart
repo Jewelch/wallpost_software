@@ -11,11 +11,12 @@ class OwnerMyPortalData extends JSONInitializable {
   late num _companyPerformance;
   late int _absentees;
 
-  OwnerMyPortalData.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  OwnerMyPortalData.fromJson(Map<String, dynamic> jsonMap, String currency) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       var aggregatedApprovalsMapList = sift.readMapListFromMap(jsonMap, 'aggregated_approvals');
       var financialSummaryMap = sift.readMapFromMap(jsonMap, 'financial_summary');
+      financialSummaryMap["currency"] = currency;
       _aggregatedApprovals = _initAggregatedApprovals(aggregatedApprovalsMapList);
       _financialSummary = FinancialSummary.fromJson(financialSummaryMap);
       _companyPerformance = sift.readNumberFromMap(jsonMap, 'company_performance');

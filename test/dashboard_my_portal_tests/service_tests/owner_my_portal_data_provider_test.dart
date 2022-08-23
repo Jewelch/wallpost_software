@@ -18,6 +18,7 @@ void main() {
   setUpAll(() {
     var company = MockCompany();
     when(() => company.id).thenReturn("someCompanyId");
+    when(() => company.currency).thenReturn("USD");
     when(() => mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
   });
 
@@ -46,7 +47,7 @@ void main() {
   test('response is ignored if it is from another session', () async {
     var didReceiveResponseForTheSecondRequest = false;
 
-    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 50);
+    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 200);
     myPortalDataProvider.get().then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');

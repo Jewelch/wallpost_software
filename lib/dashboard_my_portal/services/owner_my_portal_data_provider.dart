@@ -43,54 +43,10 @@ class OwnerMyPortalDataProvider {
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
-    //TODO: uncomment the next line and remove hardcoded map
-    // var responseMap = apiResponse.data as Map<String, dynamic>;
-
-    var responseMap = {
-      "aggregated_approvals": [
-        {
-          "comapnyId": 13,
-          "companyName": "Smart Management IT Solutions",
-          "approvalType": "Leave Request",
-          "module": "hr",
-          "moduleId": "hr",
-          "moduleColor": "#f2b33d",
-          "approvalCount": 8
-        },
-        {
-          "comapnyId": 13,
-          "companyName": "Smart Management IT Solutions ",
-          "approvalType": "Expense Request",
-          "module": "hr",
-          "moduleId": "hr",
-          "moduleColor": "#f2b33d",
-          "approvalCount": 4
-        },
-        {
-          "comapnyId": 13,
-          "companyName": "Smart Management IT Solutions ",
-          "approvalType": "Payroll Adjustment",
-          "module": "hr",
-          "moduleId": "hr",
-          "moduleColor": "#f2b33d",
-          "approvalCount": 6
-        },
-      ],
-      "financial_summary": {
-        "currency": "BGN",
-        "actual_revenue_display": "0",
-        "overall_revenue": 0,
-        "cashAvailability": "9.9M",
-        "receivableOverdue": "32.3K",
-        "payableOverdue": "67.3K",
-        "profitLoss": "14.7K",
-        "profitLossPerc": "51.854325587935"
-      },
-      "company_performance": 80,
-      "absentees": 23
-    };
+    var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
-      return OwnerMyPortalData.fromJson(responseMap);
+      var currency = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
+      return OwnerMyPortalData.fromJson(responseMap, currency);
     } on MappingException catch (_) {
       throw InvalidResponseException();
     }

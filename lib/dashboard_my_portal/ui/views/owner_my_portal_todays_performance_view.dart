@@ -110,8 +110,6 @@ class OwnerMyPerformanceTodaysPerformanceView extends StatelessWidget {
   //MARK: Functions to create staff absences tile
 
   Widget _staffAbsencesTile() {
-    if (_presenter.getAbsenteesData().numberOfAbsentees == 0) return Container();
-
     return _performanceTile(
       content: Container(
         height: 60,

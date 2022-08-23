@@ -43,44 +43,7 @@ class EmployeeMyPortalDataProvider {
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
-    //TODO: uncomment the next line and remove hardcoded map
-    // var responseMap = apiResponse.data as Map<String, dynamic>;
-
-    var responseMap = {
-      "aggregated_approvals": [
-        {
-          "comapnyId": 13,
-          "companyName": "Smart Management IT Solutions",
-          "approvalType": "Leave Request",
-          "module": "hr",
-          "moduleId": "hr",
-          "moduleColor": "#f2b33d",
-          "approvalCount": 8
-        },
-        {
-          "comapnyId": 3,
-          "companyName": "Smart Management IT Solutions ",
-          "approvalType": "Expense Request",
-          "module": "hr",
-          "moduleId": "hr",
-          "moduleColor": "#f2b33d",
-          "approvalCount": 4
-        }
-      ],
-      "financial_summary": {
-        "currency": "BGN",
-        "actual_revenue_display": "0",
-        "overall_revenue": 0,
-        "cashAvailability": "9.9M",
-        "receivableOverdue": "32.3K",
-        "payableOverdue": "67.3K",
-        "profitLoss": "14.7K",
-        "profitLossPerc": "51.854325587935"
-      },
-      "ytd_performance": 80.5,
-      "current_month_performance": 36.5,
-      "current_month_attendance_percentage": 73.5
-    };
+    var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
       return EmployeeMyPortalData.fromJson(responseMap);
     } on MappingException catch (_) {

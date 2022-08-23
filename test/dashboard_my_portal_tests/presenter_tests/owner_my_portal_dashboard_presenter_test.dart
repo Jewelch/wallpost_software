@@ -155,7 +155,7 @@ void main() {
 
   test('getting cutoff graph sections', () async {
     //given
-    var data = OwnerMyPortalData.fromJson(Mocks.ownerMyPortalDataResponse);
+    var data = OwnerMyPortalData.fromJson(Mocks.ownerMyPortalDataResponse, "USD");
     when(() => dataProvider.isLoading).thenReturn(false);
     when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
     await presenter.loadData();
@@ -178,7 +178,7 @@ void main() {
     //given
     var map = Mocks.ownerMyPortalDataResponse;
     map["company_performance"] = 40;
-    var data = OwnerMyPortalData.fromJson(map);
+    var data = OwnerMyPortalData.fromJson(map, "USD");
     when(() => dataProvider.isLoading).thenReturn(false);
     when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
     await presenter.loadData();
@@ -201,7 +201,7 @@ void main() {
     //given
     var map = Mocks.ownerMyPortalDataResponse;
     map["company_performance"] = 70;
-    var data = OwnerMyPortalData.fromJson(map);
+    var data = OwnerMyPortalData.fromJson(map, "USD");
     when(() => dataProvider.isLoading).thenReturn(false);
     when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
     await presenter.loadData();
@@ -226,7 +226,7 @@ void main() {
     //given
     var map = Mocks.ownerMyPortalDataResponse;
     map["company_performance"] = 95;
-    var data = OwnerMyPortalData.fromJson(map);
+    var data = OwnerMyPortalData.fromJson(map, "USD");
     when(() => dataProvider.isLoading).thenReturn(false);
     when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
     await presenter.loadData();

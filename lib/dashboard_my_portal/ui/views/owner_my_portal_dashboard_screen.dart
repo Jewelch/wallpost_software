@@ -12,6 +12,7 @@ import '../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../_shared/constants/app_colors.dart';
 import '../../../aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
+import '../../../attendance_adjustment/ui/views/attendance_list_screen.dart';
 import '../view_contracts/owner_my_portal_view.dart';
 
 class OwnerMyPortalDashboardScreen extends StatefulWidget {
@@ -87,7 +88,7 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
             children: [
               OwnerMyPortalHeaderCard(_presenter.getFinancialSummary()),
               OwnerMyPerformanceTodaysPerformanceView(_presenter),
-              SizedBox(height: 100),
+              SizedBox(height: 120),
             ],
           ),
         ),
@@ -107,9 +108,10 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
       children: [
         _requestsBar(),
         SizedBox(height: 20),
+        if (_presenter.getTotalApprovalCount() == 0) SizedBox(height: 10),
         if (_presenter.getTotalApprovalCount() > 0)
           BottomBanner(
-            approvalCount: 20,
+            approvalCount: _presenter.getTotalApprovalCount(),
             onTap: () => _presenter.goToAggregatedApprovalsScreen(),
           ),
       ],
@@ -131,13 +133,21 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
                 style: TextStyles.subTitleTextStyleBold.copyWith(color: AppColors.defaultColorDark),
               ),
             ),
+            SizedBox(height: 12),
             Container(
-              padding: EdgeInsets.only(top: 12),
               height: 52,
               color: Colors.white,
               child: TabChips(
                 titles: ["Leave", "Expense", "Payroll Adjustment"],
-                onItemSelected: (index) => {},
+                onItemSelected: (index) {
+                  if (index == 0) {
+                    //TODO
+                  } else if (index == 1) {
+                    //TODO
+                  } else if (index == 2) {
+                    ScreenPresenter.present(AttendanceListScreen(), context);
+                  }
+                },
               ),
             ),
           ],

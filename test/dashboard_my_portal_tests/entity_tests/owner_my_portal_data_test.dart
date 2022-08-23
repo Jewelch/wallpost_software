@@ -5,7 +5,7 @@ import '../mocks.dart';
 
 void main() {
   test('cutoff percentages', () {
-    var data = OwnerMyPortalData.fromJson(Mocks.ownerMyPortalDataResponse);
+    var data = OwnerMyPortalData.fromJson(Mocks.ownerMyPortalDataResponse, "USD");
 
     expect(data.lowPerformanceCutoff(), 65);
     expect(data.mediumPerformanceCutoff(), 79);
@@ -14,7 +14,7 @@ void main() {
     var lowPerformanceMap = Mocks.ownerMyPortalDataResponse;
     lowPerformanceMap['company_performance'] = 40;
 
-    var data = OwnerMyPortalData.fromJson(lowPerformanceMap);
+    var data = OwnerMyPortalData.fromJson(lowPerformanceMap, "USD");
 
     expect(data.isCompanyPerformanceLow(), true);
     expect(data.isCompanyPerformanceMedium(), false);
@@ -25,7 +25,7 @@ void main() {
     var lowPerformanceMap = Mocks.ownerMyPortalDataResponse;
     lowPerformanceMap['company_performance'] = 75;
 
-    var data = OwnerMyPortalData.fromJson(lowPerformanceMap);
+    var data = OwnerMyPortalData.fromJson(lowPerformanceMap, "USD");
 
     expect(data.isCompanyPerformanceLow(), false);
     expect(data.isCompanyPerformanceMedium(), true);
@@ -36,7 +36,7 @@ void main() {
     var lowPerformanceMap = Mocks.ownerMyPortalDataResponse;
     lowPerformanceMap['company_performance'] = 90;
 
-    var data = OwnerMyPortalData.fromJson(lowPerformanceMap);
+    var data = OwnerMyPortalData.fromJson(lowPerformanceMap, "USD");
 
     expect(data.isCompanyPerformanceLow(), false);
     expect(data.isCompanyPerformanceMedium(), false);

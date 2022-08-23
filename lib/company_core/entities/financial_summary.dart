@@ -15,12 +15,18 @@ class FinancialSummary extends JSONInitializable {
     try {
       _currency = sift.readStringFromMap(jsonMap, "currency");
       _profitLoss = sift.readStringFromMap(jsonMap, 'profitLoss');
-      _fundAvailability = sift.readStringFromMap(jsonMap, 'cashAvailability');
+      _fundAvailability = _readAvailableFunds(jsonMap);
       _receivableOverdue = sift.readStringFromMap(jsonMap, 'receivableOverdue');
       _payableOverdue = sift.readStringFromMap(jsonMap, 'payableOverdue');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast FinancialSummary response. Error message - ${e.errorMessage}');
     }
+  }
+
+  String _readAvailableFunds(Map<String, dynamic> jsonMap) {
+    var availableFunds = Sift().readStringFromMapWithDefaultValue(jsonMap, "cashAvailability", null);
+    if (availableFunds == null) availableFunds = Sift().readStringFromMap(jsonMap, 'fundAvailability');
+    return availableFunds;
   }
 
   bool isInProfit() {

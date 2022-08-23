@@ -51,24 +51,6 @@ void main() {
     }
   });
 
-  test('response is ignored if it is from another session', () async {
-    var didReceiveResponseForTheSecondRequest = false;
-
-    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 500);
-    breakEndMarker.endBreak(mockAttendanceDetails, mockLocation).then((_) {
-      fail('Received the response for the first request. '
-          'This response should be ignored as the session id has changed');
-    });
-
-    mockNetworkAdapter.succeed(successfulResponse);
-    breakEndMarker.endBreak(mockAttendanceDetails, mockLocation).then((_) {
-      didReceiveResponseForTheSecondRequest = true;
-    });
-
-    await Future.delayed(Duration(milliseconds: 100));
-    expect(didReceiveResponseForTheSecondRequest, true);
-  });
-
   test('does nothing when there is no active break', () async {
     mockNetworkAdapter.reset();
     mockNetworkAdapter.succeed(successfulResponse);
