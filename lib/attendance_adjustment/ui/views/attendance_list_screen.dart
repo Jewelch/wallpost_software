@@ -8,10 +8,10 @@ import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dar
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_list_presenter.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_list_view.dart';
 import 'package:wallpost/attendance_adjustment/ui/views/attendance_adjustment_screen.dart';
-import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_card.dart';
 import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_loader.dart';
 
 import '../../../_common_widgets/filter_views/dropdown_filter.dart';
+import 'attendance_list_item_card.dart';
 
 class AttendanceListScreen extends StatefulWidget {
   @override
@@ -144,7 +144,7 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
             child: DropdownFilter(
               items: presenter.getMonthsListOfSelectedYear(),
               selectedValue: presenter.getSelectedMonth(),
-              onChanged: (month) => presenter.selectMonth(month),
+              onDidSelectItemWithValue: (month) => presenter.selectMonth(month),
             ),
           ),
           SizedBox(width: 12),
@@ -152,7 +152,7 @@ class _AttendanceListScreenState extends State<AttendanceListScreen> implements 
             child: DropdownFilter(
               items: presenter.getYearsList(),
               selectedValue: presenter.getSelectedYear(),
-              onChanged: (year) => presenter.selectYear(int.parse(year)),
+              onDidSelectItemWithValue: (year) => presenter.selectYear(int.parse(year)),
             ),
           ),
         ],

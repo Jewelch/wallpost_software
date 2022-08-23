@@ -6,8 +6,8 @@ import 'package:wallpost/attendance_adjustment/entities/attendance_list_item.dar
 import 'package:wallpost/attendance_adjustment/services/attendance_list_provider.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_list_view.dart';
 
-import '../../../_shared/constants/app_colors.dart';
 import '../../../attendance__core/entities/attendance_status.dart';
+import '../../../attendance__core/utils/attendance_status_color.dart';
 
 class AttendanceListPresenter {
   final AttendanceListView _view;
@@ -96,19 +96,7 @@ class AttendanceListPresenter {
   }
 
   Color getStatusColorForItem(AttendanceListItem attendanceItem) {
-    switch (attendanceItem.status) {
-      case AttendanceStatus.Present:
-      case AttendanceStatus.NoAction:
-      case AttendanceStatus.OnTime:
-      case AttendanceStatus.Break:
-        return AppColors.green;
-      case AttendanceStatus.Late:
-      case AttendanceStatus.HalfDay:
-      case AttendanceStatus.EarlyLeave:
-        return AppColors.yellow;
-      case AttendanceStatus.Absent:
-        return AppColors.red;
-    }
+    return AttendanceStatusColor.getStatusColor(attendanceItem.status);
   }
 
   String getApprovalInfo(AttendanceListItem attendanceListItem) {

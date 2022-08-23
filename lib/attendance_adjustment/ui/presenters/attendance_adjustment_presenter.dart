@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/attendance__core/entities/attendance_status.dart';
@@ -11,6 +10,8 @@ import 'package:wallpost/attendance_adjustment/services/adjusted_status_provider
 import 'package:wallpost/attendance_adjustment/services/attendance_adjustment_submitter.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_adjustment_view.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
+
+import '../../../attendance__core/utils/attendance_status_color.dart';
 
 class AttendanceAdjustmentPresenter {
   final AttendanceAdjustmentView _view;
@@ -165,19 +166,7 @@ class AttendanceAdjustmentPresenter {
   }
 
   Color getAdjustedStatusColor() {
-    switch (_adjustedStatus) {
-      case AttendanceStatus.Present:
-      case AttendanceStatus.NoAction:
-      case AttendanceStatus.OnTime:
-      case AttendanceStatus.Break:
-        return AppColors.green;
-      case AttendanceStatus.Late:
-      case AttendanceStatus.HalfDay:
-      case AttendanceStatus.EarlyLeave:
-        return AppColors.yellow;
-      case AttendanceStatus.Absent:
-        return AppColors.red;
-    }
+    return AttendanceStatusColor.getStatusColor(_adjustedStatus);
   }
 
   String getApprovalInfo() {

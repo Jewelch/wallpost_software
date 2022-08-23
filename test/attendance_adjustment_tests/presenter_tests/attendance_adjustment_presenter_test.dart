@@ -104,10 +104,10 @@ void main() {
     _initPresenter();
 
     //then
-    expect(presenter.getPunchInTimeString(), "9:00 AM");
-    expect(presenter.getPunchOutTimeString(), "6:00 PM");
-    expect(presenter.getAdjustedPunchInTimeString(), "9:00 AM");
-    expect(presenter.getAdjustedPunchOutTimeString(), "6:00 PM");
+    expect(presenter.getPunchInTimeString(), "09:00 AM");
+    expect(presenter.getPunchOutTimeString(), "06:00 PM");
+    expect(presenter.getAdjustedPunchInTimeString(), "09:00 AM");
+    expect(presenter.getAdjustedPunchOutTimeString(), "06:00 PM");
     expect(presenter.getAdjustedStatus(), "Present");
   });
 

@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
-
-import '../buttons/rounded_icon_button.dart';
-import '../text_styles/text_styles.dart';
 
 class ModalSheetController {
   __ModalSheetScreenState? _state;
@@ -15,9 +13,9 @@ class ModalSheetController {
 
   bool get isAttached => _state != null;
 
-  void close() {
+  Future<void>? close() {
     assert(isAttached, "State not attached.");
-    _state?.close();
+    return _state?.close();
   }
 
   void dispose() {
@@ -26,59 +24,50 @@ class ModalSheetController {
 }
 
 class ModalSheetPresenter {
-  static Future<dynamic> present<T extends Object>({
+  static Future<dynamic> present({
     required BuildContext context,
-    required String title,
     required Widget content,
     required ModalSheetController controller,
+    bool shouldDismissOnTap = true,
   }) {
     return ScreenPresenter.present(
       _ModalSheetScreen(
         content: content,
-        title: title,
         controller: controller,
+        shouldDismissOnTap: shouldDismissOnTap,
       ),
       context,
-      slideDirection: SlideDirection.fromBottom,
+      slideDirection: SlideDirection.none,
     );
   }
 }
 
 class _ModalSheetScreen extends StatefulWidget {
   final Widget content;
-  final String title;
-  final ModalSheetController controller;
+  final ModalSheetController? controller;
+  final bool shouldDismissOnTap;
 
-  _ModalSheetScreen({
-    required this.content,
-    required this.title,
-    required this.controller,
-  });
+  const _ModalSheetScreen({required this.content, this.controller, required this.shouldDismissOnTap});
 
   @override
-  __ModalSheetScreenState createState() =>
-      __ModalSheetScreenState(modalSheetController: controller);
+  __ModalSheetScreenState createState() => __ModalSheetScreenState();
 }
 
 class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTickerProviderStateMixin {
-  ModalSheetController? _modalSheetController;
   late AnimationController _animationController;
   late Animation<Offset> offset;
-
-  __ModalSheetScreenState({ModalSheetController? modalSheetController}) {
-    if (modalSheetController != null) {
-      this._modalSheetController = modalSheetController;
-      _modalSheetController!._addState(this);
-    }
-  }
+  late Animation<double> opacity;
 
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _animationController.reverseDuration = Duration(milliseconds: 200);
-    offset = Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset.zero)
+    if (widget.controller != null) widget.controller!._addState(this);
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    _animationController.reverseDuration = const Duration(milliseconds: 200);
+    offset = Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero)
         .chain(CurveTween(curve: Curves.decelerate))
         .animate(_animationController);
+    opacity =
+        Tween<double>(begin: 0, end: 1.0).chain(CurveTween(curve: Curves.decelerate)).animate(_animationController);
     _animationController.forward();
     super.initState();
   }
@@ -96,9 +85,14 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
       backgroundColor: Colors.transparent,
       body: Stack(
         children: <Widget>[
-          Container(color: Colors.black.withOpacity(0.7)),
+          FadeTransition(
+            opacity: opacity,
+            child: Container(color: Colors.black.withOpacity(0.7)),
+          ),
           GestureDetector(
-            onTap: () => close(),
+            onTap: () {
+              if (widget.shouldDismissOnTap) close();
+            },
             child: Container(color: Colors.transparent),
           ),
           Column(
@@ -108,36 +102,13 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                 child: SlideTransition(
                   position: offset,
                   child: Container(
-                    constraints: BoxConstraints.loose(Size(double.infinity, 600)),
-                    color: Colors.white,
+                    constraints: BoxConstraints.loose(const Size(double.infinity, 700)),
+                    color: Colors.transparent,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          height: 60,
-                          padding: EdgeInsets.only(top: 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  widget.title,
-                                  style: TextStyles.screenTitleTextStyle,
-                                ),
-                              ),
-                              RoundedIconButton(
-                                iconName: 'assets/icons/close_icon.svg',
-                                iconSize: 20,
-                                onPressed: () => close(),
-                              ),
-                              SizedBox(width: 8),
-                            ],
-                          ),
-                        ),
-                        Divider(height: 1),
-                        Flexible(child: widget.content),
+                        CurveBottomToTop(),
+                        Flexible(child: Container(color: Colors.white, child: widget.content)),
                       ],
                     ),
                   ),
@@ -150,7 +121,7 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
     );
   }
 
-  close() {
-    _animationController.reverse().then((value) => Navigator.pop(context));
+  Future<void> close() {
+    return _animationController.reverse().then((value) => Navigator.pop(context));
   }
 }

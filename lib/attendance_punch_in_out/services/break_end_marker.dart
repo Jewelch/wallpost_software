@@ -24,19 +24,12 @@ class BreakEndMarker {
     isLoading = true;
 
     try {
-      var apiResponse = await _networkAdapter.put(apiRequest);
+      await _networkAdapter.put(apiRequest);
       isLoading = false;
-      _processResponse(apiResponse);
+      return null;
     } on APIException catch (exception) {
       isLoading = false;
       throw exception;
     }
-  }
-
-  Future<void> _processResponse(APIResponse apiResponse) async {
-    //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<void>().future;
-
-    return null;
   }
 }

@@ -12,6 +12,7 @@ class FormTextField extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final int? minLines;
   final int? maxLines;
+  final bool autoFocus;
 
   FormTextField({
     this.hint,
@@ -24,6 +25,7 @@ class FormTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.minLines = 1,
     this.maxLines = 1,
+    this.autoFocus = false,
   });
 
   @override
@@ -39,6 +41,7 @@ class FormTextField extends StatelessWidget {
         onFieldSubmitted: onFieldSubmitted,
         minLines: minLines,
         maxLines: maxLines,
+        autofocus: autoFocus,
         decoration: InputDecoration(
           isDense: true,
           fillColor: AppColors.textFieldBackgroundColor,

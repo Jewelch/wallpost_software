@@ -4,8 +4,6 @@ import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 class AttendanceListLoader extends StatelessWidget {
   const AttendanceListLoader({Key? key}) : super(key: key);
 
-  final Color primaryContrastColor = Colors.yellow;
-
   @override
   Widget build(BuildContext context) {
     return ShimmerEffect(

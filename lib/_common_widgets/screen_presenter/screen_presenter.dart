@@ -5,6 +5,7 @@ enum SlideDirection {
   fromRight,
   fromTop,
   fromBottom,
+  none,
 }
 
 class ScreenPresenter {

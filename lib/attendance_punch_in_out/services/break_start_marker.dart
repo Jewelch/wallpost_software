@@ -22,19 +22,12 @@ class BreakStartMarker {
     isLoading = true;
 
     try {
-      var apiResponse = await _networkAdapter.post(apiRequest);
+      await _networkAdapter.post(apiRequest);
       isLoading = false;
-      _processResponse(apiResponse);
+      return null;
     } on APIException catch (exception) {
       isLoading = false;
       throw exception;
     }
-  }
-
-  Future<void> _processResponse(APIResponse apiResponse) async {
-    //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<void>().future;
-
-    return null;
   }
 }

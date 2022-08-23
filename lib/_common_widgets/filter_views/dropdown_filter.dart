@@ -6,9 +6,15 @@ import '../../_shared/constants/app_colors.dart';
 class DropdownFilter extends StatelessWidget {
   final List<String> items;
   final String? selectedValue;
-  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onDidSelectItemWithValue;
+  final ValueChanged<int>? onDidSelectedItemAtIndex;
 
-  DropdownFilter({required this.items, this.selectedValue, this.onChanged});
+  DropdownFilter({
+    required this.items,
+    this.selectedValue,
+    this.onDidSelectItemWithValue,
+    this.onDidSelectedItemAtIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +35,9 @@ class DropdownFilter extends StatelessWidget {
         value: selectedValue,
         style: TextStyle(overflow: TextOverflow.fade),
         onChanged: (selectedValue) {
-          if (onChanged != null) onChanged!(selectedValue!);
+          if (selectedValue == null) return;
+          if (onDidSelectItemWithValue != null) onDidSelectItemWithValue!(selectedValue);
+          if (onDidSelectedItemAtIndex != null) onDidSelectedItemAtIndex!(items.indexOf(selectedValue));
         },
         underline: SizedBox(),
         dropdownColor: AppColors.filtersBackgroundColour,

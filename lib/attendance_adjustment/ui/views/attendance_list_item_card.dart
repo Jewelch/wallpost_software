@@ -10,8 +10,6 @@ class AttendanceListCard extends StatelessWidget {
   final AttendanceListItem attendanceListItem;
   final VoidCallback onPressed;
 
-  final Color labelColor = Colors.yellow;
-
   AttendanceListCard({
     required this.presenter,
     required this.attendanceListItem,

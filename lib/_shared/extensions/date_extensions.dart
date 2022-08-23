@@ -24,7 +24,7 @@ extension TimeExtension on TimeOfDay {
   }
 
   String hhmmaString() {
-    DateTime date = DateFormat("hh:mm").parse("${this.hour}:${this.minute}");
-    return DateFormat("h:mm a").format(date);
+    DateTime date = DateFormat("HH:mm").parse("${this.hour}:${this.minute}");
+    return DateFormat("hh:mm a").format(date);
   }
 }

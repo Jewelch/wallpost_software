@@ -10,46 +10,46 @@ class TextStyles {
 
   static get extraLargeTitleTextStyleBold => TextStyle(
         fontSize: 22,
-        color: Colors.black,
+        color: AppColors.textColorBlack,
         fontWeight: FontWeight.bold,
       );
 
   static get largeTitleTextStyleBold => TextStyle(
-        fontSize: 18,
-        color: Colors.black,
+    fontSize: 18,
+        color: AppColors.textColorBlack,
         fontWeight: FontWeight.bold,
       );
 
   static get titleTextStyle => TextStyle(
-        fontSize: 16,
-        color: Colors.black,
+    fontSize: 16,
+        color: AppColors.textColorBlack,
       );
 
   static get titleTextStyleBold => TextStyle(
-        fontSize: 16,
-        color: Colors.black,
+    fontSize: 16,
+        color: AppColors.textColorBlack,
         fontWeight: FontWeight.w600,
       );
 
   static get subTitleTextStyle => TextStyle(
-        fontSize: 14,
-        color: Colors.black,
+    fontSize: 14,
+        color: AppColors.textColorBlack,
       );
 
   static get subTitleTextStyleBold => TextStyle(
-        fontSize: 14,
-        color: Colors.black,
+    fontSize: 14,
+        color: AppColors.textColorBlack,
         fontWeight: FontWeight.w600,
       );
 
   static get labelTextStyle => TextStyle(
-        fontSize: 12,
-        color: Colors.grey,
+    fontSize: 12,
+        color: AppColors.textColorGray,
       );
 
   static get labelTextStyleBold => TextStyle(
-        fontSize: 12,
-        color: Colors.black,
+    fontSize: 12,
+        color: AppColors.textColorBlack,
         fontWeight: FontWeight.w600,
       );
 
@@ -68,8 +68,8 @@ class TextStyles {
       );
 
   static get headerCardMainValueTextStyle => TextStyle(
-        fontWeight: FontWeight.w700,
-        color: Colors.black,
+    fontWeight: FontWeight.w700,
+        color: AppColors.textColorBlack,
         fontSize: 28.0,
         overflow: TextOverflow.ellipsis,
       );
@@ -81,8 +81,8 @@ class TextStyles {
       );
 
   static get headerCardSubValueTextStyle => TextStyle(
-        fontWeight: FontWeight.w700,
-        color: Colors.black,
+    fontWeight: FontWeight.w700,
+        color: AppColors.textColorBlack,
         fontSize: 16.0,
         overflow: TextOverflow.ellipsis,
       );

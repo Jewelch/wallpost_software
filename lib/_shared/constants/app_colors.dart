@@ -6,6 +6,10 @@ class AppColors {
   static const Color defaultColorDark = Color.fromRGBO(0, 60, 129, 1.0);
   static const Color defaultColorDarkContrastColor = Color.fromRGBO(135, 169, 199, 1.0);
 
+  //MARK: Text colors
+  static const Color textColorBlack = Color.fromRGBO(39, 39, 39, 1.0);
+  static const Color textColorGray = Color.fromRGBO(160, 160, 160, 1.0);
+
   //MARK: Button colors
   static const Color disabledButtonColor = Color.fromRGBO(210, 210, 210, 1.0);
 
