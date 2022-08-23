@@ -250,7 +250,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> implements Compan
         if (shouldShowAttendanceWidget) {
           return Container(
             color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 30),
             child: AttendanceWidget(),
           );
         } else {
