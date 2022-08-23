@@ -5,10 +5,10 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_urls.dart';
 import 'package:wallpost/attendance_adjustment/services/attendance_list_provider.dart';
 
+import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_company_provider.dart';
 import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_network_adapter.dart';
-import '../../expense_list_tests/services_tests/expense_list_provider_test.dart';
 import '../mocks.dart';
 
 void main() {

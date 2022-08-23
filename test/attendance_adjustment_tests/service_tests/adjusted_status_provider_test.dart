@@ -7,10 +7,10 @@ import 'package:wallpost/attendance_adjustment/constants/attendance_adjustment_u
 import 'package:wallpost/attendance_adjustment/entities/adjusted_status_form.dart';
 import 'package:wallpost/attendance_adjustment/services/adjusted_status_provider.dart';
 
+import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_company_provider.dart';
 import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_network_adapter.dart';
-import '../../expense_list_tests/services_tests/expense_list_provider_test.dart';
 
 class MockAdjustedStatusForm extends Mock implements AdjustedStatusForm {}
 
@@ -90,7 +90,6 @@ void main() {
     }
   });
 
-
   test('throws InvalidResponseException when attendance status cannot be mapped', () async {
     mockNetworkAdapter.succeed('UNKNOWN STATUS');
 
@@ -101,8 +100,6 @@ void main() {
       expect(e is InvalidResponseException, true);
     }
   });
-
-
 
   test('success', () async {
     mockNetworkAdapter.succeed(successfulResponse);

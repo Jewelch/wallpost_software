@@ -10,10 +10,10 @@ import 'package:wallpost/attendance_adjustment/services/attendance_adjustment_su
 import 'package:wallpost/attendance_adjustment/ui/presenters/attendance_adjustment_presenter.dart';
 import 'package:wallpost/attendance_adjustment/ui/view_contracts/attendance_adjustment_view.dart';
 
+import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_company_provider.dart';
 import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_network_adapter.dart';
-import '../../expense_list_tests/services_tests/expense_list_provider_test.dart';
 import 'attendance_list_presenter_test.dart';
 
 class MockAttendanceAdjustmentView extends Mock implements AttendanceAdjustmentView {}
