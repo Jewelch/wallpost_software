@@ -4,7 +4,7 @@ import '../../_shared/exceptions/mapping_exception.dart';
 import '../../_shared/json_serialization_base/json_initializable.dart';
 
 class AggregatedApproval extends JSONInitializable {
-  late num _companyId;
+  late String _companyId;
   late String _companyName;
   late String _approvalType;
   late String _module;
@@ -14,7 +14,7 @@ class AggregatedApproval extends JSONInitializable {
   AggregatedApproval.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
     try {
       var sift = Sift();
-      _companyId = sift.readNumberFromMap(jsonMap, 'comapnyId');
+      _companyId = "${sift.readNumberFromMap(jsonMap, 'comapnyId')}";
       _companyName = sift.readStringFromMap(jsonMap, 'companyName');
       _approvalType = sift.readStringFromMap(jsonMap, 'approvalType');
       _module = sift.readStringFromMap(jsonMap, 'module');
@@ -37,7 +37,7 @@ class AggregatedApproval extends JSONInitializable {
     return _approvalType == "Leave";
   }
 
-  num get companyId => _companyId;
+  String get companyId => _companyId;
 
   String get companyName => _companyName;
 

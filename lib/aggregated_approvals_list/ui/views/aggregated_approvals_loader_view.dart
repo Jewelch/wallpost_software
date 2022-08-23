@@ -8,34 +8,69 @@ class AggregatedApprovalsLoaderView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShimmerEffect(
       child: ListView(
+        shrinkWrap: true,
         children: [
+          SizedBox(height: 8),
           _filters(),
-          _tile(),
           SizedBox(height: 8),
-          _tile(),
-          SizedBox(height: 8),
-          _tile(),
-          SizedBox(height: 8),
-          _tile(),
-          SizedBox(height: 8),
-          _tile(),
-          SizedBox(height: 8),
-          _tile(),
-          SizedBox(height: 8),
-          _tile(),
-          SizedBox(height: 8),
-          _tile(),
-          SizedBox(height: 8),
-          _tile(),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
+          SizedBox(height: 20),
+          _tile(context),
         ],
       ),
     );
   }
 
-  Widget _tile() {
+  Widget _tile(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
-      child: _emptyContainer(height: 80, width: 80, cornerRadius: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 2), borderRadius: BorderRadiusDirectional.circular(8)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                _emptyContainer(height: 20, width: 20, cornerRadius: 2),
+                SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _emptyContainer(height: 16, width: 180, cornerRadius: 8),
+                    SizedBox(height: 8),
+                    _emptyContainer(height: 16, width: 80, cornerRadius: 8),
+                  ],
+                ),
+              ],
+            ),
+            _emptyContainer(height: 20, width: 20, cornerRadius: 2),
+          ],
+        ),
+      ),
     );
   }
 

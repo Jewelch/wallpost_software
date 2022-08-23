@@ -12,7 +12,7 @@ import 'package:wallpost/aggregated_approvals_list/ui/views/aggregated_approvals
 
 import '../../../_common_widgets/buttons/rounded_back_button.dart';
 import '../../../_shared/extensions/color_utils.dart';
-import '../../../attendance_adjustment_approval/ui/attendance_adjustment_approval_list_screen.dart';
+import '../../../attendance_adjustment_approval/ui/views/attendance_adjustment_approval_list_screen.dart';
 import '../../entities/aggregated_approval.dart';
 
 class AggregatedApprovalsListScreen extends StatefulWidget {
@@ -143,7 +143,10 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
       child: InkWell(
         onTap: () {
           if (aggregatedApproval.isAttendanceAdjustmentApproval()) {
-            ScreenPresenter.present(AttendanceAdjustmentApprovalListScreen(), context);
+            ScreenPresenter.present(
+              AttendanceAdjustmentApprovalListScreen(companyId: aggregatedApproval.companyId),
+              context,
+            );
           }
         },
         child: Row(
@@ -204,7 +207,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
               child: DropdownFilter(
                 items: _presenter.getCompanyNames(),
                 selectedValue: _presenter.getSelectedCompanyName(),
-                onChanged: (companyName) => _presenter.filter(companyName: companyName),
+                onDidSelectItemWithValue: (companyName) => _presenter.filter(companyName: companyName),
               ),
             ),
           if (_presenter.shouldShowCompanyFilter()) SizedBox(width: 12),
@@ -212,7 +215,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
             child: DropdownFilter(
               items: _presenter.getModuleNames(),
               selectedValue: _presenter.getSelectedModuleName(),
-              onChanged: (moduleName) => _presenter.filter(moduleName: moduleName),
+              onDidSelectItemWithValue: (moduleName) => _presenter.filter(moduleName: moduleName),
             ),
           ),
         ],
