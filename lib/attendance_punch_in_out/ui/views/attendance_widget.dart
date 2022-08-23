@@ -333,8 +333,8 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
   void _getCurrentTime() {
     final DateTime now = DateTime.now();
     final String formattedDateTime = DateFormat('hh:mm a').format(now);
-    setState(() {
-      _timeString = formattedDateTime;
-    });
+    if (mounted) {
+      setState(() => _timeString = formattedDateTime);
+    }
   }
 }
