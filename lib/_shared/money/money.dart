@@ -1,3 +1,5 @@
+import 'money_initialization_exception.dart';
+
 class Money {
   late final num _amount;
 
@@ -10,7 +12,11 @@ class Money {
   }
 
   Money.fromString(String amount) {
-    _amount = num.parse(amount);
+    try {
+      _amount = num.parse(amount);
+    } on FormatException catch (_) {
+      throw MoneyInitializationException("Invalid amount");
+    }
   }
 
   //MARK: Functions to perform math operations

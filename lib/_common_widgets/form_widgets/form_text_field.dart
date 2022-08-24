@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 class FormTextField extends StatelessWidget {
+  final String? initialValue;
   final String? hint;
   final bool obscureText;
   final String? errorText;
@@ -13,8 +14,10 @@ class FormTextField extends StatelessWidget {
   final int? minLines;
   final int? maxLines;
   final bool autoFocus;
+  final ValueChanged<String>? onChanged;
 
   FormTextField({
+    this.initialValue,
     this.hint,
     this.obscureText = false,
     this.errorText,
@@ -26,6 +29,7 @@ class FormTextField extends StatelessWidget {
     this.minLines = 1,
     this.maxLines = 1,
     this.autoFocus = false,
+    this.onChanged,
   });
 
   @override
@@ -33,6 +37,7 @@ class FormTextField extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(color: Colors.transparent),
       child: TextFormField(
+        initialValue: initialValue,
         textAlign: TextAlign.left,
         obscureText: obscureText,
         keyboardType: keyboardType,
@@ -42,6 +47,7 @@ class FormTextField extends StatelessWidget {
         minLines: minLines,
         maxLines: maxLines,
         autofocus: autoFocus,
+        onChanged: onChanged,
         decoration: InputDecoration(
           isDense: true,
           fillColor: AppColors.textFieldBackgroundColor,

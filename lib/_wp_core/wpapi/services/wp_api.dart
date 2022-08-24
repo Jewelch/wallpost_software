@@ -119,7 +119,10 @@ class WPAPI implements NetworkAdapter {
     }
   }
 
-  Future<Map<String, String>> _buildWPHeaders({bool forceRefresh = false, bool isFormData = false}) async {
+  Future<Map<String, String>> _buildWPHeaders({
+    bool forceRefresh = false,
+    bool isFormData = false,
+  }) async {
     var headers = Map<String, String>();
     headers['Content-Type'] = isFormData ? 'application/x-www-form-urlencoded;charset=utf-8' : 'application/json';
     headers['X-WallPost-Device-ID'] = await _deviceInfo.getDeviceId();

@@ -1,5 +1,5 @@
 enum ExpenseListItemType {
-  ExpenseListItem,
+  ListItem,
   Loader,
   ErrorMessage,
   EmptySpace,

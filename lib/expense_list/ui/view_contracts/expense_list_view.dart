@@ -1,7 +1,9 @@
 abstract class ExpenseListView {
-  void updateExpenseList();
-
-  void showErrorMessage(String message);
-
   void showLoader();
+
+  void showErrorMessage();
+
+  void showNoItemsMessage();
+
+  void updateList();
 }

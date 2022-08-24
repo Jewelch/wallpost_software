@@ -1,6 +1,11 @@
+import 'dart:ui';
+
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/expense_list/entities/expense_request.dart';
-import 'package:wallpost/expense_list/entities/expense_request_status_filter.dart';
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
+import 'package:wallpost/expense__core/entities/expense_request.dart';
+import 'package:wallpost/expense__core/entities/expense_request_approval_status.dart';
+import 'package:wallpost/expense_list/entities/expense_request_approval_status_filter.dart';
 import 'package:wallpost/expense_list/services/expense_request_list_provider.dart';
 import 'package:wallpost/expense_list/ui/view_contracts/expense_list_view.dart';
 
@@ -11,44 +16,41 @@ class ExpenseListPresenter {
   ExpenseRequestListProvider _requestsProvider;
   List<ExpenseRequest> _expenseRequests = [];
   String _errorMessage = "";
+  final String _noItemsMessage =
+      "There are no expense items to show.\n\nTry changing the filters or tap here to reload.";
 
   List<ExpenseRequest> get expenseRequests => _expenseRequests;
-  ExpenseRequestStatusFilter _requestStatusFilter = ExpenseRequestStatusFilter.all;
+  ExpenseRequestApprovalStatusFilter _selectedStatusFilter = ExpenseRequestApprovalStatusFilter.all;
 
   ExpenseListPresenter(this._view) : _requestsProvider = ExpenseRequestListProvider();
 
   ExpenseListPresenter.initWith(this._view, this._requestsProvider);
 
-  Future loadExpenseRequests() async {
+  Future<void> getNext() async {
     if (_requestsProvider.isLoading) return;
-
-    _expenseRequests.isEmpty ? _view.showLoader() : _view.updateExpenseList();
+    _isFirstLoad() ? _view.showLoader() : _view.updateList();
     _resetErrors();
 
     try {
-      var expenses = await _requestsProvider.getExpenseRequests(_requestStatusFilter);
+      var expenses = await _requestsProvider.getExpenseRequests(_selectedStatusFilter);
       _handleResponse(expenses);
     } on WPException catch (e) {
-      _setError('${e.userReadableMessage}\n\nTap here to reload.');
+      _errorMessage = '${e.userReadableMessage}\n\nTap here to reload.';
+      _isFirstLoad() ? _view.showErrorMessage() : _view.updateList();
     }
   }
 
   void _handleResponse(List<ExpenseRequest> newListItems) {
     _expenseRequests.addAll(newListItems);
-
-    if (_expenseRequests.isNotEmpty) {
-      _view.updateExpenseList();
-    } else {
-      _setError("There are no expense requests to show.\n\nTap here to reload.");
-    }
+    _updateList();
   }
 
-  void _setError(String errorMessage) {
-    _errorMessage = errorMessage;
-    if (_expenseRequests.isEmpty)
-      _view.showErrorMessage(errorMessage);
-    else
-      _view.updateExpenseList();
+  void _updateList() {
+    if (_isFirstLoad()) {
+      _view.showNoItemsMessage();
+    } else {
+      _view.updateList();
+    }
   }
 
   void _resetErrors() {
@@ -57,8 +59,8 @@ class ExpenseListPresenter {
 
   //MARK: Function to filter the list
 
-  Future selectFilter(ExpenseRequestStatusFilter filter) async {
-    _requestStatusFilter = filter;
+  Future selectApprovalStatusFilterAtIndex(int index) async {
+    _selectedStatusFilter = ExpenseRequestApprovalStatusFilter.values[index];
     await refresh();
   }
 
@@ -67,7 +69,13 @@ class ExpenseListPresenter {
   Future refresh() async {
     _expenseRequests.clear();
     _requestsProvider.reset();
-    await loadExpenseRequests();
+    await getNext();
+  }
+
+  //MARK: Function to check isFirstLoad
+
+  bool _isFirstLoad() {
+    return _expenseRequests.isEmpty;
   }
 
   //MARK: Functions to get the list details
@@ -78,25 +86,75 @@ class ExpenseListPresenter {
   }
 
   ExpenseListItemType getItemTypeAtIndex(int index) {
-    if (index < _expenseRequests.length) return ExpenseListItemType.ExpenseListItem;
+    if (index < _expenseRequests.length) return ExpenseListItemType.ListItem;
 
     if (_errorMessage.isNotEmpty) return ExpenseListItemType.ErrorMessage;
 
-    if (_requestsProvider.isLoading || _requestsProvider.didReachListEnd == false)
-      return ExpenseListItemType.Loader;
+    if (_requestsProvider.isLoading || _requestsProvider.didReachListEnd == false) return ExpenseListItemType.Loader;
 
     return ExpenseListItemType.EmptySpace;
   }
 
-  ExpenseRequest getExpenseListItemAtIndex(int index) {
+  ExpenseRequest getItemAtIndex(int index) {
     return _expenseRequests[index];
   }
 
   //MARK: Getters
 
+  String getTitle(ExpenseRequest expenseRequest) {
+    if (expenseRequest.mainCategory != null && expenseRequest.subCategory != null) {
+      return expenseRequest.mainCategory! + ": " + expenseRequest.subCategory!;
+    } else if (expenseRequest.mainCategory != null) {
+      return expenseRequest.mainCategory!;
+    } else if (expenseRequest.subCategory != null) {
+      return expenseRequest.subCategory!;
+    } else if (expenseRequest.description != null) {
+      return expenseRequest.description!;
+    }
+
+    return "";
+  }
+
+  String getTotalAmount(ExpenseRequest expenseRequest) {
+    return expenseRequest.totalAmount;
+  }
+
+  String getRequestNumber(ExpenseRequest expenseRequest) {
+    return expenseRequest.requestNo;
+  }
+
+  String getRequestDate(ExpenseRequest expenseRequest) {
+    return expenseRequest.requestDate.toReadableString();
+  }
+
+  String getRequestedBy(ExpenseRequest expenseRequest) {
+    return expenseRequest.requestedBy;
+  }
+
+  String getStatus(ExpenseRequest expenseRequest) {
+    return expenseRequest.statusMessage ?? "";
+  }
+
+  Color getStatusColor(ExpenseRequest expenseRequest) {
+    print(expenseRequest.approvalStatus);
+    if (expenseRequest.approvalStatus == ExpenseRequestApprovalStatus.pending) {
+      return AppColors.yellow;
+    } else if (expenseRequest.approvalStatus == ExpenseRequestApprovalStatus.rejected) {
+      return AppColors.red;
+    } else {
+      return AppColors.green;
+    }
+  }
+
+  List<String> getStatusFilterList() {
+    return ExpenseRequestApprovalStatusFilter.values.map((status) => status.toReadableString()).toList();
+  }
+
+  String getSelectedStatusFilter() {
+    return _selectedStatusFilter.toReadableString();
+  }
+
   String get errorMessage => _errorMessage;
 
-  List<ExpenseRequestStatusFilter> get expenseRequestsFilters => ExpenseRequestStatusFilter.values;
-
-  ExpenseRequestStatusFilter get selectedStatusFilter => _requestStatusFilter;
+  String get noItemsMessage => _noItemsMessage;
 }

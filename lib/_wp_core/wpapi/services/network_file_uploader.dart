@@ -6,7 +6,6 @@ import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime_type/mime_type.dart';
-import 'package:wallpost/_wp_core/wpapi/exceptions/unexpected_response_format_exception.dart';
 
 import '../entities/api_request.dart';
 import '../entities/api_response.dart';
@@ -38,6 +37,9 @@ class NetworkFileUploader {
       final response = await request.send();
       return _processResponse(response, apiRequest);
     } catch (error) {
+      print("----------------------------------");
+      print("File upload failed - ${error.toString()}");
+      print("----------------------------------");
       throw RequestException(error.toString());
     }
   }
@@ -47,7 +49,10 @@ class NetworkFileUploader {
   }
 
   MediaType getMimeTypeFromFileName(String filename) {
-    String mimeType = mime(filename)!;
+    String? mimeType = mime(filename);
+
+    if (mimeType == null) return MediaType("text", "plain");
+
     String mimee = mimeType.split('/')[0];
     String type = mimeType.split('/')[1];
     return MediaType(mimee, type);
@@ -60,7 +65,10 @@ class NetworkFileUploader {
     try {
       var responseData = json.decode(responseString);
       return APIResponse(apiRequest, 200, responseData, {});
-    } catch (e) {
+    } catch (error) {
+      print("----------------------------------");
+      print("File upload failed - ${error.toString()}");
+      print("----------------------------------");
       throw UnexpectedResponseFormatException();
     }
   }

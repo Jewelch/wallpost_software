@@ -4,9 +4,9 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
+import 'package:wallpost/expense__core/entities/expense_request.dart';
 import 'package:wallpost/expense_list/constants/expense_list_urls.dart';
-import 'package:wallpost/expense_list/entities/expense_request.dart';
-import 'package:wallpost/expense_list/entities/expense_request_status_filter.dart';
+import 'package:wallpost/expense_list/entities/expense_request_approval_status_filter.dart';
 
 class ExpenseRequestListProvider {
   final NetworkAdapter _networkAdapter;
@@ -32,14 +32,15 @@ class ExpenseRequestListProvider {
 
   // MARK: functions to get expense requests
 
-  Future<List<ExpenseRequest>> getExpenseRequests(ExpenseRequestStatusFilter filter) async {
+  Future<List<ExpenseRequest>> getExpenseRequests(ExpenseRequestApprovalStatusFilter filter) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = ExpenseListUrls.getEmployeeExpenses(companyId, _pageNumber, _perPage, filter);
+    var url = ExpenseListUrls.getExpenseListUrl(companyId, _pageNumber, _perPage, filter);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 
     isLoading = true;
     try {
+      await Future.delayed(Duration(seconds: 10));
       var apiResponse = await _networkAdapter.get(apiRequest);
       isLoading = false;
       return await _processResponse(apiResponse);

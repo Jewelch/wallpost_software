@@ -15,6 +15,10 @@ extension DateExtension on DateTime {
   String HHmmString() {
     return DateFormat('HH:mm').format(this);
   }
+
+  String toReadableString() {
+    return DateFormat('dd MMM yyyy').format(this);
+  }
 }
 
 extension TimeExtension on TimeOfDay {
