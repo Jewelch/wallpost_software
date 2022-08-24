@@ -15,14 +15,7 @@ class ExpenseRequestListProvider {
   final int _perPage = 15;
   int _pageNumber = 1;
   bool _didReachListEnd = false;
-  bool isLoading = false;
-
-  void reset() {
-    _pageNumber = 1;
-    _didReachListEnd = false;
-    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
-    isLoading = false;
-  }
+  bool _isLoading = false;
 
   ExpenseRequestListProvider()
       : _networkAdapter = WPAPI(),
@@ -30,22 +23,26 @@ class ExpenseRequestListProvider {
 
   ExpenseRequestListProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
-  // MARK: functions to get expense requests
+  void reset() {
+    _pageNumber = 1;
+    _didReachListEnd = false;
+    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+    _isLoading = false;
+  }
 
-  Future<List<ExpenseRequest>> getExpenseRequests(ExpenseRequestApprovalStatusFilter filter) async {
+  Future<List<ExpenseRequest>> getNext(ExpenseRequestApprovalStatusFilter filter) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     var url = ExpenseListUrls.getExpenseListUrl(companyId, _pageNumber, _perPage, filter);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 
-    isLoading = true;
+    _isLoading = true;
     try {
-      await Future.delayed(Duration(seconds: 10));
       var apiResponse = await _networkAdapter.get(apiRequest);
-      isLoading = false;
+      _isLoading = false;
       return await _processResponse(apiResponse);
     } on WPException {
-      isLoading = false;
+      _isLoading = false;
       rethrow;
     }
   }
@@ -90,4 +87,6 @@ class ExpenseRequestListProvider {
   }
 
   bool get didReachListEnd => _didReachListEnd;
+
+  bool get isLoading => _isLoading;
 }

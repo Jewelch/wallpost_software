@@ -32,7 +32,7 @@ class ExpenseListPresenter {
     _resetErrors();
 
     try {
-      var expenses = await _requestsProvider.getExpenseRequests(_selectedStatusFilter);
+      var expenses = await _requestsProvider.getNext(_selectedStatusFilter);
       _handleResponse(expenses);
     } on WPException catch (e) {
       _errorMessage = '${e.userReadableMessage}\n\nTap here to reload.';
