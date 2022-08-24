@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/aggregated_approvals_list/entities/aggregated_approval.dart';
 import 'package:wallpost/company_core/entities/financial_summary.dart';
+import 'package:wallpost/company_core/entities/wp_action.dart';
 import 'package:wallpost/dashboard_my_portal/entities/owner_my_portal_data.dart';
 import 'package:wallpost/dashboard_my_portal/services/owner_my_portal_data_provider.dart';
 import 'package:wallpost/dashboard_my_portal/ui/presenters/owner_my_portal_dashboard_presenter.dart';
@@ -11,6 +12,7 @@ import 'package:wallpost/dashboard_my_portal/ui/view_contracts/owner_my_portal_v
 
 import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_company_provider.dart';
+import '../../_mocks/mock_employee.dart';
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
@@ -93,6 +95,16 @@ void main() {
       () => view.showLoader(),
       () => dataProvider.get(),
       () => view.onDidLoadData(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('go to aggregated approvals screen', () {
+    presenter.goToAggregatedApprovalsScreen();
+
+    verifyInOrder([
+      () => companyProvider.getSelectedCompanyForCurrentUser(),
+      () => view.goToApprovalsListScreen("someCompanyId"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -248,5 +260,99 @@ void main() {
 
     expect(presenter.getCompanyPerformance().value, 95);
     expect(presenter.getCompanyPerformance().color, AppColors.green);
+  });
+
+  group('tests for getting and selection request items', () {
+    test('get request items', () {
+      //given
+      var employee = MockEmployee();
+      when(() => employee.allowedActions).thenReturn([
+        WPAction.PayrollAdjustment,
+        WPAction.Leave,
+        WPAction.Expense,
+      ]);
+      var company = MockCompany();
+      when(() => company.employee).thenReturn(employee);
+      when(() => companyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
+
+      //when
+      var requestItems = presenter.getRequestItems();
+
+      //then
+      expect(requestItems, [
+        WPAction.PayrollAdjustment.toReadableString(),
+        WPAction.Leave.toReadableString(),
+        WPAction.Expense.toReadableString(),
+      ]);
+    });
+
+    test('selecting leave request item', () {
+      //given
+      var employee = MockEmployee();
+      when(() => employee.allowedActions).thenReturn([
+        WPAction.PayrollAdjustment,
+        WPAction.Leave,
+        WPAction.Expense,
+      ]);
+      var company = MockCompany();
+      when(() => company.employee).thenReturn(employee);
+      when(() => companyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
+
+      //when
+      presenter.selectRequestItemAtIndex(1);
+
+      //then
+      verifyInOrder([
+        () => companyProvider.getSelectedCompanyForCurrentUser(),
+        () => view.showLeaveActions(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('selecting expense request item', () {
+      //given
+      var employee = MockEmployee();
+      when(() => employee.allowedActions).thenReturn([
+        WPAction.PayrollAdjustment,
+        WPAction.Leave,
+        WPAction.Expense,
+      ]);
+      var company = MockCompany();
+      when(() => company.employee).thenReturn(employee);
+      when(() => companyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
+
+      //when
+      presenter.selectRequestItemAtIndex(2);
+
+      //then
+      verifyInOrder([
+        () => companyProvider.getSelectedCompanyForCurrentUser(),
+        () => view.showExpenseActions(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('selecting payroll adjustment item', () {
+      //given
+      var employee = MockEmployee();
+      when(() => employee.allowedActions).thenReturn([
+        WPAction.PayrollAdjustment,
+        WPAction.Leave,
+        WPAction.Expense,
+      ]);
+      var company = MockCompany();
+      when(() => company.employee).thenReturn(employee);
+      when(() => companyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
+
+      //when
+      presenter.selectRequestItemAtIndex(0);
+
+      //then
+      verifyInOrder([
+        () => companyProvider.getSelectedCompanyForCurrentUser(),
+        () => view.showPayrollAdjustmentActions(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
   });
 }

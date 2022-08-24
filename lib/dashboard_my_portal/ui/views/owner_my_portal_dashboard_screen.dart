@@ -8,12 +8,16 @@ import 'package:wallpost/dashboard_my_portal/ui/views/owner_my_portal_header_car
 import 'package:wallpost/dashboard_my_portal/ui/views/owner_my_portal_todays_performance_view.dart';
 
 import '../../../_common_widgets/banners/bottom_banner.dart';
+import '../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../_shared/constants/app_colors.dart';
 import '../../../aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
 import '../../../attendance_adjustment/ui/views/attendance_list_screen.dart';
+import '../../../expense_create/ui/views/create_expense_request_screen.dart';
+import '../../../expense_list/ui/views/expense_list_screen.dart';
 import '../view_contracts/owner_my_portal_view.dart';
+import 'my_portal_item_action_view.dart';
 
 class OwnerMyPortalDashboardScreen extends StatefulWidget {
   @override
@@ -107,8 +111,8 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         _requestsBar(),
-        SizedBox(height: 20),
-        if (_presenter.getTotalApprovalCount() == 0) SizedBox(height: 10),
+        Container(height: 20, color: Colors.white),
+        if (_presenter.getTotalApprovalCount() == 0) Container(height: 20, color: Colors.white),
         if (_presenter.getTotalApprovalCount() > 0)
           BottomBanner(
             approvalCount: _presenter.getTotalApprovalCount(),
@@ -133,21 +137,13 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
                 style: TextStyles.subTitleTextStyleBold.copyWith(color: AppColors.defaultColorDark),
               ),
             ),
-            SizedBox(height: 12),
             Container(
+              padding: EdgeInsets.only(top: 12),
               height: 52,
               color: Colors.white,
               child: TabChips(
-                titles: ["Leave", "Expense", "Payroll Adjustment"],
-                onItemSelected: (index) {
-                  if (index == 0) {
-                    //TODO
-                  } else if (index == 1) {
-                    //TODO
-                  } else if (index == 2) {
-                    ScreenPresenter.present(AttendanceListScreen(), context);
-                  }
-                },
+                titles: _presenter.getRequestItems(),
+                onItemSelected: (index) => _presenter.selectRequestItemAtIndex(index),
               ),
             ),
           ],
@@ -177,5 +173,42 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
   @override
   void goToApprovalsListScreen(String companyId) {
     ScreenPresenter.present(AggregatedApprovalsListScreen(companyId: companyId), context);
+  }
+
+  @override
+  void showLeaveActions() {
+    //TODO
+  }
+
+  @override
+  void showExpenseActions() {
+    _presentActionSheet(ExpenseListScreen(), CreateExpenseRequestScreen());
+  }
+
+  @override
+  void showPayrollAdjustmentActions() {
+    ScreenPresenter.present(AttendanceListScreen(), context);
+  }
+
+  //MARK: Function to present action sheet
+
+  void _presentActionSheet(Widget actionOneScreen, Widget actionTwoScreen) {
+    var controller = ModalSheetController();
+    ModalSheetPresenter.present(
+      context: context,
+      content: MyPortalItemActionView(
+        actionOneTitle: "View",
+        actionTwoTitle: "Create New",
+        actionOneCallback: () async {
+          await controller.close();
+          ScreenPresenter.present(actionOneScreen, context);
+        },
+        actionTwoCallback: () async {
+          await controller.close();
+          ScreenPresenter.present(actionTwoScreen, context);
+        },
+      ),
+      controller: controller,
+    );
   }
 }

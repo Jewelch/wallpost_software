@@ -3,15 +3,26 @@ const createLeaveActionString = "leave_request";
 const adjustPayrollActionString = "adjust_payroll";
 
 enum WPAction {
-  CreateExpenseRequest,
-  CreateLeave,
-  PayrollAdjustment,
-}
+  Expense,
+  Leave,
+  PayrollAdjustment;
 
-WPAction? initializeWpActionFromString(String itemName) {
-  if (itemName == createExpenseActionString) return WPAction.CreateExpenseRequest;
-  if (itemName == createLeaveActionString) return WPAction.CreateLeave;
-  if (itemName == adjustPayrollActionString) return WPAction.PayrollAdjustment;
+  static WPAction? initFromString(String itemName) {
+    if (itemName == createExpenseActionString) return WPAction.Expense;
+    if (itemName == createLeaveActionString) return WPAction.Leave;
+    if (itemName == adjustPayrollActionString) return WPAction.PayrollAdjustment;
 
-  return null;
+    return null;
+  }
+
+  String toReadableString() {
+    switch (this) {
+      case WPAction.Expense:
+        return "Expense";
+      case WPAction.Leave:
+        return "Leave";
+      case WPAction.PayrollAdjustment:
+        return "Payroll Adjustment";
+    }
+  }
 }

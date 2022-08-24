@@ -6,4 +6,10 @@ abstract class OwnerMyPortalView {
   void onDidLoadData();
 
   void goToApprovalsListScreen(String companyId);
+
+  void showLeaveActions();
+
+  void showExpenseActions();
+
+  void showPayrollAdjustmentActions();
 }

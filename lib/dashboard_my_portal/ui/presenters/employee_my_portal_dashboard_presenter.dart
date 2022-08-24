@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/company_core/entities/wp_action.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 
 import '../../../_shared/constants/app_colors.dart';
@@ -173,6 +174,31 @@ class EmployeeMyPortalDashboardPresenter {
         _employeeMyPortalData.currentMonthAttendancePerformance.toInt(),
         AppColors.green,
       );
+    }
+  }
+
+  //MARK: Functions to get and select request items
+
+  List<String> getRequestItems() {
+    var employee = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().employee;
+    return employee.allowedActions.map((action) => action.toReadableString()).toList();
+  }
+
+  void selectRequestItemAtIndex(int index) {
+    var employee = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().employee;
+    var allowedActions = employee.allowedActions;
+    var selectedAction = allowedActions[index];
+
+    switch (selectedAction) {
+      case WPAction.Leave:
+        _view.showLeaveActions();
+        break;
+      case WPAction.Expense:
+        _view.showExpenseActions();
+        break;
+      case WPAction.PayrollAdjustment:
+        _view.showPayrollAdjustmentActions();
+        break;
     }
   }
 }

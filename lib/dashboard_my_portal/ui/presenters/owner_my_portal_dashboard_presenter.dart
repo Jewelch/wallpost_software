@@ -9,6 +9,8 @@ import 'package:wallpost/dashboard_my_portal/ui/models/absentees_data.dart';
 import 'package:wallpost/dashboard_my_portal/ui/models/graph_section.dart';
 import 'package:wallpost/dashboard_my_portal/ui/view_contracts/owner_my_portal_view.dart';
 
+import '../../../company_core/entities/wp_action.dart';
+
 class OwnerMyPortalDashboardPresenter {
   final OwnerMyPortalView _view;
   final OwnerMyPortalDataProvider _dataProvider;
@@ -152,6 +154,31 @@ class OwnerMyPortalDashboardPresenter {
         _ownerMyPortalData.companyPerformance.toInt(),
         AppColors.green,
       );
+    }
+  }
+
+  //MARK: Functions to get and select request items
+
+  List<String> getRequestItems() {
+    var employee = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().employee;
+    return employee.allowedActions.map((action) => action.toReadableString()).toList();
+  }
+
+  void selectRequestItemAtIndex(int index) {
+    var employee = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().employee;
+    var allowedActions = employee.allowedActions;
+    var selectedAction = allowedActions[index];
+
+    switch (selectedAction) {
+      case WPAction.Leave:
+        _view.showLeaveActions();
+        break;
+      case WPAction.Expense:
+        _view.showExpenseActions();
+        break;
+      case WPAction.PayrollAdjustment:
+        _view.showPayrollAdjustmentActions();
+        break;
     }
   }
 }

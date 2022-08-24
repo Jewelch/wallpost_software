@@ -83,6 +83,17 @@ void main() {
     }
   });
 
+  test('throws InvalidResponseException when response mapping fails', () async {
+    mockNetworkAdapter.succeed(Map<String, dynamic>());
+
+    try {
+      var _ = await myPortalDataProvider.get();
+      fail('failed to throw InvalidResponseException');
+    } catch (e) {
+      expect(e is InvalidResponseException, true);
+    }
+  });
+
   test('success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 

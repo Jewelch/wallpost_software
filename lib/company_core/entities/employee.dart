@@ -49,7 +49,7 @@ class Employee extends JSONInitializable {
     var actions = <WPAction>[];
     var eligibleItemsList = responseMapList.where((element) => element['visibility']! == true).toList();
     for (var responseMap in eligibleItemsList) {
-      var item = initializeWpActionFromString(responseMap['name']!);
+      var item = WPAction.initFromString(responseMap['name']!);
       if (item != null) actions.add(item);
     }
     return actions;

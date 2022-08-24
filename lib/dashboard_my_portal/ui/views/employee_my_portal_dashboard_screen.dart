@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import 'package:wallpost/attendance_adjustment/ui/views/attendance_list_screen.dart';
+import 'package:wallpost/dashboard_my_portal/ui/views/my_portal_item_action_view.dart';
+import 'package:wallpost/expense_create/ui/views/create_expense_request_screen.dart';
 
 import '../../../_common_widgets/banners/bottom_banner.dart';
 import '../../../_common_widgets/custom_shapes/curve_bottom_to_top.dart';
@@ -10,6 +13,7 @@ import '../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../_shared/constants/app_colors.dart';
 import '../../../aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
 import '../../../attendance_punch_in_out/ui/views/attendance_widget.dart';
+import '../../../expense_list/ui/views/expense_list_screen.dart';
 import '../presenters/employee_my_portal_dashboard_presenter.dart';
 import '../view_contracts/employee_my_portal_view.dart';
 import 'employee_my_portal_header_card.dart';
@@ -142,16 +146,8 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
               height: 52,
               color: Colors.white,
               child: TabChips(
-                titles: ["Leave", "Expense", "Payroll Adjustment"],
-                onItemSelected: (index) {
-                  if (index == 0) {
-                    //TODO
-                  } else if (index == 1) {
-                    //TODO
-                  } else if (index == 2) {
-                    ScreenPresenter.present(AttendanceListScreen(), context);
-                  }
-                },
+                titles: _presenter.getRequestItems(),
+                onItemSelected: (index) => _presenter.selectRequestItemAtIndex(index),
               ),
             ),
           ],
@@ -181,5 +177,42 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
   @override
   void goToApprovalsListScreen(String companyId) {
     ScreenPresenter.present(AggregatedApprovalsListScreen(companyId: companyId), context);
+  }
+
+  @override
+  void showLeaveActions() {
+    //TODO
+  }
+
+  @override
+  void showExpenseActions() {
+    _presentActionSheet(ExpenseListScreen(), CreateExpenseRequestScreen());
+  }
+
+  @override
+  void showPayrollAdjustmentActions() {
+    ScreenPresenter.present(AttendanceListScreen(), context);
+  }
+
+  //MARK: Function to present action sheet
+
+  void _presentActionSheet(Widget actionOneScreen, Widget actionTwoScreen) {
+    var controller = ModalSheetController();
+    ModalSheetPresenter.present(
+      context: context,
+      content: MyPortalItemActionView(
+        actionOneTitle: "View",
+        actionTwoTitle: "Create New",
+        actionOneCallback: () async {
+          await controller.close();
+          ScreenPresenter.present(actionOneScreen, context);
+        },
+        actionTwoCallback: () async {
+          await controller.close();
+          ScreenPresenter.present(actionTwoScreen, context);
+        },
+      ),
+      controller: controller,
+    );
   }
 }

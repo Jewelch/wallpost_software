@@ -6,13 +6,15 @@ class MockNetworkAdapter implements NetworkAdapter {
   late bool _shouldSucceed;
   dynamic _data;
   int _delay = 0;
-  dynamic _metadata ;
+  dynamic _metadata;
+
   APIException? _apiException;
   late APIRequest _apiRequest;
   var didCallGet = false;
   var didCallPut = false;
   var didCallPost = false;
   var didCallPostWithNonce = false;
+  var didCallPostWithFormData = false;
   var didCallDelete = false;
   int noOfTimesGetIsCalled = 0;
   int noOfTimesPostIsCalled = 0;
@@ -66,7 +68,7 @@ class MockNetworkAdapter implements NetworkAdapter {
 
   @override
   Future<APIResponse> postWithFormData(APIRequest apiRequest) {
-    didCallPostWithNonce = true;
+    didCallPostWithFormData = true;
     noOfTimesPostIsCalled++;
     return _processRequest(apiRequest);
   }
