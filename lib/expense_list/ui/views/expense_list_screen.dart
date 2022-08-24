@@ -146,7 +146,6 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
       onRefresh: () => _listPresenter.refresh(),
       child: ListView.builder(
         controller: _scrollController,
-        shrinkWrap: true,
         physics: AlwaysScrollableScrollPhysics(),
         itemCount: _listPresenter.getNumberOfListItems(),
         itemBuilder: (context, index) {
