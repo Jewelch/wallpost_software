@@ -1,13 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/company_core/entities/company.dart';
 import 'package:wallpost/company_core/repositories/company_repository.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
 
+import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_current_user_provider.dart';
 import '../../_mocks/mock_user.dart';
-
-class MockCompany extends Mock implements Company {}
 
 class MockCompanyRepository extends Mock implements CompanyRepository {}
 

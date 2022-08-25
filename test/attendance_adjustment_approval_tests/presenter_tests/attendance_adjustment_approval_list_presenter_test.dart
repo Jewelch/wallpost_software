@@ -45,7 +45,6 @@ void main() {
     await presenter.getNext();
 
     //then
-    expect(presenter.noItemsMessage, "There are no approvals to show.\n\nTap here to reload.");
     verifyInOrder([
       () => listProvider.isLoading,
     ]);

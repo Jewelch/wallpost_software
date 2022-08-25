@@ -157,7 +157,7 @@ void main() {
       () => basicView.showLoader(),
       () => mockAttendanceDetailsProvider.getDetails(),
       () => basicView.showErrorAndRetryView(
-          "You are not allowed to mark attendance from the app.\nPlease contact HR or tap here to reload.")
+          "You are not allowed to mark attendance from the app. Please contact HR or tap here to reload.")
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
