@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBonjourServices</key>
@@ -32,6 +32,8 @@
 	<string>WallPost needs access to your camera to capture photos that you would like to upload.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>WallPost would like you access your location to mark your attendance.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>WallPost needs access to you photo library to select photos that you would like to upload.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
