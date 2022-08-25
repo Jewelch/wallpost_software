@@ -1,9 +1,9 @@
 import 'dart:core';
 import 'dart:io';
 
-import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/_shared/money/money.dart';
 import 'package:wallpost/_shared/money/money_initialization_exception.dart';
 import 'package:wallpost/company_core/services/selected_company_provider.dart';
@@ -13,22 +13,22 @@ import '../../entities/expense_category.dart';
 import '../../entities/expense_request_form.dart';
 import '../../services/expense_categories_provider.dart';
 import '../../services/expense_request_creator.dart';
-import '../view_contracts/expense_request_form_view.dart';
+import '../view_contracts/create_expense_request_view.dart';
 
-class ExpenseRequestPresenter {
-  ExpenseRequestFormView _view;
+class CreateExpenseRequestPresenter {
+  CreateExpenseRequestView _view;
   ExpenseCategoriesProvider _categoriesProvider;
   ExpenseRequestCreator _requestCreator;
   SelectedCompanyProvider _companyProvider;
   List<ExpenseCategory> _categories = [];
   var _model = ExpenseRequestModel();
 
-  ExpenseRequestPresenter(this._view)
+  CreateExpenseRequestPresenter(this._view)
       : _categoriesProvider = ExpenseCategoriesProvider(),
         _requestCreator = ExpenseRequestCreator(),
         _companyProvider = SelectedCompanyProvider();
 
-  ExpenseRequestPresenter.initWith(
+  CreateExpenseRequestPresenter.initWith(
     this._view,
     this._categoriesProvider,
     this._requestCreator,
@@ -53,9 +53,17 @@ class ExpenseRequestPresenter {
         _view.onDidFailToLoadCategories();
       }
     } on WPException catch (e) {
-      _model.loadCategoriesError = e.userReadableMessage;
+      _model.loadCategoriesError = "${e.userReadableMessage}\n\nTap here to reload.";
       _view.onDidFailToLoadCategories();
     }
+  }
+
+  bool isLoadingExpenseCategories() {
+    return _categoriesProvider.isLoading;
+  }
+
+  bool shouldShowLoadCategoriesError() {
+    return _model.loadCategoriesError != null;
   }
 
   //MARK: Function to select form data
@@ -68,16 +76,15 @@ class ExpenseRequestPresenter {
   void selectMainCategoryAtIndex(int index) {
     var selectedCategory = _categories[index];
     _model.mainCategory = selectedCategory;
+    _view.onDidSelectMainCategory();
 
     if (selectedCategory.projects.isNotEmpty) {
-      _model.project = _model.mainCategory!.projects[0];
+      selectProjectAtIndex(0);
     }
 
     if (selectedCategory.subCategories.isNotEmpty) {
-      _model.subCategory = _model.mainCategory!.subCategories[0];
+      selectSubCategoryAtIndex(0);
     }
-
-    _view.onDidSelectMainCategory();
   }
 
   void selectProjectAtIndex(int index) {
@@ -196,23 +203,18 @@ class ExpenseRequestPresenter {
     );
   }
 
+  bool isFormSubmissionInProgress() {
+    return _requestCreator.isLoading;
+  }
+
   //MARK: Getters
-
-  bool isLoadingExpenseCategories() {
-    return _categoriesProvider.isLoading;
-  }
-
-  bool shouldShowLoadCategoriesError() {
-    return _model.loadCategoriesError != null;
-  }
 
   DateTime getDate() {
     return _model.date;
   }
 
   String getDateString() {
-    var dateFormat = _companyProvider.getSelectedCompanyForCurrentUser().dateFormat;
-    return DateFormat(dateFormat).format(_model.date);
+    return _model.date.toReadableString();
   }
 
   List<String> getMainCategoryNames() {
@@ -239,18 +241,12 @@ class ExpenseRequestPresenter {
     return _model.mainCategory?.name ?? "";
   }
 
-  String getSelectedSubCategoryName() {
-    return _model.subCategory?.name ?? "";
-  }
-
   String getSelectedProjectName() {
     return _model.project?.name ?? "";
   }
 
-  bool shouldShowSubCategories() {
-    if (_model.mainCategory == null) return false;
-
-    return _model.mainCategory!.subCategories.length > 0;
+  String getSelectedSubCategoryName() {
+    return _model.subCategory?.name ?? "";
   }
 
   bool shouldShowProjects() {
@@ -259,17 +255,10 @@ class ExpenseRequestPresenter {
     return _model.mainCategory!.projects.length > 0;
   }
 
-  String getQuantity() {
-    if (_model.quantity == null) return "";
+  bool shouldShowSubCategories() {
+    if (_model.mainCategory == null) return false;
 
-    return "${_model.quantity}";
-  }
-
-  String getRate() {
-    if (_model.rate == null) return "";
-
-    var currency = _companyProvider.getSelectedCompanyForCurrentUser().currency;
-    return "$currency ${_model.rate!.toString()}";
+    return _model.mainCategory!.subCategories.length > 0;
   }
 
   String getTotalAmount() {
@@ -301,9 +290,5 @@ class ExpenseRequestPresenter {
 
   String? getQuantityError() {
     return _model.quantityError;
-  }
-
-  bool isFormSubmissionInProgress() {
-    return _requestCreator.isLoading;
   }
 }

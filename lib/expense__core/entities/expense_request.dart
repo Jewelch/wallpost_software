@@ -8,7 +8,7 @@ import 'expense_request_approval_status.dart';
 class ExpenseRequest extends JSONInitializable {
   late final String _id;
   late final String _companyId;
-  late final String _requestNo;
+  late final String _requestNumber;
   late final String _currency;
   late final Money? _rate;
   late final num? _quantity;
@@ -28,7 +28,7 @@ class ExpenseRequest extends JSONInitializable {
       var expenseDetailsMap = sift.readMapFromMapWithDefaultValue(jsonMap, "expense_detail", null);
       _id = "${sift.readNumberFromMap(jsonMap, 'expense_id')}";
       _companyId = "${sift.readNumberFromMap(jsonMap, 'company_id')}";
-      _requestNo = sift.readStringFromMap(jsonMap, 'expense_request_no');
+      _requestNumber = sift.readStringFromMap(jsonMap, 'expense_request_no');
       _currency = sift.readStringFromMap(jsonMap, "currency");
       var rateString = sift.readStringFromMapWithDefaultValue(expenseDetailsMap, "rate", null);
       if (rateString != null) _rate = Money.fromString(rateString);
@@ -44,6 +44,7 @@ class ExpenseRequest extends JSONInitializable {
       _statusMessage = _readStatusMessage(jsonMap);
       _attachmentUrl = sift.readStringFromMapWithDefaultValue(expenseDetailsMap, "doc_full_path");
     } on SiftException catch (e) {
+      print(e.errorMessage);
       throw MappingException('Failed to cast ExpenseRequest response. Error message - ${e.errorMessage}');
     }
   }
@@ -70,7 +71,7 @@ class ExpenseRequest extends JSONInitializable {
 
   String get companyId => _companyId;
 
-  String get requestNo => _requestNo;
+  String get requestNumber => _requestNumber;
 
   String get currency => _currency;
 

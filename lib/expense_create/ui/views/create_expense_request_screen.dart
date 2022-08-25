@@ -8,25 +8,25 @@ import 'package:wallpost/_common_widgets/form_widgets/form_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/expense_create/ui/presenters/expense_request_presenter.dart';
-import 'package:wallpost/expense_create/ui/view_contracts/expense_request_form_view.dart';
 import 'package:wallpost/expense_create/ui/views/expense_request_loader.dart';
 
 import '../../../_common_widgets/alert/alert.dart';
 import '../../../_common_widgets/text_styles/text_styles.dart';
+import '../presenters/create_expense_request_presenter.dart';
+import '../view_contracts/create_expense_request_view.dart';
 
 class CreateExpenseRequestScreen extends StatefulWidget {
   @override
   State<CreateExpenseRequestScreen> createState() => _CreateExpenseRequestScreenState();
 }
 
-class _CreateExpenseRequestScreenState extends State<CreateExpenseRequestScreen> implements ExpenseRequestFormView {
+class _CreateExpenseRequestScreenState extends State<CreateExpenseRequestScreen> implements CreateExpenseRequestView {
   TextEditingController _totalAmountController = TextEditingController();
-  late final ExpenseRequestPresenter _presenter;
+  late final CreateExpenseRequestPresenter _presenter;
 
   @override
   void initState() {
-    _presenter = ExpenseRequestPresenter(this);
+    _presenter = CreateExpenseRequestPresenter(this);
     _presenter.loadCategories();
     super.initState();
   }

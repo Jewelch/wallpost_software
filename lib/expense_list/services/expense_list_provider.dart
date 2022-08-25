@@ -8,7 +8,7 @@ import 'package:wallpost/expense__core/entities/expense_request.dart';
 import 'package:wallpost/expense_list/constants/expense_list_urls.dart';
 import 'package:wallpost/expense_list/entities/expense_request_approval_status_filter.dart';
 
-class ExpenseRequestListProvider {
+class ExpenseListProvider {
   final NetworkAdapter _networkAdapter;
   SelectedCompanyProvider _selectedCompanyProvider;
   late String _sessionId;
@@ -17,11 +17,11 @@ class ExpenseRequestListProvider {
   bool _didReachListEnd = false;
   bool _isLoading = false;
 
-  ExpenseRequestListProvider()
+  ExpenseListProvider()
       : _networkAdapter = WPAPI(),
         _selectedCompanyProvider = SelectedCompanyProvider();
 
-  ExpenseRequestListProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
+  ExpenseListProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
   void reset() {
     _pageNumber = 1;

@@ -1,4 +1,4 @@
-abstract class ExpenseRequestFormView {
+abstract class CreateExpenseRequestView {
   void showCategoriesLoader();
 
   void onDidFailToLoadCategories();

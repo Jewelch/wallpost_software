@@ -6,23 +6,21 @@ import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/expense__core/entities/expense_request.dart';
 import 'package:wallpost/expense__core/entities/expense_request_approval_status.dart';
 import 'package:wallpost/expense_list/entities/expense_request_approval_status_filter.dart';
-import 'package:wallpost/expense_list/services/expense_request_list_provider.dart';
 import 'package:wallpost/expense_list/ui/view_contracts/expense_list_view.dart';
 
+import '../../services/expense_list_provider.dart';
 import '../models/expense_list_item_type.dart';
 
 class ExpenseListPresenter {
   ExpenseListView _view;
-  ExpenseRequestListProvider _requestsProvider;
+  ExpenseListProvider _requestsProvider;
   List<ExpenseRequest> _expenseRequests = [];
-  String _errorMessage = "";
-  final String _noItemsMessage =
-      "There are no expense items to show.\n\nTry changing the filters or tap here to reload.";
-
-  List<ExpenseRequest> get expenseRequests => _expenseRequests;
   ExpenseRequestApprovalStatusFilter _selectedStatusFilter = ExpenseRequestApprovalStatusFilter.all;
+  String _errorMessage = "";
+  final String _noItemsMessage = "There are no expense requests to show.\n\n"
+      "Try changing the filters or tap here to reload.";
 
-  ExpenseListPresenter(this._view) : _requestsProvider = ExpenseRequestListProvider();
+  ExpenseListPresenter(this._view) : _requestsProvider = ExpenseListProvider();
 
   ExpenseListPresenter.initWith(this._view, this._requestsProvider);
 
@@ -57,13 +55,6 @@ class ExpenseListPresenter {
     _errorMessage = "";
   }
 
-  //MARK: Function to filter the list
-
-  Future selectApprovalStatusFilterAtIndex(int index) async {
-    _selectedStatusFilter = ExpenseRequestApprovalStatusFilter.values[index];
-    await refresh();
-  }
-
   //MARK; Function to refresh the list
 
   Future refresh() async {
@@ -76,6 +67,13 @@ class ExpenseListPresenter {
 
   bool _isFirstLoad() {
     return _expenseRequests.isEmpty;
+  }
+
+  //MARK: Function to filter the list
+
+  Future selectApprovalStatusFilterAtIndex(int index) async {
+    _selectedStatusFilter = ExpenseRequestApprovalStatusFilter.values[index];
+    await refresh();
   }
 
   //MARK: Functions to get the list details
@@ -120,7 +118,7 @@ class ExpenseListPresenter {
   }
 
   String getRequestNumber(ExpenseRequest expenseRequest) {
-    return expenseRequest.requestNo;
+    return expenseRequest.requestNumber;
   }
 
   String getRequestDate(ExpenseRequest expenseRequest) {
@@ -136,7 +134,6 @@ class ExpenseListPresenter {
   }
 
   Color getStatusColor(ExpenseRequest expenseRequest) {
-    print(expenseRequest.approvalStatus);
     if (expenseRequest.approvalStatus == ExpenseRequestApprovalStatus.pending) {
       return AppColors.yellow;
     } else if (expenseRequest.approvalStatus == ExpenseRequestApprovalStatus.rejected) {
