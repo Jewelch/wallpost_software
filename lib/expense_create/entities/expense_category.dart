@@ -12,11 +12,11 @@ class ExpenseCategory extends JSONInitializable {
   ExpenseCategory.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     try {
       var sift = Sift();
-      id = sift.readNumberFromMap(jsonMap, 'id').toString();
+      id = "${sift.readNumberFromMap(jsonMap, 'id').toString()}";
       name = sift.readStringFromMap(jsonMap, 'name');
       subCategories = _readSubCategories(jsonMap);
       projects = _readProjects(jsonMap);
-      isDisabled = sift.readBooleanFromMap(jsonMap, "disabled");
+      isDisabled = sift.readBooleanFromMapWithDefaultValue(jsonMap, "disabled", false)!;
     } on SiftException catch (e) {
       throw MappingException('Failed to cast expense category response. Error message - ${e.errorMessage}');
     }
