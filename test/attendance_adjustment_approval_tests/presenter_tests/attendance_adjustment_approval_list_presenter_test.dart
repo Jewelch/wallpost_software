@@ -37,8 +37,24 @@ void main() {
 
   //MARK: Tests for loading the list
 
+  test('does nothing when the provider is loading', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(true);
+
+    //when
+    await presenter.getNext();
+
+    //then
+    expect(presenter.noItemsMessage, "There are no approvals to show.\n\nTap here to reload.");
+    verifyInOrder([
+      () => listProvider.isLoading,
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
   test('failure to load list', () async {
     //given
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
@@ -47,6 +63,7 @@ void main() {
     //then
     expect(presenter.errorMessage, "${InvalidResponseException().userReadableMessage}\n\nTap here to reload.");
     verifyInOrder([
+      () => listProvider.isLoading,
       () => view.showLoader(),
       () => listProvider.getNext(),
       () => view.showErrorMessage(),
@@ -56,6 +73,7 @@ void main() {
 
   test('successfully loading the list when there are no items', () async {
     //given
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([]));
 
     //when
@@ -64,6 +82,7 @@ void main() {
     //then
     expect(presenter.noItemsMessage, "There are no approvals to show.\n\nTap here to reload.");
     verifyInOrder([
+      () => listProvider.isLoading,
       () => view.showLoader(),
       () => listProvider.getNext(),
       () => view.showNoItemsMessage(),
@@ -73,6 +92,7 @@ void main() {
 
   test('successfully loading the list with items', () async {
     //given
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
           MockAttendanceAdjustmentApproval(),
           MockAttendanceAdjustmentApproval(),
@@ -83,6 +103,7 @@ void main() {
 
     //then
     verifyInOrder([
+      () => listProvider.isLoading,
       () => view.showLoader(),
       () => listProvider.getNext(),
       () => view.updateList(),
@@ -92,6 +113,7 @@ void main() {
 
   test('failure to load the next list of items', () async {
     //given
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
           MockAttendanceAdjustmentApproval(),
           MockAttendanceAdjustmentApproval(),
@@ -106,6 +128,7 @@ void main() {
     expect(presenter.errorMessage, "${InvalidResponseException().userReadableMessage}\n\nTap here to reload.");
     //then
     verifyInOrder([
+      () => listProvider.isLoading,
       () => view.updateList(),
       () => listProvider.getNext(),
       () => view.updateList(),
@@ -115,6 +138,7 @@ void main() {
 
   test('successfully loading the next list of items', () async {
     //given
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
           MockAttendanceAdjustmentApproval(),
           MockAttendanceAdjustmentApproval(),
@@ -132,6 +156,7 @@ void main() {
 
     //then
     verifyInOrder([
+      () => listProvider.isLoading,
       () => view.updateList(),
       () => listProvider.getNext(),
       () => view.updateList(),
@@ -141,6 +166,7 @@ void main() {
 
   test('resets the error message before loading the next list of items', () async {
     //given
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.error(InvalidResponseException()));
     await presenter.getNext();
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
@@ -165,6 +191,7 @@ void main() {
 
   test('get number of leave list items when there are no items and an error occurs', () async {
     //when
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.error(InvalidResponseException()));
     await presenter.getNext();
 
@@ -174,6 +201,7 @@ void main() {
 
   test('get number of list items when there are some items and the provider is loading', () async {
     //when
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
           MockAttendanceAdjustmentApproval(),
           MockAttendanceAdjustmentApproval(),
@@ -193,6 +221,7 @@ void main() {
 
   test('get number of list items when there are some items and the provider has more items', () async {
     //when
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
           MockAttendanceAdjustmentApproval(),
           MockAttendanceAdjustmentApproval(),
@@ -213,6 +242,7 @@ void main() {
   test('get number of list items when there are some items and the provider has more items but fails to load them',
       () async {
     //given
+        when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
           MockAttendanceAdjustmentApproval(),
           MockAttendanceAdjustmentApproval(),
@@ -224,18 +254,19 @@ void main() {
 
     //when
     when(() => listProvider.getNext()).thenAnswer((_) => Future.error(InvalidResponseException()));
-    await presenter.getNext();
+        await presenter.getNext();
 
-    //then
-    expect(presenter.getNumberOfListItems(), 4);
-    expect(presenter.getItemTypeAtIndex(0), AttendanceAdjustmentApprovalListItemViewType.ListItem);
-    expect(presenter.getItemTypeAtIndex(1), AttendanceAdjustmentApprovalListItemViewType.ListItem);
-    expect(presenter.getItemTypeAtIndex(2), AttendanceAdjustmentApprovalListItemViewType.ListItem);
-    expect(presenter.getItemTypeAtIndex(3), AttendanceAdjustmentApprovalListItemViewType.ErrorMessage);
+        //then
+        expect(presenter.getNumberOfListItems(), 4);
+        expect(presenter.getItemTypeAtIndex(0), AttendanceAdjustmentApprovalListItemViewType.ListItem);
+        expect(presenter.getItemTypeAtIndex(1), AttendanceAdjustmentApprovalListItemViewType.ListItem);
+        expect(presenter.getItemTypeAtIndex(2), AttendanceAdjustmentApprovalListItemViewType.ListItem);
+        expect(presenter.getItemTypeAtIndex(3), AttendanceAdjustmentApprovalListItemViewType.ErrorMessage);
   });
 
   test('get number of list items when there are some items and the provider has no more items', () async {
     //when
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
           MockAttendanceAdjustmentApproval(),
           MockAttendanceAdjustmentApproval(),
@@ -255,6 +286,7 @@ void main() {
 
   test('getting list item at index', () async {
     //when
+    when(() => listProvider.isLoading).thenReturn(false);
     var approval1 = MockAttendanceAdjustmentApproval();
     var approval2 = MockAttendanceAdjustmentApproval();
     var approval3 = MockAttendanceAdjustmentApproval();
@@ -273,6 +305,7 @@ void main() {
 
   test('removing one approval from the list', () async {
     //given
+    when(() => listProvider.isLoading).thenReturn(false);
     var approval1 = MockAttendanceAdjustmentApproval();
     var approval2 = MockAttendanceAdjustmentApproval();
     var approval3 = MockAttendanceAdjustmentApproval();
@@ -291,15 +324,16 @@ void main() {
     expect(presenter.getItemTypeAtIndex(1), AttendanceAdjustmentApprovalListItemViewType.ListItem);
     expect(presenter.getItemTypeAtIndex(2), AttendanceAdjustmentApprovalListItemViewType.Loader);
     verifyInOrder([
-      () => view.updateList(),
-      () => listProvider.isLoading,
-      () => listProvider.didReachListEnd,
+          () => view.updateList(),
+          () => listProvider.isLoading,
+          () => listProvider.didReachListEnd,
     ]);
     _verifyNoMoreInteractions();
   });
 
   test('removing all approvals from the list refreshes the list', () async {
     //given
+    when(() => listProvider.isLoading).thenReturn(false);
     var approval1 = MockAttendanceAdjustmentApproval();
     var approval2 = MockAttendanceAdjustmentApproval();
     var approval3 = MockAttendanceAdjustmentApproval();
@@ -317,6 +351,7 @@ void main() {
     //then
     verifyInOrder([
       () => listProvider.reset(),
+      () => listProvider.isLoading,
       () => view.showLoader(),
       () => listProvider.getNext(),
       () => view.updateList(),

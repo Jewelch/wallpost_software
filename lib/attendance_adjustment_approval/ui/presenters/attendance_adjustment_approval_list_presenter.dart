@@ -24,6 +24,7 @@ class AttendanceAdjustmentApprovalListPresenter {
   //MARK: Functions to load data
 
   Future<void> getNext() async {
+    if (_approvalListProvider.isLoading) return;
     _isFirstLoad() ? _view.showLoader() : _view.updateList();
     _resetErrors();
 
