@@ -30,11 +30,11 @@ class AggregatedApproval extends JSONInitializable {
   }
 
   bool isExpenseRequestApproval() {
-    return _approvalType == "́Expense";
+    return _approvalType == "Expense Request";
   }
 
   bool isLeaveRequestApproval() {
-    return _approvalType == "Leave";
+    return _approvalType == "Leave Request";
   }
 
   String get companyId => _companyId;
