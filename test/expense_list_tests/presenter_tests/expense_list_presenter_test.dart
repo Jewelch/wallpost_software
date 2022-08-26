@@ -330,33 +330,9 @@ main() {
 
   test("getting title", () {
     var expense = MockExpenseRequest();
+    when(() => expense.getTitle()).thenReturn("Some title");
 
-    //when main and sub categories are not null
-    when(() => expense.mainCategory).thenReturn("Main category");
-    when(() => expense.subCategory).thenReturn("Sub category");
-    expect(presenter.getTitle(expense), "Main category: Sub category");
-
-    //when main category is not null and sub category is null
-    when(() => expense.mainCategory).thenReturn("Main category");
-    when(() => expense.subCategory).thenReturn(null);
-    expect(presenter.getTitle(expense), "Main category");
-
-    //when main category is null and sub category is not null
-    when(() => expense.mainCategory).thenReturn(null);
-    when(() => expense.subCategory).thenReturn("Sub category");
-    expect(presenter.getTitle(expense), "Sub category");
-
-    //when both main and sub categories are null and description is not null
-    when(() => expense.mainCategory).thenReturn(null);
-    when(() => expense.subCategory).thenReturn(null);
-    when(() => expense.description).thenReturn("some description");
-    expect(presenter.getTitle(expense), "some description");
-
-    //when main and sub categories and description is null
-    when(() => expense.mainCategory).thenReturn(null);
-    when(() => expense.subCategory).thenReturn(null);
-    when(() => expense.description).thenReturn(null);
-    expect(presenter.getTitle(expense), "");
+    expect(presenter.getTitle(expense), "Some title");
   });
 
   test("get total amount", () {
@@ -366,7 +342,7 @@ main() {
     expect(presenter.getTotalAmount(expense), "USD 40.00");
   });
 
-  test("get request date", () {
+  test("get request number", () {
     var expense = MockExpenseRequest();
     when(() => expense.requestNumber).thenReturn("some request number");
 

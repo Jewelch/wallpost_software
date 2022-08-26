@@ -1,15 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/attendance_adjustment_approval/constants/attendance_adjustment_approval_urls.dart';
-import 'package:wallpost/attendance_adjustment_approval/services/attendance_adjustment_approval_list_provider.dart';
+import 'package:wallpost/expense_approval/constants/expense_approval_urls.dart';
+import 'package:wallpost/expense_approval/services/expense_approval_list_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
-  Map<String, dynamic> successfulResponse = Mocks.attendanceAdjustmentApprovalListResponse;
+  Map<String, dynamic> successfulResponse = Mocks.approvalListResponse;
   var mockNetworkAdapter = MockNetworkAdapter();
-  var approvalListProvider = AttendanceAdjustmentApprovalListProvider.initWith("someCompanyId", mockNetworkAdapter);
+  var approvalListProvider = ExpenseApprovalListProvider.initWith("someCompanyId", mockNetworkAdapter);
 
   test('api request is built and executed correctly', () async {
     Map<String, dynamic> requestParams = {};
@@ -17,8 +17,7 @@ void main() {
 
     var _ = await approvalListProvider.getNext();
 
-    expect(mockNetworkAdapter.apiRequest.url,
-        AttendanceAdjustmentApprovalUrls.pendingApprovalListUrl('someCompanyId', 1, 15));
+    expect(mockNetworkAdapter.apiRequest.url, ExpenseApprovalUrls.pendingApprovalListUrl('someCompanyId', 1, 15));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -92,7 +91,7 @@ void main() {
 
     try {
       var approvalList = await approvalListProvider.getNext();
-      expect(approvalList.length, 5);
+      expect(approvalList.length, 7);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }

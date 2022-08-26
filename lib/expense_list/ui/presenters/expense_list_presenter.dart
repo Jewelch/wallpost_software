@@ -100,17 +100,7 @@ class ExpenseListPresenter {
   //MARK: Getters
 
   String getTitle(ExpenseRequest expenseRequest) {
-    if (expenseRequest.mainCategory != null && expenseRequest.subCategory != null) {
-      return expenseRequest.mainCategory! + ": " + expenseRequest.subCategory!;
-    } else if (expenseRequest.mainCategory != null) {
-      return expenseRequest.mainCategory!;
-    } else if (expenseRequest.subCategory != null) {
-      return expenseRequest.subCategory!;
-    } else if (expenseRequest.description != null) {
-      return expenseRequest.description!;
-    }
-
-    return "";
+    return expenseRequest.getTitle();
   }
 
   String getTotalAmount(ExpenseRequest expenseRequest) {

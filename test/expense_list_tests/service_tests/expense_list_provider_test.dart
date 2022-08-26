@@ -96,7 +96,6 @@ void main() {
       var _ = await expenseRequestsProvider.getNext(ExpenseRequestApprovalStatusFilter.all);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
-      print(e.runtimeType);
       expect(e is InvalidResponseException, true);
     }
   });
