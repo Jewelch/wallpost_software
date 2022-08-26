@@ -28,7 +28,7 @@ class AttendanceAdjustmentApprovalListProvider {
   }
 
   Future<List<AttendanceAdjustmentApproval>> getNext() async {
-    var url = AttendanceAdjustmentApprovalUrls.approvalListUrl(_companyId, _pageNumber, _perPage);
+    var url = AttendanceAdjustmentApprovalUrls.pendingApprovalListUrl(_companyId, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 

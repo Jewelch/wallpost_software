@@ -10,9 +10,7 @@ class AttendanceApprovalListLoader extends StatelessWidget {
       child: ListView(
         shrinkWrap: true,
         children: [
-          SizedBox(height: 8),
-          _filters(),
-          SizedBox(height: 8),
+          SizedBox(height: 20),
           _tile(context),
           SizedBox(height: 20),
           _tile(context),
@@ -78,17 +76,6 @@ class AttendanceApprovalListLoader extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _filters() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 8),
-      child: Row(
-        children: [
-          Expanded(child: _emptyContainer(height: 50, cornerRadius: 10)),
-        ],
       ),
     );
   }
