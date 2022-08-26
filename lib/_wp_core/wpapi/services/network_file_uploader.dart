@@ -37,9 +37,6 @@ class NetworkFileUploader {
       final response = await request.send();
       return _processResponse(response, apiRequest);
     } catch (error) {
-      print("----------------------------------");
-      print("File upload failed - ${error.toString()}");
-      print("----------------------------------");
       throw RequestException(error.toString());
     }
   }
@@ -66,9 +63,6 @@ class NetworkFileUploader {
       var responseData = json.decode(responseString);
       return APIResponse(apiRequest, 200, responseData, {});
     } catch (error) {
-      print("----------------------------------");
-      print("File upload failed - ${error.toString()}");
-      print("----------------------------------");
       throw UnexpectedResponseFormatException();
     }
   }
