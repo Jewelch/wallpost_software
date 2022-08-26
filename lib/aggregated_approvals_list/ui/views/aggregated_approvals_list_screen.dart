@@ -9,6 +9,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/aggregated_approvals_list/ui/presenters/aggregated_approvals_list_presenter.dart';
 import 'package:wallpost/aggregated_approvals_list/ui/view_contracts/aggregated_approvals_list_view.dart';
 import 'package:wallpost/aggregated_approvals_list/ui/views/aggregated_approvals_loader_view.dart';
+import 'package:wallpost/expense_approval/ui/views/expense_approval_list_screen.dart';
 
 import '../../../_common_widgets/buttons/rounded_back_button.dart';
 import '../../../_shared/extensions/color_utils.dart';
@@ -142,7 +143,12 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
       ),
       child: InkWell(
         onTap: () {
-          if (aggregatedApproval.isAttendanceAdjustmentApproval()) {
+          if (aggregatedApproval.isExpenseRequestApproval()) {
+            ScreenPresenter.present(
+              ExpenseApprovalListScreen(companyId: aggregatedApproval.companyId),
+              context,
+            );
+          } else if (aggregatedApproval.isAttendanceAdjustmentApproval()) {
             ScreenPresenter.present(
               AttendanceAdjustmentApprovalListScreen(companyId: aggregatedApproval.companyId),
               context,
