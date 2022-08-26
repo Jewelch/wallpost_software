@@ -17,7 +17,7 @@ void main() {
 
   test('isExpenseRequestApproval', () {
     var jsonMap = Mocks.aggregatedApprovalsResponse[0];
-    jsonMap["approvalType"] = "́Expense";
+    jsonMap["approvalType"] = "Expense Request";
 
     var aggregatedApproval = AggregatedApproval.fromJson(jsonMap);
 
@@ -28,7 +28,7 @@ void main() {
 
   test('isLeaveRequestApproval', () {
     var jsonMap = Mocks.aggregatedApprovalsResponse[0];
-    jsonMap["approvalType"] = "Leave";
+    jsonMap["approvalType"] = "Leave Request";
 
     var aggregatedApproval = AggregatedApproval.fromJson(jsonMap);
 
