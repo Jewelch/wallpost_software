@@ -76,7 +76,7 @@ void main() {
       () => dataProvider.isLoading,
       () => view.showLoader(),
       () => dataProvider.get(),
-      () => view.showErrorMessage(InvalidResponseException().userReadableMessage),
+      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });

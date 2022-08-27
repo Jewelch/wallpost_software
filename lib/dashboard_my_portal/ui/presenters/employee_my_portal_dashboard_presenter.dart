@@ -33,7 +33,7 @@ class EmployeeMyPortalDashboardPresenter {
       _employeeMyPortalData = await _dataProvider.get();
       _view.onDidLoadData();
     } on WPException catch (e) {
-      _view.showErrorMessage(e.userReadableMessage);
+      _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
     }
   }
 
