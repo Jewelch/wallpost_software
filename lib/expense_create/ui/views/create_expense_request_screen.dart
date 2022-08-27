@@ -207,6 +207,7 @@ class _CreateExpenseRequestScreenState extends State<CreateExpenseRequestScreen>
         SizedBox(height: 2),
         GestureDetector(
           onTap: () async {
+            KeyboardDismisser.dismissKeyboard();
             var files = await FilePickerScreen.present(context);
             if (files != null && files is List && files.isNotEmpty) _presenter.addAttachment(files[0]);
           },
