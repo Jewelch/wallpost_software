@@ -13,9 +13,9 @@ class ModalSheetController {
 
   bool get isAttached => _state != null;
 
-  Future<void>? close() {
+  Future<void>? close({dynamic result}) {
     assert(isAttached, "State not attached.");
-    return _state?.close();
+    return _state?.close(result: result);
   }
 
   void dispose() {
@@ -121,7 +121,9 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
     );
   }
 
-  Future<void> close() {
-    return _animationController.reverse().then((value) => Navigator.pop(context));
+  Future<void> close({dynamic result}) {
+    if (!_animationController.isDismissed)
+      return _animationController.reverse().then((value) => Navigator.pop(context, result));
+    return Future.value(null);
   }
 }
