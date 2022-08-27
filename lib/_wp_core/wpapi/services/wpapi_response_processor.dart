@@ -33,7 +33,7 @@ class WPAPIResponseProcessor {
 
   Map<String, dynamic> _readWPResponseDataFromResponse(Map<String, dynamic> responseMap) {
     if (responseMap['status'] != 'success') {
-      throw ServerSentException(responseMap['message'], responseMap['errorCode'] ?? 0);
+      throw ServerSentException(responseMap['message'] ?? responseMap['reason'], responseMap['errorCode'] ?? 0);
     }
 
     dynamic response;
