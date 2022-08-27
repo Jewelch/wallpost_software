@@ -10,29 +10,30 @@ class ExpenseRequest extends JSONInitializable {
   late final String _companyId;
   late final String _requestNumber;
   late final String _currency;
-  late final Money? _rate;
-  late final num? _quantity;
+  Money? _rate;
+  num? _quantity;
   late final Money _totalAmount;
   late final String _requestedBy;
   late final DateTime _requestDate;
-  late final String? _mainCategory;
-  late final String? _subCategory;
-  late final String? _project;
-  late final String? _description;
+  String? _mainCategory;
+  String? _subCategory;
+  String? _project;
+  String? _description;
   late final ExpenseRequestApprovalStatus _approvalStatus;
-  late final String? _statusMessage;
-  late final String? _attachmentUrl;
+  String? _statusMessage;
+  String? _attachmentUrl;
 
   ExpenseRequest.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
-      var expenseDetailsMap = sift.readMapFromMapWithDefaultValue(jsonMap, "expense_detail", null);
+      var expenseDetailMapArray = sift.readMapListFromMapWithDefaultValue(jsonMap, "expense_detail", null);
+      var expenseDetailsMap = sift.readMapFromListWithDefaultValue(expenseDetailMapArray, 0, null);
       _id = "${sift.readNumberFromMap(jsonMap, 'expense_id')}";
       _companyId = "${sift.readNumberFromMap(jsonMap, 'company_id')}";
       _requestNumber = sift.readStringFromMap(jsonMap, 'expense_request_no');
       _currency = sift.readStringFromMap(jsonMap, "currency");
-      var rateString = sift.readStringFromMapWithDefaultValue(expenseDetailsMap, "rate", null);
-      if (rateString != null) _rate = Money.fromString(rateString);
+      var rateAmount = sift.readNumberFromMapWithDefaultValue(expenseDetailsMap, "rate", null);
+      if (rateAmount != null) _rate = Money(rateAmount);
       _quantity = sift.readNumberFromMapWithDefaultValue(expenseDetailsMap, "quantity", null);
       var totalAmountString = sift.readStringFromMap(jsonMap, 'total_amount');
       _totalAmount = Money.fromString(totalAmountString);
