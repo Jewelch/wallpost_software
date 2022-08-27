@@ -26,90 +26,95 @@ class ExpenseApprovalListItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(width: 1, color: AppColors.listItemBorderColor),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      child: InkWell(
+        onTap: () => listPresenter.selectItem(approval),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  listPresenter.getTitle(approval),
-                  style: TextStyles.titleTextStyleBold,
-                ),
-              ),
-              Text(
-                listPresenter.getTotalAmount(approval),
-                style: TextStyles.titleTextStyleBold,
-              ),
-            ],
-          ),
-          SizedBox(height: 12),
-          Container(
-            child: Row(
-              children: [
-                Expanded(
-                  child: _labelAndValue(
-                    "Request No - ",
-                    listPresenter.getRequestNumber(approval),
-                  ),
-                ),
-                _labelAndValue(
-                  "Date - ",
-                  listPresenter.getRequestDate(approval),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _labelAndValue(
-                  "Requested By - ",
-                  listPresenter.getRequestedBy(approval),
-                ),
-              ),
-              Icon(
-                Icons.arrow_forward_ios_sharp,
-                color: AppColors.textColorBlack,
-                size: 16,
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          ItemNotifiable<bool>(
-            notifier: _loadingNotifier,
-            builder: (context, isLoading) {
-              return Row(
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: CapsuleActionButton(
-                      title: "Approve",
-                      color: AppColors.green,
-                      onPressed: () => _approve(),
-                      showLoader: isLoading,
+                    child: Text(
+                      listPresenter.getTitle(approval),
+                      style: TextStyles.titleTextStyleBold,
                     ),
                   ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: CapsuleActionButton(
-                      title: "Reject",
-                      color: AppColors.red,
-                      onPressed: () => _showRejectionSheet(context),
-                      disabled: isLoading ? true : false,
-                    ),
+                  Text(
+                    listPresenter.getTotalAmount(approval),
+                    style: TextStyles.titleTextStyleBold,
                   ),
                 ],
-              );
-            },
+              ),
+              SizedBox(height: 12),
+              Container(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _labelAndValue(
+                        "Request No - ",
+                        listPresenter.getRequestNumber(approval),
+                      ),
+                    ),
+                    _labelAndValue(
+                      "Date - ",
+                      listPresenter.getRequestDate(approval),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: _labelAndValue(
+                      "Requested By - ",
+                      listPresenter.getRequestedBy(approval),
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    color: AppColors.textColorBlack,
+                    size: 16,
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              ItemNotifiable<bool>(
+                notifier: _loadingNotifier,
+                builder: (context, isLoading) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: CapsuleActionButton(
+                          title: "Approve",
+                          color: AppColors.green,
+                          onPressed: () => _approve(),
+                          showLoader: isLoading,
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: CapsuleActionButton(
+                          title: "Reject",
+                          color: AppColors.red,
+                          onPressed: () => _showRejectionSheet(context),
+                          disabled: isLoading ? true : false,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -133,7 +138,7 @@ class ExpenseApprovalListItemCard extends StatelessWidget {
 
   void _approve() async {
     _loadingNotifier.notify(true);
-    await approvalPresenter.approve(approval);
+    await approvalPresenter.approve(approval.companyId, approval.id);
     _loadingNotifier.notify(false);
   }
 
@@ -142,7 +147,9 @@ class ExpenseApprovalListItemCard extends StatelessWidget {
     ModalSheetPresenter.present(
       context: context,
       content: ExpenseApprovalRejectionView(
-        approval: approval,
+        companyId: approval.companyId,
+        id: approval.id,
+        requestedBy: approval.requestedBy,
         approvalPresenter: approvalPresenter,
         modalSheetController: modalSheetController,
       ),

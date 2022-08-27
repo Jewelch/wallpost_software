@@ -63,6 +63,12 @@ class ExpenseListPresenter {
     await getNext();
   }
 
+  //MARK: Function to select an item
+
+  void selectItem(ExpenseRequest expenseRequest) {
+    _view.showExpenseDetail(expenseRequest);
+  }
+
   //MARK: Function to check isFirstLoad
 
   bool _isFirstLoad() {

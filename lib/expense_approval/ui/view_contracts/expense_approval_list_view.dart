@@ -1,3 +1,5 @@
+import 'package:wallpost/expense_approval/entities/expense_approval.dart';
+
 abstract class ExpenseApprovalListView {
   void showLoader();
 
@@ -6,4 +8,6 @@ abstract class ExpenseApprovalListView {
   void showNoItemsMessage();
 
   void updateList();
+
+  void showExpenseDetail(ExpenseApproval approval);
 }

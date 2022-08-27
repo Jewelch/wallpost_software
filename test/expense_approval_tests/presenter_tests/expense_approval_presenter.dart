@@ -45,15 +45,14 @@ void main() {
 
   test('failure to approve', () async {
     //given
-    when(() => approver.approve(any())).thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => approver.approve(any(), any())).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
-    var approval = MockExpenseApproval();
-    await presenter.approve(approval);
+    await presenter.approve("someCompanyId", "someExpenseId");
 
     //then
     verifyInOrder([
-      () => approver.approve(approval),
+      () => approver.approve("someCompanyId", "someExpenseId"),
       () => view.onDidFailToApproveOrReject("Approval Failed", InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractions();
@@ -61,33 +60,31 @@ void main() {
 
   test('successfully approving a request', () async {
     //given
-    when(() => approver.approve(any())).thenAnswer((_) => Future.value(null));
+    when(() => approver.approve(any(), any())).thenAnswer((_) => Future.value(null));
 
     //when
-    var approval = MockExpenseApproval();
-    await presenter.approve(approval);
+    await presenter.approve("someCompanyId", "someExpenseId");
 
     //then
     verifyInOrder([
-      () => approver.approve(approval),
-      () => view.onDidApproveOrRejectSuccessfully(approval),
+      () => approver.approve("someCompanyId", "someExpenseId"),
+      () => view.onDidApproveOrRejectSuccessfully("someExpenseId"),
     ]);
     _verifyNoMoreInteractions();
   });
 
   test('failure to reject', () async {
     //given
-    when(() => rejector.reject(any(), rejectionReason: any(named: "rejectionReason")))
+    when(() => rejector.reject(any(), any(), rejectionReason: any(named: "rejectionReason")))
         .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
-    var approval = MockExpenseApproval();
-    var didRejectSuccessfully = await presenter.reject(approval, "some reason");
+    var didRejectSuccessfully = await presenter.reject("someCompanyId", "someExpenseId", "some reason");
 
     //then
     expect(didRejectSuccessfully, false);
     verifyInOrder([
-      () => rejector.reject(approval, rejectionReason: "some reason"),
+      () => rejector.reject("someCompanyId", "someExpenseId", rejectionReason: "some reason"),
       () => view.onDidFailToApproveOrReject("Rejection Failed", InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractions();
@@ -95,19 +92,38 @@ void main() {
 
   test('successfully rejecting a request', () async {
     //given
-    when(() => rejector.reject(any(), rejectionReason: any(named: "rejectionReason")))
+    when(() => rejector.reject(any(), any(), rejectionReason: any(named: "rejectionReason")))
         .thenAnswer((_) => Future.value(null));
 
     //when
-    var approval = MockExpenseApproval();
-    var didRejectSuccessfully = await presenter.reject(approval, "some reason");
+    var didRejectSuccessfully = await presenter.reject("someCompanyId", "someExpenseId", "some reason");
 
     //then
     expect(didRejectSuccessfully, true);
     verifyInOrder([
-      () => rejector.reject(approval, rejectionReason: "some reason"),
-      () => view.onDidApproveOrRejectSuccessfully(approval),
+      () => rejector.reject("someCompanyId", "someExpenseId", rejectionReason: "some reason"),
+      () => view.onDidApproveOrRejectSuccessfully("someExpenseId"),
     ]);
     _verifyNoMoreInteractions();
+  });
+
+  test(
+      "didPerformAction flag is set to true when the approve function is called "
+      "irrespective of the outcome", () {
+    expect(presenter.didPerformAction, false);
+
+    presenter.approve("companyId", "expenseId");
+
+    expect(presenter.didPerformAction, true);
+  });
+
+  test(
+      "didPerformAction flag is set to true when the reject function is called "
+      "irrespective of the outcome", () {
+    expect(presenter.didPerformAction, false);
+
+    presenter.reject("companyId", "expenseId", "reason");
+
+    expect(presenter.didPerformAction, true);
   });
 }

@@ -1,3 +1,5 @@
+import 'package:wallpost/expense__core/entities/expense_request.dart';
+
 abstract class ExpenseListView {
   void showLoader();
 
@@ -6,4 +8,6 @@ abstract class ExpenseListView {
   void showNoItemsMessage();
 
   void updateList();
+
+  void showExpenseDetail(ExpenseRequest expenseRequest);
 }

@@ -292,9 +292,9 @@ void main() {
     expect(presenter.getItemAtIndex(2), approval3);
   });
 
-  //MARK: Tests to remove items
+  //MARK: Tests to select items
 
-  test('removing one approval from the list', () async {
+  test('selecting an item', () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
     var approval1 = MockExpenseApproval();
@@ -307,7 +307,34 @@ void main() {
     _clearAllInteractions();
 
     //when
-    presenter.removeItem(approval1);
+    presenter.selectItem(approval2);
+
+    //then
+    verifyInOrder([
+      () => view.showExpenseDetail(approval2),
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
+  //MARK: Tests to remove items
+
+  test('removing one approval from the list', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockExpenseApproval();
+    var approval2 = MockExpenseApproval();
+    var approval3 = MockExpenseApproval();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    when(() => listProvider.isLoading).thenReturn(false);
+    when(() => listProvider.didReachListEnd).thenReturn(false);
+    _clearAllInteractions();
+
+    //when
+    presenter.removeItemWithId("id2");
 
     //then
     expect(presenter.getNumberOfListItems(), 3);
@@ -328,16 +355,19 @@ void main() {
     var approval1 = MockExpenseApproval();
     var approval2 = MockExpenseApproval();
     var approval3 = MockExpenseApproval();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
     await presenter.getNext();
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.didReachListEnd).thenReturn(false);
-    presenter.removeItem(approval1);
-    presenter.removeItem(approval2);
+    presenter.removeItemWithId("id1");
+    presenter.removeItemWithId("id2");
     _clearAllInteractions();
 
     //when
-    await presenter.removeItem(approval3);
+    await presenter.removeItemWithId("id3");
 
     //then
     verifyInOrder([

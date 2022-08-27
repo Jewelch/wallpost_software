@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
 import '../constants/expense_approval_urls.dart';
-import '../entities/expense_approval.dart';
 
 class ExpenseRejector {
   final NetworkAdapter _networkAdapter;
@@ -14,12 +13,12 @@ class ExpenseRejector {
 
   ExpenseRejector() : _networkAdapter = WPAPI();
 
-  Future<void> reject(ExpenseApproval approval, {required String rejectionReason}) async {
-    var url = ExpenseApprovalUrls.rejectUrl(approval.companyId);
+  Future<void> reject(String companyId, String expenseId, {required String rejectionReason}) async {
+    var url = ExpenseApprovalUrls.rejectUrl(companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameter("app_type", "expenseRequest");
-    apiRequest.addParameter("request_id", approval.id);
+    apiRequest.addParameter("request_id", expenseId);
     apiRequest.addParameter("reason", rejectionReason);
     _isLoading = true;
 

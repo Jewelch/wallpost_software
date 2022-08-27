@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/expense_detail/ui/views/expense_detail_screen.dart';
 
 import '../../../_common_widgets/alert/alert.dart';
 import '../../../_common_widgets/app_bars/simple_app_bar.dart';
@@ -208,11 +210,28 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen>
     _viewTypeNotifier.notify(viewTypeList);
   }
 
+  @override
+  void showExpenseDetail(ExpenseApproval approval) {
+    _goToExpenseDetailScreen(approval);
+  }
+
+  void _goToExpenseDetailScreen(ExpenseApproval approval) async {
+    var didPerformAction = await ScreenPresenter.present(
+      ExpenseDetailScreen(
+        companyId: approval.companyId,
+        expenseId: approval.id,
+        isSourceScreenTheApprovalListScreen: true,
+      ),
+      context,
+    );
+    if (didPerformAction == true) _listPresenter.removeItemWithId(approval.id);
+  }
+
   //MARK: Approval view functions
 
   @override
-  void onDidApproveOrRejectSuccessfully(ExpenseApproval approval) {
-    _listPresenter.removeItem(approval);
+  void onDidApproveOrRejectSuccessfully(String expenseId) {
+    _listPresenter.removeItemWithId(expenseId);
   }
 
   @override

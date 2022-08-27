@@ -1,0 +1,110 @@
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
+import 'package:wallpost/expense__core/entities/expense_request_approval_status.dart';
+import 'package:wallpost/expense_detail/services/expense_detail_provider.dart';
+
+import '../../../expense__core/entities/expense_request.dart';
+import '../view_contracts/expense_detail_view.dart';
+
+class ExpenseDetailPresenter {
+  final String _companyId;
+  final String _expenseId;
+  final bool _didComeToDetailScreenFromApprovalList;
+  final ExpenseDetailView _view;
+  final ExpenseDetailProvider _expenseDetailProvider;
+  late ExpenseRequest _expenseRequest;
+  String? _errorMessage;
+
+  ExpenseDetailPresenter(
+    this._companyId,
+    this._expenseId,
+    this._view, {
+    bool didComeToDetailScreenFromApprovalList = false,
+  })  : this._didComeToDetailScreenFromApprovalList = didComeToDetailScreenFromApprovalList,
+        _expenseDetailProvider = ExpenseDetailProvider(_companyId);
+
+  ExpenseDetailPresenter.initWith(
+    this._companyId,
+    this._expenseId,
+    this._view,
+    this._expenseDetailProvider, {
+    bool didComeToDetailScreenFromApprovalList = false,
+  }) : this._didComeToDetailScreenFromApprovalList = didComeToDetailScreenFromApprovalList;
+
+  Future<void> loadDetail() async {
+    if (_expenseDetailProvider.isLoading) return;
+
+    _errorMessage = null;
+    _view.showLoader();
+    try {
+      _expenseRequest = await _expenseDetailProvider.get(_expenseId);
+      _view.onDidLoadDetails();
+    } on WPException catch (e) {
+      _errorMessage = "${e.userReadableMessage}\n\nTap here to reload.";
+      _view.onDidFailToLoadDetails();
+    }
+  }
+
+  //MARK: Functions to initiate approval and rejection
+
+  void initiateApproval() {
+    _view.approve(_companyId, _expenseId);
+  }
+
+  void initiateRejection() {
+    _view.reject(_companyId, _expenseId, _expenseRequest.requestedBy);
+  }
+
+  //MARK: Getters
+
+  bool shouldShowApprovalActions() {
+    return _didComeToDetailScreenFromApprovalList &&
+        _expenseRequest.approvalStatus == ExpenseRequestApprovalStatus.pending;
+  }
+
+  String getTitle() {
+    return _expenseRequest.getTitle();
+  }
+
+  String getRequestNumber() {
+    return _expenseRequest.requestNumber;
+  }
+
+  String getRequestDate() {
+    return _expenseRequest.requestDate.toReadableString();
+  }
+
+  String getRequestedBy() {
+    return _expenseRequest.requestedBy;
+  }
+
+  String? getMainCategory() {
+    return _expenseRequest.mainCategory;
+  }
+
+  String? getProject() {
+    return _expenseRequest.project;
+  }
+
+  String? getSubCategory() {
+    return _expenseRequest.subCategory;
+  }
+
+  String getRate() {
+    return _expenseRequest.rate;
+  }
+
+  String getQuantity() {
+    return "${_expenseRequest.quantity}";
+  }
+
+  String getTotalAmount() {
+    return _expenseRequest.totalAmount;
+  }
+
+  String? getAttachmentUrl() {
+    return _expenseRequest.attachmentUrl;
+  }
+
+  String? get errorMessage => _errorMessage;
+}

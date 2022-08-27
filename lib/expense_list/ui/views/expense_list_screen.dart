@@ -4,11 +4,15 @@ import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/filter_views/dropdown_filter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/expense__core/entities/expense_request.dart';
 import 'package:wallpost/expense_list/ui/models/expense_list_item_type.dart';
 import 'package:wallpost/expense_list/ui/presenters/expense_list_presenter.dart';
 import 'package:wallpost/expense_list/ui/view_contracts/expense_list_view.dart';
 import 'package:wallpost/expense_list/ui/views/expense_list_item_card.dart';
 import 'package:wallpost/expense_list/ui/views/expense_list_loader.dart';
+
+import '../../../_common_widgets/screen_presenter/screen_presenter.dart';
+import '../../../expense_detail/ui/views/expense_detail_screen.dart';
 
 class ExpenseListScreen extends StatefulWidget {
   const ExpenseListScreen({Key? key}) : super(key: key);
@@ -190,7 +194,7 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
     );
   }
 
-  //MARK: Approval list view functions
+  //MARK: View functions
 
   @override
   void showLoader() {
@@ -210,5 +214,22 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
   @override
   void updateList() {
     _viewTypeNotifier.notify(viewTypeList);
+  }
+
+  @override
+  void showExpenseDetail(ExpenseRequest expenseRequest) {
+    _goToExpenseDetailScreen(expenseRequest);
+  }
+
+  void _goToExpenseDetailScreen(ExpenseRequest expenseRequest) async {
+    var didPerformAction = await ScreenPresenter.present(
+      ExpenseDetailScreen(
+        companyId: expenseRequest.companyId,
+        expenseId: expenseRequest.id,
+        isSourceScreenTheApprovalListScreen: false,
+      ),
+      context,
+    );
+    if (didPerformAction == true) _listPresenter.refresh();
   }
 }

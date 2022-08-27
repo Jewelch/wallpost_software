@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/expense_approval/entities/expense_approval.dart';
 
 import '../constants/expense_approval_urls.dart';
 
@@ -14,12 +13,12 @@ class ExpenseApprover {
 
   ExpenseApprover() : _networkAdapter = WPAPI();
 
-  Future<void> approve(ExpenseApproval approval) async {
-    var url = ExpenseApprovalUrls.approveUrl(approval.companyId);
+  Future<void> approve(String companyId, String expenseId) async {
+    var url = ExpenseApprovalUrls.approveUrl(companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameter("app_type", "expenseRequest");
-    apiRequest.addParameter("request_id", approval.id);
+    apiRequest.addParameter("request_id", expenseId);
     _isLoading = true;
 
     try {

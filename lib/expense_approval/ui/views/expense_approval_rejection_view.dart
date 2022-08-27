@@ -6,11 +6,12 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import '../../../_common_widgets/buttons/capsule_action_button.dart';
 import '../../../_common_widgets/form_widgets/form_text_field.dart';
 import '../../../_shared/constants/app_colors.dart';
-import '../../entities/expense_approval.dart';
 import '../presenters/expense_approval_presenter.dart';
 
 class ExpenseApprovalRejectionView extends StatelessWidget {
-  final ExpenseApproval approval;
+  final String id;
+  final String companyId;
+  final String requestedBy;
   final ExpenseApprovalPresenter approvalPresenter;
   final ModalSheetController modalSheetController;
   final _reasonTextController = TextEditingController();
@@ -18,7 +19,9 @@ class ExpenseApprovalRejectionView extends StatelessWidget {
   final _loadingNotifier = ItemNotifier<bool>(defaultValue: false);
 
   ExpenseApprovalRejectionView({
-    required this.approval,
+    required this.id,
+    required this.companyId,
+    required this.requestedBy,
     required this.approvalPresenter,
     required this.modalSheetController,
   });
@@ -35,8 +38,7 @@ class ExpenseApprovalRejectionView extends StatelessWidget {
             children: [
               Text("Are you sure?", style: TextStyles.extraLargeTitleTextStyleBold),
               SizedBox(height: 16),
-              Text("You want to reject ${approval.requestedBy}'s expense request?",
-                  style: TextStyles.titleTextStyleBold),
+              Text("You want to reject $requestedBy's expense request?", style: TextStyles.titleTextStyleBold),
               SizedBox(height: 16),
               ItemNotifiable<String?>(
                 notifier: _reasonErrorNotifier,
@@ -91,8 +93,8 @@ class ExpenseApprovalRejectionView extends StatelessWidget {
     }
 
     _loadingNotifier.notify(true);
-    var didReject = await approvalPresenter.reject(approval, _reasonTextController.text);
+    var didReject = await approvalPresenter.reject(companyId, id, _reasonTextController.text);
     _loadingNotifier.notify(false);
-    if (didReject) modalSheetController.close();
+    if (didReject) modalSheetController.close(result: true);
   }
 }

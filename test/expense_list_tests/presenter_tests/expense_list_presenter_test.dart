@@ -187,6 +187,26 @@ main() {
     expect(presenter.errorMessage, "");
   });
 
+  //MARK: Tests for selecting an item
+
+  test("selecting an item", () async {
+    //given
+    var expenseRequests = [MockExpenseRequest(), MockExpenseRequest(), MockExpenseRequest()];
+    when(() => listProvider.isLoading).thenReturn(false);
+    when(() => listProvider.getNext(any())).thenAnswer((_) => Future.value(expenseRequests));
+    _clearAllInteractions();
+    await presenter.getNext();
+    _clearAllInteractions();
+
+    //when
+    presenter.selectItem(expenseRequests[1]);
+
+    //then
+    verifyInOrder([
+      () => view.showExpenseDetail(expenseRequests[1]),
+    ]);
+  });
+
   //MARK: Tests for getting the list details
 
   test('get number of leave list items when there are no items', () async {
