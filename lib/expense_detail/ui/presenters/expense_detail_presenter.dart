@@ -48,11 +48,11 @@ class ExpenseDetailPresenter {
   //MARK: Functions to initiate approval and rejection
 
   void initiateApproval() {
-    _view.approve(_companyId, _expenseId);
+    _view.processApproval(_companyId, _expenseId);
   }
 
   void initiateRejection() {
-    _view.reject(_companyId, _expenseId, _expenseRequest.requestedBy);
+    _view.processRejection(_companyId, _expenseId, _expenseRequest.requestedBy);
   }
 
   //MARK: Getters

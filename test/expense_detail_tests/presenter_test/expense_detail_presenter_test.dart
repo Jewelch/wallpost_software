@@ -114,7 +114,7 @@ void main() {
 
     //then
     verifyInOrder([
-      () => view.approve("someCompanyId", "someExpenseId"),
+      () => view.processApproval("someCompanyId", "someExpenseId"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -133,7 +133,7 @@ void main() {
 
     //then
     verifyInOrder([
-      () => view.reject("someCompanyId", "someExpenseId", "some name"),
+      () => view.processRejection("someCompanyId", "someExpenseId", "some name"),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
