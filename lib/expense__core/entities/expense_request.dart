@@ -71,15 +71,15 @@ class ExpenseRequest extends JSONInitializable {
 
   String getTitle() {
     var title = "";
-    title += mainCategory ?? "";
-    if (title.isNotEmpty && (project != null || subCategory != null)) title += ": ";
+    title += _mainCategory ?? "";
+    if (title.isNotEmpty && (_project != null || _subCategory != null)) title += ": ";
 
-    title += project ?? "";
-    if (title.isNotEmpty && subCategory != null) title += " ";
+    title += _project ?? "";
+    if (title.isNotEmpty && _subCategory != null) title += " ";
 
-    title += subCategory ?? "";
+    title += _subCategory ?? "";
 
-    if (title.isEmpty && description != null) title = description!;
+    if (title.isEmpty && _description != null) title = _description!;
 
     return title;
   }
