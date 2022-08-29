@@ -114,6 +114,11 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
           _labelAndValue("Rate", _presenter.getRate()),
           _labelAndValue("Quantity", _presenter.getQuantity()),
           _labelAndValue("Amount", _presenter.getTotalAmount()),
+          _labelAndValue(
+            "Status",
+            _presenter.getStatus(),
+            valueStyle: TextStyles.titleTextStyle.copyWith(color: _presenter.getStatusColor()),
+          ),
           GestureDetector(
             onTap: () => FileUrlOpener.openFileUrl(_presenter.getAttachmentUrl()),
             child: _labelAndValue(

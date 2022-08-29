@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/expense__core/entities/expense_request.dart';
 import 'package:wallpost/expense__core/entities/expense_request_approval_status.dart';
 import 'package:wallpost/expense_detail/services/expense_detail_provider.dart';
@@ -298,5 +299,33 @@ void main() {
     await presenter.loadDetail();
 
     expect(presenter.getAttachmentUrl(), "attachment url");
+  });
+
+  test("get status", () async {
+    var expense = MockExpenseRequest();
+    when(() => detailProvider.isLoading).thenReturn(false);
+    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(expense));
+    when(() => expense.statusMessage).thenReturn("some status message");
+    await presenter.loadDetail();
+
+    expect(presenter.getStatus(), "some status message");
+  });
+
+  test("get status color", () async {
+    var expense = MockExpenseRequest();
+    when(() => detailProvider.isLoading).thenReturn(false);
+    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(expense));
+    await presenter.loadDetail();
+
+    when(() => expense.approvalStatus).thenReturn(ExpenseRequestApprovalStatus.pending);
+    expect(presenter.getStatusColor(), AppColors.yellow);
+
+    //rejected
+    when(() => expense.approvalStatus).thenReturn(ExpenseRequestApprovalStatus.rejected);
+    expect(presenter.getStatusColor(), AppColors.red);
+
+    //approved
+    when(() => expense.approvalStatus).thenReturn(ExpenseRequestApprovalStatus.approved);
+    expect(presenter.getStatusColor(), AppColors.green);
   });
 }
