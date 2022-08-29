@@ -191,6 +191,8 @@ void main() {
     expect(presenter.shouldShowApprovalActions(), true);
   });
 
+  //MARK: Getter tests
+
   test('get title', () async {
     var expense = MockExpenseRequest();
     when(() => detailProvider.isLoading).thenReturn(false);
