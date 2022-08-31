@@ -3,7 +3,7 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
 import 'package:wallpost/_main/ui/view_contracts/main_view.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/company_list/views/company_list_screen.dart';
+import 'package:wallpost/dashboard/group_dashboard/ui/views/group_dashboard_screen.dart';
 import 'package:wallpost/login/ui/views/login_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -50,6 +50,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver imp
 
   @override
   void goToCompanyListScreen() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(CompanyListScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(GroupDashboardScreen(), context);
   }
 }

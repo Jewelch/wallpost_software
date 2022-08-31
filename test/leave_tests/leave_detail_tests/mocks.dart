@@ -1,0 +1,86 @@
+class Mocks {
+  static Map<String, dynamic> leaveDetailResponse = {
+    "id": 6544,
+    "employee_id": 6018,
+    "leave_type_id": 138,
+    "auto_number": "UTTRCO-INDIA/LEAVEREQUEST/07/2022/06544",
+    "company_id": 42,
+    "leave_from": "2022-07-15",
+    "leave_to": "2022-07-19",
+    "leave_days": 3,
+    "status": 1,
+    "leave_reason": "Personals , Leave days \n 15/Jul/2022,  18/Jul/2022 and   19/Jul/2022 ",
+    "contact_on_leave": "77397058",
+    "contact_email": "sgosalaparamban@wallpostdev.com",
+    "handover_status": "4",
+    "clearance_status": "4",
+    "exit_required": 0,
+    "ticket": "No",
+    "origin": 0,
+    "destination": 0,
+    "departure_date": "0000-00-00",
+    "departure_time": "00:00:00",
+    "return_date": "0000-00-00",
+    "return_time": "00:00:00",
+    "family_ticket": "",
+    "way_type": "",
+    "air_class": "",
+    "no_ticket_adult": 0,
+    "no_ticket_children": 0,
+    "rejected_reason": "",
+    "rejected_by": null,
+    "rejected_at": null,
+    "approval_comments": "",
+    "cancel_reason": "",
+    "replaced_required": "1",
+    "replaced_by": null,
+    "replaced_by_others": "",
+    "attach_doc": [
+      {
+        "document_file_name": "DOC_5f24b823-1c36-4a41-a645-f660e9d96ff6.png",
+        "reference_id": 6544,
+        "company_id": 42,
+        "attachment":
+            "https://wallpostsoftware.com/wp/https://s3.amazonaws.com/wallpostsoftware/123123/42/leaverequest/DOC_5f24b823-1c36-4a41-a645-f660e9d96ff6.png"
+      }
+    ],
+    "paid_days": 3,
+    "unpaid_days": 0,
+    "leave_type": {
+      "id": 138,
+      "name": "Privileged Leave (Annual)",
+      "handover_status": "1",
+      "clearance_status": 1,
+      "payment_cheque_type": "0"
+    },
+    "employee": {
+      "id": 6018,
+      "code": "SMIT-IND-0149",
+      "name": "Saeed",
+      "middle_name": "",
+      "short_name": "Gosalaparamban",
+      "company": 42,
+      "join_date": "2021-07-01",
+      "department": {"id": 500, "name": "Technical Department"},
+      "designation": 2063,
+      "employee_grade": 224,
+      "username": "Saeed1",
+      "signature": "",
+      "active": "1",
+      "email_id_office": "sgosalaparamban@wallpostdev.com",
+      "email_salutation": "Saeed",
+      "email_cc": "",
+      "line_manager": 4130,
+      "photo": "DOC_a53e9726-b4a0-4fd1-8fa3-77a11c4e67c7.jpg",
+      "profile_image": "DOC_a53e9726-b4a0-4fd1-8fa3-77a11c4e67c7.jpg",
+      "gender": "Male",
+      "sponser_name": "",
+      "fullName": "Saeed  Gosalaparamban",
+      "position": {"id": 2063, "name": "Android Developer"}
+    },
+    "extra_info": {
+      "handover": {"status": "Not Applicable", "action": null},
+      "pending_with": null
+    }
+  };
+}
