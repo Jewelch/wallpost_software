@@ -2,25 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/expense_approval/ui/views/expense_approval_alert.dart';
+import 'package:wallpost/expense_approval_list/entities/expense_approval_list_item.dart';
 
 import '../../../_common_widgets/buttons/capsule_action_button.dart';
-import '../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
-import '../../entities/expense_approval.dart';
+import '../../../expense_approval/ui/views/expense_rejection_alert.dart';
 import '../presenters/expense_approval_list_presenter.dart';
-import '../presenters/expense_approval_presenter.dart';
-import 'expense_approval_rejection_view.dart';
 
-class ExpenseApprovalListItemCard extends StatelessWidget {
+class ExpenseApprovalListItemCard extends StatefulWidget {
   final ExpenseApprovalListPresenter listPresenter;
-  final ExpenseApprovalPresenter approvalPresenter;
-  final ExpenseApproval approval;
-  final _loadingNotifier = ItemNotifier<bool>(defaultValue: false);
+  final ExpenseApprovalListItem approval;
 
   ExpenseApprovalListItemCard({
     required this.listPresenter,
-    required this.approvalPresenter,
     required this.approval,
   });
+
+  @override
+  State<ExpenseApprovalListItemCard> createState() => _ExpenseApprovalListItemCardState();
+}
+
+class _ExpenseApprovalListItemCardState extends State<ExpenseApprovalListItemCard> {
+  final _loadingNotifier = ItemNotifier<bool>(defaultValue: false);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class ExpenseApprovalListItemCard extends StatelessWidget {
         border: Border.all(width: 1, color: AppColors.listItemBorderColor),
       ),
       child: InkWell(
-        onTap: () => listPresenter.selectItem(approval),
+        onTap: () => widget.listPresenter.selectItem(widget.approval),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           child: Column(
@@ -42,12 +45,12 @@ class ExpenseApprovalListItemCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      listPresenter.getTitle(approval),
+                      widget.listPresenter.getTitle(widget.approval),
                       style: TextStyles.titleTextStyleBold,
                     ),
                   ),
                   Text(
-                    listPresenter.getTotalAmount(approval),
+                    widget.listPresenter.getTotalAmount(widget.approval),
                     style: TextStyles.titleTextStyleBold,
                   ),
                 ],
@@ -59,12 +62,12 @@ class ExpenseApprovalListItemCard extends StatelessWidget {
                     Expanded(
                       child: _labelAndValue(
                         "Request No - ",
-                        listPresenter.getRequestNumber(approval),
+                        widget.listPresenter.getRequestNumber(widget.approval),
                       ),
                     ),
                     _labelAndValue(
                       "Date - ",
-                      listPresenter.getRequestDate(approval),
+                      widget.listPresenter.getRequestDate(widget.approval),
                     ),
                   ],
                 ),
@@ -75,7 +78,7 @@ class ExpenseApprovalListItemCard extends StatelessWidget {
                   Expanded(
                     child: _labelAndValue(
                       "Requested By - ",
-                      listPresenter.getRequestedBy(approval),
+                      widget.listPresenter.getRequestedBy(widget.approval),
                     ),
                   ),
                   Icon(
@@ -104,7 +107,7 @@ class ExpenseApprovalListItemCard extends StatelessWidget {
                         child: CapsuleActionButton(
                           title: "Reject",
                           color: AppColors.red,
-                          onPressed: () => _showRejectionSheet(context),
+                          onPressed: () => _reject(),
                           disabled: isLoading ? true : false,
                         ),
                       ),
@@ -137,24 +140,22 @@ class ExpenseApprovalListItemCard extends StatelessWidget {
   }
 
   void _approve() async {
-    _loadingNotifier.notify(true);
-    await approvalPresenter.approve(approval.companyId, approval.id);
-    _loadingNotifier.notify(false);
+    var didApprove = await ExpenseApprovalAlert.show(
+      context: context,
+      expenseId: widget.approval.id,
+      companyId: widget.approval.companyId,
+      requestedBy: widget.approval.requestedBy,
+    );
+    if (didApprove == true) widget.listPresenter.removeItemWithId(widget.approval.id);
   }
 
-  void _showRejectionSheet(BuildContext context) async {
-    var modalSheetController = ModalSheetController();
-    ModalSheetPresenter.present(
+  void _reject() async {
+    var didReject = await ExpenseRejectionAlert.show(
       context: context,
-      content: ExpenseApprovalRejectionView(
-        companyId: approval.companyId,
-        id: approval.id,
-        requestedBy: approval.requestedBy,
-        approvalPresenter: approvalPresenter,
-        modalSheetController: modalSheetController,
-      ),
-      controller: modalSheetController,
-      shouldDismissOnTap: false,
+      expenseId: widget.approval.id,
+      companyId: widget.approval.companyId,
+      requestedBy: widget.approval.requestedBy,
     );
+    if (didReject == true) widget.listPresenter.removeItemWithId(widget.approval.id);
   }
 }

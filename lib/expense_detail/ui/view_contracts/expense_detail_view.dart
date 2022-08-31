@@ -5,7 +5,7 @@ abstract class ExpenseDetailView {
 
   void onDidLoadDetails();
 
-  void processApproval(String companyId, String expenseId);
+  void processApproval(String companyId, String expenseId, String requestedBy);
 
   void processRejection(String companyId, String expenseId, String requestedBy);
 }

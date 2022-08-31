@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/expense_approval_list/entities/expense_approval_list_item.dart';
 import 'package:wallpost/expense_detail/ui/views/expense_detail_screen.dart';
 
-import '../../../_common_widgets/alert/alert.dart';
 import '../../../_common_widgets/app_bars/simple_app_bar.dart';
 import '../../../_common_widgets/buttons/rounded_back_button.dart';
-import '../../entities/expense_approval.dart';
 import '../models/expense_approval_list_item_view_type.dart';
 import '../presenters/expense_approval_list_presenter.dart';
-import '../presenters/expense_approval_presenter.dart';
 import '../view_contracts/expense_approval_list_view.dart';
-import '../view_contracts/expense_approval_view.dart';
 import 'expense_approval_list_item_card.dart';
 import 'expense_approval_list_loader.dart';
 
@@ -25,10 +22,8 @@ class ExpenseApprovalListScreen extends StatefulWidget {
   State<ExpenseApprovalListScreen> createState() => _ExpenseApprovalListScreenState();
 }
 
-class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen>
-    implements ExpenseApprovalListView, ExpenseApprovalView {
+class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> implements ExpenseApprovalListView {
   late ExpenseApprovalListPresenter _listPresenter;
-  late ExpenseApprovalPresenter _approvalPresenter;
   final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: 0);
   final _scrollController = ScrollController();
   final int viewTypeLoader = 1;
@@ -38,7 +33,6 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen>
 
   @override
   void initState() {
-    _approvalPresenter = ExpenseApprovalPresenter(this);
     _listPresenter = ExpenseApprovalListPresenter(widget.companyId, this);
     _listPresenter.getNext();
     _setupScrollDownToLoadMoreItems();
@@ -164,7 +158,6 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen>
   Widget _listItem(index) {
     return ExpenseApprovalListItemCard(
       listPresenter: _listPresenter,
-      approvalPresenter: _approvalPresenter,
       approval: _listPresenter.getItemAtIndex(index),
     );
   }
@@ -211,11 +204,11 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen>
   }
 
   @override
-  void showExpenseDetail(ExpenseApproval approval) {
+  void showExpenseDetail(ExpenseApprovalListItem approval) {
     _goToExpenseDetailScreen(approval);
   }
 
-  void _goToExpenseDetailScreen(ExpenseApproval approval) async {
+  void _goToExpenseDetailScreen(ExpenseApprovalListItem approval) async {
     var didPerformAction = await ScreenPresenter.present(
       ExpenseDetailScreen(
         companyId: approval.companyId,
@@ -225,17 +218,5 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen>
       context,
     );
     if (didPerformAction == true) _listPresenter.removeItemWithId(approval.id);
-  }
-
-  //MARK: Approval view functions
-
-  @override
-  void onDidApproveOrRejectSuccessfully(String expenseId) {
-    _listPresenter.removeItemWithId(expenseId);
-  }
-
-  @override
-  void onDidFailToApproveOrReject(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 }

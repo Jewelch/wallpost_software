@@ -1,6 +1,6 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
-import 'package:wallpost/expense_approval/entities/expense_approval.dart';
+import 'package:wallpost/expense_approval_list/entities/expense_approval_list_item.dart';
 
 import '../../services/expense_approval_list_provider.dart';
 import '../models/expense_approval_list_item_view_type.dart';
@@ -9,7 +9,7 @@ import '../view_contracts/expense_approval_list_view.dart';
 class ExpenseApprovalListPresenter {
   final ExpenseApprovalListView _view;
   final ExpenseApprovalListProvider _approvalListProvider;
-  final List<ExpenseApproval> _approvalItems = [];
+  final List<ExpenseApprovalListItem> _approvalItems = [];
   String _errorMessage = "";
   final String _noItemsMessage = "There are no approvals to show.\n\nTap here to reload.";
 
@@ -34,7 +34,7 @@ class ExpenseApprovalListPresenter {
     }
   }
 
-  void _handleResponse(List<ExpenseApproval> newListItems) {
+  void _handleResponse(List<ExpenseApprovalListItem> newListItems) {
     _approvalItems.addAll(newListItems);
     _updateList();
   }
@@ -61,7 +61,7 @@ class ExpenseApprovalListPresenter {
 
   //MARK: Function to select an item
 
-  void selectItem(ExpenseApproval approval) {
+  void selectItem(ExpenseApprovalListItem approval) {
     _view.showExpenseDetail(approval);
   }
 
@@ -96,29 +96,29 @@ class ExpenseApprovalListPresenter {
     return ExpenseApprovalListItemViewType.EmptySpace;
   }
 
-  ExpenseApproval getItemAtIndex(int index) {
+  ExpenseApprovalListItem getItemAtIndex(int index) {
     return _approvalItems[index];
   }
 
   //MARK: Getters
 
-  String getTitle(ExpenseApproval approval) {
+  String getTitle(ExpenseApprovalListItem approval) {
     return approval.getTitle();
   }
 
-  String getTotalAmount(ExpenseApproval approval) {
+  String getTotalAmount(ExpenseApprovalListItem approval) {
     return approval.totalAmount;
   }
 
-  String getRequestNumber(ExpenseApproval approval) {
+  String getRequestNumber(ExpenseApprovalListItem approval) {
     return approval.requestNumber;
   }
 
-  String getRequestDate(ExpenseApproval approval) {
+  String getRequestDate(ExpenseApprovalListItem approval) {
     return approval.requestDate.toReadableString();
   }
 
-  String getRequestedBy(ExpenseApproval approval) {
+  String getRequestedBy(ExpenseApprovalListItem approval) {
     return approval.requestedBy;
   }
 

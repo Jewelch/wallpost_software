@@ -17,20 +17,23 @@ class ExpenseDetailPresenter {
   final ExpenseDetailProvider _expenseDetailProvider;
   late ExpenseRequest _expenseRequest;
   String? _errorMessage;
+  var _didProcessApprovalOrRejection = false;
 
-  ExpenseDetailPresenter(this._companyId,
-      this._expenseId,
-      this._view, {
-        bool didComeToDetailScreenFromApprovalList = false,
-      })  : this._didComeToDetailScreenFromApprovalList = didComeToDetailScreenFromApprovalList,
+  ExpenseDetailPresenter(
+    this._companyId,
+    this._expenseId,
+    this._view, {
+    bool didComeToDetailScreenFromApprovalList = false,
+  })  : this._didComeToDetailScreenFromApprovalList = didComeToDetailScreenFromApprovalList,
         _expenseDetailProvider = ExpenseDetailProvider(_companyId);
 
-  ExpenseDetailPresenter.initWith(this._companyId,
-      this._expenseId,
-      this._view,
-      this._expenseDetailProvider, {
-        bool didComeToDetailScreenFromApprovalList = false,
-      }) : this._didComeToDetailScreenFromApprovalList = didComeToDetailScreenFromApprovalList;
+  ExpenseDetailPresenter.initWith(
+    this._companyId,
+    this._expenseId,
+    this._view,
+    this._expenseDetailProvider, {
+    bool didComeToDetailScreenFromApprovalList = false,
+  }) : this._didComeToDetailScreenFromApprovalList = didComeToDetailScreenFromApprovalList;
 
   Future<void> loadDetail() async {
     if (_expenseDetailProvider.isLoading) return;
@@ -46,14 +49,21 @@ class ExpenseDetailPresenter {
     }
   }
 
-  //MARK: Functions to initiate approval and rejection
+  //MARK: Functions for approval and rejection
 
   void initiateApproval() {
-    _view.processApproval(_companyId, _expenseId);
+    _view.processApproval(_companyId, _expenseId, _expenseRequest.requestedBy);
   }
 
   void initiateRejection() {
     _view.processRejection(_companyId, _expenseId, _expenseRequest.requestedBy);
+  }
+
+  Future<void> onDidProcessApprovalOrRejection(dynamic didProcess) async {
+    if (didProcess == true) {
+      _didProcessApprovalOrRejection = true;
+      await loadDetail();
+    }
   }
 
   //MARK: Getters
@@ -122,4 +132,6 @@ class ExpenseDetailPresenter {
   }
 
   String? get errorMessage => _errorMessage;
+
+  get didProcessApprovalOrRejection => _didProcessApprovalOrRejection;
 }

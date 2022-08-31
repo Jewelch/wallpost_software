@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:sift/Sift.dart';
-import 'package:wallpost/expense_approval/constants/expense_approval_urls.dart';
+import 'package:wallpost/expense_approval_list/entities/expense_approval_list_item.dart';
 
 import '../../_shared/exceptions/wrong_response_format_exception.dart';
 import '../../_wp_core/wpapi/services/wp_api.dart';
-import '../entities/expense_approval.dart';
+import '../constants/expense_approval_list_urls.dart';
 
 class ExpenseApprovalListProvider {
   final String _companyId;
@@ -27,8 +27,8 @@ class ExpenseApprovalListProvider {
     isLoading = false;
   }
 
-  Future<List<ExpenseApproval>> getNext() async {
-    var url = ExpenseApprovalUrls.pendingApprovalListUrl(_companyId, _pageNumber, _perPage);
+  Future<List<ExpenseApprovalListItem>> getNext() async {
+    var url = ExpenseApprovalListUrls.pendingApprovalListUrl(_companyId, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
@@ -42,9 +42,9 @@ class ExpenseApprovalListProvider {
     }
   }
 
-  Future<List<ExpenseApproval>> _processResponse(APIResponse apiResponse) async {
+  Future<List<ExpenseApprovalListItem>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<ExpenseApproval>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<ExpenseApprovalListItem>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
@@ -60,11 +60,11 @@ class ExpenseApprovalListProvider {
     }
   }
 
-  List<ExpenseApproval> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<ExpenseApprovalListItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var approvalList = <ExpenseApproval>[];
+      var approvalList = <ExpenseApprovalListItem>[];
       for (var responseMap in responseMapList) {
-        var approval = ExpenseApproval.fromJson(responseMap);
+        var approval = ExpenseApprovalListItem.fromJson(responseMap);
         approvalList.add(approval);
       }
       _updatePaginationRelatedData(approvalList.length);

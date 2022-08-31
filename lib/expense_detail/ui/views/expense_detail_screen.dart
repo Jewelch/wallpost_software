@@ -5,13 +5,10 @@ import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/file/file_url_opener.dart';
-import 'package:wallpost/expense_approval/ui/presenters/expense_approval_presenter.dart';
-import 'package:wallpost/expense_approval/ui/view_contracts/expense_approval_view.dart';
+import 'package:wallpost/expense_approval/ui/views/expense_rejection_alert.dart';
 
-import '../../../_common_widgets/alert/alert.dart';
 import '../../../_common_widgets/buttons/capsule_action_button.dart';
-import '../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
-import '../../../expense_approval/ui/views/expense_approval_rejection_view.dart';
+import '../../../expense_approval/ui/views/expense_approval_alert.dart';
 import '../presenters/expense_detail_presenter.dart';
 import '../view_contracts/expense_detail_view.dart';
 import 'expense_detail_loader.dart';
@@ -31,14 +28,12 @@ class ExpenseDetailScreen extends StatefulWidget {
   _ExpenseDetailScreenState createState() => _ExpenseDetailScreenState();
 }
 
-class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements ExpenseDetailView, ExpenseApprovalView {
+class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements ExpenseDetailView {
   late ExpenseDetailPresenter _presenter;
-  late ExpenseApprovalPresenter _approvalPresenter;
   final int viewTypeLoader = 1;
   final int viewTypeError = 2;
   final int viewTypeExpenseDetails = 3;
   final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: 1);
-  final ItemNotifier<bool> _approveButtonLoaderNotifier = ItemNotifier(defaultValue: false);
 
   @override
   void initState() {
@@ -49,7 +44,6 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
       didComeToDetailScreenFromApprovalList: widget.isSourceScreenTheApprovalListScreen,
     );
     _presenter.loadDetail();
-    _approvalPresenter = ExpenseApprovalPresenter(this);
     super.initState();
   }
 
@@ -61,8 +55,8 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
         title: "Expense Details",
         leadingButton: RoundedBackButton(
             onPressed: () => Navigator.pop(
-                  context,
-                  _approvalPresenter.didPerformAction,
+              context,
+                  _presenter.didProcessApprovalOrRejection,
                 )),
       ),
       body: SafeArea(
@@ -132,33 +126,26 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
           ),
           SizedBox(height: 20),
           if (_presenter.shouldShowApprovalActions())
-            ItemNotifiable<bool>(
-              notifier: _approveButtonLoaderNotifier,
-              builder: (context, isLoading) {
-                return Row(
-                  children: [
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: CapsuleActionButton(
-                        title: "Approve",
-                        color: AppColors.green,
-                        onPressed: () => _presenter.initiateApproval(),
-                        showLoader: isLoading,
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: CapsuleActionButton(
-                        title: "Reject",
-                        color: AppColors.red,
-                        onPressed: () => _presenter.initiateRejection(),
-                        disabled: isLoading ? true : false,
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                  ],
-                );
-              },
+            Row(
+              children: [
+                SizedBox(width: 12),
+                Expanded(
+                  child: CapsuleActionButton(
+                    title: "Approve",
+                    color: AppColors.green,
+                    onPressed: () => _presenter.initiateApproval(),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: CapsuleActionButton(
+                    title: "Reject",
+                    color: AppColors.red,
+                    onPressed: () => _presenter.initiateRejection(),
+                  ),
+                ),
+                SizedBox(width: 12),
+              ],
             ),
         ],
       ),
@@ -225,8 +212,8 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
   }
 
   @override
-  void processApproval(String companyId, String expenseId) {
-    _approve(companyId, expenseId);
+  void processApproval(String companyId, String expenseId, String requestedBy) {
+    _approve(companyId, expenseId, requestedBy);
   }
 
   @override
@@ -234,45 +221,25 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
     _showRejectionSheet(companyId, expenseId, requestedBy, context);
   }
 
-  //MARK: Approval view functions
-
-  @override
-  void onDidApproveOrRejectSuccessfully(String expenseId) {
-    _presenter.loadDetail();
-    Alert.showSimpleAlert(
-        context: context,
-        title: "Approved Successfully",
-        message: "The expense request has been approved successfully.");
-  }
-
-  @override
-  void onDidFailToApproveOrReject(String title, String message) {
-    _presenter.loadDetail();
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
   //MARK: Functions to approve and reject
 
-  void _approve(String companyId, String expenseId) async {
-    _approveButtonLoaderNotifier.notify(true);
-    await _approvalPresenter.approve(companyId, expenseId);
-    _approveButtonLoaderNotifier.notify(false);
+  void _approve(String companyId, String expenseId, String requestedBy) async {
+    var didApprove = await ExpenseApprovalAlert.show(
+      context: context,
+      expenseId: expenseId,
+      companyId: companyId,
+      requestedBy: requestedBy,
+    );
+    _presenter.onDidProcessApprovalOrRejection(didApprove);
   }
 
   void _showRejectionSheet(String companyId, String expenseId, String requestedBy, BuildContext context) async {
-    var modalSheetController = ModalSheetController();
-    await ModalSheetPresenter.present(
+    var didReject = await ExpenseRejectionAlert.show(
       context: context,
-      content: ExpenseApprovalRejectionView(
-        companyId: companyId,
-        id: expenseId,
-        requestedBy: requestedBy,
-        approvalPresenter: _approvalPresenter,
-        modalSheetController: modalSheetController,
-      ),
-      controller: modalSheetController,
-      shouldDismissOnTap: false,
+      expenseId: expenseId,
+      companyId: companyId,
+      requestedBy: requestedBy,
     );
-    _presenter.loadDetail();
+    _presenter.onDidProcessApprovalOrRejection(didReject);
   }
 }

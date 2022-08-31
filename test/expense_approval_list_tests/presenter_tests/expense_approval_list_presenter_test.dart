@@ -1,17 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
-import 'package:wallpost/expense_approval/entities/expense_approval.dart';
-import 'package:wallpost/expense_approval/services/expense_approval_list_provider.dart';
-import 'package:wallpost/expense_approval/ui/models/expense_approval_list_item_view_type.dart';
-import 'package:wallpost/expense_approval/ui/presenters/expense_approval_list_presenter.dart';
-import 'package:wallpost/expense_approval/ui/view_contracts/expense_approval_list_view.dart';
+import 'package:wallpost/expense_approval_list/entities/expense_approval_list_item.dart';
+import 'package:wallpost/expense_approval_list/services/expense_approval_list_provider.dart';
+import 'package:wallpost/expense_approval_list/ui/models/expense_approval_list_item_view_type.dart';
+import 'package:wallpost/expense_approval_list/ui/presenters/expense_approval_list_presenter.dart';
+import 'package:wallpost/expense_approval_list/ui/view_contracts/expense_approval_list_view.dart';
 
 class MockExpenseApprovalListView extends Mock implements ExpenseApprovalListView {}
 
 class MockExpenseApprovalListProvider extends Mock implements ExpenseApprovalListProvider {}
 
-class MockExpenseApproval extends Mock implements ExpenseApproval {}
+class MockExpenseApprovalListItem extends Mock implements ExpenseApprovalListItem {}
 
 void main() {
   var view = MockExpenseApprovalListView();
@@ -90,7 +90,8 @@ void main() {
   test('successfully loading the list with items', () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
-    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([MockExpenseApproval(), MockExpenseApproval()]));
+    when(() => listProvider.getNext())
+        .thenAnswer((_) => Future.value([MockExpenseApprovalListItem(), MockExpenseApprovalListItem()]));
 
     //when
     await presenter.getNext();
@@ -108,7 +109,8 @@ void main() {
   test('failure to load the next list of items', () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
-    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([MockExpenseApproval(), MockExpenseApproval()]));
+    when(() => listProvider.getNext())
+        .thenAnswer((_) => Future.value([MockExpenseApprovalListItem(), MockExpenseApprovalListItem()]));
     await presenter.getNext();
     when(() => listProvider.getNext()).thenAnswer((_) => Future.error(InvalidResponseException()));
     _clearAllInteractions();
@@ -131,14 +133,14 @@ void main() {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockExpenseApproval(),
-          MockExpenseApproval(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockExpenseApproval(),
-          MockExpenseApproval(),
-          MockExpenseApproval(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
         ]));
     _clearAllInteractions();
 
@@ -161,9 +163,9 @@ void main() {
     when(() => listProvider.getNext()).thenAnswer((_) => Future.error(InvalidResponseException()));
     await presenter.getNext();
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockExpenseApproval(),
-          MockExpenseApproval(),
-          MockExpenseApproval(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
         ]));
     _clearAllInteractions();
 
@@ -194,9 +196,9 @@ void main() {
     //when
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockExpenseApproval(),
-          MockExpenseApproval(),
-          MockExpenseApproval(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.didReachListEnd).thenReturn(false);
@@ -214,9 +216,9 @@ void main() {
     //when
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockExpenseApproval(),
-          MockExpenseApproval(),
-          MockExpenseApproval(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.isLoading).thenReturn(false);
@@ -235,9 +237,9 @@ void main() {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockExpenseApproval(),
-          MockExpenseApproval(),
-          MockExpenseApproval(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.isLoading).thenReturn(false);
@@ -259,9 +261,9 @@ void main() {
     //when
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockExpenseApproval(),
-          MockExpenseApproval(),
-          MockExpenseApproval(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
+          MockExpenseApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.didReachListEnd).thenReturn(true);
@@ -278,9 +280,9 @@ void main() {
   test('getting list item at index', () async {
     //when
     when(() => listProvider.isLoading).thenReturn(false);
-    var approval1 = MockExpenseApproval();
-    var approval2 = MockExpenseApproval();
-    var approval3 = MockExpenseApproval();
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
     await presenter.getNext();
     when(() => listProvider.didReachListEnd).thenReturn(false);
@@ -297,9 +299,9 @@ void main() {
   test('selecting an item', () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
-    var approval1 = MockExpenseApproval();
-    var approval2 = MockExpenseApproval();
-    var approval3 = MockExpenseApproval();
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
     await presenter.getNext();
     when(() => listProvider.isLoading).thenReturn(false);
@@ -321,9 +323,9 @@ void main() {
   test('removing one approval from the list', () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
-    var approval1 = MockExpenseApproval();
-    var approval2 = MockExpenseApproval();
-    var approval3 = MockExpenseApproval();
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
     when(() => approval1.id).thenReturn("id1");
     when(() => approval2.id).thenReturn("id2");
     when(() => approval3.id).thenReturn("id3");
@@ -352,9 +354,9 @@ void main() {
   test('removing all approvals from the list refreshes the list', () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
-    var approval1 = MockExpenseApproval();
-    var approval2 = MockExpenseApproval();
-    var approval3 = MockExpenseApproval();
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
     when(() => approval1.id).thenReturn("id1");
     when(() => approval2.id).thenReturn("id2");
     when(() => approval3.id).thenReturn("id3");
@@ -383,35 +385,35 @@ void main() {
   //MARK: Tests for getters
 
   test("getting title", () {
-    var expense = MockExpenseApproval();
+    var expense = MockExpenseApprovalListItem();
     when(() => expense.getTitle()).thenReturn("Some title");
 
     expect(presenter.getTitle(expense), "Some title");
   });
 
   test("get total amount", () {
-    var expense = MockExpenseApproval();
+    var expense = MockExpenseApprovalListItem();
     when(() => expense.totalAmount).thenReturn("USD 40.00");
 
     expect(presenter.getTotalAmount(expense), "USD 40.00");
   });
 
   test("get request number", () {
-    var expense = MockExpenseApproval();
+    var expense = MockExpenseApprovalListItem();
     when(() => expense.requestNumber).thenReturn("some request number");
 
     expect(presenter.getRequestNumber(expense), "some request number");
   });
 
   test("get request date", () {
-    var expense = MockExpenseApproval();
+    var expense = MockExpenseApprovalListItem();
     when(() => expense.requestDate).thenReturn(DateTime(2022, 8, 20));
 
     expect(presenter.getRequestDate(expense), "20 Aug 2022");
   });
 
   test("get requested by", () {
-    var expense = MockExpenseApproval();
+    var expense = MockExpenseApprovalListItem();
     when(() => expense.requestedBy).thenReturn("some name");
 
     expect(presenter.getRequestedBy(expense), "some name");

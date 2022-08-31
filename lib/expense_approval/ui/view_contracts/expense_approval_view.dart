@@ -1,5 +1,9 @@
 abstract class ExpenseApprovalView {
-  void onDidFailToApproveOrReject(String title, String message);
+  void showLoader();
 
-  void onDidApproveOrRejectSuccessfully(String expenseId);
+  void notifyInvalidRejectionReason();
+
+  void onDidPerformActionSuccessfully(String expenseId);
+
+  void onDidFailToPerformAction(String title, String message);
 }

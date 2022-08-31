@@ -8,7 +8,9 @@ class ExpenseApprovalPresenter {
   final ExpenseApprovalView _view;
   final ExpenseApprover _approver;
   final ExpenseRejector _rejector;
-  var _didPerformAction = false;
+  var _didPerformApprovalSuccessfully = false;
+  var _didPerformRejectionSuccessfully = false;
+  String? _reasonErrorMessage;
 
   ExpenseApprovalPresenter.initWith(this._view, this._approver, this._rejector);
 
@@ -17,26 +19,55 @@ class ExpenseApprovalPresenter {
         _rejector = ExpenseRejector();
 
   Future<void> approve(String companyId, String expenseId) async {
-    _didPerformAction = true;
+    if (_didPerformApprovalSuccessfully) return;
+
+    _view.showLoader();
     try {
       await _approver.approve(companyId, expenseId);
-      _view.onDidApproveOrRejectSuccessfully(expenseId);
+      _didPerformApprovalSuccessfully = true;
+      _view.onDidPerformActionSuccessfully(expenseId);
     } on WPException catch (e) {
-      _view.onDidFailToApproveOrReject("Approval Failed", e.userReadableMessage);
+      _view.onDidFailToPerformAction("Approval Failed", e.userReadableMessage);
     }
   }
 
-  Future<bool> reject(String companyId, String expenseId, String rejectionReason) async {
-    _didPerformAction = true;
+  Future<void> reject(String companyId, String expenseId, String rejectionReason) async {
+    if (_didPerformRejectionSuccessfully) return;
+
+    if (rejectionReason.isEmpty) {
+      _reasonErrorMessage = "Please enter a valid reason";
+      _view.notifyInvalidRejectionReason();
+      return;
+    }
+
+    _reasonErrorMessage = null;
+    _view.showLoader();
     try {
       await _rejector.reject(companyId, expenseId, rejectionReason: rejectionReason);
-      _view.onDidApproveOrRejectSuccessfully(expenseId);
-      return true;
+      _didPerformRejectionSuccessfully = true;
+      _view.onDidPerformActionSuccessfully(expenseId);
     } on WPException catch (e) {
-      _view.onDidFailToApproveOrReject("Rejection Failed", e.userReadableMessage);
-      return false;
+      _view.onDidFailToPerformAction("Rejection Failed", e.userReadableMessage);
     }
   }
 
-  get didPerformAction => _didPerformAction;
+  bool isApprovalInProgress() {
+    return _approver.isLoading;
+  }
+
+  bool isRejectionInProgress() {
+    return _rejector.isLoading;
+  }
+
+  String getApproveButtonTitle() {
+    return _didPerformApprovalSuccessfully ? "Approved!" : "Submit";
+  }
+
+  String getRejectButtonTitle() {
+    return _didPerformRejectionSuccessfully ? "Rejected!" : "Submit";
+  }
+
+  String? getRejectionReasonError() {
+    return _reasonErrorMessage;
+  }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/expense_approval/entities/expense_approval.dart';
 import 'package:wallpost/expense_approval/services/expense_approver.dart';
 import 'package:wallpost/expense_approval/services/expense_rejector.dart';
 import 'package:wallpost/expense_approval/ui/presenters/expense_approval_presenter.dart';
@@ -9,8 +8,6 @@ import 'package:wallpost/expense_approval/ui/view_contracts/expense_approval_vie
 import '../../_mocks/mock_network_adapter.dart';
 
 class MockExpenseApprovalView extends Mock implements ExpenseApprovalView {}
-
-class MockExpenseApproval extends Mock implements ExpenseApproval {}
 
 class MockExpenseApprover extends Mock implements ExpenseApprover {}
 
@@ -34,10 +31,6 @@ void main() {
     clearInteractions(rejector);
   }
 
-  setUpAll(() {
-    registerFallbackValue(MockExpenseApproval());
-  });
-
   setUp(() {
     _clearAllInteractions();
     presenter = ExpenseApprovalPresenter.initWith(view, approver, rejector);
@@ -52,8 +45,9 @@ void main() {
 
     //then
     verifyInOrder([
+      () => view.showLoader(),
       () => approver.approve("someCompanyId", "someExpenseId"),
-      () => view.onDidFailToApproveOrReject("Approval Failed", InvalidResponseException().userReadableMessage),
+      () => view.onDidFailToPerformAction("Approval Failed", InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -67,8 +61,38 @@ void main() {
 
     //then
     verifyInOrder([
+      () => view.showLoader(),
       () => approver.approve("someCompanyId", "someExpenseId"),
-      () => view.onDidApproveOrRejectSuccessfully("someExpenseId"),
+      () => view.onDidPerformActionSuccessfully("someExpenseId"),
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
+  test('does nothing when approving once again after successfully approving a request', () async {
+    //given
+    when(() => approver.approve(any(), any())).thenAnswer((_) => Future.value(null));
+    await presenter.approve("someCompanyId", "someExpenseId");
+    _clearAllInteractions();
+
+    //when
+    await presenter.approve("someCompanyId", "someExpenseId");
+
+    //then
+    _verifyNoMoreInteractions();
+  });
+
+  test('notifying invalid rejection reason', () async {
+    //given
+    when(() => rejector.reject(any(), any(), rejectionReason: any(named: "rejectionReason")))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
+
+    //when
+    await presenter.reject("someCompanyId", "someExpenseId", "");
+
+    //then
+    expect(presenter.getRejectionReasonError(), "Please enter a valid reason");
+    verifyInOrder([
+      () => view.notifyInvalidRejectionReason(),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -79,13 +103,13 @@ void main() {
         .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
-    var didRejectSuccessfully = await presenter.reject("someCompanyId", "someExpenseId", "some reason");
+    await presenter.reject("someCompanyId", "someExpenseId", "some reason");
 
     //then
-    expect(didRejectSuccessfully, false);
     verifyInOrder([
+      () => view.showLoader(),
       () => rejector.reject("someCompanyId", "someExpenseId", rejectionReason: "some reason"),
-      () => view.onDidFailToApproveOrReject("Rejection Failed", InvalidResponseException().userReadableMessage),
+      () => view.onDidFailToPerformAction("Rejection Failed", InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -96,34 +120,67 @@ void main() {
         .thenAnswer((_) => Future.value(null));
 
     //when
-    var didRejectSuccessfully = await presenter.reject("someCompanyId", "someExpenseId", "some reason");
+    await presenter.reject("someCompanyId", "someExpenseId", "some reason");
 
     //then
-    expect(didRejectSuccessfully, true);
     verifyInOrder([
+      () => view.showLoader(),
       () => rejector.reject("someCompanyId", "someExpenseId", rejectionReason: "some reason"),
-      () => view.onDidApproveOrRejectSuccessfully("someExpenseId"),
+      () => view.onDidPerformActionSuccessfully("someExpenseId"),
     ]);
     _verifyNoMoreInteractions();
   });
 
-  test(
-      "didPerformAction flag is set to true when the approve function is called "
-      "irrespective of the outcome", () {
-    expect(presenter.didPerformAction, false);
+  test('does nothing when rejecting once again after successfully rejecting a request', () async {
+    //given
+    when(() => rejector.reject(any(), any(), rejectionReason: any(named: "rejectionReason")))
+        .thenAnswer((_) => Future.value(null));
+    await presenter.reject("someCompanyId", "someExpenseId", "some reason");
+    _clearAllInteractions();
 
-    presenter.approve("companyId", "expenseId");
+    //when
+    await presenter.reject("someCompanyId", "someExpenseId", "some reason");
 
-    expect(presenter.didPerformAction, true);
+    //then
+    _verifyNoMoreInteractions();
   });
 
-  test(
-      "didPerformAction flag is set to true when the reject function is called "
-      "irrespective of the outcome", () {
-    expect(presenter.didPerformAction, false);
+  test("checking if approval in progress", () {
+    when(() => approver.isLoading).thenReturn(true);
+    expect(presenter.isApprovalInProgress(), true);
 
-    presenter.reject("companyId", "expenseId", "reason");
+    when(() => approver.isLoading).thenReturn(false);
+    expect(presenter.isApprovalInProgress(), false);
+  });
 
-    expect(presenter.didPerformAction, true);
+  test("checking if rejection in progress", () {
+    when(() => rejector.isLoading).thenReturn(true);
+    expect(presenter.isRejectionInProgress(), true);
+
+    when(() => rejector.isLoading).thenReturn(false);
+    expect(presenter.isRejectionInProgress(), false);
+  });
+
+  test("getting approve button title before successful approval", () {
+    expect(presenter.getApproveButtonTitle(), "Submit");
+  });
+
+  test("getting approve button title after successful approval", () async {
+    when(() => approver.approve(any(), any())).thenAnswer((_) => Future.value(null));
+    await presenter.approve("someCompanyId", "someExpenseId");
+
+    expect(presenter.getApproveButtonTitle(), "Approved!");
+  });
+
+  test("getting reject button title before successful rejection", () {
+    expect(presenter.getRejectButtonTitle(), "Submit");
+  });
+
+  test("getting reject button title after successful rejection", () async {
+    when(() => rejector.reject(any(), any(), rejectionReason: any(named: "rejectionReason")))
+        .thenAnswer((_) => Future.value(null));
+    await presenter.reject("someCompanyId", "someExpenseId", "some reason");
+
+    expect(presenter.getRejectButtonTitle(), "Rejected!");
   });
 }
