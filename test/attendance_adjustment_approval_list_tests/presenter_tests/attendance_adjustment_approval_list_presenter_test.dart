@@ -3,17 +3,17 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/attendance__core/entities/attendance_status.dart';
 import 'package:wallpost/attendance__core/utils/attendance_status_color.dart';
-import 'package:wallpost/attendance_adjustment_approval/entities/attendance_adjustment_approval.dart';
-import 'package:wallpost/attendance_adjustment_approval/services/attendance_adjustment_approval_list_provider.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/models/attendance_adjustment_approval_list_item_view_type.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/view_contracts/attendance_adjustment_approval_list_view.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/entities/attendance_adjustment_approval_list_item.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/services/attendance_adjustment_approval_list_provider.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/ui/models/attendance_adjustment_approval_list_item_view_type.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_list_view.dart';
 
 class MockAttendanceAdjustmentApprovalListView extends Mock implements AttendanceAdjustmentApprovalListView {}
 
 class MockAttendanceAdjustmentApprovalListProvider extends Mock implements AttendanceAdjustmentApprovalListProvider {}
 
-class MockAttendanceAdjustmentApproval extends Mock implements AttendanceAdjustmentApproval {}
+class MockAttendanceAdjustmentApprovalListItem extends Mock implements AttendanceAdjustmentApprovalListItem {}
 
 void main() {
   var view = MockAttendanceAdjustmentApprovalListView();
@@ -93,8 +93,8 @@ void main() {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
         ]));
 
     //when
@@ -114,8 +114,8 @@ void main() {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.getNext()).thenAnswer((_) => Future.error(InvalidResponseException()));
@@ -139,14 +139,14 @@ void main() {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
         ]));
     _clearAllInteractions();
 
@@ -169,9 +169,9 @@ void main() {
     when(() => listProvider.getNext()).thenAnswer((_) => Future.error(InvalidResponseException()));
     await presenter.getNext();
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
         ]));
     _clearAllInteractions();
 
@@ -202,9 +202,9 @@ void main() {
     //when
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.didReachListEnd).thenReturn(false);
@@ -222,9 +222,9 @@ void main() {
     //when
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.isLoading).thenReturn(false);
@@ -243,9 +243,9 @@ void main() {
     //given
         when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.isLoading).thenReturn(false);
@@ -253,23 +253,23 @@ void main() {
 
     //when
     when(() => listProvider.getNext()).thenAnswer((_) => Future.error(InvalidResponseException()));
-        await presenter.getNext();
+    await presenter.getNext();
 
-        //then
-        expect(presenter.getNumberOfListItems(), 4);
-        expect(presenter.getItemTypeAtIndex(0), AttendanceAdjustmentApprovalListItemViewType.ListItem);
-        expect(presenter.getItemTypeAtIndex(1), AttendanceAdjustmentApprovalListItemViewType.ListItem);
-        expect(presenter.getItemTypeAtIndex(2), AttendanceAdjustmentApprovalListItemViewType.ListItem);
-        expect(presenter.getItemTypeAtIndex(3), AttendanceAdjustmentApprovalListItemViewType.ErrorMessage);
+    //then
+    expect(presenter.getNumberOfListItems(), 4);
+    expect(presenter.getItemTypeAtIndex(0), AttendanceAdjustmentApprovalListItemViewType.ListItem);
+    expect(presenter.getItemTypeAtIndex(1), AttendanceAdjustmentApprovalListItemViewType.ListItem);
+    expect(presenter.getItemTypeAtIndex(2), AttendanceAdjustmentApprovalListItemViewType.ListItem);
+    expect(presenter.getItemTypeAtIndex(3), AttendanceAdjustmentApprovalListItemViewType.ErrorMessage);
   });
 
   test('get number of list items when there are some items and the provider has no more items', () async {
     //when
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
-          MockAttendanceAdjustmentApproval(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
+          MockAttendanceAdjustmentApprovalListItem(),
         ]));
     await presenter.getNext();
     when(() => listProvider.didReachListEnd).thenReturn(true);
@@ -286,9 +286,9 @@ void main() {
   test('getting list item at index', () async {
     //when
     when(() => listProvider.isLoading).thenReturn(false);
-    var approval1 = MockAttendanceAdjustmentApproval();
-    var approval2 = MockAttendanceAdjustmentApproval();
-    var approval3 = MockAttendanceAdjustmentApproval();
+    var approval1 = MockAttendanceAdjustmentApprovalListItem();
+    var approval2 = MockAttendanceAdjustmentApprovalListItem();
+    var approval3 = MockAttendanceAdjustmentApprovalListItem();
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
     await presenter.getNext();
     when(() => listProvider.didReachListEnd).thenReturn(false);
@@ -300,22 +300,23 @@ void main() {
     expect(presenter.getItemAtIndex(2), approval3);
   });
 
-  //MARK: Tests to remove items
+  //MARK: Tests remove approved or rejected items
 
-  test('removing one approval from the list', () async {
+  test("successfully performing action on one item", () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
-    var approval1 = MockAttendanceAdjustmentApproval();
-    var approval2 = MockAttendanceAdjustmentApproval();
-    var approval3 = MockAttendanceAdjustmentApproval();
+    var approval1 = MockAttendanceAdjustmentApprovalListItem();
+    var approval2 = MockAttendanceAdjustmentApprovalListItem();
+    var approval3 = MockAttendanceAdjustmentApprovalListItem();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
     await presenter.getNext();
-    when(() => listProvider.isLoading).thenReturn(false);
-    when(() => listProvider.didReachListEnd).thenReturn(false);
     _clearAllInteractions();
 
     //when
-    presenter.removeItem(approval1);
+    await presenter.onDidProcessApprovalOrRejection(true, "id2");
 
     //then
     expect(presenter.getNumberOfListItems(), 3);
@@ -323,30 +324,32 @@ void main() {
     expect(presenter.getItemTypeAtIndex(1), AttendanceAdjustmentApprovalListItemViewType.ListItem);
     expect(presenter.getItemTypeAtIndex(2), AttendanceAdjustmentApprovalListItemViewType.Loader);
     verifyInOrder([
-          () => view.updateList(),
-          () => listProvider.isLoading,
-          () => listProvider.didReachListEnd,
+      () => view.updateList(),
+      () => listProvider.isLoading,
+      () => listProvider.didReachListEnd,
     ]);
     _verifyNoMoreInteractions();
   });
 
-  test('removing all approvals from the list refreshes the list', () async {
+  test("successfully performing action on all items", () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
-    var approval1 = MockAttendanceAdjustmentApproval();
-    var approval2 = MockAttendanceAdjustmentApproval();
-    var approval3 = MockAttendanceAdjustmentApproval();
+    var approval1 = MockAttendanceAdjustmentApprovalListItem();
+    var approval2 = MockAttendanceAdjustmentApprovalListItem();
+    var approval3 = MockAttendanceAdjustmentApprovalListItem();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
     await presenter.getNext();
-    when(() => listProvider.isLoading).thenReturn(false);
-    when(() => listProvider.didReachListEnd).thenReturn(false);
-    presenter.removeItem(approval1);
-    presenter.removeItem(approval2);
+    await presenter.onDidProcessApprovalOrRejection(true, "id1");
+    await presenter.onDidProcessApprovalOrRejection(true, "id2");
     _clearAllInteractions();
 
     //when
-    await presenter.removeItem(approval3);
+    await presenter.onDidProcessApprovalOrRejection(true, "id3");
 
+    //then
     //then
     verifyInOrder([
       () => listProvider.reset(),
@@ -358,24 +361,32 @@ void main() {
     _verifyNoMoreInteractions();
   });
 
+  test("does not reload data when processing approval or rejection with null or false", () async {
+    presenter.onDidProcessApprovalOrRejection(null, "someExpenseId");
+    _verifyNoMoreInteractions();
+
+    presenter.onDidProcessApprovalOrRejection(false, "someExpenseId");
+    _verifyNoMoreInteractions();
+  });
+
   //MARK: Tests for getters
 
   test('test getting employee name', () {
-    var approval = MockAttendanceAdjustmentApproval();
+    var approval = MockAttendanceAdjustmentApprovalListItem();
     when(() => approval.employeeName).thenReturn("Some employee name");
 
     expect(presenter.getEmployeeName(approval), "Some employee name");
   });
 
   test('test getting attendance date', () {
-    var approval = MockAttendanceAdjustmentApproval();
+    var approval = MockAttendanceAdjustmentApprovalListItem();
     when(() => approval.attendanceDate).thenReturn(DateTime(2022, 08, 20));
 
     expect(presenter.getDate(approval), "20-Aug-2022");
   });
 
   test('test getting original attendance status', () {
-    var approval = MockAttendanceAdjustmentApproval();
+    var approval = MockAttendanceAdjustmentApprovalListItem();
     when(() => approval.originalStatus).thenReturn(null);
     expect(presenter.getOriginalStatus(approval), "");
 
@@ -384,7 +395,7 @@ void main() {
   });
 
   test('test getting original attendance status color', () {
-    var approval = MockAttendanceAdjustmentApproval();
+    var approval = MockAttendanceAdjustmentApprovalListItem();
     when(() => approval.originalStatus).thenReturn(null);
     expect(presenter.getOriginalStatusColor(approval), null);
 
@@ -393,7 +404,7 @@ void main() {
   });
 
   test('test getting adjusted attendance status', () {
-    var approval = MockAttendanceAdjustmentApproval();
+    var approval = MockAttendanceAdjustmentApprovalListItem();
     when(() => approval.adjustedStatus).thenReturn(null);
     expect(presenter.getAdjustedStatus(approval), "");
 
@@ -402,7 +413,7 @@ void main() {
   });
 
   test('test getting adjusted attendance status color', () {
-    var approval = MockAttendanceAdjustmentApproval();
+    var approval = MockAttendanceAdjustmentApprovalListItem();
     when(() => approval.adjustedStatus).thenReturn(null);
     expect(presenter.getAdjustedStatusColor(approval), null);
 
@@ -411,7 +422,7 @@ void main() {
   });
 
   test('test getting original punch in and out times', () {
-    var approval = MockAttendanceAdjustmentApproval();
+    var approval = MockAttendanceAdjustmentApprovalListItem();
     when(() => approval.originalPunchInTime).thenReturn(null);
     when(() => approval.originalPunchOutTime).thenReturn(null);
     expect(presenter.getOriginalPunchInTime(approval), "");
@@ -424,7 +435,7 @@ void main() {
   });
 
   test('test getting adjusted punch in and out times', () {
-    var approval = MockAttendanceAdjustmentApproval();
+    var approval = MockAttendanceAdjustmentApprovalListItem();
     when(() => approval.adjustedPunchInTime).thenReturn(DateTime(2022, 08, 20, 9, 30));
     when(() => approval.adjustedPunchOutTime).thenReturn(DateTime(2022, 08, 20, 18, 0));
 
@@ -433,7 +444,7 @@ void main() {
   });
 
   test('test getting adjustment reason', () {
-    var approval = MockAttendanceAdjustmentApproval();
+    var approval = MockAttendanceAdjustmentApprovalListItem();
     when(() => approval.adjustmentReason).thenReturn("some reason");
 
     expect(presenter.getAdjustmentReason(approval), "some reason");

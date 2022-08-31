@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:sift/Sift.dart';
-import 'package:wallpost/attendance_adjustment_approval/entities/attendance_adjustment_approval.dart';
 
 import '../../_shared/exceptions/wrong_response_format_exception.dart';
 import '../../_wp_core/wpapi/services/wp_api.dart';
-import '../constants/attendance_adjustment_approval_urls.dart';
+import '../constants/attendance_adjustment_approval_list_urls.dart';
+import '../entities/attendance_adjustment_approval_list_item.dart';
 
 class AttendanceAdjustmentApprovalListProvider {
   final String _companyId;
@@ -27,8 +27,8 @@ class AttendanceAdjustmentApprovalListProvider {
     isLoading = false;
   }
 
-  Future<List<AttendanceAdjustmentApproval>> getNext() async {
-    var url = AttendanceAdjustmentApprovalUrls.pendingApprovalListUrl(_companyId, _pageNumber, _perPage);
+  Future<List<AttendanceAdjustmentApprovalListItem>> getNext() async {
+    var url = AttendanceAdjustmentApprovalListUrls.pendingApprovalListUrl(_companyId, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 
@@ -42,9 +42,10 @@ class AttendanceAdjustmentApprovalListProvider {
     }
   }
 
-  Future<List<AttendanceAdjustmentApproval>> _processResponse(APIResponse apiResponse) async {
+  Future<List<AttendanceAdjustmentApprovalListItem>> _processResponse(APIResponse apiResponse) async {
     //returning if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<AttendanceAdjustmentApproval>>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId)
+      return Completer<List<AttendanceAdjustmentApprovalListItem>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
@@ -60,11 +61,11 @@ class AttendanceAdjustmentApprovalListProvider {
     }
   }
 
-  List<AttendanceAdjustmentApproval> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<AttendanceAdjustmentApprovalListItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var approvalList = <AttendanceAdjustmentApproval>[];
+      var approvalList = <AttendanceAdjustmentApprovalListItem>[];
       for (var responseMap in responseMapList) {
-        var approval = AttendanceAdjustmentApproval.fromJson(responseMap);
+        var approval = AttendanceAdjustmentApprovalListItem.fromJson(responseMap);
         approvalList.add(approval);
       }
       _updatePaginationRelatedData(approvalList.length);

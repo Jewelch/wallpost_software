@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart
 import '../../_shared/exceptions/mapping_exception.dart';
 import '../../attendance__core/entities/attendance_status.dart';
 
-class AttendanceAdjustmentApproval extends JSONInitializable {
+class AttendanceAdjustmentApprovalListItem extends JSONInitializable {
   late String _id;
   late String _companyId;
   late String _employeeId;
@@ -18,7 +18,7 @@ class AttendanceAdjustmentApproval extends JSONInitializable {
   late AttendanceStatus? _adjustedStatus;
   late String _adjustmentReason;
 
-  AttendanceAdjustmentApproval.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  AttendanceAdjustmentApprovalListItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       _id = "${sift.readNumberFromMap(jsonMap, "id")}";

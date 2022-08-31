@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance_adjustment_approval/constants/attendance_adjustment_approval_urls.dart';
-import 'package:wallpost/attendance_adjustment_approval/entities/attendance_adjustment_approval.dart';
 
 class AttendanceAdjustmentApprover {
   final NetworkAdapter _networkAdapter;
@@ -13,12 +12,12 @@ class AttendanceAdjustmentApprover {
 
   AttendanceAdjustmentApprover() : _networkAdapter = WPAPI();
 
-  Future<void> approve(AttendanceAdjustmentApproval approval) async {
-    var url = AttendanceAdjustmentApprovalUrls.approveUrl(approval.companyId);
+  Future<void> approve(String companyId, String attendanceAdjustmentId) async {
+    var url = AttendanceAdjustmentApprovalUrls.approveUrl(companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameter("app_type", "attendanceAdjustmentRequest");
-    apiRequest.addParameter("request_id", approval.id);
+    apiRequest.addParameter("request_id", attendanceAdjustmentId);
     _isLoading = true;
 
     try {

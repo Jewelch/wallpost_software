@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/buttons/capsule_action_button.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
-import 'package:wallpost/attendance_adjustment_approval/entities/attendance_adjustment_approval.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/presenters/attendance_adjustment_approval_presenter.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/views/attendance_approval_rejection_view.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/entities/attendance_adjustment_approval_list_item.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
 
 import '../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../_shared/constants/app_colors.dart';
+import '../../../attendance_adjustment_approval/ui/views/attendance_adjustment_approval_alert.dart';
+import '../../../attendance_adjustment_approval/ui/views/attendance_adjustment_rejection_alert.dart';
 
-class AttendanceAdjustmentApprovalListCard extends StatelessWidget {
+class AttendanceAdjustmentApprovalListCard extends StatefulWidget {
   final AttendanceAdjustmentApprovalListPresenter listPresenter;
-  final AttendanceAdjustmentApprovalPresenter approvalPresenter;
-  final AttendanceAdjustmentApproval approval;
-  final _loadingNotifier = ItemNotifier<bool>(defaultValue: false);
+  final AttendanceAdjustmentApprovalListItem approval;
 
   AttendanceAdjustmentApprovalListCard({
     required this.listPresenter,
-    required this.approvalPresenter,
     required this.approval,
   });
+
+  @override
+  State<AttendanceAdjustmentApprovalListCard> createState() => _AttendanceAdjustmentApprovalListCardState();
+}
+
+class _AttendanceAdjustmentApprovalListCardState extends State<AttendanceAdjustmentApprovalListCard> {
+  final _loadingNotifier = ItemNotifier<bool>(defaultValue: false);
 
   @override
   Widget build(BuildContext context) {
@@ -35,19 +38,20 @@ class AttendanceAdjustmentApprovalListCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 6),
-          Text(listPresenter.getEmployeeName(approval), style: TextStyles.titleTextStyleBold),
+          Text(widget.listPresenter.getEmployeeName(widget.approval), style: TextStyles.titleTextStyleBold),
           SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 child: Text(
-                  "${listPresenter.getDate(approval)} - Original Details",
+                  "${widget.listPresenter.getDate(widget.approval)} - Original Details",
                   style: TextStyles.subTitleTextStyle,
                 ),
               ),
               Text(
-                listPresenter.getOriginalStatus(approval),
-                style: TextStyles.subTitleTextStyle.copyWith(color: listPresenter.getOriginalStatusColor(approval)),
+                widget.listPresenter.getOriginalStatus(widget.approval),
+                style: TextStyles.subTitleTextStyle
+                    .copyWith(color: widget.listPresenter.getOriginalStatusColor(widget.approval)),
               )
             ],
           ),
@@ -55,8 +59,8 @@ class AttendanceAdjustmentApprovalListCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _labelAndValue(label: "Punch In", value: listPresenter.getOriginalPunchInTime(approval)),
-              _labelAndValue(label: "Punch Out", value: listPresenter.getOriginalPunchOutTime(approval)),
+              _labelAndValue(label: "Punch In", value: widget.listPresenter.getOriginalPunchInTime(widget.approval)),
+              _labelAndValue(label: "Punch Out", value: widget.listPresenter.getOriginalPunchOutTime(widget.approval)),
             ],
           ),
           SizedBox(height: 8),
@@ -65,11 +69,11 @@ class AttendanceAdjustmentApprovalListCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                  child: Text("${listPresenter.getDate(approval)} - Adjusted Details",
+                  child: Text("${widget.listPresenter.getDate(widget.approval)} - Adjusted Details",
                       style: TextStyles.subTitleTextStyle)),
-              Text(listPresenter.getAdjustedStatus(approval),
+              Text(widget.listPresenter.getAdjustedStatus(widget.approval),
                   style: TextStyles.subTitleTextStyle.copyWith(
-                    color: listPresenter.getAdjustedStatusColor(approval),
+                    color: widget.listPresenter.getAdjustedStatusColor(widget.approval),
                   ))
             ],
           ),
@@ -77,12 +81,12 @@ class AttendanceAdjustmentApprovalListCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _labelAndValue(label: "Punch In", value: listPresenter.getAdjustedPunchInTime(approval)),
-              _labelAndValue(label: "Punch Out", value: listPresenter.getAdjustedPunchOutTime(approval)),
+              _labelAndValue(label: "Punch In", value: widget.listPresenter.getAdjustedPunchInTime(widget.approval)),
+              _labelAndValue(label: "Punch Out", value: widget.listPresenter.getAdjustedPunchOutTime(widget.approval)),
             ],
           ),
           SizedBox(height: 8),
-          _labelAndValue(label: "Reason", value: listPresenter.getAdjustmentReason(approval)),
+          _labelAndValue(label: "Reason", value: widget.listPresenter.getAdjustmentReason(widget.approval)),
           SizedBox(height: 20),
           ItemNotifiable<bool>(
             notifier: _loadingNotifier,
@@ -102,7 +106,7 @@ class AttendanceAdjustmentApprovalListCard extends StatelessWidget {
                     child: CapsuleActionButton(
                       title: "Reject",
                       color: AppColors.red,
-                      onPressed: () => _showRejectionSheet(context),
+                      onPressed: () => _reject(),
                       disabled: isLoading ? true : false,
                     ),
                   ),
@@ -125,22 +129,22 @@ class AttendanceAdjustmentApprovalListCard extends StatelessWidget {
   }
 
   void _approve() async {
-    _loadingNotifier.notify(true);
-    await approvalPresenter.approve(approval);
-    _loadingNotifier.notify(false);
+    var didApprove = await AttendanceAdjustmentApprovalAlert.show(
+      context: context,
+      attendanceAdjustmentId: widget.approval.id,
+      companyId: widget.approval.companyId,
+      employeeName: widget.approval.employeeName,
+    );
+    widget.listPresenter.onDidProcessApprovalOrRejection(didApprove, widget.approval.id);
   }
 
-  void _showRejectionSheet(BuildContext context) async {
-    var modalSheetController = ModalSheetController();
-    ModalSheetPresenter.present(
+  void _reject() async {
+    var didReject = await AttendanceAdjustmentRejectionAlert.show(
       context: context,
-      content: AttendanceApprovalRejectionView(
-        approval: approval,
-        approvalPresenter: approvalPresenter,
-        modalSheetController: modalSheetController,
-      ),
-      controller: modalSheetController,
-      shouldDismissOnTap: false,
+      attendanceAdjustmentId: widget.approval.id,
+      companyId: widget.approval.companyId,
+      employeeName: widget.approval.employeeName,
     );
+    widget.listPresenter.onDidProcessApprovalOrRejection(didReject, widget.approval.id);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/attendance_adjustment_approval/constants/attendance_adjustment_approval_urls.dart';
-import 'package:wallpost/attendance_adjustment_approval/services/attendance_adjustment_approval_list_provider.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/constants/attendance_adjustment_approval_list_urls.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/services/attendance_adjustment_approval_list_provider.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
@@ -18,7 +18,7 @@ void main() {
     var _ = await approvalListProvider.getNext();
 
     expect(mockNetworkAdapter.apiRequest.url,
-        AttendanceAdjustmentApprovalUrls.pendingApprovalListUrl('someCompanyId', 1, 15));
+        AttendanceAdjustmentApprovalListUrls.pendingApprovalListUrl('someCompanyId', 1, 15));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });

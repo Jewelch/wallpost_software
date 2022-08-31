@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/attendance__core/utils/attendance_status_color.dart';
-import 'package:wallpost/attendance_adjustment_approval/entities/attendance_adjustment_approval.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/entities/attendance_adjustment_approval_list_item.dart';
 
 import '../../services/attendance_adjustment_approval_list_provider.dart';
 import '../models/attendance_adjustment_approval_list_item_view_type.dart';
@@ -12,7 +12,7 @@ import '../view_contracts/attendance_adjustment_approval_list_view.dart';
 class AttendanceAdjustmentApprovalListPresenter {
   final AttendanceAdjustmentApprovalListView _view;
   final AttendanceAdjustmentApprovalListProvider _approvalListProvider;
-  final List<AttendanceAdjustmentApproval> _approvalItems = [];
+  final List<AttendanceAdjustmentApprovalListItem> _approvalItems = [];
   String _errorMessage = "";
   final String _noItemsMessage = "There are no approvals to show.\n\nTap here to reload.";
 
@@ -37,7 +37,7 @@ class AttendanceAdjustmentApprovalListPresenter {
     }
   }
 
-  void _handleResponse(List<AttendanceAdjustmentApproval> newListItems) {
+  void _handleResponse(List<AttendanceAdjustmentApprovalListItem> newListItems) {
     _approvalItems.addAll(newListItems);
     _updateList();
   }
@@ -86,72 +86,74 @@ class AttendanceAdjustmentApprovalListPresenter {
     return AttendanceAdjustmentApprovalListItemViewType.EmptySpace;
   }
 
-  AttendanceAdjustmentApproval getItemAtIndex(int index) {
+  AttendanceAdjustmentApprovalListItem getItemAtIndex(int index) {
     return _approvalItems[index];
   }
 
-  //MARK: Function to remove list item
+  //MARK: Functions for successful processing of approval or rejection
 
-  Future<void> removeItem(AttendanceAdjustmentApproval approval) async {
-    _approvalItems.remove(approval);
-    _approvalItems.isEmpty ? await refresh() : _updateList();
+  Future<void> onDidProcessApprovalOrRejection(dynamic didProcess, String expenseId) async {
+    if (didProcess == true) {
+      _approvalItems.removeWhere((approval) => approval.id == expenseId);
+      _approvalItems.isEmpty ? await refresh() : _updateList();
+    }
   }
 
   //MARK: Getters
 
-  String getEmployeeName(AttendanceAdjustmentApproval approval) {
+  String getEmployeeName(AttendanceAdjustmentApprovalListItem approval) {
     return approval.employeeName;
   }
 
-  String getDate(AttendanceAdjustmentApproval approval) {
+  String getDate(AttendanceAdjustmentApprovalListItem approval) {
     return DateFormat("dd-MMM-yyyy").format(approval.attendanceDate);
   }
 
-  String getOriginalStatus(AttendanceAdjustmentApproval approval) {
+  String getOriginalStatus(AttendanceAdjustmentApprovalListItem approval) {
     if (approval.originalStatus == null) return "";
 
     return approval.originalStatus!.toReadableString();
   }
 
-  Color? getOriginalStatusColor(AttendanceAdjustmentApproval approval) {
+  Color? getOriginalStatusColor(AttendanceAdjustmentApprovalListItem approval) {
     if (approval.originalStatus == null) return null;
 
     return AttendanceStatusColor.getStatusColor(approval.originalStatus!);
   }
 
-  String getAdjustedStatus(AttendanceAdjustmentApproval approval) {
+  String getAdjustedStatus(AttendanceAdjustmentApprovalListItem approval) {
     if (approval.adjustedStatus == null) return "";
 
     return approval.adjustedStatus!.toReadableString();
   }
 
-  Color? getAdjustedStatusColor(AttendanceAdjustmentApproval approval) {
+  Color? getAdjustedStatusColor(AttendanceAdjustmentApprovalListItem approval) {
     if (approval.adjustedStatus == null) return null;
 
     return AttendanceStatusColor.getStatusColor(approval.adjustedStatus!);
   }
 
-  String getOriginalPunchInTime(AttendanceAdjustmentApproval approval) {
+  String getOriginalPunchInTime(AttendanceAdjustmentApprovalListItem approval) {
     if (approval.originalPunchInTime == null) return "";
 
     return DateFormat("hh:mm a").format(approval.originalPunchInTime!);
   }
 
-  String getOriginalPunchOutTime(AttendanceAdjustmentApproval approval) {
+  String getOriginalPunchOutTime(AttendanceAdjustmentApprovalListItem approval) {
     if (approval.originalPunchOutTime == null) return "";
 
     return DateFormat("hh:mm a").format(approval.originalPunchOutTime!);
   }
 
-  String getAdjustedPunchInTime(AttendanceAdjustmentApproval approval) {
+  String getAdjustedPunchInTime(AttendanceAdjustmentApprovalListItem approval) {
     return DateFormat("hh:mm a").format(approval.adjustedPunchInTime);
   }
 
-  String getAdjustedPunchOutTime(AttendanceAdjustmentApproval approval) {
+  String getAdjustedPunchOutTime(AttendanceAdjustmentApprovalListItem approval) {
     return DateFormat("hh:mm a").format(approval.adjustedPunchOutTime);
   }
 
-  String getAdjustmentReason(AttendanceAdjustmentApproval approval) {
+  String getAdjustmentReason(AttendanceAdjustmentApprovalListItem approval) {
     return approval.adjustmentReason;
   }
 

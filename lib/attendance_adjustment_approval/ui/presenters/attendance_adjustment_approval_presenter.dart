@@ -1,13 +1,16 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/attendance_adjustment_approval/entities/attendance_adjustment_approval.dart';
-import 'package:wallpost/attendance_adjustment_approval/services/attendance_adjustment_approver.dart';
-import 'package:wallpost/attendance_adjustment_approval/services/attendance_adjustment_rejector.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/view_contracts/attendance_adjustment_approval_view.dart';
+
+import '../../../attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_view.dart';
+import '../../services/attendance_adjustment_approver.dart';
+import '../../services/attendance_adjustment_rejector.dart';
 
 class AttendanceAdjustmentApprovalPresenter {
   final AttendanceAdjustmentApprovalView _view;
   final AttendanceAdjustmentApprover _approver;
   final AttendanceAdjustmentRejector _rejector;
+  var _didPerformApprovalSuccessfully = false;
+  var _didPerformRejectionSuccessfully = false;
+  String? _reasonErrorMessage;
 
   AttendanceAdjustmentApprovalPresenter.initWith(this._view, this._approver, this._rejector);
 
@@ -15,23 +18,56 @@ class AttendanceAdjustmentApprovalPresenter {
       : _approver = AttendanceAdjustmentApprover(),
         _rejector = AttendanceAdjustmentRejector();
 
-  Future<void> approve(AttendanceAdjustmentApproval approval) async {
+  Future<void> approve(String companyId, String attendanceAdjustmentId) async {
+    if (_didPerformApprovalSuccessfully) return;
+
+    _view.showLoader();
     try {
-      await _approver.approve(approval);
-      _view.onDidApproveOrRejectSuccessfully(approval);
+      await _approver.approve(companyId, attendanceAdjustmentId);
+      _didPerformApprovalSuccessfully = true;
+      _view.onDidPerformActionSuccessfully(attendanceAdjustmentId);
     } on WPException catch (e) {
-      _view.onDidFailToApproveOrReject("Approval Failed", e.userReadableMessage);
+      _view.onDidFailToPerformAction("Approval Failed", e.userReadableMessage);
     }
   }
 
-  Future<bool> reject(AttendanceAdjustmentApproval approval, String rejectionReason) async {
-    try {
-      await _rejector.reject(approval, rejectionReason: rejectionReason);
-      _view.onDidApproveOrRejectSuccessfully(approval);
-      return true;
-    } on WPException catch (e) {
-      _view.onDidFailToApproveOrReject("Rejection Failed", e.userReadableMessage);
-      return false;
+  Future<void> reject(String companyId, String attendanceAdjustmentId, String rejectionReason) async {
+    if (_didPerformRejectionSuccessfully) return;
+
+    if (rejectionReason.isEmpty) {
+      _reasonErrorMessage = "Please enter a valid reason";
+      _view.notifyInvalidRejectionReason();
+      return;
     }
+
+    _reasonErrorMessage = null;
+    _view.showLoader();
+    try {
+      await _rejector.reject(companyId, attendanceAdjustmentId, rejectionReason: rejectionReason);
+      _didPerformRejectionSuccessfully = true;
+      _view.onDidPerformActionSuccessfully(attendanceAdjustmentId);
+    } on WPException catch (e) {
+      _view.onDidFailToPerformAction("Rejection Failed", e.userReadableMessage);
+    }
+  }
+
+  bool isApprovalInProgress() {
+    return _approver.isLoading;
+  }
+
+  bool isRejectionInProgress() {
+    return _rejector.isLoading;
+  }
+
+  String getApproveButtonTitle() {
+    return _didPerformApprovalSuccessfully ? "Approved!" : "Submit";
+  }
+
+  String getRejectButtonTitle() {
+    return _didPerformRejectionSuccessfully ? "Rejected!" : "Submit";
+  }
+
+  String? getRejectionReasonError() {
+    return _reasonErrorMessage;
   }
 }

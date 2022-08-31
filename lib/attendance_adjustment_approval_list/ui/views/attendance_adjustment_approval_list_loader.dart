@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 
-class AttendanceApprovalListLoader extends StatelessWidget {
-  const AttendanceApprovalListLoader({Key? key}) : super(key: key);
+class AttendanceAdjustmentApprovalListLoader extends StatelessWidget {
+  const AttendanceAdjustmentApprovalListLoader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

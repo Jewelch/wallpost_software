@@ -318,7 +318,7 @@ void main() {
     _verifyNoMoreInteractions();
   });
 
-  //MARK: Tests to remove items
+  //MARK: Tests remove approved or rejected items
 
   test("successfully performing action on one item", () async {
     //given

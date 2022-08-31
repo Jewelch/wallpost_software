@@ -1,23 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/attendance_adjustment_approval/constants/attendance_adjustment_approval_urls.dart';
-import 'package:wallpost/attendance_adjustment_approval/entities/attendance_adjustment_approval.dart';
 import 'package:wallpost/attendance_adjustment_approval/services/attendance_adjustment_approver.dart';
 
 import '../../_mocks/mock_network_adapter.dart';
 
-class MockAttendanceAdjustmentApproval extends Mock implements AttendanceAdjustmentApproval {}
-
 void main() {
   Map<String, dynamic> successfulResponse = {};
-  var approval = MockAttendanceAdjustmentApproval();
   var mockNetworkAdapter = MockNetworkAdapter();
   var approver = AttendanceAdjustmentApprover.initWith(mockNetworkAdapter);
-
-  setUpAll(() {
-    when(() => approval.id).thenReturn("someApprovalId");
-    when(() => approval.companyId).thenReturn("someCompanyId");
-  });
 
   setUp(() {
     mockNetworkAdapter.reset();
@@ -28,7 +18,7 @@ void main() {
     requestParams.addAll({"app_type": "attendanceAdjustmentRequest", "request_id": "someApprovalId"});
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await approver.approve(approval);
+    var _ = await approver.approve("someCompanyId", "someApprovalId");
 
     expect(mockNetworkAdapter.apiRequest.url, AttendanceAdjustmentApprovalUrls.approveUrl("someCompanyId"));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
@@ -39,7 +29,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await approver.approve(approval);
+      var _ = await approver.approve("someCompanyId", "someApprovalId");
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -50,7 +40,7 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var _ = await approver.approve(approval);
+      var _ = await approver.approve("someCompanyId", "someApprovalId");
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
@@ -59,7 +49,7 @@ void main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    approver.approve(approval);
+    approver.approve("someCompanyId", "someApprovalId");
 
     expect(approver.isLoading, true);
   });
@@ -67,7 +57,7 @@ void main() {
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await approver.approve(approval);
+    var _ = await approver.approve("someCompanyId", "someApprovalId");
 
     expect(approver.isLoading, false);
   });
@@ -76,7 +66,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await approver.approve(approval);
+      var _ = await approver.approve("someCompanyId", "someApprovalId");
       fail('failed to throw exception');
     } catch (_) {
       expect(approver.isLoading, false);

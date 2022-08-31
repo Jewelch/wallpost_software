@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/attendance_adjustment_approval/entities/attendance_adjustment_approval.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/view_contracts/attendance_adjustment_approval_list_view.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/view_contracts/attendance_adjustment_approval_view.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/views/attendance_adjustment_approval_list_item_card.dart';
-import 'package:wallpost/attendance_adjustment_approval/ui/views/attendance_approval_list_loader.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_list_view.dart';
+import 'package:wallpost/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_item_card.dart';
 
-import '../../../_common_widgets/alert/alert.dart';
 import '../../../_common_widgets/app_bars/simple_app_bar.dart';
 import '../../../_common_widgets/buttons/rounded_back_button.dart';
 import '../models/attendance_adjustment_approval_list_item_view_type.dart';
-import '../presenters/attendance_adjustment_approval_presenter.dart';
+import 'attendance_adjustment_approval_list_loader.dart';
 
 class AttendanceAdjustmentApprovalListScreen extends StatefulWidget {
   final String companyId;
@@ -24,9 +20,8 @@ class AttendanceAdjustmentApprovalListScreen extends StatefulWidget {
 }
 
 class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjustmentApprovalListScreen>
-    implements AttendanceAdjustmentApprovalListView, AttendanceAdjustmentApprovalView {
+    implements AttendanceAdjustmentApprovalListView {
   late AttendanceAdjustmentApprovalListPresenter _listPresenter;
-  late AttendanceAdjustmentApprovalPresenter _approvalPresenter;
   final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: 0);
   final _scrollController = ScrollController();
   final int viewTypeLoader = 1;
@@ -36,7 +31,6 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
 
   @override
   void initState() {
-    _approvalPresenter = AttendanceAdjustmentApprovalPresenter(this);
     _listPresenter = AttendanceAdjustmentApprovalListPresenter(widget.companyId, this);
     _listPresenter.getNext();
     _setupScrollDownToLoadMoreItems();
@@ -79,7 +73,7 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
   }
 
   Widget _buildLoaderView() {
-    return AttendanceApprovalListLoader();
+    return AttendanceAdjustmentApprovalListLoader();
   }
 
   Widget _buildErrorView() {
@@ -162,7 +156,6 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
   Widget _listItem(index) {
     return AttendanceAdjustmentApprovalListCard(
       listPresenter: _listPresenter,
-      approvalPresenter: _approvalPresenter,
       approval: _listPresenter.getItemAtIndex(index),
     );
   }
@@ -206,17 +199,5 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
   @override
   void updateList() {
     _viewTypeNotifier.notify(viewTypeList);
-  }
-
-  //MARK: Approval view functions
-
-  @override
-  void onDidApproveOrRejectSuccessfully(AttendanceAdjustmentApproval approval) {
-    _listPresenter.removeItem(approval);
-  }
-
-  @override
-  void onDidFailToApproveOrReject(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 }
