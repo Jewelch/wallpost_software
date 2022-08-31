@@ -65,13 +65,6 @@ class ExpenseApprovalListPresenter {
     _view.showExpenseDetail(approval);
   }
 
-  //MARK: Function to remove list item
-
-  Future<void> removeItemWithId(String expenseId) async {
-    _approvalItems.removeWhere((approval) => approval.id == expenseId);
-    _approvalItems.isEmpty ? await refresh() : _updateList();
-  }
-
   //MARK: Function to check isFirstLoad
 
   bool _isFirstLoad() {
@@ -98,6 +91,15 @@ class ExpenseApprovalListPresenter {
 
   ExpenseApprovalListItem getItemAtIndex(int index) {
     return _approvalItems[index];
+  }
+
+  //MARK: Functions for successful processing of approval or rejection
+
+  Future<void> onDidProcessApprovalOrRejection(dynamic didProcess, String expenseId) async {
+    if (didProcess == true) {
+      _approvalItems.removeWhere((approval) => approval.id == expenseId);
+      _approvalItems.isEmpty ? await refresh() : _updateList();
+    }
   }
 
   //MARK: Getters

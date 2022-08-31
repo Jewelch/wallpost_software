@@ -47,7 +47,7 @@ class ExpenseRejectionAlert extends StatefulWidget {
 }
 
 class _ExpenseRejectionAlertState extends State<ExpenseRejectionAlert> implements ExpenseApprovalView {
-  late ExpenseApprovalPresenter _presenter = ExpenseApprovalPresenter(this);
+  late ExpenseApprovalPresenter _presenter;
   final _reasonTextController = TextEditingController();
 
   @override

@@ -46,7 +46,7 @@ class ExpenseApprovalAlert extends StatefulWidget {
 }
 
 class _ExpenseApprovalAlertState extends State<ExpenseApprovalAlert> implements ExpenseApprovalView {
-  late ExpenseApprovalPresenter _presenter = ExpenseApprovalPresenter(this);
+  late ExpenseApprovalPresenter _presenter;
 
   @override
   void initState() {

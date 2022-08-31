@@ -320,7 +320,7 @@ void main() {
 
   //MARK: Tests to remove items
 
-  test('removing one approval from the list', () async {
+  test("successfully performing action on one item", () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
     var approval1 = MockExpenseApprovalListItem();
@@ -331,12 +331,10 @@ void main() {
     when(() => approval3.id).thenReturn("id3");
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
     await presenter.getNext();
-    when(() => listProvider.isLoading).thenReturn(false);
-    when(() => listProvider.didReachListEnd).thenReturn(false);
     _clearAllInteractions();
 
     //when
-    presenter.removeItemWithId("id2");
+    await presenter.onDidProcessApprovalOrRejection(true, "id2");
 
     //then
     expect(presenter.getNumberOfListItems(), 3);
@@ -351,7 +349,7 @@ void main() {
     _verifyNoMoreInteractions();
   });
 
-  test('removing all approvals from the list refreshes the list', () async {
+  test("successfully performing action on all items", () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
     var approval1 = MockExpenseApprovalListItem();
@@ -362,15 +360,14 @@ void main() {
     when(() => approval3.id).thenReturn("id3");
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
     await presenter.getNext();
-    when(() => listProvider.isLoading).thenReturn(false);
-    when(() => listProvider.didReachListEnd).thenReturn(false);
-    presenter.removeItemWithId("id1");
-    presenter.removeItemWithId("id2");
+    await presenter.onDidProcessApprovalOrRejection(true, "id1");
+    await presenter.onDidProcessApprovalOrRejection(true, "id2");
     _clearAllInteractions();
 
     //when
-    await presenter.removeItemWithId("id3");
+    await presenter.onDidProcessApprovalOrRejection(true, "id3");
 
+    //then
     //then
     verifyInOrder([
       () => listProvider.reset(),
@@ -379,6 +376,14 @@ void main() {
       () => listProvider.getNext(),
       () => view.updateList(),
     ]);
+    _verifyNoMoreInteractions();
+  });
+
+  test("does not reload data when processing approval or rejection with null or false", () async {
+    presenter.onDidProcessApprovalOrRejection(null, "someExpenseId");
+    _verifyNoMoreInteractions();
+
+    presenter.onDidProcessApprovalOrRejection(false, "someExpenseId");
     _verifyNoMoreInteractions();
   });
 

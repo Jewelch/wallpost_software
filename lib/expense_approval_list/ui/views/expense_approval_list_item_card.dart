@@ -146,7 +146,7 @@ class _ExpenseApprovalListItemCardState extends State<ExpenseApprovalListItemCar
       companyId: widget.approval.companyId,
       requestedBy: widget.approval.requestedBy,
     );
-    if (didApprove == true) widget.listPresenter.removeItemWithId(widget.approval.id);
+    widget.listPresenter.onDidProcessApprovalOrRejection(didApprove, widget.approval.id);
   }
 
   void _reject() async {
@@ -156,6 +156,6 @@ class _ExpenseApprovalListItemCardState extends State<ExpenseApprovalListItemCar
       companyId: widget.approval.companyId,
       requestedBy: widget.approval.requestedBy,
     );
-    if (didReject == true) widget.listPresenter.removeItemWithId(widget.approval.id);
+    widget.listPresenter.onDidProcessApprovalOrRejection(didReject, widget.approval.id);
   }
 }

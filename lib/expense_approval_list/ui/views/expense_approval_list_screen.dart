@@ -217,6 +217,6 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
       ),
       context,
     );
-    if (didPerformAction == true) _listPresenter.removeItemWithId(approval.id);
+    _listPresenter.onDidProcessApprovalOrRejection(didPerformAction, approval.id);
   }
 }
