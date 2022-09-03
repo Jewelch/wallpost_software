@@ -123,6 +123,8 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
   }
 
   Widget _requestsBar() {
+    if (_presenter.getRequestItems().isEmpty) return Container();
+
     return Stack(
       children: [
         CurveBottomToTop(),

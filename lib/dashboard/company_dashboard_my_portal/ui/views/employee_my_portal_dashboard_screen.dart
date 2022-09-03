@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+import 'package:wallpost/leave/leave_create/ui/views/create_leave_screen.dart';
+import 'package:wallpost/leave/leave_list/ui/views/leave_list_screen.dart';
 
+import '../../../../../_shared/constants/app_colors.dart';
 import '../../../../_common_widgets/banners/bottom_banner.dart';
 import '../../../../_common_widgets/custom_shapes/curve_bottom_to_top.dart';
 import '../../../../_common_widgets/filter_views/tab_chips.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
-import '../../../../../_shared/constants/app_colors.dart';
 import '../../../../attendance/attendance_adjustment/ui/views/attendance_list_screen.dart';
 import '../../../../attendance/attendance_punch_in_out/ui/views/attendance_widget.dart';
 import '../../../../expense/expense_create/ui/views/create_expense_request_screen.dart';
@@ -127,6 +129,8 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
   }
 
   Widget _requestsBar() {
+    if (_presenter.getRequestItems().isEmpty) return Container();
+
     return Stack(
       children: [
         CurveBottomToTop(),
@@ -181,7 +185,7 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
 
   @override
   void showLeaveActions() {
-    //TODO
+    _presentActionSheet(LeaveListScreen(), CreateLeaveScreen());
   }
 
   @override

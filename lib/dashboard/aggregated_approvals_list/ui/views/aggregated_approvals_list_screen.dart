@@ -7,6 +7,7 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/color_utils.dart';
+import 'package:wallpost/leave/leave_approval_list/ui/views/leave_approval_list_screen.dart';
 
 import '../../../../_common_widgets/buttons/rounded_back_button.dart';
 import '../../../../attendance/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_screen.dart';
@@ -151,6 +152,11 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
           } else if (aggregatedApproval.isAttendanceAdjustmentApproval()) {
             ScreenPresenter.present(
               AttendanceAdjustmentApprovalListScreen(companyId: aggregatedApproval.companyId),
+              context,
+            );
+          } else if (aggregatedApproval.isLeaveRequestApproval()) {
+            ScreenPresenter.present(
+              LeaveApprovalListScreen(companyId: aggregatedApproval.companyId),
               context,
             );
           }
