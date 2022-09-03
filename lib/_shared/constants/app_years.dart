@@ -34,6 +34,6 @@ class AppYears {
   }
 
   String getCurrentMonth() {
-    return _monthNames[DateTime.now().month];
+    return _monthNames[DateTime.now().month - 1];
   }
 }
