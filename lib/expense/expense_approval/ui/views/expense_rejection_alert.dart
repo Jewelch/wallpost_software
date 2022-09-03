@@ -58,7 +58,8 @@ class _ExpenseRejectionAlertState extends State<ExpenseRejectionAlert> implement
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      height: 800,
       padding: EdgeInsets.only(left: 12, right: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +91,7 @@ class _ExpenseRejectionAlertState extends State<ExpenseRejectionAlert> implement
                     widget.expenseId,
                     _reasonTextController.text,
                   ),
-                  showLoader: _presenter.isApprovalInProgress(),
+                  showLoader: _presenter.isRejectionInProgress(),
                 ),
               ),
               SizedBox(width: 16),
@@ -111,25 +112,27 @@ class _ExpenseRejectionAlertState extends State<ExpenseRejectionAlert> implement
   //MARK: View functions
   @override
   void showLoader() {
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
   void notifyInvalidRejectionReason() {
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
   void onDidFailToPerformAction(String title, String message) {
-    setState(() {});
+    if (mounted) setState(() {});
+
     Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 
   @override
   void onDidPerformActionSuccessfully(String expenseId) {
-    setState(() {});
+    if (mounted) setState(() {});
+
     Future.delayed(Duration(seconds: 2)).then((_) {
-      widget.modalSheetController.close(result: expenseId);
+      widget.modalSheetController.close(result: true);
     });
   }
 }

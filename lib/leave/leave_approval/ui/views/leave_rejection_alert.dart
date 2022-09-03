@@ -112,23 +112,25 @@ class _LeaveRejectionAlertState extends State<LeaveRejectionAlert> implements Le
   //MARK: View functions
   @override
   void showLoader() {
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
   void notifyInvalidRejectionReason() {
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
   void onDidFailToPerformAction(String title, String message) {
-    setState(() {});
+    if (mounted) setState(() {});
+
     Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 
   @override
   void onDidPerformActionSuccessfully(String leaveId) {
-    setState(() {});
+    if (mounted) setState(() {});
+
     Future.delayed(Duration(seconds: 2)).then((_) {
       widget.modalSheetController.close(result: true);
     });

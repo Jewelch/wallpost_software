@@ -57,7 +57,7 @@ class _ExpenseApprovalAlertState extends State<ExpenseApprovalAlert> implements 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 12, right: 12),
+      padding: EdgeInsets.only(left: 12, right: 12, bottom: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -91,9 +91,10 @@ class _ExpenseApprovalAlertState extends State<ExpenseApprovalAlert> implements 
   }
 
   //MARK: View functions
+
   @override
   void showLoader() {
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
@@ -103,13 +104,15 @@ class _ExpenseApprovalAlertState extends State<ExpenseApprovalAlert> implements 
 
   @override
   void onDidFailToPerformAction(String title, String message) {
-    setState(() {});
+    if (mounted) setState(() {});
+
     Alert.showSimpleAlert(context: context, title: title, message: message);
   }
 
   @override
   void onDidPerformActionSuccessfully(String expenseId) {
-    setState(() {});
+    if (mounted) setState(() {});
+
     Future.delayed(Duration(seconds: 2)).then((_) {
       widget.modalSheetController.close(result: true);
     });

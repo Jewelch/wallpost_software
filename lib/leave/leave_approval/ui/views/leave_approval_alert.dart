@@ -91,6 +91,7 @@ class _LeaveApprovalAlertState extends State<LeaveApprovalAlert> implements Leav
   }
 
   //MARK: View functions
+
   @override
   void showLoader() {
     if (mounted) setState(() {});
