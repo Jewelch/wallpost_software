@@ -9,7 +9,6 @@ import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_p
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_permission_permanently_denied_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/attendance_details_provider.dart';
-import 'package:wallpost/attendance/attendance_punch_in_out/services/attendance_report_provider.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/break_end_marker.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/break_start_marker.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/location_provider.dart';
@@ -27,7 +26,6 @@ class AttendancePresenter {
   final PunchInMarker _punchInMarker;
   final BreakStartMarker _breakStartMarker;
   final BreakEndMarker _breakEndMarker;
-  final AttendanceReportProvider _attendanceReportProvider;
   final DeviceSettings _deviceSettings;
 
   late AttendanceDetails _attendanceDetails;
@@ -41,7 +39,6 @@ class AttendancePresenter {
         _punchOutMarker = PunchOutMarker(),
         _breakStartMarker = BreakStartMarker(),
         _breakEndMarker = BreakEndMarker(),
-        _attendanceReportProvider = AttendanceReportProvider(),
         _deviceSettings = DeviceSettings();
 
   AttendancePresenter.initWith(
@@ -53,23 +50,8 @@ class AttendancePresenter {
     this._punchOutMarker,
     this._breakStartMarker,
     this._breakEndMarker,
-    this._attendanceReportProvider,
     this._deviceSettings,
   );
-
-  //MARK: Function to load attendance report
-
-  Future<void> loadAttendanceReport() async {
-    if (_attendanceReportProvider.isLoading) return;
-
-    try {
-      detailedView?.showAttendanceReportLoader();
-      var attendanceReport = await _attendanceReportProvider.getReport();
-      detailedView?.showAttendanceReport(attendanceReport);
-    } on WPException catch (e) {
-      detailedView?.showAttendanceReportErrorAndRetryView("${e.userReadableMessage}\n\nTap here to reload.");
-    }
-  }
 
   //MARK: Function to load attendance details
 
@@ -191,7 +173,6 @@ class AttendancePresenter {
       basicView.showLoader();
       await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
       await loadAttendanceDetails();
-      await loadAttendanceReport();
     } on WPException catch (e) {
       if (e is ServerSentException && e.userReadableMessage.contains("outside the office location")) {
         basicView.showPunchInButton();
@@ -199,7 +180,6 @@ class AttendancePresenter {
       } else {
         basicView.showErrorMessage("Punch in failed", e.userReadableMessage);
         await loadAttendanceDetails();
-        await loadAttendanceReport();
       }
     }
   }
@@ -211,7 +191,6 @@ class AttendancePresenter {
       basicView.showLoader();
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
       await loadAttendanceDetails();
-      await loadAttendanceReport();
     } on WPException catch (e) {
       if (e is ServerSentException && e.userReadableMessage.contains("outside the office location")) {
         basicView.showPunchOutButton();
@@ -219,7 +198,6 @@ class AttendancePresenter {
       } else {
         basicView.showErrorMessage("Punch out failed", e.userReadableMessage);
         await loadAttendanceDetails();
-        await loadAttendanceReport();
       }
     }
   }

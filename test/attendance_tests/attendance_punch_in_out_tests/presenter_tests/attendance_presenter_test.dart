@@ -3,14 +3,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/device/device_settings.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_details.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_location.dart';
-import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_report.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_acquisition_failed_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_address_failed_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_permission_denied_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_permission_permanently_denied_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_services_disabled_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/attendance_details_provider.dart';
-import 'package:wallpost/attendance/attendance_punch_in_out/services/attendance_report_provider.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/break_end_marker.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/break_start_marker.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/location_provider.dart';
@@ -34,8 +32,6 @@ class MockAttendanceDetails extends Mock implements AttendanceDetails {}
 
 class MockAttendanceLocation extends Mock implements AttendanceLocation {}
 
-class MockAttendanceReportProvider extends Mock implements AttendanceReportProvider {}
-
 class MockPunchInMarker extends Mock implements PunchInMarker {}
 
 class MockPunchOutMarker extends Mock implements PunchOutMarker {}
@@ -46,8 +42,6 @@ class MockBreakEndMarker extends Mock implements BreakEndMarker {}
 
 class MockDeviceSettings extends Mock implements DeviceSettings {}
 
-class MockAttendanceReport extends Mock implements AttendanceReport {}
-
 void main() {
   var basicView = MockAttendanceView();
   var detailedView = MockAttendanceDetailsView();
@@ -57,8 +51,6 @@ void main() {
   var mockPunchOutMarker = MockPunchOutMarker();
   var mockBreakStartMarker = MockBreakStartMarker();
   var mocKBreakEndMarker = MockBreakEndMarker();
-  var mockAttendanceReportProvider = MockAttendanceReportProvider();
-
   var mockDeviceSettings = MockDeviceSettings();
 
   AttendancePresenter presenter = AttendancePresenter.initWith(
@@ -70,7 +62,6 @@ void main() {
       mockPunchOutMarker,
       mockBreakStartMarker,
       mocKBreakEndMarker,
-      mockAttendanceReportProvider,
       mockDeviceSettings);
 
   setUp(() {
@@ -81,14 +72,12 @@ void main() {
     reset(mockPunchOutMarker);
     registerFallbackValue(MockAttendanceDetails());
     registerFallbackValue(MockAttendanceLocation());
-    registerFallbackValue(MockAttendanceReport());
   });
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(basicView);
     verifyNoMoreInteractions(detailedView);
     verifyNoMoreInteractions(mockAttendanceDetailsProvider);
-    verifyNoMoreInteractions(mockAttendanceReportProvider);
     verifyNoMoreInteractions(mockLocationProvider);
     verifyNoMoreInteractions(mockPunchInMarker);
     verifyNoMoreInteractions(mockPunchOutMarker);
@@ -100,7 +89,6 @@ void main() {
     clearInteractions(basicView);
     clearInteractions(detailedView);
     clearInteractions(mockAttendanceDetailsProvider);
-    clearInteractions(mockAttendanceReportProvider);
     clearInteractions(mockLocationProvider);
     clearInteractions(mockPunchInMarker);
     clearInteractions(mockPunchOutMarker);
@@ -452,8 +440,6 @@ void main() {
       //given
       var attendance = MockAttendanceDetails();
       var attendanceLocation = MockAttendanceLocation();
-      when(() => mockAttendanceReportProvider.isLoading).thenReturn(false);
-      when(() => mockAttendanceReportProvider.getReport()).thenAnswer((_) => Future.value(MockAttendanceReport()));
       when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
       when(() => attendance.isNotPunchedIn).thenReturn(true);
       when(() => attendance.canMarkAttendanceFromApp).thenReturn(true);
@@ -485,10 +471,6 @@ void main() {
         () => detailedView.hideBreakButton(),
         () => mockLocationProvider.getLocationAddress(attendanceLocation),
         () => basicView.showAddress("address"),
-        () => mockAttendanceReportProvider.isLoading,
-        () => detailedView.showAttendanceReportLoader(),
-        () => mockAttendanceReportProvider.getReport(),
-        () => detailedView.showAttendanceReport(any()),
       ]);
 
       _verifyNoMoreInteractionsOnAllMocks();
@@ -533,8 +515,6 @@ void main() {
       //given
       var attendance = MockAttendanceDetails();
       var attendanceLocation = MockAttendanceLocation();
-      when(() => mockAttendanceReportProvider.isLoading).thenReturn(false);
-      when(() => mockAttendanceReportProvider.getReport()).thenAnswer((_) => Future.value(MockAttendanceReport()));
       when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
       when(() => attendance.isNotPunchedIn).thenReturn(true);
       when(() => attendance.canMarkAttendanceFromApp).thenReturn(true);
@@ -564,10 +544,6 @@ void main() {
         () => detailedView.hideBreakButton(),
         () => mockLocationProvider.getLocationAddress(attendanceLocation),
         () => basicView.showAddress("some address"),
-        () => mockAttendanceReportProvider.isLoading,
-        () => detailedView.showAttendanceReportLoader(),
-        () => mockAttendanceReportProvider.getReport(),
-        () => detailedView.showAttendanceReport(any()),
       ]);
 
       _verifyNoMoreInteractionsOnAllMocks();
@@ -607,11 +583,7 @@ void main() {
       //given
       var attendance = MockAttendanceDetails();
       var attendanceLocation = MockAttendanceLocation();
-      when(() => mockAttendanceReportProvider.isLoading).thenReturn(false);
-      when(() => mockAttendanceReportProvider.getReport()).thenAnswer((_) => Future.value(MockAttendanceReport()));
       when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-      when(() => mockAttendanceReportProvider.isLoading).thenReturn(false);
-      when(() => mockAttendanceReportProvider.getReport()).thenAnswer((_) => Future.value(MockAttendanceReport()));
       when(() => attendance.isPunchedIn).thenReturn(true);
       when(() => attendance.isNotPunchedIn).thenReturn(false);
       when(() => attendance.isOnBreak).thenReturn(false);
@@ -646,10 +618,6 @@ void main() {
         () => basicView.showAddress("some address"),
         () => detailedView.showPunchInTime("09:00 AM"),
         () => detailedView.showBreakButton(),
-        () => mockAttendanceReportProvider.isLoading,
-        () => detailedView.showAttendanceReportLoader(),
-        () => mockAttendanceReportProvider.getReport(),
-        () => detailedView.showAttendanceReport(any()),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
@@ -696,8 +664,6 @@ void main() {
       //given
       var attendance = MockAttendanceDetails();
       var attendanceLocation = MockAttendanceLocation();
-      when(() => mockAttendanceReportProvider.isLoading).thenReturn(false);
-      when(() => mockAttendanceReportProvider.getReport()).thenAnswer((_) => Future.value(MockAttendanceReport()));
       when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
       when(() => attendance.isPunchedIn).thenReturn(true);
       when(() => attendance.isNotPunchedIn).thenReturn(false);
@@ -731,10 +697,6 @@ void main() {
         () => basicView.showAddress("some address"),
         () => detailedView.showPunchInTime("09:00 AM"),
         () => detailedView.showBreakButton(),
-        () => mockAttendanceReportProvider.isLoading,
-        () => detailedView.showAttendanceReportLoader(),
-        () => mockAttendanceReportProvider.getReport(),
-        () => detailedView.showAttendanceReport(any()),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
@@ -1025,59 +987,6 @@ void main() {
       //then
       expect(firstValue, true);
       expect(secondValue, false);
-    });
-  });
-
-  group('tests for loading attendance report', () {
-    test('does nothing when report provider is loading does nothing', () async {
-      //given
-      when(() => mockAttendanceReportProvider.isLoading).thenReturn(true);
-
-      //when
-      await presenter.loadAttendanceReport();
-
-      //then
-      verifyInOrder([
-        () => mockAttendanceReportProvider.isLoading,
-      ]);
-      _verifyNoMoreInteractionsOnAllMocks();
-    });
-
-    test('failure to load attendance report', () async {
-      //given
-      when(() => mockAttendanceReportProvider.isLoading).thenReturn(false);
-      when(() => mockAttendanceReportProvider.getReport()).thenAnswer((_) => Future.error(InvalidResponseException()));
-
-      //when
-      await presenter.loadAttendanceReport();
-
-      //then
-      verifyInOrder([
-        () => mockAttendanceReportProvider.isLoading,
-        () => detailedView.showAttendanceReportLoader(),
-        () => mockAttendanceReportProvider.getReport(),
-        () => detailedView.showAttendanceReportErrorAndRetryView(
-            "${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
-      ]);
-      _verifyNoMoreInteractionsOnAllMocks();
-    });
-
-    test('successfully loading attendance report', () async {
-      //given
-      when(() => mockAttendanceReportProvider.isLoading).thenReturn(false);
-      when(() => mockAttendanceReportProvider.getReport()).thenAnswer((_) => Future.value(MockAttendanceReport()));
-
-      //when
-      await presenter.loadAttendanceReport();
-
-      //then
-      verifyInOrder([
-        () => mockAttendanceReportProvider.isLoading,
-        () => detailedView.showAttendanceReportLoader(),
-        () => mockAttendanceReportProvider.getReport(),
-        () => detailedView.showAttendanceReport(any()),
-      ]);
-      _verifyNoMoreInteractionsOnAllMocks();
     });
   });
 }

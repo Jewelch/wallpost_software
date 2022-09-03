@@ -66,7 +66,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   void initState() {
     presenter = AttendancePresenter(basicView: this, detailedView: this);
     presenter.loadAttendanceDetails();
-    presenter.loadAttendanceReport();
+    // presenter.loadAttendanceReport();
 
     _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
     super.initState();
@@ -160,7 +160,9 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   Widget _reportErrorAndRetryView() {
     return _errorButton(
       title: _errorMessage,
-      onPressed: () => presenter.loadAttendanceReport(),
+      onPressed: () {
+        // presenter.loadAttendanceReport()
+      },
     );
   }
 
