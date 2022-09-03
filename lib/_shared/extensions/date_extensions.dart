@@ -19,6 +19,22 @@ extension DateExtension on DateTime {
   String toReadableString() {
     return DateFormat('dd MMM yyyy').format(this);
   }
+
+  bool isDateAfter(DateTime otherDate) {
+    if (_daysBetween(this, otherDate) < 0) return true;
+
+    return false;
+  }
+
+  int daysBetween(DateTime otherDate) {
+    return _daysBetween(this, otherDate);
+  }
+
+  int _daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return (to.difference(from).inHours / 24).round();
+  }
 }
 
 extension TimeExtension on TimeOfDay {
