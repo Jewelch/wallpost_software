@@ -6,7 +6,11 @@ class CurveBottomToTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    //we use a stack here instead of a column because
+    //some times there is a thin line between the two items
+    //due to a bug in flutter. So, we overlap the two items
+    //using a stack to hide the thin line.
+    return Stack(
       children: [
         Container(
           width: double.infinity,
@@ -24,7 +28,7 @@ class CurveBottomToTop extends StatelessWidget {
             painter: _CurveBottomToTopPainter(),
           ),
         ),
-        Container(height: 20, color: Colors.white),
+        Container(margin: EdgeInsets.only(top: 56), height: 20, color: Colors.white),
       ],
     );
   }
