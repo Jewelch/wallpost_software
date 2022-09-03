@@ -5,7 +5,7 @@ abstract class CreateExpenseRequestView {
 
   void onDidLoadCategories();
 
-  void onDidSetDate();
+  void onDidSelectDate();
 
   void onDidSelectMainCategory();
 

@@ -220,7 +220,7 @@ void main() {
       expect(presenter.getDate(), date);
       expect(presenter.getDateString(), "20 Aug 2022");
       verifyInOrder([
-        () => view.onDidSetDate(),
+        () => view.onDidSelectDate(),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
@@ -363,7 +363,7 @@ void main() {
       presenter.setRate("invalid number");
 
       //then
-      expect(presenter.getRateError(), "Enter a valid rate");
+      expect(presenter.getRateError(), "Please set a rate");
       expect(presenter.getTotalAmount(), "");
       verifyInOrder([
         () => view.updateValidationErrors(),
@@ -391,7 +391,7 @@ void main() {
       presenter.setQuantity("invalid quantity");
 
       //then
-      expect(presenter.getQuantityError(), "Enter a valid quantity");
+      expect(presenter.getQuantityError(), "Please set a quantity");
       expect(presenter.getTotalAmount(), "");
       verifyInOrder([
         () => view.updateValidationErrors(),
@@ -510,6 +510,22 @@ void main() {
       _clearInteractionsOnAllMocks();
     }
 
+    test("validation", () async {
+      //given
+      when(() => requestCreator.isLoading).thenReturn(false);
+      _clearInteractionsOnAllMocks();
+
+      //when
+      await presenter.createExpenseRequest();
+
+      //then
+      expect(presenter.getRateError(), "Please set a rate");
+      expect(presenter.getQuantityError(), "Please set a quantity");
+      verify(() => requestCreator.isLoading).called(1);
+      verify(() => view.updateValidationErrors()).called(2);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
     test("does nothing when the request creator is loading", () async {
       //given
       when(() => requestCreator.isLoading).thenReturn(true);
@@ -583,29 +599,6 @@ void main() {
         () => view.onDidSubmitFormSuccessfully("Success", "Your expense request has been submitted successfully."),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
-    });
-
-    test("the form is built correctly", () async {
-      //given
-      when(() => requestCreator.isLoading).thenReturn(false);
-      when(() => requestCreator.create(any(), any())).thenAnswer((_) => Future.value(null));
-      await _setupValidData();
-
-      //when
-      await presenter.createExpenseRequest();
-
-      //then
-      var verificationResult = verify(() => requestCreator.create(captureAny(), captureAny()));
-      var form = verificationResult.captured.first as ExpenseRequestForm;
-      var file = verificationResult.captured[1];
-      expect(form.date, DateTime(2022, 8, 20));
-      expect(form.mainCategory.id, "id1");
-      expect(form.project?.id, "id2");
-      expect(form.subCategory?.id, "id3");
-      expect(form.rate.toString(), "22.50");
-      expect(form.quantity, 2);
-      expect(form.description, "some description");
-      expect(file, isNotNull);
     });
 
     test("get isFormSubmissionInProgress", () {

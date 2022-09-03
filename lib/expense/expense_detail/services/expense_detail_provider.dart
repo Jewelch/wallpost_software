@@ -46,7 +46,10 @@ class ExpenseDetailProvider {
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
-    var item = ExpenseRequest.fromJson(responseMap);
-    return item;
+    try {
+      return ExpenseRequest.fromJson(responseMap);
+    } catch (_) {
+      throw InvalidResponseException();
+    }
   }
 }

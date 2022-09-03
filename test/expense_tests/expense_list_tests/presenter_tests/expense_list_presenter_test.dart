@@ -209,11 +209,11 @@ main() {
 
   //MARK: Tests for getting the list details
 
-  test('get number of leave list items when there are no items', () async {
+  test('get number of expense list items when there are no items', () async {
     expect(presenter.getNumberOfListItems(), 0);
   });
 
-  test('get number of leave list items when there are no items and an error occurs', () async {
+  test('get number of expense list items when there are no items and an error occurs', () async {
     //when
     when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext(any())).thenAnswer((_) => Future.error(InvalidResponseException()));

@@ -162,6 +162,7 @@ class _CreateExpenseRequestScreenState extends State<CreateExpenseRequestScreen>
         SizedBox(height: 2),
         FormTextField(
           keyboardType: TextInputType.numberWithOptions(decimal: true),
+          textInputAction: TextInputAction.next,
           onChanged: (rate) => _presenter.setRate(rate),
           errorText: _presenter.getRateError(),
         ),
@@ -341,7 +342,7 @@ class _CreateExpenseRequestScreenState extends State<CreateExpenseRequestScreen>
   }
 
   @override
-  void onDidSetDate() {
+  void onDidSelectDate() {
     setState(() {});
   }
 

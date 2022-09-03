@@ -1,13 +1,12 @@
 class ValidationResult {
-  final String fieldName;
   final bool isValid;
   final String? validationErrorMessage;
 
-  ValidationResult.valid(this.fieldName)
+  ValidationResult.valid()
       : isValid = true,
         validationErrorMessage = null;
 
-  ValidationResult.invalid(this.fieldName, String errorMessage)
+  ValidationResult.invalid(String errorMessage)
       : isValid = false,
         validationErrorMessage = errorMessage;
 }

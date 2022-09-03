@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/expense/expense_detail/constants/expense_detail_urls.dart';
 import 'package:wallpost/expense/expense_detail/services/expense_detail_provider.dart';
@@ -81,7 +80,7 @@ void main() {
       var _ = await detailsProvider.get("someExpenseId");
       fail('failed to throw InvalidResponseException');
     } catch (e) {
-      expect(e is MappingException, true);
+      expect(e is InvalidResponseException, true);
     }
   });
 

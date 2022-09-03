@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/expense/expense_create/constants/create_expense_request_urls.dart';
 
 import '../entities/expense_category.dart';
@@ -56,7 +55,7 @@ class ExpenseCategoriesProvider {
         categories.add(item);
       }
       return categories;
-    } on MappingException catch (_) {
+    } catch (_) {
       throw InvalidResponseException();
     }
   }
