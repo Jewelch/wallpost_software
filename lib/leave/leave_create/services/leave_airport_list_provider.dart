@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/company_core/services/selected_employee_provider.dart';
-import 'package:wallpost/leave/constants/leave_urls.dart';
-import 'package:wallpost/leave/entities/leave_airport.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+
+import '../constants/create_leave_urls.dart';
+import '../entities/leave_airport.dart';
 
 class LeaveAirportListProvider {
-  final SelectedEmployeeProvider _selectedEmployeeProvider;
+  final SelectedCompanyProvider _selectedCompanyProvider;
   final NetworkAdapter _networkAdapter;
   final int _perPage = 15;
   int _pageNumber = 1;
@@ -15,10 +16,10 @@ class LeaveAirportListProvider {
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool isLoading = false;
 
-  LeaveAirportListProvider.initWith(this._selectedEmployeeProvider, this._networkAdapter);
+  LeaveAirportListProvider.initWith(this._selectedCompanyProvider, this._networkAdapter);
 
   LeaveAirportListProvider()
-      : _selectedEmployeeProvider = SelectedEmployeeProvider(),
+      : _selectedCompanyProvider = SelectedCompanyProvider(),
         _networkAdapter = WPAPI();
 
   void reset() {
@@ -29,9 +30,10 @@ class LeaveAirportListProvider {
   }
 
   Future<List<LeaveAirport>> getNext({String? searchText}) async {
-    var companyId = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser().companyId;
-    var employeeId = _selectedEmployeeProvider.getSelectedEmployeeForCurrentUser().v1Id;
-    var url = LeaveUrls.airportsListUrl(companyId, employeeId, searchText ?? "", _pageNumber, _perPage);
+    var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
+    var companyId = company.id;
+    var employeeId = company.employee.v1Id;
+    var url = CreateLeaveUrls.airportsListUrl(companyId, employeeId, searchText ?? "", _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
 

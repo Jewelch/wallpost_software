@@ -19,10 +19,11 @@ class LeaveApprovalListItem {
       _leaveType = sift.readStringFromMap(leaveTypeMap, "name");
       _companyId = "${sift.readNumberFromMap(jsonMap, "company_id")}";
       _applicantName = "Some Employee Name"; //TODO: add employee name
-      _startDate = sift.readDateFromMap(jsonMap, "leave_from", "dd/MM/yyyy");
-      _endDate = sift.readDateFromMap(jsonMap, "leave_to", "dd/MM/yyyy");
+      _startDate = sift.readDateFromMap(jsonMap, "leave_from", "MMM-dd-yyyy");
+      _endDate = sift.readDateFromMap(jsonMap, "leave_to", "MMM-dd-yyyy");
       _totalLeaveDays = sift.readNumberFromMap(jsonMap, "leave_days").toInt();
     } on SiftException catch (e) {
+      print(e.errorMessage);
       throw MappingException('Failed to cast LeaveApproval response. Error message - ${e.errorMessage}');
     }
   }

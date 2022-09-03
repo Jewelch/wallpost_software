@@ -53,11 +53,8 @@ class _LeaveDetailScreenState extends State<LeaveDetailScreen> implements LeaveD
       backgroundColor: AppColors.screenBackgroundColor,
       appBar: SimpleAppBar(
         title: "Leave Details",
-        leadingButton: RoundedBackButton(
-            onPressed: () => Navigator.pop(
-                  context,
-                  _presenter,
-                )),
+        leadingButton:
+            RoundedBackButton(onPressed: () => Navigator.pop(context, _presenter.didProcessApprovalOrRejection)),
       ),
       body: SafeArea(
         child: ItemNotifiable(
