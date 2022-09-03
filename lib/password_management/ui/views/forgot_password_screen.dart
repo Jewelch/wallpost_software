@@ -117,7 +117,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> implements Forgot
               controller: _emailTextController,
               hint: "Email",
               errorText: value,
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
               isEnabled: enableFormInput,
             ),
           ),
