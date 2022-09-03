@@ -80,44 +80,50 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: <Widget>[
-          FadeTransition(
-            opacity: opacity,
-            child: Container(color: Colors.black.withOpacity(0.7)),
-          ),
-          GestureDetector(
-            onTap: () {
-              if (widget.shouldDismissOnTap) close();
-            },
-            child: Container(color: Colors.transparent),
-          ),
-          Column(
-            verticalDirection: VerticalDirection.up,
-            children: [
-              Flexible(
-                child: SlideTransition(
-                  position: offset,
-                  child: Container(
-                    constraints: BoxConstraints.loose(const Size(double.infinity, 700)),
-                    color: Colors.transparent,
-                    child: ListView(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: [
-                        CurveBottomToTop(),
-                        Container(color: Colors.white, child: widget.content),
-                      ],
+    return WillPopScope(
+      onWillPop: () {
+        close();
+        return Future.value(false);
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: <Widget>[
+            FadeTransition(
+              opacity: opacity,
+              child: Container(color: Colors.black.withOpacity(0.7)),
+            ),
+            GestureDetector(
+              onTap: () {
+                if (widget.shouldDismissOnTap) close();
+              },
+              child: Container(color: Colors.transparent),
+            ),
+            Column(
+              verticalDirection: VerticalDirection.up,
+              children: [
+                Flexible(
+                  child: SlideTransition(
+                    position: offset,
+                    child: Container(
+                      constraints: BoxConstraints.loose(const Size(double.infinity, 700)),
+                      color: Colors.transparent,
+                      child: ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: [
+                          CurveBottomToTop(),
+                          Container(color: Colors.white, child: widget.content),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

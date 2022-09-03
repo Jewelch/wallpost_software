@@ -7,6 +7,7 @@ class DropdownFilter extends StatelessWidget {
   final List<String> items;
   final String? selectedValue;
   final List<String> disabledItems;
+  final String? hint;
   final ValueChanged<String>? onDidSelectItemWithValue;
   final ValueChanged<int>? onDidSelectedItemAtIndex;
   final Color backgroundColor;
@@ -17,6 +18,7 @@ class DropdownFilter extends StatelessWidget {
     required this.items,
     this.selectedValue,
     this.disabledItems = const [],
+    this.hint,
     this.onDidSelectItemWithValue,
     this.onDidSelectedItemAtIndex,
     this.backgroundColor = AppColors.filtersBackgroundColour,
@@ -42,6 +44,7 @@ class DropdownFilter extends StatelessWidget {
         isExpanded: true,
         value: selectedValue,
         style: TextStyle(overflow: TextOverflow.fade),
+        hint: (hint != null && hint!.isNotEmpty) ? Text(_buildTitle(hint!), style: _buildTitleStyle(hint!)) : null,
         onChanged: (selectedValue) {
           if (selectedValue == null) return;
           if (disabledItems.contains(selectedValue)) return;
