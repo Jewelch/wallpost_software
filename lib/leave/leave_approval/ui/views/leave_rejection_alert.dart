@@ -58,52 +58,59 @@ class _LeaveRejectionAlertState extends State<LeaveRejectionAlert> implements Le
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 12, right: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Are you sure?", style: TextStyles.extraLargeTitleTextStyleBold),
-          SizedBox(height: 16),
-          Text("You want to reject ${widget.requestedBy}'s leave request?", style: TextStyles.titleTextStyleBold),
-          SizedBox(height: 16),
-          FormTextField(
-            hint: 'Write your reason here',
-            controller: _reasonTextController,
-            autoFocus: true,
-            errorText: _presenter.getRejectionReasonError(),
-            minLines: 3,
-            maxLines: 8,
-            keyboardType: TextInputType.multiline,
-            textInputAction: TextInputAction.done,
-            isEnabled: _presenter.isRejectionInProgress() ? false : true,
-          ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: CapsuleActionButton(
-                  title: _presenter.getRejectButtonTitle(),
-                  color: AppColors.green,
-                  onPressed: () => _presenter.reject(
-                    widget.companyId,
-                    widget.leaveId,
-                    _reasonTextController.text,
+    return WillPopScope(
+      onWillPop: () {
+        widget.modalSheetController.close();
+        return Future.value(false);
+      },
+      child: Container(
+        height: 800,
+        padding: EdgeInsets.only(left: 12, right: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Are you sure?", style: TextStyles.extraLargeTitleTextStyleBold),
+            SizedBox(height: 16),
+            Text("You want to reject ${widget.requestedBy}'s leave request?", style: TextStyles.titleTextStyleBold),
+            SizedBox(height: 16),
+            FormTextField(
+              hint: 'Write your reason here',
+              controller: _reasonTextController,
+              autoFocus: true,
+              errorText: _presenter.getRejectionReasonError(),
+              minLines: 3,
+              maxLines: 8,
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.done,
+              isEnabled: _presenter.isRejectionInProgress() ? false : true,
+            ),
+            SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: CapsuleActionButton(
+                    title: _presenter.getRejectButtonTitle(),
+                    color: AppColors.green,
+                    onPressed: () => _presenter.reject(
+                      widget.companyId,
+                      widget.leaveId,
+                      _reasonTextController.text,
+                    ),
+                    showLoader: _presenter.isApprovalInProgress(),
                   ),
-                  showLoader: _presenter.isApprovalInProgress(),
                 ),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: CapsuleActionButton(
-                  title: "Close",
-                  color: AppColors.red,
-                  onPressed: () => widget.modalSheetController.close(),
+                SizedBox(width: 16),
+                Expanded(
+                  child: CapsuleActionButton(
+                    title: "Close",
+                    color: AppColors.red,
+                    onPressed: () => widget.modalSheetController.close(),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

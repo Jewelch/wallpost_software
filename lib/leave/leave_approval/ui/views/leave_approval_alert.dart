@@ -56,36 +56,42 @@ class _LeaveApprovalAlertState extends State<LeaveApprovalAlert> implements Leav
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 12, right: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Are you sure?", style: TextStyles.extraLargeTitleTextStyleBold),
-          SizedBox(height: 16),
-          Text("You want to approve ${widget.requestedBy}'s leave request?", style: TextStyles.titleTextStyleBold),
-          SizedBox(height: 30),
-          Row(
-            children: [
-              Expanded(
-                child: CapsuleActionButton(
-                  title: _presenter.getApproveButtonTitle(),
-                  color: AppColors.green,
-                  onPressed: () => _presenter.approve(widget.companyId, widget.leaveId),
-                  showLoader: _presenter.isApprovalInProgress(),
+    return WillPopScope(
+      onWillPop: () {
+        widget.modalSheetController.close();
+        return Future.value(false);
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: 12, right: 12, bottom: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Are you sure?", style: TextStyles.extraLargeTitleTextStyleBold),
+            SizedBox(height: 16),
+            Text("You want to approve ${widget.requestedBy}'s leave request?", style: TextStyles.titleTextStyleBold),
+            SizedBox(height: 30),
+            Row(
+              children: [
+                Expanded(
+                  child: CapsuleActionButton(
+                    title: _presenter.getApproveButtonTitle(),
+                    color: AppColors.green,
+                    onPressed: () => _presenter.approve(widget.companyId, widget.leaveId),
+                    showLoader: _presenter.isApprovalInProgress(),
+                  ),
                 ),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: CapsuleActionButton(
-                  title: "Close",
-                  color: AppColors.red,
-                  onPressed: () => widget.modalSheetController.close(),
+                SizedBox(width: 16),
+                Expanded(
+                  child: CapsuleActionButton(
+                    title: "Close",
+                    color: AppColors.red,
+                    onPressed: () => widget.modalSheetController.close(),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
