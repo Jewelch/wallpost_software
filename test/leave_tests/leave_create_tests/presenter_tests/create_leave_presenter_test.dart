@@ -305,62 +305,6 @@ void main() {
   });
 
   group("tests for submitting the form", () {
-    test("validation", () async {
-      //given
-      when(() => requestCreator.isLoading).thenReturn(false);
-      _clearInteractionsOnAllMocks();
-
-      //when
-      await presenter.createLeave();
-
-      //then
-      expect(presenter.getLeaveTypeError(), "Please select a leave type");
-      expect(presenter.getStartDateError(), "Please select a start date");
-      expect(presenter.getEndDateError(), "Please select an end date");
-      expect(presenter.getPhoneNumberError(), "Please enter a phone number");
-      expect(presenter.getEmailError(), "Please enter an email");
-      expect(presenter.getLeaveReasonError(), "Please enter a reason");
-      expect(presenter.getFileAttachmentError(), null);
-      verify(() => requestCreator.isLoading).called(1);
-      verify(() => view.updateValidationErrors()).called(7);
-      _verifyNoMoreInteractionsOnAllMocks();
-    });
-
-    test("does nothing when the request creator is loading", () async {
-      //given
-      when(() => requestCreator.isLoading).thenReturn(true);
-
-      //when
-      await presenter.createLeave();
-
-      //then
-      verifyInOrder([
-        () => requestCreator.isLoading,
-      ]);
-      _verifyNoMoreInteractionsOnAllMocks();
-    });
-
-    test("shows validation errors if input is invalid", () async {
-      //given
-      when(() => requestCreator.isLoading).thenReturn(false);
-
-      //when
-      await presenter.createLeave();
-
-      //then
-      verifyInOrder([
-        () => requestCreator.isLoading,
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-      ]);
-      _verifyNoMoreInteractionsOnAllMocks();
-    });
-
     Future<void> _setupValidData() async {
       var leaveType = MockLeaveType();
       when(() => leaveType.name).thenReturn("leave type 1");
@@ -380,6 +324,58 @@ void main() {
       _clearInteractionsOnAllMocks();
     }
 
+    test("validation", () async {
+      //given
+      when(() => requestCreator.isLoading).thenReturn(false);
+      _clearInteractionsOnAllMocks();
+
+      //when
+      await presenter.createLeave();
+
+      //then
+      expect(presenter.getEndDateError(), "Please select an end date");
+      expect(presenter.getPhoneNumberError(), "Please enter a phone number");
+      expect(presenter.getEmailError(), "Please enter an email");
+      expect(presenter.getLeaveReasonError(), "Please enter a reason");
+      expect(presenter.getFileAttachmentError(), null);
+      verify(() => requestCreator.isLoading).called(1);
+      verify(() => view.updateValidationErrors()).called(5);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test("does nothing when the request creator is loading", () async {
+      //given
+      when(() => requestCreator.isLoading).thenReturn(true);
+
+      //when
+      await presenter.createLeave();
+
+      //then
+      verifyInOrder([
+            () => requestCreator.isLoading,
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test("shows validation errors if input is invalid", () async {
+      //given
+      when(() => requestCreator.isLoading).thenReturn(false);
+
+      //when
+      await presenter.createLeave();
+
+      //then
+      verifyInOrder([
+            () => requestCreator.isLoading,
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
     test("failure to submit form", () async {
       //given
       when(() => requestCreator.isLoading).thenReturn(false);
@@ -391,20 +387,18 @@ void main() {
 
       //then
       verifyInOrder([
-        () => requestCreator.isLoading,
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.showFormSubmissionLoader(),
-        () => requestCreator.create(any(), any()),
-        () => view.onDidFailToSubmitForm(
-              "Failed to create leave request",
-              InvalidResponseException().userReadableMessage,
-            ),
+            () => requestCreator.isLoading,
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.showFormSubmissionLoader(),
+            () => requestCreator.create(any(), any()),
+            () => view.onDidFailToSubmitForm(
+          "Failed to create leave request",
+          InvalidResponseException().userReadableMessage,
+        ),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
@@ -420,17 +414,15 @@ void main() {
 
       //then
       verifyInOrder([
-        () => requestCreator.isLoading,
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.updateValidationErrors(),
-        () => view.showFormSubmissionLoader(),
-        () => requestCreator.create(any(), any()),
-        () => view.onDidSubmitFormSuccessfully("Success", "Your leave request has been submitted successfully."),
+            () => requestCreator.isLoading,
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.updateValidationErrors(),
+            () => view.showFormSubmissionLoader(),
+            () => requestCreator.create(any(), any()),
+            () => view.onDidSubmitFormSuccessfully("Success", "Your leave request has been submitted successfully."),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });

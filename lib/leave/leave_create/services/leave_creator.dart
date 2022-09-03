@@ -46,18 +46,13 @@ class LeaveCreator {
   }
 
   Future<void> _createLeave(LeaveRequestForm leaveRequestForm) async {
-    var companyId = _companyProvider.getSelectedCompanyForCurrentUser().id;
-    var employeeId = _companyProvider.getSelectedCompanyForCurrentUser().employee.v1Id;
-    var url = CreateLeaveUrls.createLeaveUrl(companyId, employeeId);
+    var company = _companyProvider.getSelectedCompanyForCurrentUser();
+    var url = CreateLeaveUrls.createLeaveUrl(company.id, company.employee.v1Id);
     var apiRequest = APIRequest(url);
 
-    try {
-      apiRequest.addParameters(leaveRequestForm.toJson());
-      var _ = await _networkAdapter.post(apiRequest);
-      return;
-    } on WPException catch (_) {
-      rethrow;
-    }
+    apiRequest.addParameters(leaveRequestForm.toJson());
+    await _networkAdapter.post(apiRequest);
+    return;
   }
 
   bool get isLoading => _isLoading;

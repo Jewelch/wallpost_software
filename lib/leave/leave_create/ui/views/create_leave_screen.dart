@@ -137,7 +137,6 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen> implements Create
           firstDate: DateTime.now().subtract(Duration(days: 600)),
           lastDate: DateTime.now().add(Duration(days: 600)),
           onDateSelected: (date) => _presenter.setLeaveStartDate(date),
-          errorText: _presenter.getStartDateError(),
         ),
       ],
     );

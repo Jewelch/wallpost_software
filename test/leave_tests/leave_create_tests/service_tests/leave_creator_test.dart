@@ -44,16 +44,7 @@ main() {
   }
 
   void _setupFormWithFile() {
-    var leaveType = MockLeaveType();
-    when(() => leaveType.id).thenReturn("leaveTypeId");
-    when(() => leaveType.requiresCertificate).thenReturn(true);
-    when(() => leaveType.requiredMinimumPeriod).thenReturn(0);
-    leaveRequestForm.leaveType = leaveType;
-    leaveRequestForm.startDate = DateTime.now();
-    leaveRequestForm.endDate = DateTime.now();
-    leaveRequestForm.phoneNumber = "1112222333";
-    leaveRequestForm.email = "someemail@email.com";
-    leaveRequestForm.leaveReason = "some leave reason";
+    _setupFormWithoutFile();
     leaveRequestForm.attachedFileName = "someFileName.png";
   }
 

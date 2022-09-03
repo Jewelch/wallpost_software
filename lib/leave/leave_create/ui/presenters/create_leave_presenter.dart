@@ -123,28 +123,12 @@ class CreateLeavePresenter {
 
   bool _isInputValid() {
     var isValid = true;
-    if (!_validateLeaveType()) isValid = false;
-    if (!_validateStartDate()) isValid = false;
     if (!_validateEndDate()) isValid = false;
     if (!_validatePhoneNumber()) isValid = false;
     if (!_validateEmail()) isValid = false;
     if (!_validateLeaveReason()) isValid = false;
     if (!_validateAttachment()) isValid = false;
     return isValid;
-  }
-
-  bool _validateLeaveType() {
-    var validationResult = _form.validateLeaveType();
-    _viewModel.leaveTypeError = validationResult.validationErrorMessage;
-    _view.updateValidationErrors();
-    return validationResult.isValid;
-  }
-
-  bool _validateStartDate() {
-    var validationResult = _form.validateStartDate();
-    _viewModel.startDateError = validationResult.validationErrorMessage;
-    _view.updateValidationErrors();
-    return validationResult.isValid;
   }
 
   bool _validateEndDate() {
@@ -211,10 +195,6 @@ class CreateLeavePresenter {
   bool shouldShowLoadLeaveSpecsError() => _viewModel.loadLeaveSpecsError != null;
 
   String getLoadLeaveSpecsError() => _viewModel.loadLeaveSpecsError ?? "";
-
-  String? getLeaveTypeError() => _viewModel.leaveTypeError;
-
-  String? getStartDateError() => _viewModel.startDateError;
 
   String? getEndDateError() => _viewModel.endDateError;
 

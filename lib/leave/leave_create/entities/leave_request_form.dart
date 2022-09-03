@@ -21,74 +21,74 @@ class LeaveRequestForm implements JSONConvertible {
 
   ValidationResult validateLeaveType() {
     if (leaveType == null) {
-      return ValidationResult.invalid("leaveType", "Please select a leave type");
+      return ValidationResult.invalid("Please select a leave type");
     }
 
-    return ValidationResult.valid("leaveType");
+    return ValidationResult.valid();
   }
 
   ValidationResult validateStartDate() {
     if (startDate == null) {
-      return ValidationResult.invalid("startDate", "Please select a start date");
+      return ValidationResult.invalid("Please select a start date");
     }
 
-    return ValidationResult.valid("startDate");
+    return ValidationResult.valid();
   }
 
   ValidationResult validateEndDate() {
     if (endDate == null) {
-      return ValidationResult.invalid("endDate", "Please select an end date");
+      return ValidationResult.invalid("Please select an end date");
     }
 
     if (startDate != null && startDate!.isDateAfter(endDate!)) {
-      return ValidationResult.invalid("endDate", "End date cannot be before start date");
+      return ValidationResult.invalid("End date cannot be before start date");
     }
 
     if (leaveType != null && leaveType!.requiredMinimumPeriod > 0) {
       var daysBetweenStartAndEndDate = startDate!.daysBetween(endDate!);
       if (daysBetweenStartAndEndDate < leaveType!.requiredMinimumPeriod) {
         return ValidationResult.invalid(
-            "endDate", "Required minimum period for ${leaveType!.name} is ${leaveType!.requiredMinimumPeriod}");
+            "Required minimum period for ${leaveType!.name} is ${leaveType!.requiredMinimumPeriod}");
       }
     }
 
-    return ValidationResult.valid("endDate");
+    return ValidationResult.valid();
   }
 
   ValidationResult validatePhoneNumber() {
     if (phoneNumber == null || phoneNumber!.isEmpty) {
-      return ValidationResult.invalid("phoneNumber", "Please enter a phone number");
+      return ValidationResult.invalid("Please enter a phone number");
     }
 
-    return ValidationResult.valid("phoneNumber");
+    return ValidationResult.valid();
   }
 
   ValidationResult validateEmail() {
     if (email == null || email!.isEmpty) {
-      return ValidationResult.invalid("email", "Please enter an email");
+      return ValidationResult.invalid("Please enter an email");
     }
 
     if (!EmailValidator.isEmailValid(email!)) {
-      return ValidationResult.invalid("email", "Please enter a valid email");
+      return ValidationResult.invalid("Please enter a valid email");
     }
 
-    return ValidationResult.valid("email");
+    return ValidationResult.valid();
   }
 
   ValidationResult validateLeaveReason() {
     if (leaveReason == null || leaveReason!.isEmpty) {
-      return ValidationResult.invalid("leaveReason", "Please enter a reason");
+      return ValidationResult.invalid("Please enter a reason");
     }
 
-    return ValidationResult.valid("leaveReason");
+    return ValidationResult.valid();
   }
 
   ValidationResult validateFileAttachment() {
     if (leaveType != null && leaveType!.requiresCertificate && attachedFileName == null) {
-      return ValidationResult.invalid("attachedFileName", "Please upload a supporting document");
+      return ValidationResult.invalid("Please upload a supporting document");
     }
 
-    return ValidationResult.valid("attachedFileName");
+    return ValidationResult.valid();
   }
 
   ValidationResult _isFormInputValid() {
@@ -100,8 +100,10 @@ class LeaveRequestForm implements JSONConvertible {
     if (!validateLeaveReason().isValid) return validateLeaveReason();
     if (!validateFileAttachment().isValid) return validateFileAttachment();
 
-    return ValidationResult.valid("");
+    return ValidationResult.valid();
   }
+
+  //MARK: Function to convert to json
 
   @override
   Map<String, dynamic> toJson() {
