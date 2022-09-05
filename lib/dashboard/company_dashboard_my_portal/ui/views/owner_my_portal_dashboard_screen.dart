@@ -132,8 +132,10 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 60),
-            Padding(
+            Container(
+              color: Colors.white,
               padding: const EdgeInsets.only(left: 16),
+              width: double.infinity,
               child: Text(
                 "Requests",
                 style: TextStyles.subTitleTextStyleBold.copyWith(color: AppColors.defaultColorDark),
@@ -141,7 +143,7 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
             ),
             Container(
               padding: EdgeInsets.only(top: 12),
-              height: 52,
+              height: 60,
               color: Colors.white,
               child: TabChips(
                 titles: _presenter.getRequestItems(),
