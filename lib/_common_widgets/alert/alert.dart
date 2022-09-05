@@ -11,19 +11,22 @@ class Alert {
     return showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => new AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-        title: new Text(title),
-        content: new Text(message),
-        actions: <Widget>[
-          new TextButton(
-            child: new Text(buttonTitle ?? "Ok"),
-            onPressed: () {
-              Navigator.of(context).pop();
-              if (onPressed != null) onPressed();
-            },
-          ),
-        ],
+      builder: (context) => WillPopScope(
+        onWillPop: () => Future.value(false),
+        child: new AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: new Text(title),
+          content: new Text(message),
+          actions: <Widget>[
+            new TextButton(
+              child: new Text(buttonTitle ?? "Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (onPressed != null) onPressed();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -40,26 +43,29 @@ class Alert {
     return showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => new AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-        title: new Text(title),
-        content: new Text(message),
-        actions: <Widget>[
-          new TextButton(
-            child: new Text(buttonOneTitle),
-            onPressed: () {
-              Navigator.of(context).pop();
-              if (buttonOneOnPressed != null) buttonOneOnPressed();
-            },
-          ),
-          new TextButton(
-            child: new Text(buttonTwoTitle),
-            onPressed: () {
-              Navigator.of(context).pop();
-              if (buttonTwoOnPressed != null) buttonTwoOnPressed();
-            },
-          ),
-        ],
+      builder: (context) => WillPopScope(
+        onWillPop: () => Future.value(false),
+        child: new AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: new Text(title),
+          content: new Text(message),
+          actions: <Widget>[
+            new TextButton(
+              child: new Text(buttonOneTitle),
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (buttonOneOnPressed != null) buttonOneOnPressed();
+              },
+            ),
+            new TextButton(
+              child: new Text(buttonTwoTitle),
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (buttonTwoOnPressed != null) buttonTwoOnPressed();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
