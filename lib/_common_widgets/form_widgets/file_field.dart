@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
 import '../../_shared/constants/app_colors.dart';
-import '../file_picker/file_picker_screen.dart';
+import '../file/file_picker_screen.dart';
 import '../keyboard_dismisser/keyboard_dismisser.dart';
 import '../text_styles/text_styles.dart';
 
@@ -20,7 +20,7 @@ class FileField extends StatelessWidget {
     this.selectedFile,
     required this.onFileSelected,
     required this.onRemoveButtonPress,
-    required this.errorText,
+    this.errorText,
   });
 
   @override
@@ -31,7 +31,7 @@ class FileField extends StatelessWidget {
         GestureDetector(
           onTap: () async {
             KeyboardDismisser.dismissKeyboard();
-            var files = await FilePickerScreen.present(context);
+            var files = await FilePickerScreen.show(context);
             if (files != null && files is List && files.isNotEmpty) onFileSelected(files[0]);
           },
           child: Container(

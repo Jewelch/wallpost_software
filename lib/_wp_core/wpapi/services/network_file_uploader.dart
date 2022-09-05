@@ -20,7 +20,11 @@ class NetworkFileUploader {
       'POST',
       Uri.parse(url),
       onProgress: (int bytes, int total) {
-        if (onUploadProgress != null) onUploadProgress((bytes / total) * 100);
+        var progress = (bytes / total) * 100;
+        print("----------------------------------");
+        print("File upload progress - $progress");
+        print("----------------------------------");
+        if (onUploadProgress != null) onUploadProgress(progress);
       },
     );
     request.headers.addAll(apiRequest.headers);
@@ -64,6 +68,10 @@ class NetworkFileUploader {
 
     try {
       var responseData = json.decode(responseString);
+      print("----------------------------------");
+      print("File upload complete - ${apiRequest.url}");
+      print("Response - $responseData");
+      print("----------------------------------");
       return APIResponse(apiRequest, 200, responseData, {});
     } catch (error) {
       print("----------------------------------");
