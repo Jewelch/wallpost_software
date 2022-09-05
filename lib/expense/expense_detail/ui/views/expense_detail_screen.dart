@@ -165,7 +165,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
   }
 
   Widget _labelAndValue(String label, String? value, {TextStyle? valueStyle}) {
-    if (value == null) return Container();
+    if (value == null || value.isEmpty) return Container();
 
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12, bottom: 20),
