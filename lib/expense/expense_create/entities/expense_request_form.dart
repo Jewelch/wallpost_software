@@ -87,7 +87,7 @@ class ExpenseRequestForm implements JSONConvertible {
       "category": subCategory != null ? "${subCategory!.id}" : null,
       "project": project != null ? "${project!.id}" : null,
       "expense_date": date!.yyyyMMddString(),
-      "description": description ?? "",
+      "description": description,
       "quantity": "$quantity",
       "rate": "${rate.toString()}",
       "amount": "${rate!.multiply(quantity!).toString()}",

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/input_validation_exception.dart';
@@ -64,7 +66,7 @@ main() {
     test("api request is built correctly", () async {
       _setupFormWithoutFile();
       Map<String, dynamic> requestParams = {
-        'expenseItems': [expenseRequestForm.toJson()]
+        'expenseItems': jsonEncode([expenseRequestForm.toJson()])
       };
       mockNetworkAdapter.succeed(successfulResponse);
 
@@ -148,7 +150,7 @@ main() {
       var expectedRequestParams = expenseRequestForm.toJson();
       expectedRequestParams["file"] = "uploadedFileName";
       Map<String, dynamic> requestParams = {
-        'expenseItems': [expectedRequestParams]
+        'expenseItems': jsonEncode([expectedRequestParams])
       };
       mockNetworkAdapter.succeed(successfulResponse);
 

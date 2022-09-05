@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
@@ -51,7 +52,7 @@ class ExpenseRequestCreator {
     var url = CreateExpenseRequestUrls.getCreateExpenseRequestUrl(companyId);
     var apiRequest = APIRequest(url);
 
-    apiRequest.addParameter("expenseItems", [expenseRequest.toJson()]);
+    apiRequest.addParameter("expenseItems", jsonEncode([expenseRequest.toJson()]));
     await _networkAdapter.postWithFormData(apiRequest);
     return null;
   }
