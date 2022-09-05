@@ -1,7 +1,6 @@
 import 'dart:core';
 import 'dart:io';
 
-import 'package:path/path.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/_shared/money/money.dart';
@@ -242,10 +241,8 @@ class CreateExpenseRequestPresenter {
     return "$currency ${totalAmount.toString()}";
   }
 
-  String getAttachedFileName() {
-    if (_model.file == null) return "";
-
-    return basename(_model.file!.path);
+  File? getAttachedFile() {
+    return _model.file;
   }
 
   String getDescription() {

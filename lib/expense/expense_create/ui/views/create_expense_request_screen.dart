@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
-import 'package:wallpost/_common_widgets/file_picker/file_picker_screen.dart';
 import 'package:wallpost/_common_widgets/filter_views/dropdown_filter.dart';
 import 'package:wallpost/_common_widgets/form_widgets/form_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/keyboard_dismisser.dart';
@@ -11,6 +10,8 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/expense/expense_create/ui/views/expense_request_loader.dart';
 
 import '../../../../_common_widgets/alert/alert.dart';
+import '../../../../_common_widgets/form_widgets/file_field.dart';
+import '../../../../_common_widgets/form_widgets/form_date_field.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../presenters/create_expense_request_presenter.dart';
 import '../view_contracts/create_expense_request_view.dart';
@@ -88,29 +89,12 @@ class _CreateExpenseRequestScreenState extends State<CreateExpenseRequestScreen>
       children: [
         _formFieldLabel("Date", isMandatory: true),
         SizedBox(height: 2),
-        GestureDetector(
-          onTap: () async {
-            KeyboardDismisser.dismissKeyboard();
-            var date = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now().subtract(Duration(days: 600)),
-                lastDate: DateTime.now().add(Duration(days: 600)));
-            if (date != null) _presenter.setDate(date);
-          },
-          child: Container(
-            height: 50,
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            decoration:
-                BoxDecoration(color: AppColors.textFieldBackgroundColor, borderRadius: BorderRadius.circular(8)),
-            child: Row(
-              children: [
-                Expanded(child: Text(_presenter.getDateString(), style: TextStyles.titleTextStyle)),
-                Icon(Icons.calendar_today_outlined, color: AppColors.textColorGray),
-              ],
-            ),
-          ),
-        )
+        FormDateField(
+          initialDate: _presenter.getDate(),
+          firstDate: DateTime.now().subtract(Duration(days: 600)),
+          lastDate: DateTime.now().add(Duration(days: 600)),
+          onDateSelected: (date) => _presenter.setDate(date),
+        ),
       ],
     );
   }
@@ -206,24 +190,10 @@ class _CreateExpenseRequestScreenState extends State<CreateExpenseRequestScreen>
       children: [
         _formFieldLabel("Upload supporting documents"),
         SizedBox(height: 2),
-        GestureDetector(
-          onTap: () async {
-            KeyboardDismisser.dismissKeyboard();
-            var files = await FilePickerScreen.present(context);
-            if (files != null && files is List && files.isNotEmpty) _presenter.addAttachment(files[0]);
-          },
-          child: Container(
-            height: 50,
-            decoration:
-                BoxDecoration(color: AppColors.textFieldBackgroundColor, borderRadius: BorderRadius.circular(8)),
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                Expanded(child: Text(_presenter.getAttachedFileName(), style: TextStyles.titleTextStyle)),
-                Icon(Icons.attachment, color: AppColors.textColorGray),
-              ],
-            ),
-          ),
+        FileField(
+          selectedFile: _presenter.getAttachedFile(),
+          onFileSelected: (selectedFile) => _presenter.addAttachment(selectedFile),
+          onRemoveButtonPress: () => _presenter.removeAttachment(),
         ),
       ],
     );

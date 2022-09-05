@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
+import 'package:wallpost/_common_widgets/file/file_download_screen.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/file/file_url_opener.dart';
 import 'package:wallpost/expense/expense_approval/ui/views/expense_rejection_alert.dart';
 
 import '../../../../_common_widgets/buttons/capsule_action_button.dart';
@@ -114,7 +114,13 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
             valueStyle: TextStyles.titleTextStyle.copyWith(color: _presenter.getStatusColor()),
           ),
           GestureDetector(
-            onTap: () => FileUrlOpener.openFileUrl(_presenter.getAttachmentUrl()),
+            onTap: () {
+              if (_presenter.getAttachmentUrl() != null)
+                FileDownloadScreen.show(
+                  context: context,
+                  url: _presenter.getAttachmentUrl()!,
+                );
+            },
             child: _labelAndValue(
               "Attachment",
               _presenter.getAttachmentUrl(),

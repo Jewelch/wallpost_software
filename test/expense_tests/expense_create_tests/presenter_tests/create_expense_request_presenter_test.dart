@@ -449,13 +449,12 @@ void main() {
     test("adding an attachment", () {
       //given
       var file = MockFile();
-      when(() => file.path).thenReturn("folder/filename.png");
 
       //when
       presenter.addAttachment(file);
 
       //then
-      expect(presenter.getAttachedFileName(), "filename.png");
+      expect(presenter.getAttachedFile(), file);
       verifyInOrder([
         () => view.onDidAddAttachment(),
       ]);
@@ -465,7 +464,6 @@ void main() {
     test("removing an attachment", () {
       //given
       var file = MockFile();
-      when(() => file.path).thenReturn("folder/filename.png");
       presenter.addAttachment(file);
       _clearInteractionsOnAllMocks();
 
@@ -473,7 +471,7 @@ void main() {
       presenter.removeAttachment();
 
       //then
-      expect(presenter.getAttachedFileName(), "");
+      expect(presenter.getAttachedFile(), null);
       verifyInOrder([
         () => view.onDidRemoveAttachment(),
       ]);
