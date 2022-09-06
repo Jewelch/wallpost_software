@@ -75,7 +75,7 @@ class CompanyDashboardAppBar extends StatelessWidget implements PreferredSizeWid
                 ),
               ),
               SizedBox(width: 24),
-              _addButton(),
+              // _addButton(), uncomment to show the add button
               SizedBox(width: 12),
             ],
           ),
