@@ -27,6 +27,7 @@ class EmployeeMyPortalDashboardScreen extends StatefulWidget {
 }
 
 class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashboardScreen>
+    with WidgetsBindingObserver
     implements EmployeeMyPortalView {
   static const LOADER_VIEW = 1;
   static const ERROR_VIEW = 2;
@@ -40,7 +41,20 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
   void initState() {
     _presenter = EmployeeMyPortalDashboardPresenter(this);
     _presenter.loadData();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) _presenter.syncDataInBackground();
   }
 
   @override
@@ -182,7 +196,10 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
 
   @override
   void goToApprovalsListScreen(String companyId) {
-    ScreenPresenter.present(AggregatedApprovalsListScreen(companyId: companyId), context);
+    ScreenPresenter.present(
+      AggregatedApprovalsListScreen(companyId: companyId),
+      context,
+    ).then((_) => _presenter.syncDataInBackground());
   }
 
   @override
@@ -197,7 +214,10 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
 
   @override
   void showPayrollAdjustmentActions() {
-    ScreenPresenter.present(AttendanceListScreen(), context);
+    ScreenPresenter.present(
+      AttendanceListScreen(),
+      context,
+    ).then((_) => _presenter.syncDataInBackground());
   }
 
   //MARK: Function to present action sheet
@@ -211,11 +231,17 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
         actionTwoTitle: "Create New",
         actionOneCallback: () async {
           await controller.close();
-          ScreenPresenter.present(actionOneScreen, context);
+          ScreenPresenter.present(
+            actionOneScreen,
+            context,
+          ).then((_) => _presenter.syncDataInBackground());
         },
         actionTwoCallback: () async {
           await controller.close();
-          ScreenPresenter.present(actionTwoScreen, context);
+          ScreenPresenter.present(
+            actionTwoScreen,
+            context,
+          ).then((_) => _presenter.syncDataInBackground());
         },
       ),
       controller: controller,

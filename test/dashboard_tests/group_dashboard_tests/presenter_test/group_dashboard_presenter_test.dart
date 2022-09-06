@@ -9,7 +9,7 @@ import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_
 import 'package:wallpost/attendance/attendance_punch_in_out/services/attendance_details_provider.dart';
 import 'package:wallpost/dashboard/group_dashboard/entities/company_group.dart';
 import 'package:wallpost/dashboard/group_dashboard/entities/group_dashboard_data.dart';
-import 'package:wallpost/dashboard/group_dashboard/services/company_list_provider.dart';
+import 'package:wallpost/dashboard/group_dashboard/services/group_dashboard_data_provider.dart';
 import 'package:wallpost/dashboard/group_dashboard/ui/models/financial_details.dart';
 import 'package:wallpost/dashboard/group_dashboard/ui/presenters/group_dashboard_presenter.dart';
 import 'package:wallpost/dashboard/group_dashboard/ui/view_contracts/group_dashboard_view.dart';
@@ -43,7 +43,7 @@ void main() {
 
   var view = MockGroupDashboardView();
   var mockCurrentUserProvider = MockCurrentUserProvider();
-  var mockCompaniesListProvider = MockGroupDashboardDataProvider();
+  var mockDashboardDataProvider = MockGroupDashboardDataProvider();
   var mockCompanySelector = MockCompanySelector();
   var mockAttendanceProvider = MockAttendanceDetailsProvider();
   late GroupDashboardPresenter presenter;
@@ -51,15 +51,22 @@ void main() {
   void _resetAllMockInteractions() {
     clearInteractions(view);
     clearInteractions(mockCurrentUserProvider);
-    clearInteractions(mockCompaniesListProvider);
+    clearInteractions(mockDashboardDataProvider);
     clearInteractions(mockAttendanceProvider);
   }
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
     verifyNoMoreInteractions(mockCurrentUserProvider);
-    verifyNoMoreInteractions(mockCompaniesListProvider);
+    verifyNoMoreInteractions(mockDashboardDataProvider);
     verifyNoMoreInteractions(mockAttendanceProvider);
+  }
+
+  void _clearInteractionsOnAllMocks() {
+    clearInteractions(view);
+    clearInteractions(mockCurrentUserProvider);
+    clearInteractions(mockDashboardDataProvider);
+    clearInteractions(mockAttendanceProvider);
   }
 
   setUp(() {
@@ -72,34 +79,50 @@ void main() {
 
     when(() => company1.name).thenReturn("test1");
     when(() => company1.id).thenReturn("1");
+    when(() => company1.approvalCount).thenReturn(10);
     when(() => company2.name).thenReturn("test2");
     when(() => company2.id).thenReturn("2");
+    when(() => company2.approvalCount).thenReturn(8);
     when(() => companyGroup1.companyIds).thenReturn(["1"]);
 
     _resetAllMockInteractions();
     presenter = GroupDashboardPresenter.initWith(
       view,
       mockCurrentUserProvider,
-      mockCompaniesListProvider,
+      mockDashboardDataProvider,
       mockCompanySelector,
       mockAttendanceProvider,
     );
   });
 
   group('tests for loading the data', () {
-    test('retrieving companies failed', () async {
+    test('does nothing if the provider is loading', () async {
       //given
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.error(InvalidResponseException()));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(true);
 
       //when
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
 
       //then
       verifyInOrder([
-        () => mockCompaniesListProvider.isLoading,
+        () => mockDashboardDataProvider.isLoading,
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('retrieving companies failed', () async {
+      //given
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.error(InvalidResponseException()));
+
+      //when
+      await presenter.loadDashboardData();
+
+      //then
+      verifyInOrder([
+        () => mockDashboardDataProvider.isLoading,
         () => view.showLoader(),
-        () => mockCompaniesListProvider.get(),
+        () => mockDashboardDataProvider.get(),
         () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
@@ -107,20 +130,20 @@ void main() {
 
     test('retrieving companies successfully with no companies', () async {
       //given
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([]);
       when(() => groupDashboardData.financialSummary).thenReturn(null);
       when(() => groupDashboardData.groups).thenReturn([]);
 
       //when
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
 
       //then
       verifyInOrder([
-        () => mockCompaniesListProvider.isLoading,
+        () => mockDashboardDataProvider.isLoading,
         () => view.showLoader(),
-        () => mockCompaniesListProvider.get(),
+        () => mockDashboardDataProvider.get(),
         () => view.showErrorMessage("There are no companies.\n\nTap here to reload."),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
@@ -128,20 +151,20 @@ void main() {
 
     test('retrieving companies successfully ', () async {
       //given
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.financialSummary).thenReturn(null);
       when(() => groupDashboardData.groups).thenReturn([]);
 
       //when
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
 
       //then
       verifyInOrder([
-        () => mockCompaniesListProvider.isLoading,
+        () => mockDashboardDataProvider.isLoading,
         () => view.showLoader(),
-        () => mockCompaniesListProvider.get(),
+        () => mockDashboardDataProvider.get(),
         () => view.onDidLoadData(),
         () => view.updateCompanyList(),
       ]);
@@ -150,12 +173,12 @@ void main() {
 
     test('refreshing the list of companies', () async {
       //given
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.financialSummary).thenReturn(null);
       when(() => groupDashboardData.groups).thenReturn([]);
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
       _resetAllMockInteractions();
 
       //when
@@ -163,9 +186,117 @@ void main() {
 
       //then
       verifyInOrder([
-        () => mockCompaniesListProvider.isLoading,
+        () => mockDashboardDataProvider.isLoading,
         () => view.showLoader(),
-        () => mockCompaniesListProvider.get(),
+        () => mockDashboardDataProvider.get(),
+        () => view.onDidLoadData(),
+        () => view.updateCompanyList(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+  });
+
+  group('tests for syncing the data in the background', () {
+    test('does nothing when there is no existing data', () async {
+      //when
+      await presenter.syncDataInBackground();
+
+      //then
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('does nothing when retrieving dashboard data fails', () async {
+      //given
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => groupDashboardData.companies).thenReturn([company1, company2]);
+      when(() => groupDashboardData.financialSummary).thenReturn(null);
+      when(() => groupDashboardData.groups).thenReturn([]);
+      await presenter.loadDashboardData();
+      _clearInteractionsOnAllMocks();
+
+      //when
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.error(InvalidResponseException()));
+      presenter.syncDataInBackground();
+
+      //then
+      verifyInOrder([
+        () => mockDashboardDataProvider.get(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('retrieving updated data successfully with no changes', () async {
+      //given
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => groupDashboardData.companies).thenReturn([company1, company2]);
+      when(() => groupDashboardData.financialSummary).thenReturn(null);
+      when(() => groupDashboardData.groups).thenReturn([]);
+      await presenter.loadDashboardData();
+      _clearInteractionsOnAllMocks();
+
+      //when
+      await presenter.syncDataInBackground();
+
+      //then
+      verifyInOrder([
+        () => mockDashboardDataProvider.get(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('retrieving updated data successfully with changes to approval count', () async {
+      //given
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => groupDashboardData.companies).thenReturn([company1, company2]);
+      when(() => groupDashboardData.financialSummary).thenReturn(null);
+      when(() => groupDashboardData.groups).thenReturn([]);
+      await presenter.loadDashboardData();
+      _clearInteractionsOnAllMocks();
+
+      //when
+      var newData = MockGroupDashboardData();
+      var newCompany1 = MockCompany();
+      var newCompany2 = MockCompany();
+      when(() => newCompany1.approvalCount).thenReturn(2);
+      when(() => newCompany2.approvalCount).thenReturn(3);
+      when(() => newData.companies).thenReturn([newCompany1, newCompany2]);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(newData));
+      await presenter.syncDataInBackground();
+
+      //then
+      expect(presenter.getApprovalCount(), 5);
+      verifyInOrder([
+        () => mockDashboardDataProvider.get(),
+        () => view.onDidLoadData(),
+        () => view.updateCompanyList(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('retrieving updated data successfully with changes to number of companies', () async {
+      //given
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => groupDashboardData.companies).thenReturn([company1, company2]);
+      when(() => groupDashboardData.financialSummary).thenReturn(null);
+      when(() => groupDashboardData.groups).thenReturn([]);
+      await presenter.loadDashboardData();
+      _clearInteractionsOnAllMocks();
+
+      //when
+      var newData = MockGroupDashboardData();
+      var newCompany1 = MockCompany();
+      when(() => newCompany1.approvalCount).thenReturn(18);
+      when(() => newData.companies).thenReturn([newCompany1]);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(newData));
+      await presenter.syncDataInBackground();
+
+      //then
+      verifyInOrder([
+        () => mockDashboardDataProvider.get(),
         () => view.onDidLoadData(),
         () => view.updateCompanyList(),
       ]);
@@ -227,28 +358,28 @@ void main() {
 
   group('getting list details', () {
     test('number of items when there are no companies', () async {
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([]);
       when(() => groupDashboardData.financialSummary).thenReturn(null);
       when(() => groupDashboardData.groups).thenReturn([]);
 
       //when
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
 
       //then
       expect(presenter.getNumberOfRows(), 0);
     });
 
     test('number of items when there are companies and user cannot access financial data', () async {
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(false);
       when(() => groupDashboardData.groups).thenReturn([]);
 
       //when
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
 
       //then
       expect(presenter.getNumberOfRows(), 2);
@@ -259,15 +390,15 @@ void main() {
     test(
         'number of items when there are companies and user has access financial data but overall financial data is null',
         () async {
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(true);
       when(() => groupDashboardData.financialSummary).thenReturn(null);
       when(() => groupDashboardData.groups).thenReturn([]);
 
       //when
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
 
       //then
       expect(presenter.getNumberOfRows(), 2);
@@ -278,15 +409,15 @@ void main() {
     test(
         'number of items when there are companies and user has access to financial data and overall financial data is not null',
         () async {
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(true);
       when(() => groupDashboardData.financialSummary).thenReturn(financialSummary);
       when(() => groupDashboardData.groups).thenReturn([]);
 
       //when
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
 
       //then
       expect(presenter.getNumberOfRows(), 3);
@@ -296,15 +427,15 @@ void main() {
     });
 
     test('number of items when group filter is selected and group financial data is null', () async {
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(true);
       when(() => companyGroup1.financialSummary).thenReturn(null);
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
 
       //when
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
       presenter.selectGroupAtIndex(0);
 
       //then
@@ -313,15 +444,15 @@ void main() {
     });
 
     test('number of items when group filter is selected and group financial data is not null', () async {
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(true);
       when(() => companyGroup1.financialSummary).thenReturn(financialSummary);
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
 
       //when
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
       presenter.selectGroupAtIndex(0);
 
       //then
@@ -334,11 +465,11 @@ void main() {
   group('tests for filtering company list', () {
     test('performing a search with no results', () async {
       //given
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
       when(() => groupDashboardData.companies).thenReturn([]);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
       _resetAllMockInteractions();
 
       //when
@@ -351,12 +482,12 @@ void main() {
 
     test('performing search successfully', () async {
       //given
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
       _resetAllMockInteractions();
 
       //when
@@ -373,13 +504,13 @@ void main() {
 
     test('selecting a company group filter shows the company list and financial summary fot that group', () async {
       //given
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(true);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => companyGroup1.financialSummary).thenReturn(financialSummary);
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
       _resetAllMockInteractions();
 
       //when
@@ -397,12 +528,12 @@ void main() {
 
     test('clearing company group filter selection', () async {
       //given
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
       presenter.selectGroupAtIndex(0);
       _resetAllMockInteractions();
 
@@ -421,12 +552,12 @@ void main() {
 
     test('test applying both search and company group filter', () async {
       //given
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
       _resetAllMockInteractions();
 
       //when
@@ -444,12 +575,12 @@ void main() {
 
     test('clearing all filters', () async {
       //given
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
       presenter.performSearch("test2");
       presenter.selectGroupAtIndex(0);
       _resetAllMockInteractions();
@@ -580,12 +711,12 @@ void main() {
 
   group('tests for selecting company and viewing approvals', () {
     test('number of items when there are no companies', () async {
-      when(() => mockCompaniesListProvider.isLoading).thenReturn(false);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.financialSummary).thenReturn(financialSummary);
       when(() => groupDashboardData.groups).thenReturn([]);
-      await presenter.loadCompanies();
+      await presenter.loadDashboardData();
       _resetAllMockInteractions();
 
       //when
@@ -617,8 +748,8 @@ void main() {
       var groupDashboardData = MockGroupDashboardData();
       when(() => groupDashboardData.groups).thenReturn([]);
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
-      await presenter.loadCompanies();
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      await presenter.loadDashboardData();
 
       //when
       var shouldShowGroups = presenter.shouldShowCompanyGroupsFilter();
@@ -632,8 +763,8 @@ void main() {
       var groupDashboardData = MockGroupDashboardData();
       when(() => groupDashboardData.groups).thenReturn([MockCompanyGroup()]);
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
-      await presenter.loadCompanies();
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      await presenter.loadDashboardData();
 
       //when
       var shouldShowGroups = presenter.shouldShowCompanyGroupsFilter();
@@ -647,8 +778,8 @@ void main() {
       when(() => company1.approvalCount).thenReturn(5);
       when(() => company2.approvalCount).thenReturn(13);
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
-      when(() => mockCompaniesListProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
-      await presenter.loadCompanies();
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      await presenter.loadDashboardData();
 
       //when
       var totalApprovalCount = presenter.getApprovalCount();

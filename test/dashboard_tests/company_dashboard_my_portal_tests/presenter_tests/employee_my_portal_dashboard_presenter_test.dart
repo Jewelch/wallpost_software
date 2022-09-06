@@ -35,6 +35,12 @@ void main() {
     verifyNoMoreInteractions(companyProvider);
   }
 
+  void _clearInteractionsOnAllMocks() {
+    clearInteractions(view);
+    clearInteractions(dataProvider);
+    clearInteractions(companyProvider);
+  }
+
   setUp(() {
     view = MockEmployeeMyPortalView();
     dataProvider = MockEmployeeMyPortalDataProvider();
@@ -94,6 +100,84 @@ void main() {
       () => view.onDidLoadData(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  group('tests for syncing the data in the background', () {
+    test('does nothing when there is no existing data', () async {
+      //when
+      await presenter.syncDataInBackground();
+
+      //then
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('does nothing when retrieving dashboard data fails', () async {
+      //given
+      when(() => dataProvider.isLoading).thenReturn(false);
+      when(() => dataProvider.get()).thenAnswer((_) => Future.value(MockEmployeeMyPortalData()));
+      await presenter.loadData();
+      _clearInteractionsOnAllMocks();
+
+      //when
+      when(() => dataProvider.get()).thenAnswer((_) => Future.error(InvalidResponseException()));
+      presenter.syncDataInBackground();
+
+      //then
+      verifyInOrder([
+        () => dataProvider.get(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('retrieving updated data successfully with no changes', () async {
+      //given
+      var data = MockEmployeeMyPortalData();
+      var approval = MockAggregatedApproval();
+      when(() => approval.approvalCount).thenReturn(10);
+      when(() => data.aggregatedApprovals).thenReturn([approval]);
+      when(() => dataProvider.isLoading).thenReturn(false);
+      when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
+      await presenter.loadData();
+      _clearInteractionsOnAllMocks();
+
+      //when
+      await presenter.syncDataInBackground();
+
+      //then
+      verifyInOrder([
+        () => dataProvider.get(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
+    test('retrieving updated data successfully with changes to approval count', () async {
+      //given
+      var existingData = MockEmployeeMyPortalData();
+      var existingApproval = MockAggregatedApproval();
+      when(() => existingApproval.approvalCount).thenReturn(10);
+      when(() => existingData.aggregatedApprovals).thenReturn([existingApproval]);
+      when(() => dataProvider.isLoading).thenReturn(false);
+      when(() => dataProvider.get()).thenAnswer((_) => Future.value(existingData));
+      await presenter.loadData();
+      _clearInteractionsOnAllMocks();
+
+      //when
+      var newData = MockEmployeeMyPortalData();
+      var newApproval = MockAggregatedApproval();
+      when(() => newApproval.approvalCount).thenReturn(6);
+      when(() => newData.aggregatedApprovals).thenReturn([newApproval]);
+      when(() => dataProvider.isLoading).thenReturn(false);
+      when(() => dataProvider.get()).thenAnswer((_) => Future.value(newData));
+      await presenter.syncDataInBackground();
+
+      //then
+      expect(presenter.getTotalApprovalCount(), 6);
+      verifyInOrder([
+        () => dataProvider.get(),
+        () => view.onDidLoadData(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
   });
 
   test('go to aggregated approvals screen', () {

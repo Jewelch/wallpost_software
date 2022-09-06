@@ -7,6 +7,8 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/expense/expense_create/ui/views/create_expense_request_screen.dart';
 import 'package:wallpost/expense/expense_list/ui/views/expense_list_screen.dart';
+import 'package:wallpost/leave/leave_create/ui/views/create_leave_screen.dart';
+import 'package:wallpost/leave/leave_list/ui/views/leave_list_screen.dart';
 
 import '../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
@@ -24,7 +26,9 @@ class OwnerMyPortalDashboardScreen extends StatefulWidget {
   State<OwnerMyPortalDashboardScreen> createState() => _OwnerMyPortalDashboardScreenState();
 }
 
-class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScreen> implements OwnerMyPortalView {
+class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScreen>
+    with WidgetsBindingObserver
+    implements OwnerMyPortalView {
   static const LOADER_VIEW = 1;
   static const ERROR_VIEW = 2;
   static const DATA_VIEW = 3;
@@ -37,7 +41,20 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
   void initState() {
     _presenter = OwnerMyPortalDashboardPresenter(this);
     _presenter.loadData();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) _presenter.syncDataInBackground();
   }
 
   @override
@@ -176,12 +193,15 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
 
   @override
   void goToApprovalsListScreen(String companyId) {
-    ScreenPresenter.present(AggregatedApprovalsListScreen(companyId: companyId), context);
+    ScreenPresenter.present(
+      AggregatedApprovalsListScreen(companyId: companyId),
+      context,
+    ).then((_) => _presenter.syncDataInBackground());
   }
 
   @override
   void showLeaveActions() {
-    //TODO
+    _presentActionSheet(LeaveListScreen(), CreateLeaveScreen());
   }
 
   @override
@@ -191,7 +211,10 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
 
   @override
   void showPayrollAdjustmentActions() {
-    ScreenPresenter.present(AttendanceListScreen(), context);
+    ScreenPresenter.present(
+      AttendanceListScreen(),
+      context,
+    ).then((_) => _presenter.syncDataInBackground());
   }
 
   //MARK: Function to present action sheet
@@ -205,11 +228,17 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
         actionTwoTitle: "Create New",
         actionOneCallback: () async {
           await controller.close();
-          ScreenPresenter.present(actionOneScreen, context);
+          ScreenPresenter.present(
+            actionOneScreen,
+            context,
+          ).then((_) => _presenter.syncDataInBackground());
         },
         actionTwoCallback: () async {
           await controller.close();
-          ScreenPresenter.present(actionTwoScreen, context);
+          ScreenPresenter.present(
+            actionTwoScreen,
+            context,
+          ).then((_) => _presenter.syncDataInBackground());
         },
       ),
       controller: controller,

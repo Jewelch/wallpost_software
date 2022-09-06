@@ -13,7 +13,7 @@ class EmployeeMyPortalDashboardPresenter {
   final EmployeeMyPortalView _view;
   final EmployeeMyPortalDataProvider _dataProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
-  late EmployeeMyPortalData _employeeMyPortalData;
+  EmployeeMyPortalData? _employeeMyPortalData;
 
   EmployeeMyPortalDashboardPresenter(this._view)
       : this._dataProvider = EmployeeMyPortalDataProvider(),
@@ -42,11 +42,37 @@ class EmployeeMyPortalDashboardPresenter {
     _view.goToApprovalsListScreen(company.id);
   }
 
+  //MARK: Functions to sync the dashboard data in the background
+
+  Future<void> syncDataInBackground() async {
+    if (_employeeMyPortalData == null) return;
+
+    try {
+      var existingData = _employeeMyPortalData!;
+      var newData = await _dataProvider.get();
+
+      if (_didDataChange(existingData, newData)) {
+        _employeeMyPortalData = newData;
+        _view.onDidLoadData();
+      }
+    } on WPException catch (_) {
+      //do nothing
+    }
+  }
+
+  bool _didDataChange(EmployeeMyPortalData existingData, EmployeeMyPortalData newData) {
+    return _getTotalApprovalCount(existingData) != _getTotalApprovalCount(newData);
+  }
+
   //MARK: Function to get approval count
 
   int getTotalApprovalCount() {
+    return _getTotalApprovalCount(_employeeMyPortalData!);
+  }
+
+  int _getTotalApprovalCount(EmployeeMyPortalData myPortalData) {
     int totalApprovalCount = 0;
-    for (var approval in _employeeMyPortalData.aggregatedApprovals) {
+    for (var approval in myPortalData.aggregatedApprovals) {
       totalApprovalCount += approval.approvalCount;
     }
     return totalApprovalCount;
@@ -57,63 +83,63 @@ class EmployeeMyPortalDashboardPresenter {
   List<GraphValue> getCutoffPerformanceGraphSections() {
     return [
       GraphValue(
-        _employeeMyPortalData.lowPerformanceCutoff(),
+        _employeeMyPortalData!.lowPerformanceCutoff(),
         AppColors.red.withOpacity(0.3),
       ),
       GraphValue(
-        _employeeMyPortalData.mediumPerformanceCutoff() - _employeeMyPortalData.lowPerformanceCutoff(),
+        _employeeMyPortalData!.mediumPerformanceCutoff() - _employeeMyPortalData!.lowPerformanceCutoff(),
         AppColors.yellow.withOpacity(0.3),
       ),
       GraphValue(
-        100 - _employeeMyPortalData.mediumPerformanceCutoff(),
+        100 - _employeeMyPortalData!.mediumPerformanceCutoff(),
         AppColors.green.withOpacity(0.3),
       ),
     ];
   }
 
   List<GraphValue> getActualPerformanceGraphSections() {
-    if (_employeeMyPortalData.isYTDPerformanceLow()) {
+    if (_employeeMyPortalData!.isYTDPerformanceLow()) {
       return [
         GraphValue(
-          _employeeMyPortalData.ytdPerformance.toInt(),
+          _employeeMyPortalData!.ytdPerformance.toInt(),
           AppColors.red,
         ),
         GraphValue(
-          100 - _employeeMyPortalData.ytdPerformance.toInt(),
+          100 - _employeeMyPortalData!.ytdPerformance.toInt(),
           Colors.transparent,
         ),
       ];
-    } else if (_employeeMyPortalData.isYTDPerformanceMedium()) {
+    } else if (_employeeMyPortalData!.isYTDPerformanceMedium()) {
       return [
         GraphValue(
-          _employeeMyPortalData.lowPerformanceCutoff(),
+          _employeeMyPortalData!.lowPerformanceCutoff(),
           AppColors.red,
         ),
         GraphValue(
-          _employeeMyPortalData.ytdPerformance.toInt() - _employeeMyPortalData.lowPerformanceCutoff(),
+          _employeeMyPortalData!.ytdPerformance.toInt() - _employeeMyPortalData!.lowPerformanceCutoff(),
           AppColors.yellow,
         ),
         GraphValue(
-          100 - _employeeMyPortalData.ytdPerformance.toInt(),
+          100 - _employeeMyPortalData!.ytdPerformance.toInt(),
           Colors.transparent,
         ),
       ];
     } else {
       return [
         GraphValue(
-          _employeeMyPortalData.lowPerformanceCutoff(),
+          _employeeMyPortalData!.lowPerformanceCutoff(),
           AppColors.red,
         ),
         GraphValue(
-          _employeeMyPortalData.mediumPerformanceCutoff() - _employeeMyPortalData.lowPerformanceCutoff(),
+          _employeeMyPortalData!.mediumPerformanceCutoff() - _employeeMyPortalData!.lowPerformanceCutoff(),
           AppColors.yellow,
         ),
         GraphValue(
-          _employeeMyPortalData.ytdPerformance.toInt() - _employeeMyPortalData.mediumPerformanceCutoff(),
+          _employeeMyPortalData!.ytdPerformance.toInt() - _employeeMyPortalData!.mediumPerformanceCutoff(),
           AppColors.green,
         ),
         GraphValue(
-          100 - _employeeMyPortalData.ytdPerformance.toInt(),
+          100 - _employeeMyPortalData!.ytdPerformance.toInt(),
           Colors.transparent,
         ),
       ];
@@ -121,57 +147,57 @@ class EmployeeMyPortalDashboardPresenter {
   }
 
   GraphValue getYTDPerformance() {
-    if (_employeeMyPortalData.isYTDPerformanceLow()) {
+    if (_employeeMyPortalData!.isYTDPerformanceLow()) {
       return GraphValue(
-        _employeeMyPortalData.ytdPerformance.toInt(),
+        _employeeMyPortalData!.ytdPerformance.toInt(),
         AppColors.red,
       );
-    } else if (_employeeMyPortalData.isYTDPerformanceMedium()) {
+    } else if (_employeeMyPortalData!.isYTDPerformanceMedium()) {
       return GraphValue(
-        _employeeMyPortalData.ytdPerformance.toInt(),
+        _employeeMyPortalData!.ytdPerformance.toInt(),
         AppColors.yellow,
       );
     } else {
       return GraphValue(
-        _employeeMyPortalData.ytdPerformance.toInt(),
+        _employeeMyPortalData!.ytdPerformance.toInt(),
         AppColors.green,
       );
     }
   }
 
   GraphValue getCurrentMonthPerformance() {
-    if (_employeeMyPortalData.isCurrentMonthPerformanceLow()) {
+    if (_employeeMyPortalData!.isCurrentMonthPerformanceLow()) {
       return GraphValue(
-        _employeeMyPortalData.currentMonthPerformance.toInt(),
+        _employeeMyPortalData!.currentMonthPerformance.toInt(),
         AppColors.red,
       );
-    } else if (_employeeMyPortalData.isCurrentMonthPerformanceMedium()) {
+    } else if (_employeeMyPortalData!.isCurrentMonthPerformanceMedium()) {
       return GraphValue(
-        _employeeMyPortalData.currentMonthPerformance.toInt(),
+        _employeeMyPortalData!.currentMonthPerformance.toInt(),
         AppColors.yellow,
       );
     } else {
       return GraphValue(
-        _employeeMyPortalData.currentMonthPerformance.toInt(),
+        _employeeMyPortalData!.currentMonthPerformance.toInt(),
         AppColors.green,
       );
     }
   }
 
   GraphValue getCurrentMonthAttendancePerformance() {
-    if (_employeeMyPortalData.isCurrentMonthAttendancePerformanceLow()) {
+    if (_employeeMyPortalData!.isCurrentMonthAttendancePerformanceLow()) {
       return GraphValue(
-        _employeeMyPortalData.currentMonthAttendancePerformance.toInt(),
+        _employeeMyPortalData!.currentMonthAttendancePerformance.toInt(),
         AppColors.red,
       );
-    } else if (_employeeMyPortalData.isCurrentMonthAttendancePerformanceMedium()) {
+    } else if (_employeeMyPortalData!.isCurrentMonthAttendancePerformanceMedium()) {
       return GraphValue(
-        _employeeMyPortalData.currentMonthAttendancePerformance.toInt(),
+        _employeeMyPortalData!.currentMonthAttendancePerformance.toInt(),
         AppColors.yellow,
       );
     } else {
       return GraphValue(
-        _employeeMyPortalData.currentMonthAttendancePerformance.toInt(),
+        _employeeMyPortalData!.currentMonthAttendancePerformance.toInt(),
         AppColors.green,
       );
     }

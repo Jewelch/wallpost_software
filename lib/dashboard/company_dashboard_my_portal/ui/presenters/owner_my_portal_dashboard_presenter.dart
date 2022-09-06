@@ -15,7 +15,7 @@ class OwnerMyPortalDashboardPresenter {
   final OwnerMyPortalView _view;
   final OwnerMyPortalDataProvider _dataProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
-  late OwnerMyPortalData _ownerMyPortalData;
+  OwnerMyPortalData? _ownerMyPortalData;
 
   OwnerMyPortalDashboardPresenter(this._view)
       : this._dataProvider = OwnerMyPortalDataProvider(),
@@ -44,27 +44,58 @@ class OwnerMyPortalDashboardPresenter {
     _view.goToApprovalsListScreen(company.id);
   }
 
+  //MARK: Functions to sync the dashboard data in the background
+
+  Future<void> syncDataInBackground() async {
+    if (_ownerMyPortalData == null) return;
+
+    try {
+      var existingData = _ownerMyPortalData!;
+      var newData = await _dataProvider.get();
+
+      if (_didDataChange(existingData, newData)) {
+        _ownerMyPortalData = newData;
+        _view.onDidLoadData();
+      }
+    } on WPException catch (_) {
+      //do nothing
+    }
+  }
+
+  bool _didDataChange(OwnerMyPortalData existingData, OwnerMyPortalData newData) {
+    return _getTotalApprovalCount(existingData) != _getTotalApprovalCount(newData) ||
+        _getAbsenteesData(existingData).numberOfAbsentees != _getAbsenteesData(newData).numberOfAbsentees;
+  }
+
   //MARK: Function to get financial summary
 
   FinancialSummary getFinancialSummary() {
-    return _ownerMyPortalData.financialSummary;
+    return _ownerMyPortalData!.financialSummary;
   }
 
   //MARK: Function to get absentees data
 
   AbsenteesData getAbsenteesData() {
-    if (_ownerMyPortalData.absentees > 0) {
-      return AbsenteesData(_ownerMyPortalData.absentees, AppColors.red);
+    return _getAbsenteesData(_ownerMyPortalData!);
+  }
+
+  AbsenteesData _getAbsenteesData(OwnerMyPortalData ownerMyPortalData) {
+    if (ownerMyPortalData.absentees > 0) {
+      return AbsenteesData(ownerMyPortalData.absentees, AppColors.red);
     } else {
-      return AbsenteesData(_ownerMyPortalData.absentees, AppColors.green);
+      return AbsenteesData(ownerMyPortalData.absentees, AppColors.green);
     }
   }
 
   //MARK: Function to get approval count
 
   int getTotalApprovalCount() {
+    return _getTotalApprovalCount(_ownerMyPortalData!);
+  }
+
+  int _getTotalApprovalCount(OwnerMyPortalData myPortalData) {
     int totalApprovalCount = 0;
-    for (var approval in _ownerMyPortalData.aggregatedApprovals) {
+    for (var approval in myPortalData.aggregatedApprovals) {
       totalApprovalCount += approval.approvalCount;
     }
     return totalApprovalCount;
@@ -75,63 +106,63 @@ class OwnerMyPortalDashboardPresenter {
   List<GraphValue> getCutoffPerformanceGraphSections() {
     return [
       GraphValue(
-        _ownerMyPortalData.lowPerformanceCutoff(),
+        _ownerMyPortalData!.lowPerformanceCutoff(),
         AppColors.red.withOpacity(0.3),
       ),
       GraphValue(
-        _ownerMyPortalData.mediumPerformanceCutoff() - _ownerMyPortalData.lowPerformanceCutoff(),
+        _ownerMyPortalData!.mediumPerformanceCutoff() - _ownerMyPortalData!.lowPerformanceCutoff(),
         AppColors.yellow.withOpacity(0.3),
       ),
       GraphValue(
-        100 - _ownerMyPortalData.mediumPerformanceCutoff(),
+        100 - _ownerMyPortalData!.mediumPerformanceCutoff(),
         AppColors.green.withOpacity(0.3),
       ),
     ];
   }
 
   List<GraphValue> getActualPerformanceGraphSections() {
-    if (_ownerMyPortalData.isCompanyPerformanceLow()) {
+    if (_ownerMyPortalData!.isCompanyPerformanceLow()) {
       return [
         GraphValue(
-          _ownerMyPortalData.companyPerformance.toInt(),
+          _ownerMyPortalData!.companyPerformance.toInt(),
           AppColors.red,
         ),
         GraphValue(
-          100 - _ownerMyPortalData.companyPerformance.toInt(),
+          100 - _ownerMyPortalData!.companyPerformance.toInt(),
           Colors.transparent,
         ),
       ];
-    } else if (_ownerMyPortalData.isCompanyPerformanceMedium()) {
+    } else if (_ownerMyPortalData!.isCompanyPerformanceMedium()) {
       return [
         GraphValue(
-          _ownerMyPortalData.lowPerformanceCutoff(),
+          _ownerMyPortalData!.lowPerformanceCutoff(),
           AppColors.red,
         ),
         GraphValue(
-          _ownerMyPortalData.companyPerformance.toInt() - _ownerMyPortalData.lowPerformanceCutoff(),
+          _ownerMyPortalData!.companyPerformance.toInt() - _ownerMyPortalData!.lowPerformanceCutoff(),
           AppColors.yellow,
         ),
         GraphValue(
-          100 - _ownerMyPortalData.companyPerformance.toInt(),
+          100 - _ownerMyPortalData!.companyPerformance.toInt(),
           Colors.transparent,
         ),
       ];
     } else {
       return [
         GraphValue(
-          _ownerMyPortalData.lowPerformanceCutoff(),
+          _ownerMyPortalData!.lowPerformanceCutoff(),
           AppColors.red,
         ),
         GraphValue(
-          _ownerMyPortalData.mediumPerformanceCutoff() - _ownerMyPortalData.lowPerformanceCutoff(),
+          _ownerMyPortalData!.mediumPerformanceCutoff() - _ownerMyPortalData!.lowPerformanceCutoff(),
           AppColors.yellow,
         ),
         GraphValue(
-          _ownerMyPortalData.companyPerformance.toInt() - _ownerMyPortalData.mediumPerformanceCutoff(),
+          _ownerMyPortalData!.companyPerformance.toInt() - _ownerMyPortalData!.mediumPerformanceCutoff(),
           AppColors.green,
         ),
         GraphValue(
-          100 - _ownerMyPortalData.companyPerformance.toInt(),
+          100 - _ownerMyPortalData!.companyPerformance.toInt(),
           Colors.transparent,
         ),
       ];
@@ -139,19 +170,19 @@ class OwnerMyPortalDashboardPresenter {
   }
 
   GraphValue getCompanyPerformance() {
-    if (_ownerMyPortalData.isCompanyPerformanceLow()) {
+    if (_ownerMyPortalData!.isCompanyPerformanceLow()) {
       return GraphValue(
-        _ownerMyPortalData.companyPerformance.toInt(),
+        _ownerMyPortalData!.companyPerformance.toInt(),
         AppColors.red,
       );
-    } else if (_ownerMyPortalData.isCompanyPerformanceMedium()) {
+    } else if (_ownerMyPortalData!.isCompanyPerformanceMedium()) {
       return GraphValue(
-        _ownerMyPortalData.companyPerformance.toInt(),
+        _ownerMyPortalData!.companyPerformance.toInt(),
         AppColors.yellow,
       );
     } else {
       return GraphValue(
-        _ownerMyPortalData.companyPerformance.toInt(),
+        _ownerMyPortalData!.companyPerformance.toInt(),
         AppColors.green,
       );
     }

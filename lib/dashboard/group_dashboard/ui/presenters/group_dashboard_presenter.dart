@@ -4,12 +4,12 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/company_selector.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/dashboard/group_dashboard/entities/group_dashboard_data.dart';
-import 'package:wallpost/dashboard/group_dashboard/services/company_list_provider.dart';
 
 import '../../../../_wp_core/company_management/entities/company.dart';
 import '../../../../_wp_core/company_management/entities/financial_summary.dart';
 import '../../../../attendance/attendance_punch_in_out/services/attendance_details_provider.dart';
 import '../../entities/company_group.dart';
+import '../../services/group_dashboard_data_provider.dart';
 import '../models/financial_details.dart';
 import '../view_contracts/group_dashboard_view.dart';
 
@@ -20,7 +20,7 @@ class GroupDashboardPresenter {
   final CompanySelector _companySelector;
   final AttendanceDetailsProvider _attendanceDetailsProvider;
 
-  late GroupDashboardData _groupDashboardData;
+  GroupDashboardData? _groupDashboardData;
   var _searchText = "";
   CompanyGroup? _selectedGroup;
 
@@ -51,15 +51,15 @@ class GroupDashboardPresenter {
 
   //MARK: Functions to load company list
 
-  Future<void> loadCompanies() async {
+  Future<void> loadDashboardData() async {
     if (_groupDashboardDataProvider.isLoading) return;
 
     _clearFilters();
     _view.showLoader();
 
     try {
-      var companyList = await _groupDashboardDataProvider.get();
-      _handleResponse(companyList);
+      var groupDashboardData = await _groupDashboardDataProvider.get();
+      _handleResponse(groupDashboardData);
     } on WPException catch (e) {
       _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
     }
@@ -68,7 +68,7 @@ class GroupDashboardPresenter {
   void _handleResponse(GroupDashboardData groupDashboardData) {
     _groupDashboardData = groupDashboardData;
 
-    if (_groupDashboardData.companies.isNotEmpty) {
+    if (_groupDashboardData!.companies.isNotEmpty) {
       _view.onDidLoadData();
       _view.updateCompanyList();
     } else {
@@ -77,7 +77,7 @@ class GroupDashboardPresenter {
   }
 
   List<Company> _getFilteredCompanies() {
-    var allCompanies = _groupDashboardData.companies;
+    var allCompanies = _groupDashboardData!.companies;
     var companyIdsFilteredByGroup = _selectedGroup?.companyIds ?? allCompanies.map((c) => c.id).toList();
     var companiesFilteredByGroup = allCompanies.where((c) => companyIdsFilteredByGroup.contains(c.id)).toList();
     var companiesFilteredBySearchText = companiesFilteredByGroup.where((c) {
@@ -91,22 +91,44 @@ class GroupDashboardPresenter {
     FinancialSummary? summaryToShow;
     if (_selectedGroup != null && _selectedGroup?.financialSummary != null) {
       summaryToShow = _selectedGroup?.financialSummary;
-    } else if (_groupDashboardData.financialSummary != null) {
-      summaryToShow = _groupDashboardData.financialSummary;
+    } else if (_groupDashboardData!.financialSummary != null) {
+      summaryToShow = _groupDashboardData!.financialSummary;
     }
 
-    if (_groupDashboardData.shouldShowFinancialData() && summaryToShow != null) {
+    if (_groupDashboardData!.shouldShowFinancialData() && summaryToShow != null) {
       return summaryToShow;
     } else {
       return null;
     }
   }
 
-  //MARK: Function to refresh the company list
+  //MARK: Functions to sync the dashboard data in the background
+
+  Future<void> syncDataInBackground() async {
+    if (_groupDashboardData == null) return;
+
+    try {
+      var existingData = _groupDashboardData!;
+      var newData = await _groupDashboardDataProvider.get();
+      if (_didDataChange(existingData, newData)) {
+        _groupDashboardData = newData;
+        _handleResponse(newData);
+      }
+    } on WPException catch (_) {
+      //do nothing
+    }
+  }
+
+  bool _didDataChange(GroupDashboardData existingData, GroupDashboardData newData) {
+    return _getTotalApprovalCount(existingData) != _getTotalApprovalCount(newData) ||
+        existingData.companies.length != newData.companies.length;
+  }
+
+  //MARK: Function to refresh the dashboard data
 
   refresh() {
     _clearFilters();
-    loadCompanies();
+    loadDashboardData();
   }
 
   //MARK: Functions to perform search
@@ -119,7 +141,7 @@ class GroupDashboardPresenter {
   //MARK: Functions to select and deselect company group filter
 
   void selectGroupAtIndex(int index) {
-    _selectedGroup = _groupDashboardData.groups[index];
+    _selectedGroup = _groupDashboardData!.groups[index];
     _view.updateCompanyList();
   }
 
@@ -238,17 +260,21 @@ class GroupDashboardPresenter {
   }
 
   List<CompanyGroup> getCompanyGroups() {
-    return _groupDashboardData.groups;
+    return _groupDashboardData!.groups;
   }
 
   bool shouldShowCompanyGroupsFilter() {
-    return _groupDashboardData.groups.isNotEmpty;
+    return _groupDashboardData!.groups.isNotEmpty;
   }
 
   int getApprovalCount() {
+    return _getTotalApprovalCount(_groupDashboardData!);
+  }
+
+  int _getTotalApprovalCount(GroupDashboardData dashboardData) {
     num approvalCount = 0;
-    for (var i = 0; i < _groupDashboardData.companies.length; i++) {
-      approvalCount += _groupDashboardData.companies[i].approvalCount;
+    for (var i = 0; i < dashboardData.companies.length; i++) {
+      approvalCount += dashboardData.companies[i].approvalCount;
     }
     return approvalCount.toInt();
   }

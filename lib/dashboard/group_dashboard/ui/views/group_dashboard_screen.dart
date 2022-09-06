@@ -28,7 +28,9 @@ class GroupDashboardScreen extends StatefulWidget {
   _GroupDashboardScreenState createState() => _GroupDashboardScreenState();
 }
 
-class _GroupDashboardScreenState extends State<GroupDashboardScreen> implements GroupDashboardView {
+class _GroupDashboardScreenState extends State<GroupDashboardScreen>
+    with WidgetsBindingObserver
+    implements GroupDashboardView {
   static const LOADER_VIEW = 1;
   static const ERROR_VIEW = 2;
   static const DATA_VIEW = 3;
@@ -43,9 +45,22 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> implements 
   @override
   void initState() {
     presenter = GroupDashboardPresenter(this);
-    presenter.loadCompanies();
+    presenter.loadDashboardData();
     presenter.loadAttendanceDetails();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) presenter.syncDataInBackground();
   }
 
   @override
@@ -289,12 +304,15 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen> implements 
       CompanyDashboardScreen(company.id, company.name),
       context,
       slideDirection: SlideDirection.fromBottom,
-    );
+    ).then((_) => presenter.syncDataInBackground());
   }
 
   @override
   void goToApprovalsListScreen() {
-    ScreenPresenter.present(AggregatedApprovalsListScreen(), context);
+    ScreenPresenter.present(
+      AggregatedApprovalsListScreen(),
+      context,
+    ).then((_) => presenter.syncDataInBackground());
   }
 
   @override
