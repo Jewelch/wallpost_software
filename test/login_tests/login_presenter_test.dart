@@ -52,7 +52,6 @@ void main() {
   test('logging in with invalid credentials notifies the view', () async {
     //given
     when(() => authenticator.isLoading).thenReturn(false);
-    // when(() => authenticator.login(any)).thenReturn(false);
     LoginPresenter presenter = LoginPresenter.initWith(view, authenticator);
 
     //when
