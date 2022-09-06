@@ -42,8 +42,8 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
   void initState() {
     presenter = AttendancePresenter(basicView: this);
     presenter.loadAttendanceDetails();
-    super.initState();
     WidgetsBinding.instance.addObserver(this);
+    super.initState();
   }
 
   @override
