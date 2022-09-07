@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 
 import '../../../../_shared/constants/app_colors.dart';
 import '../../_wp_core/wpapi/services/wp_file_downloader.dart';
@@ -38,6 +39,7 @@ class FileDownloadScreen extends StatefulWidget {
 class _FileDownloadScreenState extends State<FileDownloadScreen> {
   int progress = 0;
   bool didCompleteDownload = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -52,11 +54,11 @@ class _FileDownloadScreenState extends State<FileDownloadScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(!didCompleteDownload ? "Downloading File $progress%" : "Download Complete",
-              style: TextStyles.extraLargeTitleTextStyleBold),
+          Text(_getTitle(), style: TextStyles.extraLargeTitleTextStyleBold),
           SizedBox(height: 60),
           Container(
             height: 60,
+            margin: EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12.0),
@@ -94,15 +96,26 @@ class _FileDownloadScreenState extends State<FileDownloadScreen> {
     );
   }
 
-  Future<void> _initiateDownload() async {
-    var file = await WPFileDownloader().download(widget.url, onDownloadProgress: (progress) {
-      if (mounted) setState(() => this.progress = progress.toInt());
-    });
+  String _getTitle() {
+    if (_errorMessage != null) return _errorMessage!;
 
-    if (mounted) {
-      setState(() {});
-      OpenFilex.open(file.path);
-      widget.modalSheetController.close();
+    return !didCompleteDownload ? "Downloading File $progress%" : "Download Complete";
+  }
+
+  Future<void> _initiateDownload() async {
+    try {
+      var file = await WPFileDownloader().download(widget.url, onDownloadProgress: (progress) {
+        if (mounted) setState(() => this.progress = progress.toInt());
+      });
+      if (mounted) {
+        setState(() {});
+        OpenFilex.open(file.path);
+        widget.modalSheetController.close();
+      }
+    } on WPException catch (e) {
+      if (mounted) {
+        setState(() => _errorMessage = e.userReadableMessage);
+      }
     }
   }
 }
