@@ -43,7 +43,12 @@ class FileField extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               children: [
-                Expanded(child: Text(_getTitle(), style: TextStyles.titleTextStyle)),
+                Expanded(
+                    child: Text(
+                  _getTitle(),
+                  style: TextStyles.titleTextStyle,
+                  overflow: TextOverflow.ellipsis,
+                )),
                 _icon(),
               ],
             ),
