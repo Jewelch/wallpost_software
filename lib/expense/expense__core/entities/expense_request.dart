@@ -21,6 +21,7 @@ class ExpenseRequest extends JSONInitializable {
   String? _description;
   late final ExpenseRequestApprovalStatus _approvalStatus;
   String? _statusMessage;
+  String? _rejectionReason;
   String? _attachmentUrl;
 
   ExpenseRequest.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
@@ -45,6 +46,7 @@ class ExpenseRequest extends JSONInitializable {
       _description = sift.readStringFromMapWithDefaultValue(jsonMap, 'description');
       _approvalStatus = _readApprovalStatus(jsonMap);
       _statusMessage = _readStatusMessage(jsonMap);
+      _rejectionReason = sift.readStringFromMapWithDefaultValue(jsonMap, "rejection_message", null);
       _attachmentUrl = sift.readStringFromMapWithDefaultValue(expenseDetailsMap, "doc_full_path");
     } on SiftException catch (e) {
       throw MappingException('Failed to cast ExpenseRequest response. Error message - ${e.errorMessage}');
@@ -113,6 +115,8 @@ class ExpenseRequest extends JSONInitializable {
   ExpenseRequestApprovalStatus get approvalStatus => _approvalStatus;
 
   String? get statusMessage => _statusMessage;
+
+  String? get rejectionReason => _rejectionReason;
 
   String? get attachmentUrl => _attachmentUrl;
 }

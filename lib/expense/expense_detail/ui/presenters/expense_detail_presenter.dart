@@ -131,6 +131,10 @@ class ExpenseDetailPresenter {
     }
   }
 
+  String? getRejectionReason() {
+    return _expenseRequest.rejectionReason;
+  }
+
   String? get errorMessage => _errorMessage;
 
   get didProcessApprovalOrRejection => _didProcessApprovalOrRejection;

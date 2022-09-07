@@ -113,6 +113,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
             _presenter.getStatus(),
             valueStyle: TextStyles.titleTextStyle.copyWith(color: _presenter.getStatusColor()),
           ),
+          _labelAndValue("Rejection Reason", _presenter.getRejectionReason()),
           GestureDetector(
             onTap: () {
               if (_presenter.getAttachmentUrl() != null)

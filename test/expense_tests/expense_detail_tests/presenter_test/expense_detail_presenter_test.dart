@@ -359,4 +359,14 @@ void main() {
     when(() => expense.approvalStatus).thenReturn(ExpenseRequestApprovalStatus.approved);
     expect(presenter.getStatusColor(), AppColors.green);
   });
+
+  test('get rejection reason', () async {
+    var expense = MockExpenseRequest();
+    when(() => detailProvider.isLoading).thenReturn(false);
+    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(expense));
+    when(() => expense.rejectionReason).thenReturn("some rejection reason");
+    await presenter.loadDetail();
+
+    expect(presenter.getAttachmentUrl(), "some rejection reason");
+  });
 }
