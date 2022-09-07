@@ -59,7 +59,8 @@ class _AttendanceAdjustmentRejectionAlertState extends State<AttendanceAdjustmen
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      height: 800,
       padding: EdgeInsets.only(left: 12, right: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
