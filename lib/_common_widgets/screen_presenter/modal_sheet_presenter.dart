@@ -110,6 +110,7 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                       constraints: BoxConstraints.loose(const Size(double.infinity, 700)),
                       color: Colors.transparent,
                       child: ListView(
+                        padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         children: [
