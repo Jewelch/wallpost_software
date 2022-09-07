@@ -18,9 +18,9 @@ class LeaveApprovalListItem {
       _id = "${sift.readNumberFromMap(jsonMap, "id")}";
       _leaveType = sift.readStringFromMap(leaveTypeMap, "name");
       _companyId = "${sift.readNumberFromMap(jsonMap, "company_id")}";
-      _applicantName = "Some Employee Name"; //TODO: add employee name
-      _startDate = sift.readDateFromMap(jsonMap, "leave_from", "MMM-dd-yyyy");
-      _endDate = sift.readDateFromMap(jsonMap, "leave_to", "MMM-dd-yyyy");
+      _applicantName = sift.readStringFromMap(jsonMap, "approve_request_by");
+      _startDate = sift.readDateFromMap(jsonMap, 'leave_from_actual', 'yyyy-MM-dd');
+      _endDate = sift.readDateFromMap(jsonMap, 'leave_to_actual', 'yyyy-MM-dd');
       _totalLeaveDays = sift.readNumberFromMap(jsonMap, "leave_days").toInt();
     } on SiftException catch (e) {
       print(e.errorMessage);
