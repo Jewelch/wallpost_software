@@ -13,19 +13,25 @@ class LeaveDetailLoader extends StatelessWidget {
           children: [
             SizedBox(height: 20),
             _emptyContainer(height: 40),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             _tile(),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             _tile(),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             _tile(),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             _tile(),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             _tile(),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             _tile(),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
+            _tile(),
+            SizedBox(height: 20),
+            _tile(),
+            SizedBox(height: 20),
+            _tile(),
+            SizedBox(height: 20),
             _tile(),
           ],
         ),
@@ -36,9 +42,9 @@ class LeaveDetailLoader extends StatelessWidget {
   Widget _tile() {
     return Row(
       children: [
-        _emptyContainer(height: 24, width: 120),
+        _emptyContainer(height: 26, width: 120),
         SizedBox(width: 20),
-        _emptyContainer(height: 24, width: 200),
+        _emptyContainer(height: 26, width: 200),
       ],
     );
   }
@@ -48,9 +54,7 @@ class LeaveDetailLoader extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            width: 1,
-          ),
+          border: Border.all(width: 1),
           color: Colors.white,
         ),
       );
