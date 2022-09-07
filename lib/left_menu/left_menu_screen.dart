@@ -7,7 +7,6 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
-import 'package:wallpost/notifications/ui/views/notifications_screen.dart';
 import 'package:wallpost/password_management/ui/views/change_password_screen.dart';
 
 import '../_common_widgets/buttons/rounded_back_button.dart';
@@ -47,13 +46,6 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
               iconName: 'assets/icons/settings_icon.svg',
               showArrow: true,
               onTap: goToChangePasswordScreen,
-            ),
-            Divider(),
-            _listItem(
-              title: 'Notifications',
-              iconName: 'assets/icons/notification_icon.svg',
-              showArrow: true,
-              onTap: goToNotificationsScreen,
             ),
             Divider(),
             _listItem(
@@ -142,10 +134,6 @@ class _LeftMenuScreenState extends State<LeftMenuScreen> {
 
   goToChangePasswordScreen() {
     ScreenPresenter.present(ChangePasswordScreen(), context);
-  }
-
-  goToNotificationsScreen() {
-    ScreenPresenter.present(NotificationsScreen(), context);
   }
 
   logout() {
