@@ -1,13 +1,12 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 import '../screen_presenter/modal_sheet_presenter.dart';
-import 'image_from_camera_picker.dart';
 
 enum FileTypes { images, videos, documents, audios, camera }
 
@@ -59,13 +58,8 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
               ],
             ),
             onTap: () async {
-              final cameras = await availableCameras();
-              var imagePath = await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => ImageFromCameraPickerScreen(camera: cameras.first),
-                ),
-              );
-              if (imagePath != null) _didSelectFiles([File(imagePath)]);
+              final XFile? photo = await ImagePicker().pickImage(source: ImageSource.camera);
+              if (photo != null) _didSelectFiles([File(photo.path)]);
             },
           ),
         if (widget.filesType.contains(FileTypes.images))
