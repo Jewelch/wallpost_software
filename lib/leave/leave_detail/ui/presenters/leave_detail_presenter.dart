@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
-import 'package:wallpost/leave/leave__core/entities/leave_status.dart';
 import 'package:wallpost/leave/leave_detail/entities/leave_detail.dart';
 import 'package:wallpost/leave/leave_detail/services/leave_detail_provider.dart';
 
@@ -69,7 +68,7 @@ class LeaveDetailPresenter {
   //MARK: Getters
 
   bool shouldShowApprovalActions() {
-    return _didComeToDetailScreenFromApprovalList && _leaveDetail.status == LeaveStatus.pendingApproval;
+    return _didComeToDetailScreenFromApprovalList && _leaveDetail.isPendingApproval();
   }
 
   String getTitle() {
@@ -111,7 +110,15 @@ class LeaveDetailPresenter {
   String? getStatus() {
     if (_leaveDetail.isApproved()) return null;
 
-    return _leaveDetail.status.toReadableString();
+    if (_leaveDetail.isPendingApproval()) {
+      var status = _leaveDetail.statusString;
+      if (_leaveDetail.pendingWithUsers != null)
+        return "$status with ${_leaveDetail.pendingWithUsers}";
+      else
+        return status;
+    }
+
+    return _leaveDetail.statusString;
   }
 
   Color getStatusColor() {

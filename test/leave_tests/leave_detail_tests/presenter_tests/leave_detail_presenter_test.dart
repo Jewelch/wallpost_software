@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/leave/leave__core/entities/leave_status.dart';
 import 'package:wallpost/leave/leave_detail/entities/leave_detail.dart';
 import 'package:wallpost/leave/leave_detail/services/leave_detail_provider.dart';
 import 'package:wallpost/leave/leave_detail/ui/presenters/leave_detail_presenter.dart';
@@ -197,7 +196,7 @@ void main() {
     var leave = MockLeaveDetail();
     when(() => detailProvider.isLoading).thenReturn(false);
     when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(leave));
-    when(() => leave.status).thenReturn(LeaveStatus.approved);
+    when(() => leave.isPendingApproval()).thenReturn(false);
     await presenter.loadDetail();
 
     expect(presenter.shouldShowApprovalActions(), false);
@@ -216,7 +215,7 @@ void main() {
     var leave = MockLeaveDetail();
     when(() => detailProvider.isLoading).thenReturn(false);
     when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(leave));
-    when(() => leave.status).thenReturn(LeaveStatus.pendingApproval);
+    when(() => leave.isPendingApproval()).thenReturn(true);
     await presenter.loadDetail();
 
     expect(presenter.shouldShowApprovalActions(), true);
@@ -322,23 +321,48 @@ void main() {
     expect(presenter.getStatus(), null);
   });
 
-  test('get status', () async {
+  test('get status when status is pending and approver names are available', () async {
     var leave = MockLeaveDetail();
     when(() => detailProvider.isLoading).thenReturn(false);
     when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(leave));
-    when(() => leave.status).thenReturn(LeaveStatus.rejected);
     when(() => leave.isApproved()).thenReturn(false);
-    when(() => leave.isRejected()).thenReturn(true);
+    when(() => leave.isPendingApproval()).thenReturn(true);
+    when(() => leave.pendingWithUsers).thenReturn("Some Username");
+    when(() => leave.statusString).thenReturn("Pending");
     await presenter.loadDetail();
 
-    expect(presenter.getStatus(), "Rejected");
+    expect(presenter.getStatus(), "Pending with Some Username");
+  });
+
+  test('get status when status is pending and approver names are not available', () async {
+    var leave = MockLeaveDetail();
+    when(() => detailProvider.isLoading).thenReturn(false);
+    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(leave));
+    when(() => leave.isApproved()).thenReturn(false);
+    when(() => leave.isPendingApproval()).thenReturn(true);
+    when(() => leave.pendingWithUsers).thenReturn(null);
+    when(() => leave.statusString).thenReturn("Pending");
+    await presenter.loadDetail();
+
+    expect(presenter.getStatus(), "Pending");
+  });
+
+  test('get status for all other leave statuses', () async {
+    var leave = MockLeaveDetail();
+    when(() => detailProvider.isLoading).thenReturn(false);
+    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(leave));
+    when(() => leave.isApproved()).thenReturn(false);
+    when(() => leave.isPendingApproval()).thenReturn(false);
+    when(() => leave.statusString).thenReturn("Some Status");
+    await presenter.loadDetail();
+
+    expect(presenter.getStatus(), "Some Status");
   });
 
   test('get status color', () async {
     var leave = MockLeaveDetail();
     when(() => detailProvider.isLoading).thenReturn(false);
     when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(leave));
-    when(() => leave.status).thenReturn(LeaveStatus.rejected);
     await presenter.loadDetail();
 
     when(() => leave.isPendingApproval()).thenReturn(true);

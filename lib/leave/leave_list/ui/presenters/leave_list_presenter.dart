@@ -4,7 +4,6 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 
-import '../../../leave__core/entities/leave_status.dart';
 import '../../entities/leave_list_item.dart';
 import '../../entities/leave_list_status_filter.dart';
 import '../../services/leave_list_provider.dart';
@@ -122,13 +121,21 @@ class LeaveListPresenter {
   }
 
   String? getStatus(LeaveListItem leaveListItem) {
-    if (leaveListItem.status == LeaveStatus.approved) return null;
+    if (leaveListItem.isApproved()) return null;
 
-    return leaveListItem.status.toReadableString();
+    if (leaveListItem.isPendingApproval()) {
+      var status = leaveListItem.statusString;
+      if (leaveListItem.pendingWithUsers != null)
+        return "$status with ${leaveListItem.pendingWithUsers}";
+      else
+        return status;
+    }
+
+    return leaveListItem.statusString;
   }
 
   Color getStatusColor(LeaveListItem leaveListItem) {
-    if (leaveListItem.status == LeaveStatus.pendingApproval) {
+    if (leaveListItem.isPendingApproval()) {
       return AppColors.yellow;
     } else {
       return AppColors.red;

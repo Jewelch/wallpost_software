@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
-import 'package:wallpost/leave/leave__core/entities/leave_status.dart';
 import 'package:wallpost/leave/leave_list/entities/leave_list_item.dart';
 import 'package:wallpost/leave/leave_list/entities/leave_list_status_filter.dart';
 import 'package:wallpost/leave/leave_list/services/leave_list_provider.dart';
@@ -375,27 +374,49 @@ main() {
     expect(presenter.getEndDate(leave), "23 Aug 2022");
   });
 
-  test("get status", () {
+  test('status is null when leave is approved', () async {
     var leave = MockLeaveListItem();
+    when(() => leave.isApproved()).thenReturn(true);
 
-    //when status is approved
-    when(() => leave.status).thenReturn(LeaveStatus.approved);
     expect(presenter.getStatus(leave), null);
-
-    //when status message is not approved
-    when(() => leave.status).thenReturn(LeaveStatus.pendingApproval);
-    expect(presenter.getStatus(leave), LeaveStatus.pendingApproval.toReadableString());
   });
 
-  test("get status color", () {
+  test('get status when status is pending and approver names are available', () async {
+    var leave = MockLeaveListItem();
+    when(() => leave.isApproved()).thenReturn(false);
+    when(() => leave.isPendingApproval()).thenReturn(true);
+    when(() => leave.pendingWithUsers).thenReturn("Some Username");
+    when(() => leave.statusString).thenReturn("Pending");
+
+    expect(presenter.getStatus(leave), "Pending with Some Username");
+  });
+
+  test('get status when status is pending and approver names are not available', () async {
+    var leave = MockLeaveListItem();
+    when(() => leave.isApproved()).thenReturn(false);
+    when(() => leave.isPendingApproval()).thenReturn(true);
+    when(() => leave.pendingWithUsers).thenReturn(null);
+    when(() => leave.statusString).thenReturn("Pending");
+
+    expect(presenter.getStatus(leave), "Pending");
+  });
+
+  test('get status for all other leave statuses', () async {
+    var leave = MockLeaveListItem();
+    when(() => leave.isApproved()).thenReturn(false);
+    when(() => leave.isPendingApproval()).thenReturn(false);
+    when(() => leave.statusString).thenReturn("Some Status");
+
+    expect(presenter.getStatus(leave), "Some Status");
+  });
+
+  test('get status color', () async {
     var leave = MockLeaveListItem();
 
-    //pending approval
-    when(() => leave.status).thenReturn(LeaveStatus.pendingApproval);
+    when(() => leave.isPendingApproval()).thenReturn(true);
     expect(presenter.getStatusColor(leave), AppColors.yellow);
 
-    //others
-    when(() => leave.status).thenReturn(LeaveStatus.cancelled);
+    when(() => leave.isPendingApproval()).thenReturn(false);
     expect(presenter.getStatusColor(leave), AppColors.red);
   });
 

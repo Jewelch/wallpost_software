@@ -20,6 +20,7 @@ class LeaveDetail extends JSONInitializable {
   late String _leaveType;
   late LeaveStatus _status;
   late String? _attachment;
+  List<String> _pendingWithUsers = [];
   String? _approvalComment;
   String? _rejectionReason;
   String? _cancellationReason;
@@ -29,6 +30,7 @@ class LeaveDetail extends JSONInitializable {
     try {
       var leaveTypeMap = sift.readMapFromMap(jsonMap, 'leave_type');
       var employeeMap = sift.readMapFromMap(jsonMap, 'employee');
+      var extraInfoMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'extra_info', {});
       _leaveId = '${sift.readNumberFromMap(jsonMap, 'id')}';
       _companyId = '${sift.readNumberFromMap(jsonMap, 'company_id')}';
       _applicantName = '${sift.readStringFromMap(employeeMap, 'name')}';
@@ -44,6 +46,7 @@ class LeaveDetail extends JSONInitializable {
       _leaveType = sift.readStringFromMap(leaveTypeMap, 'name');
       _status = _readLeaveStatus(jsonMap);
       _attachment = _readAttachment(jsonMap);
+      _pendingWithUsers = sift.readStringListFromMapWithDefaultValue(extraInfoMap, "pending_with_users", [])!;
       _approvalComment = sift.readStringFromMapWithDefaultValue(jsonMap, 'approval_comments', null);
       _rejectionReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'rejected_reason', null);
       _cancellationReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'cancel_reason', null);
@@ -72,19 +75,19 @@ class LeaveDetail extends JSONInitializable {
   }
 
   bool isApproved() {
-    return status == LeaveStatus.approved;
+    return _status == LeaveStatus.approved;
   }
 
   bool isPendingApproval() {
-    return status == LeaveStatus.pendingApproval;
+    return _status == LeaveStatus.pendingApproval;
   }
 
   bool isRejected() {
-    return status == LeaveStatus.rejected;
+    return _status == LeaveStatus.rejected;
   }
 
   bool isCancelled() {
-    return status == LeaveStatus.cancelled;
+    return _status == LeaveStatus.cancelled;
   }
 
   String get leaveId => _leaveId;
@@ -107,19 +110,21 @@ class LeaveDetail extends JSONInitializable {
 
   String get contactOnLeave => _contactOnLeave;
 
+  String get emailOnLeave => _emailOnLeave;
+
   String get leaveReason => _leaveReason;
 
   String get leaveType => _leaveType;
 
-  LeaveStatus get status => _status;
+  String get statusString => _status.toReadableString();
 
   String? get attachmentUrl => _attachment;
+
+  String? get pendingWithUsers => _pendingWithUsers.isEmpty ? null : _pendingWithUsers.join(", ");
 
   String? get approvalComment => _approvalComment;
 
   String? get rejectionReason => _rejectionReason;
 
   String? get cancellationReason => _cancellationReason;
-
-  String get emailOnLeave => _emailOnLeave;
 }

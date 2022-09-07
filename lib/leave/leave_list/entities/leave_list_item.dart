@@ -14,6 +14,7 @@ class LeaveListItem extends JSONInitializable {
   late num _totalLeaveDays;
   late String _leaveType;
   late LeaveStatus _status;
+  List<String> _pendingWithUsers = [];
   String? _approvalComment;
   String? _rejectionReason;
   String? _cancellationReason;
@@ -22,6 +23,7 @@ class LeaveListItem extends JSONInitializable {
     var sift = Sift();
     try {
       var leaveTypeMap = sift.readMapFromMap(jsonMap, 'leave_type');
+      var extraInfoMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'extra_info', {});
       _leaveId = '${sift.readNumberFromMap(jsonMap, 'id')}';
       _companyId = '${sift.readNumberFromMap(jsonMap, 'company_id')}';
       _applicantName = "sift.readStringFromMap(employeeMap, 'fullName')";
@@ -31,6 +33,7 @@ class LeaveListItem extends JSONInitializable {
       _totalLeaveDays = sift.readNumberFromMap(jsonMap, 'leave_days');
       _leaveType = sift.readStringFromMap(leaveTypeMap, 'name');
       _status = _readLeaveStatus(jsonMap);
+      _pendingWithUsers = sift.readStringListFromMapWithDefaultValue(extraInfoMap, "pending_with_users", [])!;
       _approvalComment = sift.readStringFromMapWithDefaultValue(jsonMap, 'approval_comments', null);
       _rejectionReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'rejected_reason', null);
       _cancellationReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'cancel_reason', null);
@@ -46,6 +49,22 @@ class LeaveListItem extends JSONInitializable {
     if (status == null) throw MappingException('Failed to cast LeaveListItem response. Invalid status - $statusInt');
 
     return status;
+  }
+
+  bool isApproved() {
+    return _status == LeaveStatus.approved;
+  }
+
+  bool isPendingApproval() {
+    return _status == LeaveStatus.pendingApproval;
+  }
+
+  bool isRejected() {
+    return _status == LeaveStatus.rejected;
+  }
+
+  bool isCancelled() {
+    return _status == LeaveStatus.cancelled;
   }
 
   String get leaveId => _leaveId;
@@ -64,7 +83,9 @@ class LeaveListItem extends JSONInitializable {
 
   String get leaveType => _leaveType;
 
-  LeaveStatus get status => _status;
+  String get statusString => _status.toReadableString();
+
+  String? get pendingWithUsers => _pendingWithUsers.isEmpty ? null : _pendingWithUsers.join(", ");
 
   String? get approvalComment => _approvalComment;
 

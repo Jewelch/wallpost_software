@@ -57,6 +57,7 @@ class LeaveListItemCard extends StatelessWidget {
                     "",
                     presenter.getTotalLeaveDays(leaveListItem),
                   ),
+                  SizedBox(width: 12),
                   Expanded(child: _status()),
                   Icon(
                     Icons.arrow_forward_ios_sharp,
@@ -78,6 +79,7 @@ class LeaveListItemCard extends StatelessWidget {
     return Text(
       presenter.getStatus(leaveListItem)!,
       textAlign: TextAlign.end,
+      overflow: TextOverflow.ellipsis,
       style: TextStyles.subTitleTextStyleBold.copyWith(
         color: presenter.getStatusColor(leaveListItem),
       ),
