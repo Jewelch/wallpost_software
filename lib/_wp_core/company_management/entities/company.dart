@@ -35,7 +35,7 @@ class Company extends JSONInitializable {
       _currency = sift.readStringFromMap(companyInfoMap, 'currency');
       var _packages = sift.readStringListFromMap(companyInfoMap, 'packages');
       _modules = _initModules(_packages);
-      _approvalCount = sift.readNumberFromMap(jsonMap, 'approval_count');
+      _approvalCount = sift.readNumberFromMap(jsonMap, 'companyApprovalCount');
       if (financialSummaryMap != null) _financialSummary = FinancialSummary.fromJson(financialSummaryMap);
       _employee = Employee.fromJson(jsonMap);
     } on SiftException catch (e) {
