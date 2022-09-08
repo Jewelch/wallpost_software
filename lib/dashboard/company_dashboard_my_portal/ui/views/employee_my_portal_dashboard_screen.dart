@@ -135,7 +135,7 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
         SizedBox(height: 40),
         if (_presenter.getTotalApprovalCount() > 0)
           BottomBanner(
-            approvalCount: 20,
+            approvalCount: _presenter.getTotalApprovalCount(),
             onTap: () => _presenter.goToAggregatedApprovalsScreen(),
           ),
       ],
