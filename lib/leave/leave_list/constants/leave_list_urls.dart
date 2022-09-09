@@ -7,7 +7,7 @@ class LeaveListUrls {
       String companyId, String employeeId, LeaveListStatusFilter status, int pageNumber, int itemsPerPage) {
     var url = '${BaseUrls.hrUrlV3()}/companies/$companyId/employees/$employeeId/leaverequests?'
         '&page=$pageNumber&perPage=$itemsPerPage';
-    url += "&type=${status.toRawString()}";
+    if (status != LeaveListStatusFilter.all) url += "&type=${status.toRawString()}";
     return url;
   }
 }
