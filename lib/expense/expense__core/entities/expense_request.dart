@@ -39,7 +39,7 @@ class ExpenseRequest extends JSONInitializable {
       var totalAmountString = sift.readStringFromMap(jsonMap, 'total_amount');
       _totalAmount = Money.fromString(totalAmountString);
       _requestedBy = sift.readStringFromMap(jsonMap, 'created_by_name');
-      _requestDate = sift.readDateFromMap(jsonMap, "created_at", "yyyy-MM-dd HH:mm:ss");
+      _requestDate = sift.readDateFromMap(jsonMap, "expense_date", "yyyy-MM-dd");
       _mainCategory = sift.readStringFromMapWithDefaultValue(jsonMap, 'main_category');
       _project = sift.readStringFromMapWithDefaultValue(jsonMap, 'project');
       _subCategory = sift.readStringFromMapWithDefaultValue(jsonMap, 'sub_category');

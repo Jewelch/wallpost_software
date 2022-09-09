@@ -4,7 +4,7 @@ class Mocks {
     "expense_request_no": "GER/ER/07/2022/000003",
     "total_amount": "12344",
     "type": "hr",
-    "created_at": "2022-07-05 08:54:21",
+    "expense_date": "2022-07-05",
     "created_by": 277,
     "company_id": 19,
     "created_by_name": "Pramod  R",

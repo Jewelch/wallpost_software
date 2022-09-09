@@ -25,7 +25,7 @@ class ExpenseApprovalListItem extends JSONInitializable {
       _subCategory = sift.readStringFromMapWithDefaultValue(jsonMap, "sub_category", null);
       _requestedBy = sift.readStringFromMap(requestedByMap, "full_name");
       _requestNumber = sift.readStringFromMap(jsonMap, "expense_request_no");
-      _requestDate = sift.readDateFromMap(jsonMap, "created_at", "yyyy-MM-dd HH:mm:ss");
+      _requestDate = sift.readDateFromMap(jsonMap, "expense_date", "yyyy-MM-dd");
       var currency = sift.readStringFromMap(jsonMap, "currency");
       var amountString = sift.readStringFromMap(jsonMap, "total_amount");
       _totalAmount = "$currency $amountString";

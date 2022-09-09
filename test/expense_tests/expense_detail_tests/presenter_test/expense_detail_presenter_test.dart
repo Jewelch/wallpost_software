@@ -367,6 +367,6 @@ void main() {
     when(() => expense.rejectionReason).thenReturn("some rejection reason");
     await presenter.loadDetail();
 
-    expect(presenter.getAttachmentUrl(), "some rejection reason");
+    expect(presenter.getRejectionReason(), "some rejection reason");
   });
 }
