@@ -54,6 +54,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    presenter.stopListeningToNotifications();
     super.dispose();
   }
 

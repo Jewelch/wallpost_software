@@ -6,6 +6,9 @@ import 'package:wallpost/dashboard/aggregated_approvals_list/services/aggregated
 import 'package:wallpost/dashboard/aggregated_approvals_list/ui/presenters/aggregated_approvals_list_presenter.dart';
 import 'package:wallpost/dashboard/aggregated_approvals_list/ui/view_contracts/aggregated_approvals_list_view.dart';
 
+import '../../../_mocks/mock_notification_center.dart';
+import '../../../_mocks/mock_notification_observer.dart';
+
 class MockAggregatedApproval extends Mock implements AggregatedApproval {}
 
 class MockAggregatedApprovalsListView extends Mock implements AggregatedApprovalsListView {}
@@ -15,21 +18,53 @@ class MockAggregatedApprovalsProvider extends Mock implements AggregatedApproval
 void main() {
   var view = MockAggregatedApprovalsListView();
   var approvalsProvider = MockAggregatedApprovalsProvider();
+  late MockNotificationCenter notificationCenter;
   late AggregatedApprovalsListPresenter presenter;
 
   void _resetAllMockInteractions() {
     clearInteractions(view);
     clearInteractions(approvalsProvider);
+    clearInteractions(notificationCenter);
   }
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
     verifyNoMoreInteractions(approvalsProvider);
+    verifyNoMoreInteractions(notificationCenter);
   }
 
+  setUpAll(() {
+    registerFallbackValue(MockNotificationObserver());
+  });
+
   setUp(() {
+    notificationCenter = MockNotificationCenter();
+    presenter = AggregatedApprovalsListPresenter.initWith(view, approvalsProvider, notificationCenter);
     _resetAllMockInteractions();
-    presenter = AggregatedApprovalsListPresenter.initWith(view, approvalsProvider);
+  });
+
+  test('starts listening to notifications on initialization', () async {
+    //given
+    presenter = AggregatedApprovalsListPresenter.initWith(view, approvalsProvider, notificationCenter);
+
+    //then
+    verifyInOrder([
+      () => notificationCenter.addExpenseApprovalRequiredObserver(any()),
+      () => notificationCenter.addLeaveApprovalRequiredObserver(any()),
+      () => notificationCenter.addAttendanceAdjustmentApprovalRequiredObserver(any()),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('stop listening to notifications', () async {
+    //given
+    presenter.stopListeningToNotifications();
+
+    //then
+    verifyInOrder([
+      () => notificationCenter.removeObserverFromAllChannels(key: "aggregatedApprovalsList"),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
   });
 
   test('does nothing when the provider is loading', () async {
@@ -116,7 +151,13 @@ void main() {
     when(() => approvalsProvider.isLoading).thenReturn(false);
     when(() => approvalsProvider.getAllApprovals(companyId: any(named: "companyId")))
         .thenAnswer((_) => Future.value(approvals));
-    presenter = AggregatedApprovalsListPresenter.initWith(view, approvalsProvider, companyId: "someCompanyId");
+    presenter = AggregatedApprovalsListPresenter.initWith(
+      view,
+      approvalsProvider,
+      notificationCenter,
+      companyId: "someCompanyId",
+    );
+    _resetAllMockInteractions();
 
     //when
     await presenter.loadApprovalsList();
@@ -139,7 +180,12 @@ void main() {
   });
 
   test('should show company filter when showing approvals for selected company', () async {
-    presenter = AggregatedApprovalsListPresenter.initWith(view, approvalsProvider, companyId: "someCompanyId");
+    presenter = AggregatedApprovalsListPresenter.initWith(
+      view,
+      approvalsProvider,
+      notificationCenter,
+      companyId: "someCompanyId",
+    );
 
     expect(presenter.shouldShowCompanyFilter(), false);
   });

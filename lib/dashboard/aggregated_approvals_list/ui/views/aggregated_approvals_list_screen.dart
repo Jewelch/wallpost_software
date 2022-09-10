@@ -47,6 +47,12 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
   }
 
   @override
+  void dispose() {
+    _presenter.stopListeningToNotifications();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,

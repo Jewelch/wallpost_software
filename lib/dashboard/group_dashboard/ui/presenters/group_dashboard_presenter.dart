@@ -4,10 +4,12 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/company_selector.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/dashboard/group_dashboard/entities/group_dashboard_data.dart';
+import 'package:wallpost/notification_center/notification_center.dart';
 
 import '../../../../_wp_core/company_management/entities/company.dart';
 import '../../../../_wp_core/company_management/entities/financial_summary.dart';
 import '../../../../attendance/attendance_punch_in_out/services/attendance_details_provider.dart';
+import '../../../../notification_center/notification_observer.dart';
 import '../../entities/company_group.dart';
 import '../../services/group_dashboard_data_provider.dart';
 import '../models/financial_details.dart';
@@ -19,16 +21,21 @@ class GroupDashboardPresenter {
   final GroupDashboardDataProvider _groupDashboardDataProvider;
   final CompanySelector _companySelector;
   final AttendanceDetailsProvider _attendanceDetailsProvider;
+  final NotificationCenter _notificationCenter;
 
   GroupDashboardData? _groupDashboardData;
   var _searchText = "";
   CompanyGroup? _selectedGroup;
 
-  GroupDashboardPresenter(this._view)
-      : _currentUserProvider = CurrentUserProvider(),
-        _groupDashboardDataProvider = GroupDashboardDataProvider(),
-        _companySelector = CompanySelector(),
-        _attendanceDetailsProvider = AttendanceDetailsProvider();
+  GroupDashboardPresenter(GroupDashboardView view)
+      : this.initWith(
+          view,
+          CurrentUserProvider(),
+          GroupDashboardDataProvider(),
+          CompanySelector(),
+          AttendanceDetailsProvider(),
+          NotificationCenter.getInstance(),
+        );
 
   GroupDashboardPresenter.initWith(
     this._view,
@@ -36,7 +43,28 @@ class GroupDashboardPresenter {
     this._groupDashboardDataProvider,
     this._companySelector,
     this._attendanceDetailsProvider,
-  );
+    this._notificationCenter,
+  ) {
+    _startListeningToNotifications();
+  }
+
+  //MARK: Functions to start and stop listening to notifications
+
+  void _startListeningToNotifications() {
+    _notificationCenter.addExpenseApprovalRequiredObserver(
+      NotificationObserver(key: "groupDashboard", callback: (_) => syncDataInBackground()),
+    );
+    _notificationCenter.addLeaveApprovalRequiredObserver(
+      NotificationObserver(key: "groupDashboard", callback: (_) => syncDataInBackground()),
+    );
+    _notificationCenter.addAttendanceAdjustmentApprovalRequiredObserver(
+      NotificationObserver(key: "groupDashboard", callback: (_) => syncDataInBackground()),
+    );
+  }
+
+  void stopListeningToNotifications() {
+    _notificationCenter.removeObserverFromAllChannels(key: "groupDashboard");
+  }
 
   //MARK: Functions to load attendance
 

@@ -16,6 +16,8 @@ import 'package:wallpost/dashboard/group_dashboard/ui/view_contracts/group_dashb
 
 import '../../../_mocks/mock_company.dart';
 import '../../../_mocks/mock_current_user_provider.dart';
+import '../../../_mocks/mock_notification_center.dart';
+import '../../../_mocks/mock_notification_observer.dart';
 
 class MockGroupDashboardView extends Mock implements GroupDashboardView {}
 
@@ -46,20 +48,15 @@ void main() {
   var mockDashboardDataProvider = MockGroupDashboardDataProvider();
   var mockCompanySelector = MockCompanySelector();
   var mockAttendanceProvider = MockAttendanceDetailsProvider();
+  var notificationCenter = MockNotificationCenter();
   late GroupDashboardPresenter presenter;
-
-  void _resetAllMockInteractions() {
-    clearInteractions(view);
-    clearInteractions(mockCurrentUserProvider);
-    clearInteractions(mockDashboardDataProvider);
-    clearInteractions(mockAttendanceProvider);
-  }
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
     verifyNoMoreInteractions(mockCurrentUserProvider);
     verifyNoMoreInteractions(mockDashboardDataProvider);
     verifyNoMoreInteractions(mockAttendanceProvider);
+    verifyNoMoreInteractions(notificationCenter);
   }
 
   void _clearInteractionsOnAllMocks() {
@@ -67,6 +64,7 @@ void main() {
     clearInteractions(mockCurrentUserProvider);
     clearInteractions(mockDashboardDataProvider);
     clearInteractions(mockAttendanceProvider);
+    clearInteractions(notificationCenter);
   }
 
   setUp(() {
@@ -85,14 +83,50 @@ void main() {
     when(() => company2.approvalCount).thenReturn(8);
     when(() => companyGroup1.companyIds).thenReturn(["1"]);
 
-    _resetAllMockInteractions();
     presenter = GroupDashboardPresenter.initWith(
       view,
       mockCurrentUserProvider,
       mockDashboardDataProvider,
       mockCompanySelector,
       mockAttendanceProvider,
+      notificationCenter,
     );
+    _clearInteractionsOnAllMocks();
+  });
+
+  setUpAll(() {
+    registerFallbackValue(MockNotificationObserver());
+  });
+
+  test('starts listening to notifications on initialization', () async {
+    //given
+    presenter = GroupDashboardPresenter.initWith(
+      view,
+      mockCurrentUserProvider,
+      mockDashboardDataProvider,
+      mockCompanySelector,
+      mockAttendanceProvider,
+      notificationCenter,
+    );
+
+    //then
+    verifyInOrder([
+      () => notificationCenter.addExpenseApprovalRequiredObserver(any()),
+      () => notificationCenter.addLeaveApprovalRequiredObserver(any()),
+      () => notificationCenter.addAttendanceAdjustmentApprovalRequiredObserver(any()),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('stop listening to notifications', () async {
+    //given
+    presenter.stopListeningToNotifications();
+
+    //then
+    verifyInOrder([
+      () => notificationCenter.removeObserverFromAllChannels(key: "groupDashboard"),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
   });
 
   group('tests for loading the data', () {
@@ -179,7 +213,7 @@ void main() {
       when(() => groupDashboardData.financialSummary).thenReturn(null);
       when(() => groupDashboardData.groups).thenReturn([]);
       await presenter.loadDashboardData();
-      _resetAllMockInteractions();
+      _clearInteractionsOnAllMocks();
 
       //when
       await presenter.refresh();
@@ -470,7 +504,7 @@ void main() {
       when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
       await presenter.loadDashboardData();
-      _resetAllMockInteractions();
+      _clearInteractionsOnAllMocks();
 
       //when
       presenter.performSearch("non existent company id");
@@ -488,7 +522,7 @@ void main() {
       when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
       await presenter.loadDashboardData();
-      _resetAllMockInteractions();
+      _clearInteractionsOnAllMocks();
 
       //when
       presenter.performSearch("test2");
@@ -511,7 +545,7 @@ void main() {
       when(() => companyGroup1.financialSummary).thenReturn(financialSummary);
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
       await presenter.loadDashboardData();
-      _resetAllMockInteractions();
+      _clearInteractionsOnAllMocks();
 
       //when
       presenter.selectGroupAtIndex(0);
@@ -535,7 +569,7 @@ void main() {
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
       await presenter.loadDashboardData();
       presenter.selectGroupAtIndex(0);
-      _resetAllMockInteractions();
+      _clearInteractionsOnAllMocks();
 
       //when
       presenter.clearGroupSelection();
@@ -558,7 +592,7 @@ void main() {
       when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
       await presenter.loadDashboardData();
-      _resetAllMockInteractions();
+      _clearInteractionsOnAllMocks();
 
       //when
       presenter.performSearch("test2");
@@ -583,7 +617,7 @@ void main() {
       await presenter.loadDashboardData();
       presenter.performSearch("test2");
       presenter.selectGroupAtIndex(0);
-      _resetAllMockInteractions();
+      _clearInteractionsOnAllMocks();
 
       //when
       presenter.clearFiltersAndUpdateViews();
@@ -717,7 +751,7 @@ void main() {
       when(() => groupDashboardData.financialSummary).thenReturn(financialSummary);
       when(() => groupDashboardData.groups).thenReturn([]);
       await presenter.loadDashboardData();
-      _resetAllMockInteractions();
+      _clearInteractionsOnAllMocks();
 
       //when
       presenter.selectCompany(company1);

@@ -1,6 +1,8 @@
 import "package:collection/collection.dart";
+import 'package:wallpost/notification_center/notification_center.dart';
 
 import '../../../../_shared/exceptions/wp_exception.dart';
+import '../../../../notification_center/notification_observer.dart';
 import '../../entities/aggregated_approval.dart';
 import '../../services/aggregated_approvals_list_provider.dart';
 import '../view_contracts/aggregated_approvals_list_view.dart';
@@ -9,14 +11,48 @@ class AggregatedApprovalsListPresenter {
   final String? companyId;
   final AggregatedApprovalsListView _view;
   final AggregatedApprovalsListProvider _provider;
+  final NotificationCenter _notificationCenter;
   List<AggregatedApproval> approvals = [];
 
   late String _selectedCompanyName;
   late String _selectedModuleName;
 
-  AggregatedApprovalsListPresenter(this._view, {this.companyId}) : _provider = AggregatedApprovalsListProvider();
+  AggregatedApprovalsListPresenter(AggregatedApprovalsListView view, {String? companyId})
+      : this.initWith(
+          view,
+          AggregatedApprovalsListProvider(),
+          NotificationCenter.getInstance(),
+          companyId: companyId,
+        );
 
-  AggregatedApprovalsListPresenter.initWith(this._view, this._provider, {this.companyId});
+  AggregatedApprovalsListPresenter.initWith(
+    this._view,
+    this._provider,
+    this._notificationCenter, {
+    this.companyId,
+  }) {
+    _startListeningToNotifications();
+  }
+
+  //MARK: Functions to start and stop listening to notifications
+
+  void _startListeningToNotifications() {
+    _notificationCenter.addExpenseApprovalRequiredObserver(
+      NotificationObserver(key: "aggregatedApprovalsList", callback: (_) => loadApprovalsList()),
+    );
+    _notificationCenter.addLeaveApprovalRequiredObserver(
+      NotificationObserver(key: "aggregatedApprovalsList", callback: (_) => loadApprovalsList()),
+    );
+    _notificationCenter.addAttendanceAdjustmentApprovalRequiredObserver(
+      NotificationObserver(key: "aggregatedApprovalsList", callback: (_) => loadApprovalsList()),
+    );
+  }
+
+  void stopListeningToNotifications() {
+    _notificationCenter.removeObserverFromAllChannels(key: "aggregatedApprovalsList");
+  }
+
+  //MARK: Functions to load data
 
   Future<void> loadApprovalsList() async {
     if (_provider.isLoading) return;

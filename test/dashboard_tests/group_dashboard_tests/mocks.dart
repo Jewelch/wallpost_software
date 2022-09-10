@@ -1,5 +1,5 @@
 class Mocks {
-  static Map<String, dynamic> companiesListResponse = {
+  static Map<String, dynamic> groupDashboardResponse = {
     "groups": [
       {
         "group_id": 0,
@@ -68,7 +68,7 @@ class Mocks {
     ],
     "companies": [
       {
-        "approval_count": 8,
+        "companyApprovalCount": 8,
         "company_info": {
           "company_id": 13,
           "account_no": 123123,
@@ -123,7 +123,7 @@ class Mocks {
         }
       },
       {
-        "approval_count": 8,
+        "companyApprovalCount": 8,
         "company_info": {
           "company_id": 13,
           "account_no": 123123,

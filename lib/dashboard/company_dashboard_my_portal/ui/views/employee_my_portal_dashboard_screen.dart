@@ -47,6 +47,7 @@ class _EmployeeMyPortalDashboardScreenState extends State<EmployeeMyPortalDashbo
 
   @override
   void dispose() {
+    _presenter.stopListeningToNotifications();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

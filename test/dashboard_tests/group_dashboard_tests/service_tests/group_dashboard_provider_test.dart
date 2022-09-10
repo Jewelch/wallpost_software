@@ -11,15 +11,15 @@ import '../mocks.dart';
 class MockCompanyRepository extends Mock implements CompanyRepository {}
 
 void main() {
-  var successfulResponse = Mocks.companiesListResponse;
+  var successfulResponse = Mocks.groupDashboardResponse;
   var mockNetworkAdapter = MockNetworkAdapter();
-  var companyListProvider = GroupDashboardDataProvider.initWith(mockNetworkAdapter);
+  var groupDashboardProvider = GroupDashboardDataProvider.initWith(mockNetworkAdapter);
 
   test('api request is built correctly', () async {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await companyListProvider.get();
+    var _ = await groupDashboardProvider.get();
 
     expect(mockNetworkAdapter.apiRequest.url, GroupDashboardUrls.getGroupDashboardUrl());
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
@@ -29,7 +29,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await companyListProvider.get();
+      var _ = await groupDashboardProvider.get();
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -40,7 +40,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await companyListProvider.get();
+      var _ = await groupDashboardProvider.get();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -51,7 +51,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      var _ = await companyListProvider.get();
+      var _ = await groupDashboardProvider.get();
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -62,7 +62,7 @@ void main() {
     mockNetworkAdapter.succeed(<String, dynamic>{});
 
     try {
-      var _ = await companyListProvider.get();
+      var _ = await groupDashboardProvider.get();
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -72,12 +72,12 @@ void main() {
   test('success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var companyList = await companyListProvider.get();
-    expect(companyList.groups.length, 2);
-    expect(companyList.companies.length, 2);
-    expect(companyList.companies[0].employee, isNotNull);
-    expect(companyList.companies[0].financialSummary, isNotNull);
-    expect(companyList.companies[1].employee, isNotNull);
-    expect(companyList.companies[1].financialSummary, isNull);
+    var groupDashboard = await groupDashboardProvider.get();
+    expect(groupDashboard.groups.length, 2);
+    expect(groupDashboard.companies.length, 2);
+    expect(groupDashboard.companies[0].employee, isNotNull);
+    expect(groupDashboard.companies[0].financialSummary, isNotNull);
+    expect(groupDashboard.companies[1].employee, isNotNull);
+    expect(groupDashboard.companies[1].financialSummary, isNull);
   });
 }

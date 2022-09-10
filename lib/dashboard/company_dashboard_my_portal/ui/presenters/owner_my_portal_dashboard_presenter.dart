@@ -5,6 +5,8 @@ import 'package:wallpost/_wp_core/company_management/services/selected_company_p
 
 import '../../../../_wp_core/company_management/entities/financial_summary.dart';
 import '../../../../_wp_core/company_management/entities/wp_action.dart';
+import '../../../../notification_center/notification_center.dart';
+import '../../../../notification_center/notification_observer.dart';
 import '../../entities/owner_my_portal_data.dart';
 import '../../services/owner_my_portal_data_provider.dart';
 import '../models/absentees_data.dart';
@@ -15,17 +17,45 @@ class OwnerMyPortalDashboardPresenter {
   final OwnerMyPortalView _view;
   final OwnerMyPortalDataProvider _dataProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
+  final NotificationCenter _notificationCenter;
   OwnerMyPortalData? _ownerMyPortalData;
 
-  OwnerMyPortalDashboardPresenter(this._view)
-      : this._dataProvider = OwnerMyPortalDataProvider(),
-        this._selectedCompanyProvider = SelectedCompanyProvider();
+  OwnerMyPortalDashboardPresenter(OwnerMyPortalView view)
+      : this.initWith(
+          view,
+          OwnerMyPortalDataProvider(),
+          SelectedCompanyProvider(),
+          NotificationCenter.getInstance(),
+        );
 
   OwnerMyPortalDashboardPresenter.initWith(
     this._view,
     this._dataProvider,
     this._selectedCompanyProvider,
-  );
+    this._notificationCenter,
+  ) {
+    _startListeningToNotifications();
+  }
+
+  //MARK: Functions to start and stop listening to notifications
+
+  void _startListeningToNotifications() {
+    _notificationCenter.addExpenseApprovalRequiredObserver(
+      NotificationObserver(key: "ownerMyPortal", callback: (_) => syncDataInBackground()),
+    );
+    _notificationCenter.addLeaveApprovalRequiredObserver(
+      NotificationObserver(key: "ownerMyPortal", callback: (_) => syncDataInBackground()),
+    );
+    _notificationCenter.addAttendanceAdjustmentApprovalRequiredObserver(
+      NotificationObserver(key: "ownerMyPortal", callback: (_) => syncDataInBackground()),
+    );
+  }
+
+  void stopListeningToNotifications() {
+    _notificationCenter.removeObserverFromAllChannels(key: "ownerMyPortal");
+  }
+
+  //MARK: Functions to load data
 
   Future<void> loadData() async {
     if (_dataProvider.isLoading) return;

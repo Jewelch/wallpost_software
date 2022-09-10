@@ -13,6 +13,8 @@ import 'package:wallpost/dashboard/company_dashboard_my_portal/ui/view_contracts
 import '../../../_mocks/mock_company.dart';
 import '../../../_mocks/mock_company_provider.dart';
 import '../../../_mocks/mock_employee.dart';
+import '../../../_mocks/mock_notification_center.dart';
+import '../../../_mocks/mock_notification_observer.dart';
 import '../mocks.dart';
 
 class MockEmployeeMyPortalView extends Mock implements EmployeeMyPortalView {}
@@ -27,28 +29,71 @@ void main() {
   late MockEmployeeMyPortalView view;
   late MockEmployeeMyPortalDataProvider dataProvider;
   late MockCompanyProvider companyProvider;
+  late MockNotificationCenter notificationCenter;
   late EmployeeMyPortalDashboardPresenter presenter;
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
     verifyNoMoreInteractions(dataProvider);
     verifyNoMoreInteractions(companyProvider);
+    verifyNoMoreInteractions(notificationCenter);
   }
 
   void _clearInteractionsOnAllMocks() {
     clearInteractions(view);
     clearInteractions(dataProvider);
     clearInteractions(companyProvider);
+    clearInteractions(notificationCenter);
   }
+
+  setUpAll(() {
+    registerFallbackValue(MockNotificationObserver());
+  });
 
   setUp(() {
     view = MockEmployeeMyPortalView();
     dataProvider = MockEmployeeMyPortalDataProvider();
     companyProvider = MockCompanyProvider();
+    notificationCenter = MockNotificationCenter();
     var company = MockCompany();
     when(() => company.id).thenReturn("someCompanyId");
     when(() => companyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
-    presenter = EmployeeMyPortalDashboardPresenter.initWith(view, dataProvider, companyProvider);
+    presenter = EmployeeMyPortalDashboardPresenter.initWith(
+      view,
+      dataProvider,
+      companyProvider,
+      notificationCenter,
+    );
+    _clearInteractionsOnAllMocks();
+  });
+
+  test('starts listening to notifications on initialization', () async {
+    //given
+    presenter = EmployeeMyPortalDashboardPresenter.initWith(
+      view,
+      dataProvider,
+      companyProvider,
+      notificationCenter,
+    );
+
+    //then
+    verifyInOrder([
+      () => notificationCenter.addExpenseApprovalRequiredObserver(any()),
+      () => notificationCenter.addLeaveApprovalRequiredObserver(any()),
+      () => notificationCenter.addAttendanceAdjustmentApprovalRequiredObserver(any()),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('stop listening to notifications', () async {
+    //given
+    presenter.stopListeningToNotifications();
+
+    //then
+    verifyInOrder([
+      () => notificationCenter.removeObserverFromAllChannels(key: "employeeMyPortal"),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
   });
 
   test('loading data when service is loading does nothing', () async {

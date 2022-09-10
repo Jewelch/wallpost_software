@@ -4,6 +4,8 @@ import 'package:wallpost/_wp_core/company_management/entities/wp_action.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 
 import '../../../../../_shared/constants/app_colors.dart';
+import '../../../../notification_center/notification_center.dart';
+import '../../../../notification_center/notification_observer.dart';
 import '../../entities/employee_my_portal_data.dart';
 import '../../services/employee_my_portal_data_provider.dart';
 import '../models/graph_section.dart';
@@ -13,17 +15,45 @@ class EmployeeMyPortalDashboardPresenter {
   final EmployeeMyPortalView _view;
   final EmployeeMyPortalDataProvider _dataProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
+  final NotificationCenter _notificationCenter;
   EmployeeMyPortalData? _employeeMyPortalData;
 
-  EmployeeMyPortalDashboardPresenter(this._view)
-      : this._dataProvider = EmployeeMyPortalDataProvider(),
-        this._selectedCompanyProvider = SelectedCompanyProvider();
+  EmployeeMyPortalDashboardPresenter(EmployeeMyPortalView view)
+      : this.initWith(
+          view,
+          EmployeeMyPortalDataProvider(),
+          SelectedCompanyProvider(),
+          NotificationCenter.getInstance(),
+        );
 
   EmployeeMyPortalDashboardPresenter.initWith(
     this._view,
     this._dataProvider,
     this._selectedCompanyProvider,
-  );
+    this._notificationCenter,
+  ) {
+    _startListeningToNotifications();
+  }
+
+  //MARK: Functions to start and stop listening to notifications
+
+  void _startListeningToNotifications() {
+    _notificationCenter.addExpenseApprovalRequiredObserver(
+      NotificationObserver(key: "employeeMyPortal", callback: (_) => syncDataInBackground()),
+    );
+    _notificationCenter.addLeaveApprovalRequiredObserver(
+      NotificationObserver(key: "employeeMyPortal", callback: (_) => syncDataInBackground()),
+    );
+    _notificationCenter.addAttendanceAdjustmentApprovalRequiredObserver(
+      NotificationObserver(key: "employeeMyPortal", callback: (_) => syncDataInBackground()),
+    );
+  }
+
+  void stopListeningToNotifications() {
+    _notificationCenter.removeObserverFromAllChannels(key: "employeeMyPortal");
+  }
+
+  //MARK: Functions to load data
 
   Future<void> loadData() async {
     if (_dataProvider.isLoading) return;
