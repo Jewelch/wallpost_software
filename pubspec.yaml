@@ -1,7 +1,7 @@
 name: wallpost
 description: WallPost Mobile App
 
-version: 3.0.0+161
+version: 3.0.0+162
 
 environment:
   sdk: '>=2.17.0 <3.0.5'
@@ -42,6 +42,7 @@ dependencies:
   email_validator: ^2.1.17
   file_picker: ^5.0.1
   open_filex: ^4.0.1
+  image_picker: ^0.8.5+3
 
 dev_dependencies:
   flutter_test:

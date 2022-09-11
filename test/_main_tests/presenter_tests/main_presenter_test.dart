@@ -3,25 +3,19 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_main/services/repository_initializer.dart';
 import 'package:wallpost/_main/ui/presenters/main_presenter.dart';
 import 'package:wallpost/_main/ui/view_contracts/main_view.dart';
-import 'package:wallpost/notifications/services/app_badge_updater.dart';
-import 'package:wallpost/notifications_core/services/notification_center.dart';
 
 import '../../_mocks/mock_current_user_provider.dart';
+import '../../_mocks/mock_notification_center.dart';
 
 class MockMainView extends Mock implements MainView {}
 
 class MockRepositoryInitializer extends Mock implements RepositoryInitializer {}
-
-class MockNotificationCenter extends Mock implements NotificationCenter {}
-
-class MockAppBadgeUpdater extends Mock implements AppBadgeUpdater {}
 
 void main() {
   late MockMainView view;
   late MockCurrentUserProvider currentUserProvider;
   late MockRepositoryInitializer repoInitializer;
   late MockNotificationCenter notificationCenter;
-  late MockAppBadgeUpdater badgeUpdater;
   late MainPresenter presenter;
 
   setUp(() {
@@ -29,8 +23,7 @@ void main() {
     currentUserProvider = MockCurrentUserProvider();
     repoInitializer = MockRepositoryInitializer();
     notificationCenter = MockNotificationCenter();
-    badgeUpdater = MockAppBadgeUpdater();
-    presenter = MainPresenter.initWith(view, currentUserProvider, repoInitializer, notificationCenter, badgeUpdater);
+    presenter = MainPresenter.initWith(view, currentUserProvider, repoInitializer, notificationCenter);
 
     when(() => repoInitializer.initializeRepos()).thenAnswer((invocation) => Future.value(null));
     when(() => notificationCenter.setupAndHandlePushNotifications()).thenAnswer((_) => Future.value(null));
@@ -41,15 +34,16 @@ void main() {
     verifyNoMoreInteractions(currentUserProvider);
     verifyNoMoreInteractions(repoInitializer);
     verifyNoMoreInteractions(notificationCenter);
-    verifyNoMoreInteractions(badgeUpdater);
   }
 
   test('processes launch tasks and navigates to login screen if a user is not logged in', () async {
     //given
     when(() => currentUserProvider.isLoggedIn()).thenReturn(false);
+    when(() => notificationCenter.setupAndHandlePushNotifications()).thenAnswer((_) => Future.value(null));
+    when(() => notificationCenter.updateCount()).thenAnswer((_) => Future.value(null));
 
     //when
-    await presenter.processLaunchTasksAndShowLandingScreen(delayBeforeSettingUpNotificationsAndAppBadge: 0);
+    await presenter.processLaunchTasksAndShowLandingScreen();
 
     //then
     verifyInOrder([
@@ -57,7 +51,7 @@ void main() {
       () => currentUserProvider.isLoggedIn(),
       () => view.goToLoginScreen(),
       () => notificationCenter.setupAndHandlePushNotifications(),
-      () => badgeUpdater.updateBadgeCount(),
+      () => notificationCenter.updateCount(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -65,9 +59,11 @@ void main() {
   test('processes launch tasks and navigates to the company list screen when a user is logged in', () async {
     //given
     when(() => currentUserProvider.isLoggedIn()).thenReturn(true);
+    when(() => notificationCenter.setupAndHandlePushNotifications()).thenAnswer((_) => Future.value(null));
+    when(() => notificationCenter.updateCount()).thenAnswer((_) => Future.value(null));
 
     //when
-    await presenter.processLaunchTasksAndShowLandingScreen(delayBeforeSettingUpNotificationsAndAppBadge: 0);
+    await presenter.processLaunchTasksAndShowLandingScreen();
 
     //then
     verifyInOrder([
@@ -75,18 +71,19 @@ void main() {
       () => currentUserProvider.isLoggedIn(),
       () => view.goToCompanyListScreen(),
       () => notificationCenter.setupAndHandlePushNotifications(),
-      () => badgeUpdater.updateBadgeCount(),
+      () => notificationCenter.updateCount(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
   test('updating badge count', () async {
     //when
+    when(() => notificationCenter.updateCount()).thenAnswer((_) => Future.value(null));
     presenter.updateBadgeCount();
 
     //then
     verifyInOrder([
-      () => badgeUpdater.updateBadgeCount(),
+      () => notificationCenter.updateCount(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
