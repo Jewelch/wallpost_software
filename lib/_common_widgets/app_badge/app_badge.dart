@@ -8,6 +8,8 @@ class AppBadge {
         FlutterAppBadger.removeBadge();
       else
         FlutterAppBadger.updateBadgeCount(count);
-    } on PlatformException {}
+    } on PlatformException {
+      //do nothing
+    }
   }
 }
