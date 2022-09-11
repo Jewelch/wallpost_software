@@ -178,7 +178,7 @@ void main() {
       "someExpenseId",
       view,
       detailProvider,
-      didComeToDetailScreenFromApprovalList: false,
+      didLaunchDetailScreenForApproval: false,
     );
 
     expect(presenter.shouldShowApprovalActions(), false);
@@ -192,7 +192,7 @@ void main() {
       "someExpenseId",
       view,
       detailProvider,
-      didComeToDetailScreenFromApprovalList: true,
+      didLaunchDetailScreenForApproval: true,
     );
     var expense = MockExpenseRequest();
     when(() => detailProvider.isLoading).thenReturn(false);
@@ -211,7 +211,7 @@ void main() {
       "someExpenseId",
       view,
       detailProvider,
-      didComeToDetailScreenFromApprovalList: true,
+      didLaunchDetailScreenForApproval: true,
     );
     var expense = MockExpenseRequest();
     when(() => detailProvider.isLoading).thenReturn(false);

@@ -226,7 +226,6 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> implements Expens
       ExpenseDetailScreen(
         companyId: expenseRequest.companyId,
         expenseId: expenseRequest.id,
-        isSourceScreenTheApprovalListScreen: false,
       ),
       context,
     );

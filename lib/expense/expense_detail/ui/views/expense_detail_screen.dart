@@ -16,12 +16,12 @@ import 'expense_detail_loader.dart';
 class ExpenseDetailScreen extends StatefulWidget {
   final String companyId;
   final String expenseId;
-  final bool isSourceScreenTheApprovalListScreen;
+  final bool isLaunchingDetailScreenForApproval;
 
   ExpenseDetailScreen({
     required this.companyId,
     required this.expenseId,
-    this.isSourceScreenTheApprovalListScreen = false,
+    this.isLaunchingDetailScreenForApproval = false,
   });
 
   @override
@@ -40,8 +40,8 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
     _presenter = ExpenseDetailPresenter(
       widget.companyId,
       widget.expenseId,
-      this,
-      didComeToDetailScreenFromApprovalList: widget.isSourceScreenTheApprovalListScreen,
+      didLaunchDetailScreenForApproval: widget.isLaunchingDetailScreenForApproval,
+      view: this,
     );
     _presenter.loadDetail();
     super.initState();

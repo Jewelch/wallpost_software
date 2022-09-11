@@ -213,7 +213,7 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
       ExpenseDetailScreen(
         companyId: approval.companyId,
         expenseId: approval.id,
-        isSourceScreenTheApprovalListScreen: true,
+        isLaunchingDetailScreenForApproval: true,
       ),
       context,
     );

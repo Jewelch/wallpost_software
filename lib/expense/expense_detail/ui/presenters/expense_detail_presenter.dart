@@ -12,7 +12,7 @@ import '../view_contracts/expense_detail_view.dart';
 class ExpenseDetailPresenter {
   final String _companyId;
   final String _expenseId;
-  final bool _didComeToDetailScreenFromApprovalList;
+  final bool _didLaunchDetailScreenForApproval;
   final ExpenseDetailView _view;
   final ExpenseDetailProvider _expenseDetailProvider;
   late ExpenseRequest _expenseRequest;
@@ -21,10 +21,11 @@ class ExpenseDetailPresenter {
 
   ExpenseDetailPresenter(
     this._companyId,
-    this._expenseId,
-    this._view, {
-    bool didComeToDetailScreenFromApprovalList = false,
-  })  : this._didComeToDetailScreenFromApprovalList = didComeToDetailScreenFromApprovalList,
+    this._expenseId, {
+    bool didLaunchDetailScreenForApproval = false,
+    required ExpenseDetailView view,
+  })  : this._didLaunchDetailScreenForApproval = didLaunchDetailScreenForApproval,
+        this._view = view,
         _expenseDetailProvider = ExpenseDetailProvider(_companyId);
 
   ExpenseDetailPresenter.initWith(
@@ -32,8 +33,8 @@ class ExpenseDetailPresenter {
     this._expenseId,
     this._view,
     this._expenseDetailProvider, {
-    bool didComeToDetailScreenFromApprovalList = false,
-  }) : this._didComeToDetailScreenFromApprovalList = didComeToDetailScreenFromApprovalList;
+    bool didLaunchDetailScreenForApproval = false,
+  }) : this._didLaunchDetailScreenForApproval = didLaunchDetailScreenForApproval;
 
   Future<void> loadDetail() async {
     if (_expenseDetailProvider.isLoading) return;
@@ -69,8 +70,7 @@ class ExpenseDetailPresenter {
   //MARK: Getters
 
   bool shouldShowApprovalActions() {
-    return _didComeToDetailScreenFromApprovalList &&
-        _expenseRequest.approvalStatus == ExpenseRequestApprovalStatus.pending;
+    return _didLaunchDetailScreenForApproval && _expenseRequest.approvalStatus == ExpenseRequestApprovalStatus.pending;
   }
 
   String getTitle() {
