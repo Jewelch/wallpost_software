@@ -21,7 +21,7 @@ class BaseUrls {
     return 'https://$subDomain.${environment}api.wallpostsoftware.com/api/$version';
   }
 
-  static const String _ENVIRONMENT = _STAGING;
+  static const String _ENVIRONMENT = _PRODUCTION;
 
   static String baseUrlV2() {
     return BaseUrls.generateUrl(subDomain: _CORE, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
