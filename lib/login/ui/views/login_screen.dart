@@ -4,7 +4,7 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
-import 'package:wallpost/_common_widgets/form_widgets/login_text_field.dart';
+import 'package:wallpost/_common_widgets/form_widgets/form_text_field.dart';
 import 'package:wallpost/_common_widgets/form_widgets/password_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
@@ -12,7 +12,7 @@ import 'package:wallpost/_main/ui/views/main_screen.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/login/ui/contracts/login_view.dart';
 import 'package:wallpost/login/ui/presenters/login_presenter.dart';
-import 'package:wallpost/password_management/ui/views/forgot_password_screen.dart';
+import 'package:wallpost/settings/password_management/ui/views/forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
         children: <Widget>[
           ItemNotifiable<String?>(
             notifier: _accountNumberErrorNotifier,
-            builder: (context, value) => LoginTextField(
+            builder: (context, value) => FormTextField(
               controller: _accountNumberTextController,
               hint: "Account Number",
               errorText: value,
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
           SizedBox(height: 16),
           ItemNotifiable<String?>(
             notifier: _usernameErrorNotifier,
-            builder: (context, value) => LoginTextField(
+            builder: (context, value) => FormTextField(
               controller: _usernameTextController,
               hint: "Username",
               errorText: value,
@@ -228,4 +228,3 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
     ScreenPresenter.presentAndRemoveAllPreviousScreens(MainScreen(), context);
   }
 }
-//a5NPA4uC
