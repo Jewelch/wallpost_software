@@ -10,11 +10,11 @@ import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dism
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/password_management/ui/contracts/change_password_view.dart';
-import 'package:wallpost/password_management/ui/presenters/change_password_presenter.dart';
-import 'package:wallpost/password_management/ui/views/change_password_success_screen.dart';
+import 'package:wallpost/settings/password_management/ui/contracts/change_password_view.dart';
+import 'package:wallpost/settings/password_management/ui/presenters/change_password_presenter.dart';
+import 'package:wallpost/settings/password_management/ui/views/change_password_success_screen.dart';
 
-import '../../../_common_widgets/buttons/rounded_back_button.dart';
+import '../../../../_common_widgets/buttons/rounded_back_button.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   @override

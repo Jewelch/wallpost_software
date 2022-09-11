@@ -9,7 +9,7 @@ import 'package:wallpost/dashboard/group_dashboard/entities/group_dashboard_data
 class GroupDashboardDataProvider {
   final NetworkAdapter _networkAdapter;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
-  bool isLoading = false;
+  bool _isLoading = false;
 
   GroupDashboardDataProvider.initWith(this._networkAdapter);
 
@@ -19,14 +19,14 @@ class GroupDashboardDataProvider {
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var url = GroupDashboardUrls.getGroupDashboardUrl();
     var apiRequest = APIRequest.withId(url, _sessionId);
-    isLoading = true;
+    _isLoading = true;
 
     try {
       var apiResponse = await _networkAdapter.get(apiRequest);
-      isLoading = false;
+      _isLoading = false;
       return _processResponse(apiResponse);
     } on APIException catch (exception) {
-      isLoading = false;
+      _isLoading = false;
       throw exception;
     }
   }
@@ -44,4 +44,6 @@ class GroupDashboardDataProvider {
       throw InvalidResponseException();
     }
   }
+
+  bool get isLoading => _isLoading;
 }

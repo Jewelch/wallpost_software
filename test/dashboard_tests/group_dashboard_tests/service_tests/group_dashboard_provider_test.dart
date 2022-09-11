@@ -80,4 +80,31 @@ void main() {
     expect(groupDashboard.companies[1].employee, isNotNull);
     expect(groupDashboard.companies[1].financialSummary, isNull);
   });
+
+  test('test loading flag is set to true when the service is executed', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    groupDashboardProvider.get();
+
+    expect(groupDashboardProvider.isLoading, true);
+  });
+
+  test('test loading flag is reset after success', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await groupDashboardProvider.get();
+
+    expect(groupDashboardProvider.isLoading, false);
+  });
+
+  test('test loading flag is reset after failure', () async {
+    mockNetworkAdapter.fail(NetworkFailureException());
+
+    try {
+      var _ = await groupDashboardProvider.get();
+      fail('failed to throw exception');
+    } catch (_) {
+      expect(groupDashboardProvider.isLoading, false);
+    }
+  });
 }

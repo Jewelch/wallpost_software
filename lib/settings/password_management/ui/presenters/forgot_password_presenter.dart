@@ -2,9 +2,9 @@ import 'dart:core';
 
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/api_exception.dart';
-import 'package:wallpost/password_management/entities/reset_password_form.dart';
-import 'package:wallpost/password_management/services/password_resetter.dart';
-import 'package:wallpost/password_management/ui/contracts/forgot_password_view.dart';
+import 'package:wallpost/settings/password_management/entities/reset_password_form.dart';
+import 'package:wallpost/settings/password_management/services/password_resetter.dart';
+import 'package:wallpost/settings/password_management/ui/contracts/forgot_password_view.dart';
 
 class ForgotPasswordPresenter {
   final ForgotPasswordView _view;

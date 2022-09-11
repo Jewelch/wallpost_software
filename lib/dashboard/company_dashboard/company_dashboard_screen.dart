@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
-import 'package:wallpost/left_menu/left_menu_screen.dart';
+import 'package:wallpost/settings/left_menu/left_menu_screen.dart';
 
 import '../company_dashboard_my_portal/ui/views/my_portal_dasboard_base_screen.dart';
 import 'company_dashboard_app_bar.dart';

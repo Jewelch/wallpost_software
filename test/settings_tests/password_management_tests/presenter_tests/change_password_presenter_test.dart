@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/password_management/entities/change_password_form.dart';
-import 'package:wallpost/password_management/services/password_changer.dart';
-import 'package:wallpost/password_management/ui/contracts/change_password_view.dart';
-import 'package:wallpost/password_management/ui/presenters/change_password_presenter.dart';
+import 'package:wallpost/settings/password_management/entities/change_password_form.dart';
+import 'package:wallpost/settings/password_management/services/password_changer.dart';
+import 'package:wallpost/settings/password_management/ui/contracts/change_password_view.dart';
+import 'package:wallpost/settings/password_management/ui/presenters/change_password_presenter.dart';
 
-import '../../_mocks/mock_current_user_provider.dart';
-import '../../_mocks/mock_network_adapter.dart';
-import '../../_mocks/mock_user.dart';
+import '../../../_mocks/mock_current_user_provider.dart';
+import '../../../_mocks/mock_network_adapter.dart';
+import '../../../_mocks/mock_user.dart';
 
 class MockChangePasswordView extends Mock implements ChangePasswordView {}
 

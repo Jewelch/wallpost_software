@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/left_menu/left_menu_button.dart';
+import 'package:wallpost/settings/left_menu/left_menu_button.dart';
 
 import '../../_common_widgets/buttons/rounded_icon_button.dart';
 

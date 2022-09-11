@@ -1,8 +1,8 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
-import 'package:wallpost/password_management/entities/change_password_form.dart';
-import 'package:wallpost/password_management/services/password_changer.dart';
-import 'package:wallpost/password_management/ui/contracts/change_password_view.dart';
+import 'package:wallpost/settings/password_management/entities/change_password_form.dart';
+import 'package:wallpost/settings/password_management/services/password_changer.dart';
+import 'package:wallpost/settings/password_management/ui/contracts/change_password_view.dart';
 
 class ChangePasswordPresenter {
   final ChangePasswordView _view;

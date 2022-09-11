@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/password_management/entities/reset_password_form.dart';
-import 'package:wallpost/password_management/services/password_resetter.dart';
-import 'package:wallpost/password_management/ui/contracts/forgot_password_view.dart';
-import 'package:wallpost/password_management/ui/presenters/forgot_password_presenter.dart';
+import 'package:wallpost/settings/password_management/entities/reset_password_form.dart';
+import 'package:wallpost/settings/password_management/services/password_resetter.dart';
+import 'package:wallpost/settings/password_management/ui/contracts/forgot_password_view.dart';
+import 'package:wallpost/settings/password_management/ui/presenters/forgot_password_presenter.dart';
 
-import '../../_mocks/mock_network_adapter.dart';
+import '../../../_mocks/mock_network_adapter.dart';
 
 class MockForgotPasswordView extends Mock implements ForgotPasswordView {}
 

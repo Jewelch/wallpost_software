@@ -7,11 +7,11 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_main/services/logout_handler.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
-import 'package:wallpost/password_management/ui/views/change_password_screen.dart';
 
-import '../_common_widgets/buttons/rounded_back_button.dart';
-import '../_common_widgets/custom_shapes/header_card.dart';
-import '../_shared/constants/app_colors.dart';
+import '../../_common_widgets/buttons/rounded_back_button.dart';
+import '../../_common_widgets/custom_shapes/header_card.dart';
+import '../../_shared/constants/app_colors.dart';
+import '../password_management/ui/views/change_password_screen.dart';
 
 class LeftMenuScreen extends StatefulWidget {
   const LeftMenuScreen({Key? key}) : super(key: key);

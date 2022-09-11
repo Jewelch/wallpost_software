@@ -8,11 +8,11 @@ import 'package:wallpost/_common_widgets/form_widgets/form_text_field.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/password_management/ui/contracts/forgot_password_view.dart';
-import 'package:wallpost/password_management/ui/presenters/forgot_password_presenter.dart';
-import 'package:wallpost/password_management/ui/views/forgot_password_success_screen.dart';
+import 'package:wallpost/settings/password_management/ui/contracts/forgot_password_view.dart';
+import 'package:wallpost/settings/password_management/ui/presenters/forgot_password_presenter.dart';
+import 'package:wallpost/settings/password_management/ui/views/forgot_password_success_screen.dart';
 
-import '../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../_common_widgets/text_styles/text_styles.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override

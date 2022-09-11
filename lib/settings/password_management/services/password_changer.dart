@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/password_management/constants/password_management_urls.dart';
-import 'package:wallpost/password_management/entities/change_password_form.dart';
+
+import '../constants/password_management_urls.dart';
+import '../entities/change_password_form.dart';
 
 class PasswordChanger {
   final NetworkAdapter _networkAdapter;
