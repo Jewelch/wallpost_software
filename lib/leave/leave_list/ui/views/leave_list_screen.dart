@@ -226,7 +226,6 @@ class _LeaveListScreenState extends State<LeaveListScreen> implements LeaveListV
       LeaveDetailScreen(
         companyId: leaveListItem.companyId,
         leaveId: leaveListItem.leaveId,
-        isSourceScreenTheApprovalListScreen: false,
       ),
       context,
     );

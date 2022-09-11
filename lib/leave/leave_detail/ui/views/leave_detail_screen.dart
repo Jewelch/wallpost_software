@@ -16,12 +16,12 @@ import 'leave_detail_loader.dart';
 class LeaveDetailScreen extends StatefulWidget {
   final String companyId;
   final String leaveId;
-  final bool isSourceScreenTheApprovalListScreen;
+  final bool isLaunchingDetailScreenForApproval;
 
   LeaveDetailScreen({
     required this.companyId,
     required this.leaveId,
-    this.isSourceScreenTheApprovalListScreen = false,
+    this.isLaunchingDetailScreenForApproval = false,
   });
 
   @override
@@ -40,8 +40,8 @@ class _LeaveDetailScreenState extends State<LeaveDetailScreen> implements LeaveD
     _presenter = LeaveDetailPresenter(
       widget.companyId,
       widget.leaveId,
-      this,
-      didComeToDetailScreenFromApprovalList: widget.isSourceScreenTheApprovalListScreen,
+      didLaunchDetailScreenForApproval: widget.isLaunchingDetailScreenForApproval,
+      view: this,
     );
     _presenter.loadDetail();
     super.initState();

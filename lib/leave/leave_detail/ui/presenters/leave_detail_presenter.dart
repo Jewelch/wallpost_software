@@ -11,7 +11,7 @@ import '../view_contracts/leave_detail_view.dart';
 class LeaveDetailPresenter {
   final String _companyId;
   final String _leaveId;
-  final bool _didComeToDetailScreenFromApprovalList;
+  final bool _didLaunchDetailScreenForApproval;
   final LeaveDetailView _view;
   final LeaveDetailProvider _leaveDetailProvider;
   late LeaveDetail _leaveDetail;
@@ -20,10 +20,11 @@ class LeaveDetailPresenter {
 
   LeaveDetailPresenter(
     this._companyId,
-    this._leaveId,
-    this._view, {
-    bool didComeToDetailScreenFromApprovalList = false,
-  })  : this._didComeToDetailScreenFromApprovalList = didComeToDetailScreenFromApprovalList,
+    this._leaveId, {
+    bool didLaunchDetailScreenForApproval = false,
+    required LeaveDetailView view,
+  })  : this._didLaunchDetailScreenForApproval = didLaunchDetailScreenForApproval,
+        this._view = view,
         _leaveDetailProvider = LeaveDetailProvider(_companyId);
 
   LeaveDetailPresenter.initWith(
@@ -31,8 +32,8 @@ class LeaveDetailPresenter {
     this._leaveId,
     this._view,
     this._leaveDetailProvider, {
-    bool didComeToDetailScreenFromApprovalList = false,
-  }) : this._didComeToDetailScreenFromApprovalList = didComeToDetailScreenFromApprovalList;
+    bool didLaunchDetailScreenForApproval = false,
+  }) : this._didLaunchDetailScreenForApproval = didLaunchDetailScreenForApproval;
 
   Future<void> loadDetail() async {
     if (_leaveDetailProvider.isLoading) return;
@@ -68,7 +69,7 @@ class LeaveDetailPresenter {
   //MARK: Getters
 
   bool shouldShowApprovalActions() {
-    return _didComeToDetailScreenFromApprovalList && _leaveDetail.isPendingApproval();
+    return _didLaunchDetailScreenForApproval && _leaveDetail.isPendingApproval();
   }
 
   String getTitle() {

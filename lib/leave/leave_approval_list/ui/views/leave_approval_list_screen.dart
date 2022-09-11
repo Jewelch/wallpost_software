@@ -213,7 +213,7 @@ class _LeaveApprovalListScreenState extends State<LeaveApprovalListScreen> imple
       LeaveDetailScreen(
         companyId: approval.companyId,
         leaveId: approval.id,
-        isSourceScreenTheApprovalListScreen: true,
+        isLaunchingDetailScreenForApproval: true,
       ),
       context,
     );

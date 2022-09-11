@@ -177,7 +177,7 @@ void main() {
       "someLeaveId",
       view,
       detailProvider,
-      didComeToDetailScreenFromApprovalList: false,
+      didLaunchDetailScreenForApproval: false,
     );
 
     expect(presenter.shouldShowApprovalActions(), false);
@@ -191,7 +191,7 @@ void main() {
       "someLeaveId",
       view,
       detailProvider,
-      didComeToDetailScreenFromApprovalList: true,
+      didLaunchDetailScreenForApproval: true,
     );
     var leave = MockLeaveDetail();
     when(() => detailProvider.isLoading).thenReturn(false);
@@ -210,7 +210,7 @@ void main() {
       "someLeaveId",
       view,
       detailProvider,
-      didComeToDetailScreenFromApprovalList: true,
+      didLaunchDetailScreenForApproval: true,
     );
     var leave = MockLeaveDetail();
     when(() => detailProvider.isLoading).thenReturn(false);
