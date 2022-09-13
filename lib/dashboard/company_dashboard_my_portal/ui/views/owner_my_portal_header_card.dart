@@ -39,8 +39,8 @@ class OwnerMyPortalHeaderCard extends StatelessWidget {
             children: [
               SizedBox(width: 20),
               Text(
-                "Profit & Loss",
-                style: TextStyles.headerCardMainLabelTextStyle.copyWith(color: Colors.white),
+                "Profit\nand Loss",
+                style: TextStyles.headerCardMainLabelTextStyle,
               ),
               Expanded(
                 child: Text(
@@ -68,40 +68,40 @@ class OwnerMyPortalHeaderCard extends StatelessWidget {
               SizedBox(width: 20),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: _financialSummaryElement(
-                    _financialSummary.availableFunds,
-                    "Available Funds",
-                    _financialSummary.areFundsAvailable()
-                        ? AppColors.greenOnDarkDefaultColorBg
-                        : AppColors.redOnDarkDefaultColorBg,
-                  ),
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                child: _financialSummaryElement(
+                  _financialSummary.availableFunds,
+                  "Available\nFunds",
+                  _financialSummary.areFundsAvailable()
+                      ? AppColors.greenOnDarkDefaultColorBg
+                      : AppColors.redOnDarkDefaultColorBg,
                 ),
-                Flexible(
-                  child: _financialSummaryElement(
-                    _financialSummary.receivableOverdue,
-                    "Receivables Overdue",
-                    _financialSummary.areReceivablesOverdue()
-                        ? AppColors.redOnDarkDefaultColorBg
-                        : AppColors.greenOnDarkDefaultColorBg,
-                  ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: _financialSummaryElement(
+                  _financialSummary.receivableOverdue,
+                  "Receivables\nOverdue",
+                  _financialSummary.areReceivablesOverdue()
+                      ? AppColors.redOnDarkDefaultColorBg
+                      : AppColors.greenOnDarkDefaultColorBg,
                 ),
-                Flexible(
-                  child: _financialSummaryElement(
-                    _financialSummary.payableOverdue,
-                    "Payables Overdue",
-                    _financialSummary.arePayablesOverdue()
-                        ? AppColors.redOnDarkDefaultColorBg
-                        : AppColors.greenOnDarkDefaultColorBg,
-                  ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: _financialSummaryElement(
+                  _financialSummary.payableOverdue,
+                  "Payables\nOverdue",
+                  _financialSummary.arePayablesOverdue()
+                      ? AppColors.redOnDarkDefaultColorBg
+                      : AppColors.greenOnDarkDefaultColorBg,
                 ),
-              ],
-            ),
+              ),
+              SizedBox(width: 20),
+            ],
           ),
           SizedBox(height: 10),
         ],
@@ -110,19 +110,22 @@ class OwnerMyPortalHeaderCard extends StatelessWidget {
   }
 
   Widget _financialSummaryElement(String value, String label, Color textColor) {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: Column(
-          children: [
-            FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Text(value,
-                  style: TextStyles.headerCardSubValueTextStyle.copyWith(
-                    color: textColor,
-                  )),
-            ),
-            Text(label, style: TextStyles.headerCardSubLabelTextStyle.copyWith(color: Colors.white))
-          ],
-        ));
+    return Column(
+      children: [
+        FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text(value,
+              style: TextStyles.headerCardSubValueTextStyle.copyWith(
+                color: textColor,
+              )),
+        ),
+        SizedBox(height: 2),
+        Text(
+          label,
+          style: TextStyles.headerCardSubLabelTextStyle,
+          textAlign: TextAlign.center,
+        )
+      ],
+    );
   }
 }

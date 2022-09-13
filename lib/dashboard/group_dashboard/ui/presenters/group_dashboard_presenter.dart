@@ -229,7 +229,7 @@ class GroupDashboardPresenter {
     if (summary == null) return _emptyFinancialDetails();
 
     return FinancialDetails.name(
-      label: "Profit & Loss",
+      label: "Profit\nand Loss",
       value: summary.profitLoss,
       textColor: summary.isInProfit() ? _successColor(isForHeaderCard) : _failureColor(isForHeaderCard),
     );
@@ -239,7 +239,7 @@ class GroupDashboardPresenter {
     if (summary == null) return _emptyFinancialDetails();
 
     return FinancialDetails.name(
-      label: "Available Funds",
+      label: "Available\nFunds",
       value: summary.availableFunds,
       textColor: summary.areFundsAvailable() ? _successColor(isForHeaderCard) : _failureColor(isForHeaderCard),
     );
@@ -249,7 +249,7 @@ class GroupDashboardPresenter {
     if (summary == null) return _emptyFinancialDetails();
 
     return FinancialDetails.name(
-      label: "Receivables Overdue",
+      label: "Receivables\nOverdue",
       value: summary.receivableOverdue,
       textColor: summary.areReceivablesOverdue() ? _failureColor(isForHeaderCard) : _successColor(isForHeaderCard),
     );
@@ -259,7 +259,7 @@ class GroupDashboardPresenter {
     if (summary == null) return _emptyFinancialDetails();
 
     return FinancialDetails.name(
-      label: "Payables Overdue",
+      label: "Payables\nOverdue",
       value: summary.payableOverdue,
       textColor: summary.arePayablesOverdue() ? _failureColor(isForHeaderCard) : _successColor(isForHeaderCard),
     );

@@ -68,31 +68,31 @@ class FinancialSummaryCard extends StatelessWidget {
               SizedBox(width: 20),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: _financialSummaryElement(_presenter.getAvailableFundsDetails(
-                    _financialSummary,
-                    isForHeaderCard: true,
-                  )),
-                ),
-                Flexible(
-                  child: _financialSummaryElement(_presenter.getOverdueReceivablesDetails(
-                    _financialSummary,
-                    isForHeaderCard: true,
-                  )),
-                ),
-                Flexible(
-                  child: _financialSummaryElement(_presenter.getOverduePayablesDetails(
-                    _financialSummary,
-                    isForHeaderCard: true,
-                  )),
-                ),
-              ],
-            ),
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                child: _financialSummaryElement(_presenter.getAvailableFundsDetails(
+                  _financialSummary,
+                  isForHeaderCard: true,
+                )),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: _financialSummaryElement(_presenter.getOverdueReceivablesDetails(
+                  _financialSummary,
+                  isForHeaderCard: true,
+                )),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: _financialSummaryElement(_presenter.getOverduePayablesDetails(
+                  _financialSummary,
+                  isForHeaderCard: true,
+                )),
+              ),
+              SizedBox(width: 20),
+            ],
           ),
         ],
       ),
@@ -100,19 +100,22 @@ class FinancialSummaryCard extends StatelessWidget {
   }
 
   Widget _financialSummaryElement(FinancialDetails financialDetails) {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: Column(
-          children: [
-            FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Text(financialDetails.value,
-                  style: TextStyles.headerCardSubValueTextStyle.copyWith(
-                    color: financialDetails.textColor,
-                  )),
-            ),
-            Text(financialDetails.label, style: TextStyles.headerCardSubLabelTextStyle)
-          ],
-        ));
+    return Column(
+      children: [
+        FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text(financialDetails.value,
+              style: TextStyles.headerCardSubValueTextStyle.copyWith(
+                color: financialDetails.textColor,
+              )),
+        ),
+        SizedBox(height: 2),
+        Text(
+          financialDetails.label,
+          style: TextStyles.headerCardSubLabelTextStyle,
+          textAlign: TextAlign.center,
+        )
+      ],
+    );
   }
 }
