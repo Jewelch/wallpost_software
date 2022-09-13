@@ -49,10 +49,7 @@ class NotificationScreenRouter implements NotificationRouter {
 
   @override
   void goToAttendanceAdjustmentDetailScreen(String companyId, String attendanceId) {
-    ScreenPresenter.present(
-      AttendanceAdjustmentApprovalListScreen(companyId: companyId),
-      navigatorKey.currentContext!,
-    );
+    //do nothing as we do not have an attendance adjustment detail screen
   }
 
   @override
