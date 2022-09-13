@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
         body: SafeArea(
           child: Container(
             child: ListView(
-              physics: ClampingScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               children: <Widget>[
                 _logo(),
                 SizedBox(height: 4),
