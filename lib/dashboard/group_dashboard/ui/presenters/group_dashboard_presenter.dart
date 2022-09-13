@@ -154,9 +154,9 @@ class GroupDashboardPresenter {
 
   //MARK: Function to refresh the dashboard data
 
-  refresh() {
+  Future<void> refresh() {
     _clearFilters();
-    loadDashboardData();
+    return loadDashboardData();
   }
 
   //MARK: Functions to perform search
