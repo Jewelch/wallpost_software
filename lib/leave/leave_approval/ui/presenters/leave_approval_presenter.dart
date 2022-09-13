@@ -1,5 +1,6 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 
+import '../../../../notification_center/notification_center.dart';
 import '../../services/leave_approver.dart';
 import '../../services/leave_rejector.dart';
 import '../view_contracts/leave_approval_view.dart';
@@ -8,15 +9,22 @@ class LeaveApprovalPresenter {
   final LeaveApprovalView _view;
   final LeaveApprover _approver;
   final LeaveRejector _rejector;
+  final NotificationCenter _notificationCenter;
   var _didPerformApprovalSuccessfully = false;
   var _didPerformRejectionSuccessfully = false;
   String? _reasonErrorMessage;
 
-  LeaveApprovalPresenter.initWith(this._view, this._approver, this._rejector);
+  LeaveApprovalPresenter.initWith(
+    this._view,
+    this._approver,
+    this._rejector,
+    this._notificationCenter,
+  );
 
   LeaveApprovalPresenter(this._view)
       : _approver = LeaveApprover(),
-        _rejector = LeaveRejector();
+        _rejector = LeaveRejector(),
+        _notificationCenter = NotificationCenter.getInstance();
 
   Future<void> approve(String companyId, String leaveId) async {
     if (_didPerformApprovalSuccessfully) return;
@@ -24,6 +32,7 @@ class LeaveApprovalPresenter {
     _view.showLoader();
     try {
       await _approver.approve(companyId, leaveId);
+      _notificationCenter.updateCount();
       _didPerformApprovalSuccessfully = true;
       _view.onDidPerformActionSuccessfully(leaveId);
     } on WPException catch (e) {
@@ -44,6 +53,7 @@ class LeaveApprovalPresenter {
     _view.showLoader();
     try {
       await _rejector.reject(companyId, leaveId, rejectionReason: rejectionReason);
+      _notificationCenter.updateCount();
       _didPerformRejectionSuccessfully = true;
       _view.onDidPerformActionSuccessfully(leaveId);
     } on WPException catch (e) {

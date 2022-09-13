@@ -6,6 +6,8 @@ import 'package:wallpost/attendance/attendance_adjustment_approval/services/atte
 import 'package:wallpost/attendance/attendance_adjustment_approval/ui/presenters/attendance_adjustment_approval_presenter.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_view.dart';
 
+import '../../../_mocks/mock_notification_center.dart';
+
 class MockAttendanceAdjustmentApprovalView extends Mock implements AttendanceAdjustmentApprovalView {}
 
 class MockAttendanceAdjustmentApprover extends Mock implements AttendanceAdjustmentApprover {}
@@ -16,22 +18,27 @@ void main() {
   var view = MockAttendanceAdjustmentApprovalView();
   var approver = MockAttendanceAdjustmentApprover();
   var rejector = MockAttendanceAdjustmentRejector();
+  var notificationCenter = MockNotificationCenter();
   late AttendanceAdjustmentApprovalPresenter presenter;
 
   void _verifyNoMoreInteractions() {
     verifyNoMoreInteractions(view);
     verifyNoMoreInteractions(approver);
     verifyNoMoreInteractions(rejector);
+    verifyNoMoreInteractions(notificationCenter);
   }
 
   void _clearAllInteractions() {
     clearInteractions(view);
     clearInteractions(approver);
     clearInteractions(rejector);
+    clearInteractions(notificationCenter);
   }
 
   setUp(() {
-    presenter = AttendanceAdjustmentApprovalPresenter.initWith(view, approver, rejector);
+    _clearAllInteractions();
+    when(() => notificationCenter.updateCount()).thenAnswer((_) => Future.value(null));
+    presenter = AttendanceAdjustmentApprovalPresenter.initWith(view, approver, rejector, notificationCenter);
   });
 
   test('failure to approve', () async {
@@ -61,6 +68,7 @@ void main() {
     verifyInOrder([
       () => view.showLoader(),
       () => approver.approve("someCompanyId", "someAttendanceId"),
+      () => notificationCenter.updateCount(),
       () => view.onDidPerformActionSuccessfully("someAttendanceId"),
     ]);
     _verifyNoMoreInteractions();
@@ -124,6 +132,7 @@ void main() {
     verifyInOrder([
       () => view.showLoader(),
       () => rejector.reject("someCompanyId", "someAttendanceId", rejectionReason: "some reason"),
+      () => notificationCenter.updateCount(),
       () => view.onDidPerformActionSuccessfully("someAttendanceId"),
     ]);
     _verifyNoMoreInteractions();
