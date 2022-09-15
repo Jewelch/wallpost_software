@@ -17,7 +17,7 @@ import '../../../../_wp_core/company_management/entities/financial_summary.dart'
 import '../../../../attendance/attendance_punch_in_out/ui/views/attendance_widget.dart';
 import '../../../../settings/left_menu/left_menu_screen.dart';
 import '../../../aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
-import 'financial_summary_card.dart';
+import '../../../finance_detail_views/ui/views/finance_detail_card.dart';
 import 'group_dashboard_app_bar.dart';
 import 'group_dashboard_list_card_with_revenue.dart';
 import 'group_dashboard_list_card_without_revenue.dart';
@@ -214,7 +214,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
         itemCount: presenter.getNumberOfRows(),
         itemBuilder: (context, index) {
           if (presenter.getItemAtIndex(index) is FinancialSummary)
-            return FinancialSummaryCard(presenter, presenter.getItemAtIndex(index));
+            return FinanceDetailCard(presenter.getItemAtIndex(index));
           else
             return _getCompanyCard(presenter.getItemAtIndex(index));
         },
@@ -231,7 +231,6 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
       );
     } else {
       return GroupDashboardListCardWithRevenue(
-        presenter: presenter,
         company: companyListItem,
         onPressed: () => presenter.selectCompany(companyListItem),
       );
