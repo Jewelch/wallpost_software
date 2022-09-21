@@ -28,14 +28,14 @@ class FinanceDetailCard extends StatelessWidget {
                 children: [
                   Text("Financials ", style: TextStyles.headerCardHeadingTextStyle),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
+                    padding: const EdgeInsets.only(bottom: 5),
                     child: Text(_presenter.getCurrency(), style: TextStyles.headerCardSubLabelTextStyle),
                   ),
                 ],
               ),
               Expanded(
                 child: Text(
-                  "YTD   ${AppYears().years().last}",
+                  "YTD  ${AppYears().years().last}",
                   textAlign: TextAlign.end,
                   style: TextStyles.headerCardSubHeadingTextStyle,
                 ),

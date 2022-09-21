@@ -22,7 +22,7 @@ void main() {
     when(() => negativeSummary.profitLoss).thenReturn("-40");
     when(() => negativeSummary.isInProfit()).thenReturn(false);
     var details1 = FinanceDetailCardPresenter(negativeSummary).getProfitLossDetails();
-    expect(details1.label, "Profit and Loss");
+    expect(details1.label, "Profit & Loss");
     expect(details1.value, "-40");
     expect(details1.valueColor.isEqualTo(AppColors.redOnDarkDefaultColorBg), true);
 
@@ -30,7 +30,7 @@ void main() {
     when(() => positiveSummary.profitLoss).thenReturn("440");
     when(() => positiveSummary.isInProfit()).thenReturn(true);
     var details2 = FinanceDetailCardPresenter(positiveSummary).getProfitLossDetails();
-    expect(details2.label, "Profit and Loss");
+    expect(details2.label, "Profit & Loss");
     expect(details2.value, "440");
     expect(details2.valueColor.isEqualTo(AppColors.greenOnDarkDefaultColorBg), true);
   });

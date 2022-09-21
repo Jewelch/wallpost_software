@@ -37,18 +37,23 @@ class TextStyles {
       );
 
   static get subTitleTextStyleBold => TextStyle(
-    fontSize: 14,
+        fontSize: 14,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.w600,
       );
 
   static get labelTextStyle => TextStyle(
-    fontSize: 12,
+        fontSize: 12,
+        color: AppColors.textColorGray,
+      );
+
+  static get smallLabelTextStyle => TextStyle(
+        fontSize: 11,
         color: AppColors.textColorGray,
       );
 
   static get labelTextStyleBold => TextStyle(
-    fontSize: 12,
+        fontSize: 12,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.w600,
       );
@@ -58,19 +63,19 @@ class TextStyles {
   static get headerCardHeadingTextStyle => TextStyle(
         fontWeight: FontWeight.w700,
         color: Colors.white,
-        fontSize: 30.0,
+        fontSize: 24.0,
       );
 
   static get headerCardSubHeadingTextStyle => TextStyle(
-        fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w400,
         color: Colors.white,
-        fontSize: 20.0,
+        fontSize: 17.0,
       );
 
   static get headerCardMainValueTextStyle => TextStyle(
     fontWeight: FontWeight.w700,
         color: AppColors.textColorBlack,
-        fontSize: 28.0,
+        fontSize: 24.0,
         overflow: TextOverflow.ellipsis,
       );
 
