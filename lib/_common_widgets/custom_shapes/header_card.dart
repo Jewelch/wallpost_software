@@ -12,7 +12,7 @@ class HeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 280,
+      height: 260,
       margin: EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         boxShadow: [
@@ -45,13 +45,13 @@ class HeaderCardPainter extends CustomPainter {
     paint.color = color;
     path = Path();
     path.lineTo(0, 0);
-    path.cubicTo(0, 0, 0, 30, 20, 30);
-    path.lineTo(size.width - 30, 30);
-    path.cubicTo(size.width, 30, size.width, 60, size.width, 60);
-    path.lineTo(size.width, size.height - 60);
-    path.cubicTo(size.width, size.height - 30, size.width - 30, size.height - 30, size.width - 30, size.height - 30);
-    path.lineTo(20, size.height - 30);
-    path.cubicTo(0, size.height - 30, 0, size.height, 0, size.height);
+    path.cubicTo(0, 0, 0, 24, 24, 24);
+    path.lineTo(size.width - 24, 24);
+    path.cubicTo(size.width, 24, size.width, 48, size.width, 48);
+    path.lineTo(size.width, size.height - 48);
+    path.cubicTo(size.width, size.height - 24, size.width - 24, size.height - 24, size.width - 24, size.height - 24);
+    path.lineTo(24, size.height - 24);
+    path.cubicTo(0, size.height - 24, 0, size.height, 0, size.height);
     path.lineTo(0, 0);
     canvas.drawPath(path, paint);
   }
