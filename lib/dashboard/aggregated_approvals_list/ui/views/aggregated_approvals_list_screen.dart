@@ -149,24 +149,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
         border: Border.all(width: 1, color: AppColors.listItemBorderColor),
       ),
       child: InkWell(
-        onTap: () {
-          if (aggregatedApproval.isExpenseRequestApproval()) {
-            ScreenPresenter.present(
-              ExpenseApprovalListScreen(companyId: aggregatedApproval.companyId),
-              context,
-            );
-          } else if (aggregatedApproval.isAttendanceAdjustmentApproval()) {
-            ScreenPresenter.present(
-              AttendanceAdjustmentApprovalListScreen(companyId: aggregatedApproval.companyId),
-              context,
-            );
-          } else if (aggregatedApproval.isLeaveRequestApproval()) {
-            ScreenPresenter.present(
-              LeaveApprovalListScreen(companyId: aggregatedApproval.companyId),
-              context,
-            );
-          }
-        },
+        onTap: () => handleTap(aggregatedApproval),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -213,6 +196,28 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
         ),
       ),
     );
+  }
+
+  void handleTap(AggregatedApproval aggregatedApproval) async {
+    if (aggregatedApproval.isExpenseRequestApproval()) {
+      var didPerformAction = await ScreenPresenter.present(
+        ExpenseApprovalListScreen(companyId: aggregatedApproval.companyId),
+        context,
+      );
+      if (didPerformAction == true) _presenter.loadApprovalsList();
+    } else if (aggregatedApproval.isAttendanceAdjustmentApproval()) {
+      var didPerformAction = await ScreenPresenter.present(
+        AttendanceAdjustmentApprovalListScreen(companyId: aggregatedApproval.companyId),
+        context,
+      );
+      if (didPerformAction == true) _presenter.loadApprovalsList();
+    } else if (aggregatedApproval.isLeaveRequestApproval()) {
+      var didPerformAction = await ScreenPresenter.present(
+        LeaveApprovalListScreen(companyId: aggregatedApproval.companyId),
+        context,
+      );
+      if (didPerformAction == true) _presenter.loadApprovalsList();
+    }
   }
 
   Widget _companyAndModuleFilter() {

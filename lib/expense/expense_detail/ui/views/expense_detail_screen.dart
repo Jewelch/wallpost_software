@@ -49,31 +49,37 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.screenBackgroundColor,
-      appBar: SimpleAppBar(
-        title: "Expense Details",
-        leadingButton: RoundedBackButton(
-            onPressed: () => Navigator.pop(
-              context,
-                  _presenter.didProcessApprovalOrRejection,
-                )),
-      ),
-      body: SafeArea(
-        child: ItemNotifiable(
-          notifier: _viewTypeNotifier,
-          builder: (context, viewType) {
-            if (viewType == viewTypeLoader) {
-              return ExpenseDetailLoader();
-            } else if (viewType == viewTypeError) {
-              return _buildErrorView();
-            } else {
-              return _buildExpenseDetailsView();
-            }
-          },
+    return WillPopScope(
+      onWillPop: () {
+        _handleBackPress();
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.screenBackgroundColor,
+        appBar: SimpleAppBar(
+          title: "Expense Details",
+          leadingButton: RoundedBackButton(onPressed: () => _handleBackPress()),
+        ),
+        body: SafeArea(
+          child: ItemNotifiable(
+            notifier: _viewTypeNotifier,
+            builder: (context, viewType) {
+              if (viewType == viewTypeLoader) {
+                return ExpenseDetailLoader();
+              } else if (viewType == viewTypeError) {
+                return _buildErrorView();
+              } else {
+                return _buildExpenseDetailsView();
+              }
+            },
+          ),
         ),
       ),
     );
+  }
+
+  void _handleBackPress() async {
+    Navigator.pop(context, _presenter.didProcessApprovalOrRejection);
   }
 
   Widget _buildErrorView() {

@@ -47,29 +47,39 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: SimpleAppBar(
-        title: "Payroll Adjustment Approvals",
-        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
-      ),
-      body: SafeArea(
-        child: ItemNotifiable(
-          notifier: _viewTypeNotifier,
-          builder: (context, viewType) {
-            if (viewType == viewTypeLoader) {
-              return _buildLoaderView();
-            } else if (viewType == viewTypeError) {
-              return _buildErrorView();
-            } else if (viewType == viewTypeNoItems) {
-              return _buildNoItemsView();
-            } else {
-              return _dataView();
-            }
-          },
+    return WillPopScope(
+      onWillPop: () {
+        _handleBackPress();
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: SimpleAppBar(
+          title: "Payroll Adjustment Approvals",
+          leadingButton: RoundedBackButton(onPressed: () => _handleBackPress()),
+        ),
+        body: SafeArea(
+          child: ItemNotifiable(
+            notifier: _viewTypeNotifier,
+            builder: (context, viewType) {
+              if (viewType == viewTypeLoader) {
+                return _buildLoaderView();
+              } else if (viewType == viewTypeError) {
+                return _buildErrorView();
+              } else if (viewType == viewTypeNoItems) {
+                return _buildNoItemsView();
+              } else {
+                return _dataView();
+              }
+            },
+          ),
         ),
       ),
     );
+  }
+
+  void _handleBackPress() async {
+    Navigator.pop(context, _listPresenter.didProcessApprovalOrRejection);
   }
 
   Widget _buildLoaderView() {

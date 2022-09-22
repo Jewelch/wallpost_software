@@ -337,6 +337,7 @@ void main() {
     await presenter.onDidProcessApprovalOrRejection(true, "id2");
 
     //then
+    expect(presenter.didProcessApprovalOrRejection, true);
     expect(presenter.getNumberOfListItems(), 3);
     expect(presenter.getItemTypeAtIndex(0), ExpenseApprovalListItemViewType.ListItem);
     expect(presenter.getItemTypeAtIndex(1), ExpenseApprovalListItemViewType.ListItem);

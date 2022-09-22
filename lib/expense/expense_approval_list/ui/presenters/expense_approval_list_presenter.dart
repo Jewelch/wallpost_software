@@ -12,6 +12,7 @@ class ExpenseApprovalListPresenter {
   final List<ExpenseApprovalListItem> _approvalItems = [];
   String _errorMessage = "";
   final String _noItemsMessage = "There are no approvals to show.\n\nTap here to reload.";
+  var _didProcessApprovalOrRejection = false;
 
   ExpenseApprovalListPresenter(String companyId, this._view)
       : _approvalListProvider = ExpenseApprovalListProvider(companyId);
@@ -95,8 +96,9 @@ class ExpenseApprovalListPresenter {
 
   //MARK: Functions for successful processing of approval or rejection
 
-  Future<void> onDidProcessApprovalOrRejection(dynamic didProcess, String expenseId) async {
-    if (didProcess == true) {
+  Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, String expenseId) async {
+    if (didPerformAction == true) {
+      this._didProcessApprovalOrRejection = didPerformAction;
       _approvalItems.removeWhere((approval) => approval.id == expenseId);
       _approvalItems.isEmpty ? await refresh() : _updateList();
     }
@@ -127,4 +129,6 @@ class ExpenseApprovalListPresenter {
   String get errorMessage => _errorMessage;
 
   String get noItemsMessage => _noItemsMessage;
+
+  get didProcessApprovalOrRejection => _didProcessApprovalOrRejection;
 }
