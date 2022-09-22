@@ -34,6 +34,7 @@ void main() {
     TimeOfDay adjustedPunchOutTime = TimeOfDay(hour: 17, minute: 0);
     var adjustedStatus = AttendanceStatus.Present;
     adjustmentForm = AttendanceAdjustmentForm(
+      "someAttendanceId",
       "someCompanyId",
       "v1EmpId",
       attendanceDate,
@@ -55,7 +56,7 @@ void main() {
 
     expect(mockNetworkAdapter.apiRequest.url, AttendanceAdjustmentUrls.submitAdjustmentUrl('someCompanyId', 'v1EmpId'));
     expect(mockNetworkAdapter.apiRequest.parameters, {
-      'attendance_id': null,
+      'attendance_id': "someAttendanceId",
       'date': '2020-01-01',
       'reason': "some work",
       'adjusted_punchin': '08:00',
