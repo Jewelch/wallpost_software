@@ -268,7 +268,7 @@ void main() {
     when(() => leave.totalLeaveDays).thenReturn(4);
     await presenter.loadDetail();
 
-    expect(presenter.getTotalDays(), "4");
+    expect(presenter.getTotalDays(), "4 days");
   });
 
   test('get total paid days', () async {
@@ -278,7 +278,7 @@ void main() {
     when(() => leave.paidDays).thenReturn(3);
     await presenter.loadDetail();
 
-    expect(presenter.getTotalPaidDays(), "3");
+    expect(presenter.getTotalPaidDays(), "3 days");
   });
 
   test('get total unpaid days', () async {
@@ -288,7 +288,7 @@ void main() {
     when(() => leave.unPaidDays).thenReturn(1);
     await presenter.loadDetail();
 
-    expect(presenter.getTotalUnpaidDays(), "1");
+    expect(presenter.getTotalUnpaidDays(), "1 day");
   });
 
   test('get leave reason', () async {

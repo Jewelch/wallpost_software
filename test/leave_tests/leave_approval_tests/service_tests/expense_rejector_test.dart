@@ -16,15 +16,15 @@ void main() {
   test('api request is built and executed correctly', () async {
     Map<String, dynamic> requestParams = {};
     requestParams.addAll({
-      "app_type": "leaveRequest",
-      "request_id": "someLeaveId",
-      "reason": "some reason",
+      "comments": "some reason",
+      "clearance_status": 0,
+      "replaced_required": 1,
     });
     mockNetworkAdapter.succeed(successfulResponse);
 
     var _ = await rejector.reject("someCompanyId", "someLeaveId", rejectionReason: "some reason");
 
-    expect(mockNetworkAdapter.apiRequest.url, LeaveApprovalUrls.rejectUrl("someCompanyId"));
+    expect(mockNetworkAdapter.apiRequest.url, LeaveApprovalUrls.rejectUrl("someCompanyId", "someLeaveId"));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallPost, true);
   });

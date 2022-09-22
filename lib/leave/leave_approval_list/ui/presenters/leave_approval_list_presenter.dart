@@ -109,7 +109,8 @@ class LeaveApprovalListPresenter {
   }
 
   String getTotalDays(LeaveApprovalListItem leaveApprovalListItem) {
-    return "${leaveApprovalListItem.totalLeaveDays} Days";
+    var suffix = leaveApprovalListItem.totalLeaveDays == 1 ? "day" : "days";
+    return "${leaveApprovalListItem.totalLeaveDays} $suffix";
   }
 
   String getLeaveType(LeaveApprovalListItem leaveApprovalListItem) {

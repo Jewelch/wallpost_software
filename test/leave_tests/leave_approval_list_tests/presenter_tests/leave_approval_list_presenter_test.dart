@@ -399,8 +399,10 @@ void main() {
   test("get leave days", () {
     var approval = MockLeaveApprovalListItem();
     when(() => approval.totalLeaveDays).thenReturn(3);
+    expect(presenter.getTotalDays(approval), "3 days");
 
-    expect(presenter.getTotalDays(approval), "3 Days");
+    when(() => approval.totalLeaveDays).thenReturn(1);
+    expect(presenter.getTotalDays(approval), "1 day");
   });
 
   test("get start date", () {

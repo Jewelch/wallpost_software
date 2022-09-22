@@ -356,8 +356,10 @@ main() {
   test("get total leave days", () {
     var leave = MockLeaveListItem();
     when(() => leave.totalLeaveDays).thenReturn(4);
+    expect(presenter.getTotalLeaveDays(leave), "4 days");
 
-    expect(presenter.getTotalLeaveDays(leave), "4 Days");
+    when(() => leave.totalLeaveDays).thenReturn(1);
+    expect(presenter.getTotalLeaveDays(leave), "1 day");
   });
 
   test("get start date", () {
