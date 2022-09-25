@@ -8,4 +8,8 @@ enum Module {
 
     return null;
   }
+
+  String toReadableString() {
+    return "HR";
+  }
 }
