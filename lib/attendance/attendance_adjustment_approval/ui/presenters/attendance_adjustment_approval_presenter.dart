@@ -1,9 +1,9 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 
 import '../../../../notification_center/notification_center.dart';
-import '../../../attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_view.dart';
 import '../../services/attendance_adjustment_approver.dart';
 import '../../services/attendance_adjustment_rejector.dart';
+import '../view_contracts/attendance_adjustment_approval_view.dart';
 
 class AttendanceAdjustmentApprovalPresenter {
   final AttendanceAdjustmentApprovalView _view;

@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval/services/attendance_adjustment_approver.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval/services/attendance_adjustment_rejector.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval/ui/presenters/attendance_adjustment_approval_presenter.dart';
-import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_view.dart';
+import 'package:wallpost/attendance/attendance_adjustment_approval/ui/view_contracts/attendance_adjustment_approval_view.dart';
 
 import '../../../_mocks/mock_notification_center.dart';
 
