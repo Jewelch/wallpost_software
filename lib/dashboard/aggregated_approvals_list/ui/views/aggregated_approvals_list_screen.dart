@@ -168,7 +168,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
                   SizedBox(height: 4.0),
                   Row(
                     children: [
-                      Text('${aggregatedApproval.module.toUpperCase()} - ',
+                      Text('${aggregatedApproval.module.toReadableString().toUpperCase()} - ',
                           style: TextStyles.subTitleTextStyle.copyWith(
                             color: ColorUtils.initColorFromHex(aggregatedApproval.moduleColor),
                             fontWeight: FontWeight.bold,
@@ -199,25 +199,26 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
   }
 
   void handleTap(AggregatedApproval aggregatedApproval) async {
+    var numberOfApprovalsProcessed;
+
     if (aggregatedApproval.isExpenseRequestApproval()) {
-      var didPerformAction = await ScreenPresenter.present(
+      numberOfApprovalsProcessed = await ScreenPresenter.present(
         ExpenseApprovalListScreen(companyId: aggregatedApproval.companyId),
         context,
       );
-      if (didPerformAction == true) _presenter.loadApprovalsList();
     } else if (aggregatedApproval.isAttendanceAdjustmentApproval()) {
-      var didPerformAction = await ScreenPresenter.present(
+      numberOfApprovalsProcessed = await ScreenPresenter.present(
         AttendanceAdjustmentApprovalListScreen(companyId: aggregatedApproval.companyId),
         context,
       );
-      if (didPerformAction == true) _presenter.loadApprovalsList();
     } else if (aggregatedApproval.isLeaveRequestApproval()) {
-      var didPerformAction = await ScreenPresenter.present(
+      numberOfApprovalsProcessed = await ScreenPresenter.present(
         LeaveApprovalListScreen(companyId: aggregatedApproval.companyId),
         context,
       );
-      if (didPerformAction == true) _presenter.loadApprovalsList();
     }
+
+    _presenter.didProcessApprovals(aggregatedApproval, numberOfApprovalsProcessed);
   }
 
   Widget _companyAndModuleFilter() {
@@ -254,7 +255,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
   }
 
   @override
-  void onDidLoadApprovals() {
+  void updateList() {
     _viewTypeNotifier.notify(DATA_VIEW);
   }
 
@@ -268,5 +269,10 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
   void showNoMatchingResultsMessage(String message) {
     _errorMessage = message;
     _viewTypeNotifier.notify(NO_MATCHING_ITEMS_VIEW);
+  }
+
+  @override
+  void onDidProcessAllApprovals() {
+    Navigator.pop(context);
   }
 }

@@ -48,6 +48,10 @@ class AggregatedApproval extends JSONInitializable {
     return _approvalType == "Leave Request";
   }
 
+  void setCount(int count) {
+    _approvalCount = count;
+  }
+
   String get companyId => _companyId;
 
   String get companyName => _companyName;

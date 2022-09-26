@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
+import 'package:wallpost/_wp_core/company_management/entities/module.dart';
 import 'package:wallpost/dashboard/aggregated_approvals_list/entities/aggregated_approval.dart';
 import 'package:wallpost/dashboard/aggregated_approvals_list/services/aggregated_approvals_list_provider.dart';
 import 'package:wallpost/dashboard/aggregated_approvals_list/ui/presenters/aggregated_approvals_list_presenter.dart';
@@ -8,6 +9,7 @@ import 'package:wallpost/dashboard/aggregated_approvals_list/ui/view_contracts/a
 
 import '../../../_mocks/mock_notification_center.dart';
 import '../../../_mocks/mock_notification_observer.dart';
+import '../mocks.dart';
 
 class MockAggregatedApproval extends Mock implements AggregatedApproval {}
 
@@ -138,7 +140,7 @@ void main() {
       () => approvalsProvider.isLoading,
       () => view.showLoader(),
       () => approvalsProvider.getAllApprovals(),
-      () => view.onDidLoadApprovals(),
+      () => view.updateList(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -170,7 +172,7 @@ void main() {
       () => approvalsProvider.isLoading,
       () => view.showLoader(),
       () => approvalsProvider.getAllApprovals(companyId: "someCompanyId"),
-      () => view.onDidLoadApprovals(),
+      () => view.updateList(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -194,13 +196,13 @@ void main() {
     //given
     var approval1 = MockAggregatedApproval();
     when(() => approval1.companyName).thenReturn("Company One");
-    when(() => approval1.module).thenReturn("hr");
+    when(() => approval1.module).thenReturn(Module.Hr);
     var approval2 = MockAggregatedApproval();
     when(() => approval2.companyName).thenReturn("Company Two");
-    when(() => approval2.module).thenReturn("finance");
+    when(() => approval2.module).thenReturn(Module.Finance);
     var approval3 = MockAggregatedApproval();
     when(() => approval3.companyName).thenReturn("C Three");
-    when(() => approval3.module).thenReturn("hr");
+    when(() => approval3.module).thenReturn(Module.Hr);
     var approvals = [approval1, approval2, approval3];
     when(() => approvalsProvider.isLoading).thenReturn(false);
     when(() => approvalsProvider.getAllApprovals()).thenAnswer((_) => Future.value(approvals));
@@ -209,17 +211,17 @@ void main() {
 
     //then
     expect(presenter.getCompanyNames(), ["All Companies", "Company One", "Company Two", "C Three"]);
-    expect(presenter.getModuleNames(), ["All Modules", "hr", "finance"]);
+    expect(presenter.getModuleNames(), ["All Modules", "HR", "Finance"]);
   });
 
   test('applying company name filter', () async {
     //given
     var approval1 = MockAggregatedApproval();
     when(() => approval1.companyName).thenReturn("Company One");
-    when(() => approval1.module).thenReturn("hr");
+    when(() => approval1.module).thenReturn(Module.Hr);
     var approval2 = MockAggregatedApproval();
     when(() => approval2.companyName).thenReturn("Company Two");
-    when(() => approval2.module).thenReturn("finance");
+    when(() => approval1.module).thenReturn(Module.Finance);
     var approvals = [approval1, approval2];
     when(() => approvalsProvider.isLoading).thenReturn(false);
     when(() => approvalsProvider.getAllApprovals()).thenAnswer((_) => Future.value(approvals));
@@ -234,7 +236,7 @@ void main() {
     expect(presenter.getNumberOfRows(), 1);
     expect(presenter.getItemAtIndex(0), approval1);
     verifyInOrder([
-      () => view.onDidLoadApprovals(),
+      () => view.updateList(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
 
@@ -247,7 +249,7 @@ void main() {
     expect(presenter.getNumberOfRows(), 1);
     expect(presenter.getItemAtIndex(0), approval2);
     verifyInOrder([
-      () => view.onDidLoadApprovals(),
+      () => view.updateList(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
 
@@ -268,13 +270,13 @@ void main() {
     //given
     var approval1 = MockAggregatedApproval();
     when(() => approval1.companyName).thenReturn("Company One");
-    when(() => approval1.module).thenReturn("hr");
+    when(() => approval1.module).thenReturn(Module.Hr);
     var approval2 = MockAggregatedApproval();
     when(() => approval2.companyName).thenReturn("Company Two");
-    when(() => approval2.module).thenReturn("finance");
+    when(() => approval2.module).thenReturn(Module.Finance);
     var approval3 = MockAggregatedApproval();
     when(() => approval3.companyName).thenReturn("C Three");
-    when(() => approval3.module).thenReturn("hr");
+    when(() => approval3.module).thenReturn(Module.Hr);
     var approvals = [approval1, approval2, approval3];
     when(() => approvalsProvider.isLoading).thenReturn(false);
     when(() => approvalsProvider.getAllApprovals()).thenAnswer((_) => Future.value(approvals));
@@ -282,28 +284,28 @@ void main() {
     _resetAllMockInteractions();
 
     //when
-    presenter.filter(moduleName: "hr");
+    presenter.filter(moduleName: Module.Hr.toReadableString());
 
     //then
-    expect(presenter.getSelectedModuleName(), "hr");
+    expect(presenter.getSelectedModuleName(), "HR");
     expect(presenter.getNumberOfRows(), 2);
     expect(presenter.getItemAtIndex(0), approval1);
     expect(presenter.getItemAtIndex(1), approval3);
     verifyInOrder([
-      () => view.onDidLoadApprovals(),
+      () => view.updateList(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
 
     //when
     _resetAllMockInteractions();
-    presenter.filter(moduleName: "finance");
+    presenter.filter(moduleName: Module.Finance.toReadableString());
 
     //then
-    expect(presenter.getSelectedModuleName(), "finance");
+    expect(presenter.getSelectedModuleName(), Module.Finance.toReadableString());
     expect(presenter.getNumberOfRows(), 1);
     expect(presenter.getItemAtIndex(0), approval2);
     verifyInOrder([
-      () => view.onDidLoadApprovals(),
+      () => view.updateList(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
 
@@ -324,13 +326,13 @@ void main() {
     //given
     var approval1 = MockAggregatedApproval();
     when(() => approval1.companyName).thenReturn("Company One");
-    when(() => approval1.module).thenReturn("hr");
+    when(() => approval1.module).thenReturn(Module.Hr);
     var approval2 = MockAggregatedApproval();
     when(() => approval2.companyName).thenReturn("Company Two");
-    when(() => approval2.module).thenReturn("finance");
+    when(() => approval1.module).thenReturn(Module.Finance);
     var approval3 = MockAggregatedApproval();
     when(() => approval3.companyName).thenReturn("C Three");
-    when(() => approval3.module).thenReturn("hr");
+    when(() => approval1.module).thenReturn(Module.Hr);
     var approvals = [approval1, approval2, approval3];
     when(() => approvalsProvider.isLoading).thenReturn(false);
     when(() => approvalsProvider.getAllApprovals()).thenAnswer((_) => Future.value(approvals));
@@ -346,5 +348,109 @@ void main() {
     expect(presenter.getItemAtIndex(0), approval1);
     expect(presenter.getItemAtIndex(1), approval2);
     expect(presenter.getItemAtIndex(2), approval3);
+  });
+
+  test("approval processing when number of approvals is invalid does nothing", () {
+    presenter.didProcessApprovals(MockAggregatedApproval(), null);
+    _verifyNoMoreInteractionsOnAllMocks();
+
+    presenter.didProcessApprovals(MockAggregatedApproval(), 2.44);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test(
+      "approval processing when all approvals in the aggregated"
+      "approval are not processed, reduces the approval count and"
+      "updates the list", () async {
+    //given
+    var approval = AggregatedApproval.fromJson(Mocks.aggregatedApprovalsResponse[0]);
+    var approvals = [approval];
+    when(() => approvalsProvider.isLoading).thenReturn(false);
+    when(() => approvalsProvider.getAllApprovals()).thenAnswer((_) => Future.value(approvals));
+    await presenter.loadApprovalsList();
+    _resetAllMockInteractions();
+
+    //when
+    presenter.didProcessApprovals(approval, 5);
+
+    //then
+    expect(approval.approvalCount, 3);
+    verifyInOrder([
+      () => view.updateList(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test(
+      "approval processing when all approvals in the aggregated"
+      "approval are processed, removes the aggregated approval and"
+      "updates the list", () async {
+    //given
+    var approval1 = AggregatedApproval.fromJson(Mocks.aggregatedApprovalsResponse[0]);
+    var approval2 = AggregatedApproval.fromJson(Mocks.aggregatedApprovalsResponse[1]);
+    var approvals = [approval1, approval2];
+    when(() => approvalsProvider.isLoading).thenReturn(false);
+    when(() => approvalsProvider.getAllApprovals()).thenAnswer((_) => Future.value(approvals));
+    await presenter.loadApprovalsList();
+    _resetAllMockInteractions();
+
+    //when
+    presenter.didProcessApprovals(approval1, 8);
+
+    //then
+    expect(presenter.getNumberOfRows(), 1);
+    expect(presenter.getItemAtIndex(0), approval2);
+    verifyInOrder([
+      () => view.updateList(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test(
+      "setting count that makes the aggregated approval count negative"
+      "removes the aggregated approval and updates the list", () async {
+    //given
+    var approval1 = AggregatedApproval.fromJson(Mocks.aggregatedApprovalsResponse[0]);
+    var approval2 = AggregatedApproval.fromJson(Mocks.aggregatedApprovalsResponse[1]);
+    var approvals = [approval1, approval2];
+    when(() => approvalsProvider.isLoading).thenReturn(false);
+    when(() => approvalsProvider.getAllApprovals()).thenAnswer((_) => Future.value(approvals));
+    await presenter.loadApprovalsList();
+    _resetAllMockInteractions();
+
+    //when
+    presenter.didProcessApprovals(approval1, 4000);
+
+    //then
+    expect(presenter.getNumberOfRows(), 1);
+    expect(presenter.getItemAtIndex(0), approval2);
+    verifyInOrder([
+      () => view.updateList(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test(
+      "approval processing when all approvals in all aggregated"
+      "approval are processed", () async {
+    //given
+    var approval1 = AggregatedApproval.fromJson(Mocks.aggregatedApprovalsResponse[0]);
+    var approval2 = AggregatedApproval.fromJson(Mocks.aggregatedApprovalsResponse[1]);
+    var approvals = [approval1, approval2];
+    when(() => approvalsProvider.isLoading).thenReturn(false);
+    when(() => approvalsProvider.getAllApprovals()).thenAnswer((_) => Future.value(approvals));
+    await presenter.loadApprovalsList();
+    presenter.didProcessApprovals(approval1, 8);
+    _resetAllMockInteractions();
+
+    //when
+    presenter.didProcessApprovals(approval2, 4);
+
+    //then
+    expect(presenter.getNumberOfRows(), 0);
+    verifyInOrder([
+      () => view.onDidProcessAllApprovals(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
   });
 }
