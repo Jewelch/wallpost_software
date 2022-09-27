@@ -61,9 +61,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed && presenter.shouldReloadDataWhenAppIsResumed()) {
-      presenter.loadAttendanceDetails();
-    }
+    if (state == AppLifecycleState.resumed) presenter.loadAttendanceDetails();
   }
 
   @override
