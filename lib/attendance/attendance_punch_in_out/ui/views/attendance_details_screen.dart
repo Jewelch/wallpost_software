@@ -11,6 +11,7 @@ import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_
 import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_report.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/time_to_punch_in_calculator.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/presenters/attendance_presenter.dart';
+import 'package:wallpost/attendance/attendance_punch_in_out/ui/presenters/attendance_report_presenter.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/view_contracts/attendance_detailed_view.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
 
@@ -37,6 +38,8 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   final ItemNotifier<String> _countDownTimeNotifier = ItemNotifier(defaultValue: "");
   var _viewSelectorReportNotifier = ItemNotifier<int>(defaultValue: 0);
   late final AttendancePresenter presenter;
+  late final AttendanceReportPresenter reportPresenter;
+
   late String _timeString;
   late Timer _currentTimer;
   late Timer _countDownTimer;
@@ -65,8 +68,9 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   @override
   void initState() {
     presenter = AttendancePresenter(basicView: this, detailedView: this);
+    reportPresenter=AttendanceReportPresenter(detailedView: this);
     presenter.loadAttendanceDetails();
-    // presenter.loadAttendanceReport();
+    reportPresenter.loadAttendanceReport();
 
     _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
     super.initState();
@@ -161,7 +165,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
     return _errorButton(
       title: _errorMessage,
       onPressed: () {
-        // presenter.loadAttendanceReport()
+         reportPresenter.loadAttendanceReport();
       },
     );
   }

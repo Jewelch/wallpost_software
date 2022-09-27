@@ -6,9 +6,15 @@ class AttendanceUrls {
   }
 
   static String attendanceReportUrl(String startDate, String endDate) {
-    return '${BaseUrls.hrUrlV2()}/companies/attendance/reportsCountHR?'
+    return 'https://hr.stagingapi.wallpostsoftware.com/api/v2/widget/attendance/reportsCountHR?'
         '&scope=MY&date_from=$startDate&date_to=$endDate';
   }
+
+
+  // static String attendanceReportUrl(String companyId, String employeeId, String startDate, String endDate) {
+  //   return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/reportsCountHR?'
+  //       '&scope=MY&date_from=$startDate&date_to=$endDate';
+  // }
 
   static String punchInUrl(bool isLocationValid) {
     var url = '${BaseUrls.hrUrlV2()}/widget/attendance/punch_in';
