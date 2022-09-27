@@ -35,6 +35,8 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   var _locationOnMapNotifier = ItemNotifier<AttendanceLocation?>(defaultValue: null);
   var _punchInTimeNotifier = ItemNotifier<String?>(defaultValue: null);
   var _punchOutTimeNotifier = ItemNotifier<String?>(defaultValue: null);
+  var _showBreakLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
+
   final ItemNotifier<String> _countDownTimeNotifier = ItemNotifier(defaultValue: "");
   var _viewSelectorReportNotifier = ItemNotifier<int>(defaultValue: 0);
   late final AttendancePresenter presenter;
@@ -68,9 +70,9 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   @override
   void initState() {
     presenter = AttendancePresenter(basicView: this, detailedView: this);
-    reportPresenter=AttendanceReportPresenter(detailedView: this);
+
     presenter.loadAttendanceDetails();
-    reportPresenter.loadAttendanceReport();
+
 
     _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
     super.initState();
@@ -422,11 +424,15 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   //MARK: Functions to build start break and end buttons
 
   Widget _buildStartBreakButton() {
-    return _breakActionButton(
-        title: "Start Break",
-        buttonColor: AttendanceColors.breakButtonColor,
-        textColor: AttendanceColors.breakButtonTextColor,
-        onButtonPressed: () => presenter.startBreak());
+    return ItemNotifiable<bool>(
+      notifier: _showBreakLoaderNotifier,
+      builder:(context, showLoader) =>  _breakActionButton(
+          title: "Start Break",
+          buttonColor: AttendanceColors.breakButtonColor,
+          textColor: AttendanceColors.breakButtonTextColor,
+          showLoader: showLoader,
+          onButtonPressed: () => presenter.startBreak()),
+    );
   }
 
   Widget _buildEndBreakButton() {
@@ -441,9 +447,30 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
       {required String title,
       required Color buttonColor,
       required Color textColor,
+        bool disabled=false,
+         bool showLoader=false,
       required VoidCallback onButtonPressed}) {
     return ElevatedButton(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: showLoader ? _buildBreakLoader() : _buildIconAndTitle(title,textColor),
+      ),
+      onPressed: (disabled || showLoader) ? null : onButtonPressed,
+      style: ElevatedButton.styleFrom(
+        primary: buttonColor,
+        onPrimary: textColor,
+        elevation: 0.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+      ),
+    );
+  }
+
+
+  List<Widget> _buildIconAndTitle(String title,Color textColor ) {
+    return [
+      Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
@@ -457,18 +484,24 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
             style: TextStyles.titleTextStyle.copyWith(color: textColor),
           ),
         ],
-      ),
-      onPressed: onButtonPressed,
-      style: ElevatedButton.styleFrom(
-        primary: buttonColor,
-        onPrimary: textColor,
-        elevation: 0.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-      ),
-    );
+      )
+    ];
   }
+
+  List<Widget> _buildBreakLoader() {
+    return [
+      SizedBox(
+        width: 20,
+        height: 20,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          backgroundColor: Colors.transparent,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+        ),
+      )
+    ];
+  }
+
 
   //MARK: Functions to build attendance report
 
@@ -515,17 +548,6 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   }
 
   //MARK: View functions
-
-  @override
-  void showAttendanceReportLoader() {
-    _viewSelectorReportNotifier.notify(REPORT_LOADER_VIEW);
-  }
-
-  @override
-  void showAttendanceReportErrorAndRetryView(String message) {
-    _viewSelectorReportNotifier.notify(REPORT_ERROR_VIEW);
-    _errorMessage = message;
-  }
 
   @override
   void showLoader() {
@@ -605,11 +627,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
     _breakButtonNotifier.notify(RESUME_BUTTON_VIEW);
   }
 
-  @override
-  void showAttendanceReport(AttendanceReport attendanceReport) {
-    _viewSelectorReportNotifier.notify(REPORT_DATA_VIEW);
-    _attendanceReportNotifier.notify(attendanceReport);
-  }
+
 
   @override
   void doRefresh() {}
@@ -645,6 +663,11 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
 
   @override
   void showBreakLoader() {
+    _showBreakLoaderNotifier.notify(true);
+  }
 
+  @override
+  void hideLoader() {
+    _showBreakLoaderNotifier.notify(false);
   }
 }

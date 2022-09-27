@@ -209,9 +209,13 @@ class AttendancePresenter {
 
     try {
       detailedView?.showBreakLoader();
-      await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
-      await loadAttendanceDetails();
+      print("in presenter............");
+     var breakData= await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
+     print(breakData);
+      detailedView?.hideLoader();
+      //await loadAttendanceDetails();
     } on WPException catch (e) {
+      detailedView?.hideLoader();
       basicView.showErrorMessage("Failed to start break", e.userReadableMessage);
     }
   }
