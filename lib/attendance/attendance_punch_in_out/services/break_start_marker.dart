@@ -17,7 +17,7 @@ class BreakStartMarker {
 
   BreakStartMarker() : _networkAdapter = WPAPI();
 
-  Future<List<Break>> startBreak(AttendanceDetails attendanceDetails, AttendanceLocation location) async {
+  Future<void> startBreak(AttendanceDetails attendanceDetails, AttendanceLocation location) async {
     var url = AttendanceUrls.breakStartUrl(attendanceDetails.attendanceDetailsId!);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
@@ -25,11 +25,11 @@ class BreakStartMarker {
     isLoading = true;
 
     try {
-      var apiResponse = await _networkAdapter.post(apiRequest);
-      //await _networkAdapter.post(apiRequest);
+     // var apiResponse = await _networkAdapter.post(apiRequest);
+      await _networkAdapter.post(apiRequest);
       isLoading = false;
-      //return null;
-      return _processResponse(apiResponse);
+      return null;
+
     } on APIException catch (exception) {
       isLoading = false;
       throw exception;
@@ -60,18 +60,6 @@ class BreakStartMarker {
     }
     return attendanceListItems;
   }
-  // Future<Break> _processResponse(APIResponse apiResponse) async {
-  //   if (apiResponse.data == null) throw InvalidResponseException();
-  //   if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
-  //
-  //   var responseMap = apiResponse.data as Map<String, dynamic>;
-  //   try {
-  //     var user = Break.fromJson(responseMap);
-  //
-  //     return user;
-  //   } catch (e) {
-  //     throw InvalidResponseException();
-  //   }
-  // }
+
 
 }

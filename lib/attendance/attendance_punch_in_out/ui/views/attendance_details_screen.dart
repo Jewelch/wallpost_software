@@ -14,6 +14,7 @@ import 'package:wallpost/attendance/attendance_punch_in_out/ui/presenters/attend
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/presenters/attendance_report_presenter.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/view_contracts/attendance_detailed_view.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
+import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/attendance_details_loader.dart';
 
 import '../../../../_common_widgets/app_bars/simple_app_bar.dart';
 import '../../../../_common_widgets/buttons/rounded_back_button.dart';
@@ -107,7 +108,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
             child: ItemNotifiable<int>(
           notifier: _viewSelectorNotifier,
           builder: (context, viewType) {
-            if (viewType == LOADER_VIEW) return _buildLoader();
+            if (viewType == LOADER_VIEW) return AttendanceDetailsLoader();
 
             if (viewType == ERROR_VIEW) return _errorAndRetryView();
 
