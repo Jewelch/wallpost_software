@@ -17,8 +17,9 @@ class GroupDashboardListCardWithRevenue extends StatelessWidget {
       onTap: onPressed,
       child: Column(
         children: [
+          SizedBox(height: 12),
           Padding(
-            padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
+            padding: const EdgeInsets.only(left: 12, right: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -38,9 +39,8 @@ class GroupDashboardListCardWithRevenue extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 4),
-          Divider(),
           SizedBox(height: 12),
+          Divider(),
         ],
       ),
     );

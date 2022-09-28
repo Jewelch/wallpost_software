@@ -41,7 +41,7 @@ class GroupDashboardAppBar extends StatelessWidget implements PreferredSizeWidge
               Expanded(
                 child: Center(
                     child: Text(
-                  "Group Summary",
+                  "Group Dashboard",
                   style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
                 )),
               ),
