@@ -533,6 +533,28 @@ void main() {
       _verifyNoMoreInteractionsOnAllMocks();
     });
 
+    test('clearing search filter', () async {
+      //given
+      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
+      when(() => groupDashboardData.companies).thenReturn([company1, company2]);
+      when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(false);
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
+      when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
+      await presenter.loadDashboardData();
+      presenter.performSearch("test2");
+      _clearInteractionsOnAllMocks();
+
+      //when
+      presenter.clearSearchSelection();
+
+      //then
+      expect(presenter.getNumberOfRows(), 2);
+      verifyInOrder([
+        () => view.updateCompanyList(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
     test('selecting a company group filter shows the company list and financial summary fot that group', () async {
       //given
       when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
@@ -599,31 +621,6 @@ void main() {
       expect(presenter.getNumberOfRows(), 0);
       verifyInOrder([
         () => view.updateCompanyList(),
-        () => view.updateCompanyList(),
-      ]);
-      _verifyNoMoreInteractionsOnAllMocks();
-    });
-
-    test('clearing all filters', () async {
-      //given
-      when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
-      when(() => groupDashboardData.companies).thenReturn([company1, company2]);
-      when(() => groupDashboardData.shouldShowFinancialData()).thenReturn(false);
-      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
-      when(() => groupDashboardData.groups).thenReturn([companyGroup1, companyGroup2]);
-      await presenter.loadDashboardData();
-      presenter.performSearch("test2");
-      presenter.selectGroupAtIndex(0);
-      _clearInteractionsOnAllMocks();
-
-      //when
-      presenter.clearFiltersAndUpdateViews();
-
-      //then
-      expect(presenter.getNumberOfRows(), 2);
-      expect(presenter.getItemAtIndex(0), company1);
-      expect(presenter.getItemAtIndex(1), company2);
-      verifyInOrder([
         () => view.updateCompanyList(),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();

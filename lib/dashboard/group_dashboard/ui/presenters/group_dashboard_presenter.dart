@@ -156,35 +156,31 @@ class GroupDashboardPresenter {
     return loadDashboardData();
   }
 
-  //MARK: Functions to perform search
+  //MARK: Functions to apply and clear filters
 
   void performSearch(String searchText) {
     _searchText = searchText;
     _view.updateCompanyList();
   }
 
-  //MARK: Functions to select and deselect company group filter
-
   void selectGroupAtIndex(int index) {
     _selectedGroup = _groupDashboardData!.groups[index];
-    _view.updateCompanyList();
-  }
-
-  void clearGroupSelection() {
-    _selectedGroup = null;
-    _view.updateCompanyList();
-  }
-
-  //MARK: Functions to clear filters
-
-  void clearFiltersAndUpdateViews() {
-    _clearFilters();
     _view.updateCompanyList();
   }
 
   void _clearFilters() {
     _searchText = "";
     _selectedGroup = null;
+  }
+
+  void clearSearchSelection() {
+    _searchText = "";
+    _view.updateCompanyList();
+  }
+
+  void clearGroupSelection() {
+    _selectedGroup = null;
+    _view.updateCompanyList();
   }
 
   //MARK: Functions to perform selections

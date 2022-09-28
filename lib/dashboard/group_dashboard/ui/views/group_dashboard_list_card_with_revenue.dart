@@ -15,26 +15,33 @@ class GroupDashboardListCardWithRevenue extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: Text(company.name, style: TextStyles.largeTitleTextStyleBold)),
-            SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                _companyLogo(),
-                SizedBox(width: 16),
-                if (company.financialSummary != null) Expanded(child: FinanceDetailListItem(company.financialSummary!)),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Text(company.name, style: TextStyles.largeTitleTextStyleBold)),
+                SizedBox(height: 16),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    _companyLogo(),
+                    SizedBox(width: 16),
+                    if (company.financialSummary != null)
+                      Expanded(child: FinanceDetailListItem(company.financialSummary!)),
+                  ],
+                ),
               ],
             ),
-            SizedBox(height: 12),
-          ],
-        ),
+          ),
+          SizedBox(height: 4),
+          Divider(),
+          SizedBox(height: 12),
+        ],
       ),
     );
   }

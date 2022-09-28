@@ -117,7 +117,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
       children: [
         SizedBox(height: 10),
         _topBar(),
-        SizedBox(height: 10),
+        _groupTabBar(),
         Expanded(child: _companyList()),
         _attendanceView(),
         if (presenter.getApprovalCount() > 0)
@@ -129,12 +129,12 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
     );
   }
 
-  //MARK: Functions to build the top bar
+  //MARK: Functions to build the top bar and filter views
 
   Widget _topBar() {
     return ItemNotifiable<bool>(
       notifier: _filtersBarVisibilityNotifier,
-      builder: (context, showFiltersBar) => showFiltersBar ? _filtersBar() : _appBarWithSearchButton(),
+      builder: (context, showSearchBar) => showSearchBar ? _searchBar() : _appBarWithSearchButton(),
     );
   }
 
@@ -154,10 +154,10 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
     );
   }
 
-  Widget _filtersBar() {
+  Widget _searchBar() {
     return Column(
       children: [
-        SizedBox(height: 36),
+        SizedBox(height: 44),
         Row(
           children: <Widget>[
             Expanded(
@@ -168,7 +168,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
             ),
             GestureDetector(
               onTap: () {
-                presenter.clearFiltersAndUpdateViews();
+                presenter.clearSearchSelection();
                 _filtersBarVisibilityNotifier.notify(false);
               },
               child: Text("Cancel", style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.red)),
@@ -176,6 +176,15 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
             SizedBox(width: 12),
           ],
         ),
+      ],
+    );
+  }
+
+  Widget _groupTabBar() {
+    if (presenter.shouldShowCompanyGroupsFilter() == false) return Container();
+
+    return Column(
+      children: [
         if (presenter.shouldShowCompanyGroupsFilter()) SizedBox(height: 12),
         if (presenter.shouldShowCompanyGroupsFilter())
           Container(
@@ -206,19 +215,20 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
   }
 
   Widget _companyListView() {
-    return RefreshIndicator(
-      onRefresh: () => presenter.refresh(),
-      child: ListView.separated(
-        padding: EdgeInsets.zero,
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        itemCount: presenter.getNumberOfRows(),
-        itemBuilder: (context, index) {
-          if (presenter.getItemAtIndex(index) is FinancialSummary)
-            return FinanceDetailCard(presenter.getItemAtIndex(index));
-          else
-            return _getCompanyCard(presenter.getItemAtIndex(index));
-        },
-        separatorBuilder: (BuildContext context, int index) => index == 0 ? Container() : Divider(),
+    return Container(
+      child: RefreshIndicator(
+        onRefresh: () => presenter.refresh(),
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          itemCount: presenter.getNumberOfRows(),
+          itemBuilder: (context, index) {
+            if (presenter.getItemAtIndex(index) is FinancialSummary)
+              return FinanceDetailCard(presenter.getItemAtIndex(index));
+            else
+              return _getCompanyCard(presenter.getItemAtIndex(index));
+          },
+        ),
       ),
     );
   }
@@ -304,7 +314,10 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
       CompanyDashboardScreen(company.id, company.name),
       context,
       slideDirection: SlideDirection.fromBottom,
-    ).then((_) => presenter.syncDataInBackground());
+    ).then((_) {
+      presenter.syncDataInBackground();
+      presenter.loadAttendanceDetails();
+    });
   }
 
   @override
@@ -312,7 +325,10 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
     ScreenPresenter.present(
       AggregatedApprovalsListScreen(),
       context,
-    ).then((_) => presenter.syncDataInBackground());
+    ).then((_) {
+      presenter.syncDataInBackground();
+      presenter.loadAttendanceDetails();
+    });
   }
 
   @override
