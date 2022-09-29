@@ -31,7 +31,11 @@ class FileField extends StatelessWidget {
         GestureDetector(
           onTap: () async {
             KeyboardDismisser.dismissKeyboard();
-            var files = await FilePickerScreen.show(context);
+            var files = await FilePickerScreen.show(context, fileTypes: [
+              PickerFileType.image,
+              PickerFileType.camera,
+              PickerFileType.document,
+            ]);
             if (files != null && files is List && files.isNotEmpty) onFileSelected(files[0]);
           },
           child: Container(
