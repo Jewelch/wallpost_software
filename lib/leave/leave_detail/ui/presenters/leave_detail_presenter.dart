@@ -16,7 +16,6 @@ class LeaveDetailPresenter {
   final LeaveDetailProvider _leaveDetailProvider;
   late LeaveDetail _leaveDetail;
   String? _errorMessage;
-  var _didProcessApprovalOrRejection = false;
 
   LeaveDetailPresenter(
     this._companyId,
@@ -57,13 +56,6 @@ class LeaveDetailPresenter {
 
   void initiateRejection() {
     _view.processRejection(_companyId, _leaveId, _leaveDetail.applicantName);
-  }
-
-  Future<void> onDidProcessApprovalOrRejection(dynamic didProcess) async {
-    if (didProcess == true) {
-      _didProcessApprovalOrRejection = true;
-      await loadDetail();
-    }
   }
 
   //MARK: Getters
@@ -134,6 +126,4 @@ class LeaveDetailPresenter {
   }
 
   String? get errorMessage => _errorMessage;
-
-  get didProcessApprovalOrRejection => _didProcessApprovalOrRejection;
 }

@@ -49,37 +49,27 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        _handleBackPress();
-        return Future.value(false);
-      },
-      child: Scaffold(
-        backgroundColor: AppColors.screenBackgroundColor,
-        appBar: SimpleAppBar(
-          title: "Expense Details",
-          leadingButton: RoundedBackButton(onPressed: () => _handleBackPress()),
-        ),
-        body: SafeArea(
-          child: ItemNotifiable(
-            notifier: _viewTypeNotifier,
-            builder: (context, viewType) {
-              if (viewType == viewTypeLoader) {
-                return ExpenseDetailLoader();
-              } else if (viewType == viewTypeError) {
-                return _buildErrorView();
-              } else {
-                return _buildExpenseDetailsView();
-              }
-            },
-          ),
+    return Scaffold(
+      backgroundColor: AppColors.screenBackgroundColor,
+      appBar: SimpleAppBar(
+        title: "Expense Details",
+        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
+      ),
+      body: SafeArea(
+        child: ItemNotifiable(
+          notifier: _viewTypeNotifier,
+          builder: (context, viewType) {
+            if (viewType == viewTypeLoader) {
+              return ExpenseDetailLoader();
+            } else if (viewType == viewTypeError) {
+              return _buildErrorView();
+            } else {
+              return _buildExpenseDetailsView();
+            }
+          },
         ),
       ),
     );
-  }
-
-  void _handleBackPress() async {
-    Navigator.pop(context, _presenter.didProcessApprovalOrRejection);
   }
 
   Widget _buildErrorView() {
@@ -243,7 +233,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
       companyId: companyId,
       requestedBy: requestedBy,
     );
-    _presenter.onDidProcessApprovalOrRejection(didApprove);
+    if (didApprove == true) Navigator.pop(context, true);
   }
 
   void _showRejectionSheet(String companyId, String expenseId, String requestedBy, BuildContext context) async {
@@ -253,6 +243,6 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
       companyId: companyId,
       requestedBy: requestedBy,
     );
-    _presenter.onDidProcessApprovalOrRejection(didReject);
+    if (didReject == true) Navigator.pop(context, true);
   }
 }

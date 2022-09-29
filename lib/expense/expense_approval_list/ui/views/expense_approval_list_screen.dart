@@ -51,14 +51,14 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        _handleBackPress();
+        _dismiss();
         return Future.value(false);
       },
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: SimpleAppBar(
           title: "Expense Approvals",
-          leadingButton: RoundedBackButton(onPressed: () => _handleBackPress()),
+          leadingButton: RoundedBackButton(onPressed: () => _dismiss()),
         ),
         body: SafeArea(
           child: ItemNotifiable(
@@ -78,10 +78,6 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
         ),
       ),
     );
-  }
-
-  void _handleBackPress() async {
-    Navigator.pop(context, _listPresenter.didProcessApprovalOrRejection);
   }
 
   Widget _buildLoaderView() {
@@ -228,5 +224,16 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
       context,
     );
     _listPresenter.onDidProcessApprovalOrRejection(didPerformAction, approval.id);
+  }
+
+  @override
+  void onDidProcessAllApprovals() {
+    _dismiss();
+  }
+
+  //MARK: Function to dismiss the screen
+
+  void _dismiss() {
+    Navigator.pop(context, _listPresenter.numberOfApprovalsProcessed);
   }
 }

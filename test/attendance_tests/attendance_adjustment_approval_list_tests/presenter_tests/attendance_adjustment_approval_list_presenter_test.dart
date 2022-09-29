@@ -241,7 +241,7 @@ void main() {
   test('get number of list items when there are some items and the provider has more items but fails to load them',
       () async {
     //given
-        when(() => listProvider.isLoading).thenReturn(false);
+    when(() => listProvider.isLoading).thenReturn(false);
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([
           MockAttendanceAdjustmentApprovalListItem(),
           MockAttendanceAdjustmentApprovalListItem(),
@@ -302,7 +302,7 @@ void main() {
 
   //MARK: Tests remove approved or rejected items
 
-  test("successfully performing action on one item", () async {
+  test("successfully performing action on one of three items updates the list", () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
     var approval1 = MockAttendanceAdjustmentApprovalListItem();
@@ -319,7 +319,7 @@ void main() {
     await presenter.onDidProcessApprovalOrRejection(true, "id2");
 
     //then
-    expect(presenter.didProcessApprovalOrRejection, true);
+    expect(presenter.numberOfApprovalsProcessed, 1);
     expect(presenter.getNumberOfListItems(), 3);
     expect(presenter.getItemTypeAtIndex(0), AttendanceAdjustmentApprovalListItemViewType.ListItem);
     expect(presenter.getItemTypeAtIndex(1), AttendanceAdjustmentApprovalListItemViewType.ListItem);
@@ -351,13 +351,9 @@ void main() {
     await presenter.onDidProcessApprovalOrRejection(true, "id3");
 
     //then
-    //then
+    expect(presenter.numberOfApprovalsProcessed, 3);
     verifyInOrder([
-      () => listProvider.reset(),
-      () => listProvider.isLoading,
-      () => view.showLoader(),
-      () => listProvider.getNext(),
-      () => view.updateList(),
+      () => view.onDidProcessAllApprovals(),
     ]);
     _verifyNoMoreInteractions();
   });

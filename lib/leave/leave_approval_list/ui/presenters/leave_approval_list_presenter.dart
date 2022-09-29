@@ -12,7 +12,7 @@ class LeaveApprovalListPresenter {
   final List<LeaveApprovalListItem> _approvalItems = [];
   String _errorMessage = "";
   final String _noItemsMessage = "There are no approvals to show.\n\nTap here to reload.";
-  var _didProcessApprovalOrRejection = false;
+  int _numberOfApprovalsProcessed = 0;
 
   LeaveApprovalListPresenter(String companyId, this._view)
       : _approvalListProvider = LeaveApprovalListProvider(companyId);
@@ -98,9 +98,9 @@ class LeaveApprovalListPresenter {
 
   Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, String leaveId) async {
     if (didPerformAction == true) {
-      this._didProcessApprovalOrRejection = didPerformAction;
+      _numberOfApprovalsProcessed = _numberOfApprovalsProcessed + 1;
       _approvalItems.removeWhere((approval) => approval.id == leaveId);
-      _approvalItems.isEmpty ? await refresh() : _updateList();
+      _approvalItems.isNotEmpty ? _updateList() : _view.onDidProcessAllApprovals();
     }
   }
 
@@ -131,5 +131,5 @@ class LeaveApprovalListPresenter {
 
   String get noItemsMessage => _noItemsMessage;
 
-  get didProcessApprovalOrRejection => _didProcessApprovalOrRejection;
+  int get numberOfApprovalsProcessed => _numberOfApprovalsProcessed;
 }
