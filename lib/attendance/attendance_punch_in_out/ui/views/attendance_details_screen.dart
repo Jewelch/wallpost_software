@@ -8,13 +8,13 @@ import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/constants/attendance_colors.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_location.dart';
-import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_report.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/time_to_punch_in_calculator.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/presenters/attendance_presenter.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/presenters/attendance_report_presenter.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/view_contracts/attendance_detailed_view.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/attendance_details_loader.dart';
+import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/attendance_reports_widget.dart';
 
 import '../../../../_common_widgets/app_bars/simple_app_bar.dart';
 import '../../../../_common_widgets/buttons/rounded_back_button.dart';
@@ -32,14 +32,12 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   var _viewSelectorNotifier = ItemNotifier<int>(defaultValue: 0);
   var _buttonTypeNotifier = ItemNotifier<int>(defaultValue: PUNCH_IN_BUTTON_VIEW);
   var _breakButtonNotifier = ItemNotifier<int>(defaultValue: SHOW_BREAK_BUTTON_VIEW);
-  var _attendanceReportNotifier = ItemNotifier<AttendanceReport?>(defaultValue: null);
   var _locationOnMapNotifier = ItemNotifier<AttendanceLocation?>(defaultValue: null);
   var _punchInTimeNotifier = ItemNotifier<String?>(defaultValue: null);
   var _punchOutTimeNotifier = ItemNotifier<String?>(defaultValue: null);
   var _showBreakLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
 
   final ItemNotifier<String> _countDownTimeNotifier = ItemNotifier(defaultValue: "");
-  var _viewSelectorReportNotifier = ItemNotifier<int>(defaultValue: 0);
   late final AttendancePresenter presenter;
   late final AttendanceReportPresenter reportPresenter;
 
@@ -63,10 +61,6 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   static const SHOW_BREAK_BUTTON_VIEW = 9;
   static const HIDE_BREAK_BUTTON_VIEW = 10;
   static const RESUME_BUTTON_VIEW = 11;
-
-  static const REPORT_LOADER_VIEW = 12;
-  static const REPORT_ERROR_VIEW = 13;
-  static const REPORT_DATA_VIEW = 14;
 
   @override
   void initState() {
@@ -100,7 +94,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SimpleAppBar(
-        title: "Approvals",
+        title: "Attendance Details",
         leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
       ),
       body: SingleChildScrollView(
@@ -125,22 +119,6 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
     );
   }
 
-  //MARK: Functions to build the loader
-
-  Widget _buildLoader() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24),
-      height: 50,
-      child: Center(
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          backgroundColor: AttendanceColors.disabledButtonColor,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
-        ),
-      ),
-    );
-  }
-
   //MARK: Functions to build the error and retry view
 
   Widget _errorAndRetryView() {
@@ -161,15 +139,6 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
     return _errorButton(
       title: _errorMessage,
       onPressed: () => presenter.goToAppSettings(),
-    );
-  }
-
-  Widget _reportErrorAndRetryView() {
-    return _errorButton(
-      title: _errorMessage,
-      onPressed: () {
-         reportPresenter.loadAttendanceReport();
-      },
     );
   }
 
@@ -226,7 +195,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
         SizedBox(height: 16),
         Container(width: 140, child: _buildBreakButtonView()),
         SizedBox(height: 16),
-        Container(padding: EdgeInsets.symmetric(horizontal: 12), child: _buildAttendanceReportView())
+        Container(padding: EdgeInsets.symmetric(horizontal: 12), child: AttendanceReportsWidget())
       ],
     );
   }
@@ -437,11 +406,15 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   }
 
   Widget _buildEndBreakButton() {
-    return _breakActionButton(
-        title: "Resume",
-        buttonColor: AttendanceColors.resumeButtonColor,
-        textColor: Colors.white,
-        onButtonPressed: () => presenter.endBreak());
+    return ItemNotifiable<bool>(
+      notifier: _showBreakLoaderNotifier,
+      builder:(context, showLoader) => _breakActionButton(
+          title: "Resume",
+          buttonColor: AttendanceColors.resumeButtonColor,
+          textColor: Colors.white,
+          showLoader: showLoader,
+          onButtonPressed: () => presenter.endBreak()),
+    );
   }
 
   Widget _breakActionButton(
@@ -501,51 +474,6 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
         ),
       )
     ];
-  }
-
-
-  //MARK: Functions to build attendance report
-
-  Widget _buildAttendanceReportView() {
-    return ItemNotifiable<int?>(
-      notifier: _viewSelectorReportNotifier,
-      builder: (context, viewType) {
-        if (viewType == REPORT_LOADER_VIEW) return _buildLoader();
-
-        if (viewType == REPORT_ERROR_VIEW) return _reportErrorAndRetryView();
-
-        if (viewType == REPORT_DATA_VIEW) return _attendanceReportDataView();
-
-        return Container();
-      },
-    );
-  }
-
-  Widget _attendanceReportDataView() {
-    return ItemNotifiable<AttendanceReport?>(
-        notifier: _attendanceReportNotifier,
-        builder: (context, attendanceReport) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _attendanceReportDetails("Late Punch In", attendanceReport!.late, Colors.deepOrange),
-              _attendanceReportDetails("Early Punch Out", attendanceReport.earlyLeave, Colors.black),
-              _attendanceReportDetails("Absences", attendanceReport.absents, Colors.red)
-            ],
-          );
-        });
-  }
-
-  Widget _attendanceReportDetails(String title, num noOfDays, Color textColor) {
-    return Column(
-      children: [
-        noOfDays == 1
-            ? Text("$noOfDays Day", style: TextStyles.titleTextStyleBold.copyWith(color: textColor))
-            : Text("$noOfDays Days", style: TextStyles.titleTextStyleBold.copyWith(color: textColor)),
-        SizedBox(height: 8),
-        Text(title, style: TextStyles.titleTextStyle.copyWith(color: Colors.black))
-      ],
-    );
   }
 
   //MARK: View functions
@@ -627,8 +555,6 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   void showResumeButton() {
     _breakButtonNotifier.notify(RESUME_BUTTON_VIEW);
   }
-
-
 
   @override
   void doRefresh() {}

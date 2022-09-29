@@ -3,6 +3,7 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/api_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_details.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_location.dart';
+import 'package:wallpost/attendance/attendance_punch_in_out/entities/break.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_acquisition_failed_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_address_failed_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_permission_denied_exception.dart';
@@ -30,7 +31,9 @@ class AttendancePresenter {
 
   late AttendanceDetails _attendanceDetails;
   late AttendanceLocation? _attendanceLocation;
+  List<Break> _breakList= [];
   var _shouldReloadDataOnResume = false;
+
 
   AttendancePresenter({required this.basicView, this.detailedView})
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
@@ -209,10 +212,11 @@ class AttendancePresenter {
 
     try {
       detailedView?.showBreakLoader();
-      await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
-
+    var breakData= await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
+      _breakList.addAll(breakData);
       detailedView?.hideLoader();
-      await loadAttendanceDetails();
+      detailedView?.showResumeButton();
+
     } on WPException catch (e) {
       detailedView?.hideLoader();
       basicView.showErrorMessage("Failed to start break", e.userReadableMessage);
@@ -221,12 +225,23 @@ class AttendancePresenter {
 
   Future<void> endBreak() async {
     if (_breakEndMarker.isLoading) return;
-
+    var currentBreakId = "";
     try {
       detailedView?.showBreakLoader();
-      await _breakEndMarker.endBreak(_attendanceDetails, _attendanceLocation!);
-      await loadAttendanceDetails();
+
+      if (_breakList.isNotEmpty) {
+        var activeBreaks = _breakList.where((element) => element.isActive());
+        currentBreakId=activeBreaks.first.id;
+      }else{
+        currentBreakId=_attendanceDetails.activeBreakId!;
+      }
+
+      await _breakEndMarker.endBreak(_attendanceDetails.attendanceDetailsId,currentBreakId, _attendanceLocation!);
+      detailedView?.hideLoader();
+      detailedView?.showBreakButton();
+
     } on WPException catch (e) {
+      detailedView?.hideLoader();
       basicView.showErrorMessage("Failed to end break", e.userReadableMessage);
     }
   }

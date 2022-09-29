@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/constants/attendance_urls.dart';
@@ -17,7 +15,7 @@ class BreakStartMarker {
 
   BreakStartMarker() : _networkAdapter = WPAPI();
 
-  Future<void> startBreak(AttendanceDetails attendanceDetails, AttendanceLocation location) async {
+  Future<List<Break>> startBreak(AttendanceDetails attendanceDetails, AttendanceLocation location) async {
     var url = AttendanceUrls.breakStartUrl(attendanceDetails.attendanceDetailsId!);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
@@ -25,11 +23,9 @@ class BreakStartMarker {
     isLoading = true;
 
     try {
-     // var apiResponse = await _networkAdapter.post(apiRequest);
-      await _networkAdapter.post(apiRequest);
+      var apiResponse = await _networkAdapter.post(apiRequest);
       isLoading = false;
-      return null;
-
+      return _processResponse(apiResponse);
     } on APIException catch (exception) {
       isLoading = false;
       throw exception;
@@ -40,9 +36,9 @@ class BreakStartMarker {
     //returning if the response is from another session
     if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<Break>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
-    var responseMap = apiResponse.data as Map<String, dynamic>;
+    var responseMap = apiResponse.data as List<Map<String, dynamic>>;
     try {
       return _readItemsFromResponse(responseMap);
     } catch (e) {
@@ -50,16 +46,16 @@ class BreakStartMarker {
     }
   }
 
-  List<Break> _readItemsFromResponse(Map<String, dynamic> responseMap) {
-    List<Break> attendanceListItems = [];
-    var sift = Sift();
-    var dataMap = sift.readMapListFromMap(responseMap, "data");
-    for (var attendanceJson in dataMap) {
-      var listItem = Break.fromJson(attendanceJson);
-      attendanceListItems.add(listItem);
+  List<Break> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+    try {
+      var breakListItemList = <Break>[];
+      for (var responseMap in responseMapList) {
+        var breakListItem = Break.fromJson(responseMap);
+        breakListItemList.add(breakListItem);
+      }
+      return breakListItemList;
+    } catch (e) {
+      throw InvalidResponseException();
     }
-    return attendanceListItems;
   }
-
-
 }
