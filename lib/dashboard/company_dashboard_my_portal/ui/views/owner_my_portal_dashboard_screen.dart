@@ -103,10 +103,17 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
   Widget _dataView() {
     return Stack(
       children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child: Text(
+            "My Portal",
+            style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: AppColors.myPortalColor),
+          ),
+        ),
         RefreshIndicator(
           onRefresh: () => _presenter.loadData(),
           child: ListView(
-            padding: EdgeInsets.only(top: 0, bottom: 100),
+            padding: EdgeInsets.only(top: 20, bottom: 100),
             children: [
               FinanceDetailCard(_presenter.getFinancialSummary()),
               OwnerMyPerformanceTodaysPerformanceView(_presenter),
