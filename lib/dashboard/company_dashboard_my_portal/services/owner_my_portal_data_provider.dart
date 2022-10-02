@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
 import '../constants/my_portal_dashboard_urls.dart';
 import '../entities/owner_my_portal_data.dart';
@@ -20,9 +20,9 @@ class OwnerMyPortalDataProvider {
       : _selectedCompanyProvider = SelectedCompanyProvider(),
         _networkAdapter = WPAPI();
 
-  Future<OwnerMyPortalData> get() async {
+  Future<OwnerMyPortalData> get({int? month, required int year}) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = MyPortalDashboardUrls.ownerMyPortalDataUrl(companyId);
+    var url = MyPortalDashboardUrls.ownerMyPortalDataUrl(companyId, month, year);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     _isLoading = true;
