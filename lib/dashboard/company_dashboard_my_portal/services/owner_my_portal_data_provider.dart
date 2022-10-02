@@ -20,7 +20,7 @@ class OwnerMyPortalDataProvider {
       : _selectedCompanyProvider = SelectedCompanyProvider(),
         _networkAdapter = WPAPI();
 
-  Future<OwnerMyPortalData> get({int? month, required int year}) async {
+  Future<OwnerMyPortalData> get({int? month, int? year}) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     var url = MyPortalDashboardUrls.ownerMyPortalDataUrl(companyId, month, year);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();

@@ -3,6 +3,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 
+import '../../../../_shared/constants/app_years.dart';
 import '../../../../_wp_core/company_management/entities/financial_summary.dart';
 import '../../../../_wp_core/company_management/entities/wp_action.dart';
 import '../../../../notification_center/notification_center.dart';
@@ -19,6 +20,9 @@ class OwnerMyPortalDashboardPresenter {
   final SelectedCompanyProvider _selectedCompanyProvider;
   final NotificationCenter _notificationCenter;
   OwnerMyPortalData? _ownerMyPortalData;
+
+  var _selectedYear = AppYears().years().last;
+  var _selectedMonth = 0;
 
   OwnerMyPortalDashboardPresenter(OwnerMyPortalView view)
       : this.initWith(
@@ -62,7 +66,10 @@ class OwnerMyPortalDashboardPresenter {
 
     _view.showLoader();
     try {
-      _ownerMyPortalData = await _dataProvider.get();
+      _ownerMyPortalData = await _dataProvider.get(
+        month: _selectedMonth == 0 ? null : _selectedMonth,
+        year: _selectedYear,
+      );
       _view.onDidLoadData();
     } on WPException catch (e) {
       _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
@@ -74,6 +81,12 @@ class OwnerMyPortalDashboardPresenter {
     _view.goToApprovalsListScreen(company.id);
   }
 
+  Future<void> setFilter({required int month, required int year}) {
+    _selectedMonth = month;
+    _selectedYear = year;
+    return loadData();
+  }
+
   //MARK: Functions to sync the dashboard data in the background
 
   Future<void> syncDataInBackground() async {
@@ -81,7 +94,7 @@ class OwnerMyPortalDashboardPresenter {
 
     try {
       var existingData = _ownerMyPortalData!;
-      var newData = await _dataProvider.get();
+      var newData = await _dataProvider.get(year: 2022, month: 1);
 
       if (_didDataChange(existingData, newData)) {
         _ownerMyPortalData = newData;
@@ -242,4 +255,10 @@ class OwnerMyPortalDashboardPresenter {
         break;
     }
   }
+
+  //MARK: Getters
+
+  get selectedMonth => _selectedMonth;
+
+  get selectedYear => _selectedYear;
 }
