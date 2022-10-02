@@ -26,11 +26,19 @@ class AppYears {
     return years;
   }
 
-  List<String> currentAndPastMonthsOfTheCurrentYear(int year) {
+  List<String> currentAndPastMonthsOfYear(int year) {
     if (year == DateTime.now().year) {
       return _monthNames.sublist(0, DateTime.now().month);
     } else
       return _monthNames;
+  }
+
+  List<String> currentAndPastShortenedMonthsOfYear(int year) {
+    return currentAndPastMonthsOfYear(year).map((m) => _shortenedMonthName(m)).toList();
+  }
+
+  String _shortenedMonthName(String month) {
+    return month.substring(0, 3);
   }
 
   String getCurrentMonth() {
