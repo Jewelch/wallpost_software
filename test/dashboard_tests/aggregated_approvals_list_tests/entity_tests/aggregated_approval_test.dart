@@ -36,4 +36,14 @@ void main() {
     expect(aggregatedApproval.isAttendanceAdjustmentApproval(), false);
     expect(aggregatedApproval.isExpenseRequestApproval(), false);
   });
+
+  test('setting approval count', () {
+    var jsonMap = Mocks.aggregatedApprovalsResponse[0];
+    jsonMap["approvalType"] = "Leave Request";
+    var aggregatedApproval = AggregatedApproval.fromJson(jsonMap);
+
+    aggregatedApproval.setCount(3);
+
+    expect(aggregatedApproval.approvalCount, 3);
+  });
 }

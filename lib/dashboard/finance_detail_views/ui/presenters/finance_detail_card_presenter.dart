@@ -13,7 +13,7 @@ class FinanceDetailCardPresenter {
 
   FinanceDetail getProfitLossDetails() {
     return FinanceDetail(
-      label: "Profit and Loss",
+      label: "Profit & Loss",
       value: _summary.profitLoss,
       valueColor: _summary.isInProfit() ? _successColor() : _failureColor(),
     );

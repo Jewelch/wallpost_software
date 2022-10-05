@@ -6,8 +6,8 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import '../../../../_common_widgets/buttons/capsule_action_button.dart';
 import '../../../../_common_widgets/form_widgets/form_text_field.dart';
 import '../../../../_shared/constants/app_colors.dart';
-import '../../../attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_view.dart';
 import '../presenters/attendance_adjustment_approval_presenter.dart';
+import '../view_contracts/attendance_adjustment_approval_view.dart';
 
 class AttendanceAdjustmentRejectionAlert extends StatefulWidget {
   final String attendanceAdjustmentId;

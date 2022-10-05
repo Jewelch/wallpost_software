@@ -15,26 +15,33 @@ class GroupDashboardListCardWithRevenue extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: Text(company.name, style: TextStyles.largeTitleTextStyleBold)),
-            SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                _companyLogo(),
-                SizedBox(width: 16),
-                if (company.financialSummary != null) Expanded(child: FinanceDetailListItem(company.financialSummary!)),
+      child: Column(
+        children: [
+          SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.only(left: 12, right: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Text(company.name, style: TextStyles.largeTitleTextStyleBold)),
+                SizedBox(height: 16),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    _companyLogo(),
+                    SizedBox(width: 16),
+                    if (company.financialSummary != null)
+                      Expanded(child: FinanceDetailListItem(company.financialSummary!)),
+                  ],
+                ),
               ],
             ),
-            SizedBox(height: 12),
-          ],
-        ),
+          ),
+          SizedBox(height: 12),
+          Divider(),
+        ],
       ),
     );
   }
@@ -42,8 +49,8 @@ class GroupDashboardListCardWithRevenue extends StatelessWidget {
   Widget _companyLogo() {
     final borderRadius = BorderRadius.circular(20);
     return Container(
-      width: 90,
-      height: 90,
+      width: 80,
+      height: 80,
       padding: EdgeInsets.all(6),
       decoration: BoxDecoration(
         color: Colors.white,

@@ -14,11 +14,16 @@ class LeaveApprover {
   LeaveApprover() : _networkAdapter = WPAPI();
 
   Future<void> approve(String companyId, String leaveId) async {
-    var url = LeaveApprovalUrls.approveUrl(companyId);
+    var url = LeaveApprovalUrls.approveUrl(companyId, leaveId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
-    apiRequest.addParameter("app_type", "leaveRequest");
-    apiRequest.addParameter("request_id", leaveId);
+    apiRequest.addParameter("comments", "");
+    apiRequest.addParameter("replaced_required", "1");
+    apiRequest.addParameter("replaced_by", []);
+    apiRequest.addParameter("clearance_status", 1);
+    apiRequest.addParameter("handover_status", 1);
+    apiRequest.addParameter("replaced_by_others", "");
+
     _isLoading = true;
 
     try {

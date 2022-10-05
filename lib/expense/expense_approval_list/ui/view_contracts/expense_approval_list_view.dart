@@ -10,4 +10,6 @@ abstract class ExpenseApprovalListView {
   void updateList();
 
   void showExpenseDetail(ExpenseApprovalListItem approval);
+
+  void onDidProcessAllApprovals();
 }

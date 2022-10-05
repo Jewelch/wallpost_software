@@ -140,35 +140,6 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("successfully approving or rejecting reloads the data", () async {
-    //given
-    when(() => detailProvider.isLoading).thenReturn(false);
-    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(MockLeaveDetail()));
-
-    //when
-    await presenter.onDidProcessApprovalOrRejection(true);
-
-    //then
-    expect(presenter.didProcessApprovalOrRejection, true);
-    verifyInOrder([
-      () => detailProvider.isLoading,
-      () => view.showLoader(),
-      () => detailProvider.get("someLeaveId"),
-      () => view.onDidLoadDetails(),
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-  test("does not reload data when processing approval or rejection with null or false", () async {
-    presenter.onDidProcessApprovalOrRejection(null);
-    expect(presenter.didProcessApprovalOrRejection, false);
-    _verifyNoMoreInteractionsOnAllMocks();
-
-    presenter.onDidProcessApprovalOrRejection(false);
-    expect(presenter.didProcessApprovalOrRejection, false);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
   //MARK: Tests for getters
 
   test('should not show approval actions when not coming from approvals list', () async {
@@ -268,7 +239,7 @@ void main() {
     when(() => leave.totalLeaveDays).thenReturn(4);
     await presenter.loadDetail();
 
-    expect(presenter.getTotalDays(), "4");
+    expect(presenter.getTotalDays(), "4 days");
   });
 
   test('get total paid days', () async {
@@ -278,7 +249,7 @@ void main() {
     when(() => leave.paidDays).thenReturn(3);
     await presenter.loadDetail();
 
-    expect(presenter.getTotalPaidDays(), "3");
+    expect(presenter.getTotalPaidDays(), "3 days");
   });
 
   test('get total unpaid days', () async {
@@ -288,7 +259,7 @@ void main() {
     when(() => leave.unPaidDays).thenReturn(1);
     await presenter.loadDetail();
 
-    expect(presenter.getTotalUnpaidDays(), "1");
+    expect(presenter.getTotalUnpaidDays(), "1 day");
   });
 
   test('get leave reason', () async {

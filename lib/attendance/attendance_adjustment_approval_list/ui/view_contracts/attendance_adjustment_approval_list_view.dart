@@ -6,4 +6,6 @@ abstract class AttendanceAdjustmentApprovalListView {
   void showNoItemsMessage();
 
   void updateList();
+
+  void onDidProcessAllApprovals();
 }

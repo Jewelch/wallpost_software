@@ -5,6 +5,7 @@ import 'package:wallpost/_shared/json_serialization_base/json_convertible.dart';
 import '../../attendance__core/entities/attendance_status.dart';
 
 class AttendanceAdjustmentForm implements JSONConvertible {
+  final String? attendanceId;
   final String companyId;
   final String employeeId;
   final DateTime date;
@@ -14,6 +15,7 @@ class AttendanceAdjustmentForm implements JSONConvertible {
   final AttendanceStatus adjustedStatus;
 
   AttendanceAdjustmentForm(
+    this.attendanceId,
     this.companyId,
     this.employeeId,
     this.date,
@@ -26,7 +28,7 @@ class AttendanceAdjustmentForm implements JSONConvertible {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'attendance_id': null,
+      'attendance_id': attendanceId,
       'date': date.yyyyMMddString(),
       'reason': reason,
       'adjusted_punchin': adjustedPunchInTime != null ? adjustedPunchInTime!.HHmmString() : null,

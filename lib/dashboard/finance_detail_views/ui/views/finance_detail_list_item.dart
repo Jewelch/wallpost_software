@@ -54,7 +54,7 @@ class FinanceDetailListItem extends StatelessWidget {
             color: financeDetail.valueColor,
           ),
         ),
-        Text(financeDetail.label, style: TextStyles.labelTextStyle.copyWith(color: Colors.black)),
+        Text(financeDetail.label, style: TextStyles.smallLabelTextStyle.copyWith(color: Colors.black)),
       ],
     );
   }

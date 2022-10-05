@@ -53,8 +53,7 @@ class _LeaveDetailScreenState extends State<LeaveDetailScreen> implements LeaveD
       backgroundColor: AppColors.screenBackgroundColor,
       appBar: SimpleAppBar(
         title: "Leave Details",
-        leadingButton:
-            RoundedBackButton(onPressed: () => Navigator.pop(context, _presenter.didProcessApprovalOrRejection)),
+        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
       ),
       body: SafeArea(
         child: ItemNotifiable(
@@ -228,7 +227,7 @@ class _LeaveDetailScreenState extends State<LeaveDetailScreen> implements LeaveD
       companyId: companyId,
       requestedBy: requestedBy,
     );
-    _presenter.onDidProcessApprovalOrRejection(didApprove);
+    if (didApprove == true) Navigator.pop(context, true);
   }
 
   void _showRejectionSheet(String companyId, String leaveId, String requestedBy, BuildContext context) async {
@@ -238,6 +237,6 @@ class _LeaveDetailScreenState extends State<LeaveDetailScreen> implements LeaveD
       companyId: companyId,
       requestedBy: requestedBy,
     );
-    _presenter.onDidProcessApprovalOrRejection(didReject);
+    if (didReject == true) Navigator.pop(context, true);
   }
 }

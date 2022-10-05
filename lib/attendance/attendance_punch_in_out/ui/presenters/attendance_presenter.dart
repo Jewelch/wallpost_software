@@ -30,7 +30,6 @@ class AttendancePresenter {
 
   late AttendanceDetails _attendanceDetails;
   late AttendanceLocation? _attendanceLocation;
-  var _shouldReloadDataOnResume = false;
 
   AttendancePresenter({required this.basicView, this.detailedView})
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
@@ -240,18 +239,10 @@ class AttendancePresenter {
   //MARK: Functions to go to settings
 
   void goToLocationSettings() {
-    _shouldReloadDataOnResume = true;
     _deviceSettings.goToLocationSettings();
   }
 
   void goToAppSettings() {
-    _shouldReloadDataOnResume = true;
     _deviceSettings.goToAppSettings();
-  }
-
-  bool shouldReloadDataWhenAppIsResumed() {
-    var reloadData = _shouldReloadDataOnResume;
-    _shouldReloadDataOnResume = false;
-    return reloadData;
   }
 }

@@ -84,7 +84,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed && presenter.shouldReloadDataWhenAppIsResumed()) {
+    if (state == AppLifecycleState.resumed) {
       presenter.loadAttendanceDetails();
     }
   }

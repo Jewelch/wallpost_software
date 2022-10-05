@@ -65,11 +65,7 @@ class Company extends JSONInitializable {
 
   String get accountNumber => _accountNumber;
 
-  String get name => _name;
-
-  String get shortName => _shortName;
-
-  String get commercialName => _commercialName;
+  String get name => _commercialName;
 
   String get logoUrl => _logoUrl;
 

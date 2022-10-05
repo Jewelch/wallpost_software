@@ -14,12 +14,12 @@ class LeaveRejector {
   LeaveRejector() : _networkAdapter = WPAPI();
 
   Future<void> reject(String companyId, String leaveId, {required String rejectionReason}) async {
-    var url = LeaveApprovalUrls.rejectUrl(companyId);
+    var url = LeaveApprovalUrls.rejectUrl(companyId, leaveId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
-    apiRequest.addParameter("app_type", "leaveRequest");
-    apiRequest.addParameter("request_id", leaveId);
-    apiRequest.addParameter("reason", rejectionReason);
+    apiRequest.addParameter("comments", rejectionReason);
+    apiRequest.addParameter("clearance_status", 0);
+    apiRequest.addParameter("replaced_required", 1);
     _isLoading = true;
 
     try {

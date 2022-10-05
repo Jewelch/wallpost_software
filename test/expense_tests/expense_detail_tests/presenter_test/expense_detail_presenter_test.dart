@@ -141,35 +141,6 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test("successfully approving or rejecting reloads the data", () async {
-    //given
-    when(() => detailProvider.isLoading).thenReturn(false);
-    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(MockExpenseRequest()));
-
-    //when
-    await presenter.onDidProcessApprovalOrRejection(true);
-
-    //then
-    expect(presenter.didProcessApprovalOrRejection, true);
-    verifyInOrder([
-      () => detailProvider.isLoading,
-      () => view.showLoader(),
-      () => detailProvider.get("someExpenseId"),
-      () => view.onDidLoadDetails(),
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
-  test("does not reload data when processing approval or rejection with null or false", () async {
-    presenter.onDidProcessApprovalOrRejection(null);
-    expect(presenter.didProcessApprovalOrRejection, false);
-    _verifyNoMoreInteractionsOnAllMocks();
-
-    presenter.onDidProcessApprovalOrRejection(false);
-    expect(presenter.didProcessApprovalOrRejection, false);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
   //MARK: Tests for getters
 
   test('should not show approval actions when not coming from approvals list', () async {
