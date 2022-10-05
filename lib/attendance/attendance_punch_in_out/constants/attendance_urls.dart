@@ -6,7 +6,7 @@ class AttendanceUrls {
   }
 
   static String attendanceReportUrl(String startDate, String endDate) {
-    return 'https://hr.stagingapi.wallpostsoftware.com/api/v2/widget/attendance/reportsCountHR?'
+    return '${BaseUrls.hrUrlV2()}/widget/attendance/reportsCountHR?'
         '&scope=MY&date_from=$startDate&date_to=$endDate';
   }
 
