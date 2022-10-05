@@ -256,6 +256,11 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
   }
 
   @override
+  void showAttendanceButtonLoader() {
+    _viewTypeNotifier.notify(LOADER_VIEW);
+  }
+
+  @override
   void showErrorAndRetryView(String message) {
     _errorMessage = message;
     _viewTypeNotifier.notify(ERROR_VIEW);
@@ -337,4 +342,5 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
       setState(() => _timeString = formattedDateTime);
     }
   }
+
 }

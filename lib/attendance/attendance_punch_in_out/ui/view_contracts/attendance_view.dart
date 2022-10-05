@@ -20,4 +20,6 @@ abstract class AttendanceView {
   void showAlertToMarkAttendanceWithInvalidLocation(bool isForPunchIn, String title, String message);
 
   void doRefresh();
+
+  void showAttendanceButtonLoader();
 }

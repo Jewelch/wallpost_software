@@ -170,8 +170,7 @@ class AttendancePresenter {
     if (_punchInMarker.isLoading) return;
 
     try {
-      if (detailedView == null) basicView.showLoader();
-      detailedView?.showAttendanceButtonLoader();
+      basicView.showAttendanceButtonLoader();
       await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
       _attendanceDetails = await _attendanceDetailsProvider.getDetails();
       basicView.showPunchOutButton();
@@ -191,9 +190,7 @@ class AttendancePresenter {
     if (_punchOutMarker.isLoading) return;
 
     try {
-      if (detailedView == null) basicView.showLoader();
-      detailedView?.showAttendanceButtonLoader();
-
+      basicView.showAttendanceButtonLoader();
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
       _attendanceDetails = await _attendanceDetailsProvider.getDetails();
       _showTimeTillPunchIn();
