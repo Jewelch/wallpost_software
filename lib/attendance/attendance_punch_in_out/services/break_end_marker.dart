@@ -14,10 +14,10 @@ class BreakEndMarker {
 
   BreakEndMarker() : _networkAdapter = WPAPI();
 
-  Future<void> endBreak(String? attendanceDetailsId,String? activeBreakId, AttendanceLocation location) async {
-    if (activeBreakId == null) return;
+  Future<void> endBreak(AttendanceDetails attendanceDetails, AttendanceLocation location) async {
+    if (attendanceDetails.activeBreakId == null) return;
 
-    var url = AttendanceUrls.breakEndUrl(attendanceDetailsId!, activeBreakId!);
+    var url = AttendanceUrls.breakEndUrl(attendanceDetails.attendanceDetailsId!,attendanceDetails.activeBreakId!);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameters(location.toJson());

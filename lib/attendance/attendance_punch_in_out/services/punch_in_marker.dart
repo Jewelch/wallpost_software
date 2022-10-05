@@ -29,4 +29,22 @@ class PunchInMarker {
       throw exception;
     }
   }
+
+  // Future<String?> _processResponse(APIResponse apiResponse) async {
+  //   //returning if the response is from another session
+  //   if (apiResponse.apiRequest.requestId != _sessionId) return Completer<String?>().future;
+  //   if (apiResponse.data == null) throw InvalidResponseException();
+  //   if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
+  //
+  //   var responseMap = apiResponse.data as Map<String, dynamic>;
+  //   var sift = Sift();
+  //   try {
+  //     var attendanceDetailsList = sift.readMapListFromMapWithDefaultValue(responseMap, 'attendance_details');
+  //     var attendanceDetailsMap = sift.readMapFromListWithDefaultValue(attendanceDetailsList, 0, null);
+  //     var punchInTime = sift.readStringFromMap(attendanceDetailsMap, 'punch_in');
+  //     return punchInTime;
+  //   } catch (e) {
+  //     throw InvalidResponseException();
+  //   }
+  // }
 }

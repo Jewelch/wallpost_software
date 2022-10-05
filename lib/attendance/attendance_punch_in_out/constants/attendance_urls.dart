@@ -10,12 +10,6 @@ class AttendanceUrls {
         '&scope=MY&date_from=$startDate&date_to=$endDate';
   }
 
-
-  // static String attendanceReportUrl(String companyId, String employeeId, String startDate, String endDate) {
-  //   return '${BaseUrls.hrUrlV2()}/companies/$companyId/employees/$employeeId/attendance/reportsCountHR?'
-  //       '&scope=MY&date_from=$startDate&date_to=$endDate';
-  // }
-
   static String punchInUrl(bool isLocationValid) {
     var url = '${BaseUrls.hrUrlV2()}/widget/attendance/punch_in';
     if (isLocationValid == false) url += '?punchin_invalid_location=Y';

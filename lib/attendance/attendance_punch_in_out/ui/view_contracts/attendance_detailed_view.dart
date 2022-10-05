@@ -18,4 +18,6 @@ abstract class AttendanceDetailedView {
 
   void showLocationOnMap(AttendanceLocation attendanceLocation);
 
+  void showAttendanceButtonLoader();
+
 }

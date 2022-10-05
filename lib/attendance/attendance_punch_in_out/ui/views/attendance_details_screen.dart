@@ -15,6 +15,7 @@ import 'package:wallpost/attendance/attendance_punch_in_out/ui/view_contracts/at
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/attendance_details_loader.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/attendance_reports_widget.dart';
+import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/break_action_button.dart';
 
 import '../../../../_common_widgets/app_bars/simple_app_bar.dart';
 import '../../../../_common_widgets/buttons/rounded_back_button.dart';
@@ -47,27 +48,25 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   var _errorMessage = "";
 
   static const LOADER_VIEW = 1;
-
   static const DATA_VIEW = 2;
-
   static const ERROR_VIEW = 3;
+
   static const GPS_DISABLED_VIEW = 4;
   static const PERMISSION_DENIED_FOREVER_ERROR_VIEW = 5;
 
-  static const COUNT_DOWN_VIEW = 6;
-  static const PUNCH_IN_BUTTON_VIEW = 7;
-  static const PUNCH_OUT_BUTTON_VIEW = 8;
+  static const ATTENDANCE_BUTTON_LOADER_VIEW = 6;
+  static const COUNT_DOWN_VIEW = 7;
+  static const PUNCH_IN_BUTTON_VIEW = 8;
+  static const PUNCH_OUT_BUTTON_VIEW = 9;
 
-  static const SHOW_BREAK_BUTTON_VIEW = 9;
-  static const HIDE_BREAK_BUTTON_VIEW = 10;
-  static const RESUME_BUTTON_VIEW = 11;
+  static const SHOW_BREAK_BUTTON_VIEW = 10;
+  static const HIDE_BREAK_BUTTON_VIEW = 11;
+  static const RESUME_BUTTON_VIEW = 12;
 
   @override
   void initState() {
     presenter = AttendancePresenter(basicView: this, detailedView: this);
-
     presenter.loadAttendanceDetails();
-
 
     _currentTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getCurrentTime());
     super.initState();
@@ -274,6 +273,8 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
       child: ItemNotifiable<int>(
         notifier: _buttonTypeNotifier,
         builder: (context, value) {
+          if (value == ATTENDANCE_BUTTON_LOADER_VIEW) return _buildAttendanceButtonLoaderView();
+
           if (value == PUNCH_IN_BUTTON_VIEW) return _buildPunchInButton();
 
           if (value == PUNCH_OUT_BUTTON_VIEW) return _buildPunchOutButton();
@@ -282,6 +283,21 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
 
           return Container();
         },
+      ),
+    );
+  }
+
+  //MARK: Functions to build the loader for attendance button
+
+  Widget _buildAttendanceButtonLoaderView() {
+    return Container(
+      color: AttendanceColors.disabledButtonColor,
+      child: Center(
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          backgroundColor: Colors.transparent,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+        ),
       ),
     );
   }
@@ -295,7 +311,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
         color: AttendanceColors.disabledButtonColor,
         child: Center(
           child: Text(
-            "$timeLeft\nto punch in",
+            "$timeLeft\n\nTo punch in",
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -351,26 +367,25 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   Widget _actionButton(
       {required String title, required String time, required Color buttonColor, required VoidCallback onPressed}) {
     return MaterialButton(
-      padding: EdgeInsets.all(20),
-      elevation: 0,
-      highlightElevation: 0,
-      color: buttonColor,
-      child: Column(
-        children: [
-          Icon(Icons.access_time, size: 32, color: Colors.white),
-          SizedBox(height: 12),
-          Text(
-            title,
-            style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
-          ),
-          Text(
-            time,
-            style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
-          )
-        ],
-      ),
-      onPressed: onPressed,
-    );
+        padding: EdgeInsets.all(20),
+        elevation: 0,
+        highlightElevation: 0,
+        color: buttonColor,
+        child: Column(
+          children: [
+            Icon(Icons.access_time, size: 32, color: Colors.white),
+            SizedBox(height: 12),
+            Text(
+              title,
+              style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
+            ),
+            Text(
+              time,
+              style: TextStyles.titleTextStyle.copyWith(color: Colors.white),
+            )
+          ],
+        ),
+        onPressed: onPressed);
   }
 
   Widget _buildBreakButtonView() {
@@ -396,7 +411,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   Widget _buildStartBreakButton() {
     return ItemNotifiable<bool>(
       notifier: _showBreakLoaderNotifier,
-      builder:(context, showLoader) =>  _breakActionButton(
+      builder: (context, showLoader) => BreakActionButton(
           title: "Start Break",
           buttonColor: AttendanceColors.breakButtonColor,
           textColor: AttendanceColors.breakButtonTextColor,
@@ -408,72 +423,13 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   Widget _buildEndBreakButton() {
     return ItemNotifiable<bool>(
       notifier: _showBreakLoaderNotifier,
-      builder:(context, showLoader) => _breakActionButton(
+      builder: (context, showLoader) => BreakActionButton(
           title: "Resume",
           buttonColor: AttendanceColors.resumeButtonColor,
           textColor: Colors.white,
           showLoader: showLoader,
           onButtonPressed: () => presenter.endBreak()),
     );
-  }
-
-  Widget _breakActionButton(
-      {required String title,
-      required Color buttonColor,
-      required Color textColor,
-        bool disabled=false,
-         bool showLoader=false,
-      required VoidCallback onButtonPressed}) {
-    return ElevatedButton(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: showLoader ? _buildBreakLoader() : _buildIconAndTitle(title,textColor),
-      ),
-      onPressed: (disabled || showLoader) ? null : onButtonPressed,
-      style: ElevatedButton.styleFrom(
-        primary: buttonColor,
-        onPrimary: textColor,
-        elevation: 0.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-      ),
-    );
-  }
-
-
-  List<Widget> _buildIconAndTitle(String title,Color textColor ) {
-    return [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.coffee_outlined,
-            color: textColor,
-            size: 18,
-          ),
-          SizedBox(width: 8),
-          Text(
-            title,
-            style: TextStyles.titleTextStyle.copyWith(color: textColor),
-          ),
-        ],
-      )
-    ];
-  }
-
-  List<Widget> _buildBreakLoader() {
-    return [
-      SizedBox(
-        width: 20,
-        height: 20,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          backgroundColor: Colors.transparent,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
-        ),
-      )
-    ];
   }
 
   //MARK: View functions
@@ -490,6 +446,11 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   }
 
   @override
+  void showErrorMessage(String title, String message) {
+    Alert.showSimpleAlert(context: context, title: title, message: message);
+  }
+
+  @override
   void showRequestToTurnOnGpsView(String message) {
     _viewSelectorNotifier.notify(GPS_DISABLED_VIEW);
     _errorMessage = message;
@@ -499,6 +460,11 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   void showRequestToEnableLocationView(String message) {
     _viewSelectorNotifier.notify(PERMISSION_DENIED_FOREVER_ERROR_VIEW);
     _errorMessage = message;
+  }
+
+  @override
+  void showAttendanceButtonLoader() {
+    _buttonTypeNotifier.notify(ATTENDANCE_BUTTON_LOADER_VIEW);
   }
 
   @override
@@ -542,6 +508,16 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
   }
 
   @override
+  void showBreakLoader() {
+    _showBreakLoaderNotifier.notify(true);
+  }
+
+  @override
+  void hideLoader() {
+    _showBreakLoaderNotifier.notify(false);
+  }
+
+  @override
   void showBreakButton() {
     _breakButtonNotifier.notify(SHOW_BREAK_BUTTON_VIEW);
   }
@@ -572,11 +548,6 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
     );
   }
 
-  @override
-  void showErrorMessage(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
   //MARK: Util functions
 
   void _getCurrentTime() {
@@ -585,16 +556,5 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen>
     setState(() {
       _timeString = formattedDateTime;
     });
-  }
-
-
-  @override
-  void showBreakLoader() {
-    _showBreakLoaderNotifier.notify(true);
-  }
-
-  @override
-  void hideLoader() {
-    _showBreakLoaderNotifier.notify(false);
   }
 }

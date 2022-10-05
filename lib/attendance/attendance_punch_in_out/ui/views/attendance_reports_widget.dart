@@ -85,15 +85,15 @@ class _AttendanceReportsWidgetState extends State<AttendanceReportsWidget> imple
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _attendanceReportDetails("Late Punch In", attendanceReport!.late, Colors.deepOrange),
-              _attendanceReportDetails("Early Punch Out", attendanceReport.earlyLeave, Colors.black),
-              _attendanceReportDetails("Absences", attendanceReport.absents, Colors.red)
+              _attendanceReport("Late Punch In", attendanceReport!.late, Colors.deepOrange),
+              _attendanceReport("Early Punch Out", attendanceReport.earlyLeave, Colors.black),
+              _attendanceReport("Absences", attendanceReport.absents, Colors.red)
             ],
           );
         });
   }
 
-  Widget _attendanceReportDetails(String title, num noOfDays, Color textColor) {
+  Widget _attendanceReport(String title, num noOfDays, Color textColor) {
     return Column(
       children: [
         noOfDays == 1
@@ -104,7 +104,6 @@ class _AttendanceReportsWidgetState extends State<AttendanceReportsWidget> imple
       ],
     );
   }
-
 
   //MARK: View functions
 

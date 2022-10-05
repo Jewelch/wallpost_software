@@ -3,7 +3,6 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/exceptions/api_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_details.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_location.dart';
-import 'package:wallpost/attendance/attendance_punch_in_out/entities/break.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_acquisition_failed_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_address_failed_exception.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/exception/location_permission_denied_exception.dart';
@@ -31,9 +30,7 @@ class AttendancePresenter {
 
   late AttendanceDetails _attendanceDetails;
   late AttendanceLocation? _attendanceLocation;
-  List<Break> _breakList= [];
   var _shouldReloadDataOnResume = false;
-
 
   AttendancePresenter({required this.basicView, this.detailedView})
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
@@ -173,16 +170,19 @@ class AttendancePresenter {
     if (_punchInMarker.isLoading) return;
 
     try {
-      basicView.showLoader();
+      if (detailedView == null) basicView.showLoader();
+      detailedView?.showAttendanceButtonLoader();
       await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
-      await loadAttendanceDetails();
+      _attendanceDetails = await _attendanceDetailsProvider.getDetails();
+      basicView.showPunchOutButton();
+      _showPunchInTime(_attendanceDetails);
+      detailedView?.showBreakButton();
     } on WPException catch (e) {
+      basicView.showPunchInButton();
       if (e is ServerSentException && e.userReadableMessage.contains("outside the office location")) {
-        basicView.showPunchInButton();
         basicView.showAlertToMarkAttendanceWithInvalidLocation(true, "Invalid location", e.userReadableMessage);
       } else {
         basicView.showErrorMessage("Punch in failed", e.userReadableMessage);
-        await loadAttendanceDetails();
       }
     }
   }
@@ -191,16 +191,20 @@ class AttendancePresenter {
     if (_punchOutMarker.isLoading) return;
 
     try {
-      basicView.showLoader();
+      if (detailedView == null) basicView.showLoader();
+      detailedView?.showAttendanceButtonLoader();
+
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
-      await loadAttendanceDetails();
+      _attendanceDetails = await _attendanceDetailsProvider.getDetails();
+      _showTimeTillPunchIn();
+      _showPunchOutTime(_attendanceDetails);
+      detailedView?.hideBreakButton();
     } on WPException catch (e) {
+      basicView.showPunchOutButton();
       if (e is ServerSentException && e.userReadableMessage.contains("outside the office location")) {
-        basicView.showPunchOutButton();
         basicView.showAlertToMarkAttendanceWithInvalidLocation(false, "Invalid location", e.userReadableMessage);
       } else {
         basicView.showErrorMessage("Punch out failed", e.userReadableMessage);
-        await loadAttendanceDetails();
       }
     }
   }
@@ -212,11 +216,10 @@ class AttendancePresenter {
 
     try {
       detailedView?.showBreakLoader();
-    var breakData= await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
-      _breakList.addAll(breakData);
+      await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
+      _attendanceDetails = await _attendanceDetailsProvider.getDetails();
       detailedView?.hideLoader();
       detailedView?.showResumeButton();
-
     } on WPException catch (e) {
       detailedView?.hideLoader();
       basicView.showErrorMessage("Failed to start break", e.userReadableMessage);
@@ -225,21 +228,12 @@ class AttendancePresenter {
 
   Future<void> endBreak() async {
     if (_breakEndMarker.isLoading) return;
-    var currentBreakId = "";
+
     try {
       detailedView?.showBreakLoader();
-
-      if (_breakList.isNotEmpty) {
-        var activeBreaks = _breakList.where((element) => element.isActive());
-        currentBreakId=activeBreaks.first.id;
-      }else{
-        currentBreakId=_attendanceDetails.activeBreakId!;
-      }
-
-      await _breakEndMarker.endBreak(_attendanceDetails.attendanceDetailsId,currentBreakId, _attendanceLocation!);
+      await _breakEndMarker.endBreak(_attendanceDetails, _attendanceLocation!);
       detailedView?.hideLoader();
       detailedView?.showBreakButton();
-
     } on WPException catch (e) {
       detailedView?.hideLoader();
       basicView.showErrorMessage("Failed to end break", e.userReadableMessage);
