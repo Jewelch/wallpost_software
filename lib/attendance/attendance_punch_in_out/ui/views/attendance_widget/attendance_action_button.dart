@@ -26,7 +26,6 @@ class AttendanceActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        //TODO: uncomment following widget to show more button
         Positioned(
           right: 0,
           top: 0,
@@ -51,8 +50,7 @@ class AttendanceActionButton extends StatelessWidget {
           ),
         ),
         Container(
-          //TODO: uncomment following line to show more button
-           margin: EdgeInsets.only(right: 80),
+          margin: EdgeInsets.only(right: 80),
           child: MaterialButton(
             onPressed: onButtonPressed,
             elevation: 0,

@@ -29,7 +29,7 @@ dependencies:
   cached_network_image: ^3.2.1
   flutter_app_badger: ^1.4.0
   shimmer: 2.0.0
-  notifiable: 1.0.5
+  notifiable: 1.0.6
   google_maps_flutter: ^2.1.8
   camera: ^0.10.0
   camera_avfoundation:

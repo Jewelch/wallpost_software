@@ -7,6 +7,7 @@ import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dism
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/attendance_detail/attendance_detail_screen.dart';
 import 'package:wallpost/dashboard/company_dashboard/company_dashboard_screen.dart';
 import 'package:wallpost/dashboard/group_dashboard/ui/presenters/group_dashboard_presenter.dart';
 import 'package:wallpost/dashboard/group_dashboard/ui/view_contracts/group_dashboard_view.dart';
@@ -14,7 +15,7 @@ import 'package:wallpost/dashboard/group_dashboard/ui/view_contracts/group_dashb
 import '../../../../_common_widgets/search_bar/search_bar.dart';
 import '../../../../_wp_core/company_management/entities/company.dart';
 import '../../../../_wp_core/company_management/entities/financial_summary.dart';
-import '../../../../attendance/attendance_punch_in_out/ui/views/attendance_widget.dart';
+import '../../../../attendance/attendance_punch_in_out/ui/views/attendance_widget/attendance_widget.dart';
 import '../../../../settings/left_menu/left_menu_screen.dart';
 import '../../../aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
 import '../../../finance_detail_views/ui/views/finance_detail_card.dart';
@@ -237,7 +238,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
     if (companyListItem.financialSummary == null) {
       return GroupDashboardListCardWithoutRevenue(
         company: companyListItem,
-        onPressed: () => presenter.selectCompany(companyListItem),
+        onPressed: () => ScreenPresenter.present(AttendanceDetailScreen(), context),
       );
     } else {
       return GroupDashboardListCardWithRevenue(

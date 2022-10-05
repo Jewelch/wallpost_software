@@ -1,7 +1,13 @@
+import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_location.dart';
+
 abstract class AttendanceView {
   void showLoader();
 
-  void showErrorMessage(String title, String message);
+  void showAttendanceButtonLoader();
+
+  void showButtonBreakLoader();
+
+  void showErrorAlert(String title, String message);
 
   void showErrorAndRetryView(String message);
 
@@ -15,11 +21,7 @@ abstract class AttendanceView {
 
   void showPunchOutButton();
 
-  void showAddress(String address);
+  void showLocation(AttendanceLocation location, String address);
 
   void showAlertToMarkAttendanceWithInvalidLocation(bool isForPunchIn, String title, String message);
-
-  void doRefresh();
-
-  void showAttendanceButtonLoader();
 }

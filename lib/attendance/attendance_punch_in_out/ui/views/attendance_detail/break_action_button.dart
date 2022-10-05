@@ -45,38 +45,31 @@ class BreakActionButton extends StatelessWidget {
       ),
     );
   }
-}
 
-List<Widget> _buildIconAndTitle(String title, Color textColor) {
-  return [
-    Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.coffee_outlined,
-          color: textColor,
-          size: 18,
-        ),
-        SizedBox(width: 8),
-        Text(
-          title,
-          style: TextStyles.titleTextStyle.copyWith(color: textColor),
-        ),
-      ],
-    )
-  ];
-}
+  List<Widget> _buildIconAndTitle(String title, Color textColor) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.coffee_outlined, color: textColor, size: 18),
+          SizedBox(width: 8),
+          Text(title, style: TextStyles.titleTextStyle.copyWith(color: textColor)),
+        ],
+      )
+    ];
+  }
 
-List<Widget> _buildBreakLoader() {
-  return [
-    SizedBox(
-      width: 20,
-      height: 20,
-      child: CircularProgressIndicator(
-        strokeWidth: 2,
-        backgroundColor: Colors.transparent,
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
-      ),
-    )
-  ];
+  List<Widget> _buildBreakLoader() {
+    return [
+      SizedBox(
+        width: 20,
+        height: 20,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          backgroundColor: Colors.transparent,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+        ),
+      )
+    ];
+  }
 }

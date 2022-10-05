@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 
-class AttendanceDetailsLoader extends StatelessWidget {
-
+class AttendanceDetailLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShimmerEffect(
       child: ListView(
         shrinkWrap: true,
-        padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

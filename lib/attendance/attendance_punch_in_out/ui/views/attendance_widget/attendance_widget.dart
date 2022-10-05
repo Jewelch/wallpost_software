@@ -6,13 +6,14 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/attendance_action_button.dart';
-import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/attendance_details_screen.dart';
+import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/attendance_detail/attendance_detail_screen.dart';
 
-import '../../constants/attendance_colors.dart';
-import '../../services/time_to_punch_in_calculator.dart';
-import '../presenters/attendance_presenter.dart';
-import '../view_contracts/attendance_view.dart';
+import '../../../constants/attendance_colors.dart';
+import '../../../entities/attendance_location.dart';
+import '../../../services/time_to_punch_in_calculator.dart';
+import '../../presenters/attendance_presenter.dart';
+import '../../view_contracts/attendance_view.dart';
+import 'attendance_action_button.dart';
 
 class AttendanceWidget extends StatefulWidget {
   @override
@@ -207,7 +208,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
           presenter.loadAttendanceDetails();
         },
         onMoreButtonPressed: () {
-          ScreenPresenter.present(AttendanceDetailsScreen(), context);
+          ScreenPresenter.present(AttendanceDetailScreen(), context);
         },
       ),
     );
@@ -229,7 +230,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
           presenter.loadAttendanceDetails();
         },
         onMoreButtonPressed: () {
-          ScreenPresenter.present(AttendanceDetailsScreen(), context);
+          ScreenPresenter.present(AttendanceDetailScreen(), context);
         },
       ),
     );
@@ -256,6 +257,11 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
   @override
   void showAttendanceButtonLoader() {
     _viewTypeNotifier.notify(LOADER_VIEW);
+  }
+
+  @override
+  void showButtonBreakLoader() {
+    //do nothing
   }
 
   @override
@@ -287,6 +293,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
 
   @override
   void showPunchInButton() {
+    //todo - why did we add this?
     Timer(Duration(seconds: 1), () {
       _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
     });
@@ -296,6 +303,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
 
   @override
   void showPunchOutButton() {
+    //todo - why did we add this?
     Timer(Duration(seconds: 1), () {
       _viewTypeNotifier.notify(PUNCH_OUT_BUTTON_VIEW);
     });
@@ -304,7 +312,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
   }
 
   @override
-  void showAddress(String address) {
+  void showLocation(AttendanceLocation location, String address) {
     _locationAddressNotifier.notify(address);
   }
 
@@ -322,13 +330,8 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
   }
 
   @override
-  void showErrorMessage(String title, String message) {
+  void showErrorAlert(String title, String message) {
     Alert.showSimpleAlert(context: context, title: title, message: message);
-  }
-
-  @override
-  void doRefresh() {
-    presenter.loadAttendanceDetails();
   }
 
   //MARK: Util functions
@@ -340,5 +343,4 @@ class _AttendanceWidgetState extends State<AttendanceWidget> with WidgetsBinding
       setState(() => _timeString = formattedDateTime);
     }
   }
-
 }

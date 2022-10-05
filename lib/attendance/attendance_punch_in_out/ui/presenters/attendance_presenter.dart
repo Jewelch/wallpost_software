@@ -14,12 +14,10 @@ import 'package:wallpost/attendance/attendance_punch_in_out/services/break_start
 import 'package:wallpost/attendance/attendance_punch_in_out/services/location_provider.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/punch_in_marker.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/services/punch_out_marker.dart';
-import 'package:wallpost/attendance/attendance_punch_in_out/ui/view_contracts/attendance_detailed_view.dart';
 import 'package:wallpost/attendance/attendance_punch_in_out/ui/view_contracts/attendance_view.dart';
 
 class AttendancePresenter {
   final AttendanceView basicView;
-  final AttendanceDetailedView? detailedView;
   final AttendanceDetailsProvider _attendanceDetailsProvider;
   final LocationProvider _locationProvider;
   final PunchOutMarker _punchOutMarker;
@@ -31,7 +29,7 @@ class AttendancePresenter {
   late AttendanceDetails _attendanceDetails;
   late AttendanceLocation? _attendanceLocation;
 
-  AttendancePresenter({required this.basicView, this.detailedView})
+  AttendancePresenter({required this.basicView})
       : _attendanceDetailsProvider = AttendanceDetailsProvider(),
         _locationProvider = LocationProvider(),
         _punchInMarker = PunchInMarker(),
@@ -42,7 +40,6 @@ class AttendancePresenter {
 
   AttendancePresenter.initWith(
     this.basicView,
-    this.detailedView,
     this._attendanceDetailsProvider,
     this._locationProvider,
     this._punchInMarker,
@@ -98,7 +95,6 @@ class AttendancePresenter {
     if (_attendanceLocation == null) return;
 
     basicView.showPunchInButton();
-    detailedView?.hideBreakButton();
     await _loadAddress(_attendanceLocation!);
   }
 
@@ -108,17 +104,11 @@ class AttendancePresenter {
 
     basicView.showPunchOutButton();
     await _loadAddress(_attendanceLocation!);
-    _showPunchInTime(attendanceDetails);
-    _attendanceDetails.isOnBreak ? detailedView?.showResumeButton() : detailedView?.showBreakButton();
   }
 
   Future<void> _loadPunchedOutDetails(AttendanceDetails attendanceDetails) async {
     _attendanceLocation = await getLocation();
     if (_attendanceLocation == null) return;
-
-    _showPunchInTime(attendanceDetails);
-    _showPunchOutTime(attendanceDetails);
-    detailedView?.hideBreakButton();
   }
 
   //MARK: Functions to get location
@@ -126,7 +116,7 @@ class AttendancePresenter {
   Future<AttendanceLocation?> getLocation() async {
     try {
       var attendanceLocation = await _locationProvider.getLocation();
-      detailedView?.showLocationOnMap(attendanceLocation);
+      basicView.showLocation(attendanceLocation, "");
       return attendanceLocation;
     } on LocationServicesDisabledException {
       basicView.showRequestToTurnOnGpsView("Location service disabled.\nTap here to go to location settings.");
@@ -150,17 +140,7 @@ class AttendancePresenter {
     } on LocationReverseGeocodingException {
       address = "${location.latitude}, ${location.longitude}";
     }
-    basicView.showAddress(address);
-  }
-
-  //MARK: Functions to show punched in and out time
-
-  void _showPunchInTime(AttendanceDetails attendanceDetails) {
-    detailedView?.showPunchInTime(attendanceDetails.punchInTimeString);
-  }
-
-  void _showPunchOutTime(AttendanceDetails attendanceDetails) {
-    detailedView?.showPunchOutTime(attendanceDetails.punchOutTimeString);
+    basicView.showLocation(location, address);
   }
 
   //MARK: Functions to mark attendance
@@ -171,16 +151,14 @@ class AttendancePresenter {
     try {
       basicView.showAttendanceButtonLoader();
       await _punchInMarker.punchIn(_attendanceLocation!, isLocationValid: isLocationValid);
-      _attendanceDetails = await _attendanceDetailsProvider.getDetails();
-      basicView.showPunchOutButton();
-      _showPunchInTime(_attendanceDetails);
-      detailedView?.showBreakButton();
+      await loadAttendanceDetails();
     } on WPException catch (e) {
-      basicView.showPunchInButton();
       if (e is ServerSentException && e.userReadableMessage.contains("outside the office location")) {
+        basicView.showPunchInButton();
         basicView.showAlertToMarkAttendanceWithInvalidLocation(true, "Invalid location", e.userReadableMessage);
       } else {
-        basicView.showErrorMessage("Punch in failed", e.userReadableMessage);
+        basicView.showErrorAlert("Punch in failed", e.userReadableMessage);
+        await loadAttendanceDetails();
       }
     }
   }
@@ -191,16 +169,14 @@ class AttendancePresenter {
     try {
       basicView.showAttendanceButtonLoader();
       await _punchOutMarker.punchOut(_attendanceDetails, _attendanceLocation!, isLocationValid: isLocationValid);
-      _attendanceDetails = await _attendanceDetailsProvider.getDetails();
-      _showTimeTillPunchIn();
-      _showPunchOutTime(_attendanceDetails);
-      detailedView?.hideBreakButton();
+      await loadAttendanceDetails();
     } on WPException catch (e) {
-      basicView.showPunchOutButton();
       if (e is ServerSentException && e.userReadableMessage.contains("outside the office location")) {
+        basicView.showPunchOutButton();
         basicView.showAlertToMarkAttendanceWithInvalidLocation(false, "Invalid location", e.userReadableMessage);
       } else {
-        basicView.showErrorMessage("Punch out failed", e.userReadableMessage);
+        basicView.showErrorAlert("Punch out failed", e.userReadableMessage);
+        await loadAttendanceDetails();
       }
     }
   }
@@ -211,14 +187,11 @@ class AttendancePresenter {
     if (_breakStartMarker.isLoading) return;
 
     try {
-      detailedView?.showBreakLoader();
+      basicView.showButtonBreakLoader();
       await _breakStartMarker.startBreak(_attendanceDetails, _attendanceLocation!);
-      _attendanceDetails = await _attendanceDetailsProvider.getDetails();
-      detailedView?.hideLoader();
-      detailedView?.showResumeButton();
+      await loadAttendanceDetails();
     } on WPException catch (e) {
-      detailedView?.hideLoader();
-      basicView.showErrorMessage("Failed to start break", e.userReadableMessage);
+      basicView.showErrorAlert("Failed to start break", e.userReadableMessage);
     }
   }
 
@@ -226,13 +199,11 @@ class AttendancePresenter {
     if (_breakEndMarker.isLoading) return;
 
     try {
-      detailedView?.showBreakLoader();
+      basicView.showButtonBreakLoader();
       await _breakEndMarker.endBreak(_attendanceDetails, _attendanceLocation!);
-      detailedView?.hideLoader();
-      detailedView?.showBreakButton();
+      await loadAttendanceDetails();
     } on WPException catch (e) {
-      detailedView?.hideLoader();
-      basicView.showErrorMessage("Failed to end break", e.userReadableMessage);
+      basicView.showErrorAlert("Failed to end break", e.userReadableMessage);
     }
   }
 
@@ -244,5 +215,23 @@ class AttendancePresenter {
 
   void goToAppSettings() {
     _deviceSettings.goToAppSettings();
+  }
+
+  //MARK: Getters
+
+  String getPunchInTime() {
+    return "6:00 AM";
+  }
+
+  String getPunchOutTime() {
+    return "8:00 AM";
+  }
+
+  bool shouldShowStartBreakButton() {
+    return _attendanceDetails.isOnBreak == false;
+  }
+
+  bool shouldShowEndBreakButton() {
+    return _attendanceDetails.isOnBreak;
   }
 }

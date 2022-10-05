@@ -1,5 +1,5 @@
 import 'package:wallpost/attendance/attendance_punch_in_out/entities/attendance_report.dart';
-abstract class AttendanceReportsView {
+abstract class AttendanceReportView {
   void showLoader();
 
   void showErrorAndRetryView(String message);
