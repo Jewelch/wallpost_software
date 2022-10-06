@@ -1,10 +1,7 @@
-
-import 'package:wallpost/sales_data/entities/sales_data.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_data.dart';
 
 abstract class SalesDataView {
   void showLoader();
-
-  void hideLoader();
 
   void showErrorMessage(String errorMessage) {}
 

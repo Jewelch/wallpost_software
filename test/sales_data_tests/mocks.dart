@@ -1,9 +1,6 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:random_string/random_string.dart';
-import 'package:wallpost/sales_data/entities/sales_data.dart';
-import 'package:wallpost/sales_data/services/sales_data_provider.dart';
-
-class MockSalesDataProvider extends Mock implements SalesDataProvider {}
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_data.dart';
 
 class MockSalesData extends Mock implements SalesData {}
 

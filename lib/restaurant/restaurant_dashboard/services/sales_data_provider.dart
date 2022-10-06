@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/sales_data/constants/sales_data_url.dart';
-import 'package:wallpost/sales_data/entities/sales_data.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_data.dart';
 
-import '../../_wp_core/company_management/services/selected_company_provider.dart';
+import '../../../_wp_core/company_management/services/selected_company_provider.dart';
+import '../constants/restaurant_dashboard_urls.dart';
 
 class SalesDataProvider {
   SalesDataProvider()
@@ -21,7 +21,8 @@ class SalesDataProvider {
   bool isLoading = false;
 
   Future<SalesData> getSalesAmounts({String? storeId}) async {
-    var url = SalesDataUrls.getSalesAmountsUrl(_selectedCompanyProvider.getSelectedCompanyForCurrentUser().id, storeId);
+    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
+    var url = RestaurantDashboardUrls.getSalesAmountsUrl(companyId, storeId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/header_card.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/sales_data/entities/sales_data.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_data.dart';
 
-class SalesDataHeaderCard extends StatelessWidget {
+class RestaurantDashboardHeaderCard extends StatelessWidget {
   final SalesData _salesData;
 
-  SalesDataHeaderCard(this._salesData);
+  RestaurantDashboardHeaderCard(this._salesData);
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +16,7 @@ class SalesDataHeaderCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 2),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,9 +97,7 @@ class SalesDataHeaderCard extends StatelessWidget {
               SizedBox(width: 40),
             ],
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20),
         ],
       ),
     );

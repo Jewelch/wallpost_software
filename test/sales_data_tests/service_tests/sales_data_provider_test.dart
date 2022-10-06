@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
-import 'package:wallpost/sales_data/constants/sales_data_url.dart';
-import 'package:wallpost/sales_data/services/sales_data_provider.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/constants/restaurant_dashboard_urls.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/services/sales_data_provider.dart';
 
 import '../../_mocks/mock_company.dart';
 import '../../_mocks/mock_company_provider.dart';
@@ -41,7 +41,8 @@ void main() {
 
     await salesDataProvider.getSalesAmounts(storeId: 'someStoreId');
 
-    expect(mockNetworkAdapter.apiRequest.url, SalesDataUrls.getSalesAmountsUrl('someCompanyId', 'someStoreId'));
+    expect(
+        mockNetworkAdapter.apiRequest.url, RestaurantDashboardUrls.getSalesAmountsUrl('someCompanyId', 'someStoreId'));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, isTrue);
   });

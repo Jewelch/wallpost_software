@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
-import 'package:wallpost/sales_data/entities/sales_data.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_data.dart';
 
 import '../mocks.dart';
 
@@ -9,7 +9,7 @@ void main() {
     final String totalSales = '12000';
     final String netSales = '4000';
     final String costOfSales = '2700';
-    final String grossOfProfit = '400';
+    final int grossOfProfit = 40;
 
     final salesData = SalesData.fromJson(Mocks.specificSalesDataResponse(
       totalSales: totalSales,

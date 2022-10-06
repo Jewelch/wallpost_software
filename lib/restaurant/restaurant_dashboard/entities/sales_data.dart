@@ -1,6 +1,6 @@
 import 'package:sift/Sift.dart';
 
-import '../../_shared/exceptions/mapping_exception.dart';
+import '../../../_shared/exceptions/mapping_exception.dart';
 
 class SalesData {
   late String _totalSales;
@@ -18,13 +18,14 @@ class SalesData {
       _grossOfProfit = sift.readNumberFromMap(jsonMap, 'gross_of_profit').toString();
     } on SiftException catch (e) {
       throw MappingException('Failed to cast SalesData response. Error message - ${e.errorMessage}');
-    } on MappingException {
-      rethrow;
     }
   }
 
   String get totalSales => _totalSales;
+
   String get netSales => _netSales;
+
   String get costOfSales => _costOfSales;
+
   String get grossOfProfit => '$_grossOfProfit%';
 }
