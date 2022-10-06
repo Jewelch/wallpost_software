@@ -15,7 +15,7 @@ class SalesData {
       _totalSales = sift.readStringFromMap(jsonMap, 'total_sales');
       _netSales = sift.readStringFromMap(jsonMap, 'net_sales');
       _costOfSales = sift.readStringFromMap(jsonMap, 'cost_of_sales');
-      _grossOfProfit = sift.readStringFromMap(jsonMap, 'gross_of_profit');
+      _grossOfProfit = sift.readNumberFromMap(jsonMap, 'gross_of_profit').toString();
     } on SiftException catch (e) {
       throw MappingException('Failed to cast SalesData response. Error message - ${e.errorMessage}');
     } on MappingException {
