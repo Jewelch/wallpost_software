@@ -97,4 +97,16 @@ class TextStyles {
         color: AppColors.defaultColorDarkContrastColor,
         fontSize: 11.0,
       );
+
+  static get headerCardMoneyLabelTextStyle => TextStyle(
+    fontWeight: FontWeight.w300,
+    color: AppColors.defaultColorDarkContrastColor,
+    fontSize: 18.0,
+  );
+
+  static get headerCardHeadingTextStyleWithGreenColor => TextStyle(
+    fontWeight: FontWeight.w700,
+    color: Colors.green,
+    fontSize: 24.0,
+  );
 }
