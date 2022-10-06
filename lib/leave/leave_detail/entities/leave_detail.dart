@@ -8,7 +8,6 @@ class LeaveDetail extends JSONInitializable {
   late String _leaveId;
   late String _companyId;
   late String _applicantName;
-  late String _applicantProfileImageUrl;
   late DateTime _startDate;
   late DateTime _endDate;
   late num _totalLeaveDays;
@@ -34,7 +33,6 @@ class LeaveDetail extends JSONInitializable {
       _leaveId = '${sift.readNumberFromMap(jsonMap, 'id')}';
       _companyId = '${sift.readNumberFromMap(jsonMap, 'company_id')}';
       _applicantName = '${sift.readStringFromMap(employeeMap, 'name')}';
-      _applicantProfileImageUrl = "sift.readStringFromMap(employeeMap, 'profile_image')";
       _startDate = sift.readDateFromMap(jsonMap, 'leave_from', 'yyyy-MM-dd');
       _endDate = sift.readDateFromMap(jsonMap, 'leave_to', 'yyyy-MM-dd');
       _totalLeaveDays = sift.readNumberFromMap(jsonMap, 'leave_days');
@@ -51,6 +49,7 @@ class LeaveDetail extends JSONInitializable {
       _rejectionReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'rejected_reason', null);
       _cancellationReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'cancel_reason', null);
     } on SiftException catch (e) {
+      print(e.errorMessage);
       throw MappingException('Failed to cast LeaveListItem response. Error message - ${e.errorMessage}');
     }
   }
@@ -95,8 +94,6 @@ class LeaveDetail extends JSONInitializable {
   String get companyId => _companyId;
 
   String get applicantName => _applicantName;
-
-  String get applicantProfileImageUrl => _applicantProfileImageUrl;
 
   DateTime get startDate => _startDate;
 

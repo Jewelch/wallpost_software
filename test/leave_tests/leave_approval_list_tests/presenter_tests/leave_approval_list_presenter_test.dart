@@ -320,7 +320,7 @@ void main() {
 
   //MARK: Tests remove approved or rejected items
 
-  test("successfully performing action on one item", () async {
+  test("successfully performing action on one of three item updates the list", () async {
     //given
     when(() => listProvider.isLoading).thenReturn(false);
     var approval1 = MockLeaveApprovalListItem();
@@ -337,6 +337,7 @@ void main() {
     await presenter.onDidProcessApprovalOrRejection(true, "id2");
 
     //then
+    expect(presenter.numberOfApprovalsProcessed, 1);
     expect(presenter.getNumberOfListItems(), 3);
     expect(presenter.getItemTypeAtIndex(0), LeaveApprovalListItemViewType.ListItem);
     expect(presenter.getItemTypeAtIndex(1), LeaveApprovalListItemViewType.ListItem);
@@ -368,13 +369,9 @@ void main() {
     await presenter.onDidProcessApprovalOrRejection(true, "id3");
 
     //then
-    //then
+    expect(presenter.numberOfApprovalsProcessed, 3);
     verifyInOrder([
-      () => listProvider.reset(),
-      () => listProvider.isLoading,
-      () => view.showLoader(),
-      () => listProvider.getNext(),
-      () => view.updateList(),
+      () => view.onDidProcessAllApprovals(),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -399,8 +396,10 @@ void main() {
   test("get leave days", () {
     var approval = MockLeaveApprovalListItem();
     when(() => approval.totalLeaveDays).thenReturn(3);
+    expect(presenter.getTotalDays(approval), "3 days");
 
-    expect(presenter.getTotalDays(approval), "3 Days");
+    when(() => approval.totalLeaveDays).thenReturn(1);
+    expect(presenter.getTotalDays(approval), "1 day");
   });
 
   test("get start date", () {

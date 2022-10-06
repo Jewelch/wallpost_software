@@ -149,24 +149,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
         border: Border.all(width: 1, color: AppColors.listItemBorderColor),
       ),
       child: InkWell(
-        onTap: () {
-          if (aggregatedApproval.isExpenseRequestApproval()) {
-            ScreenPresenter.present(
-              ExpenseApprovalListScreen(companyId: aggregatedApproval.companyId),
-              context,
-            );
-          } else if (aggregatedApproval.isAttendanceAdjustmentApproval()) {
-            ScreenPresenter.present(
-              AttendanceAdjustmentApprovalListScreen(companyId: aggregatedApproval.companyId),
-              context,
-            );
-          } else if (aggregatedApproval.isLeaveRequestApproval()) {
-            ScreenPresenter.present(
-              LeaveApprovalListScreen(companyId: aggregatedApproval.companyId),
-              context,
-            );
-          }
-        },
+        onTap: () => handleTap(aggregatedApproval),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -185,7 +168,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
                   SizedBox(height: 4.0),
                   Row(
                     children: [
-                      Text('${aggregatedApproval.module.toUpperCase()} - ',
+                      Text('${aggregatedApproval.module.toReadableString().toUpperCase()} - ',
                           style: TextStyles.subTitleTextStyle.copyWith(
                             color: ColorUtils.initColorFromHex(aggregatedApproval.moduleColor),
                             fontWeight: FontWeight.bold,
@@ -213,6 +196,29 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
         ),
       ),
     );
+  }
+
+  void handleTap(AggregatedApproval aggregatedApproval) async {
+    var numberOfApprovalsProcessed;
+
+    if (aggregatedApproval.isExpenseRequestApproval()) {
+      numberOfApprovalsProcessed = await ScreenPresenter.present(
+        ExpenseApprovalListScreen(companyId: aggregatedApproval.companyId),
+        context,
+      );
+    } else if (aggregatedApproval.isAttendanceAdjustmentApproval()) {
+      numberOfApprovalsProcessed = await ScreenPresenter.present(
+        AttendanceAdjustmentApprovalListScreen(companyId: aggregatedApproval.companyId),
+        context,
+      );
+    } else if (aggregatedApproval.isLeaveRequestApproval()) {
+      numberOfApprovalsProcessed = await ScreenPresenter.present(
+        LeaveApprovalListScreen(companyId: aggregatedApproval.companyId),
+        context,
+      );
+    }
+
+    _presenter.didProcessApprovals(aggregatedApproval, numberOfApprovalsProcessed);
   }
 
   Widget _companyAndModuleFilter() {
@@ -249,7 +255,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
   }
 
   @override
-  void onDidLoadApprovals() {
+  void updateList() {
     _viewTypeNotifier.notify(DATA_VIEW);
   }
 
@@ -263,5 +269,10 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
   void showNoMatchingResultsMessage(String message) {
     _errorMessage = message;
     _viewTypeNotifier.notify(NO_MATCHING_ITEMS_VIEW);
+  }
+
+  @override
+  void onDidProcessAllApprovals() {
+    Navigator.pop(context);
   }
 }

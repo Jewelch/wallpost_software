@@ -129,4 +129,24 @@ main() {
     var negativePayablesSummary = FinancialSummary.fromJson(negativePayablesMap);
     expect(negativePayablesSummary.arePayablesOverdue(), false);
   });
+
+  //tests for getters
+
+  test("getters", () {
+    var summaryMap = {
+      "currency": "USD",
+      "cashAvailability": "17.6M",
+      "receivableOverdue": "-25B",
+      "payableOverdue": "1.7M",
+      "profitLoss": "623.5M"
+    };
+
+    var summary = FinancialSummary.fromJson(summaryMap);
+
+    expect(summary.currency, "USD");
+    expect(summary.profitLoss, "623.5M");
+    expect(summary.availableFunds, "17.6M");
+    expect(summary.receivableOverdue, "-25B");
+    expect(summary.payableOverdue, "1.7M");
+  });
 }

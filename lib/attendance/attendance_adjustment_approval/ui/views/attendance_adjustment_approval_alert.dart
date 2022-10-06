@@ -5,8 +5,8 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
 import '../../../../_common_widgets/buttons/capsule_action_button.dart';
 import '../../../../_shared/constants/app_colors.dart';
-import '../../../attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_view.dart';
 import '../presenters/attendance_adjustment_approval_presenter.dart';
+import '../view_contracts/attendance_adjustment_approval_view.dart';
 
 class AttendanceAdjustmentApprovalAlert extends StatefulWidget {
   final String attendanceAdjustmentId;
@@ -58,7 +58,7 @@ class _AttendanceAdjustmentApprovalAlertState extends State<AttendanceAdjustment
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 12, right: 12),
+      padding: EdgeInsets.only(left: 12, right: 12, bottom: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

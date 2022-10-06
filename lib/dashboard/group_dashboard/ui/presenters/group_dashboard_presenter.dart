@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/company_selector.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
@@ -12,7 +10,6 @@ import '../../../../attendance/attendance_punch_in_out/services/attendance_detai
 import '../../../../notification_center/notification_observer.dart';
 import '../../entities/company_group.dart';
 import '../../services/group_dashboard_data_provider.dart';
-import '../models/financial_details.dart';
 import '../view_contracts/group_dashboard_view.dart';
 
 class GroupDashboardPresenter {
@@ -154,40 +151,36 @@ class GroupDashboardPresenter {
 
   //MARK: Function to refresh the dashboard data
 
-  refresh() {
+  Future<void> refresh() {
     _clearFilters();
-    loadDashboardData();
+    return loadDashboardData();
   }
 
-  //MARK: Functions to perform search
+  //MARK: Functions to apply and clear filters
 
   void performSearch(String searchText) {
     _searchText = searchText;
     _view.updateCompanyList();
   }
 
-  //MARK: Functions to select and deselect company group filter
-
   void selectGroupAtIndex(int index) {
     _selectedGroup = _groupDashboardData!.groups[index];
-    _view.updateCompanyList();
-  }
-
-  void clearGroupSelection() {
-    _selectedGroup = null;
-    _view.updateCompanyList();
-  }
-
-  //MARK: Functions to clear filters
-
-  void clearFiltersAndUpdateViews() {
-    _clearFilters();
     _view.updateCompanyList();
   }
 
   void _clearFilters() {
     _searchText = "";
     _selectedGroup = null;
+  }
+
+  void clearSearchSelection() {
+    _searchText = "";
+    _view.updateCompanyList();
+  }
+
+  void clearGroupSelection() {
+    _selectedGroup = null;
+    _view.updateCompanyList();
   }
 
   //MARK: Functions to perform selections
@@ -221,60 +214,6 @@ class GroupDashboardPresenter {
     } else {
       return _getFilteredCompanies()[index];
     }
-  }
-
-  //MARK: Functions to get financial details
-
-  FinancialDetails getProfitLossDetails(FinancialSummary? summary, {bool isForHeaderCard = false}) {
-    if (summary == null) return _emptyFinancialDetails();
-
-    return FinancialDetails.name(
-      label: "Profit & Loss",
-      value: summary.profitLoss,
-      textColor: summary.isInProfit() ? _successColor(isForHeaderCard) : _failureColor(isForHeaderCard),
-    );
-  }
-
-  FinancialDetails getAvailableFundsDetails(FinancialSummary? summary, {bool isForHeaderCard = false}) {
-    if (summary == null) return _emptyFinancialDetails();
-
-    return FinancialDetails.name(
-      label: "Available Funds",
-      value: summary.availableFunds,
-      textColor: summary.areFundsAvailable() ? _successColor(isForHeaderCard) : _failureColor(isForHeaderCard),
-    );
-  }
-
-  FinancialDetails getOverdueReceivablesDetails(FinancialSummary? summary, {bool isForHeaderCard = false}) {
-    if (summary == null) return _emptyFinancialDetails();
-
-    return FinancialDetails.name(
-      label: "Receivables Overdue",
-      value: summary.receivableOverdue,
-      textColor: summary.areReceivablesOverdue() ? _failureColor(isForHeaderCard) : _successColor(isForHeaderCard),
-    );
-  }
-
-  FinancialDetails getOverduePayablesDetails(FinancialSummary? summary, {bool isForHeaderCard = false}) {
-    if (summary == null) return _emptyFinancialDetails();
-
-    return FinancialDetails.name(
-      label: "Payables Overdue",
-      value: summary.payableOverdue,
-      textColor: summary.arePayablesOverdue() ? _failureColor(isForHeaderCard) : _successColor(isForHeaderCard),
-    );
-  }
-
-  FinancialDetails _emptyFinancialDetails() {
-    return FinancialDetails.name(label: "", value: "", textColor: Colors.transparent);
-  }
-
-  Color _successColor(bool isForHeaderCard) {
-    return isForHeaderCard ? AppColors.greenOnDarkDefaultColorBg : AppColors.green;
-  }
-
-  Color _failureColor(bool isForHeaderCard) {
-    return isForHeaderCard ? AppColors.redOnDarkDefaultColorBg : AppColors.red;
   }
 
   //MARK: Getters

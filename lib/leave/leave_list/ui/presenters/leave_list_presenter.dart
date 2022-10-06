@@ -117,7 +117,8 @@ class LeaveListPresenter {
   }
 
   String getTotalLeaveDays(LeaveListItem leaveListItem) {
-    return "${leaveListItem.totalLeaveDays} Days";
+    var suffix = leaveListItem.totalLeaveDays == 1 ? "day" : "days";
+    return "${leaveListItem.totalLeaveDays} $suffix";
   }
 
   String? getStatus(LeaveListItem leaveListItem) {

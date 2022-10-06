@@ -47,26 +47,32 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: SimpleAppBar(
-        title: "Payroll Adjustment Approvals",
-        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
-      ),
-      body: SafeArea(
-        child: ItemNotifiable(
-          notifier: _viewTypeNotifier,
-          builder: (context, viewType) {
-            if (viewType == viewTypeLoader) {
-              return _buildLoaderView();
-            } else if (viewType == viewTypeError) {
-              return _buildErrorView();
-            } else if (viewType == viewTypeNoItems) {
-              return _buildNoItemsView();
-            } else {
-              return _dataView();
-            }
-          },
+    return WillPopScope(
+      onWillPop: () {
+        _dismiss();
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: SimpleAppBar(
+          title: "Payroll Adjustment Approvals",
+          leadingButton: RoundedBackButton(onPressed: () => _dismiss()),
+        ),
+        body: SafeArea(
+          child: ItemNotifiable(
+            notifier: _viewTypeNotifier,
+            builder: (context, viewType) {
+              if (viewType == viewTypeLoader) {
+                return _buildLoaderView();
+              } else if (viewType == viewTypeError) {
+                return _buildErrorView();
+              } else if (viewType == viewTypeNoItems) {
+                return _buildNoItemsView();
+              } else {
+                return _dataView();
+              }
+            },
+          ),
         ),
       ),
     );
@@ -199,5 +205,16 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
   @override
   void updateList() {
     _viewTypeNotifier.notify(viewTypeList);
+  }
+
+  @override
+  void onDidProcessAllApprovals() {
+    _dismiss();
+  }
+
+  //MARK: Function to dismiss the screen
+
+  void _dismiss() {
+    Navigator.pop(context, _listPresenter.numberOfApprovalsProcessed);
   }
 }

@@ -1,6 +1,6 @@
 const createExpenseActionString = "expense_request";
 const createLeaveActionString = "leave_request";
-const adjustPayrollActionString = "adjust_payroll";
+const adjustPayrollActionString = "payroll_adjustment";
 
 enum WPAction {
   Expense,

@@ -5,6 +5,7 @@ import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart'
 import 'package:wallpost/_common_widgets/filter_views/tab_chips.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/dashboard/finance_detail_views/ui/views/finance_detail_card.dart';
 import 'package:wallpost/expense/expense_create/ui/views/create_expense_request_screen.dart';
 import 'package:wallpost/expense/expense_list/ui/views/expense_list_screen.dart';
 import 'package:wallpost/leave/leave_create/ui/views/create_leave_screen.dart';
@@ -18,7 +19,6 @@ import '../presenters/owner_my_portal_dashboard_presenter.dart';
 import '../view_contracts/owner_my_portal_view.dart';
 import 'my_portal_dashboard_loader.dart';
 import 'my_portal_item_action_view.dart';
-import 'owner_my_portal_header_card.dart';
 import 'owner_my_portal_todays_performance_view.dart';
 
 class OwnerMyPortalDashboardScreen extends StatefulWidget {
@@ -108,7 +108,7 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
           child: ListView(
             padding: EdgeInsets.only(top: 0, bottom: 100),
             children: [
-              OwnerMyPortalHeaderCard(_presenter.getFinancialSummary()),
+              FinanceDetailCard(_presenter.getFinancialSummary()),
               OwnerMyPerformanceTodaysPerformanceView(_presenter),
               SizedBox(height: 120),
             ],

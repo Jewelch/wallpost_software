@@ -42,8 +42,8 @@ class GroupDashboardListCardWithoutRevenue extends StatelessWidget {
   Widget _companyLogo() {
     final borderRadius = BorderRadius.circular(20);
     return Container(
-      width: 100,
-      height: 100,
+      width: 80,
+      height: 80,
       padding: EdgeInsets.all(6),
       decoration: BoxDecoration(
         color: Colors.white,

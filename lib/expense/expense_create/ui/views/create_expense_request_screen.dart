@@ -59,10 +59,13 @@ class _CreateExpenseRequestScreenState extends State<CreateExpenseRequestScreen>
     return GestureDetector(
       onTap: () => _presenter.loadCategories(),
       child: Center(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          height: 100,
-          child: Text(_presenter.getLoadCategoriesError()),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 50),
+          child: Text(
+            _presenter.getLoadCategoriesError(),
+            textAlign: TextAlign.center,
+            style: TextStyles.titleTextStyle,
+          ),
         ),
       ),
     );

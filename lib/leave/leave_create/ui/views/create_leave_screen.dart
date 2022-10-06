@@ -58,10 +58,13 @@ class _CreateLeaveScreenState extends State<CreateLeaveScreen> implements Create
     return GestureDetector(
       onTap: () => _presenter.loadLeaveSpecs(),
       child: Center(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          height: 100,
-          child: Text(_presenter.getLoadLeaveSpecsError()),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 50),
+          child: Text(
+            _presenter.getLoadLeaveSpecsError(),
+            textAlign: TextAlign.center,
+            style: TextStyles.titleTextStyle,
+          ),
         ),
       ),
     );

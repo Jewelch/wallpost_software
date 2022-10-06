@@ -44,6 +44,7 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
       scaffoldMessengerKey: snackbarKey,
       home: MainScreen(),
       theme: ThemeData(fontFamily: 'Roboto'),
+      themeMode: ThemeMode.light,
     );
   }
 

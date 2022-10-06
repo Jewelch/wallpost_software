@@ -16,7 +16,6 @@ class LeaveDetailPresenter {
   final LeaveDetailProvider _leaveDetailProvider;
   late LeaveDetail _leaveDetail;
   String? _errorMessage;
-  var _didProcessApprovalOrRejection = false;
 
   LeaveDetailPresenter(
     this._companyId,
@@ -59,13 +58,6 @@ class LeaveDetailPresenter {
     _view.processRejection(_companyId, _leaveId, _leaveDetail.applicantName);
   }
 
-  Future<void> onDidProcessApprovalOrRejection(dynamic didProcess) async {
-    if (didProcess == true) {
-      _didProcessApprovalOrRejection = true;
-      await loadDetail();
-    }
-  }
-
   //MARK: Getters
 
   bool shouldShowApprovalActions() {
@@ -89,15 +81,19 @@ class LeaveDetailPresenter {
   }
 
   String getTotalDays() {
-    return "${_leaveDetail.totalLeaveDays}";
+    return "${_leaveDetail.totalLeaveDays} ${_getDaySuffix(_leaveDetail.totalLeaveDays.toInt())}";
   }
 
   String getTotalPaidDays() {
-    return "${_leaveDetail.paidDays}";
+    return "${_leaveDetail.paidDays} ${_getDaySuffix(_leaveDetail.paidDays.toInt())}";
   }
 
   String getTotalUnpaidDays() {
-    return "${_leaveDetail.unPaidDays}";
+    return "${_leaveDetail.unPaidDays} ${_getDaySuffix(_leaveDetail.unPaidDays.toInt())}";
+  }
+
+  String _getDaySuffix(int days) {
+    return days == 1 ? "day" : "days";
   }
 
   String getLeaveReason() {
@@ -130,6 +126,4 @@ class LeaveDetailPresenter {
   }
 
   String? get errorMessage => _errorMessage;
-
-  get didProcessApprovalOrRejection => _didProcessApprovalOrRejection;
 }

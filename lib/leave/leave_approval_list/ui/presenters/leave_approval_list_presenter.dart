@@ -12,6 +12,7 @@ class LeaveApprovalListPresenter {
   final List<LeaveApprovalListItem> _approvalItems = [];
   String _errorMessage = "";
   final String _noItemsMessage = "There are no approvals to show.\n\nTap here to reload.";
+  int _numberOfApprovalsProcessed = 0;
 
   LeaveApprovalListPresenter(String companyId, this._view)
       : _approvalListProvider = LeaveApprovalListProvider(companyId);
@@ -95,10 +96,11 @@ class LeaveApprovalListPresenter {
 
   //MARK: Functions for successful processing of approval or rejection
 
-  Future<void> onDidProcessApprovalOrRejection(dynamic didProcess, String leaveId) async {
-    if (didProcess == true) {
+  Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, String leaveId) async {
+    if (didPerformAction == true) {
+      _numberOfApprovalsProcessed = _numberOfApprovalsProcessed + 1;
       _approvalItems.removeWhere((approval) => approval.id == leaveId);
-      _approvalItems.isEmpty ? await refresh() : _updateList();
+      _approvalItems.isNotEmpty ? _updateList() : _view.onDidProcessAllApprovals();
     }
   }
 
@@ -109,7 +111,8 @@ class LeaveApprovalListPresenter {
   }
 
   String getTotalDays(LeaveApprovalListItem leaveApprovalListItem) {
-    return "${leaveApprovalListItem.totalLeaveDays} Days";
+    var suffix = leaveApprovalListItem.totalLeaveDays == 1 ? "day" : "days";
+    return "${leaveApprovalListItem.totalLeaveDays} $suffix";
   }
 
   String getLeaveType(LeaveApprovalListItem leaveApprovalListItem) {
@@ -127,4 +130,6 @@ class LeaveApprovalListPresenter {
   String get errorMessage => _errorMessage;
 
   String get noItemsMessage => _noItemsMessage;
+
+  int get numberOfApprovalsProcessed => _numberOfApprovalsProcessed;
 }

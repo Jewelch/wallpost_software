@@ -10,4 +10,6 @@ abstract class LeaveApprovalListView {
   void updateList();
 
   void showLeaveDetail(LeaveApprovalListItem approval);
+
+  void onDidProcessAllApprovals();
 }

@@ -98,6 +98,7 @@ class AttendanceAdjustmentPresenter {
       var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
       var employee = company.employee;
       var attendanceAdjustmentForm = AttendanceAdjustmentForm(
+        _attendanceListItem.attendanceId,
         company.id,
         employee.v1Id,
         _attendanceListItem.date,

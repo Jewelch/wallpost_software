@@ -1,39 +1,44 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/expense/expense_approval/services/expense_approver.dart';
-import 'package:wallpost/expense/expense_approval/services/expense_rejector.dart';
-import 'package:wallpost/expense/expense_approval/ui/presenters/expense_approval_presenter.dart';
-import 'package:wallpost/expense/expense_approval/ui/view_contracts/expense_approval_view.dart';
+import 'package:wallpost/leave/leave_approval/services/leave_approver.dart';
+import 'package:wallpost/leave/leave_approval/services/leave_rejector.dart';
+import 'package:wallpost/leave/leave_approval/ui/presenters/leave_approval_presenter.dart';
+import 'package:wallpost/leave/leave_approval/ui/view_contracts/leave_approval_view.dart';
 
 import '../../../_mocks/mock_network_adapter.dart';
+import '../../../_mocks/mock_notification_center.dart';
 
-class MockExpenseApprovalView extends Mock implements ExpenseApprovalView {}
+class MockLeaveApprovalView extends Mock implements LeaveApprovalView {}
 
-class MockExpenseApprover extends Mock implements ExpenseApprover {}
+class MockLeaveApprover extends Mock implements LeaveApprover {}
 
-class MockExpenseRejector extends Mock implements ExpenseRejector {}
+class MockLeaveRejector extends Mock implements LeaveRejector {}
 
 void main() {
-  var view = MockExpenseApprovalView();
-  var approver = MockExpenseApprover();
-  var rejector = MockExpenseRejector();
-  late ExpenseApprovalPresenter presenter;
+  var view = MockLeaveApprovalView();
+  var approver = MockLeaveApprover();
+  var rejector = MockLeaveRejector();
+  var notificationCenter = MockNotificationCenter();
+  late LeaveApprovalPresenter presenter;
 
   void _verifyNoMoreInteractions() {
     verifyNoMoreInteractions(view);
     verifyNoMoreInteractions(approver);
     verifyNoMoreInteractions(rejector);
+    verifyNoMoreInteractions(notificationCenter);
   }
 
   void _clearAllInteractions() {
     clearInteractions(view);
     clearInteractions(approver);
     clearInteractions(rejector);
+    clearInteractions(notificationCenter);
   }
 
   setUp(() {
     _clearAllInteractions();
-    presenter = ExpenseApprovalPresenter.initWith(view, approver, rejector);
+    when(() => notificationCenter.updateCount()).thenAnswer((_) => Future.value(null));
+    presenter = LeaveApprovalPresenter.initWith(view, approver, rejector, notificationCenter);
   });
 
   test('failure to approve', () async {
@@ -41,12 +46,12 @@ void main() {
     when(() => approver.approve(any(), any())).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
-    await presenter.approve("someCompanyId", "someExpenseId");
+    await presenter.approve("someCompanyId", "someLeaveId");
 
     //then
     verifyInOrder([
       () => view.showLoader(),
-      () => approver.approve("someCompanyId", "someExpenseId"),
+      () => approver.approve("someCompanyId", "someLeaveId"),
       () => view.onDidFailToPerformAction("Approval Failed", InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractions();
@@ -57,13 +62,14 @@ void main() {
     when(() => approver.approve(any(), any())).thenAnswer((_) => Future.value(null));
 
     //when
-    await presenter.approve("someCompanyId", "someExpenseId");
+    await presenter.approve("someCompanyId", "someLeaveId");
 
     //then
     verifyInOrder([
       () => view.showLoader(),
-      () => approver.approve("someCompanyId", "someExpenseId"),
-      () => view.onDidPerformActionSuccessfully("someExpenseId"),
+      () => approver.approve("someCompanyId", "someLeaveId"),
+      () => notificationCenter.updateCount(),
+      () => view.onDidPerformActionSuccessfully("someLeaveId"),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -71,11 +77,11 @@ void main() {
   test('does nothing when approving once again after successfully approving a request', () async {
     //given
     when(() => approver.approve(any(), any())).thenAnswer((_) => Future.value(null));
-    await presenter.approve("someCompanyId", "someExpenseId");
+    await presenter.approve("someCompanyId", "someLeaveId");
     _clearAllInteractions();
 
     //when
-    await presenter.approve("someCompanyId", "someExpenseId");
+    await presenter.approve("someCompanyId", "someLeaveId");
 
     //then
     _verifyNoMoreInteractions();
@@ -87,7 +93,7 @@ void main() {
         .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
-    await presenter.reject("someCompanyId", "someExpenseId", "");
+    await presenter.reject("someCompanyId", "someLeaveId", "");
 
     //then
     expect(presenter.getRejectionReasonError(), "Please enter a valid reason");
@@ -103,12 +109,12 @@ void main() {
         .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
-    await presenter.reject("someCompanyId", "someExpenseId", "some reason");
+    await presenter.reject("someCompanyId", "someLeaveId", "some reason");
 
     //then
     verifyInOrder([
       () => view.showLoader(),
-      () => rejector.reject("someCompanyId", "someExpenseId", rejectionReason: "some reason"),
+      () => rejector.reject("someCompanyId", "someLeaveId", rejectionReason: "some reason"),
       () => view.onDidFailToPerformAction("Rejection Failed", InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractions();
@@ -120,13 +126,14 @@ void main() {
         .thenAnswer((_) => Future.value(null));
 
     //when
-    await presenter.reject("someCompanyId", "someExpenseId", "some reason");
+    await presenter.reject("someCompanyId", "someLeaveId", "some reason");
 
     //then
     verifyInOrder([
       () => view.showLoader(),
-      () => rejector.reject("someCompanyId", "someExpenseId", rejectionReason: "some reason"),
-      () => view.onDidPerformActionSuccessfully("someExpenseId"),
+      () => rejector.reject("someCompanyId", "someLeaveId", rejectionReason: "some reason"),
+      () => notificationCenter.updateCount(),
+      () => view.onDidPerformActionSuccessfully("someLeaveId"),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -135,11 +142,11 @@ void main() {
     //given
     when(() => rejector.reject(any(), any(), rejectionReason: any(named: "rejectionReason")))
         .thenAnswer((_) => Future.value(null));
-    await presenter.reject("someCompanyId", "someExpenseId", "some reason");
+    await presenter.reject("someCompanyId", "someLeaveId", "some reason");
     _clearAllInteractions();
 
     //when
-    await presenter.reject("someCompanyId", "someExpenseId", "some reason");
+    await presenter.reject("someCompanyId", "someLeaveId", "some reason");
 
     //then
     _verifyNoMoreInteractions();
@@ -167,7 +174,7 @@ void main() {
 
   test("getting approve button title after successful approval", () async {
     when(() => approver.approve(any(), any())).thenAnswer((_) => Future.value(null));
-    await presenter.approve("someCompanyId", "someExpenseId");
+    await presenter.approve("someCompanyId", "someLeaveId");
 
     expect(presenter.getApproveButtonTitle(), "Approved!");
   });
@@ -179,7 +186,7 @@ void main() {
   test("getting reject button title after successful rejection", () async {
     when(() => rejector.reject(any(), any(), rejectionReason: any(named: "rejectionReason")))
         .thenAnswer((_) => Future.value(null));
-    await presenter.reject("someCompanyId", "someExpenseId", "some reason");
+    await presenter.reject("someCompanyId", "someLeaveId", "some reason");
 
     expect(presenter.getRejectButtonTitle(), "Rejected!");
   });

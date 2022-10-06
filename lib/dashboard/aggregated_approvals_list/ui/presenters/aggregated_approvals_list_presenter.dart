@@ -12,7 +12,7 @@ class AggregatedApprovalsListPresenter {
   final AggregatedApprovalsListView _view;
   final AggregatedApprovalsListProvider _provider;
   final NotificationCenter _notificationCenter;
-  List<AggregatedApproval> approvals = [];
+  List<AggregatedApproval> _approvals = [];
 
   late String _selectedCompanyName;
   late String _selectedModuleName;
@@ -62,19 +62,19 @@ class AggregatedApprovalsListPresenter {
 
     try {
       if (companyId == null) {
-        approvals = await _provider.getAllApprovals();
+        _approvals = await _provider.getAllApprovals();
       } else {
-        approvals = await _provider.getAllApprovals(companyId: companyId);
+        _approvals = await _provider.getAllApprovals(companyId: companyId);
       }
 
-      if (approvals.isEmpty) {
+      if (_approvals.isEmpty) {
         _view.showErrorMessage("There are no pending approvals.\n\nTap here to reload.");
         return;
       }
 
-      _view.onDidLoadApprovals();
+      _view.updateList();
     } on WPException catch (e) {
-      approvals.clear();
+      _approvals.clear();
       _view.showErrorMessage('${e.userReadableMessage}\n\nTap here to reload.');
     }
   }
@@ -104,17 +104,18 @@ class AggregatedApprovalsListPresenter {
       _view.showNoMatchingResultsMessage("There are no approvals that match\nthe selected filters.");
       return;
     } else {
-      _view.onDidLoadApprovals();
+      _view.updateList();
     }
   }
 
   List<AggregatedApproval> _getFilteredApprovals() {
-    var filteredList = approvals;
+    var filteredList = _approvals;
     if (_selectedCompanyName != "All Companies") {
-      filteredList = approvals.where((company) => (company.companyName == _selectedCompanyName)).toList();
+      filteredList = _approvals.where((approval) => (approval.companyName == _selectedCompanyName)).toList();
     }
     if (_selectedModuleName != "All Modules") {
-      filteredList = filteredList.where((company) => (company.module == _selectedModuleName)).toList();
+      filteredList =
+          filteredList.where((approval) => (approval.module.toReadableString() == _selectedModuleName)).toList();
     }
     return filteredList;
   }
@@ -132,18 +133,30 @@ class AggregatedApprovalsListPresenter {
     _selectedModuleName = "All Modules";
   }
 
+  //MARK: Function to handle processed approvals
+
+  void didProcessApprovals(AggregatedApproval aggregatedApproval, dynamic numberOfApprovalsProcessed) {
+    if (numberOfApprovalsProcessed == null || !(numberOfApprovalsProcessed is int)) return;
+
+    var existingCount = aggregatedApproval.approvalCount;
+    var updatedCount = existingCount - numberOfApprovalsProcessed;
+    updatedCount > 0 ? aggregatedApproval.setCount(updatedCount) : _approvals.remove(aggregatedApproval);
+
+    _approvals.isNotEmpty ? _view.updateList() : _view.onDidProcessAllApprovals();
+  }
+
   //MARK: Getters
 
   List<String> getCompanyNames() {
-    final companyNames = approvals.groupListsBy((element) => element.companyName);
+    final companyNames = _approvals.groupListsBy((element) => element.companyName);
     var names = companyNames.keys.toList();
     names.insert(0, "All Companies");
     return names;
   }
 
   List<String> getModuleNames() {
-    final moduleNames = approvals.groupListsBy((element) => element.module);
-    var names = moduleNames.keys.toList();
+    var uniqueModules = _approvals.groupListsBy((element) => element.module).keys.toList();
+    var names = uniqueModules.map((m) => m.toReadableString()).toList();
     names.insert(0, "All Modules");
     return names;
   }

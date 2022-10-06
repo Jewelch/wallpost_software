@@ -1,9 +1,11 @@
 abstract class AggregatedApprovalsListView {
   void showLoader();
 
-  void onDidLoadApprovals();
+  void updateList();
 
   void showErrorMessage(String message);
 
   void showNoMatchingResultsMessage(String message);
+
+  void onDidProcessAllApprovals();
 }

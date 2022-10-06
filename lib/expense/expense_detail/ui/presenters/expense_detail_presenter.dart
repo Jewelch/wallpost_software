@@ -17,7 +17,6 @@ class ExpenseDetailPresenter {
   final ExpenseDetailProvider _expenseDetailProvider;
   late ExpenseRequest _expenseRequest;
   String? _errorMessage;
-  var _didProcessApprovalOrRejection = false;
 
   ExpenseDetailPresenter(
     this._companyId,
@@ -58,13 +57,6 @@ class ExpenseDetailPresenter {
 
   void initiateRejection() {
     _view.processRejection(_companyId, _expenseId, _expenseRequest.requestedBy);
-  }
-
-  Future<void> onDidProcessApprovalOrRejection(dynamic didProcess) async {
-    if (didProcess == true) {
-      _didProcessApprovalOrRejection = true;
-      await loadDetail();
-    }
   }
 
   //MARK: Getters
@@ -136,6 +128,4 @@ class ExpenseDetailPresenter {
   }
 
   String? get errorMessage => _errorMessage;
-
-  get didProcessApprovalOrRejection => _didProcessApprovalOrRejection;
 }

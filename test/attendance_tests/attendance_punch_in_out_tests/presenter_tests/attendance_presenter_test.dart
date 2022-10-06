@@ -953,7 +953,6 @@ void main() {
       presenter.goToLocationSettings();
 
       //then
-      expect(presenter.shouldReloadDataWhenAppIsResumed(), true);
       verifyInOrder([
         () => mockDeviceSettings.goToLocationSettings(),
       ]);
@@ -968,25 +967,10 @@ void main() {
       presenter.goToAppSettings();
 
       //then
-      expect(presenter.shouldReloadDataWhenAppIsResumed(), true);
       verifyInOrder([
         () => mockDeviceSettings.goToAppSettings(),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
-    });
-
-    test('test should reload data on resume flag is set to false once retrieved', () {
-      //given
-      when(() => mockDeviceSettings.goToAppSettings()).thenAnswer((_) => Future.value(true));
-      presenter.goToAppSettings();
-
-      //when
-      var firstValue = presenter.shouldReloadDataWhenAppIsResumed();
-      var secondValue = presenter.shouldReloadDataWhenAppIsResumed();
-
-      //then
-      expect(firstValue, true);
-      expect(secondValue, false);
     });
   });
 }

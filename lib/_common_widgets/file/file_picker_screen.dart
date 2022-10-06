@@ -8,30 +8,30 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 
 import '../screen_presenter/modal_sheet_presenter.dart';
 
-enum FileTypes { images, videos, documents, audios, camera }
+enum PickerFileType { image, video, document, audio, camera }
 
 class FilePickerScreen extends StatefulWidget {
   final bool allowMultiple;
-  final List<FileTypes> filesType;
+  final List<PickerFileType> fileTypes;
   final ModalSheetController modalSheetController;
 
   FilePickerScreen._({
     required this.allowMultiple,
-    required this.filesType,
+    required this.fileTypes,
     required this.modalSheetController,
   });
 
   static Future<dynamic> show(
     BuildContext context, {
     bool allowMultiple = false,
-    List<FileTypes> filesType = FileTypes.values,
+    List<PickerFileType> fileTypes = PickerFileType.values,
   }) {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
       context: context,
       content: FilePickerScreen._(
         allowMultiple: allowMultiple,
-        filesType: filesType,
+        fileTypes: fileTypes,
         modalSheetController: modalSheetController,
       ),
       controller: modalSheetController,
@@ -48,7 +48,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.filesType.contains(FileTypes.camera))
+        if (widget.fileTypes.contains(PickerFileType.camera))
           ListTile(
             title: Row(
               children: [
@@ -58,11 +58,15 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
               ],
             ),
             onTap: () async {
-              final XFile? photo = await ImagePicker().pickImage(source: ImageSource.camera);
+              final XFile? photo = await ImagePicker().pickImage(
+                source: ImageSource.camera,
+                maxWidth: 800,
+                maxHeight: 800,
+              );
               if (photo != null) _didSelectFiles([File(photo.path)]);
             },
           ),
-        if (widget.filesType.contains(FileTypes.images))
+        if (widget.fileTypes.contains(PickerFileType.image))
           ListTile(
             title: Row(
               children: [
@@ -73,7 +77,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
             ),
             onTap: () => _pickFiles(FileType.image),
           ),
-        if (widget.filesType.contains(FileTypes.videos))
+        if (widget.fileTypes.contains(PickerFileType.video))
           ListTile(
             title: Row(
               children: [
@@ -84,7 +88,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
             ),
             onTap: () => _pickFiles(FileType.video),
           ),
-        if (widget.filesType.contains(FileTypes.documents))
+        if (widget.fileTypes.contains(PickerFileType.document))
           ListTile(
             title: Row(
               children: [
@@ -102,7 +106,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
               'txt',
             ]),
           ),
-        if (widget.filesType.contains(FileTypes.audios))
+        if (widget.fileTypes.contains(PickerFileType.audio))
           ListTile(
             title: Row(
               children: [

@@ -49,26 +49,32 @@ class _LeaveApprovalListScreenState extends State<LeaveApprovalListScreen> imple
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: SimpleAppBar(
-        title: "Leave Approvals",
-        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
-      ),
-      body: SafeArea(
-        child: ItemNotifiable(
-          notifier: _viewTypeNotifier,
-          builder: (context, viewType) {
-            if (viewType == viewTypeLoader) {
-              return _buildLoaderView();
-            } else if (viewType == viewTypeError) {
-              return _buildErrorView();
-            } else if (viewType == viewTypeNoItems) {
-              return _buildNoItemsView();
-            } else {
-              return _dataView();
-            }
-          },
+    return WillPopScope(
+      onWillPop: () {
+        _dismiss();
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: SimpleAppBar(
+          title: "Leave Approvals",
+          leadingButton: RoundedBackButton(onPressed: () => _dismiss()),
+        ),
+        body: SafeArea(
+          child: ItemNotifiable(
+            notifier: _viewTypeNotifier,
+            builder: (context, viewType) {
+              if (viewType == viewTypeLoader) {
+                return _buildLoaderView();
+              } else if (viewType == viewTypeError) {
+                return _buildErrorView();
+              } else if (viewType == viewTypeNoItems) {
+                return _buildNoItemsView();
+              } else {
+                return _dataView();
+              }
+            },
+          ),
         ),
       ),
     );
@@ -218,5 +224,16 @@ class _LeaveApprovalListScreenState extends State<LeaveApprovalListScreen> imple
       context,
     );
     _listPresenter.onDidProcessApprovalOrRejection(didPerformAction, approval.id);
+  }
+
+  @override
+  void onDidProcessAllApprovals() {
+    _dismiss();
+  }
+
+  //MARK: Function to dismiss the screen
+
+  void _dismiss() {
+    Navigator.pop(context, _listPresenter.numberOfApprovalsProcessed);
   }
 }

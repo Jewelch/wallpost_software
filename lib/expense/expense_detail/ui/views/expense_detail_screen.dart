@@ -53,11 +53,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
       backgroundColor: AppColors.screenBackgroundColor,
       appBar: SimpleAppBar(
         title: "Expense Details",
-        leadingButton: RoundedBackButton(
-            onPressed: () => Navigator.pop(
-              context,
-                  _presenter.didProcessApprovalOrRejection,
-                )),
+        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
       ),
       body: SafeArea(
         child: ItemNotifiable(
@@ -237,7 +233,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
       companyId: companyId,
       requestedBy: requestedBy,
     );
-    _presenter.onDidProcessApprovalOrRejection(didApprove);
+    if (didApprove == true) Navigator.pop(context, true);
   }
 
   void _showRejectionSheet(String companyId, String expenseId, String requestedBy, BuildContext context) async {
@@ -247,6 +243,6 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> implements Ex
       companyId: companyId,
       requestedBy: requestedBy,
     );
-    _presenter.onDidProcessApprovalOrRejection(didReject);
+    if (didReject == true) Navigator.pop(context, true);
   }
 }
