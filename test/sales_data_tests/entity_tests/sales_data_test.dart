@@ -24,7 +24,7 @@ void main() {
     expect(salesData.grossOfProfit, '$grossOfProfit%');
   });
 
-  test('SalesData model serialization throws a <MappingException> when data is unvalid', () {
+  test('SalesData model serialization throws a <MappingException> when data is invalid', () {
     try {
       SalesData.fromJson(
           Mocks.specificSalesDataResponse(totalSales: 12000, netSales: '4000', costOfSales: '2700', grossOfProfit: '40')['data']);

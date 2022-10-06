@@ -1,4 +1,11 @@
+import 'package:mocktail/mocktail.dart';
 import 'package:random_string/random_string.dart';
+import 'package:wallpost/sales_data/entities/sales_data.dart';
+import 'package:wallpost/sales_data/services/sales_data_provider.dart';
+
+class MockSalesDataProvider extends Mock implements SalesDataProvider {}
+
+class MockSalesData extends Mock implements SalesData {}
 
 class Mocks {
   static var loginResponse = {

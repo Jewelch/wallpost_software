@@ -1,43 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
-import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/sales_data/presenters/sales_presenter.dart';
+import 'package:wallpost/sales_data/ui/contracts/SalesDataView.dart';
 
-import '_mocks.dart';
+import '../mocks.dart';
 
-class SalesPresenter {
-  SalesDataProvider _salesDataProvider;
-  SalesDataView _view;
 
-  SalesPresenter(this._view) : _salesDataProvider = SalesDataProvider();
-
-  SalesPresenter.initWith(this._view, this._salesDataProvider);
-
-  Future loadSalesData() async {
-    if (_salesDataProvider.isLoading) return;
-    _view.showLoader();
-    try {
-      var salesData = await _salesDataProvider.getSalesData();
-      _view.hideLoader();
-      _view.showSalesData(salesData);
-    } on WPException catch (e) {
-      _view.hideLoader();
-      _view.showErrorMessage(e.userReadableMessage + "\n\nTap here to reload.");
-    }
-  }
-}
-
-abstract class SalesDataView {
-  void showLoader();
-
-  void hideLoader();
-
-  void showErrorMessage(String errorMessage) {}
-
-  void showSalesData(SalesData salesData) {}
-}
-
-class SalesData {}
 
 class MockSalesDataView extends Mock implements SalesDataView {}
 
@@ -62,7 +31,7 @@ void main() {
     test('failure to load sales data', () async {
       //given
       when(() => salesDataProvider.isLoading).thenReturn(false);
-      when(() => salesDataProvider.getSalesData()).thenAnswer((_) => Future.error(InvalidResponseException()));
+      when(() => salesDataProvider.getSalesAmounts()).thenAnswer((_) => Future.error(InvalidResponseException()));
 
       //when
       await salesPresenter.loadSalesData();
@@ -70,7 +39,7 @@ void main() {
       verifyInOrder([
         () => salesDataProvider.isLoading,
         () => view.showLoader(),
-        () => salesDataProvider.getSalesData(),
+        () => salesDataProvider.getSalesAmounts(),
         () => view.hideLoader(),
         () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
       ]);
@@ -79,9 +48,10 @@ void main() {
 
     test('successfully loading sales data', () async {
       //given
-      var salesData = SalesData();
+      var salesData = MockSalesData();
       when(() => salesDataProvider.isLoading).thenReturn(false);
-      when(() => salesDataProvider.getSalesData()).thenAnswer((_) => Future.value(salesData));
+      when(() => salesDataProvider.getSalesAmounts()).thenAnswer((_) => Future.value(salesData));
+
       //when
       await salesPresenter.loadSalesData();
 
@@ -89,7 +59,7 @@ void main() {
       verifyInOrder([
         () => salesDataProvider.isLoading,
         () => view.showLoader(),
-        () => salesDataProvider.getSalesData(),
+        () => salesDataProvider.getSalesAmounts(),
         () => view.hideLoader(),
         () => view.showSalesData(salesData),
       ]);
