@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/sales_data/constants/sales_data_url.dart';
 import 'package:wallpost/sales_data/services/sales_data_provider.dart';
@@ -54,6 +55,57 @@ void main() {
     } catch (e) {
       expect(e, isA<NetworkFailureException>());
     }
+  });
+
+  test('SalesAmounts API throws <InvalidResponseException> when response is null', () async {
+    mockNetworkAdapter.succeed(null);
+
+    try {
+      await salesDataProvider.getSalesAmounts(storeId: 'someStoreId');
+      fail('failed to throw InvalidResponseException');
+    } catch (e) {
+      expect(e is InvalidResponseException, true);
+    }
+  });
+
+  test('SalesAmounts API throws <WrongResponseFormatException> when response is of the wrong format', () async {
+    mockNetworkAdapter.succeed('wrong response format');
+
+    try {
+      await salesDataProvider.getSalesAmounts(storeId: 'someStoreId');
+      fail('failed to throw WrongResponseFormatException');
+    } catch (e) {
+      expect(e is WrongResponseFormatException, true);
+    }
+  });
+
+  test('SalesAmounts API throws <InvalidResponseException> when entity mapping fails', () async {
+    mockNetworkAdapter.succeed(<String, dynamic>{"miss_data": "anyWrongData"});
+
+    try {
+      await salesDataProvider.getSalesAmounts(storeId: 'someStoreId');
+      fail('failed to throw InvalidResponseException');
+    } catch (e) {
+      expect(e is InvalidResponseException, true);
+    }
+  });
+
+  test('SalesAmounts API response is ignored if it is from another session', () async {
+    var didReceiveResponseForTheSecondRequest = false;
+
+    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 200);
+    salesDataProvider.getSalesAmounts().then((_) {
+      fail('Received the response for the first request. '
+          'This response should be ignored as the session id has changed');
+    });
+
+    mockNetworkAdapter.succeed(successfulResponse);
+    salesDataProvider.getSalesAmounts().then((_) {
+      didReceiveResponseForTheSecondRequest = true;
+    });
+
+    await Future.delayed(Duration(milliseconds: 100));
+    expect(didReceiveResponseForTheSecondRequest, true);
   });
 
   test('SalesAmounts API succeeds', () async {
