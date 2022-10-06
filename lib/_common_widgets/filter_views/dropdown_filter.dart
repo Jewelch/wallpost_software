@@ -11,6 +11,7 @@ class DropdownFilter extends StatelessWidget {
   final ValueChanged<String>? onDidSelectItemWithValue;
   final ValueChanged<int>? onDidSelectedItemAtIndex;
   final Color backgroundColor;
+  final Color? dropdownColor;
   final TextStyle? textStyle;
   final Color? dropdownArrowColor;
 
@@ -22,6 +23,7 @@ class DropdownFilter extends StatelessWidget {
     this.onDidSelectItemWithValue,
     this.onDidSelectedItemAtIndex,
     this.backgroundColor = AppColors.filtersBackgroundColour,
+    this.dropdownColor,
     this.textStyle,
     this.dropdownArrowColor = AppColors.defaultColorDark,
   });
@@ -52,7 +54,7 @@ class DropdownFilter extends StatelessWidget {
           if (onDidSelectedItemAtIndex != null) onDidSelectedItemAtIndex!(items.indexOf(selectedValue));
         },
         underline: SizedBox(),
-        dropdownColor: backgroundColor,
+        dropdownColor: dropdownColor ?? backgroundColor,
         icon: SvgPicture.asset(
           'assets/icons/arrow_down_icon.svg',
           color: dropdownArrowColor,

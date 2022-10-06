@@ -30,7 +30,7 @@ class AttendanceListPresenter {
 
   void _initYearAndMonth() {
     _selectedYear = _yearsAndMonthsProvider.years().last;
-    _selectedMonth = _yearsAndMonthsProvider.currentAndPastMonthsOfTheCurrentYear(_selectedYear).last;
+    _selectedMonth = _yearsAndMonthsProvider.currentAndPastMonthsOfYear(_selectedYear).last;
   }
 
   //MARK: Function to load the attendance_punch_in_out list
@@ -114,7 +114,7 @@ class AttendanceListPresenter {
   }
 
   List<String> getMonthsListOfSelectedYear() {
-    return _yearsAndMonthsProvider.currentAndPastMonthsOfTheCurrentYear(_selectedYear);
+    return _yearsAndMonthsProvider.currentAndPastMonthsOfYear(_selectedYear);
   }
 
   Future<void> selectYear(int year) async {

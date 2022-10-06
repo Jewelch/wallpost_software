@@ -5,7 +5,7 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/settings/left_menu/left_menu_button.dart';
 
-import '../../_common_widgets/buttons/rounded_icon_button.dart';
+import '../../../../_common_widgets/buttons/rounded_icon_button.dart';
 
 class CompanyDashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String companyName;
@@ -84,6 +84,8 @@ class CompanyDashboardAppBar extends StatelessWidget implements PreferredSizeWid
     );
   }
 
+  // uncomment to show the add button
+  // ignore: unused_element
   Widget _addButton() {
     return RoundedIconButton(
       width: 46,

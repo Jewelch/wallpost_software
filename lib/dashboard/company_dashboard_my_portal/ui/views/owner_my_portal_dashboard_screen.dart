@@ -11,6 +11,7 @@ import 'package:wallpost/expense/expense_list/ui/views/expense_list_screen.dart'
 import 'package:wallpost/leave/leave_create/ui/views/create_leave_screen.dart';
 import 'package:wallpost/leave/leave_list/ui/views/leave_list_screen.dart';
 
+import '../../../../_common_widgets/filter_views/ytd_filter.dart';
 import '../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../attendance/attendance_adjustment/ui/views/attendance_list_screen.dart';
@@ -106,11 +107,31 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
         RefreshIndicator(
           onRefresh: () => _presenter.loadData(),
           child: ListView(
-            padding: EdgeInsets.only(top: 0, bottom: 100),
+            padding: EdgeInsets.only(top: 44, bottom: 100),
             children: [
               FinanceDetailCard(_presenter.getFinancialSummary()),
               OwnerMyPerformanceTodaysPerformanceView(_presenter),
               SizedBox(height: 120),
+            ],
+          ),
+        ),
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "My Portal",
+                style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: AppColors.myPortalColor),
+              ),
+              YtdFilter(
+                initialMonth: _presenter.selectedMonth,
+                initialYear: _presenter.selectedYear,
+                onDidChangeFilter: (month, year) {
+                  _presenter.setFilter(month: month, year: year);
+                },
+              ),
             ],
           ),
         ),

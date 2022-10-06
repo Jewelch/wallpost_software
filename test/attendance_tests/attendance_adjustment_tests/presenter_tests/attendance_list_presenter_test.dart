@@ -39,8 +39,8 @@ void main() {
 
   setUp(() {
     when(() => yearsAndMonthsProvider.years()).thenReturn([2021, 2022]);
-    when(() => yearsAndMonthsProvider.currentAndPastMonthsOfTheCurrentYear(2022)).thenReturn(["Jan", "Feb"]);
-    when(() => yearsAndMonthsProvider.currentAndPastMonthsOfTheCurrentYear(2021)).thenReturn(["Jan", "Feb", "Mar"]);
+    when(() => yearsAndMonthsProvider.currentAndPastMonthsOfYear(2022)).thenReturn(["Jan", "Feb"]);
+    when(() => yearsAndMonthsProvider.currentAndPastMonthsOfYear(2021)).thenReturn(["Jan", "Feb", "Mar"]);
     presenter = AttendanceListPresenter.initWith(view, mockAttendanceListProvider, yearsAndMonthsProvider);
     _resetAllMockInteractions();
   });

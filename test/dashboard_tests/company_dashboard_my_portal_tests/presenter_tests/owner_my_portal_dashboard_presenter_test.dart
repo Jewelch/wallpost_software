@@ -102,7 +102,8 @@ void main() {
   test('loading data when service is loading does nothing', () async {
     //given
     when(() => dataProvider.isLoading).thenReturn(true);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await presenter.loadData();
@@ -117,7 +118,8 @@ void main() {
   test('failure to load the data', () async {
     //given
     when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await presenter.loadData();
@@ -126,7 +128,7 @@ void main() {
     verifyInOrder([
       () => dataProvider.isLoading,
       () => view.showLoader(),
-      () => dataProvider.get(),
+      () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
       () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -135,7 +137,8 @@ void main() {
   test('successfully loading the data', () async {
     //given
     when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.value(MockOwnerMyPortalData()));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(MockOwnerMyPortalData()));
 
     //when
     await presenter.loadData();
@@ -144,7 +147,49 @@ void main() {
     verifyInOrder([
       () => dataProvider.isLoading,
       () => view.showLoader(),
-      () => dataProvider.get(),
+      () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
+      () => view.onDidLoadData(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('setting filter', () async {
+    //given
+    when(() => dataProvider.isLoading).thenReturn(false);
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(MockOwnerMyPortalData()));
+
+    //when
+    await presenter.setFilter(month: 2, year: 2022);
+
+    //then
+    expect(presenter.selectedMonth, 2);
+    expect(presenter.selectedYear, 2022);
+    verifyInOrder([
+      () => dataProvider.isLoading,
+      () => view.showLoader(),
+      () => dataProvider.get(month: 2, year: 2022),
+      () => view.onDidLoadData(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('setting month to 0 sets it to null in the provider', () async {
+    //given
+    when(() => dataProvider.isLoading).thenReturn(false);
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(MockOwnerMyPortalData()));
+
+    //when
+    await presenter.setFilter(month: 0, year: 2022);
+
+    //then
+    expect(presenter.selectedMonth, 0);
+    expect(presenter.selectedYear, 2022);
+    verifyInOrder([
+      () => dataProvider.isLoading,
+      () => view.showLoader(),
+      () => dataProvider.get(month: null, year: 2022),
       () => view.onDidLoadData(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -162,17 +207,19 @@ void main() {
     test('does nothing when retrieving dashboard data fails', () async {
       //given
       when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get()).thenAnswer((_) => Future.value(MockOwnerMyPortalData()));
+      when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+          .thenAnswer((_) => Future.value(MockOwnerMyPortalData()));
       await presenter.loadData();
       _clearInteractionsOnAllMocks();
 
       //when
-      when(() => dataProvider.get()).thenAnswer((_) => Future.error(InvalidResponseException()));
+      when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+          .thenAnswer((_) => Future.error(InvalidResponseException()));
       presenter.syncDataInBackground();
 
       //then
       verifyInOrder([
-        () => dataProvider.get(),
+        () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
@@ -185,7 +232,8 @@ void main() {
       when(() => data.aggregatedApprovals).thenReturn([approval]);
       when(() => data.absentees).thenReturn(10);
       when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
+      when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+          .thenAnswer((_) => Future.value(data));
       await presenter.loadData();
       _clearInteractionsOnAllMocks();
 
@@ -194,7 +242,7 @@ void main() {
 
       //then
       verifyInOrder([
-        () => dataProvider.get(),
+        () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
@@ -206,7 +254,8 @@ void main() {
       when(() => existingApproval.approvalCount).thenReturn(10);
       when(() => existingData.aggregatedApprovals).thenReturn([existingApproval]);
       when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get()).thenAnswer((_) => Future.value(existingData));
+      when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+          .thenAnswer((_) => Future.value(existingData));
       await presenter.loadData();
       _clearInteractionsOnAllMocks();
 
@@ -216,12 +265,13 @@ void main() {
       when(() => newApproval.approvalCount).thenReturn(6);
       when(() => newData.aggregatedApprovals).thenReturn([newApproval]);
       when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get()).thenAnswer((_) => Future.value(newData));
+      when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+          .thenAnswer((_) => Future.value(newData));
       await presenter.syncDataInBackground();
 
       //then
       verifyInOrder([
-        () => dataProvider.get(),
+        () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
         () => view.onDidLoadData(),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
@@ -235,7 +285,8 @@ void main() {
       when(() => existingData.aggregatedApprovals).thenReturn([existingApproval]);
       when(() => existingData.absentees).thenReturn(20);
       when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get()).thenAnswer((_) => Future.value(existingData));
+      when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+          .thenAnswer((_) => Future.value(existingData));
       await presenter.loadData();
       _clearInteractionsOnAllMocks();
 
@@ -246,13 +297,14 @@ void main() {
       when(() => newData.aggregatedApprovals).thenReturn([newApproval]);
       when(() => newData.absentees).thenReturn(10);
       when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get()).thenAnswer((_) => Future.value(newData));
+      when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+          .thenAnswer((_) => Future.value(newData));
       await presenter.syncDataInBackground();
 
       //then
       expect(presenter.getTotalApprovalCount(), 10);
       verifyInOrder([
-        () => dataProvider.get(),
+        () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
         () => view.onDidLoadData(),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
@@ -275,7 +327,8 @@ void main() {
     var data = MockOwnerMyPortalData();
     when(() => data.financialSummary).thenReturn(financialSummary);
     when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(data));
     await presenter.loadData();
 
     //then
@@ -287,7 +340,8 @@ void main() {
     var data = MockOwnerMyPortalData();
     when(() => data.absentees).thenReturn(0);
     when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(data));
     await presenter.loadData();
 
     //then
@@ -300,7 +354,8 @@ void main() {
     var data = MockOwnerMyPortalData();
     when(() => data.absentees).thenReturn(10);
     when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(data));
     await presenter.loadData();
 
     //then
@@ -319,7 +374,8 @@ void main() {
     var data = MockOwnerMyPortalData();
     when(() => data.aggregatedApprovals).thenReturn([approval1, approval2, approval3]);
     when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(data));
     await presenter.loadData();
 
     //then
@@ -330,7 +386,8 @@ void main() {
     //given
     var data = OwnerMyPortalData.fromJson(Mocks.ownerMyPortalDataResponse, "USD");
     when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(data));
     await presenter.loadData();
 
     //when
@@ -353,7 +410,8 @@ void main() {
     map["company_performance"] = 40;
     var data = OwnerMyPortalData.fromJson(map, "USD");
     when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(data));
     await presenter.loadData();
 
     //when
@@ -376,7 +434,8 @@ void main() {
     map["company_performance"] = 70;
     var data = OwnerMyPortalData.fromJson(map, "USD");
     when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(data));
     await presenter.loadData();
 
     //when
@@ -401,7 +460,8 @@ void main() {
     map["company_performance"] = 95;
     var data = OwnerMyPortalData.fromJson(map, "USD");
     when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
+    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(data));
     await presenter.loadData();
 
     //when

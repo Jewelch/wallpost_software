@@ -26,9 +26,9 @@ void main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await myPortalDataProvider.get();
+    var _ = await myPortalDataProvider.get(month: 1, year: 2022);
 
-    expect(mockNetworkAdapter.apiRequest.url, MyPortalDashboardUrls.ownerMyPortalDataUrl('someCompanyId'));
+    expect(mockNetworkAdapter.apiRequest.url, MyPortalDashboardUrls.ownerMyPortalDataUrl('someCompanyId', 1, 2022));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, true);
   });
@@ -37,7 +37,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await myPortalDataProvider.get();
+      var _ = await myPortalDataProvider.get(month: 1, year: 2022);
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e is NetworkFailureException, true);
@@ -48,13 +48,13 @@ void main() {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 200);
-    myPortalDataProvider.get().then((_) {
+    myPortalDataProvider.get(month: 1, year: 2022).then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
     mockNetworkAdapter.succeed(successfulResponse);
-    myPortalDataProvider.get().then((_) {
+    myPortalDataProvider.get(month: 1, year: 2022).then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -66,7 +66,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      var _ = await myPortalDataProvider.get();
+      var _ = await myPortalDataProvider.get(month: 1, year: 2022);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -77,7 +77,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      var _ = await myPortalDataProvider.get();
+      var _ = await myPortalDataProvider.get(month: 1, year: 2022);
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -88,7 +88,7 @@ void main() {
     mockNetworkAdapter.succeed(Map<String, dynamic>());
 
     try {
-      var _ = await myPortalDataProvider.get();
+      var _ = await myPortalDataProvider.get(month: 1, year: 2022);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -99,7 +99,7 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      var attendanceDetails = await myPortalDataProvider.get();
+      var attendanceDetails = await myPortalDataProvider.get(month: 1, year: 2022);
       expect(attendanceDetails, isNotNull);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
@@ -109,7 +109,7 @@ void main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    myPortalDataProvider.get();
+    myPortalDataProvider.get(month: 1, year: 2022);
 
     expect(myPortalDataProvider.isLoading, true);
   });
@@ -117,7 +117,7 @@ void main() {
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await myPortalDataProvider.get();
+    var _ = await myPortalDataProvider.get(month: 1, year: 2022);
 
     expect(myPortalDataProvider.isLoading, false);
   });
@@ -126,7 +126,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      var _ = await myPortalDataProvider.get();
+      var _ = await myPortalDataProvider.get(month: 1, year: 2022);
       fail('failed to throw exception');
     } catch (_) {
       expect(myPortalDataProvider.isLoading, false);

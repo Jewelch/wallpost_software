@@ -15,7 +15,7 @@ class TextStyles {
       );
 
   static get largeTitleTextStyleBold => TextStyle(
-    fontSize: 18,
+    fontSize: 17,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.bold,
       );
