@@ -26,6 +26,14 @@ class AppYears {
     return years;
   }
 
+  int getCurrentYear() {
+    return years().last;
+  }
+
+  String getCurrentMonth() {
+    return _monthNames[DateTime.now().month - 1];
+  }
+
   List<String> currentAndPastMonthsOfYear(int year) {
     if (year == DateTime.now().year) {
       return _monthNames.sublist(0, DateTime.now().month);
@@ -37,11 +45,11 @@ class AppYears {
     return currentAndPastMonthsOfYear(year).map((m) => _shortenedMonthName(m)).toList();
   }
 
-  String _shortenedMonthName(String month) {
-    return month.substring(0, 3);
+  String getShortNameForMonth(int month) {
+    return _shortenedMonthName(_monthNames[month]);
   }
 
-  String getCurrentMonth() {
-    return _monthNames[DateTime.now().month - 1];
+  String _shortenedMonthName(String month) {
+    return month.substring(0, 3);
   }
 }
