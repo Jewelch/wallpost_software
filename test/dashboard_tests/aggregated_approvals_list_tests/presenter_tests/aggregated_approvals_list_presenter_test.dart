@@ -199,7 +199,7 @@ void main() {
     when(() => approval1.module).thenReturn(Module.Hr);
     var approval2 = MockAggregatedApproval();
     when(() => approval2.companyName).thenReturn("Company Two");
-    when(() => approval2.module).thenReturn(Module.Finance);
+    when(() => approval2.module).thenReturn(Module.Crm);
     var approval3 = MockAggregatedApproval();
     when(() => approval3.companyName).thenReturn("C Three");
     when(() => approval3.module).thenReturn(Module.Hr);
@@ -221,7 +221,7 @@ void main() {
     when(() => approval1.module).thenReturn(Module.Hr);
     var approval2 = MockAggregatedApproval();
     when(() => approval2.companyName).thenReturn("Company Two");
-    when(() => approval1.module).thenReturn(Module.Finance);
+    when(() => approval1.module).thenReturn(Module.Crm);
     var approvals = [approval1, approval2];
     when(() => approvalsProvider.isLoading).thenReturn(false);
     when(() => approvalsProvider.getAllApprovals()).thenAnswer((_) => Future.value(approvals));
@@ -273,7 +273,7 @@ void main() {
     when(() => approval1.module).thenReturn(Module.Hr);
     var approval2 = MockAggregatedApproval();
     when(() => approval2.companyName).thenReturn("Company Two");
-    when(() => approval2.module).thenReturn(Module.Finance);
+    when(() => approval2.module).thenReturn(Module.Crm);
     var approval3 = MockAggregatedApproval();
     when(() => approval3.companyName).thenReturn("C Three");
     when(() => approval3.module).thenReturn(Module.Hr);
@@ -298,10 +298,10 @@ void main() {
 
     //when
     _resetAllMockInteractions();
-    presenter.filter(moduleName: Module.Finance.toReadableString());
+    presenter.filter(moduleName: Module.Crm.toReadableString());
 
     //then
-    expect(presenter.getSelectedModuleName(), Module.Finance.toReadableString());
+    expect(presenter.getSelectedModuleName(), Module.Crm.toReadableString());
     expect(presenter.getNumberOfRows(), 1);
     expect(presenter.getItemAtIndex(0), approval2);
     verifyInOrder([
@@ -329,7 +329,7 @@ void main() {
     when(() => approval1.module).thenReturn(Module.Hr);
     var approval2 = MockAggregatedApproval();
     when(() => approval2.companyName).thenReturn("Company Two");
-    when(() => approval1.module).thenReturn(Module.Finance);
+    when(() => approval1.module).thenReturn(Module.Crm);
     var approval3 = MockAggregatedApproval();
     when(() => approval3.companyName).thenReturn("C Three");
     when(() => approval1.module).thenReturn(Module.Hr);

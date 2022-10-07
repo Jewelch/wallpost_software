@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/settings/left_menu/left_menu_screen.dart';
 
-import '../../../company_dashboard_my_portal/ui/views/employee_my_portal_dashboard_screen.dart';
-import '../../../company_dashboard_my_portal/ui/views/owner_my_portal_dashboard_screen.dart';
+import '../../../company_dashboard_employee_my_portal/ui/views/employee_my_portal_dashboard_screen.dart';
+import '../../../company_dashboard_owner_my_portal/ui/views/owner_my_portal_dashboard_screen.dart';
 import '../presenters/company_dashboard_presenter.dart';
 import 'company_dashboard_app_bar.dart';
 
