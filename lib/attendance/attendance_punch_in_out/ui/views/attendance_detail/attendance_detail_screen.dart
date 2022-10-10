@@ -322,14 +322,14 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
   }
 
   Widget _endBreakButton() {
-    return _breakButton(title: "Start Break", onPressed: () => presenter.startBreak());
+    return _breakButton(title: "End Break", onPressed: () => presenter.endBreak());
   }
 
   Widget _breakButton({required String title, required VoidCallback onPressed}) {
     return ItemNotifiable<bool>(
       notifier: _breakButtonLoaderNotifier,
       builder: (context, showLoader) => BreakActionButton(
-          title: "Start Break",
+          title: title,
           buttonColor: AttendanceColors.breakButtonColor,
           textColor: AttendanceColors.breakButtonTextColor,
           showLoader: showLoader,
