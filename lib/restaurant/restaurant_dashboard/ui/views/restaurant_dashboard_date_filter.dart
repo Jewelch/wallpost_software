@@ -2,39 +2,43 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/filter_views/custom_filter_chip.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 
-import '../../entities/filtering_value.dart';
+import '../../entities/date_range_filters.dart';
 
-enum DateLimits { from, to }
+enum CustomDateRangeFromAndToEnum { from, to }
 
-class DateFilteringBottomSheet extends StatefulWidget {
-  DateFilteringBottomSheet({
-    super.key,
-    required List<String> elements,
-    required this.onFilterSettled,
-    this.initialDateTime,
-    this.minimumDate,
-    this.maximumDate,
-  }) : filteringElements = elements..add('Custom');
+class DateRangeSelector extends StatefulWidget {
+  final DateRangeFilters dateFilters;
+  final ModalSheetController modalSheetController;
 
-  final List<String> filteringElements;
-  final void Function(FilteringValue) onFilterSettled;
+  DateRangeSelector._(this.dateFilters, this.modalSheetController);
 
-  final DateTime? initialDateTime;
-  final DateTime? minimumDate;
-  final DateTime? maximumDate;
+  static Future<dynamic> show(
+    BuildContext context, {
+    bool allowMultiple = false,
+    required DateRangeFilters dateFilters,
+  }) {
+    var modalSheetController = ModalSheetController();
+    return ModalSheetPresenter.present(
+      context: context,
+      content: DateRangeSelector._(dateFilters, modalSheetController),
+      controller: modalSheetController,
+    );
+  }
 
   @override
-  State<DateFilteringBottomSheet> createState() => _State();
+  State<DateRangeSelector> createState() => _State(this.dateFilters);
 }
 
-class _State extends State<DateFilteringBottomSheet> {
-  DateLimits _selectedSegment = DateLimits.from;
-  int? _selectedFilterIndex;
-  DateTime? _startDate;
-  DateTime? _endDate;
+class _State extends State<DateRangeSelector> {
+  DateRangeFilters dateFilters;
+
+  _State(this.dateFilters);
+
+  CustomDateRangeFromAndToEnum _selectedSegment = CustomDateRangeFromAndToEnum.from;
 
   @override
   Widget build(BuildContext context) {
@@ -48,18 +52,15 @@ class _State extends State<DateFilteringBottomSheet> {
               Wrap(
                 spacing: 10,
                 runSpacing: 10,
-                children: widget.filteringElements
+                children: widget.dateFilters.selectableOptions
                     .map(
-                      (title) => CustomFilterChip(
+                      (dateOption) => CustomFilterChip(
                         shape: CustomFilterChipShape.roundedRectangle,
                         backgroundColor: AppColors.filtersBackgroundColor,
-                        borderColor: _selectedFilterIndex == null
-                            ? AppColors.filtersBackgroundColor
-                            : title == widget.filteringElements[_selectedFilterIndex!]
-                                ? AppColors.defaultColorDark
-                                : AppColors.filtersBackgroundColor,
-                        title: Text(title, style: TextStyle(color: AppColors.defaultColorDark)),
-                        onPressed: () => setState(() => _selectedFilterIndex = widget.filteringElements.toList().indexOf(title)),
+                        borderColor:
+                            dateFilters.selectedDateOption != dateOption ? AppColors.filtersBackgroundColor : AppColors.defaultColorDark,
+                        title: Text(dateOption.toReadableString(), style: TextStyle(color: AppColors.defaultColorDark)),
+                        onPressed: () => setState(() => dateFilters.selectedDateOption = dateOption),
                       ),
                     )
                     .toList(),
@@ -68,31 +69,31 @@ class _State extends State<DateFilteringBottomSheet> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Visibility(
-                  visible: _selectedFilterIndex == widget.filteringElements.length - 1,
+                  visible: dateFilters.selectedDateOption == SelectableDateRangeOptions.custom,
                   child: Column(
                     children: [
                       SizedBox(
                         width: double.infinity,
-                        child: CupertinoSlidingSegmentedControl<DateLimits>(
+                        child: CupertinoSlidingSegmentedControl<CustomDateRangeFromAndToEnum>(
                           padding: EdgeInsets.all(1),
                           backgroundColor: AppColors.tabDatePickerColor,
                           groupValue: _selectedSegment,
-                          onValueChanged: (DateLimits? value) {
+                          onValueChanged: (CustomDateRangeFromAndToEnum? value) {
                             if (value != null) {
                               setState(() {
                                 _selectedSegment = value;
                               });
                             }
                           },
-                          children: const <DateLimits, Widget>{
-                            DateLimits.from: Padding(
+                          children: const <CustomDateRangeFromAndToEnum, Widget>{
+                            CustomDateRangeFromAndToEnum.from: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
                                 'From',
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),
-                            DateLimits.to: Padding(
+                            CustomDateRangeFromAndToEnum.to: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
                                 'To',
@@ -110,7 +111,7 @@ class _State extends State<DateFilteringBottomSheet> {
                             SizedBox(
                               width: 100,
                               child: Text(
-                                _startDate?.yMMMd().toUpperCase() ?? '',
+                                dateFilters.startDate.yMMMd().toUpperCase(),
                                 style: TextStyle(color: AppColors.textColorGray, fontSize: 14),
                               ),
                             ),
@@ -118,7 +119,7 @@ class _State extends State<DateFilteringBottomSheet> {
                             SizedBox(
                               width: 100,
                               child: Text(
-                                _endDate?.yMMMd().toUpperCase() ?? '',
+                                dateFilters.endDate.yMMMd().toUpperCase() ,
                                 style: TextStyle(color: AppColors.textColorGray, fontSize: 14),
                               ),
                             ),
@@ -139,16 +140,12 @@ class _State extends State<DateFilteringBottomSheet> {
                             mode: CupertinoDatePickerMode.date,
                             onDateTimeChanged: (value) {
                               setState(() {
-                                _selectedSegment == DateLimits.from ? _startDate = value : _endDate = value;
+                                _selectedSegment == CustomDateRangeFromAndToEnum.from ? dateFilters.startDate = value : dateFilters.endDate = value;
                               });
                             },
-                            initialDateTime: _endDate ?? _startDate ?? widget.initialDateTime ?? DateTime.now(),
-                            minimumDate: _selectedSegment == DateLimits.from
-                                ? widget.minimumDate ?? DateTime.utc(1950)
-                                : (_startDate ?? widget.minimumDate ?? DateTime.utc(1950)),
-                            maximumDate: _selectedSegment == DateLimits.to
-                                ? widget.maximumDate ?? DateTime.now()
-                                : (_endDate ?? widget.maximumDate ?? DateTime.now()),
+                            initialDateTime: DateTime.now(),
+                            minimumDate: DateTime.utc(2010),
+                            maximumDate: DateTime.now(),
                           ),
                         ),
                       ),
@@ -165,16 +162,10 @@ class _State extends State<DateFilteringBottomSheet> {
                     child: RoundedRectangleActionButton(
                       title: 'Apply',
                       onPressed: () {
-                        if (_selectedFilterIndex != null && _selectedFilterIndex != widget.filteringElements.length - 1) {
-                          _startDate = null;
-                          _endDate = null;
-                        }
-                        widget.onFilterSettled(FilteringValue(
-                          filteringElement: widget.filteringElements[_selectedFilterIndex ?? 0],
-                          startDate: _startDate?.yyyyMMddString(),
-                          endDate: _endDate?.yyyyMMddString(),
-                        ));
-                        Navigator.of(context).pop();
+                        print(dateFilters.startDate.yMMMd());
+                        print(dateFilters.endDate.yMMMd());
+                        print(dateFilters.selectedDateOption);
+                        widget.modalSheetController.close();
                       },
                       backgroundColor: AppColors.green,
                     ),
@@ -186,10 +177,7 @@ class _State extends State<DateFilteringBottomSheet> {
                       title: 'Clear',
                       onPressed: () {
                         setState(() {
-                          _selectedSegment = DateLimits.from;
-                          _selectedFilterIndex = null;
-                          _startDate = null;
-                          _endDate = null;
+                          _selectedSegment = CustomDateRangeFromAndToEnum.from;
                         });
                       },
                       backgroundColor: AppColors.red,
