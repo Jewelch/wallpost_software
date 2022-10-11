@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 
 class DashboardLoader extends StatelessWidget {

@@ -6,6 +6,10 @@ extension DateExtension on DateTime {
     return DateFormat('yyyy-MM-dd').format(this);
   }
 
+  String yMMMd() {
+    return DateFormat('yMMMd').format(this);
+  }
+
   // ignore: non_constant_identifier_names
   String HHmmssString() {
     return DateFormat('HH:mm:ss').format(this);

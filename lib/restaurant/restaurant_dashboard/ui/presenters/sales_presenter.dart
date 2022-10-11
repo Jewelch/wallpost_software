@@ -5,7 +5,7 @@ import '../view_contracts/sales_data_view.dart';
 
 class SalesPresenter {
   SalesDataProvider _salesDataProvider;
-  SalesDataView _view;
+  RestaurantDashboardView _view;
 
   SalesPresenter(this._view) : _salesDataProvider = SalesDataProvider();
 

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
@@ -20,8 +18,8 @@ class ForgotPasswordSuccessScreen extends StatelessWidget {
             Container(
               width: 80,
               height: 80,
-              decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.green, width: 3), borderRadius: BorderRadius.circular(50)),
+              decoration:
+                  BoxDecoration(border: Border.all(color: AppColors.green, width: 3), borderRadius: BorderRadius.circular(50)),
               child: Container(
                 margin: EdgeInsets.all(10),
                 child: SvgPicture.asset(

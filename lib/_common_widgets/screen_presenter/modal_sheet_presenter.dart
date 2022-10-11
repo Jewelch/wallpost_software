@@ -47,13 +47,17 @@ class _ModalSheetScreen extends StatefulWidget {
   final ModalSheetController? controller;
   final bool shouldDismissOnTap;
 
-  const _ModalSheetScreen({required this.content, this.controller, required this.shouldDismissOnTap});
+  const _ModalSheetScreen(
+      {required this.content,
+      this.controller,
+      required this.shouldDismissOnTap});
 
   @override
   __ModalSheetScreenState createState() => __ModalSheetScreenState();
 }
 
-class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTickerProviderStateMixin {
+class __ModalSheetScreenState extends State<_ModalSheetScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> offset;
   late Animation<double> opacity;
@@ -61,13 +65,15 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
   @override
   void initState() {
     if (widget.controller != null) widget.controller!._addState(this);
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
     _animationController.reverseDuration = const Duration(milliseconds: 200);
     offset = Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero)
         .chain(CurveTween(curve: Curves.decelerate))
         .animate(_animationController);
-    opacity =
-        Tween<double>(begin: 0, end: 1.0).chain(CurveTween(curve: Curves.decelerate)).animate(_animationController);
+    opacity = Tween<double>(begin: 0, end: 1.0)
+        .chain(CurveTween(curve: Curves.decelerate))
+        .animate(_animationController);
     _animationController.forward();
     super.initState();
   }
@@ -107,7 +113,8 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                   child: SlideTransition(
                     position: offset,
                     child: Container(
-                      constraints: BoxConstraints.loose(const Size(double.infinity, 700)),
+                      constraints: BoxConstraints.loose(
+                          const Size(double.infinity, 700)),
                       color: Colors.transparent,
                       child: ListView(
                         padding: EdgeInsets.zero,
@@ -131,7 +138,9 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
 
   Future<void> close({dynamic result}) {
     if (!_animationController.isDismissed)
-      return _animationController.reverse().then((value) => Navigator.pop(context, result));
+      return _animationController
+          .reverse()
+          .then((value) => Navigator.pop(context, result));
     return Future.value(null);
   }
 }

@@ -1,9 +1,11 @@
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_data.dart';
 
-abstract class SalesDataView {
+abstract class RestaurantDashboardView {
   void showLoader();
 
-  void showErrorMessage(String errorMessage) {}
+  void showErrorMessage(String errorMessage);
 
-  void showSalesData(SalesData salesData) {}
+  void showSalesData(SalesData salesData);
+
+  void showBottomFilter();
 }

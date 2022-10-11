@@ -15,13 +15,19 @@ class YtdFilter extends StatefulWidget {
   late final int _initialYear;
   final Function(int selectedMonth, int selectedYear) onDidChangeFilter;
 
-  YtdFilter({required initialMonth, required initialYear, required this.onDidChangeFilter}) {
-    this._initialMonth = _isMonthValidForYear(initialMonth, initialYear) ? initialMonth : 0;
-    this._initialYear = _years.contains(initialYear) ? initialYear : _years.last;
+  YtdFilter(
+      {required initialMonth,
+      required initialYear,
+      required this.onDidChangeFilter}) {
+    this._initialMonth =
+        _isMonthValidForYear(initialMonth, initialYear) ? initialMonth : 0;
+    this._initialYear =
+        _years.contains(initialYear) ? initialYear : _years.last;
   }
 
   @override
-  State<YtdFilter> createState() => _YtdFilterState(_initialMonth, _initialYear);
+  State<YtdFilter> createState() =>
+      _YtdFilterState(_initialMonth, _initialYear);
 
   bool _isMonthValidForYear(int month, int year) {
     if (month < AppYears().currentAndPastMonthsOfYear(year).length) return true;
@@ -47,9 +53,10 @@ class _YtdFilterState extends State<YtdFilter> {
           child: DropdownFilter(
             items: _getMonthNamesForSelectedYear(),
             selectedValue: _getSelectedMonthName(),
-            textStyle: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
+            textStyle: TextStyles.largeTitleTextStyleBold
+                .copyWith(color: AppColors.defaultColor),
             backgroundColor: Colors.white,
-            dropdownColor: AppColors.filtersBackgroundColour,
+            dropdownColor: AppColors.filtersBackgroundColor,
             dropdownArrowColor: AppColors.defaultColor,
             onDidSelectedItemAtIndex: (month) => _selectMonth(month),
           ),
@@ -59,9 +66,10 @@ class _YtdFilterState extends State<YtdFilter> {
           child: DropdownFilter(
             items: _getYears(),
             selectedValue: _getSelectedYear(),
-            textStyle: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
+            textStyle: TextStyles.largeTitleTextStyleBold
+                .copyWith(color: AppColors.defaultColor),
             backgroundColor: Colors.white,
-            dropdownColor: AppColors.filtersBackgroundColour,
+            dropdownColor: AppColors.filtersBackgroundColor,
             dropdownArrowColor: AppColors.defaultColor,
             onDidSelectedItemAtIndex: (index) => _selectYearAtIndex(index),
           ),
@@ -92,7 +100,8 @@ class _YtdFilterState extends State<YtdFilter> {
   void _selectYearAtIndex(int index) {
     setState(() {
       _selectedYear = widget._years[index];
-      if (!widget._isMonthValidForYear(_selectedMonth, _selectedYear)) _selectedMonth = 0;
+      if (!widget._isMonthValidForYear(_selectedMonth, _selectedYear))
+        _selectedMonth = 0;
     });
     widget.onDidChangeFilter(_selectedMonth, _selectedYear);
   }

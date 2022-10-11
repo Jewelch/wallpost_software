@@ -29,6 +29,7 @@ class MainPresenter {
     await _repositoryInitializer.initializeRepos();
 
     //navigating based on login status
+    //TODO:
     var isLoggedIn = _currentUserProvider.isLoggedIn();
     isLoggedIn ? _view.goToCompanyListScreen() : _view.goToLoginScreen();
 

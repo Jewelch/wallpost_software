@@ -12,7 +12,7 @@ class TabChips extends StatefulWidget {
   TabChips({
     required this.titles,
     this.onItemSelected,
-    this.chipBackgroundColor = AppColors.filtersBackgroundColour,
+    this.chipBackgroundColor = AppColors.filtersBackgroundColor,
     this.titleColor = AppColors.defaultColorDark,
   });
 
@@ -29,11 +29,13 @@ class _TabChipsState extends State<TabChips> {
         _getNumberOfItems(),
         (index) {
           return Container(
-            padding: EdgeInsets.only(left: 12, right: index == _getNumberOfItems() - 1 ? 12 : 0),
+            padding: EdgeInsets.only(
+                left: 12, right: index == _getNumberOfItems() - 1 ? 12 : 0),
             child: CustomFilterChip(
               title: Text(
                 widget.titles[index],
-                style: TextStyles.subTitleTextStyle.copyWith(color: widget.titleColor),
+                style: TextStyles.subTitleTextStyle
+                    .copyWith(color: widget.titleColor),
               ),
               shape: CustomFilterChipShape.roundedRectangle,
               backgroundColor: widget.chipBackgroundColor,

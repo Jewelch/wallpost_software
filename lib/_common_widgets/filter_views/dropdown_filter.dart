@@ -22,7 +22,7 @@ class DropdownFilter extends StatelessWidget {
     this.hint,
     this.onDidSelectItemWithValue,
     this.onDidSelectedItemAtIndex,
-    this.backgroundColor = AppColors.filtersBackgroundColour,
+    this.backgroundColor = AppColors.filtersBackgroundColor,
     this.dropdownColor,
     this.textStyle,
     this.dropdownArrowColor = AppColors.defaultColorDark,
@@ -46,12 +46,16 @@ class DropdownFilter extends StatelessWidget {
         isExpanded: true,
         value: selectedValue,
         style: TextStyle(overflow: TextOverflow.fade),
-        hint: (hint != null && hint!.isNotEmpty) ? Text(_buildTitle(hint!), style: _buildTitleStyle(hint!)) : null,
+        hint: (hint != null && hint!.isNotEmpty)
+            ? Text(_buildTitle(hint!), style: _buildTitleStyle(hint!))
+            : null,
         onChanged: (selectedValue) {
           if (selectedValue == null) return;
           if (disabledItems.contains(selectedValue)) return;
-          if (onDidSelectItemWithValue != null) onDidSelectItemWithValue!(selectedValue);
-          if (onDidSelectedItemAtIndex != null) onDidSelectedItemAtIndex!(items.indexOf(selectedValue));
+          if (onDidSelectItemWithValue != null)
+            onDidSelectItemWithValue!(selectedValue);
+          if (onDidSelectedItemAtIndex != null)
+            onDidSelectedItemAtIndex!(items.indexOf(selectedValue));
         },
         underline: SizedBox(),
         dropdownColor: dropdownColor ?? backgroundColor,
@@ -70,8 +74,11 @@ class DropdownFilter extends StatelessWidget {
   }
 
   TextStyle _buildTitleStyle(String item) {
-    var style = textStyle ?? TextStyle(color: AppColors.defaultColorDark, overflow: TextOverflow.ellipsis);
-    if (_isItemDisabled(item)) style = style.copyWith(color: AppColors.textColorGray);
+    var style = textStyle ??
+        TextStyle(
+            color: AppColors.defaultColorDark, overflow: TextOverflow.ellipsis);
+    if (_isItemDisabled(item))
+      style = style.copyWith(color: AppColors.textColorGray);
     return style;
   }
 

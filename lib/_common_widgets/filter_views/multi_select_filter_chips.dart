@@ -49,7 +49,8 @@ class MultiSelectFilterChips extends StatefulWidget {
   }
 
   @override
-  _MultiSelectFilterChipsState createState() => _MultiSelectFilterChipsState(selectedIndices, controller: controller);
+  _MultiSelectFilterChipsState createState() =>
+      _MultiSelectFilterChipsState(selectedIndices, controller: controller);
 }
 
 class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
@@ -76,13 +77,20 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
         _getNumberOfItems(),
         (index) {
           return Container(
-            padding: EdgeInsets.only(left: 12, right: index == _getNumberOfItems() - 1 ? 12 : 0),
+            padding: EdgeInsets.only(
+                left: 12, right: index == _getNumberOfItems() - 1 ? 12 : 0),
             child: CustomFilterChip(
-              title: Text(_isItemAtIndexTheTrailingButton(index) ? widget.trailingButtonTitle! : widget.titles[index],
-                  style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColorDark)),
+              title: Text(
+                  _isItemAtIndexTheTrailingButton(index)
+                      ? widget.trailingButtonTitle!
+                      : widget.titles[index],
+                  style: TextStyles.subTitleTextStyle
+                      .copyWith(color: AppColors.defaultColorDark)),
               shape: CustomFilterChipShape.roundedRectangle,
-              backgroundColor: AppColors.filtersBackgroundColour,
-              borderColor: _isSelected(index) ? AppColors.defaultColorDark : AppColors.filtersBackgroundColour,
+              backgroundColor: AppColors.filtersBackgroundColor,
+              borderColor: _isSelected(index)
+                  ? AppColors.defaultColorDark
+                  : AppColors.filtersBackgroundColor,
               onPressed: _getActionForItemAtIndex(index),
             ),
           );
@@ -99,7 +107,9 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
     if (_isItemAtIndexTheTrailingButton(index)) {
       return () => widget.onTrailingButtonPressed?.call();
     } else {
-      return () => _isSelected(index) ? _deselectItemAtIndex(index) : _selectItemAtIndex(index);
+      return () => _isSelected(index)
+          ? _deselectItemAtIndex(index)
+          : _selectItemAtIndex(index);
     }
   }
 

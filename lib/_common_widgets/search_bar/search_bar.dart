@@ -26,7 +26,7 @@ class SearchBar extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: AppColors.filtersBackgroundColour,
+        color: AppColors.filtersBackgroundColor,
       ),
       width: double.infinity,
       child: Row(
@@ -47,7 +47,8 @@ class SearchBar extends StatelessWidget {
               textAlignVertical: TextAlignVertical(y: 1),
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDarkContrastColor),
+                hintStyle: TextStyles.titleTextStyle
+                    .copyWith(color: AppColors.defaultColorDarkContrastColor),
                 border: OutlineInputBorder(borderSide: BorderSide.none),
                 suffixIcon: ItemNotifiable<bool>(
                   notifier: textFieldClearButtonNotifier,
@@ -66,7 +67,8 @@ class SearchBar extends StatelessWidget {
                   },
                 ),
               ),
-              style: TextStyles.titleTextStyle.copyWith(color: AppColors.defaultColorDark),
+              style: TextStyles.titleTextStyle
+                  .copyWith(color: AppColors.defaultColorDark),
               onChanged: (text) {
                 onSearchTextChanged.call(text);
                 textFieldClearButtonNotifier.notify(text.isNotEmpty);
