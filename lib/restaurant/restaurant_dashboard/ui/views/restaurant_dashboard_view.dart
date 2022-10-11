@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:notifiable/item_notifiable.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/extensions/string_extensions.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_data.dart';
+import 'package:wallpost/dashboard/company_dashboard/ui/views/company_dashboard_app_bar.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_date_filter.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_header_card.dart';
 
 import '../../../../_shared/constants/app_colors.dart';
-import '../../entities/filtering_value.dart';
-import '../view_contracts/sales_data_view.dart';
+import '../view_contracts/restaurant_dashboard_view.dart';
 
 class RestaurantDashboardScreen extends StatefulWidget {
   @override
@@ -19,38 +18,44 @@ class RestaurantDashboardScreen extends StatefulWidget {
 
 class _State extends State<RestaurantDashboardScreen> implements RestaurantDashboardView {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final _modalSheetController = ModalSheetController();
-  final _salesDataNotifier = ItemNotifier<SalesData>(defaultValue: SalesData.empty());
-  String? _selectedFilteringValue;
+  final _salesDataNotifier = ItemNotifier<AggregatedSalesData>(defaultValue: AggregatedSalesData.empty());
+  late RestaurantDashboardPresenter _salesPresenter;
 
-  @override
-  void dispose() {
-    _modalSheetController.dispose();
-    super.dispose();
+  _State() {
+    _salesPresenter = RestaurantDashboardPresenter(this);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            CompanyDashboardAppBar(
+              companyName: "companyName",
+              profileImageUrl: " _presenter.getProfileImageUrl()",
+              onLeftMenuButtonPress: () => "LeftMenuScreen.show(context)",
+              onAddButtonPress: () {},
+              onTitlePress: () => Navigator.pop(context),
+            ),
+            SizedBox(
+              height: 30,
+            ),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
                   Spacer(),
                   InkWell(
                     onTap: showBottomFilter,
                     child: Text(
-                      _selectedFilteringValue ?? "Today",
+                      _salesPresenter.dateFilters.selectedDateOption.toReadableString(),
                       style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
                     ),
                   ),
-                  SizedBox(width: 5),
+                  SizedBox(width: 8),
                   SvgPicture.asset(
                     'assets/icons/arrow_down_icon.svg',
                     color: AppColors.defaultColor,
@@ -60,7 +65,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                 ],
               ),
             ),
-            ItemNotifiable<SalesData>(
+            ItemNotifiable<AggregatedSalesData>(
               notifier: _salesDataNotifier,
               builder: (context, value) => RestaurantDashboardHeaderCard(value),
             ),
@@ -77,19 +82,11 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   void showLoader() {}
 
   @override
-  void showSalesData(SalesData salesData) => _salesDataNotifier.notify(salesData);
+  void showSalesData(AggregatedSalesData salesData) => _salesDataNotifier.notify(salesData);
 
-  @override
-  void showBottomFilter() => ModalSheetPresenter.present(
-        context: context,
-        content: DateFilteringBottomSheet(
-            elements: ['Today', 'Yesterday', 'This week', 'This month', 'This year', 'Last year'],
-            onFilterSettled: (FilteringValue filteringValues) {
-              setState(() => _selectedFilteringValue = filteringValues.filteringElement);
-              print(filteringValues.filteringElement.toSnakeCase);
-              print(filteringValues.startDate);
-              print(filteringValues.endDate);
-            }),
-        controller: _modalSheetController,
-      );
+  void showBottomFilter() async {
+    await DateRangeSelector.show(context, dateFilters: _salesPresenter.dateFilters);
+    setState(() {
+    });
+  }
 }

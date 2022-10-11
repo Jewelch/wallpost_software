@@ -1,20 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/services/sales_data_provider.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/sales_presenter.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/sales_data_view.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/date_range_filters.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/restaurant_dashboard_view.dart';
 
-import '../mocks.dart';
+import '../../mocks.dart';
 
-class MockSalesDataProvider extends Mock implements SalesDataProvider {}
+class MockSalesDataProvider extends Mock implements AggregatedSalesDataProvider {}
 
-class MockSalesDataView extends Mock implements SalesDataView {}
+class MockSalesDataView extends Mock implements RestaurantDashboardView {}
 
 void main() {
   var salesDataProvider = MockSalesDataProvider();
   var view = MockSalesDataView();
-  var salesPresenter = SalesPresenter.initWith(view, salesDataProvider);
+  var dateFilter = DateRangeFilters();
+  var salesPresenter = RestaurantDashboardPresenter.initWith(view, salesDataProvider, dateFilter);
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
@@ -37,7 +39,7 @@ void main() {
     test('failure to load sales data', () async {
       //given
       when(() => salesDataProvider.isLoading).thenReturn(false);
-      when(() => salesDataProvider.getSalesAmounts()).thenAnswer((_) => Future.error(InvalidResponseException()));
+      when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer((_) => Future.error(InvalidResponseException()));
 
       //when
       await salesPresenter.loadSalesData();
@@ -45,7 +47,7 @@ void main() {
       verifyInOrder([
         () => salesDataProvider.isLoading,
         () => view.showLoader(),
-        () => salesDataProvider.getSalesAmounts(),
+        () => salesDataProvider.getSalesAmounts(dateFilter),
         () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
@@ -55,7 +57,7 @@ void main() {
       //given
       var salesData = MockSalesData();
       when(() => salesDataProvider.isLoading).thenReturn(false);
-      when(() => salesDataProvider.getSalesAmounts()).thenAnswer((_) => Future.value(salesData));
+      when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer((_) => Future.value(salesData));
 
       //when
       await salesPresenter.loadSalesData();
@@ -64,7 +66,7 @@ void main() {
       verifyInOrder([
         () => salesDataProvider.isLoading,
         () => view.showLoader(),
-        () => salesDataProvider.getSalesAmounts(),
+        () => salesDataProvider.getSalesAmounts(dateFilter),
         () => view.showSalesData(salesData),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
