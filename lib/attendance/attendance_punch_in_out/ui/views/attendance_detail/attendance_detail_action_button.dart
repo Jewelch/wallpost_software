@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/attendance/attendance_punch_in_out/constants/attendance_colors.dart';
 
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
 
@@ -28,11 +29,16 @@ class AttendanceDetailActionButton extends StatelessWidget {
   }
 
   Widget _loader() {
-    return CircularProgressIndicator(
-      strokeWidth: 2,
-      backgroundColor: Colors.transparent,
-      valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
-    );
+      return Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: AttendanceColors.disabledButtonColor),
+        child: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            backgroundColor: Colors.transparent,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.7)),
+          ),
+        ),
+      );
   }
 
   Widget _button() {
