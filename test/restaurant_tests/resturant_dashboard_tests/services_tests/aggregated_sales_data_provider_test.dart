@@ -3,14 +3,15 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/constants/restaurant_dashboard_urls.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/services/sales_data_provider.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/date_range_filters.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
 
-import '../../_mocks/mock_company.dart';
-import '../../_mocks/mock_company_provider.dart';
-import '../../_mocks/mock_company_repository.dart';
-import '../../_mocks/mock_current_user_provider.dart';
-import '../../_mocks/mock_network_adapter.dart';
-import '../mocks.dart';
+import '../../../_mocks/mock_company.dart';
+import '../../../_mocks/mock_company_provider.dart';
+import '../../../_mocks/mock_company_repository.dart';
+import '../../../_mocks/mock_current_user_provider.dart';
+import '../../../_mocks/mock_network_adapter.dart';
+import '../../mocks.dart';
 
 void main() {
   Map<String, dynamic> successfulResponse = Mocks.salesDataRandomResponse;
@@ -19,8 +20,9 @@ void main() {
   var mockCurrentUserProvider = MockCurrentUserProvider();
   var mockCompanyRepository = MockCompanyRepository();
   var mockSelectedCompanyProvider = MockCompanyProvider();
+  var dateFilter = DateRangeFilters();
 
-  var salesDataProvider = SalesDataProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+  var salesDataProvider = AggregatedSalesDataProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
 
   setUpAll(() {
     final mockCompany = MockCompany();
@@ -39,10 +41,9 @@ void main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    await salesDataProvider.getSalesAmounts(storeId: 'someStoreId');
+    await salesDataProvider.getSalesAmounts(dateFilter, storeId: 'someStoreId');
 
-    expect(
-        mockNetworkAdapter.apiRequest.url, RestaurantDashboardUrls.getSalesAmountsUrl('someCompanyId', 'someStoreId'));
+    expect(mockNetworkAdapter.apiRequest.url, RestaurantDashboardUrls.getSalesAmountsUrl('someCompanyId', 'someStoreId', dateFilter));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, isTrue);
   });
@@ -51,7 +52,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      await salesDataProvider.getSalesAmounts(storeId: 'someStoreId');
+      await salesDataProvider.getSalesAmounts(dateFilter, storeId: 'someStoreId');
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e, isA<NetworkFailureException>());
@@ -62,7 +63,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      await salesDataProvider.getSalesAmounts(storeId: 'someStoreId');
+      await salesDataProvider.getSalesAmounts(dateFilter, storeId: 'someStoreId');
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -73,7 +74,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      await salesDataProvider.getSalesAmounts(storeId: 'someStoreId');
+      await salesDataProvider.getSalesAmounts(dateFilter, storeId: 'someStoreId');
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -84,7 +85,7 @@ void main() {
     mockNetworkAdapter.succeed(<String, dynamic>{"miss_data": "anyWrongData"});
 
     try {
-      await salesDataProvider.getSalesAmounts(storeId: 'someStoreId');
+      await salesDataProvider.getSalesAmounts(dateFilter, storeId: 'someStoreId');
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -95,13 +96,13 @@ void main() {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 200);
-    salesDataProvider.getSalesAmounts().then((_) {
+    salesDataProvider.getSalesAmounts(dateFilter).then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
     mockNetworkAdapter.succeed(successfulResponse);
-    salesDataProvider.getSalesAmounts().then((_) {
+    salesDataProvider.getSalesAmounts(dateFilter).then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -113,7 +114,7 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      await salesDataProvider.getSalesAmounts(storeId: "someStoreId");
+      await salesDataProvider.getSalesAmounts(dateFilter, storeId: "someStoreId");
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
