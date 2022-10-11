@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/header_card.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_data.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 
 class RestaurantDashboardHeaderCard extends StatelessWidget {
-  final SalesData _salesData;
+  final AggregatedSalesData _salesData;
 
   RestaurantDashboardHeaderCard(this._salesData);
 
@@ -22,11 +22,18 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(width: 20),
-              Text(_salesData.totalSales, style: TextStyles.headerCardHeadingTextStyle),
               Expanded(
+                flex: 1,
+                child: Text(_salesData.totalSales, style: TextStyles.headerCardHeadingTextStyle),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .2,
+              ),
+              Expanded(
+                flex: 1,
                 child: Text(
                   _salesData.netSales,
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.start,
                   style: TextStyles.headerCardHeadingTextStyle,
                 ),
               ),
@@ -37,11 +44,18 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
           Row(
             children: [
               SizedBox(width: 20),
-              Text("Total Sale", style: TextStyles.headerCardMoneyLabelTextStyle),
               Expanded(
+                flex: 1,
+                child: Text("Total Sale", style: TextStyles.headerCardMoneyLabelTextStyle),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .2,
+              ),
+              Expanded(
+                flex: 1,
                 child: Text(
                   "Net Sale",
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.start,
                   style: TextStyles.headerCardMoneyLabelTextStyle,
                 ),
               ),
@@ -71,11 +85,18 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(width: 20),
-              Text(_salesData.costOfSales, style: TextStyles.headerCardHeadingTextStyle),
               Expanded(
+                flex: 1,
+                child: Text(_salesData.costOfSales, style: TextStyles.headerCardHeadingTextStyle),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .2,
+              ),
+              Expanded(
+                flex: 1,
                 child: Text(
                   _salesData.grossOfProfit,
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.start,
                   style: TextStyles.headerCardHeadingTextStyleWithGreenColor,
                 ),
               ),
@@ -86,11 +107,18 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
           Row(
             children: [
               SizedBox(width: 20),
-              Text("Cost of Sales", style: TextStyles.headerCardMoneyLabelTextStyle),
               Expanded(
+                flex: 1,
+                child: Text("Cost of Sales", style: TextStyles.headerCardMoneyLabelTextStyle),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .2,
+              ), //
+              Expanded(
+                flex: 1,
                 child: Text(
                   "Gross Profit",
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.start,
                   style: TextStyles.headerCardMoneyLabelTextStyle,
                 ),
               ),

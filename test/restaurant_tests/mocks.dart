@@ -1,8 +1,8 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:random_string/random_string.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_data.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 
-class MockSalesData extends Mock implements SalesData {}
+class MockSalesData extends Mock implements AggregatedSalesData {}
 
 class Mocks {
   static var loginResponse = {
@@ -25,10 +25,10 @@ class Mocks {
     "status": "success",
     "metadata": [],
     "data": {
-      "total_sales": randomNumeric(3),
-      "net_sales": randomNumeric(3),
-      "cost_of_sales": randomNumeric(3),
-      "gross_of_profit": randomNumeric(2),
+      "total_sales": "21",
+      "net_sales": "22",
+      "cost_of_sales": "22",
+      "gross_of_profit": 10,
     }
   };
 

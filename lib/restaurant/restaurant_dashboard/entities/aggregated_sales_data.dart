@@ -3,13 +3,13 @@ import 'package:sift/Sift.dart';
 import '../../../_shared/exceptions/mapping_exception.dart';
 import '../../../_shared/json_serialization_base/json_initializable.dart';
 
-class SalesData extends JSONInitializable {
+class AggregatedSalesData extends JSONInitializable {
   late String _totalSales;
   late String _netSales;
   late String _costOfSales;
   late String _grossOfProfit;
 
-  SalesData({
+  AggregatedSalesData({
     required String totalSales,
     required String netSales,
     required String costOfSales,
@@ -20,11 +20,10 @@ class SalesData extends JSONInitializable {
         _grossOfProfit = grossOfProfit,
         super.fromJson({});
 
-  factory SalesData.empty() => SalesData(totalSales: '0,00', netSales: '0,00', costOfSales: '0,00', grossOfProfit: '0');
+  factory AggregatedSalesData.empty() => AggregatedSalesData(totalSales: '0,00', netSales: '0,00', costOfSales: '0,00', grossOfProfit: '0');
 
-  SalesData.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
+  AggregatedSalesData.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
     final sift = Sift();
-
     try {
       _totalSales = sift.readStringFromMap(jsonMap, 'total_sales');
       _netSales = sift.readStringFromMap(jsonMap, 'net_sales');
