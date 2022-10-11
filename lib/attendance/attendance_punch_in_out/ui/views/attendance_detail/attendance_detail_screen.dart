@@ -198,6 +198,7 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
             buttonColor: AttendanceColors.punchOutButtonColor,
             onPressed: () => _doPunchOut(),
           ),
+          SizedBox(height: 4),
           presenter.shouldShowStartBreakButton() ? _startBreakButton() : _endBreakButton(),
         ],
       ),
@@ -230,9 +231,9 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     _buildAttendanceTimeView("Punch In", presenter.getPunchInTime()),
-                    SizedBox(width: 20),
+                    SizedBox(width: 12),
                     content,
-                    SizedBox(width: 20),
+                    SizedBox(width: 12),
                     _buildAttendanceTimeView("Punch Out", presenter.getPunchOutTime()),
                   ],
                 ),
@@ -251,7 +252,6 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
 
   Widget _mapView() {
     return Container(
-      // height: 300,
       margin: EdgeInsets.only(bottom: 70, right: 12),
       child: ItemNotifiable<AttendanceLocation?>(
         notifier: _locationNotifier,
@@ -381,6 +381,7 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
   void showCountDownView(int secondsTillPunchIn) {
     var _remainingTimeToPunchInString = TimeToPunchInCalculator.timeTillPunchIn(secondsTillPunchIn.toInt());
     _countDownNotifier.notify(_remainingTimeToPunchInString);
+    _attendanceButtonLoaderNotifier.notify(false);
 
     _viewTypeNotifier.notify(COUNT_DOWN_VIEW);
     _startCountDownTimer(secondsTillPunchIn);
@@ -389,6 +390,7 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
   @override
   void showPunchInButton() {
     _viewTypeNotifier.notify(PUNCH_IN_BUTTON_VIEW);
+    _attendanceButtonLoaderNotifier.notify(false);
 
     _currentTimer = Timer.periodic(Duration(milliseconds: 1), (Timer t) => _getCurrentTime());
   }
@@ -396,6 +398,8 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
   @override
   void showPunchOutButton() {
     _viewTypeNotifier.notify(PUNCH_OUT_BUTTON_VIEW);
+    _attendanceButtonLoaderNotifier.notify(false);
+    _breakButtonLoaderNotifier.notify(false);
 
     _currentTimer = Timer.periodic(Duration(milliseconds: 1), (Timer t) => _getCurrentTime());
   }

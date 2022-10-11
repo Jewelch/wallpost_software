@@ -192,6 +192,7 @@ class AttendancePresenter {
       await loadAttendanceDetails();
     } on WPException catch (e) {
       basicView.showErrorAlert("Failed to start break", e.userReadableMessage);
+      await loadAttendanceDetails();
     }
   }
 
@@ -204,6 +205,7 @@ class AttendancePresenter {
       await loadAttendanceDetails();
     } on WPException catch (e) {
       basicView.showErrorAlert("Failed to end break", e.userReadableMessage);
+      await loadAttendanceDetails();
     }
   }
 
@@ -220,11 +222,11 @@ class AttendancePresenter {
   //MARK: Getters
 
   String getPunchInTime() {
-    return "6:00 AM";
+    return _attendanceDetails.punchInTimeString;
   }
 
   String getPunchOutTime() {
-    return "8:00 AM";
+    return _attendanceDetails.punchOutTimeString;
   }
 
   bool shouldShowStartBreakButton() {
