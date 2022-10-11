@@ -3,7 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/user_management/entities/user.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/constants/restaurant_dashboard_urls.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
 
 import '../../../_mocks/mock_company.dart';

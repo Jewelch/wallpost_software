@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/_shared/date_range_selector/date_range_selector.dart';
 import 'package:wallpost/dashboard/company_dashboard/ui/views/company_dashboard_app_bar.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_date_filter.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_header_card.dart';
 
 import '../../../../_shared/constants/app_colors.dart';
@@ -49,9 +49,9 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                 children: [
                   Spacer(),
                   InkWell(
-                    onTap: showBottomFilter,
+                    onTap: showDateRangeSelector,
                     child: Text(
-                      _salesPresenter.dateFilters.selectedDateOption.toReadableString(),
+                      _salesPresenter.dateFilters.selectedRangeOption.toReadableString(),
                       style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
                     ),
                   ),
@@ -76,17 +76,16 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   }
 
   @override
-  void showErrorMessage(String errorMessage) {}
-
-  @override
   void showLoader() {}
 
   @override
   void showSalesData(AggregatedSalesData salesData) => _salesDataNotifier.notify(salesData);
 
-  void showBottomFilter() async {
+  void showDateRangeSelector() async {
     await DateRangeSelector.show(context, dateFilters: _salesPresenter.dateFilters);
-    setState(() {
-    });
+    setState(() {});
   }
+
+  @override
+  void showErrorMessage(String errorMessage) {}
 }

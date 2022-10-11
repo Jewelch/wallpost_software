@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 
 import '../../../_wp_core/company_management/services/selected_company_provider.dart';

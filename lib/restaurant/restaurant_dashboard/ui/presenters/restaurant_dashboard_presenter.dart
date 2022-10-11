@@ -1,5 +1,5 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
 
 import '../view_contracts/restaurant_dashboard_view.dart';

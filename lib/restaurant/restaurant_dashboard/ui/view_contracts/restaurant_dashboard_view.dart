@@ -7,5 +7,5 @@ abstract class RestaurantDashboardView {
 
   void showSalesData(AggregatedSalesData salesData);
 
-  void showBottomFilter();
+  void showDateRangeSelector();
 }

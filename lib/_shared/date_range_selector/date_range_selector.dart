@@ -6,9 +6,9 @@ import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 
-import '../../entities/date_range_filters.dart';
+import 'date_range_filters.dart';
 
-enum CustomDateRangeFromAndToEnum { from, to }
+enum CustomDateRangeSegments { from, to }
 
 class DateRangeSelector extends StatefulWidget {
   final DateRangeFilters dateFilters;
@@ -38,7 +38,7 @@ class _State extends State<DateRangeSelector> {
 
   _State(this.dateFilters);
 
-  CustomDateRangeFromAndToEnum _selectedSegment = CustomDateRangeFromAndToEnum.from;
+  CustomDateRangeSegments _selectedSegment = CustomDateRangeSegments.from;
 
   @override
   Widget build(BuildContext context) {
@@ -52,15 +52,15 @@ class _State extends State<DateRangeSelector> {
               Wrap(
                 spacing: 10,
                 runSpacing: 10,
-                children: widget.dateFilters.selectableOptions
+                children: widget.dateFilters.selectableRangeOptions
                     .map(
                       (dateOption) => CustomFilterChip(
                         shape: CustomFilterChipShape.roundedRectangle,
                         backgroundColor: AppColors.filtersBackgroundColor,
                         borderColor:
-                            dateFilters.selectedDateOption != dateOption ? AppColors.filtersBackgroundColor : AppColors.defaultColorDark,
+                            dateFilters.selectedRangeOption != dateOption ? AppColors.filtersBackgroundColor : AppColors.defaultColorDark,
                         title: Text(dateOption.toReadableString(), style: TextStyle(color: AppColors.defaultColorDark)),
-                        onPressed: () => setState(() => dateFilters.selectedDateOption = dateOption),
+                        onPressed: () => setState(() => dateFilters.selectedRangeOption = dateOption),
                       ),
                     )
                     .toList(),
@@ -69,31 +69,31 @@ class _State extends State<DateRangeSelector> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Visibility(
-                  visible: dateFilters.selectedDateOption == SelectableDateRangeOptions.custom,
+                  visible: dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom,
                   child: Column(
                     children: [
                       SizedBox(
                         width: double.infinity,
-                        child: CupertinoSlidingSegmentedControl<CustomDateRangeFromAndToEnum>(
+                        child: CupertinoSlidingSegmentedControl<CustomDateRangeSegments>(
                           padding: EdgeInsets.all(1),
                           backgroundColor: AppColors.tabDatePickerColor,
                           groupValue: _selectedSegment,
-                          onValueChanged: (CustomDateRangeFromAndToEnum? value) {
+                          onValueChanged: (CustomDateRangeSegments? value) {
                             if (value != null) {
                               setState(() {
                                 _selectedSegment = value;
                               });
                             }
                           },
-                          children: const <CustomDateRangeFromAndToEnum, Widget>{
-                            CustomDateRangeFromAndToEnum.from: Padding(
+                          children: const <CustomDateRangeSegments, Widget>{
+                            CustomDateRangeSegments.from: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
                                 'From',
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),
-                            CustomDateRangeFromAndToEnum.to: Padding(
+                            CustomDateRangeSegments.to: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
                                 'To',
@@ -140,7 +140,7 @@ class _State extends State<DateRangeSelector> {
                             mode: CupertinoDatePickerMode.date,
                             onDateTimeChanged: (value) {
                               setState(() {
-                                _selectedSegment == CustomDateRangeFromAndToEnum.from ? dateFilters.startDate = value : dateFilters.endDate = value;
+                                _selectedSegment == CustomDateRangeSegments.from ? dateFilters.startDate = value : dateFilters.endDate = value;
                               });
                             },
                             initialDateTime: DateTime.now(),
@@ -164,7 +164,7 @@ class _State extends State<DateRangeSelector> {
                       onPressed: () {
                         print(dateFilters.startDate.yMMMd());
                         print(dateFilters.endDate.yMMMd());
-                        print(dateFilters.selectedDateOption);
+                        print(dateFilters.selectedRangeOption);
                         widget.modalSheetController.close();
                       },
                       backgroundColor: AppColors.green,
@@ -177,7 +177,7 @@ class _State extends State<DateRangeSelector> {
                       title: 'Clear',
                       onPressed: () {
                         setState(() {
-                          _selectedSegment = CustomDateRangeFromAndToEnum.from;
+                          _selectedSegment = CustomDateRangeSegments.from;
                         });
                       },
                       backgroundColor: AppColors.red,
