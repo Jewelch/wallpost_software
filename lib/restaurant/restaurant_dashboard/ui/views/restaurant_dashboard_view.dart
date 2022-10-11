@@ -82,7 +82,11 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   void showSalesData(AggregatedSalesData salesData) => _salesDataNotifier.notify(salesData);
 
   void showDateRangeSelector() async {
-    await DateRangeSelector.show(context, dateFilters: _salesPresenter.dateFilters);
+    await DateRangeSelector.show(
+      context,
+      onDateRangeFilterSelected: (dateFilters) => _salesPresenter.dateFilters = dateFilters,
+      initialDateRangeFilter: _salesPresenter.dateFilters,
+    );
     setState(() {});
   }
 

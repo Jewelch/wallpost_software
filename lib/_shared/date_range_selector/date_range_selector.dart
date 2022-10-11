@@ -11,32 +11,39 @@ import 'date_range_filters.dart';
 enum CustomDateRangeSegments { from, to }
 
 class DateRangeSelector extends StatefulWidget {
-  final DateRangeFilters dateFilters;
   final ModalSheetController modalSheetController;
+  final Function(DateRangeFilters) onDateRangeFilterSelected;
+  final DateRangeFilters? initialDateRangeFilters;
 
-  DateRangeSelector._(this.dateFilters, this.modalSheetController);
+  DateRangeSelector._(this.modalSheetController, this.onDateRangeFilterSelected, [this.initialDateRangeFilters]);
 
-  static Future<dynamic> show(
-    BuildContext context, {
-    bool allowMultiple = false,
-    required DateRangeFilters dateFilters,
-  }) {
+  static Future<dynamic> show(BuildContext context,
+      {bool allowMultiple = false,
+      required Function(DateRangeFilters) onDateRangeFilterSelected,
+      DateRangeFilters? initialDateRangeFilter}) {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
       context: context,
-      content: DateRangeSelector._(dateFilters, modalSheetController),
+      content: DateRangeSelector._(modalSheetController, onDateRangeFilterSelected, initialDateRangeFilter),
       controller: modalSheetController,
     );
   }
 
   @override
-  State<DateRangeSelector> createState() => _State(this.dateFilters);
+  State<DateRangeSelector> createState() => _State(initialDateRangeFilters);
 }
 
 class _State extends State<DateRangeSelector> {
-  DateRangeFilters dateFilters;
+  late DateRangeFilters dateFilters;
 
-  _State(this.dateFilters);
+  _State([DateRangeFilters? initialDateFilters]) {
+    dateFilters = DateRangeFilters();
+    if (initialDateFilters != null) {
+      this.dateFilters.startDate = dateFilters.startDate;
+      this.dateFilters.endDate = dateFilters.endDate;
+      this.dateFilters.selectedRangeOption = dateFilters.selectedRangeOption;
+    }
+  }
 
   CustomDateRangeSegments _selectedSegment = CustomDateRangeSegments.from;
 
@@ -52,7 +59,7 @@ class _State extends State<DateRangeSelector> {
               Wrap(
                 spacing: 10,
                 runSpacing: 10,
-                children: widget.dateFilters.selectableRangeOptions
+                children: dateFilters.selectableRangeOptions
                     .map(
                       (dateOption) => CustomFilterChip(
                         shape: CustomFilterChipShape.roundedRectangle,
@@ -119,7 +126,7 @@ class _State extends State<DateRangeSelector> {
                             SizedBox(
                               width: 100,
                               child: Text(
-                                dateFilters.endDate.yMMMd().toUpperCase() ,
+                                dateFilters.endDate.yMMMd().toUpperCase(),
                                 style: TextStyle(color: AppColors.textColorGray, fontSize: 14),
                               ),
                             ),
@@ -140,7 +147,9 @@ class _State extends State<DateRangeSelector> {
                             mode: CupertinoDatePickerMode.date,
                             onDateTimeChanged: (value) {
                               setState(() {
-                                _selectedSegment == CustomDateRangeSegments.from ? dateFilters.startDate = value : dateFilters.endDate = value;
+                                _selectedSegment == CustomDateRangeSegments.from
+                                    ? dateFilters.startDate = value
+                                    : dateFilters.endDate = value;
                               });
                             },
                             initialDateTime: DateTime.now(),
@@ -162,9 +171,7 @@ class _State extends State<DateRangeSelector> {
                     child: RoundedRectangleActionButton(
                       title: 'Apply',
                       onPressed: () {
-                        print(dateFilters.startDate.yMMMd());
-                        print(dateFilters.endDate.yMMMd());
-                        print(dateFilters.selectedRangeOption);
+                        widget.onDateRangeFilterSelected(dateFilters);
                         widget.modalSheetController.close();
                       },
                       backgroundColor: AppColors.green,

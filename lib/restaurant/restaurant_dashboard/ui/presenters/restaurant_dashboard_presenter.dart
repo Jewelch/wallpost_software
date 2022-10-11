@@ -7,27 +7,24 @@ import '../view_contracts/restaurant_dashboard_view.dart';
 class RestaurantDashboardPresenter {
   AggregatedSalesDataProvider _salesDataProvider;
   RestaurantDashboardView _view;
-  DateRangeFilters _dateFilters;
+  DateRangeFilters dateFilters;
 
   RestaurantDashboardPresenter(this._view)
       : _salesDataProvider = AggregatedSalesDataProvider(),
-        _dateFilters = DateRangeFilters();
+        dateFilters = DateRangeFilters();
 
-  RestaurantDashboardPresenter.initWith(this._view, this._salesDataProvider, this._dateFilters);
+  RestaurantDashboardPresenter.initWith(this._view, this._salesDataProvider, this.dateFilters);
 
   Future loadSalesData() async {
     if (_salesDataProvider.isLoading) return;
 
     _view.showLoader();
     try {
-      var salesData = await _salesDataProvider.getSalesAmounts(_dateFilters);
+      var salesData = await _salesDataProvider.getSalesAmounts(dateFilters);
       _view.showSalesData(salesData);
     } on WPException catch (e) {
       _view.showErrorMessage(e.userReadableMessage + "\n\nTap here to reload.");
     }
   }
 
-  // MARK: Getters
-
-  DateRangeFilters get dateFilters => _dateFilters;
 }
