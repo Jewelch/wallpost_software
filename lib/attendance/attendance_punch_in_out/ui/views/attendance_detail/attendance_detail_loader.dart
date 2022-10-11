@@ -21,27 +21,9 @@ class AttendanceDetailLoader extends StatelessWidget {
                     children: <Widget>[
                       _emptyContainer(height: 400, cornerRadius: 12),
                       Container(
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          height: 70,
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  _emptyContainer(height: 12, width: 80, cornerRadius: 12),
-                                  _emptyContainer(height: 12, width: 80, cornerRadius: 12),
-                                ],
-                              ),
-                              SizedBox(height: 12),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  _emptyContainer(height: 8, width: 80, cornerRadius: 12),
-                                  _emptyContainer(height: 8, width: 80, cornerRadius: 12),
-                                ],
-                              ),
-                            ],
-                          )),
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        height: 20,
+                      ),
                     ],
                   ),
                   Positioned(
@@ -50,9 +32,30 @@ class AttendanceDetailLoader extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 16,),
-              Center(
-                child:  _emptyContainer(height: 32, width: 120, cornerRadius: 12),
+              SizedBox(
+                height: 12,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      _emptyContainer(height: 12, width: 80, cornerRadius: 12),
+                      SizedBox(height: 4),
+                      _emptyContainer(height: 8, width: 80, cornerRadius: 12),
+                    ],
+                  ),
+                  SizedBox(width: 12),
+                  _emptyContainer(height: 32, width: 120, cornerRadius: 12),
+                  SizedBox(width: 12),
+                  Column(
+                    children: [
+                      _emptyContainer(height: 12, width: 80, cornerRadius: 12),
+                      SizedBox(height: 4),
+                      _emptyContainer(height: 8, width: 80, cornerRadius: 12),
+                    ],
+                  ),
+                ],
               )
             ],
           )
