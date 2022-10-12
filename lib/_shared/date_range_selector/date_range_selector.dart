@@ -59,7 +59,7 @@ class _State extends State<DateRangeSelector> {
               Wrap(
                 spacing: 10,
                 runSpacing: 10,
-                children: dateFilters.selectableRangeOptions
+                children: SelectableDateRangeOptions.values
                     .map(
                       (dateOption) => CustomFilterChip(
                         shape: CustomFilterChipShape.roundedRectangle,

@@ -33,7 +33,6 @@ enum SelectableDateRangeOptions {
 }
 
 class DateRangeFilters {
-  List<SelectableDateRangeOptions> selectableRangeOptions = SelectableDateRangeOptions.values;
   SelectableDateRangeOptions selectedRangeOption = SelectableDateRangeOptions.today;
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
