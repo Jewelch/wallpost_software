@@ -1,39 +1,38 @@
 import 'dart:async';
 
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 
 import '../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../constants/restaurant_dashboard_urls.dart';
 
 class AggregatedSalesDataProvider {
+  final NetworkAdapter _networkAdapter;
+  final SelectedCompanyProvider _selectedCompanyProvider;
+  String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+  bool _isLoading = false;
+
   AggregatedSalesDataProvider()
       : _networkAdapter = WPAPI(),
         _selectedCompanyProvider = SelectedCompanyProvider();
 
   AggregatedSalesDataProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
-  final NetworkAdapter _networkAdapter;
-  SelectedCompanyProvider _selectedCompanyProvider;
-
-  String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
-  bool isLoading = false;
-
-  Future<AggregatedSalesData> getSalesAmounts(DateRangeFilters dateFilters,{String? storeId}) async {
+  Future<AggregatedSalesData> getSalesAmounts(DateRangeFilters dateFilters, {String? storeId}) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = RestaurantDashboardUrls.getSalesAmountsUrl(companyId, storeId,dateFilters);
+    var url = RestaurantDashboardUrls.getSalesAmountsUrl(companyId, storeId, dateFilters);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 
-    isLoading = true;
+    _isLoading = true;
     try {
       var apiResponse = await _networkAdapter.get(apiRequest);
-      isLoading = false;
+      _isLoading = false;
       return _processResponse(apiResponse);
     } on APIException catch (exception) {
-      isLoading = false;
+      _isLoading = false;
       throw exception;
     }
   }
@@ -45,14 +44,12 @@ class AggregatedSalesDataProvider {
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
-    return _readItemsFromResponse(responseMap);
-  }
-
-  AggregatedSalesData _readItemsFromResponse(Map<String, dynamic> responseMap) {
     try {
-      return AggregatedSalesData.fromJson(responseMap['data']);
-    } catch (_) {
+      return AggregatedSalesData.fromJson(responseMap);
+    } catch (e) {
       throw InvalidResponseException();
     }
   }
+
+  bool get isLoading => _isLoading;
 }

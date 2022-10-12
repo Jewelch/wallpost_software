@@ -20,7 +20,12 @@ class AggregatedSalesData extends JSONInitializable {
         _grossOfProfit = grossOfProfit,
         super.fromJson({});
 
-  factory AggregatedSalesData.empty() => AggregatedSalesData(totalSales: '0,00', netSales: '0,00', costOfSales: '0,00', grossOfProfit: '0');
+  factory AggregatedSalesData.empty() => AggregatedSalesData(
+        totalSales: '0.00',
+        netSales: '0.00',
+        costOfSales: '0.00',
+        grossOfProfit: '0.00',
+      );
 
   AggregatedSalesData.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
     final sift = Sift();

@@ -9,6 +9,7 @@ import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restauran
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_header_card.dart';
 
 import '../../../../_shared/constants/app_colors.dart';
+import '../../../../settings/left_menu/left_menu_screen.dart';
 import '../view_contracts/restaurant_dashboard_view.dart';
 
 class RestaurantDashboardScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
             CompanyDashboardAppBar(
               companyName: "companyName",
               profileImageUrl: " _presenter.getProfileImageUrl()",
-              onLeftMenuButtonPress: () => "LeftMenuScreen.show(context)",
+              onLeftMenuButtonPress: () => LeftMenuScreen.show(context),
               onAddButtonPress: () {},
               onTitlePress: () => Navigator.pop(context),
             ),

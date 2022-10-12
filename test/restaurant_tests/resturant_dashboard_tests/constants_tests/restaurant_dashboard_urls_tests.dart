@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/constants/base_urls.dart';
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/constants/restaurant_dashboard_urls.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 
 main() {
   var dateRangeFilter = DateRangeFilters();
@@ -55,7 +55,7 @@ main() {
     expect(url, "${BaseUrls.hrUrlV2()}/companies/1/store/1/consolidated_stats/sales_data?date_filter_type=last_year");
   });
 
-  test("creating the url when selected date filter is Custom", () {
+  test("creating the url when selected date filter is custom", () {
     dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.custom;
     dateRangeFilter.startDate = DateTime.now().subtract(Duration(days: 10));
     dateRangeFilter.endDate = DateTime.now().subtract(Duration(days: 1));

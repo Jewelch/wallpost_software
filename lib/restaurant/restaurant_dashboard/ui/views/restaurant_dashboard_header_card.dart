@@ -62,9 +62,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 40),
             ],
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20),
           Row(
             children: [
               SizedBox(width: 10),
@@ -77,9 +75,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 10),
             ],
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,

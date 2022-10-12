@@ -1,35 +1,14 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:random_string/random_string.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 
 class MockSalesData extends Mock implements AggregatedSalesData {}
 
 class Mocks {
-  static var loginResponse = {
-    "full_name": "Full User Name",
-    "profile_image": "www.imageUrl.com",
-    "refresh_token": "refToken",
-    "token": "accessToken",
-    "token_expiry": DateTime.now().millisecondsSinceEpoch + 100000,
-    "user_id": "09TZ3NLA195FpWJ",
-    "username": "someUserName"
-  };
-
-  static Map<String, dynamic> get userMapWithInactiveSession {
-    Map<String, dynamic> map = Map.from(loginResponse);
-    map['token_expiry'] = 123;
-    return map;
-  }
-
   static Map<String, dynamic> salesDataRandomResponse = {
-    "status": "success",
-    "metadata": [],
-    "data": {
-      "total_sales": "21",
-      "net_sales": "22",
-      "cost_of_sales": "22",
-      "gross_of_profit": 10,
-    }
+    "total_sales": "21",
+    "net_sales": "22",
+    "cost_of_sales": "22",
+    "gross_of_profit": 10,
   };
 
   static Map<String, dynamic> specificSalesDataResponse({

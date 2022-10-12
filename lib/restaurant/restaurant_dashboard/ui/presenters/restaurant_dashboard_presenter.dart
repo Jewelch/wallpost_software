@@ -5,6 +5,8 @@ import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sal
 import '../view_contracts/restaurant_dashboard_view.dart';
 
 class RestaurantDashboardPresenter {
+  //add selected company provider here
+  //add current user provider
   AggregatedSalesDataProvider _salesDataProvider;
   RestaurantDashboardView _view;
   DateRangeFilters dateFilters;
@@ -26,5 +28,10 @@ class RestaurantDashboardPresenter {
       _view.showErrorMessage(e.userReadableMessage + "\n\nTap here to reload.");
     }
   }
+
+/*
+  get company name()
+  get profile image url();
+   */
 
 }
