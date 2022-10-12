@@ -88,7 +88,6 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
         child: ItemNotifiable<int>(
           notifier: _viewTypeNotifier,
           builder: (context, viewType) {
-            print(viewType);
             if (viewType == LOADER_VIEW) return AttendanceDetailLoader();
 
             if (viewType == ERROR_VIEW) return _errorAndRetryView();
