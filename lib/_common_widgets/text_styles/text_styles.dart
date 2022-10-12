@@ -21,12 +21,12 @@ class TextStyles {
       );
 
   static get titleTextStyle => TextStyle(
-    fontSize: 16,
+    fontSize: 15,
         color: AppColors.textColorBlack,
       );
 
   static get titleTextStyleBold => TextStyle(
-    fontSize: 16,
+    fontSize: 15,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.w600,
       );
