@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
@@ -19,6 +18,7 @@ import '../../../../../_common_widgets/buttons/rounded_back_button.dart';
 import 'attendance_detail_action_button.dart';
 import 'attendance_detail_loader.dart';
 import 'break_action_button.dart';
+import 'location_map_view.dart';
 
 class AttendanceDetailScreen extends StatefulWidget {
   const AttendanceDetailScreen({Key? key}) : super(key: key);
@@ -47,8 +47,7 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
   static const PUNCH_OUT_BUTTON_VIEW = 7;
 
   late String _timeString;
-  late Timer _currentTimer;
-  late Timer _countDownTimer;
+  late Timer _currentTimer, _countDownTimer;
   var _errorMessage = "";
 
   @override
@@ -112,24 +111,15 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
   //MARK: Functions to build the error and retry view
 
   Widget _errorAndRetryView() {
-    return _errorButton(
-      title: _errorMessage,
-      onPressed: () => presenter.loadAttendanceDetails(),
-    );
+    return _errorButton(title: _errorMessage, onPressed: () => presenter.loadAttendanceDetails());
   }
 
   Widget _enableGpsView() {
-    return _errorButton(
-      title: _errorMessage,
-      onPressed: () => presenter.goToLocationSettings(),
-    );
+    return _errorButton(title: _errorMessage, onPressed: () => presenter.goToLocationSettings());
   }
 
   Widget _grantLocationPermissionView() {
-    return _errorButton(
-      title: _errorMessage,
-      onPressed: () => presenter.goToAppSettings(),
-    );
+    return _errorButton(title: _errorMessage, onPressed: () => presenter.goToAppSettings());
   }
 
   Widget _errorButton({required String title, required VoidCallback onPressed}) {
@@ -254,28 +244,10 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
       margin: EdgeInsets.only(bottom: 70, right: 12),
       child: ItemNotifiable<AttendanceLocation?>(
         notifier: _locationNotifier,
-        builder: (context, location) => ClipRRect(
-          borderRadius: BorderRadius.only(topRight: Radius.circular(28), bottomRight: Radius.circular(28)),
-          child: location == null
-              ? Container()
-              : GoogleMap(
-                  zoomControlsEnabled: false,
-                  compassEnabled: false,
-                  tiltGesturesEnabled: false,
-                  rotateGesturesEnabled: false,
-                  myLocationButtonEnabled: false,
-                  scrollGesturesEnabled: false,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(location.latitude.toDouble(), location.longitude.toDouble()),
-                    zoom: 16.0,
-                  ),
-                  markers: Set<Marker>()
-                    ..add(Marker(
-                      markerId: MarkerId('Current Location'),
-                      position: LatLng(location.latitude.toDouble(), location.longitude.toDouble()),
-                    )),
-                ),
-        ),
+        builder: (context, location) {
+          if(location==null) return Container();
+          return LocationMapView(attendanceLocation: location);
+        },
       ),
     );
   }
@@ -294,12 +266,8 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
 
   //MARK: Functions to build the attendance and break buttons
 
-  Widget _attendanceButton({
-    required String title,
-    required String subTitle,
-    required Color buttonColor,
-    required VoidCallback onPressed,
-  }) {
+  Widget _attendanceButton(
+      {required String title, required String subTitle, required Color buttonColor, required VoidCallback onPressed}) {
     return ItemNotifiable<bool>(
       notifier: _attendanceButtonLoaderNotifier,
       builder: (context, showLoader) {
