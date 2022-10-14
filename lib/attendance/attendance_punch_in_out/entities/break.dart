@@ -11,8 +11,8 @@ class Break extends JSONInitializable {
     var sift = Sift();
     try {
       _id = sift.readStringFromMap(jsonMap, 'interval_id');
-      _startTime = sift.readDateFromMap(jsonMap, 'break_in', 'yyyy-MM-dd HH:mm:ss');
-      _endTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'break_out', 'yyyy-MM-dd HH:mm:ss', null);
+      _startTime = sift.readDateFromMap(jsonMap, 'actual_break_in', 'yyyy-MM-dd HH:mm:ss');
+      _endTime = sift.readDateFromMapWithDefaultValue(jsonMap, 'actual_break_out', 'yyyy-MM-dd HH:mm:ss', null);
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Break response. Error message - ${e.errorMessage}');
     }
