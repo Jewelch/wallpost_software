@@ -10,8 +10,8 @@ class RetailDashboardData extends JSONInitializable {
   RetailDashboardData.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
-      _todaysSale = sift.readStringFromMap(jsonMap, "todays_sale");
-      _ytdSale = sift.readStringFromMap(jsonMap, "ytd_sale");
+      _todaysSale = sift.readStringFromMap(jsonMap, "at_a_glance_sales_amount");
+      _ytdSale = sift.readStringFromMap(jsonMap, "filtered_sales_amount");
     } on SiftException catch (e) {
       throw MappingException('Failed to cast RetailDashboardData response. Error message - ${e.errorMessage}');
     }

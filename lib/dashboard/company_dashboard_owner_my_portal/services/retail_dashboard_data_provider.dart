@@ -20,14 +20,8 @@ class RetailDashboardDataProvider {
         _networkAdapter = WPAPI();
 
   Future<RetailDashboardData> get({int? month, int? year}) async {
-    await Future.delayed(Duration(seconds: 3));
-    return RetailDashboardData.fromJson({
-      "todays_sale": "1,234",
-      "ytd_sale": "1,234,222",
-    });
-
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = OwnerMyPortalDashboardUrls.retailDataUrl(companyId, month, year);
+    var url = OwnerMyPortalDashboardUrls.retailDataUrl(companyId, month == 0 ? null : month, year);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     _isLoading = true;

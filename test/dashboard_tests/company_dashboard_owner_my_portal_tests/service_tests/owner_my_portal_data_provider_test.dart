@@ -34,6 +34,15 @@ void main() {
     expect(mockNetworkAdapter.didCallGet, true);
   });
 
+  test('month is set to null if it is 0', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await myPortalDataProvider.get(month: 0, year: 2022);
+
+    expect(mockNetworkAdapter.apiRequest.url,
+        OwnerMyPortalDashboardUrls.ownerMyPortalDataUrl('someCompanyId', null, 2022));
+  });
+
   test('throws exception when network adapter fails', () async {
     mockNetworkAdapter.fail(NetworkFailureException());
 

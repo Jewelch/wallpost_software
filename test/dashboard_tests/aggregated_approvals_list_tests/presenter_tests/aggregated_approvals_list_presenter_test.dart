@@ -211,7 +211,7 @@ void main() {
 
     //then
     expect(presenter.getCompanyNames(), ["All Companies", "Company One", "Company Two", "C Three"]);
-    expect(presenter.getModuleNames(), ["All Modules", "HR", "Finance"]);
+    expect(presenter.getModuleNames(), ["All Modules", "HR", "CRM"]);
   });
 
   test('applying company name filter', () async {

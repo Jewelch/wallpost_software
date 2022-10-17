@@ -123,7 +123,7 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
   }
 
   @override
-  void showErrorMessage(String message) {
+  void showErrorMessage() {
     _viewTypeNotifier.notify(viewTypeError);
   }
 

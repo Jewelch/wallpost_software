@@ -13,9 +13,9 @@ class CRMDashboardData extends JSONInitializable {
     var sift = Sift();
     try {
       _actualRevenue = sift.readStringFromMap(jsonMap, "actual_revenue");
-      _targetAchievedPercent = sift.readNumberFromMap(jsonMap, "target_achieved").toInt();
+      _targetAchievedPercent = sift.readNumberFromMap(jsonMap, "target_achieved_percentage").toInt();
       _inPipeline = sift.readStringFromMap(jsonMap, "in_pipeline");
-      _leadConvertedPercent = sift.readNumberFromMap(jsonMap, "lead_converted").toInt();
+      _leadConvertedPercent = sift.readNumberFromMap(jsonMap, "lead_converted_percentage").toInt();
     } on SiftException catch (e) {
       throw MappingException('Failed to cast CRMDashboardData response. Error message - ${e.errorMessage}');
     }

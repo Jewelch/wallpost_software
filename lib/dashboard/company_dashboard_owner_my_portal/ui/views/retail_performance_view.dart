@@ -123,7 +123,7 @@ class RetailPerformanceViewState extends State<RetailPerformanceView>
   }
 
   @override
-  void showErrorMessage(String message) {
+  void showErrorMessage() {
     _viewTypeNotifier.notify(viewTypeError);
   }
 

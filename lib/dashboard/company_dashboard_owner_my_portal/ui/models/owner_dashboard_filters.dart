@@ -4,16 +4,12 @@ class OwnerDashboardFilters {
   int month = 0;
   int year = AppYears().getCurrentYear();
 
-  String getMontYearString() {
+  String getMonthYearString() {
     String label = "";
     if (month == 0) {
-      if (year == AppYears().getCurrentYear()) {
-        label = "YTD";
-      } else {
-        label = "YTD $year";
-      }
+      label = "YTD";
     } else {
-      label += "${AppYears().getShortNameForMonth(month)} $year";
+      label += "${AppYears().getShortNameForMonth(month - 1)} $year";
     }
     return label;
   }

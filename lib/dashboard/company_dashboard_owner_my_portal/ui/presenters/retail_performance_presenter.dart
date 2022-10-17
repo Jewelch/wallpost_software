@@ -28,7 +28,7 @@ class RetailPerformancePresenter {
       _view.onDidLoadData();
     } on WPException catch (e) {
       _errorMessage = '${e.userReadableMessage}\n\nTap here to reload.';
-      _view.showErrorMessage(e.userReadableMessage);
+      _view.showErrorMessage();
     }
   }
 
@@ -48,7 +48,7 @@ class RetailPerformancePresenter {
 
   PerformanceValue getYTDSale() {
     return PerformanceValue(
-      label: "${_filters.getMontYearString()} Sales",
+      label: "${_filters.getMonthYearString()} Sales",
       value: _retailData!.ytdSale,
       textColor: AppColors.defaultColorDark,
     );

@@ -20,16 +20,8 @@ class HRDashboardDataProvider {
         _networkAdapter = WPAPI();
 
   Future<HRDashboardData> get({int? month, int? year}) async {
-    await Future.delayed(Duration(seconds: 3));
-    return HRDashboardData.fromJson({
-      "active_staff": "1,234",
-      "employee_cost": "1,234,222",
-      "staff_on_leave": "24",
-      "documents_expired": "30",
-    });
-
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = OwnerMyPortalDashboardUrls.hrDataUrl(companyId, month, year);
+    var url = OwnerMyPortalDashboardUrls.hrDataUrl(companyId, month == 0 ? null : month, year);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     _isLoading = true;

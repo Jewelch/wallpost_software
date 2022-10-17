@@ -20,16 +20,8 @@ class CRMDashboardDataProvider {
         _networkAdapter = WPAPI();
 
   Future<CRMDashboardData> get({int? month, int? year}) async {
-    await Future.delayed(Duration(seconds: 3));
-    return CRMDashboardData.fromJson({
-      "actual_revenue": "13,000",
-      "target_achieved": 123,
-      "in_pipeline": "140",
-      "lead_converted": 20,
-    });
-
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = OwnerMyPortalDashboardUrls.crmDataUrl(companyId, month, year);
+    var url = OwnerMyPortalDashboardUrls.crmDataUrl(companyId, month == 0 ? null : month, year);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     _isLoading = true;

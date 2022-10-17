@@ -35,9 +35,9 @@ class Mocks {
 
   static Map<String, dynamic> crmDashboardDataResponse = {
     "actual_revenue": "13,000",
-    "target_achieved": "1,233",
+    "target_achieved_percentage": 12,
     "in_pipeline": "140",
-    "lead_converted": "11,300"
+    "lead_converted_percentage": 20
   };
 
   static Map<String, dynamic> hrDashboardDataResponse = {
@@ -47,7 +47,13 @@ class Mocks {
     "documents_expired": "30"
   };
 
-  static Map<String, dynamic> restaurantDashboardDataResponse = {"todays_sale": "1,233,000", "ytd_sale": "12,333,000"};
+  static Map<String, dynamic> restaurantDashboardDataResponse = {
+    "at_a_glance_sales_amount": "1,233,000",
+    "filtered_sales_amount": "12,333,000",
+  };
 
-  static Map<String, dynamic> retailDashboardDataResponse = {"todays_sale": "1,233,000", "ytd_sale": "12,333,000"};
+  static Map<String, dynamic> retailDashboardDataResponse = {
+    "at_a_glance_sales_amount": "1,233,000",
+    "filtered_sales_amount": "12,333,000",
+  };
 }

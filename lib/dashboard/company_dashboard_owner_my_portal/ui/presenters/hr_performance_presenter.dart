@@ -30,7 +30,7 @@ class HRPerformancePresenter {
       _view.onDidLoadData();
     } on WPException catch (e) {
       _errorMessage = '${e.userReadableMessage}\n\nTap here to reload.';
-      _view.showErrorMessage(e.userReadableMessage);
+      _view.showErrorMessage();
     }
   }
 

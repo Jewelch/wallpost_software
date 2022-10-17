@@ -22,7 +22,7 @@ class OwnerMyPortalDataProvider {
 
   Future<OwnerMyPortalData> get({int? month, int? year}) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = OwnerMyPortalDashboardUrls.ownerMyPortalDataUrl(companyId, month, year);
+    var url = OwnerMyPortalDashboardUrls.ownerMyPortalDataUrl(companyId, month == 0 ? null : month, year);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     _isLoading = true;

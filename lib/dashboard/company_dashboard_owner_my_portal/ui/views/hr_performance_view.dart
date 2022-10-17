@@ -143,7 +143,7 @@ class _HRPerformanceViewState extends State<HRPerformanceView>
   }
 
   @override
-  void showErrorMessage(String message) {
+  void showErrorMessage() {
     _viewTypeNotifier.notify(viewTypeError);
   }
 

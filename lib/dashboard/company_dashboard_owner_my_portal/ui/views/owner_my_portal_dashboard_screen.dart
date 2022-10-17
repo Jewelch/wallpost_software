@@ -19,6 +19,7 @@ import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../attendance/attendance_adjustment/ui/views/attendance_list_screen.dart';
 import '../../../aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
 import '../../../company_dashboard/ui/common_views/my_portal_item_action_view.dart';
+import '../presenters/module_page_view_presenter.dart';
 import '../presenters/owner_my_portal_dashboard_presenter.dart';
 import '../view_contracts/owner_my_portal_view.dart';
 import 'company_performance_view.dart';
@@ -36,6 +37,7 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
   static const ERROR_VIEW = 2;
   static const DATA_VIEW = 3;
   late OwnerMyPortalDashboardPresenter _presenter;
+  final _moduleViewPresenter = ModulePageViewPresenter();
 
   var _errorMessage = "";
   var _viewTypeNotifier = ItemNotifier<int>(defaultValue: LOADER_VIEW);
@@ -112,7 +114,7 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
             padding: EdgeInsets.only(top: 44, bottom: 100),
             children: [
               FinanceDetailCard(_presenter.getFinancialSummary()),
-              ModulesView(_presenter.filters),
+              ModulesView(_moduleViewPresenter, _presenter.filters),
               SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),

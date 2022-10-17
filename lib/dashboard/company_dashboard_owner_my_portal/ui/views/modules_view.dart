@@ -11,26 +11,32 @@ import '../presenters/module_page_view_presenter.dart';
 import 'crm_performance_view.dart';
 
 class ModulesView extends StatefulWidget {
+  final ModulePageViewPresenter _presenter;
   final OwnerDashboardFilters _filters;
 
-  ModulesView(this._filters);
+  ModulesView(this._presenter, this._filters);
 
   @override
   State<ModulesView> createState() => _ModulesViewState();
 }
 
 class _ModulesViewState extends State<ModulesView> with TickerProviderStateMixin {
-  final _presenter = ModulePageViewPresenter();
   late TabController _tabController;
 
   @override
   void initState() {
-    _tabController = new TabController(vsync: this, length: _presenter.getNumberOfModules());
+    _tabController = new TabController(
+      vsync: this,
+      length: widget._presenter.getNumberOfModules(),
+      initialIndex: widget._presenter.selectedModuleIndex,
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!widget._presenter.shouldDisplayModules()) return Container();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -46,7 +52,8 @@ class _ModulesViewState extends State<ModulesView> with TickerProviderStateMixin
             indicatorColor: AppColors.defaultColor,
             indicatorPadding: EdgeInsets.only(right: 10),
             isScrollable: true,
-            tabs: _presenter.getModuleNames().map((moduleName) => Tab(text: moduleName)).toList(),
+            tabs: widget._presenter.getModuleNames().map((moduleName) => Tab(text: moduleName)).toList(),
+            onTap: (tabIndex) => widget._presenter.selectModuleAtIndex(tabIndex),
           ),
         ),
         SizedBox(height: 12),
@@ -56,7 +63,7 @@ class _ModulesViewState extends State<ModulesView> with TickerProviderStateMixin
           child: TabBarView(
             clipBehavior: Clip.none,
             controller: _tabController,
-            children: _presenter.getModules().map((module) {
+            children: widget._presenter.getModules().map((module) {
               if (module == Module.Crm) {
                 return CRMPerformanceView(widget._filters);
               } else if (module == Module.Hr) {

@@ -1,8 +1,9 @@
 class BaseUrls {
   //Sub domains
   static const String _CORE = 'core';
-  static const String _TASK_SUB_DOMAIN = 'task';
   static const String _HR_SUB_DOMAIN = 'hr';
+  static const String _RESTAURANT_SUB_DOMAIN = 'restaurant';
+  static const String _MISC_SUB_DOMAIN = 'misc';
 
   //Environments
   static const String _PRODUCTION = '';
@@ -35,7 +36,11 @@ class BaseUrls {
     return BaseUrls.generateUrl(subDomain: _HR_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_3_PATH);
   }
 
-  static String taskUrlV2() {
-    return BaseUrls.generateUrl(subDomain: _TASK_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
+  static String restaurantUrlV2() {
+    return BaseUrls.generateUrl(subDomain: _RESTAURANT_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
+  }
+
+  static String miscUrlV2() {
+    return BaseUrls.generateUrl(subDomain: _MISC_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
   }
 }

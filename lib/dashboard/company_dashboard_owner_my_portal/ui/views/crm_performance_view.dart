@@ -143,7 +143,7 @@ class _CRMPerformanceViewState extends State<CRMPerformanceView>
   }
 
   @override
-  void showErrorMessage(String message) {
+  void showErrorMessage() {
     _viewTypeNotifier.notify(viewTypeError);
   }
 

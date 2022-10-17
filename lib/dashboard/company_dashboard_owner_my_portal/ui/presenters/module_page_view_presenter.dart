@@ -6,6 +6,7 @@ import '../../../../_wp_core/company_management/entities/company.dart';
 class ModulePageViewPresenter {
   final SelectedCompanyProvider _companyProvider;
   late final Company _company;
+  int _selectedModuleIndex = 0;
 
   ModulePageViewPresenter() : this.initWith(SelectedCompanyProvider());
 
@@ -17,8 +18,8 @@ class ModulePageViewPresenter {
     return getModuleNames().length;
   }
 
-  List<String> getModuleNames() {
-    return getModules().map((m) => m.toReadableString()).toList();
+  bool shouldDisplayModules() {
+    return getNumberOfModules() > 0;
   }
 
   List<Module> getModules() {
@@ -27,4 +28,14 @@ class ModulePageViewPresenter {
     var modulesToShow = _company.modules.where((m) => allDashboardModules.contains(m)).toList();
     return modulesToShow;
   }
+
+  List<String> getModuleNames() {
+    return getModules().map((m) => m.toReadableString()).toList();
+  }
+
+  void selectModuleAtIndex(int index) {
+    _selectedModuleIndex = index;
+  }
+
+  int get selectedModuleIndex => _selectedModuleIndex;
 }
