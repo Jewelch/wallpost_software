@@ -19,8 +19,8 @@ class CompanyPerformanceView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: 60,
-            width: 60,
+            height: 50,
+            width: 50,
             child: Stack(
               children: [
                 Positioned.fill(
@@ -36,7 +36,7 @@ class CompanyPerformanceView extends StatelessWidget {
                     sections: cutoffPerformanceSections(),
                     borderData: FlBorderData(show: false),
                     sectionsSpace: 0,
-                    centerSpaceRadius: 25,
+                    centerSpaceRadius: 23,
                     startDegreeOffset: 270.0,
                   ),
                 ),
@@ -45,7 +45,7 @@ class CompanyPerformanceView extends StatelessWidget {
                     sections: actualPerformanceSections(),
                     borderData: FlBorderData(show: false),
                     sectionsSpace: 0,
-                    centerSpaceRadius: 25,
+                    centerSpaceRadius: 23,
                     startDegreeOffset: 270.0,
                   ),
                 ),
@@ -53,18 +53,20 @@ class CompanyPerformanceView extends StatelessWidget {
             ),
           ),
           SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "YTD",
-                style: TextStyles.labelTextStyleBold,
-              ),
-              Text(
-                "Company\nPerformance",
-                style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
-              ),
-            ],
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "YTD",
+                  style: TextStyles.labelTextStyleBold,
+                ),
+                Text(
+                  "Company\nPerformance",
+                  style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
+                ),
+              ],
+            ),
           ),
         ],
       ),

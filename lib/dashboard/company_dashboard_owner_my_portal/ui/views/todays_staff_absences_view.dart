@@ -34,12 +34,12 @@ class TodaysStaffAbsencesView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Today's",
-                  style: TextStyles.labelTextStyleBold,
-                ),
-                Text(
                   "Staff\nAbsences",
                   style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
+                ),
+                Text(
+                  "Today",
+                  style: TextStyles.labelTextStyleBold,
                 ),
               ],
             )
