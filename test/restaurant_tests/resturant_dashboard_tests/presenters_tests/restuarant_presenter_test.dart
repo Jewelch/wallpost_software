@@ -2,7 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wises.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/services/sales_breakdowns_provider.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/restaurant_dashboard_view.dart';
 
@@ -12,18 +15,29 @@ class MockSalesDataProvider extends Mock implements AggregatedSalesDataProvider 
 
 class MockSalesDataView extends Mock implements RestaurantDashboardView {}
 
+class MockSalesBreakDownProvider extends Mock implements SalesBreakDownsProvider {}
+
+class MockSalesBreakDowns extends Mock implements SalesBreakDownItem {}
+
 void main() {
   var salesDataProvider = MockSalesDataProvider();
+  var salesBreakDownProvider = MockSalesBreakDownProvider();
   var view = MockSalesDataView();
   var dateFilter = DateRangeFilters();
-  var salesPresenter = RestaurantDashboardPresenter.initWith(view, salesDataProvider, dateFilter);
+  var salesPresenter =
+      RestaurantDashboardPresenter.initWith(view, salesDataProvider, salesBreakDownProvider, dateFilter);
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
     verifyNoMoreInteractions(salesDataProvider);
+    verifyNoMoreInteractions(salesBreakDownProvider);
   }
 
-  test('loading sales data when the provider is loading does nothing', () async {
+  setUpAll(() {
+    registerFallbackValue(SalesBreakDownWises.baseOnCategory);
+  });
+
+  test('loading sales data when sales data provider is loading does nothing', () async {
     //given
     when(() => salesDataProvider.isLoading).thenReturn(true);
 
@@ -68,6 +82,94 @@ void main() {
       () => view.showLoader(),
       () => salesDataProvider.getSalesAmounts(dateFilter),
       () => view.showSalesData(salesData),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('loading sales breakdowns when sales breakdowns provider is loading does nothing', () async {
+    //given
+    when(() => salesBreakDownProvider.isLoading).thenReturn(true);
+
+    //when
+    await salesPresenter.loadSalesBreakDown();
+
+    //then
+    verify(() => salesBreakDownProvider.isLoading);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('failure to load sales breakdowns', () async {
+    //given
+    when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+    when(() => salesBreakDownProvider.getSalesBreakDowns(any()))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
+
+    //when
+    await salesPresenter.loadSalesBreakDown();
+
+    verifyInOrder([
+      () => salesBreakDownProvider.isLoading,
+      () => view.showLoader(),
+      () => salesBreakDownProvider.getSalesBreakDowns(any()),
+      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('successfully loading sales breakdowns', () async {
+    //given
+    var salesBreakDowns = [MockSalesBreakDowns()];
+    when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+    when(() => salesBreakDownProvider.getSalesBreakDowns(any())).thenAnswer((_) => Future.value(salesBreakDowns));
+
+    //when
+    await salesPresenter.loadSalesBreakDown();
+
+    //then
+    verifyInOrder([
+      () => salesBreakDownProvider.isLoading,
+      () => view.showLoader(),
+      () => salesBreakDownProvider.getSalesBreakDowns(any()),
+      () => view.showSalesBreakDowns(salesBreakDowns),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('failure to changing and loading sales breakdowns based on new changed wise after changing the wise', () async {
+    //given
+    when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+    when(() => salesBreakDownProvider.getSalesBreakDowns(any()))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
+
+    //when
+    await salesPresenter.changeAndLoadSalesBreakDownWise(SalesBreakDownWises.baseOnCategory);
+
+    //then
+    expect(salesPresenter.selectedSalesBreakDownWise, SalesBreakDownWises.baseOnCategory);
+    verifyInOrder([
+      () => view.showLoader(),
+      () => salesBreakDownProvider.getSalesBreakDowns(SalesBreakDownWises.baseOnCategory),
+      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('successfully changing and loading sales breakdowns based on new changed wise after changing the wise',
+      () async {
+    //given
+    var salesBreakDowns = [MockSalesBreakDowns()];
+    when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+    when(() => salesBreakDownProvider.getSalesBreakDowns(any())).thenAnswer((_) => Future.value(salesBreakDowns));
+
+    //when
+    await salesPresenter.changeAndLoadSalesBreakDownWise(SalesBreakDownWises.baseOnMenu);
+
+    //then
+    expect(salesPresenter.selectedSalesBreakDownWise, SalesBreakDownWises.baseOnMenu);
+    verifyInOrder([
+      () => view.showLoader(),
+      () => salesBreakDownProvider.getSalesBreakDowns(SalesBreakDownWises.baseOnMenu),
+      () => view.showSalesBreakDowns(salesBreakDowns),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
