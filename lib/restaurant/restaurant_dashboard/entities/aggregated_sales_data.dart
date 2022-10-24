@@ -9,24 +9,6 @@ class AggregatedSalesData extends JSONInitializable {
   late String _costOfSales;
   late String _grossOfProfit;
 
-  AggregatedSalesData({
-    required String totalSales,
-    required String netSales,
-    required String costOfSales,
-    required String grossOfProfit,
-  })  : _totalSales = totalSales,
-        _netSales = netSales,
-        _costOfSales = costOfSales,
-        _grossOfProfit = grossOfProfit,
-        super.fromJson({});
-
-  factory AggregatedSalesData.empty() => AggregatedSalesData(
-        totalSales: '0.00',
-        netSales: '0.00',
-        costOfSales: '0.00',
-        grossOfProfit: '0.00',
-      );
-
   AggregatedSalesData.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
     final sift = Sift();
     try {
@@ -35,7 +17,8 @@ class AggregatedSalesData extends JSONInitializable {
       _costOfSales = sift.readStringFromMap(jsonMap, 'cost_of_sales');
       _grossOfProfit = sift.readNumberFromMap(jsonMap, 'gross_of_profit').toString();
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast SalesData response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast SalesData response. Error message - ${e.errorMessage}');
     }
   }
 
