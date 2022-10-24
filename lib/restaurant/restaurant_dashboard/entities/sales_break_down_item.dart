@@ -18,7 +18,7 @@ class SalesBreakDownItem extends JSONInitializable {
     }
   }
 
-  String get totalSales => _totalSales;
+  double get totalSales => double.parse(_totalSales);
 
   String get type => _type;
 }
