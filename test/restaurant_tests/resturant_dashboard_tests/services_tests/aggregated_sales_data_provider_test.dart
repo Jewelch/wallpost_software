@@ -33,10 +33,10 @@ void main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    await salesDataProvider.getSalesAmounts(dateFilter, storeId: 'someStoreId');
+    await salesDataProvider.getSalesAmounts(dateFilter);
 
     expect(mockNetworkAdapter.apiRequest.url,
-        RestaurantDashboardUrls.getSalesAmountsUrl('someCompanyId', 'someStoreId', dateFilter));
+        RestaurantDashboardUrls.getSalesAmountsUrl('someCompanyId',  dateFilter));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, isTrue);
   });
@@ -45,7 +45,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      await salesDataProvider.getSalesAmounts(dateFilter, storeId: 'someStoreId');
+      await salesDataProvider.getSalesAmounts(dateFilter,);
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e, isA<NetworkFailureException>());
@@ -56,7 +56,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      await salesDataProvider.getSalesAmounts(dateFilter, storeId: 'someStoreId');
+      await salesDataProvider.getSalesAmounts(dateFilter, );
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -67,7 +67,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      await salesDataProvider.getSalesAmounts(dateFilter, storeId: 'someStoreId');
+      await salesDataProvider.getSalesAmounts(dateFilter,);
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -78,7 +78,7 @@ void main() {
     mockNetworkAdapter.succeed(<String, dynamic>{"miss_data": "anyWrongData"});
 
     try {
-      await salesDataProvider.getSalesAmounts(dateFilter, storeId: 'someStoreId');
+      await salesDataProvider.getSalesAmounts(dateFilter,);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -107,7 +107,7 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      await salesDataProvider.getSalesAmounts(dateFilter, storeId: "someStoreId");
+      await salesDataProvider.getSalesAmounts(dateFilter, );
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
@@ -116,7 +116,7 @@ void main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    salesDataProvider.getSalesAmounts(dateFilter, storeId: "someStoreId");
+    salesDataProvider.getSalesAmounts(dateFilter, );
 
     expect(salesDataProvider.isLoading, true);
   });
@@ -124,7 +124,7 @@ void main() {
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    await salesDataProvider.getSalesAmounts(dateFilter, storeId: "someStoreId");
+    await salesDataProvider.getSalesAmounts(dateFilter, );
 
     expect(salesDataProvider.isLoading, false);
   });
@@ -133,7 +133,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      await salesDataProvider.getSalesAmounts(dateFilter, storeId: "someStoreId");
+      await salesDataProvider.getSalesAmounts(dateFilter, );
       fail('failed to throw exception');
     } catch (_) {
       expect(salesDataProvider.isLoading, false);
