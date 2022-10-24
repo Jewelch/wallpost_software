@@ -135,7 +135,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('failure to changing and loading sales breakdowns based on new changed wise after changing the wise', () async {
+  test('failure to changing and loading sales breakdowns based on new changed wise', () async {
     //given
     when(() => salesBreakDownProvider.isLoading).thenReturn(false);
     when(() => salesBreakDownProvider.getSalesBreakDowns(any()))
@@ -154,7 +154,7 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('successfully changing and loading sales breakdowns based on new changed wise after changing the wise',
+  test('successfully changing and loading sales breakdowns based on new changed wise',
       () async {
     //given
     var salesBreakDowns = [MockSalesBreakDowns()];
