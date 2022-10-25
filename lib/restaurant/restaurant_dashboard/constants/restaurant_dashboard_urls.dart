@@ -12,8 +12,8 @@ class RestaurantDashboardUrls {
     var url =
         '${BaseUrls.hrUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_data?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
     if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom) {
-      url += "&start_date=${dateFilters.startDate.yMMMd}";
-      url += "&end_date=${dateFilters.endDate.yMMMd}";
+      url += "&start_date=${dateFilters.startDate.yMMMd()}";
+      url += "&end_date=${dateFilters.endDate.yMMMd()}";
     }
     return url;
   }

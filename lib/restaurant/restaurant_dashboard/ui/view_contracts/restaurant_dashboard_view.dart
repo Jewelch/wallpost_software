@@ -11,4 +11,6 @@ abstract class RestaurantDashboardView {
   void showSalesBreakDowns(List<SalesBreakDownItem> salesBreakDowns);
 
   void showDateRangeSelector();
+
+  void onDidSelectSalesBreakdownFilterType();
 }

@@ -5,7 +5,7 @@ import 'package:wallpost/_main/ui/view_contracts/main_view.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/login/ui/views/login_screen.dart';
 
-import '../../../dashboard/group_dashboard/ui/views/group_dashboard_screen.dart';
+import '../../../restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_screen.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key? key}) : super(key: key);
@@ -51,6 +51,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver imp
 
   @override
   void goToCompanyListScreen() {
-    ScreenPresenter.presentAndRemoveAllPreviousScreens(GroupDashboardScreen(), context);
+    ScreenPresenter.presentAndRemoveAllPreviousScreens(RestaurantDashboardScreen(), context);
   }
 }

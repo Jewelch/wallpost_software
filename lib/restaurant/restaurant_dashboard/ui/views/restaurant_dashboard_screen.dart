@@ -12,6 +12,8 @@ import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/resta
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_header_card.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/sales_break_down_card.dart';
 
+import '../../../../_common_widgets/filter_views/dropdown_filter.dart';
+
 class RestaurantDashboardScreen extends StatefulWidget {
   @override
   State<RestaurantDashboardScreen> createState() => _State();
@@ -42,11 +44,9 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
               onAddButtonPress: () {},
               onTitlePress: () => Navigator.pop(context),
             ),
-            SizedBox(
-              height: 30,
-            ),
+            SizedBox(height: 30),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.only(left: 16, right: 28),
               child: Row(
                 children: [
                   Spacer(),
@@ -61,8 +61,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                   SvgPicture.asset(
                     'assets/icons/arrow_down_icon.svg',
                     color: AppColors.defaultColor,
-                    width: 17,
-                    height: 17,
+                    height: 14,
                   ),
                 ],
               ),
@@ -70,6 +69,26 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
             ItemNotifiable<AggregatedSalesData?>(
               notifier: _salesDataNotifier,
               builder: (context, value) => value != null ? RestaurantDashboardHeaderCard(value) : SizedBox(),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Text('Sales Breakdown', style: TextStyles.titleTextStyleBold),
+                  SizedBox(width: 15),
+                  Flexible(
+                    child: DropdownFilter(
+                      items: _salesPresenter.orderFilters,
+                      selectedValue: _salesPresenter.selectedOrderFilter,
+                      textStyle: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
+                      backgroundColor: Colors.transparent,
+                      dropdownColor: AppColors.filtersBackgroundColor,
+                      dropdownArrowColor: AppColors.defaultColor,
+                      onDidSelectedItemAtIndex: (index) => _salesPresenter.selectOrderFilterAt(index),
+                    ),
+                  ),
+                ],
+              ),
             ),
             ItemNotifiable<List<SalesBreakDownItem>>(
               notifier: _salesBreakDownsNotifier,
@@ -103,4 +122,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   void showSalesBreakDowns(List<SalesBreakDownItem> salesBreakDowns) {
     _salesBreakDownsNotifier.notify(salesBreakDowns);
   }
+
+  @override
+  void onDidSelectSalesBreakdownFilterType() => setState(() {});
 }

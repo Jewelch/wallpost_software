@@ -54,7 +54,6 @@ class _ModulesViewState extends State<ModulesView> with TickerProviderStateMixin
           height: 180,
           margin: EdgeInsets.symmetric(horizontal: 12),
           child: TabBarView(
-            clipBehavior: Clip.none,
             controller: _tabController,
             children: _presenter.getModules().map((module) {
               if (module == Module.Crm) {

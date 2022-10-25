@@ -10,7 +10,7 @@ class RestaurantDashboardPresenter {
   AggregatedSalesDataProvider _salesDataProvider;
   SalesBreakDownsProvider _salesBreakDownsProvider;
   RestaurantDashboardView _view;
-  SalesBreakDownWises _selectedSalesBreakDownWise = SalesBreakDownWises.baseOnOrder;
+  SalesBreakDownWises _selectedSalesBreakDownWise = SalesBreakDownWises.baseOnCategory;
   DateRangeFilters dateFilters;
 
   RestaurantDashboardPresenter(this._view)
@@ -19,7 +19,24 @@ class RestaurantDashboardPresenter {
         dateFilters = DateRangeFilters();
 
   RestaurantDashboardPresenter.initWith(
-      this._view, this._salesDataProvider, this._salesBreakDownsProvider, this.dateFilters);
+    this._view,
+    this._salesDataProvider,
+    this._salesBreakDownsProvider,
+    this.dateFilters,
+  );
+
+  List<String> orderFilters = [
+    SalesBreakDownWises.baseOnOrder.toReadableString(),
+    SalesBreakDownWises.baseOnCategory.toReadableString(),
+    SalesBreakDownWises.baseOnMenu.toReadableString(),
+  ];
+
+  String selectedOrderFilter = SalesBreakDownWises.baseOnOrder.toReadableString();
+
+  void selectOrderFilterAt(int index) => {
+        selectedOrderFilter = orderFilters[index],
+        _view.onDidSelectSalesBreakdownFilterType(),
+      };
 
   // MARK: Load Aggregated Sales Data
 
