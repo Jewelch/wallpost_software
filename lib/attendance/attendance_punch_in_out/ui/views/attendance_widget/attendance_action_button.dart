@@ -26,33 +26,31 @@ class AttendanceActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        //TODO: uncomment following widget to show more button
-        // Positioned(
-        //   right: 0,
-        //   top: 0,
-        //   bottom: 0,
-        //   child: Container(
-        //     width: 120,
-        //     child: MaterialButton(
-        //       elevation: 0,
-        //       highlightElevation: 0,
-        //       padding: EdgeInsets.only(left: 26),
-        //       color: moreButtonColor,
-        //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        //       child: Row(
-        //         children: [
-        //           SizedBox(width: 20),
-        //           Icon(Icons.arrow_upward, size: 20, color: Colors.white),
-        //           Text(" More", style: TextStyles.subTitleTextStyle.copyWith(color: Colors.white)),
-        //         ],
-        //       ),
-        //       onPressed: onMoreButtonPressed,
-        //     ),
-        //   ),
-        // ),
+        Positioned(
+          right: 0,
+          top: 0,
+          bottom: 0,
+          child: Container(
+            width: 120,
+            child: MaterialButton(
+              elevation: 0,
+              highlightElevation: 0,
+              padding: EdgeInsets.only(left: 26),
+              color: moreButtonColor,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              child: Row(
+                children: [
+                  SizedBox(width: 20),
+                  Icon(Icons.arrow_upward, size: 20, color: Colors.white),
+                  Text(" More", style: TextStyles.subTitleTextStyle.copyWith(color: Colors.white)),
+                ],
+              ),
+              onPressed: onMoreButtonPressed,
+            ),
+          ),
+        ),
         Container(
-          //TODO: uncomment following line to show more button
-          // margin: EdgeInsets.only(right: 80),
+          margin: EdgeInsets.only(right: 80),
           child: MaterialButton(
             onPressed: onButtonPressed,
             elevation: 0,

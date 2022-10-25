@@ -5,7 +5,7 @@ class AttendanceReport {
   late num _presents;
   late num _absents;
   late num _late;
-  late num _earlyLeave;
+  late num _earlyLeaves;
   late num _leaves;
 
   AttendanceReport.fromJson(List<Map<String, dynamic>> jsonMapList) {
@@ -15,7 +15,7 @@ class AttendanceReport {
       _presents = sift.readNumberFromMap(reportMap, 'Presents');
       _absents = sift.readNumberFromMap(reportMap, 'Absents');
       _late = sift.readNumberFromMap(reportMap, 'Late');
-      _earlyLeave = sift.readNumberFromMap(reportMap, 'EarlyLeave');
+      _earlyLeaves = sift.readNumberFromMap(reportMap, 'EarlyLeave');
       _leaves = sift.readNumberFromMap(reportMap, 'Leaves');
     } on SiftException catch (e) {
       throw MappingException('Failed to cast AttendanceReport response. Error message - ${e.errorMessage}');
@@ -28,7 +28,7 @@ class AttendanceReport {
 
   num get late => _late;
 
-  num get earlyLeave => _earlyLeave;
+  num get earlyLeave => _earlyLeaves;
 
   num get leaves => _leaves;
 }

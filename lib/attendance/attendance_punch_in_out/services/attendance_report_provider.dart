@@ -18,7 +18,6 @@ class AttendanceReportProvider {
   Future<AttendanceReport> getReport() async {
     var startDate = _getFirstDayOfCurrentMonth().yyyyMMddString();
     var endDate = _getLastDayOfCurrentMonth().yyyyMMddString();
-
     var url = AttendanceUrls.attendanceReportUrl(startDate, endDate);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);

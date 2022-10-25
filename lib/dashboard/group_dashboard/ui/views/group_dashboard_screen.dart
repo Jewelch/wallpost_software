@@ -13,7 +13,7 @@ import 'package:wallpost/dashboard/group_dashboard/ui/view_contracts/group_dashb
 import '../../../../_common_widgets/search_bar/search_bar.dart';
 import '../../../../_wp_core/company_management/entities/company.dart';
 import '../../../../_wp_core/company_management/entities/financial_summary.dart';
-import '../../../../attendance/attendance_punch_in_out/ui/views/attendance_widget.dart';
+import '../../../../attendance/attendance_punch_in_out/ui/views/attendance_widget/attendance_widget.dart';
 import '../../../../settings/left_menu/left_menu_screen.dart';
 import '../../../aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
 import '../../../company_dashboard/ui/views/company_dashboard_screen.dart';
