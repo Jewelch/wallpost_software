@@ -183,6 +183,7 @@ class AttendancePresenter {
 
   //MARK: Functions to mark break
 
+
   Future<void> startBreak() async {
     if (_breakStartMarker.isLoading) return;
 
