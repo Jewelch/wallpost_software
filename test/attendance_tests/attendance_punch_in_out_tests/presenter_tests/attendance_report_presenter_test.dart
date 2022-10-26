@@ -36,8 +36,6 @@ main() {
     presenter = AttendanceReportPresenter.initWith(view, attendanceReportProvider);
   });
 
-  //MARK: Tests for loading the list
-
   test('does nothing when the provider is loading', () async {
     //given
     when(() => attendanceReportProvider.isLoading).thenReturn(true);
