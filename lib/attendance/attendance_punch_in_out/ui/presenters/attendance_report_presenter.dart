@@ -17,6 +17,7 @@ class AttendanceReportPresenter {
   //MARK: Function to load attendance report
 
   Future<void> loadAttendanceReport() async {
+    if (_attendanceReportProvider.isLoading) return;
     try {
       reportsView.showLoader();
       var attendanceReport = await _attendanceReportProvider.getReport();
