@@ -12,50 +12,50 @@ main() {
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
-    expect(url, "${BaseUrls.hrUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=today");
+    expect(url, "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=today");
   });
 
-  test("creating aggregated sales data when selected date filter is yesterday", () {
+  test("creating aggregated sales data url when selected date filter is yesterday", () {
     dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.yesterday;
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
-    expect(url, "${BaseUrls.hrUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=yesterday");
+    expect(url, "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=yesterday");
   });
 
-  test("creating aggregated sales data when selected date filter is this week", () {
+  test("creating aggregated sales data url when selected date filter is this week", () {
     dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.thisWeek;
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
-    expect(url, "${BaseUrls.hrUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=this_week");
+    expect(url, "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=this_week");
   });
 
-  test("creating aggregated sales data when selected date filter is this month", () {
+  test("creating aggregated sales data url when selected date filter is this month", () {
     dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.thisMonth;
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
-    expect(url, "${BaseUrls.hrUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=this_month");
+    expect(url, "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=this_month");
   });
 
-  test("creating aggregated sales data when selected date filter is this year", () {
+  test("creating aggregated sales data url when selected date filter is this year", () {
     dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.thisYear;
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
-    expect(url, "${BaseUrls.hrUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=this_year");
+    expect(url, "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=this_year");
   });
 
-  test("creating aggregated sales data when selected date filter is last year", () {
+  test("creating aggregated sales data url when selected date filter is last year", () {
     dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.lastYear;
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
-    expect(url, "${BaseUrls.hrUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=last_year");
+    expect(url, "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=last_year");
   });
 
-  test("creating the url when selected date filter is custom", () {
+  test("creating the url when selected date url filter is custom", () {
     dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.custom;
     dateRangeFilter.startDate = DateTime.now().subtract(Duration(days: 10));
     dateRangeFilter.endDate = DateTime.now().subtract(Duration(days: 1));
@@ -63,6 +63,6 @@ main() {
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
     expect(url,
-        "${BaseUrls.hrUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=date&start_date=${dateRangeFilter.startDate.yMMMd}&end_date=${dateRangeFilter.endDate.yMMMd}");
+        "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=date_between&start_date=${dateRangeFilter.startDate.yMMMd()}&end_date=${dateRangeFilter.endDate.yMMMd()}");
   });
 }

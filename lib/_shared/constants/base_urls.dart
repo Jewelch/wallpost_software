@@ -3,6 +3,7 @@ class BaseUrls {
   static const String _CORE = 'core';
   static const String _TASK_SUB_DOMAIN = 'task';
   static const String _HR_SUB_DOMAIN = 'hr';
+  static const String _RESTAURANT_SUB_DOMAIN = 'restaurant';
 
   //Environments
   static const String _PRODUCTION = '';
@@ -38,4 +39,9 @@ class BaseUrls {
   static String taskUrlV2() {
     return BaseUrls.generateUrl(subDomain: _TASK_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
   }
+
+  static String restaurantUrlV2() {
+    return BaseUrls.generateUrl(subDomain: _RESTAURANT_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
+  }
+
 }

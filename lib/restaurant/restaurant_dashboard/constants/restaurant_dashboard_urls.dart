@@ -10,10 +10,10 @@ class RestaurantDashboardUrls {
     DateRangeFilters dateFilters,
   ) {
     var url =
-        '${BaseUrls.hrUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_data?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
+        '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_data?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
     if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom) {
-      url += "&start_date=${dateFilters.startDate.yMMMd()}";
-      url += "&end_date=${dateFilters.endDate.yMMMd()}";
+      url += "&start_date=${dateFilters.startDate.yyyyMMddString()}";
+      url += "&end_date=${dateFilters.endDate.yyyyMMddString()}";
     }
     return url;
   }
@@ -21,7 +21,14 @@ class RestaurantDashboardUrls {
   static String getSalesBreakDownsUrl(
     String companyId,
     SalesBreakDownWiseOptions salesBreakDownWises,
+    DateRangeFilters dateFilters,
   ) {
-    return '${BaseUrls.hrUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_breakdown/by/${salesBreakDownWises.toRawString()}';
+    var url =
+        '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_breakdown/by/${salesBreakDownWises.toRawString()}?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
+    if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom) {
+      url += "&start_date=${dateFilters.startDate.yyyyMMddString()}";
+      url += "&end_date=${dateFilters.endDate.yyyyMMddString()}";
+    }
+    return url;
   }
 }
