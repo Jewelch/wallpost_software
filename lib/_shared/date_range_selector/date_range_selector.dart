@@ -37,12 +37,7 @@ class _State extends State<DateRangeSelector> {
   late DateRangeFilters dateFilters;
 
   _State([DateRangeFilters? initialDateFilters]) {
-    dateFilters = DateRangeFilters();
-    if (initialDateFilters != null) {
-      this.dateFilters.startDate = dateFilters.startDate;
-      this.dateFilters.endDate = dateFilters.endDate;
-      this.dateFilters.selectedRangeOption = dateFilters.selectedRangeOption;
-    }
+    dateFilters = initialDateFilters ?? DateRangeFilters();
   }
 
   CustomDateRangeSegments _selectedSegment = CustomDateRangeSegments.from;

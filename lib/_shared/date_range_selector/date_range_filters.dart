@@ -27,7 +27,7 @@ enum SelectableDateRangeOptions {
   }
 
   String toRawString() {
-    return this == SelectableDateRangeOptions.custom ? 'date' : this.toReadableString().replaceAll(' ', '_').toLowerCase();
+    return this == SelectableDateRangeOptions.custom ? 'date_between' : this.toReadableString().replaceAll(' ', '_').toLowerCase();
   }
 
 }
