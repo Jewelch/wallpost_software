@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/constants/restaurant_dashboard_urls.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
@@ -17,6 +18,8 @@ void main() {
   var mockCompanyRepository = MockCompanyRepository();
   var mockSelectedCompanyProvider = MockCompanyProvider();
   var salesBreakDownsProvider = SalesBreakDownsProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+  var dateFilter = DateRangeFilters();
+  var salesBreakDownWiseOption = SalesBreakDownWiseOptions.basedOnMenu;
 
   setUpAll(() {
     final mockCompany = MockCompany();
@@ -32,10 +35,10 @@ void main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    await salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory);
+    await salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter);
 
     expect(mockNetworkAdapter.apiRequest.url,
-        RestaurantDashboardUrls.getSalesBreakDownsUrl('someCompanyId', SalesBreakDownWiseOptions.basedOnCategory));
+        RestaurantDashboardUrls.getSalesBreakDownsUrl('someCompanyId', salesBreakDownWiseOption, dateFilter));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, isTrue);
   });
@@ -44,7 +47,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      await salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory);
+      await salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter);
       fail('failed to throw the network adapter failure exception');
     } catch (e) {
       expect(e, isA<NetworkFailureException>());
@@ -55,7 +58,7 @@ void main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      await salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory);
+      await salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       expect(e is InvalidResponseException, true);
@@ -66,7 +69,7 @@ void main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      await salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory);
+      await salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter);
       fail('failed to throw WrongResponseFormatException');
     } catch (e) {
       expect(e is WrongResponseFormatException, true);
@@ -79,7 +82,7 @@ void main() {
     ]));
 
     try {
-      await salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory);
+      await salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
       print(e);
@@ -91,13 +94,13 @@ void main() {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 200);
-    salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory).then((_) {
+    salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter).then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
     mockNetworkAdapter.succeed(successfulResponse);
-    salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory).then((_) {
+    salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter).then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -109,7 +112,7 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      await salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory);
+      await salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter);
     } catch (e) {
       fail('failed to complete successfully. exception thrown $e');
     }
@@ -118,7 +121,7 @@ void main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory);
+    salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter);
 
     expect(salesBreakDownsProvider.isLoading, true);
   });
@@ -126,7 +129,7 @@ void main() {
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    await salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory);
+    await salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter);
 
     expect(salesBreakDownsProvider.isLoading, false);
   });
@@ -135,7 +138,7 @@ void main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      await salesBreakDownsProvider.getSalesBreakDowns(SalesBreakDownWiseOptions.basedOnCategory);
+      await salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter);
       fail('failed to throw exception');
     } catch (_) {
       expect(salesBreakDownsProvider.isLoading, false);

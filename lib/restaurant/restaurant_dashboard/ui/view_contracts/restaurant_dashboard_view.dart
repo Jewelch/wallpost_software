@@ -6,7 +6,7 @@ abstract class RestaurantDashboardView {
 
   void showErrorMessage(String errorMessage);
 
-  void showSalesData(AggregatedSalesData salesData);
+  void updateSalesData(AggregatedSalesData salesData);
 
   void showSalesBreakDowns(List<SalesBreakDownItem> salesBreakDowns);
 

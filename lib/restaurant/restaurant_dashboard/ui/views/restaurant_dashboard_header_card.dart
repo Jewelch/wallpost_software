@@ -5,7 +5,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 
 class RestaurantDashboardHeaderCard extends StatelessWidget {
-  final AggregatedSalesData _salesData;
+  final AggregatedSalesData? _salesData;
 
   RestaurantDashboardHeaderCard(this._salesData);
 
@@ -16,7 +16,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: 2),
+          SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -24,7 +24,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 20),
               Expanded(
                 flex: 1,
-                child: Text(_salesData.totalSales, style: TextStyles.headerCardHeadingTextStyle),
+                child: Text(_salesData?.totalSales ?? "0.00", style: TextStyles.headerCardHeadingTextStyle),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * .2,
@@ -32,7 +32,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: Text(
-                  _salesData.netSales,
+                  _salesData?.netSales  ?? "0.00",
                   textAlign: TextAlign.start,
                   style: TextStyles.headerCardHeadingTextStyle,
                 ),
@@ -83,7 +83,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 20),
               Expanded(
                 flex: 1,
-                child: Text(_salesData.costOfSales, style: TextStyles.headerCardHeadingTextStyle),
+                child: Text(_salesData?.costOfSales  ?? "0.00", style: TextStyles.headerCardHeadingTextStyle),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * .2,
@@ -91,7 +91,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: Text(
-                  _salesData.grossOfProfit,
+                  _salesData?.grossOfProfit  ?? "0.00",
                   textAlign: TextAlign.start,
                   style: TextStyles.headerCardHeadingTextStyleWithGreenColor,
                 ),

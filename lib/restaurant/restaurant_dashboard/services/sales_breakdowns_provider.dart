@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
@@ -19,9 +20,9 @@ class SalesBreakDownsProvider {
 
   SalesBreakDownsProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
-  Future<List<SalesBreakDownItem>> getSalesBreakDowns(SalesBreakDownWiseOptions salesBreakDownWises) async {
+  Future<List<SalesBreakDownItem>> getSalesBreakDowns(SalesBreakDownWiseOptions salesBreakDownWiseOption,DateRangeFilters dateRangeFilters) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = RestaurantDashboardUrls.getSalesBreakDownsUrl(companyId, salesBreakDownWises);
+    var url = RestaurantDashboardUrls.getSalesBreakDownsUrl(companyId, salesBreakDownWiseOption,dateRangeFilters);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 

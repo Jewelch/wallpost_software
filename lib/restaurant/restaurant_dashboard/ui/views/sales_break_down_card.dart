@@ -16,8 +16,7 @@ class SalesBreakDownCard extends StatelessWidget {
     for (var sales in _salesBreakDowns) {
       if (sales.totalSales > maxSale) {
         maxSale = sales.totalSales;
-      }
-      if (sales.totalSales < minSale) {
+      } else if (sales.totalSales < minSale) {
         minSale = sales.totalSales;
       }
     }
@@ -28,6 +27,7 @@ class SalesBreakDownCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: GridView.builder(
+        padding: EdgeInsets.zero,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -44,7 +44,7 @@ class SalesBreakDownCard extends StatelessWidget {
 
   Card _getSalesBreakDownItemCard(SalesBreakDownItem salesBreakDownItem) {
     return Card(
-      elevation: 5,
+      elevation: 2,
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
@@ -58,6 +58,7 @@ class SalesBreakDownCard extends StatelessWidget {
                 style: TextStyle(
                     color: getSalesBreakDownItemColor(salesBreakDownItem), fontSize: 24, fontWeight: FontWeight.bold),
               ),
+              SizedBox(height: 4,),
               Text(
                 salesBreakDownItem.type,
                 style: TextStyle(color: AppColors.textColorGray, fontSize: 16),

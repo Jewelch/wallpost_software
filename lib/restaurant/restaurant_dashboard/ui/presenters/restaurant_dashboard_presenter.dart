@@ -1,5 +1,7 @@
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/services/sales_breakdowns_provider.dart';
@@ -11,10 +13,14 @@ class RestaurantDashboardPresenter {
   SalesBreakDownsProvider _salesBreakDownsProvider;
   RestaurantDashboardView _view;
   DateRangeFilters dateFilters;
+  CurrentUserProvider _currentUserProvider;
+  SelectedCompanyProvider _selectedCompanyProvider ;
 
   RestaurantDashboardPresenter(this._view)
       : _salesDataProvider = AggregatedSalesDataProvider(),
         _salesBreakDownsProvider = SalesBreakDownsProvider(),
+        _currentUserProvider = CurrentUserProvider(),
+        _selectedCompanyProvider = SelectedCompanyProvider(),
         dateFilters = DateRangeFilters();
 
   RestaurantDashboardPresenter.initWith(
@@ -22,21 +28,21 @@ class RestaurantDashboardPresenter {
     this._salesDataProvider,
     this._salesBreakDownsProvider,
     this.dateFilters,
+    this._currentUserProvider,
+    this._selectedCompanyProvider,
   );
 
   SalesBreakDownWiseOptions _selectedBreakDownWise = SalesBreakDownWiseOptions.values.first;
 
-  SalesBreakDownWiseOptions get selectedBreakDownWise => _selectedBreakDownWise;
-
   // MARK: Load Aggregated Sales Data
 
-  Future loadSalesData() async {
+  Future loadAggregatedSalesData() async {
     if (_salesDataProvider.isLoading) return;
 
     _view.showLoader();
     try {
       var salesData = await _salesDataProvider.getSalesAmounts(dateFilters);
-      _view.showSalesData(salesData);
+      _view.updateSalesData(salesData);
     } on WPException catch (e) {
       _view.showErrorMessage(e.userReadableMessage + "\n\nTap here to reload.");
     }
@@ -56,10 +62,18 @@ class RestaurantDashboardPresenter {
 
     _view.showLoader();
     try {
-      var salesBreakDowns = await _salesBreakDownsProvider.getSalesBreakDowns(_selectedBreakDownWise);
+      var salesBreakDowns = await _salesBreakDownsProvider.getSalesBreakDowns(_selectedBreakDownWise, dateFilters);
       _view.showSalesBreakDowns(salesBreakDowns);
     } on WPException catch (e) {
       _view.showErrorMessage(e.userReadableMessage + "\n\nTap here to reload.");
     }
   }
+
+  // Getters
+
+  SalesBreakDownWiseOptions get selectedBreakDownWise => _selectedBreakDownWise;
+
+  String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
+
+  String getProfileImageUrl() => _currentUserProvider.getCurrentUser().profileImageUrl;
 }
