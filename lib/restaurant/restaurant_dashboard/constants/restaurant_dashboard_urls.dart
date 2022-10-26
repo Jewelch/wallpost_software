@@ -1,6 +1,6 @@
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wises.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_filtering_strategies.dart';
 
 import '../../../../_shared/constants/base_urls.dart';
 
@@ -20,7 +20,7 @@ class RestaurantDashboardUrls {
 
   static String getSalesBreakDownsUrl(
     String companyId,
-    SalesBreakDownWises salesBreakDownWises,
+    SalesBreakdownFilteringStrategies salesBreakDownWises,
   ) {
     return '${BaseUrls.hrUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_breakdown/by/${salesBreakDownWises.toRawString()}';
   }

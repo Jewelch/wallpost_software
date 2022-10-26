@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/constants/base_urls.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/constants/restaurant_dashboard_urls.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wises.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_filtering_strategies.dart';
 
 main() {
   test("creating sales breakdown url when selected wise is order wise", () {
-    var selectedWise = SalesBreakDownWises.baseOnOrder;
+    var selectedWise = SalesBreakdownFilteringStrategies.basedOnOrder;
 
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise);
 
@@ -13,7 +13,7 @@ main() {
   });
 
   test("creating sales breakdown when selected wise is category wise", () {
-    var selectedWise = SalesBreakDownWises.baseOnCategory;
+    var selectedWise = SalesBreakdownFilteringStrategies.basedOnCategory;
 
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise);
 
@@ -21,7 +21,7 @@ main() {
   });
 
   test("creating sales breakdown when selected wise is menu item wise", () {
-    var selectedWise = SalesBreakDownWises.baseOnMenu;
+    var selectedWise = SalesBreakdownFilteringStrategies.basedOnMenu;
 
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise);
 

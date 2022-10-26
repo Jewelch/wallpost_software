@@ -3,7 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wises.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_filtering_strategies.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/services/sales_breakdowns_provider.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
@@ -24,8 +24,7 @@ void main() {
   var salesBreakDownProvider = MockSalesBreakDownProvider();
   var view = MockSalesDataView();
   var dateFilter = DateRangeFilters();
-  var salesPresenter =
-      RestaurantDashboardPresenter.initWith(view, salesDataProvider, salesBreakDownProvider, dateFilter);
+  var salesPresenter = RestaurantDashboardPresenter.initWith(view, salesDataProvider, salesBreakDownProvider, dateFilter);
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
@@ -34,7 +33,7 @@ void main() {
   }
 
   setUpAll(() {
-    registerFallbackValue(SalesBreakDownWises.baseOnCategory);
+    registerFallbackValue(SalesBreakdownFilteringStrategies.basedOnOrder);
   });
 
   test('loading sales data when sales data provider is loading does nothing', () async {
@@ -52,8 +51,7 @@ void main() {
   test('failure to load sales data', () async {
     //given
     when(() => salesDataProvider.isLoading).thenReturn(false);
-    when(() => salesDataProvider.getSalesAmounts(dateFilter))
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await salesPresenter.loadSalesData();
@@ -101,8 +99,7 @@ void main() {
   test('failure to load sales breakdowns', () async {
     //given
     when(() => salesBreakDownProvider.isLoading).thenReturn(false);
-    when(() => salesBreakDownProvider.getSalesBreakDowns(any()))
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => salesBreakDownProvider.getSalesBreakDowns(any())).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await salesPresenter.loadSalesBreakDown();
@@ -138,39 +135,70 @@ void main() {
   test('failure to changing and loading sales breakdowns based on new changed wise', () async {
     //given
     when(() => salesBreakDownProvider.isLoading).thenReturn(false);
-    when(() => salesBreakDownProvider.getSalesBreakDowns(any()))
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => salesBreakDownProvider.getSalesBreakDowns(any())).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
-    await salesPresenter.changeAndLoadSalesBreakDownWise(SalesBreakDownWises.baseOnCategory);
+    await salesPresenter.loadSalesBreakDown();
 
     //then
-    expect(salesPresenter.selectedSalesBreakDownWise, SalesBreakDownWises.baseOnCategory);
+    expect(salesPresenter.selectedFilteringStrategy, SalesBreakdownFilteringStrategies.values.first);
     verifyInOrder([
+      () => salesBreakDownProvider.isLoading,
       () => view.showLoader(),
-      () => salesBreakDownProvider.getSalesBreakDowns(SalesBreakDownWises.baseOnCategory),
+      () => salesBreakDownProvider.getSalesBreakDowns(SalesBreakdownFilteringStrategies.values.first),
       () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('successfully changing and loading sales breakdowns based on new changed wise',
-      () async {
+  test('successfully changing and loading sales breakdowns based on new changed wise', () async {
     //given
     var salesBreakDowns = [MockSalesBreakDowns()];
     when(() => salesBreakDownProvider.isLoading).thenReturn(false);
     when(() => salesBreakDownProvider.getSalesBreakDowns(any())).thenAnswer((_) => Future.value(salesBreakDowns));
 
     //when
-    await salesPresenter.changeAndLoadSalesBreakDownWise(SalesBreakDownWises.baseOnMenu);
+    await salesPresenter.loadSalesBreakDown();
 
     //then
-    expect(salesPresenter.selectedSalesBreakDownWise, SalesBreakDownWises.baseOnMenu);
+    expect(salesPresenter.selectedFilteringStrategy, SalesBreakdownFilteringStrategies.basedOnOrder);
     verifyInOrder([
+      () => salesBreakDownProvider.isLoading,
       () => view.showLoader(),
-      () => salesBreakDownProvider.getSalesBreakDowns(SalesBreakDownWises.baseOnMenu),
+      () => salesBreakDownProvider.getSalesBreakDowns(SalesBreakdownFilteringStrategies.basedOnOrder),
       () => view.showSalesBreakDowns(salesBreakDowns),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('basedOnOrder order wise is initially selected', () {
+    expect(salesPresenter.selectedFilteringStrategy, SalesBreakdownFilteringStrategies.values.first);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test('Filtering Strategy toggling is working', () async {
+    //given
+    var salesBreakDowns = [MockSalesBreakDowns()];
+    when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+    when(() => salesBreakDownProvider.getSalesBreakDowns(any())).thenAnswer((_) => Future.value(salesBreakDowns));
+
+    for (var i = 0; i < SalesBreakdownFilteringStrategies.values.length; i++) {
+      //when
+      salesPresenter.selectFilteringStrategyAtIndex(i);
+      await salesPresenter.loadSalesBreakDown();
+
+      //then
+      verifyInOrder([
+        () => view.onDidSelectSalesBreakdownFilteringStrategy(),
+        () => salesBreakDownProvider.isLoading,
+        () => view.showLoader(),
+        () => salesBreakDownProvider.getSalesBreakDowns(SalesBreakdownFilteringStrategies.values[i]),
+        () => view.showSalesBreakDowns(salesBreakDowns),
+      ]);
+
+      expect(salesPresenter.selectedFilteringStrategy, SalesBreakdownFilteringStrategies.values[i]);
+
+      _verifyNoMoreInteractionsOnAllMocks();
+    }
   });
 }

@@ -13,6 +13,7 @@ import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_das
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/sales_break_down_card.dart';
 
 import '../../../../_common_widgets/filter_views/dropdown_filter.dart';
+import '../../entities/sales_break_down_filtering_strategies.dart';
 
 class RestaurantDashboardScreen extends StatefulWidget {
   @override
@@ -35,7 +36,6 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
       key: _scaffoldKey,
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             CompanyDashboardAppBar(
               companyName: "companyName",
@@ -78,13 +78,13 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                   SizedBox(width: 15),
                   Flexible(
                     child: DropdownFilter(
-                      items: _salesPresenter.orderFilters,
-                      selectedValue: _salesPresenter.selectedOrderFilter,
+                      items: SalesBreakdownFilteringStrategies.values.map((strategy) => strategy.toReadableString()).toList(),
+                      selectedValue: _salesPresenter.selectedFilteringStrategy.toReadableString(),
                       textStyle: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
                       backgroundColor: Colors.transparent,
                       dropdownColor: AppColors.filtersBackgroundColor,
                       dropdownArrowColor: AppColors.defaultColor,
-                      onDidSelectedItemAtIndex: (index) => _salesPresenter.selectOrderFilterAt(index),
+                      onDidSelectedItemAtIndex: _salesPresenter.selectFilteringStrategyAtIndex,
                     ),
                   ),
                 ],
@@ -124,5 +124,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   }
 
   @override
-  void onDidSelectSalesBreakdownFilterType() => setState(() {});
+  void onDidSelectSalesBreakdownFilteringStrategy() => setState(() {
+        _salesPresenter.loadSalesBreakDown();
+      });
 }
