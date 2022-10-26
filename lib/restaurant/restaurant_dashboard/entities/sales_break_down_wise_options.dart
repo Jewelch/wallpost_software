@@ -1,4 +1,4 @@
-enum SalesBreakdownFilteringStrategies {
+enum SalesBreakDownWiseOptions {
   basedOnOrder,
   basedOnCategory,
   basedOnMenu;

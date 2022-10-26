@@ -13,7 +13,7 @@ import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_das
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/sales_break_down_card.dart';
 
 import '../../../../_common_widgets/filter_views/dropdown_filter.dart';
-import '../../entities/sales_break_down_filtering_strategies.dart';
+import '../../entities/sales_break_down_wise_options.dart';
 
 class RestaurantDashboardScreen extends StatefulWidget {
   @override
@@ -78,13 +78,13 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                   SizedBox(width: 15),
                   Flexible(
                     child: DropdownFilter(
-                      items: SalesBreakdownFilteringStrategies.values.map((strategy) => strategy.toReadableString()).toList(),
-                      selectedValue: _salesPresenter.selectedFilteringStrategy.toReadableString(),
+                      items: SalesBreakDownWiseOptions.values.map((strategy) => strategy.toReadableString()).toList(),
+                      selectedValue: _salesPresenter.selectedBreakDownWise.toReadableString(),
                       textStyle: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
                       backgroundColor: Colors.transparent,
                       dropdownColor: AppColors.filtersBackgroundColor,
                       dropdownArrowColor: AppColors.defaultColor,
-                      onDidSelectedItemAtIndex: _salesPresenter.selectFilteringStrategyAtIndex,
+                      onDidSelectedItemAtIndex: _salesPresenter.selectSalesBreakDownWiseAtIndex,
                     ),
                   ),
                 ],

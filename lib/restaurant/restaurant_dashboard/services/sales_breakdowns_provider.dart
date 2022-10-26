@@ -5,7 +5,7 @@ import 'package:wallpost/_wp_core/company_management/services/selected_company_p
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/constants/restaurant_dashboard_urls.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_filtering_strategies.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
 
 class SalesBreakDownsProvider {
   final NetworkAdapter _networkAdapter;
@@ -19,7 +19,7 @@ class SalesBreakDownsProvider {
 
   SalesBreakDownsProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
-  Future<List<SalesBreakDownItem>> getSalesBreakDowns(SalesBreakdownFilteringStrategies salesBreakDownWises) async {
+  Future<List<SalesBreakDownItem>> getSalesBreakDowns(SalesBreakDownWiseOptions salesBreakDownWises) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl(companyId, salesBreakDownWises);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
