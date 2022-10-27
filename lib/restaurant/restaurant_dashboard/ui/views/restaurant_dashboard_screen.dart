@@ -155,8 +155,25 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
           ),
           ItemNotifiable<List<SalesBreakDownItem>>(
             notifier: _salesBreakDownsNotifier,
-            builder: (context, salesBreakDowns) =>
-                SalesBreakDownCard(salesBreakDowns..sort((a, b) => a.totalSales > b.totalSales ? 0 : 1)),
+            builder: (context, salesBreakDowns) => salesBreakDowns.isEmpty
+                ? Padding(
+                    padding: EdgeInsets.only(top: 120),
+                    child: Text(
+                      "There is no sales breakdowns with these filters",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.titleTextStyle,
+                    ),
+                  )
+                : SalesBreakDownCard(
+                    salesBreakDowns
+                      ..sort(
+                        (a, b) => a.totalSales == b.totalSales
+                            ? 0
+                            : a.totalSales > b.totalSales
+                                ? -1
+                                : 1,
+                      ),
+                  ),
           ),
         ],
       ),
@@ -187,12 +204,15 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   }
 
   void showDateRangeSelector() async {
-    await DateRangeSelector.show(
+    var dateRange = await DateRangeSelector.show(
       context,
       initialDateRangeFilter: _salesPresenter.dateFilters,
       onDateRangeFilterSelected: (dateFilters) => _salesPresenter.dateFilters = dateFilters,
     );
-    _loadSalesData();
+    if (dateRange != null) {
+      _salesPresenter.dateFilters = dateRange;
+      _loadSalesData();
+    }
   }
 
   @override
