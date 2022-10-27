@@ -53,15 +53,28 @@ class SalesBreakDownCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                salesBreakDownItem.totalSales.toString(),
-                style: TextStyle(
-                    color: getSalesBreakDownItemColor(salesBreakDownItem), fontSize: 24, fontWeight: FontWeight.bold),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    salesBreakDownItem.totalSales.toString(),
+                    style: TextStyle(
+
+                        overflow: TextOverflow.ellipsis,
+                        color: getSalesBreakDownItemColor(salesBreakDownItem),
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold),
+                  ),
+                )
               ),
-              SizedBox(height: 4,),
-              Text(
-                salesBreakDownItem.type,
-                style: TextStyle(color: AppColors.textColorGray, fontSize: 16),
+              SizedBox(
+                height: 4,
+              ),
+              Expanded(
+                child: Text(
+                  salesBreakDownItem.type,
+                  style: TextStyle(color: AppColors.textColorGray, fontSize: 16),
+                ),
               ),
             ]),
       ),
