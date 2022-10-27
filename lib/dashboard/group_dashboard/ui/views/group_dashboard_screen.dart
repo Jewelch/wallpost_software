@@ -10,6 +10,8 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/group_dashboard/ui/presenters/group_dashboard_presenter.dart';
 import 'package:wallpost/dashboard/group_dashboard/ui/view_contracts/group_dashboard_view.dart';
 
+import '../../../../_common_widgets/buttons/action_button_holder.dart';
+import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 import '../../../../_common_widgets/search_bar/search_bar.dart';
 import '../../../../_wp_core/company_management/entities/company.dart';
 import '../../../../_wp_core/company_management/entities/financial_summary.dart';
@@ -120,12 +122,23 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
         Expanded(child: _companyList()),
         _attendanceView(),
         if (presenter.getApprovalCount() > 0)
-          BottomBanner(
+          /* BottomBanner(
             approvalCount: presenter.getApprovalCount(),
             onTap: () => presenter.showAggregatedApprovals(),
-          ),
+          ),*/
+          _bottomView()
       ],
     );
+  }
+
+  Widget _bottomView() {
+    return Padding(
+        // height: 50,
+        padding: EdgeInsets.only(left: 12, right: 12),
+        // color: Colors.white,
+        child: ActionButtonsHolder(
+            approvalCount: presenter.getApprovalCount(),
+            onDidPressApprovalsButton: () => presenter.showAggregatedApprovals()));
   }
 
   //MARK: Functions to build the top bar and filter views

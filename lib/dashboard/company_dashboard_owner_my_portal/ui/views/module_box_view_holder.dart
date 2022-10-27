@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../_shared/constants/app_colors.dart';
 
-class PerformanceViewHolder extends StatelessWidget {
+class ModuleBoxViewHolder extends StatelessWidget {
   final Widget content;
   final Color backgroundColor;
 
-  PerformanceViewHolder({
+  ModuleBoxViewHolder({
     required this.content,
     this.backgroundColor = AppColors.screenBackgroundColor,
   });
@@ -18,14 +18,6 @@ class PerformanceViewHolder extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.defaultColorDarkContrastColor.withOpacity(0.02),
-            offset: Offset(0, 0),
-            blurRadius: 40,
-            spreadRadius: 0,
-          ),
-        ],
       ),
       child: content,
     );

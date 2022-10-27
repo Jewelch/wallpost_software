@@ -25,8 +25,8 @@ class ModulePageViewPresenter {
   List<Module> getModules() {
     //filter out only those modules that are to be shown in the dashboard
     var allDashboardModules = [Module.Crm, Module.Hr, Module.Restaurant, Module.Retail];
-    var modulesToShow = _company.modules.where((m) => allDashboardModules.contains(m)).toList();
-    return modulesToShow;
+    var modulesToShow = allDashboardModules.where((element) => _company.modules.contains(element));
+    return modulesToShow.toList();
   }
 
   List<String> getModuleNames() {

@@ -7,12 +7,15 @@ import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart'
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/modules_view.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/todays_staff_absences_view.dart';
+import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/todays_staff_absences_view_with_no_approvals.dart';
 import 'package:wallpost/dashboard/finance_detail_views/ui/views/finance_detail_card.dart';
 import 'package:wallpost/expense/expense_create/ui/views/create_expense_request_screen.dart';
 import 'package:wallpost/expense/expense_list/ui/views/expense_list_screen.dart';
 import 'package:wallpost/leave/leave_create/ui/views/create_leave_screen.dart';
 import 'package:wallpost/leave/leave_list/ui/views/leave_list_screen.dart';
 
+import '../../../../_common_widgets/buttons/action_button_holder.dart';
+import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 import '../../../../_common_widgets/filter_views/ytd_filter.dart';
 import '../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
@@ -23,6 +26,7 @@ import '../presenters/module_page_view_presenter.dart';
 import '../presenters/owner_my_portal_dashboard_presenter.dart';
 import '../view_contracts/owner_my_portal_view.dart';
 import 'company_performance_view.dart';
+import 'company_performance_view_with_no_approvals.dart';
 import 'owner_dashboard_loader.dart';
 
 class OwnerMyPortalDashboardScreen extends StatefulWidget {
@@ -121,15 +125,7 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
                 child: Text("HR & Performance", style: TextStyles.largeTitleTextStyleBold),
               ),
               SizedBox(height: 10),
-              Row(
-                children: [
-                  SizedBox(width: 12),
-                  Expanded(child: CompanyPerformanceView(_presenter)),
-                  SizedBox(width: 20),
-                  Expanded(child: TodaysStaffAbsencesView(_presenter)),
-                  SizedBox(width: 12),
-                ],
-              ),
+              buildHrPerformanceView(),
               SizedBox(height: 120),
             ],
           ),
@@ -156,15 +152,27 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [_bottomBar()],
+          children: [if (_presenter.getTotalApprovalCount() > 0) _bottomView()],
         ),
       ],
     );
   }
 
-  //MARK: Functions to build the bottom bar
+  //MARK: Functions to build the approval button
 
-  Widget _bottomBar() {
+  Widget _bottomView() {
+    return Padding(
+        // height: 50,
+        padding: EdgeInsets.only(left: 12, right: 12),
+        // color: Colors.white,
+        child: ActionButtonsHolder(
+            approvalCount: _presenter.getTotalApprovalCount(),
+            onDidPressApprovalsButton: () => _presenter.goToAggregatedApprovalsScreen()));
+  }
+
+  //MARK: Functions to build the bottom bar
+  // todo Remove bottom  code
+  /* Widget _bottomBar() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -178,7 +186,7 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
           ),
       ],
     );
-  }
+  }*/
 
   Widget _requestsBar() {
     if (_presenter.getRequestItems().isEmpty) return Container();
@@ -284,5 +292,33 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
       ),
       controller: controller,
     );
+  }
+
+  buildHrPerformanceView() {
+    if (_presenter.getTotalApprovalCount() > 0)
+      return Row(
+        children: [
+          SizedBox(width: 12),
+          Expanded(child: CompanyPerformanceView(_presenter)),
+          SizedBox(width: 20),
+          Expanded(child: TodaysStaffAbsencesView(_presenter)),
+          SizedBox(width: 12),
+        ],
+      );
+    else {
+      return Container(
+        color: Colors.white,
+        padding: EdgeInsets.only(left: 12, right: 12),
+        child: Column(
+          children: [
+            SizedBox(height: 8),
+            CompanyPerformanceViewWithNoApprovals(_presenter),
+            SizedBox(height: 8),
+            TodaysStaffAbsencesViewWithNoApprovals(_presenter),
+            SizedBox(height: 8),
+          ],
+        ),
+      );
+    }
   }
 }

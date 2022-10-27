@@ -58,16 +58,16 @@ class _ModulesViewState extends State<ModulesView> with TickerProviderStateMixin
         ),
         SizedBox(height: 12),
         Container(
-          height: 180,
+          height: 188,
           margin: EdgeInsets.symmetric(horizontal: 12),
           child: TabBarView(
             clipBehavior: Clip.none,
             controller: _tabController,
             children: widget._presenter.getModules().map((module) {
-              if (module == Module.Crm) {
-                return CRMPerformanceView(widget._filters);
-              } else if (module == Module.Hr) {
+              if (module == Module.Hr) {
                 return HRPerformanceView(widget._filters);
+              } else if (module == Module.Crm) {
+                return CRMPerformanceView(widget._filters);
               } else if (module == Module.Restaurant) {
                 return RestaurantPerformanceView(widget._filters);
               } else if (module == Module.Retail) {

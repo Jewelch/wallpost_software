@@ -4,6 +4,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/view_contracts/module_performance_view.dart';
+import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/module_box_view_holder.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 
 import '../models/owner_dashboard_filters.dart';
@@ -88,43 +89,45 @@ class _HRPerformanceViewState extends State<HRPerformanceView>
       children: [
         Row(
           children: [
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getActiveStaff())),
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getEmployeeCost())),
-            SizedBox(width: 12),
+            Expanded(
+                child: ModuleBoxViewHolder(
+              content: _tile(_presenter.getActiveStaff()),
+              backgroundColor: Color(0xFFE8FCF3),
+            )),
+            SizedBox(width: 8),
+            Expanded(
+                child: ModuleBoxViewHolder(
+                    content: _tile(_presenter.getEmployeeCost()), backgroundColor: Color(0xFFE8FCF3))),
           ],
         ),
-        SizedBox(height: 12),
+        SizedBox(height: 8),
         Row(
           children: [
-            SizedBox(width: 40),
-            Expanded(child: Divider()),
-            SizedBox(width: 40),
-            Expanded(child: Divider()),
-            SizedBox(width: 40),
-          ],
-        ),
-        SizedBox(height: 12),
-        Row(
-          children: [
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getStaffOnLeaveToday())),
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getDocumentsExpired())),
-            SizedBox(width: 12),
+            Expanded(
+                child: ModuleBoxViewHolder(
+              content: _tile(_presenter.getStaffOnLeaveToday()),
+              backgroundColor: Color(0xFFF0F5FA),
+            )),
+            SizedBox(width: 8),
+            Expanded(
+                child: ModuleBoxViewHolder(
+              content: _tile(_presenter.getDocumentsExpired()),
+              backgroundColor: Color(0xFFFCE9E8),
+            )),
           ],
         )
       ],
     );
   }
 
+  // saeed edited - Text alignment to start
   Widget _tile(PerformanceValue performanceValue) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           performanceValue.value,
-          style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: performanceValue.textColor),
+          style: TextStyles.largeTitleTextStyleBold.copyWith(color: performanceValue.textColor),
         ),
         SizedBox(height: 2),
         Text(

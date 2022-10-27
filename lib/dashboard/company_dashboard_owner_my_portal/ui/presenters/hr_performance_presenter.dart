@@ -65,7 +65,7 @@ class HRPerformancePresenter {
     }
 
     return PerformanceValue(
-      label: "Staff On Leave Today",
+      label: "Staff On Leave",
       value: _hrData!.staffOnLeaveToday,
       textColor: color,
     );
