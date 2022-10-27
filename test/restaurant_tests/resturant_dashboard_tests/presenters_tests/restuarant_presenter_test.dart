@@ -26,8 +26,8 @@ void main() {
   var salesBreakDownProvider = MockSalesBreakDownProvider();
   var view = MockSalesDataView();
   var dateFilter = DateRangeFilters();
-  var salesPresenter =
-      RestaurantDashboardPresenter.initWith(view, salesDataProvider, salesBreakDownProvider, dateFilter,MockCurrentUserProvider(),MockCompanyProvider());
+  var salesPresenter = RestaurantDashboardPresenter.initWith(
+      view, salesDataProvider, salesBreakDownProvider, dateFilter, MockCurrentUserProvider(), MockCompanyProvider());
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
@@ -56,8 +56,7 @@ void main() {
   test('failure to load sales data', () async {
     //given
     when(() => salesDataProvider.isLoading).thenReturn(false);
-    when(() => salesDataProvider.getSalesAmounts(dateFilter))
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await salesPresenter.loadAggregatedSalesData();
@@ -98,7 +97,7 @@ void main() {
 
     //then
     expect(salesPresenter.selectedBreakDownWise, SalesBreakDownWiseOptions.basedOnMenu);
-    verify(() => view.onDidSelectSalesBreakdownFilteringStrategy());
+    verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
   // MARK: Test Loading sales breakdown wise
@@ -137,8 +136,7 @@ void main() {
     //given
     var salesBreakDowns = [MockSalesBreakDowns()];
     when(() => salesBreakDownProvider.isLoading).thenReturn(false);
-    when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
-        .thenAnswer((_) => Future.value(salesBreakDowns));
+    when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter)).thenAnswer((_) => Future.value(salesBreakDowns));
 
     //when
     await salesPresenter.loadSalesBreakDown();

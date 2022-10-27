@@ -32,7 +32,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: Text(
-                  _salesData?.netSales  ?? "0.00",
+                  _salesData?.netSales ?? "0.00",
                   textAlign: TextAlign.start,
                   style: TextStyles.headerCardHeadingTextStyle,
                 ),
@@ -83,7 +83,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 20),
               Expanded(
                 flex: 1,
-                child: Text(_salesData?.costOfSales  ?? "0.00", style: TextStyles.headerCardHeadingTextStyle),
+                child: Text(_salesData?.costOfSales ?? "0.00", style: TextStyles.headerCardHeadingTextStyle),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * .2,
@@ -91,7 +91,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: Text(
-                  _salesData?.grossOfProfit  ?? "0.00",
+                  _salesData?.grossOfProfit ?? "0.00",
                   textAlign: TextAlign.start,
                   style: TextStyles.headerCardHeadingTextStyleWithGreenColor,
                 ),

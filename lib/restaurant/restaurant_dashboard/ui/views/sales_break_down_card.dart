@@ -5,19 +5,22 @@ import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_do
 // ignore: must_be_immutable
 class SalesBreakDownCard extends StatelessWidget {
   final List<SalesBreakDownItem> _salesBreakDowns;
-  double maxSale = double.minPositive;
-  double minSale = double.maxFinite;
+  double _maxSale = double.minPositive;
+  double _minSale = double.maxFinite;
 
-  SalesBreakDownCard(this._salesBreakDowns) {
-    initialMaxAndMinSales();
+  SalesBreakDownCard(
+    this._salesBreakDowns, {
+    super.key,
+  }) {
+    _initialMaxAndMinSales();
   }
 
-  void initialMaxAndMinSales() {
+  void _initialMaxAndMinSales() {
     for (var sales in _salesBreakDowns) {
-      if (sales.totalSales > maxSale) {
-        maxSale = sales.totalSales;
-      } else if (sales.totalSales < minSale) {
-        minSale = sales.totalSales;
+      if (sales.totalSales > _maxSale) {
+        _maxSale = sales.totalSales;
+      } else if (sales.totalSales < _minSale) {
+        _minSale = sales.totalSales;
       }
     }
   }
@@ -37,53 +40,50 @@ class SalesBreakDownCard extends StatelessWidget {
           childAspectRatio: 1.8,
         ),
         itemCount: _salesBreakDowns.length,
-        itemBuilder: ((context, index) => _getSalesBreakDownItemCard(_salesBreakDowns[index])),
-      ),
-    );
-  }
-
-  Card _getSalesBreakDownItemCard(SalesBreakDownItem salesBreakDownItem) {
-    return Card(
-      elevation: 2,
-      color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Align(
+        itemBuilder: (context, index) => Card(
+          elevation: 1,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5),
+                Expanded(
+                    child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    salesBreakDownItem.totalSales.toString(),
+                    _salesBreakDowns[index].totalSales.toString(),
                     style: TextStyle(
-
                         overflow: TextOverflow.ellipsis,
-                        color: getSalesBreakDownItemColor(salesBreakDownItem),
+                        color: _getSalesBreakDownItemColor(_salesBreakDowns[index]),
                         fontSize: 24,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.w600),
                   ),
-                )
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Expanded(
-                child: Text(
-                  salesBreakDownItem.type,
-                  style: TextStyle(color: AppColors.textColorGray, fontSize: 16),
+                )),
+                SizedBox(height: 4),
+                Expanded(
+                  child: Text(
+                    _salesBreakDowns[index].type,
+                    style: TextStyle(
+                      color: AppColors.textColorGray,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
-              ),
-            ]),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Color getSalesBreakDownItemColor(SalesBreakDownItem salesBreakDownItem) {
-    if (salesBreakDownItem.totalSales == maxSale) return AppColors.green;
-    if (salesBreakDownItem.totalSales == minSale) return AppColors.red;
+  Color _getSalesBreakDownItemColor(SalesBreakDownItem salesBreakDownItem) {
+    if (salesBreakDownItem.totalSales == _maxSale) return AppColors.green;
+    if (salesBreakDownItem.totalSales == _minSale) return AppColors.red;
     return AppColors.yellow;
   }
 }
