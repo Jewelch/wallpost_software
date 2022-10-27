@@ -15,7 +15,7 @@ main() {
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
     expect(url,
-        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/category?date_filter_type=today');
+        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/category/mobile?date_filter_type=today');
   });
 
   test("creating sales breakdown url when selected wise is menu item wise", () {
@@ -24,7 +24,7 @@ main() {
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
     expect(url,
-        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/menu_item?date_filter_type=today');
+        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/menu_item/mobile?date_filter_type=today');
   });
 
   test("creating sales breakdown url when selected wise is order wise", () {
@@ -33,7 +33,7 @@ main() {
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
     expect(url,
-        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type?date_filter_type=today');
+        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type/mobile?date_filter_type=today');
   });
 
   test("creating sales breakdown url url when selected date filter is today", () {
@@ -42,7 +42,7 @@ main() {
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
     expect(url,
-        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type?date_filter_type=today');
+        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type/mobile?date_filter_type=today');
   });
 
   test("creating sales breakdown url when selected date filter is yesterday", () {
@@ -51,7 +51,7 @@ main() {
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
     expect(url,
-        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type?date_filter_type=yesterday');
+        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type/mobile?date_filter_type=yesterday');
   });
 
   test("creating sales breakdown url when selected date filter is this week", () {
@@ -60,16 +60,18 @@ main() {
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
     expect(url,
-        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type?date_filter_type=this_week');
+        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type/mobile?date_filter_type=this_week');
   });
 
   test("creating sales breakdown url when selected date filter is this month", () {
     dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.thisMonth;
+    dateRangeFilter.startDate = DateTime.now();
+    dateRangeFilter.endDate = DateTime.now().subtract(Duration(days: 30));
 
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
     expect(url,
-        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type?date_filter_type=this_month');
+        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type/mobile?date_filter_type=date_between&start_date=${dateRangeFilter.startDate.yyyyMMddString()}&end_date=${dateRangeFilter.endDate.yyyyMMddString()}');
   });
 
   test("creating sales breakdown url when selected date filter is this year", () {
@@ -78,7 +80,7 @@ main() {
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
     expect(url,
-        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type?date_filter_type=this_year');
+        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type/mobile?date_filter_type=this_year');
   });
 
   test("creating sales breakdown url when selected date filter is last year", () {
@@ -87,7 +89,7 @@ main() {
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
     expect(url,
-        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type?date_filter_type=last_year');
+        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type/mobile?date_filter_type=last_year');
   });
 
   test("creating the url when selected date filter is custom", () {
@@ -98,6 +100,6 @@ main() {
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
     expect(url,
-        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type?date_filter_type=date_between&start_date=${dateRangeFilter.startDate.yMMMd()}&end_date=${dateRangeFilter.endDate.yMMMd()}');
+        '${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_breakdown/by/order_type/mobile?date_filter_type=date_between&start_date=${dateRangeFilter.startDate.yyyyMMddString()}&end_date=${dateRangeFilter.endDate.yyyyMMddString()}');
   });
 }

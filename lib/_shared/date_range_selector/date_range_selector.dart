@@ -12,10 +12,9 @@ enum CustomDateRangeSegments { from, to }
 
 class DateRangeSelector extends StatefulWidget {
   final ModalSheetController modalSheetController;
-  final Function(DateRangeFilters) onDateRangeFilterSelected;
   final DateRangeFilters? initialDateRangeFilters;
 
-  DateRangeSelector._(this.modalSheetController, this.onDateRangeFilterSelected, [this.initialDateRangeFilters]);
+  DateRangeSelector._(this.modalSheetController, [this.initialDateRangeFilters]);
 
   static Future<dynamic> show(BuildContext context,
       {bool allowMultiple = false,
@@ -24,7 +23,7 @@ class DateRangeSelector extends StatefulWidget {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
       context: context,
-      content: DateRangeSelector._(modalSheetController, onDateRangeFilterSelected, initialDateRangeFilter),
+      content: DateRangeSelector._(modalSheetController, initialDateRangeFilter),
       controller: modalSheetController,
     );
   }
@@ -59,10 +58,22 @@ class _State extends State<DateRangeSelector> {
                       (dateOption) => CustomFilterChip(
                         shape: CustomFilterChipShape.roundedRectangle,
                         backgroundColor: AppColors.filtersBackgroundColor,
-                        borderColor:
-                            dateFilters.selectedRangeOption != dateOption ? AppColors.filtersBackgroundColor : AppColors.defaultColorDark,
+                        borderColor: dateFilters.selectedRangeOption != dateOption
+                            ? AppColors.filtersBackgroundColor
+                            : AppColors.defaultColorDark,
                         title: Text(dateOption.toReadableString(), style: TextStyle(color: AppColors.defaultColorDark)),
-                        onPressed: () => setState(() => dateFilters.selectedRangeOption = dateOption),
+                        onPressed: () {
+                          if (dateOption == SelectableDateRangeOptions.thisMonth) {
+                            dateFilters.selectedRangeOption = dateOption;
+                            var today = DateTime.now();
+                            var startDate = today.subtract(Duration(days: 31));
+                            dateFilters.startDate = startDate;
+                            dateFilters.endDate = today;
+                          } else {
+                            dateFilters.selectedRangeOption = dateOption;
+                          }
+                          setState(() {});
+                        },
                       ),
                     )
                     .toList(),
@@ -166,8 +177,7 @@ class _State extends State<DateRangeSelector> {
                     child: RoundedRectangleActionButton(
                       title: 'Apply',
                       onPressed: () {
-                        widget.onDateRangeFilterSelected(dateFilters);
-                        widget.modalSheetController.close();
+                        widget.modalSheetController.close(result: dateFilters);
                       },
                       backgroundColor: AppColors.green,
                     ),

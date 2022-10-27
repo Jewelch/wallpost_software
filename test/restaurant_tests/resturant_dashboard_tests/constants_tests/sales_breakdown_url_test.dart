@@ -33,10 +33,12 @@ main() {
 
   test("creating aggregated sales data url when selected date filter is this month", () {
     dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.thisMonth;
+    dateRangeFilter.startDate = DateTime.now();
+    dateRangeFilter.endDate = DateTime.now().subtract(Duration(days: 30));
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
-    expect(url, "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=this_month");
+    expect(url, "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=date_between&start_date=${dateRangeFilter.startDate.yyyyMMddString()}&end_date=${dateRangeFilter.endDate.yyyyMMddString()}");
   });
 
   test("creating aggregated sales data url when selected date filter is this year", () {
@@ -63,6 +65,6 @@ main() {
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
     expect(url,
-        "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=date_between&start_date=${dateRangeFilter.startDate.yMMMd()}&end_date=${dateRangeFilter.endDate.yMMMd()}");
+        "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data?date_filter_type=date_between&start_date=${dateRangeFilter.startDate.yyyyMMddString()}&end_date=${dateRangeFilter.endDate.yyyyMMddString()}");
   });
 }

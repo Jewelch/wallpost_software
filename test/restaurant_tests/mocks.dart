@@ -31,15 +31,15 @@ class Mocks {
   static List<Map<String, dynamic>> salesBreakDownsData = [
     {
       "type": "21",
-      "total_sales": "22",
+      "total_sales": 22,
     },
     {
       "type": "21",
-      "total_sales": "22",
+      "total_sales": 22,
     },
     {
       "type": "21",
-      "total_sales": "22",
+      "total_sales": 22,
     },
   ];
 }

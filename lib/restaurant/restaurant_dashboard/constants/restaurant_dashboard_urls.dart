@@ -11,7 +11,7 @@ class RestaurantDashboardUrls {
   ) {
     var url =
         '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_data?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
-    if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom) {
+    if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom || dateFilters.selectedRangeOption == SelectableDateRangeOptions.thisMonth ) {
       url += "&start_date=${dateFilters.startDate.yyyyMMddString()}";
       url += "&end_date=${dateFilters.endDate.yyyyMMddString()}";
     }
@@ -24,8 +24,8 @@ class RestaurantDashboardUrls {
     DateRangeFilters dateFilters,
   ) {
     var url =
-        '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_breakdown/by/${salesBreakDownWises.toRawString()}?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
-    if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom) {
+        '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_breakdown/by/${salesBreakDownWises.toRawString()}/mobile?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
+    if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom || dateFilters.selectedRangeOption == SelectableDateRangeOptions.thisMonth ) {
       url += "&start_date=${dateFilters.startDate.yyyyMMddString()}";
       url += "&end_date=${dateFilters.endDate.yyyyMMddString()}";
     }
