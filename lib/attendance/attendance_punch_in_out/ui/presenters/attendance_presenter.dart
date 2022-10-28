@@ -229,6 +229,10 @@ class AttendancePresenter {
     return _attendanceDetails.punchOutTimeString;
   }
 
+  bool shouldShowBreakButton() {
+    return _attendanceDetails.isPunchedIn;
+  }
+
   bool shouldShowStartBreakButton() {
     return _attendanceDetails.isOnBreak == false;
   }
