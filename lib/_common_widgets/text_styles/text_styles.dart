@@ -15,24 +15,24 @@ class TextStyles {
       );
 
   static get largeTitleTextStyleBold => TextStyle(
-    fontSize: 17,
+        fontSize: 17,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.bold,
       );
 
   static get titleTextStyle => TextStyle(
-    fontSize: 15,
+        fontSize: 15,
         color: AppColors.textColorBlack,
       );
 
   static get titleTextStyleBold => TextStyle(
-    fontSize: 15,
+        fontSize: 15,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.w600,
       );
 
   static get subTitleTextStyle => TextStyle(
-    fontSize: 14,
+        fontSize: 14,
         color: AppColors.textColorBlack,
       );
 
@@ -67,13 +67,13 @@ class TextStyles {
       );
 
   static get headerCardSubHeadingTextStyle => TextStyle(
-    fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w400,
         color: Colors.white,
         fontSize: 17.0,
       );
 
   static get headerCardMainValueTextStyle => TextStyle(
-    fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w700,
         color: AppColors.textColorBlack,
         fontSize: 24.0,
         overflow: TextOverflow.ellipsis,
@@ -86,7 +86,7 @@ class TextStyles {
       );
 
   static get headerCardSubValueTextStyle => TextStyle(
-    fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w700,
         color: AppColors.textColorBlack,
         fontSize: 16.0,
         overflow: TextOverflow.ellipsis,
@@ -99,14 +99,14 @@ class TextStyles {
       );
 
   static get headerCardMoneyLabelTextStyle => TextStyle(
-    fontWeight: FontWeight.w300,
-    color: AppColors.defaultColorDarkContrastColor,
-    fontSize: 18.0,
-  );
+        fontWeight: FontWeight.w300,
+        color: AppColors.defaultColorDarkContrastColor,
+        fontSize: 17.0,
+      );
 
   static get headerCardHeadingTextStyleWithGreenColor => TextStyle(
-    fontWeight: FontWeight.w700,
-    color: Colors.green,
-    fontSize: 24.0,
-  );
+        fontWeight: FontWeight.w700,
+        color: Colors.green,
+        fontSize: 24.0,
+      );
 }

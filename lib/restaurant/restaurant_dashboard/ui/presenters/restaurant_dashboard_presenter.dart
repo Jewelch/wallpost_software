@@ -14,7 +14,7 @@ class RestaurantDashboardPresenter {
   RestaurantDashboardView _view;
   DateRangeFilters dateFilters;
   CurrentUserProvider _currentUserProvider;
-  SelectedCompanyProvider _selectedCompanyProvider ;
+  SelectedCompanyProvider _selectedCompanyProvider;
 
   RestaurantDashboardPresenter(this._view)
       : _salesDataProvider = AggregatedSalesDataProvider(),
@@ -52,7 +52,7 @@ class RestaurantDashboardPresenter {
 
   void selectSalesBreakDownWiseAtIndex(int index) {
     _selectedBreakDownWise = SalesBreakDownWiseOptions.values[index];
-    _view.onDidSelectSalesBreakdownFilteringStrategy();
+    _view.onDidChangeSalesBreakDownWise();
   }
 
   // MARK: Load Sales BreakDowns Data
