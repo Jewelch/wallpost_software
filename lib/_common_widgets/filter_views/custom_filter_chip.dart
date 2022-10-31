@@ -17,7 +17,7 @@ class CustomFilterChip extends StatelessWidget {
   CustomFilterChip({
     required this.title,
     this.icon,
-    Color backgroundColor = AppColors.filtersBackgroundColour,
+    Color backgroundColor = AppColors.filtersBackgroundColor,
     this.borderColor = AppColors.defaultColorDark,
     this.shape = CustomFilterChipShape.roundedRectangle,
     this.onPressed,

@@ -81,8 +81,8 @@ class _MultiSelectFilterChipsState extends State<MultiSelectFilterChips> {
               title: Text(_isItemAtIndexTheTrailingButton(index) ? widget.trailingButtonTitle! : widget.titles[index],
                   style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColorDark)),
               shape: CustomFilterChipShape.roundedRectangle,
-              backgroundColor: AppColors.filtersBackgroundColour,
-              borderColor: _isSelected(index) ? AppColors.defaultColorDark : AppColors.filtersBackgroundColour,
+              backgroundColor: AppColors.filtersBackgroundColor,
+              borderColor: _isSelected(index) ? AppColors.defaultColorDark : AppColors.filtersBackgroundColor,
               onPressed: _getActionForItemAtIndex(index),
             ),
           );
