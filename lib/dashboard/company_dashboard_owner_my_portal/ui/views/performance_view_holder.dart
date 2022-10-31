@@ -20,9 +20,9 @@ class PerformanceViewHolder extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.defaultColorDarkContrastColor.withOpacity(0.02),
+            color: AppColors.defaultColorDarkContrastColor.withOpacity(0.3),
             offset: Offset(0, 0),
-            blurRadius: 40,
+            blurRadius: 10,
             spreadRadius: 0,
           ),
         ],

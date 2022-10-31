@@ -4,6 +4,7 @@ import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/pe
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../_shared/constants/app_colors.dart';
 import '../presenters/owner_my_portal_dashboard_presenter.dart';
+import 'module_box_view_holder.dart';
 
 class TodaysStaffAbsencesView extends StatelessWidget {
   final OwnerMyPortalDashboardPresenter _presenter;
@@ -16,7 +17,7 @@ class TodaysStaffAbsencesView extends StatelessWidget {
   }
 
   Widget _staffAbsencesTile() {
-    return PerformanceViewHolder(
+    return ModuleBoxViewHolder(
       backgroundColor: Color.fromRGBO(243, 246, 249, 1.0),
       content: Container(
         height: 60,

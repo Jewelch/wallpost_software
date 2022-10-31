@@ -120,11 +120,11 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
               FinanceDetailCard(_presenter.getFinancialSummary()),
               ModulesView(_moduleViewPresenter, _presenter.filters),
               SizedBox(height: 30),
-              Padding(
+          /*    Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: Text("HR & Performance", style: TextStyles.largeTitleTextStyleBold),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 10),*/
               buildHrPerformanceView(),
               SizedBox(height: 120),
             ],
@@ -161,13 +161,17 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
   //MARK: Functions to build the approval button
 
   Widget _bottomView() {
-    return Padding(
-        // height: 50,
-        padding: EdgeInsets.only(left: 12, right: 12),
-        // color: Colors.white,
-        child: ActionButtonsHolder(
-            approvalCount: _presenter.getTotalApprovalCount(),
-            onDidPressApprovalsButton: () => _presenter.goToAggregatedApprovalsScreen()));
+    return Container(
+      color: Colors.white,
+      child: Padding(
+          // height: 50,
+
+          padding: EdgeInsets.only(left: 12, right: 12),
+          // color: Colors.white,
+          child: ActionButtonsHolder(
+              approvalCount: _presenter.getTotalApprovalCount(),
+              onDidPressApprovalsButton: () => _presenter.goToAggregatedApprovalsScreen())),
+    );
   }
 
   //MARK: Functions to build the bottom bar
