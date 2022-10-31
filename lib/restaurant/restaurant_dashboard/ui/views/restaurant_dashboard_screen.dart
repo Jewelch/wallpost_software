@@ -35,11 +35,9 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   AggregatedSalesData? _aggregatedSalesData;
 
   void _loadSalesData() {
-    // _salesPresenter.loadAggregatedSalesData().then((value) {
-    //   if (value is AggregatedSalesData) {
-    _salesPresenter.loadSalesBreakDown();
-    // }
-    // });
+    _salesPresenter.loadAggregatedSalesData().then((value) {
+      _salesPresenter.loadSalesBreakDown();
+    });
   }
 
   _State() {
@@ -165,14 +163,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                     ),
                   )
                 : SalesBreakDownCard(
-                    salesBreakDowns
-                      ..sort(
-                        (a, b) => a.totalSales == b.totalSales
-                            ? 0
-                            : a.totalSales > b.totalSales
-                                ? -1
-                                : 1,
-                      ),
+                    salesBreakDowns..sort((a, b) => b.totalSales.compareTo(a.totalSales)),
                   ),
           ),
         ],

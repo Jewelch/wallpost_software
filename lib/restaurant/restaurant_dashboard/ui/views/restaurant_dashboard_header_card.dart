@@ -21,7 +21,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(width: 20),
+              SizedBox(width: 16),
               Expanded(
                 flex: 1,
                 child: Text(_salesData?.totalSales ?? "0.00", style: TextStyles.headerCardHeadingTextStyle),
@@ -43,7 +43,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
           SizedBox(height: 4),
           Row(
             children: [
-              SizedBox(width: 20),
+              SizedBox(width: 16),
               Expanded(
                 flex: 1,
                 child: Text("Total Sale", style: TextStyles.headerCardMoneyLabelTextStyle),
@@ -65,7 +65,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
           SizedBox(height: 20),
           Row(
             children: [
-              SizedBox(width: 10),
+              SizedBox(width: 18),
               Expanded(
                   child: Divider(
                 color: AppColors.bannerBackgroundColor,
@@ -80,7 +80,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(width: 20),
+              SizedBox(width: 16),
               Expanded(
                 flex: 1,
                 child: Text(_salesData?.costOfSales  ?? "0.00", style: TextStyles.headerCardHeadingTextStyle),
@@ -102,7 +102,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
           SizedBox(height: 4),
           Row(
             children: [
-              SizedBox(width: 20),
+              SizedBox(width: 16),
               Expanded(
                 flex: 1,
                 child: Text("Cost of Sales", style: TextStyles.headerCardMoneyLabelTextStyle),
