@@ -41,9 +41,10 @@ class SalesBreakDownCard extends StatelessWidget {
         ),
         itemCount: _salesBreakDowns.length,
         itemBuilder: (context, index) => Card(
+          borderOnForeground: true,
           elevation: 1,
           color: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),side:BorderSide(color: AppColors.listItemBorderColor) ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
