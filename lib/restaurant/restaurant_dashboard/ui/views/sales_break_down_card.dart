@@ -44,7 +44,7 @@ class SalesBreakDownCard extends StatelessWidget {
           borderOnForeground: true,
           elevation: 1,
           color: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),side:BorderSide(color: AppColors.listItemBorderColor) ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),side:BorderSide(color: AppColors.tabDatePickerColor) ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
