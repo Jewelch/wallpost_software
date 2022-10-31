@@ -42,11 +42,9 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   }
 
   void _loadSalesData() {
-    // _salesPresenter.loadAggregatedSalesData().then((value) {
-    //   if (value is AggregatedSalesData) {
-    _salesPresenter.loadSalesBreakDown();
-    // }
-    // });
+    _salesPresenter.loadAggregatedSalesData().then((value) {
+      _salesPresenter.loadSalesBreakDown();
+    });
   }
 
   @override
