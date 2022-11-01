@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/view_contracts/module_performance_view.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_screen.dart';
 
 import '../models/owner_dashboard_filters.dart';
 import '../models/performance_value.dart';
@@ -39,25 +41,30 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return VisibilityDetector(
-      key: Key('restaurant-performance-view'),
-      onVisibilityChanged: (visibilityInfo) {
-        print(visibilityInfo.visibleFraction);
-        if (visibilityInfo.visibleFraction == 1.0) _presenter.loadData();
+    return GestureDetector(
+      onTap: () {
+        ScreenPresenter.present(RestaurantDashboardScreen(), context);
       },
-      child: PerformanceViewHolder(
-        content: Center(
-          child: ItemNotifiable<int>(
-            notifier: _viewTypeNotifier,
-            builder: (context, viewType) {
-              if (viewType == viewTypeLoader) {
-                return ModuleLoader();
-              } else if (viewType == viewTypeError) {
-                return _errorView();
-              } else {
-                return _dataView();
-              }
-            },
+      child: VisibilityDetector(
+        key: Key('restaurant-performance-view'),
+        onVisibilityChanged: (visibilityInfo) {
+          print(visibilityInfo.visibleFraction);
+          if (visibilityInfo.visibleFraction == 1.0) _presenter.loadData();
+        },
+        child: PerformanceViewHolder(
+          content: Center(
+            child: ItemNotifiable<int>(
+              notifier: _viewTypeNotifier,
+              builder: (context, viewType) {
+                if (viewType == viewTypeLoader) {
+                  return ModuleLoader();
+                } else if (viewType == viewTypeError) {
+                  return _errorView();
+                } else {
+                  return _dataView();
+                }
+              },
+            ),
           ),
         ),
       ),

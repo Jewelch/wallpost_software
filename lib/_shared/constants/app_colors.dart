@@ -38,7 +38,8 @@ class AppColors {
   static const Color listItemBorderColor = Color.fromRGBO(237, 237, 237, 1.0);
 
   //MARK: Filter colors
-  static const Color filtersBackgroundColour = Color.fromRGBO(223, 240, 247, 1.0);
+  static const Color filtersBackgroundColor = Color.fromRGBO(223, 240, 247, 1.0);
+  static const Color tabDatePickerColor = Color.fromARGB(255, 245, 245, 245);
 
   //MARK: Banner colors
   static const Color bannerBackgroundColor = Color.fromRGBO(248, 162, 40, 1.0);

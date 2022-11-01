@@ -15,7 +15,7 @@ class TextStyles {
       );
 
   static get largeTitleTextStyleBold => TextStyle(
-    fontSize: 17,
+        fontSize: 17,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.bold,
       );
@@ -96,5 +96,11 @@ class TextStyles {
         fontWeight: FontWeight.w300,
         color: AppColors.defaultColorDarkContrastColor,
         fontSize: 11.0,
+      );
+
+  static get headerCardMoneyLabelTextStyle => TextStyle(
+        fontWeight: FontWeight.w300,
+        color: AppColors.defaultColorDarkContrastColor,
+        fontSize: 17.0,
       );
 }
