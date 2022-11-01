@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/header_card.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/extensions/string_extensions.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 
 class RestaurantDashboardHeaderCard extends StatelessWidget {
@@ -91,7 +92,9 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
                 child: Text(
                   _salesData?.grossOfProfit ?? "0.00",
                   textAlign: TextAlign.start,
-                  style: TextStyles.headerCardHeadingTextStyle.copyWith(color: AppColors.green),
+                  style: TextStyles.headerCardHeadingTextStyle.copyWith(
+                    color: (_salesData?.grossOfProfit ?? "0.00").isNegative ? AppColors.red : AppColors.green,
+                  ),
                 ),
               ),
               SizedBox(width: 40),

@@ -11,6 +11,7 @@ class AggregatedSalesData extends JSONInitializable {
 
   AggregatedSalesData.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
     final sift = Sift();
+
     try {
       _totalSales = sift.readStringFromMap(jsonMap, 'total_sales');
       _netSales = sift.readStringFromMap(jsonMap, 'net_sales');

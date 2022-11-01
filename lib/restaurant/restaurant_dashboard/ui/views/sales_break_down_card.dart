@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/extensions/string_extensions.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
 
 // ignore: must_be_immutable
@@ -17,10 +18,10 @@ class SalesBreakDownCard extends StatelessWidget {
 
   void _initialMaxAndMinSales() {
     for (var sales in _salesBreakDowns) {
-      if (sales.totalSales > _maxSale) {
-        _maxSale = sales.totalSales;
-      } else if (sales.totalSales < _minSale) {
-        _minSale = sales.totalSales;
+      if (sales.totalSales.toDouble > _maxSale) {
+        _maxSale = sales.totalSales.toDouble;
+      } else if (sales.totalSales.toDouble < _minSale) {
+        _minSale = sales.totalSales.toDouble;
       }
     }
   }
@@ -56,7 +57,7 @@ class SalesBreakDownCard extends StatelessWidget {
                     child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    _salesBreakDowns[index].totalSales.toString(),
+                    _salesBreakDowns[index].totalSales.withoutNullDecimals.commaSeparated,
                     style: TextStyle(
                         overflow: TextOverflow.ellipsis,
                         color: _getSalesBreakDownItemColor(_salesBreakDowns[index]),
@@ -84,8 +85,8 @@ class SalesBreakDownCard extends StatelessWidget {
   }
 
   Color _getSalesBreakDownItemColor(SalesBreakDownItem salesBreakDownItem) {
-    if (salesBreakDownItem.totalSales == _maxSale) return AppColors.green;
-    if (salesBreakDownItem.totalSales == _minSale) return AppColors.red;
+    if (salesBreakDownItem.totalSales.toDouble == _maxSale) return AppColors.green;
+    if (salesBreakDownItem.totalSales.toDouble == _minSale) return AppColors.red;
     return AppColors.yellow;
   }
 }

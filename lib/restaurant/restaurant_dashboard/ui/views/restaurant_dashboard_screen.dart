@@ -4,6 +4,7 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_selector.dart';
+import 'package:wallpost/_shared/extensions/string_extensions.dart';
 import 'package:wallpost/dashboard/company_dashboard/ui/views/company_dashboard_app_bar.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
@@ -116,8 +117,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                       Text('Sales Breakdown', style: TextStyles.largeTitleTextStyleBold),
                       Expanded(
                         child: DropdownFilter(
-                          items:
-                              SalesBreakDownWiseOptions.values.map((strategy) => strategy.toReadableString()).toList(),
+                          items: SalesBreakDownWiseOptions.values.map((strategy) => strategy.toReadableString()).toList(),
                           selectedValue: _salesPresenter.selectedBreakDownWise.toReadableString(),
                           textStyle: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
                           backgroundColor: Colors.transparent,
@@ -143,10 +143,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                           ),
                         )
                       : SalesBreakDownCard(
-                          salesBreakDowns
-                            ..sort(
-                              (a, b) => b.totalSales.compareTo(a.totalSales),
-                            ),
+                          salesBreakDowns..sort((a, b) => b.totalSales.toDouble.compareTo(a.totalSales.toDouble)),
                         ),
                 ),
               ],
@@ -192,7 +189,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   }
 
   @override
-  void onDidChangeSalesBreakDownWise() => setState(_salesPresenter.loadSalesBreakDown);
+  void onDidChangeSalesBreakDownWise() => setState(() => _salesPresenter.loadSalesBreakDown());
 }
 
 class _AppBar extends StatelessWidget {
