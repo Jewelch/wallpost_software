@@ -58,7 +58,7 @@ class _ModulesViewState extends State<ModulesView> with TickerProviderStateMixin
         ),
         SizedBox(height: 12),
         Container(
-          height: 180,
+          height: 166,
           margin: EdgeInsets.symmetric(horizontal: 12),
           child: TabBarView(
             clipBehavior: Clip.none,
