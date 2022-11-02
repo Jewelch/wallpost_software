@@ -50,106 +50,111 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: AppColors.screenBackgroundColor,
-      body: ItemNotifiable<_ScreenStates>(
-        notifier: screenStateNotifier,
-        builder: (_, value) => <_ScreenStates, Widget>{
-          //$ LOADING STATE
-          _ScreenStates.loading: RestaurantDashboardLoader(),
-          //! ERROR STATE
-          _ScreenStates.error: Column(
-            children: [
-              SizedBox(height: 10),
-              _AppBar(salesPresenter: _salesPresenter),
-              SizedBox(height: 10),
-              Expanded(
-                child: Container(
-                  child: TextButton(
-                    child: Text(
-                      errorMessage,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.titleTextStyle,
-                    ),
-                    onPressed: _loadSalesData,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          //* DATA STATE
-          _ScreenStates.data: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
+    return RefreshIndicator(
+      onRefresh: () async => _loadSalesData(),
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: AppColors.screenBackgroundColor,
+        body: ItemNotifiable<_ScreenStates>(
+          notifier: screenStateNotifier,
+          builder: (_, value) => <_ScreenStates, Widget>{
+            //$ LOADING STATE
+            _ScreenStates.loading: RestaurantDashboardLoader(),
+            //! ERROR STATE
+            _ScreenStates.error: Column(
+              children: [
+                SizedBox(height: 10),
                 _AppBar(salesPresenter: _salesPresenter),
-                SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 28),
-                  child: Row(
-                    children: [
-                      Spacer(),
-                      InkWell(
-                        onTap: showDateRangeSelector,
-                        child: Text(
-                          _salesPresenter.dateFilters.selectedRangeOption.toReadableString(),
-                          style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
-                        ),
+                SizedBox(height: 10),
+                Expanded(
+                  child: Container(
+                    child: TextButton(
+                      child: Text(
+                        errorMessage,
+                        textAlign: TextAlign.center,
+                        style: TextStyles.titleTextStyle,
                       ),
-                      SizedBox(width: 8),
-                      SvgPicture.asset(
-                        'assets/icons/arrow_down_icon.svg',
-                        color: AppColors.defaultColor,
-                        height: 14,
-                      ),
-                    ],
+                      onPressed: _loadSalesData,
+                    ),
                   ),
-                ),
-                ItemNotifiable<AggregatedSalesData?>(
-                  notifier: salesDataNotifier,
-                  builder: (context, value) => RestaurantDashboardHeaderCard(value),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Sales Breakdown', style: TextStyles.largeTitleTextStyleBold),
-                      Expanded(
-                        child: DropdownFilter(
-                          items: SalesBreakDownWiseOptions.values.map((strategy) => strategy.toReadableString()).toList(),
-                          selectedValue: _salesPresenter.selectedBreakDownWise.toReadableString(),
-                          textStyle: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
-                          backgroundColor: Colors.transparent,
-                          dropdownColor: AppColors.filtersBackgroundColor,
-                          dropdownArrowColor: AppColors.defaultColor,
-                          onDidSelectedItemAtIndex: _salesPresenter.selectSalesBreakDownWiseAtIndex,
-                          selectedItemAlignment: AlignmentDirectional.centerEnd,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 8),
-                ItemNotifiable<List<SalesBreakDownItem>>(
-                  notifier: salesBreakDownsNotifier,
-                  builder: (context, salesBreakDowns) => salesBreakDowns.isEmpty
-                      ? Padding(
-                          padding: EdgeInsets.only(top: 120),
-                          child: Text(
-                            "There is no sales breakdown with these filters",
-                            textAlign: TextAlign.center,
-                            style: TextStyles.titleTextStyle,
-                          ),
-                        )
-                      : SalesBreakDownCard(
-                          salesBreakDowns..sort((a, b) => b.totalSales.toDouble.compareTo(a.totalSales.toDouble)),
-                        ),
                 ),
               ],
             ),
-          ),
-        }[value]!,
+            //* DATA STATE
+            _ScreenStates.data: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  _AppBar(salesPresenter: _salesPresenter),
+                  SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 28),
+                    child: Row(
+                      children: [
+                        Spacer(),
+                        InkWell(
+                          onTap: showDateRangeSelector,
+                          child: Text(
+                            _salesPresenter.dateFilters.selectedRangeOption.toReadableString(),
+                            style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        SvgPicture.asset(
+                          'assets/icons/arrow_down_icon.svg',
+                          color: AppColors.defaultColor,
+                          height: 14,
+                        ),
+                      ],
+                    ),
+                  ),
+                  ItemNotifiable<AggregatedSalesData?>(
+                    notifier: salesDataNotifier,
+                    builder: (context, value) => RestaurantDashboardHeaderCard(value),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Sales Breakdown', style: TextStyles.largeTitleTextStyleBold),
+                        Expanded(
+                          child: DropdownFilter(
+                            items: SalesBreakDownWiseOptions.values
+                                .map((strategy) => strategy.toReadableString())
+                                .toList(),
+                            selectedValue: _salesPresenter.selectedBreakDownWise.toReadableString(),
+                            textStyle: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
+                            backgroundColor: Colors.transparent,
+                            dropdownColor: AppColors.filtersBackgroundColor,
+                            dropdownArrowColor: AppColors.defaultColor,
+                            onDidSelectedItemAtIndex: _salesPresenter.selectSalesBreakDownWiseAtIndex,
+                            selectedItemAlignment: AlignmentDirectional.centerEnd,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  ItemNotifiable<List<SalesBreakDownItem>>(
+                    notifier: salesBreakDownsNotifier,
+                    builder: (context, salesBreakDowns) => salesBreakDowns.isEmpty
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 120),
+                            child: Text(
+                              "There is no sales breakdown with these filters",
+                              textAlign: TextAlign.center,
+                              style: TextStyles.titleTextStyle,
+                            ),
+                          )
+                        : SalesBreakDownCard(
+                            salesBreakDowns..sort((a, b) => b.totalSales.toDouble.compareTo(a.totalSales.toDouble)),
+                          ),
+                  ),
+                ],
+              ),
+            ),
+          }[value]!,
+        ),
       ),
     );
   }

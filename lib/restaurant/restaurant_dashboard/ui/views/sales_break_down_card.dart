@@ -70,7 +70,7 @@ class SalesBreakDownCard extends StatelessWidget {
                   child: Text(
                     _salesBreakDowns[index].type,
                     style: TextStyle(
-                      color: AppColors.textColorGray,
+                      color: AppColors.textColorDarkGray,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),

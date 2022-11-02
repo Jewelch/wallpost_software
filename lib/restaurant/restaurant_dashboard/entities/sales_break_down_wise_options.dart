@@ -6,7 +6,7 @@ enum SalesBreakDownWiseOptions {
   String toReadableString() {
     switch (this) {
       case basedOnOrder:
-        return "Order";
+        return "Order wise";
       case basedOnCategory:
         return "Category type wise";
       case basedOnMenu:

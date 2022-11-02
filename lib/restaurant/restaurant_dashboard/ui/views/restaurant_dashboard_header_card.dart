@@ -25,7 +25,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 16),
               Expanded(
                 flex: 1,
-                child: Text(_salesData?.totalSales ?? "0.00", style: TextStyles.headerCardHeadingTextStyle),
+                child: Text(_salesData?.totalSales ?? "0.00", style: TextStyles.headerCardNumberTextStyle),
               ),
               SizedBox(width: MediaQuery.of(context).size.width * .2),
               Expanded(
@@ -33,7 +33,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
                 child: Text(
                   _salesData?.netSales ?? "0.00",
                   textAlign: TextAlign.start,
-                  style: TextStyles.headerCardHeadingTextStyle,
+                  style: TextStyles.headerCardNumberTextStyle,
                 ),
               ),
               SizedBox(width: 40),
@@ -82,7 +82,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 16),
               Expanded(
                 flex: 1,
-                child: Text(_salesData?.costOfSales ?? "0.00", style: TextStyles.headerCardHeadingTextStyle),
+                child: Text(_salesData?.costOfSales ?? "0.00", style: TextStyles.headerCardNumberTextStyle),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * .2,
@@ -90,9 +90,9 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: Text(
-                  _salesData?.grossOfProfit ?? "0.00",
+                  (_salesData?.grossOfProfit ?? "0.00") + "%",
                   textAlign: TextAlign.start,
-                  style: TextStyles.headerCardHeadingTextStyle.copyWith(
+                  style: TextStyles.headerCardNumberTextStyle.copyWith(
                     color: (_salesData?.grossOfProfit ?? "0.00").isNegative ? AppColors.red : AppColors.green,
                   ),
                 ),

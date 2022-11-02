@@ -60,6 +60,12 @@ class TextStyles {
 
   //MARK: Header card text styles
 
+  static get headerCardNumberTextStyle => TextStyle(
+    fontWeight: FontWeight.w700,
+    color: Colors.white,
+    fontSize: 28.0,
+  );
+
   static get headerCardHeadingTextStyle => TextStyle(
         fontWeight: FontWeight.w700,
         color: Colors.white,
@@ -100,7 +106,7 @@ class TextStyles {
 
   static get headerCardMoneyLabelTextStyle => TextStyle(
         fontWeight: FontWeight.w300,
-        color: AppColors.defaultColorDarkContrastColor,
+        color: AppColors.screenBackgroundColor.withOpacity(.6),
         fontSize: 17.0,
       );
 }

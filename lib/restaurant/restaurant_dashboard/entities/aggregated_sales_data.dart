@@ -29,5 +29,5 @@ class AggregatedSalesData extends JSONInitializable {
 
   String get costOfSales => _costOfSales;
 
-  String get grossOfProfit => '$_grossOfProfitPercentage%';
+  String get grossOfProfit => '$_grossOfProfitPercentage';
 }
