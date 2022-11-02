@@ -5,10 +5,12 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/view_contracts/module_performance_view.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
+import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder_module_new.dart';
 
 import '../models/owner_dashboard_filters.dart';
 import '../models/performance_value.dart';
 import '../presenters/restaurant_performance_presenter.dart';
+import 'module_box_view_holder.dart';
 import 'module_loader.dart';
 
 class RestaurantPerformanceView extends StatefulWidget {
@@ -45,7 +47,7 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
         print(visibilityInfo.visibleFraction);
         if (visibilityInfo.visibleFraction == 1.0) _presenter.loadData();
       },
-      child: PerformanceViewHolder(
+      child: PerformanceViewHolderNew(
         content: Center(
           child: ItemNotifiable<int>(
             notifier: _viewTypeNotifier,
@@ -83,7 +85,7 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
   }
 
   Widget _dataView() {
-    return Column(
+   /* return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
@@ -96,11 +98,26 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
           ],
         ),
       ],
+    );*/
+
+    return Row(
+
+    children: [
+      Expanded(child: ModuleBoxViewHolder(content: _tile(_presenter.getTodaysSale()),
+        backgroundColor: Color(0xFFE8FCF3),
+      )),
+      SizedBox(width: 8),
+
+      Expanded(child: ModuleBoxViewHolder(content: _tile(_presenter.getYTDSale())
+      ,              backgroundColor: Color(0xFFF0F5FA),
+      )),
+    ],
     );
   }
 
   Widget _tile(PerformanceValue performanceValue) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           performanceValue.value,
