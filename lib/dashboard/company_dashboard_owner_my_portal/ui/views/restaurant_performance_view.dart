@@ -83,21 +83,6 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
   }
 
   Widget _dataView() {
-   /* return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          children: [
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getTodaysSale())),
-            Container(height: 80, width: 1, color: AppColors.defaultColor.withOpacity(0.1)),
-            Expanded(child: _tile(_presenter.getYTDSale())),
-            SizedBox(width: 12),
-          ],
-        ),
-      ],
-    );*/
-
     return Row(
 
     children: [

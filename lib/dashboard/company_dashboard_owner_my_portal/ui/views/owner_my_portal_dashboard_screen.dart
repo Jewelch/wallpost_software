@@ -171,24 +171,6 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
     );
   }
 
-  //MARK: Functions to build the bottom bar
-  // todo Remove bottom  code
-  /* Widget _bottomBar() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        _requestsBar(),
-        Container(height: 20, color: Colors.white),
-        if (_presenter.getTotalApprovalCount() == 0) Container(height: 20, color: Colors.white),
-        if (_presenter.getTotalApprovalCount() > 0)
-          BottomBanner(
-            approvalCount: _presenter.getTotalApprovalCount(),
-            onTap: () => _presenter.goToAggregatedApprovalsScreen(),
-          ),
-      ],
-    );
-  }*/
-
   Widget _requestsBar() {
     if (_presenter.getRequestItems().isEmpty) return Container();
 

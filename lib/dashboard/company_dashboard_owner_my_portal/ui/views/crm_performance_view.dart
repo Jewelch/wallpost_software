@@ -120,44 +120,6 @@ class _CRMPerformanceViewState extends State<CRMPerformanceView>
     );
   }
 
-  // Widget _dataView() {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     children: [
-  //       Row(
-  //         children: [
-  //           SizedBox(width: 12),
-  //           Expanded(child: _tile(_presenter.getActualRevenue())),
-  //           SizedBox(width: 12),
-  //           Expanded(child: _tile(_presenter.getTargetAchieved())),
-  //           SizedBox(width: 12),
-  //         ],
-  //       ),
-  //       SizedBox(height: 12),
-  //       Row(
-  //         children: [
-  //           SizedBox(width: 40),
-  //           Expanded(child: Divider()),
-  //           SizedBox(width: 40),
-  //           Expanded(child: Divider()),
-  //           SizedBox(width: 40),
-  //         ],
-  //       ),
-  //       SizedBox(height: 12),
-  //       Row(
-  //         children: [
-  //           SizedBox(width: 12),
-  //           Expanded(child: _tile(_presenter.getInPipeline())),
-  //           SizedBox(width: 12),
-  //           Expanded(child: _tile(_presenter.getLeadConverted())),
-  //           SizedBox(width: 12),
-  //         ],
-  //       )
-  //     ],
-  //   );
-  // }
-  // saeed edited - Text alignment to start
-
   Widget _tile(PerformanceValue performanceValue) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
