@@ -129,14 +129,14 @@ void main() {
     //no staff on leave
     when(() => data.staffOnLeaveToday).thenReturn("0");
     when(() => data.isAnyStaffOnLeave()).thenReturn(false);
-    expect(presenter.getStaffOnLeaveToday().label, "Staff On Leave Today");
+    expect(presenter.getStaffOnLeaveToday().label, "Staff On Leave");
     expect(presenter.getStaffOnLeaveToday().value, "0");
     expect(presenter.getStaffOnLeaveToday().textColor, AppColors.green);
 
     //some staff on leave
     when(() => data.staffOnLeaveToday).thenReturn("3");
     when(() => data.isAnyStaffOnLeave()).thenReturn(true);
-    expect(presenter.getStaffOnLeaveToday().label, "Staff On Leave Today");
+    expect(presenter.getStaffOnLeaveToday().label, "Staff On Leave");
     expect(presenter.getStaffOnLeaveToday().value, "3");
     expect(presenter.getStaffOnLeaveToday().textColor, AppColors.red);
   });
