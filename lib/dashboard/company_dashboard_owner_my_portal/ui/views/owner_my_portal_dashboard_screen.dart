@@ -119,7 +119,7 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
             children: [
               FinanceDetailCard(_presenter.getFinancialSummary()),
               ModulesView(_moduleViewPresenter, _presenter.filters),
-              SizedBox(height: 30),
+              SizedBox(height: 20),
           /*    Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: Text("HR & Performance", style: TextStyles.largeTitleTextStyleBold),
