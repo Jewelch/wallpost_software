@@ -2,8 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/module_box_view_holder.dart';
-import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
-
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../models/graph_value.dart';
 import '../presenters/owner_my_portal_dashboard_presenter.dart';

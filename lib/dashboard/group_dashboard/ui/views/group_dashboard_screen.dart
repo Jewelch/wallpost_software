@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
-import 'package:wallpost/_common_widgets/banners/bottom_banner.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
 import 'package:wallpost/_common_widgets/keyboard_dismisser/on_tap_keyboard_dismisser.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
@@ -11,7 +10,6 @@ import 'package:wallpost/dashboard/group_dashboard/ui/presenters/group_dashboard
 import 'package:wallpost/dashboard/group_dashboard/ui/view_contracts/group_dashboard_view.dart';
 
 import '../../../../_common_widgets/buttons/action_button_holder.dart';
-import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 import '../../../../_common_widgets/search_bar/search_bar.dart';
 import '../../../../_wp_core/company_management/entities/company.dart';
 import '../../../../_wp_core/company_management/entities/financial_summary.dart';
