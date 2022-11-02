@@ -91,12 +91,14 @@ class _HRPerformanceViewState extends State<HRPerformanceView>
             Expanded(
                 child: ModuleBoxViewHolder(
               content: _tile(_presenter.getActiveStaff()),
-              backgroundColor: Color(0xFFE8FCF3),
+              backgroundColor: Color.fromRGBO(232, 252, 243, 1.0),
             )),
             SizedBox(width: 8),
             Expanded(
                 child: ModuleBoxViewHolder(
-                    content: _tile(_presenter.getEmployeeCost()), backgroundColor: Color(0xFFE8FCF3))),
+              content: _tile(_presenter.getEmployeeCost()),
+              backgroundColor: Color.fromRGBO(232, 252, 243, 1.0),
+            )),
           ],
         ),
         SizedBox(height: 8),
@@ -105,13 +107,13 @@ class _HRPerformanceViewState extends State<HRPerformanceView>
             Expanded(
                 child: ModuleBoxViewHolder(
               content: _tile(_presenter.getStaffOnLeaveToday()),
-              backgroundColor: Color(0xFFF0F5FA),
+              backgroundColor: Color.fromRGBO(240, 245, 240, 1.0),
             )),
             SizedBox(width: 8),
             Expanded(
                 child: ModuleBoxViewHolder(
               content: _tile(_presenter.getDocumentsExpired()),
-              backgroundColor: Color(0xFFFCE9E8),
+              backgroundColor: Color.fromRGBO(252, 233, 232, 1.0),
             )),
           ],
         )

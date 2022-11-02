@@ -84,17 +84,19 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
 
   Widget _dataView() {
     return Row(
-
-    children: [
-      Expanded(child: ModuleBoxViewHolder(content: _tile(_presenter.getTodaysSale()),
-        backgroundColor: Color(0xFFE8FCF3),
-      )),
-      SizedBox(width: 8),
-
-      Expanded(child: ModuleBoxViewHolder(content: _tile(_presenter.getYTDSale())
-      ,              backgroundColor: Color(0xFFF0F5FA),
-      )),
-    ],
+      children: [
+        Expanded(
+            child: ModuleBoxViewHolder(
+          content: _tile(_presenter.getTodaysSale()),
+          backgroundColor: Color.fromRGBO(232, 252, 243, 1.0),
+        )),
+        SizedBox(width: 8),
+        Expanded(
+            child: ModuleBoxViewHolder(
+          content: _tile(_presenter.getYTDSale()),
+          backgroundColor: Color.fromRGBO(240, 245, 250, 1.0),
+        )),
+      ],
     );
   }
 
