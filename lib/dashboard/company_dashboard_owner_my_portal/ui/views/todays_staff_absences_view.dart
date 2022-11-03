@@ -21,21 +21,24 @@ class TodaysStaffAbsencesView extends StatelessWidget {
       content: Container(
         height: 60,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(width: _presenter.getTotalApprovalCount() > 0?0:20),
+
             Text(
               "${_presenter.getAbsenteesData().value}",
               style: TextStyles.extraLargeTitleTextStyleBold.copyWith(
                 color: _presenter.getAbsenteesData().color,
               ),
             ),
-            SizedBox(width: 10),
+            SizedBox(width: _presenter.getTotalApprovalCount() > 0?10:30),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Staff\nAbsences",
+                  _presenter.getTotalApprovalCount() > 0?"Staff\nAbsences":"Staff Absences",
+
                   style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
                 ),
                 Text(

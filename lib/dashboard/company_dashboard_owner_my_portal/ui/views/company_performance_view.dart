@@ -16,10 +16,10 @@ class CompanyPerformanceView extends StatelessWidget {
     return ModuleBoxViewHolder(
       backgroundColor: Color.fromRGBO(243, 246, 249, 1.0),
       content: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            height: 50,
+            height: 60,
             width: 50,
             child: Stack(
               children: [
@@ -52,7 +52,7 @@ class CompanyPerformanceView extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: _presenter.getTotalApprovalCount() > 0?10:20),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +62,7 @@ class CompanyPerformanceView extends StatelessWidget {
                   style: TextStyles.labelTextStyleBold,
                 ),
                 Text(
-                  "Company\nPerformance",
+                  _presenter.getTotalApprovalCount() > 0?"Company\nPerformance":"Company Performance",
                   style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
                 ),
               ],
