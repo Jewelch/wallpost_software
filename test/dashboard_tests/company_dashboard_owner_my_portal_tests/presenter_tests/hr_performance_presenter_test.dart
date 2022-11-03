@@ -103,7 +103,7 @@ void main() {
     when(() => data.activeStaff).thenReturn("1,234");
     expect(presenter.getActiveStaff().label, "Active Staff");
     expect(presenter.getActiveStaff().value, "1,234");
-    expect(presenter.getActiveStaff().textColor, AppColors.defaultColorDark);
+    expect(presenter.getActiveStaff().textColor, AppColors.green);
   });
 
   test("get employee cost", () async {

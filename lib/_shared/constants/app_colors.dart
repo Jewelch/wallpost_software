@@ -27,8 +27,11 @@ class AppColors {
 
   //MARK: Outcome colors
   static const Color green = Color.fromRGBO(51, 190, 114, 1.0);
+  static const Color lightGreen = Color.fromRGBO(232, 252, 243, 1.0);
   static final Color yellow = Color.fromRGBO(248, 166, 50, 1.0);
   static const Color red = Color.fromRGBO(243, 45, 44, 1.0);
+  static const Color lightRed = Color.fromRGBO(252, 233, 232, 1.0);
+  static const Color lightGray = Color.fromRGBO(243, 246, 249, 1.0);
   static const Color greenOnDarkDefaultColorBg = Color.fromRGBO(74, 240, 145, 1.0);
   static const Color redOnDarkDefaultColorBg = Color.fromRGBO(250, 104, 100, 1.0);
 

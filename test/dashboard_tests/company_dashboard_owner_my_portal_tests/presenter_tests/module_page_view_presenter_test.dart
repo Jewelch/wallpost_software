@@ -60,9 +60,9 @@ void main() {
     when(() => company.modules).thenReturn(Module.values);
     expect(presenter.getModules(), [
       Module.Crm,
+      Module.Hr,
       Module.Restaurant,
       Module.Retail,
-      Module.Hr,
     ]);
   });
 

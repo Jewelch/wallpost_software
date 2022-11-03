@@ -160,7 +160,7 @@ void main() {
     when(() => data.inPipeline).thenReturn("2,300");
     expect(presenter.getInPipeline().label, "In Pipeline");
     expect(presenter.getInPipeline().value, "2,300");
-    expect(presenter.getInPipeline().textColor, AppColors.defaultColorDark);
+    expect(presenter.getInPipeline().textColor, AppColors.textColorBlack);
   });
 
   test("get lead converted", () async {

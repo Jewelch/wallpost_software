@@ -46,6 +46,7 @@ class _HRPerformanceViewState extends State<HRPerformanceView>
         if (visibilityInfo.visibleFraction == 1.0) _presenter.loadData();
       },
       child: PerformanceViewHolder(
+        padding: EdgeInsets.all(8),
         content: Center(
           child: ItemNotifiable<int>(
             notifier: _viewTypeNotifier,
@@ -86,34 +87,48 @@ class _HRPerformanceViewState extends State<HRPerformanceView>
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          children: [
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getActiveStaff())),
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getEmployeeCost())),
-            SizedBox(width: 12),
-          ],
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(
+                child: PerformanceViewHolder(
+                  content: _tile(_presenter.getActiveStaff()),
+                  backgroundColor: AppColors.lightGreen,
+                  showShadow: false,
+                ),
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: PerformanceViewHolder(
+                  content: _tile(_presenter.getEmployeeCost()),
+                  backgroundColor: AppColors.lightGreen,
+                  showShadow: false,
+                ),
+              ),
+            ],
+          ),
         ),
-        SizedBox(height: 12),
-        Row(
-          children: [
-            SizedBox(width: 40),
-            Expanded(child: Divider()),
-            SizedBox(width: 40),
-            Expanded(child: Divider()),
-            SizedBox(width: 40),
-          ],
-        ),
-        SizedBox(height: 12),
-        Row(
-          children: [
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getStaffOnLeaveToday())),
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getDocumentsExpired())),
-            SizedBox(width: 12),
-          ],
+        SizedBox(height: 8),
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(
+                child: PerformanceViewHolder(
+                  content: _tile(_presenter.getStaffOnLeaveToday()),
+                  backgroundColor: AppColors.lightGray,
+                  showShadow: false,
+                ),
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: PerformanceViewHolder(
+                  content: _tile(_presenter.getDocumentsExpired()),
+                  backgroundColor: Color.fromRGBO(252, 233, 232, 1.0),
+                  showShadow: false,
+                ),
+              ),
+            ],
+          ),
         )
       ],
     );
@@ -121,10 +136,11 @@ class _HRPerformanceViewState extends State<HRPerformanceView>
 
   Widget _tile(PerformanceValue performanceValue) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           performanceValue.value,
-          style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: performanceValue.textColor),
+          style: TextStyles.largeTitleTextStyleBold.copyWith(color: performanceValue.textColor),
         ),
         SizedBox(height: 2),
         Text(

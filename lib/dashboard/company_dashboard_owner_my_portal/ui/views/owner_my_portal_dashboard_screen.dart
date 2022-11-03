@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
-import 'package:wallpost/_common_widgets/banners/bottom_banner.dart';
-import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
-import 'package:wallpost/_common_widgets/filter_views/tab_chips.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/modules_view.dart';
@@ -13,6 +10,7 @@ import 'package:wallpost/expense/expense_list/ui/views/expense_list_screen.dart'
 import 'package:wallpost/leave/leave_create/ui/views/create_leave_screen.dart';
 import 'package:wallpost/leave/leave_list/ui/views/leave_list_screen.dart';
 
+import '../../../../_common_widgets/buttons/action_button_holder.dart';
 import '../../../../_common_widgets/filter_views/ytd_filter.dart';
 import '../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
@@ -115,21 +113,8 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
             children: [
               FinanceDetailCard(_presenter.getFinancialSummary()),
               ModulesView(_moduleViewPresenter, _presenter.filters),
-              SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Text("HR & Performance", style: TextStyles.largeTitleTextStyleBold),
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  SizedBox(width: 12),
-                  Expanded(child: CompanyPerformanceView(_presenter)),
-                  SizedBox(width: 20),
-                  Expanded(child: TodaysStaffAbsencesView(_presenter)),
-                  SizedBox(width: 12),
-                ],
-              ),
+              SizedBox(height: 16),
+              _buildHrPerformanceView(),
               SizedBox(height: 120),
             ],
           ),
@@ -156,61 +141,37 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [_bottomBar()],
+          children: [if (_presenter.getTotalApprovalCount() > 0) _bottomView()],
         ),
       ],
     );
   }
 
-  //MARK: Functions to build the bottom bar
-
-  Widget _bottomBar() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        _requestsBar(),
-        Container(height: 20, color: Colors.white),
-        if (_presenter.getTotalApprovalCount() == 0) Container(height: 20, color: Colors.white),
-        if (_presenter.getTotalApprovalCount() > 0)
-          BottomBanner(
-            approvalCount: _presenter.getTotalApprovalCount(),
-            onTap: () => _presenter.goToAggregatedApprovalsScreen(),
-          ),
-      ],
+  Widget _buildHrPerformanceView() {
+    return Container(
+      height: 86,
+      child: Row(
+        children: [
+          SizedBox(width: 12),
+          Expanded(child: CompanyPerformanceView(_presenter)),
+          SizedBox(width: 8),
+          Expanded(child: TodaysStaffAbsencesView(_presenter)),
+          SizedBox(width: 12),
+        ],
+      ),
     );
   }
 
-  Widget _requestsBar() {
-    if (_presenter.getRequestItems().isEmpty) return Container();
+  //MARK: Functions to build the approval button
 
-    return Stack(
-      children: [
-        CurveBottomToTop(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 60),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.only(left: 16),
-              width: double.infinity,
-              child: Text(
-                "Requests",
-                style: TextStyles.subTitleTextStyleBold.copyWith(color: AppColors.defaultColorDark),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 12),
-              height: 60,
-              color: Colors.white,
-              child: TabChips(
-                titles: _presenter.getRequestItems(),
-                onItemSelected: (index) => _presenter.selectRequestItemAtIndex(index),
-              ),
-            ),
-          ],
-        ),
-      ],
+  Widget _bottomView() {
+    return Container(
+      color: Colors.white,
+      child: Padding(
+          padding: EdgeInsets.only(left: 12, right: 12),
+          child: ActionButtonsHolder(
+              approvalCount: _presenter.getTotalApprovalCount(),
+              onDidPressApprovalsButton: () => _presenter.goToAggregatedApprovalsScreen())),
     );
   }
 

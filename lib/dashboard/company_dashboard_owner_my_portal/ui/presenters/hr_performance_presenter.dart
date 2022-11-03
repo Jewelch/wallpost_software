@@ -44,7 +44,7 @@ class HRPerformancePresenter {
     return PerformanceValue(
       label: "Active Staff",
       value: _hrData!.activeStaff,
-      textColor: AppColors.defaultColorDark,
+      textColor: AppColors.green,
     );
   }
 

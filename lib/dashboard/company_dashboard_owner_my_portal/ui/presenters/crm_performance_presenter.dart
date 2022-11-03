@@ -69,7 +69,7 @@ class CRMPerformancePresenter {
     return PerformanceValue(
       label: "In Pipeline",
       value: _crmData!.inPipeline,
-      textColor: AppColors.defaultColorDark,
+      textColor: AppColors.textColorBlack,
     );
   }
 

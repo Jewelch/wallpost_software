@@ -17,18 +17,20 @@ class TodaysStaffAbsencesView extends StatelessWidget {
 
   Widget _staffAbsencesTile() {
     return PerformanceViewHolder(
+      showShadow: false,
+      backgroundColor: AppColors.lightGray,
       content: Container(
-        height: 60,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(width: 20),
             Text(
               "${_presenter.getAbsenteesData().value}",
               style: TextStyles.extraLargeTitleTextStyleBold.copyWith(
                 color: _presenter.getAbsenteesData().color,
               ),
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 20),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -8,15 +8,19 @@ import '../models/graph_value.dart';
 import '../presenters/owner_my_portal_dashboard_presenter.dart';
 
 class CompanyPerformanceView extends StatelessWidget {
+  final bool isSmall;
+
   final OwnerMyPortalDashboardPresenter _presenter;
 
-  CompanyPerformanceView(this._presenter);
+  CompanyPerformanceView(this._presenter, {this.isSmall = false});
 
   @override
   Widget build(BuildContext context) {
     return PerformanceViewHolder(
+      showShadow: false,
+      backgroundColor: AppColors.lightGray,
       content: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             height: 50,
@@ -52,10 +56,11 @@ class CompanyPerformanceView extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: _presenter.getTotalApprovalCount() > 0 ? 10 : 20),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "YTD",
@@ -63,7 +68,7 @@ class CompanyPerformanceView extends StatelessWidget {
                 ),
                 Text(
                   "Company\nPerformance",
-                  style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
+                  style: TextStyles.smallLabelTextStyle.copyWith(color: AppColors.textColorBlack),
                 ),
               ],
             ),
