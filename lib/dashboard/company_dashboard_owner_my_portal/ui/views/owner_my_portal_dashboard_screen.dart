@@ -125,16 +125,20 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "My Portal",
-                style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: AppColors.myPortalColor),
+              Expanded(
+                child: Text(
+                  "My Portal",
+                  style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: AppColors.myPortalColor),
+                ),
               ),
-              YtdFilter(
-                initialMonth: _presenter.selectedMonth,
-                initialYear: _presenter.selectedYear,
-                onDidChangeFilter: (month, year) {
-                  _presenter.setFilter(month: month, year: year);
-                },
+              Flexible(
+                child: YtdFilter(
+                  initialMonth: _presenter.selectedMonth,
+                  initialYear: _presenter.selectedYear,
+                  onDidChangeFilter: (month, year) {
+                    _presenter.setFilter(month: month, year: year);
+                  },
+                ),
               ),
             ],
           ),

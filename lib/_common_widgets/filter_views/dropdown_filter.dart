@@ -42,14 +42,14 @@ class DropdownFilter extends StatelessWidget {
         items: items.map((item) {
           return DropdownMenuItem(
             value: item,
-            child: Text(_buildTitle(item), style: _buildTitleStyle(item), maxLines: 1),
+            child: Text(_buildTitle(item), textScaleFactor: 1.0, style: _buildTitleStyle(item), maxLines: 1),
           );
         }).toList(),
         selectedItemBuilder: (context) {
           return items.map((item) {
             return DropdownMenuItem(
               value: item,
-              child: Text(_buildTitle(item), style: _buildTitleStyle(item), maxLines: 1),
+              child: Text(_buildTitle(item), textScaleFactor: 1.0, style: _buildTitleStyle(item), maxLines: 1),
               alignment: selectedItemAlignment,
             );
           }).toList();
@@ -57,7 +57,9 @@ class DropdownFilter extends StatelessWidget {
         style: TextStyle(overflow: TextOverflow.ellipsis),
         isExpanded: true,
         value: selectedValue,
-        hint: (hint != null && hint!.isNotEmpty) ? Text(_buildTitle(hint!), style: _buildTitleStyle(hint!)) : null,
+        hint: (hint != null && hint!.isNotEmpty)
+            ? Text(_buildTitle(hint!), textScaleFactor: 1.0, style: _buildTitleStyle(hint!))
+            : null,
         onChanged: (selectedValue) {
           if (selectedValue == null) return;
           if (disabledItems.contains(selectedValue)) return;

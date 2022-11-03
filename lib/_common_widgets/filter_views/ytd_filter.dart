@@ -42,8 +42,7 @@ class _YtdFilterState extends State<YtdFilter> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: 80,
+        Flexible(
           child: DropdownFilter(
             items: _getMonthNamesForSelectedYear(),
             selectedValue: _getSelectedMonthName(),
@@ -52,10 +51,10 @@ class _YtdFilterState extends State<YtdFilter> {
             dropdownColor: AppColors.filtersBackgroundColor,
             dropdownArrowColor: AppColors.defaultColor,
             onDidSelectedItemAtIndex: (month) => _selectMonth(month),
+            selectedItemAlignment: AlignmentDirectional.centerEnd,
           ),
         ),
-        SizedBox(
-          width: 90,
+        Flexible(
           child: DropdownFilter(
             items: _getYears(),
             selectedValue: _getSelectedYear(),
@@ -64,6 +63,7 @@ class _YtdFilterState extends State<YtdFilter> {
             dropdownColor: AppColors.filtersBackgroundColor,
             dropdownArrowColor: AppColors.defaultColor,
             onDidSelectedItemAtIndex: (index) => _selectYearAtIndex(index),
+            selectedItemAlignment: AlignmentDirectional.centerEnd,
           ),
         ),
       ],
