@@ -57,16 +57,21 @@ void main() {
     when(() => company.modules).thenReturn([Module.Finance]);
     expect(presenter.getModules(), []);
 
-    when(() => company.modules).thenReturn([Module.Retail, Module.Restaurant, Module.Hr, Module.Crm]);
-    expect(presenter.getModules(), [Module.Retail, Module.Restaurant, Module.Hr, Module.Crm]);
+    when(() => company.modules).thenReturn(Module.values);
+    expect(presenter.getModules(), [
+      Module.Crm,
+      Module.Restaurant,
+      Module.Retail,
+      Module.Hr,
+    ]);
   });
 
   test("get module names", () {
     when(() => company.modules).thenReturn([Module.Retail, Module.Restaurant]);
 
     expect(presenter.getModuleNames(), [
-      Module.Retail.toReadableString(),
       Module.Restaurant.toReadableString(),
+      Module.Retail.toReadableString(),
     ]);
   });
 
