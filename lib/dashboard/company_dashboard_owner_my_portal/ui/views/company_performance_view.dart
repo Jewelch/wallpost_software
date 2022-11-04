@@ -8,11 +8,9 @@ import '../models/graph_value.dart';
 import '../presenters/owner_my_portal_dashboard_presenter.dart';
 
 class CompanyPerformanceView extends StatelessWidget {
-  final bool isSmall;
-
   final OwnerMyPortalDashboardPresenter _presenter;
 
-  CompanyPerformanceView(this._presenter, {this.isSmall = false});
+  CompanyPerformanceView(this._presenter);
 
   @override
   Widget build(BuildContext context) {
