@@ -22,7 +22,7 @@ class OwnerMyPortalData extends JSONInitializable {
       _companyPerformance = sift.readNumberFromMap(jsonMap, 'company_performance');
       _absentees = sift.readNumberFromMap(jsonMap, 'absentees').toInt();
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast Company response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast OwnerMyPortalData response. Error message - ${e.errorMessage}');
     } on MappingException {
       rethrow;
     }
