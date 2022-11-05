@@ -42,7 +42,8 @@ class _YtdFilterState extends State<YtdFilter> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Flexible(
+        SizedBox(
+          width: 110,
           child: DropdownFilter(
             items: _getMonthNamesForSelectedYear(),
             selectedValue: _getSelectedMonthName(),
@@ -54,7 +55,8 @@ class _YtdFilterState extends State<YtdFilter> {
             selectedItemAlignment: AlignmentDirectional.centerEnd,
           ),
         ),
-        Flexible(
+        SizedBox(
+          width: 110,
           child: DropdownFilter(
             items: _getYears(),
             selectedValue: _getSelectedYear(),
