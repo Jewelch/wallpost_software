@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -113,6 +112,10 @@ class OwnerMyPortalDashboardPresenter {
     return _ownerMyPortalData!.financialSummary;
   }
 
+  //MARK: Function to get company performance
+
+  int get companyPerformance => _ownerMyPortalData?.companyPerformance.toInt() ?? 0;
+
   //MARK: Function to get absentees data
 
   GraphValue getAbsenteesData() {
@@ -139,81 +142,6 @@ class OwnerMyPortalDashboardPresenter {
       totalApprovalCount += approval.approvalCount;
     }
     return totalApprovalCount;
-  }
-
-  //MARK: Functions to get graph values
-
-  List<GraphValue> getCutoffPerformanceGraphSections() {
-    return [
-      GraphValue(
-        _ownerMyPortalData!.lowPerformanceCutoff(),
-        AppColors.red.withOpacity(0.3),
-      ),
-      GraphValue(
-        _ownerMyPortalData!.mediumPerformanceCutoff() - _ownerMyPortalData!.lowPerformanceCutoff(),
-        AppColors.yellow.withOpacity(0.3),
-      ),
-      GraphValue(
-        100 - _ownerMyPortalData!.mediumPerformanceCutoff(),
-        AppColors.green.withOpacity(0.3),
-      ),
-    ];
-  }
-
-  List<GraphValue> getActualPerformanceGraphSections() {
-    if (_ownerMyPortalData!.isCompanyPerformanceLow()) {
-      return [
-        GraphValue(
-          _ownerMyPortalData!.companyPerformance.toInt(),
-          AppColors.red,
-        ),
-        GraphValue(
-          100 - _ownerMyPortalData!.companyPerformance.toInt(),
-          Colors.transparent,
-        ),
-      ];
-    } else if (_ownerMyPortalData!.isCompanyPerformanceMedium()) {
-      return [
-        GraphValue(
-          _ownerMyPortalData!.companyPerformance.toInt(),
-          AppColors.yellow,
-        ),
-        GraphValue(
-          100 - _ownerMyPortalData!.companyPerformance.toInt(),
-          Colors.transparent,
-        ),
-      ];
-    } else {
-      return [
-        GraphValue(
-          _ownerMyPortalData!.companyPerformance.toInt(),
-          AppColors.green,
-        ),
-        GraphValue(
-          100 - _ownerMyPortalData!.companyPerformance.toInt(),
-          Colors.transparent,
-        ),
-      ];
-    }
-  }
-
-  GraphValue getCompanyPerformance() {
-    if (_ownerMyPortalData!.isCompanyPerformanceLow()) {
-      return GraphValue(
-        _ownerMyPortalData!.companyPerformance.toInt(),
-        AppColors.red,
-      );
-    } else if (_ownerMyPortalData!.isCompanyPerformanceMedium()) {
-      return GraphValue(
-        _ownerMyPortalData!.companyPerformance.toInt(),
-        AppColors.yellow,
-      );
-    } else {
-      return GraphValue(
-        _ownerMyPortalData!.companyPerformance.toInt(),
-        AppColors.green,
-      );
-    }
   }
 
   //MARK: Functions to get and select request items

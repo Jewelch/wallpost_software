@@ -37,26 +37,6 @@ class OwnerMyPortalData extends JSONInitializable {
     return approvalsList;
   }
 
-  bool isCompanyPerformanceLow() {
-    return _companyPerformance <= lowPerformanceCutoff();
-  }
-
-  bool isCompanyPerformanceMedium() {
-    return _companyPerformance > lowPerformanceCutoff() && _companyPerformance <= mediumPerformanceCutoff();
-  }
-
-  bool isCompanyPerformanceHigh() {
-    return _companyPerformance > mediumPerformanceCutoff();
-  }
-
-  int lowPerformanceCutoff() {
-    return 65;
-  }
-
-  int mediumPerformanceCutoff() {
-    return 79;
-  }
-
   List<AggregatedApproval> get aggregatedApprovals => _aggregatedApprovals;
 
   FinancialSummary get financialSummary => _financialSummary;

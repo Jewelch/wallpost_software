@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -251,104 +250,6 @@ void main() {
 
     //then
     expect(presenter.getTotalApprovalCount(), 30);
-  });
-
-  test('getting cutoff graph sections', () async {
-    //given
-    var data = EmployeeMyPortalData.fromJson(Mocks.employeeMyPortalDataResponse);
-    when(() => dataProvider.isLoading).thenReturn(false);
-    when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
-    await presenter.loadData();
-
-    //when
-    var cutoffSections = presenter.getCutoffPerformanceGraphSections();
-
-    //then
-    expect(cutoffSections[0].value, data.lowPerformanceCutoff());
-    expect(cutoffSections[0].color, AppColors.red.withOpacity(0.3));
-
-    expect(cutoffSections[1].value, data.mediumPerformanceCutoff() - data.lowPerformanceCutoff());
-    expect(cutoffSections[1].color, AppColors.yellow.withOpacity(0.3));
-
-    expect(cutoffSections[2].value, 100 - data.mediumPerformanceCutoff());
-    expect(cutoffSections[2].color, AppColors.green.withOpacity(0.3));
-  });
-
-  group('tests for getting ytd performance graph values', () {
-    test('getting graph values for low ytd performance', () async {
-      //given
-      var map = Mocks.employeeMyPortalDataResponse;
-      map["ytd_performance"] = 40;
-      var data = EmployeeMyPortalData.fromJson(map);
-      when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
-      await presenter.loadData();
-
-      //when
-      var graphSections = presenter.getActualPerformanceGraphSections();
-
-      //then
-      expect(graphSections.length, 2);
-      expect(graphSections[0].value, 40);
-      expect(graphSections[0].color, AppColors.red);
-      expect(graphSections[1].value, 60);
-      expect(graphSections[1].color, Colors.transparent);
-
-      expect(presenter.getYTDPerformance().value, 40);
-      expect(presenter.getYTDPerformance().color, AppColors.red);
-    });
-
-    test('getting graph values for medium ytd performance', () async {
-      //given
-      var map = Mocks.employeeMyPortalDataResponse;
-      map["ytd_performance"] = 70;
-      var data = EmployeeMyPortalData.fromJson(map);
-      when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
-      await presenter.loadData();
-
-      //when
-      var graphSections = presenter.getActualPerformanceGraphSections();
-
-      //then
-      expect(graphSections.length, 3);
-      expect(graphSections[0].value, data.lowPerformanceCutoff());
-      expect(graphSections[0].color, AppColors.red);
-      expect(graphSections[1].value, 5);
-      expect(graphSections[1].color, AppColors.yellow);
-      expect(graphSections[2].value, 30);
-      expect(graphSections[2].color, Colors.transparent);
-
-      expect(presenter.getYTDPerformance().value, 70);
-      expect(presenter.getYTDPerformance().color, AppColors.yellow);
-    });
-
-    test('getting graph values for high ytd performance', () async {
-      //given
-      var map = Mocks.employeeMyPortalDataResponse;
-      map["ytd_performance"] = 95;
-      var data = EmployeeMyPortalData.fromJson(map);
-      when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get()).thenAnswer((_) => Future.value(data));
-      await presenter.loadData();
-
-      //when
-      var graphSections = presenter.getActualPerformanceGraphSections();
-
-      //then
-      expect(graphSections.length, 4);
-      expect(graphSections[0].value, data.lowPerformanceCutoff());
-      expect(graphSections[0].color, AppColors.red);
-      expect(graphSections[1].value, data.mediumPerformanceCutoff() - data.lowPerformanceCutoff());
-      expect(graphSections[1].color, AppColors.yellow);
-      expect(graphSections[2].value, 16);
-      expect(graphSections[2].color, AppColors.green);
-      expect(graphSections[3].value, 5);
-      expect(graphSections[3].color, Colors.transparent);
-
-      expect(presenter.getYTDPerformance().value, 95);
-      expect(presenter.getYTDPerformance().color, AppColors.green);
-    });
   });
 
   group('tests for getting current month performance value', () {

@@ -34,51 +34,6 @@ class EmployeeMyPortalData extends JSONInitializable {
     return approvalsList;
   }
 
-  bool isYTDPerformanceLow() {
-    return _ytdPerformance <= lowPerformanceCutoff();
-  }
-
-  bool isYTDPerformanceMedium() {
-    return _ytdPerformance > lowPerformanceCutoff() && _ytdPerformance <= mediumPerformanceCutoff();
-  }
-
-  bool isYTDPerformanceHigh() {
-    return _ytdPerformance > mediumPerformanceCutoff();
-  }
-
-  bool isCurrentMonthPerformanceLow() {
-    return _currentMonthPerformance <= lowPerformanceCutoff();
-  }
-
-  bool isCurrentMonthPerformanceMedium() {
-    return _currentMonthPerformance > lowPerformanceCutoff() && _currentMonthPerformance <= mediumPerformanceCutoff();
-  }
-
-  bool isCurrentMonthPerformanceHigh() {
-    return _currentMonthPerformance > mediumPerformanceCutoff();
-  }
-
-  bool isCurrentMonthAttendancePerformanceLow() {
-    return _currentMonthAttendancePerformance <= lowPerformanceCutoff();
-  }
-
-  bool isCurrentMonthAttendancePerformanceMedium() {
-    return _currentMonthAttendancePerformance > lowPerformanceCutoff() &&
-        _currentMonthAttendancePerformance <= mediumPerformanceCutoff();
-  }
-
-  bool isCurrentMonthAttendancePerformanceHigh() {
-    return _currentMonthAttendancePerformance > mediumPerformanceCutoff();
-  }
-
-  int lowPerformanceCutoff() {
-    return 65;
-  }
-
-  int mediumPerformanceCutoff() {
-    return 79;
-  }
-
   List<AggregatedApproval> get aggregatedApprovals => _aggregatedApprovals;
 
   num get ytdPerformance => _ytdPerformance;
