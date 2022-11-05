@@ -1,31 +1,36 @@
 import 'package:wallpost/_wp_core/company_management/entities/module.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-
-import '../../../../_wp_core/company_management/entities/company.dart';
+import 'package:wallpost/permissions/permissions_provider.dart';
 
 class ModulePageViewPresenter {
-  final SelectedCompanyProvider _companyProvider;
-  late final Company _company;
+  final PermissionsProvider _permissionsProvider;
   int _selectedModuleIndex = 0;
 
-  ModulePageViewPresenter() : this.initWith(SelectedCompanyProvider());
+  ModulePageViewPresenter() : this.initWith(PermissionsProvider());
 
-  ModulePageViewPresenter.initWith(this._companyProvider) {
-    _company = this._companyProvider.getSelectedCompanyForCurrentUser();
+  ModulePageViewPresenter.initWith(this._permissionsProvider);
+
+  bool shouldDisplayModules() {
+    return getNumberOfModules() > 0;
+  }
+
+  List<Module> getAllDashboardModules() {
+    //modules that are to be shown in the dashboard
+    return [Module.Crm, Module.Hr, Module.Restaurant, Module.Retail];
   }
 
   int getNumberOfModules() {
     return getModuleNames().length;
   }
 
-  bool shouldDisplayModules() {
-    return getNumberOfModules() > 0;
-  }
-
   List<Module> getModules() {
-    //filter out only those modules that are to be shown in the dashboard
-    var allDashboardModules = [Module.Crm, Module.Hr, Module.Restaurant, Module.Retail];
-    var modulesToShow = allDashboardModules.where((element) => _company.modules.contains(element));
+    var allDashboardModules = getAllDashboardModules();
+    List<Module> allowedModules = [];
+    if (_permissionsProvider.canAccessCrmModule()) allowedModules.add(Module.Crm);
+    if (_permissionsProvider.canAccessHrModule()) allowedModules.add(Module.Hr);
+    if (_permissionsProvider.canAccessRestaurantModule()) allowedModules.add(Module.Restaurant);
+    if (_permissionsProvider.canAccessRetailModule()) allowedModules.add(Module.Retail);
+
+    var modulesToShow = allDashboardModules.where((m) => allowedModules.contains(m));
     return modulesToShow.toList();
   }
 
