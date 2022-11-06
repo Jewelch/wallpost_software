@@ -18,7 +18,6 @@ class AggregatedSalesData extends JSONInitializable {
       _costOfSales = sift.readStringFromMap(jsonMap, 'cost_sales');
       _grossOfProfitPercentage = sift.readNumberFromMap(jsonMap, 'gross_profit_percentage').toString();
     } on SiftException catch (e) {
-      print(e.errorMessage);
       throw MappingException('Failed to cast AggregatedSalesData response. Error message - ${e.errorMessage}');
     }
   }

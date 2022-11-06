@@ -10,7 +10,6 @@ class SalesBreakDownItem extends JSONInitializable {
   SalesBreakDownItem.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
     final sift = Sift();
     try {
-      print(jsonMap['total_sales']);
       _totalSales = sift.readNumberFromMap(jsonMap, 'total_sales').toStringAsFixed(2);
       _type = sift.readStringFromMap(jsonMap, 'type');
     } on SiftException catch (e) {
