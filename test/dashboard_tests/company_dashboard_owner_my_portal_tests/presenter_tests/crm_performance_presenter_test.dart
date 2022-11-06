@@ -129,7 +129,7 @@ void main() {
     expect(presenter.getTargetAchieved().textColor, AppColors.red);
 
     //medium
-    when(() => data.targetAchievedPercent).thenReturn(50);
+    when(() => data.targetAchievedPercent).thenReturn(70);
     expect(presenter.getTargetAchieved().label, "Target Achieved");
     expect(presenter.getTargetAchieved().value, "70%");
     expect(presenter.getTargetAchieved().textColor, AppColors.yellow);
@@ -168,7 +168,7 @@ void main() {
     expect(presenter.getLeadConverted().textColor, AppColors.red);
 
     //medium
-    when(() => data.leadConvertedPercent).thenReturn(50);
+    when(() => data.leadConvertedPercent).thenReturn(70);
     expect(presenter.getLeadConverted().label, "Lead Converted");
     expect(presenter.getLeadConverted().value, "70%");
     expect(presenter.getLeadConverted().textColor, AppColors.yellow);

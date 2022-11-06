@@ -2,6 +2,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 
+import '../../../../_shared/constants/app_years.dart';
 import '../../../../_wp_core/company_management/entities/financial_summary.dart';
 import '../../../../_wp_core/company_management/entities/wp_action.dart';
 import '../../../../notification_center/notification_center.dart';
@@ -114,7 +115,17 @@ class OwnerMyPortalDashboardPresenter {
 
   //MARK: Function to get company performance
 
-  int get companyPerformance => _ownerMyPortalData?.companyPerformance.toInt() ?? 0;
+  int getCompanyPerformance() {
+    return _ownerMyPortalData!.companyPerformance.toInt();
+  }
+
+  String getCompanyPerformanceDisplayValue() {
+    return "${getCompanyPerformance()}%";
+  }
+
+  String getCompanyPerformanceLabel() {
+    return "${AppYears().yearAndMonthAsYtdString(_filters.year, _filters.month)} Sales";
+  }
 
   //MARK: Function to get absentees data
 

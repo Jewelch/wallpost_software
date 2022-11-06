@@ -21,8 +21,8 @@ class CompanyPerformanceView extends StatelessWidget {
         children: [
           PerformancePieChart(
             size: 50,
-            value: _presenter.companyPerformance.toDouble(),
-            valueText: "${_presenter.companyPerformance}%",
+            value: _presenter.getCompanyPerformance().toDouble(),
+            valueText: _presenter.getCompanyPerformanceDisplayValue(),
             valueTextStyle: TextStyles.titleTextStyleBold,
           ),
           SizedBox(width: _presenter.getTotalApprovalCount() > 0 ? 10 : 20),
@@ -32,7 +32,7 @@ class CompanyPerformanceView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "YTD",
+                  _presenter.getCompanyPerformanceLabel(),
                   style: TextStyles.labelTextStyleBold,
                 ),
                 Text(

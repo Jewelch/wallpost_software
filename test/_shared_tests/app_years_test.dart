@@ -91,7 +91,7 @@ void main() {
     int year = 2018;
     int month = 0;
 
-    expect(AppYears().yearAndMonthAsYtdString(year, month), "YTD $year");
+    expect(AppYears().yearAndMonthAsYtdString(year, month), "YTD");
   });
 
   test("get ytd string for previous year and month", () {

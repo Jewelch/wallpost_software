@@ -319,9 +319,6 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('company performance is 0 when the data has not loaded', () async {
-    expect(presenter.companyPerformance, 0);
-  });
 
   test('getting company performance', () async {
     //given
@@ -333,7 +330,14 @@ void main() {
     await presenter.loadData();
 
     //then
-    expect(presenter.companyPerformance, 87);
+    expect(presenter.getCompanyPerformance(), 87);
+    expect(presenter.getCompanyPerformanceDisplayValue(), "87%");
+    expect(presenter.getCompanyPerformanceLabel(), "YTD Sales");
+
+    await presenter.setFilter(month: 2, year: 2018);
+    expect(presenter.getCompanyPerformance(), 87);
+    expect(presenter.getCompanyPerformanceDisplayValue(), "87%");
+    expect(presenter.getCompanyPerformanceLabel(), "Feb 2018 Sales");
   });
 
   test('getting financial summary', () async {

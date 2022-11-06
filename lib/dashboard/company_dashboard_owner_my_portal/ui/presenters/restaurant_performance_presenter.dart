@@ -1,4 +1,5 @@
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/entities/restaurant_dashboard_data.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/services/restaurant_dashboard_data_provider.dart';
@@ -49,7 +50,7 @@ class RestaurantPerformancePresenter {
 
   PerformanceValue getYTDSale() {
     return PerformanceValue(
-      label: "${_filters.getMonthYearString()} Sales",
+      label: "${AppYears().yearAndMonthAsYtdString(_filters.year, _filters.month)} Sales",
       value: _restaurantData!.ytdSale,
       textColor: AppColors.defaultColorDark,
     );
