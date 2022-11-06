@@ -46,10 +46,20 @@ class AppYears {
   }
 
   String getShortNameForMonth(int month) {
-    return _shortenedMonthName(_monthNames[month]);
+    return _shortenedMonthName(_monthNames[month - 1]);
   }
 
   String _shortenedMonthName(String month) {
     return month.substring(0, 3);
+  }
+
+  String yearAndMonthAsYtdString(int year, int month) {
+    String label = "";
+    if (month == 0) {
+      label = "YTD";
+    } else {
+      label += "${getShortNameForMonth(month)} $year";
+    }
+    return label;
   }
 }
