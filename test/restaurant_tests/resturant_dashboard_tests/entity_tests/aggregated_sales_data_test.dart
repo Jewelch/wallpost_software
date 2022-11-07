@@ -21,7 +21,7 @@ void main() {
     expect(salesData.totalSales, totalSales);
     expect(salesData.netSales, netSales);
     expect(salesData.costOfSales, costOfSales);
-    expect(salesData.grossOfProfit, '$grossOfProfit%');
+    expect(salesData.grossOfProfit, '$grossOfProfit');
   });
 
   test('SalesData model serialization throws a <MappingException> when data is invalid', () {

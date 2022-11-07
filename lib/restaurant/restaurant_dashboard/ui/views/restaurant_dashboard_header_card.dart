@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/header_card.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/extensions/string_extensions.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
+
+import '../presenters/restaurant_dashboard_presenter.dart';
 
 class RestaurantDashboardHeaderCard extends StatelessWidget {
-  final AggregatedSalesData? _salesData;
+  final RestaurantDashboardPresenter _presenter;
 
-  RestaurantDashboardHeaderCard(this._salesData);
+  RestaurantDashboardHeaderCard(this._presenter);
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +25,18 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 16),
               Expanded(
                 flex: 1,
-                child: Text(_salesData?.totalSales ?? "0.00", style: TextStyles.headerCardNumberTextStyle),
+                child: Text(
+                  _presenter.getTotalSales(),
+                  style: TextStyles.headerCardMainValueTextStyle,
+                ),
               ),
               SizedBox(width: MediaQuery.of(context).size.width * .2),
               Expanded(
                 flex: 1,
                 child: Text(
-                  _salesData?.netSales ?? "0.00",
+                  _presenter.getNetSale(),
                   textAlign: TextAlign.start,
-                  style: TextStyles.headerCardNumberTextStyle,
+                  style: TextStyles.headerCardMainValueTextStyle,
                 ),
               ),
               SizedBox(width: 40),
@@ -45,17 +48,15 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 16),
               Expanded(
                 flex: 1,
-                child: Text("Total Sale", style: TextStyles.headerCardMoneyLabelTextStyle),
+                child: Text("Total Sale", style: TextStyles.headerCardMainLabelTextStyle),
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * .2,
-              ),
+              SizedBox(width: MediaQuery.of(context).size.width * .2),
               Expanded(
                 flex: 1,
                 child: Text(
                   "Net Sale",
                   textAlign: TextAlign.start,
-                  style: TextStyles.headerCardMoneyLabelTextStyle,
+                  style: TextStyles.headerCardMainLabelTextStyle,
                 ),
               ),
               SizedBox(width: 40),
@@ -65,10 +66,7 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
           Row(
             children: [
               SizedBox(width: 18),
-              Expanded(
-                  child: Divider(
-                color: AppColors.bannerBackgroundColor,
-              )),
+              Expanded(child: Divider(color: AppColors.bannerBackgroundColor)),
               SizedBox(width: 20),
               Expanded(child: Divider(color: AppColors.bannerBackgroundColor)),
               SizedBox(width: 10),
@@ -82,18 +80,16 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 16),
               Expanded(
                 flex: 1,
-                child: Text(_salesData?.costOfSales ?? "0.00", style: TextStyles.headerCardNumberTextStyle),
+                child: Text(_presenter.getCostOfSales(), style: TextStyles.headerCardMainValueTextStyle),
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * .2,
-              ),
+              SizedBox(width: MediaQuery.of(context).size.width * .2),
               Expanded(
                 flex: 1,
                 child: Text(
-                  (_salesData?.grossOfProfit ?? "0.00") + "%",
+                  _presenter.getGrossProfit(),
                   textAlign: TextAlign.start,
-                  style: TextStyles.headerCardNumberTextStyle.copyWith(
-                    color: (_salesData?.grossOfProfit ?? "0.00").isNegative ? AppColors.red : AppColors.green,
+                  style: TextStyles.headerCardMainValueTextStyle.copyWith(
+                    color: _presenter.getGrossProfitTextColor(),
                   ),
                 ),
               ),
@@ -106,17 +102,15 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               SizedBox(width: 16),
               Expanded(
                 flex: 1,
-                child: Text("Cost of Sales", style: TextStyles.headerCardMoneyLabelTextStyle),
+                child: Text("Cost of Sales", style: TextStyles.headerCardMainLabelTextStyle),
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * .2,
-              ), //
+              SizedBox(width: MediaQuery.of(context).size.width * .2),
               Expanded(
                 flex: 1,
                 child: Text(
                   "Gross Profit",
                   textAlign: TextAlign.start,
-                  style: TextStyles.headerCardMoneyLabelTextStyle,
+                  style: TextStyles.headerCardMainLabelTextStyle,
                 ),
               ),
               SizedBox(width: 40),
