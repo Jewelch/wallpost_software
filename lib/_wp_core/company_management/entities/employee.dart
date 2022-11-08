@@ -39,8 +39,7 @@ class Employee extends JSONInitializable {
     List<Role> roles = [];
     roleStrings.forEach((roleString) {
       var role = Role.initFromString(roleString);
-      if (role == null) throw MappingException('Failed to initialize role from Employee response.');
-      roles.add(role);
+      if (role != null) roles.add(role);
     });
     return roles;
   }
