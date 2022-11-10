@@ -5,6 +5,8 @@ abstract class GroupDashboardView {
 
   void showErrorMessage(String message);
 
+  void showErrorMessageBanner(String message);
+
   void onDidLoadData();
 
   void updateCompanyList();

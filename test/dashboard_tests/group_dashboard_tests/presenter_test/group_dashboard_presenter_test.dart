@@ -15,6 +15,7 @@ import '../../../_mocks/mock_company.dart';
 import '../../../_mocks/mock_current_user_provider.dart';
 import '../../../_mocks/mock_notification_center.dart';
 import '../../../_mocks/mock_notification_observer.dart';
+import '../../../_mocks/mock_user.dart';
 
 class MockGroupDashboardView extends Mock implements GroupDashboardView {}
 
@@ -257,7 +258,7 @@ void main() {
       _verifyNoMoreInteractionsOnAllMocks();
     });
 
-    test('retrieving updated data successfully with no changes', () async {
+    test('failure to sync data in background', () async {
       //given
       when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
       when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
@@ -268,16 +269,19 @@ void main() {
       _clearInteractionsOnAllMocks();
 
       //when
+      when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.error(InvalidResponseException()));
       await presenter.syncDataInBackground();
 
       //then
       verifyInOrder([
         () => mockDashboardDataProvider.get(),
+        () => view
+            .showErrorMessageBanner("Failed to sync updated data.\n${InvalidResponseException().userReadableMessage}"),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
 
-    test('retrieving updated data successfully with changes to approval count', () async {
+    test('successfully syncing the data in background', () async {
       //given
       when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
       when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
@@ -291,14 +295,23 @@ void main() {
       var newData = MockGroupDashboardData();
       var newCompany1 = MockCompany();
       var newCompany2 = MockCompany();
+      when(() => newCompany1.id).thenReturn("1");
+      when(() => newCompany2.id).thenReturn("2");
+      when(() => newCompany1.name).thenReturn("comp1");
+      when(() => newCompany2.name).thenReturn("comp2");
       when(() => newCompany1.approvalCount).thenReturn(2);
       when(() => newCompany2.approvalCount).thenReturn(3);
       when(() => newData.companies).thenReturn([newCompany1, newCompany2]);
+      when(() => newData.financialSummary).thenReturn(null);
+      when(() => newData.groups).thenReturn([]);
       when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(newData));
       await presenter.syncDataInBackground();
 
       //then
       expect(presenter.getApprovalCount(), 5);
+      expect(presenter.getItemAtIndex(0), newCompany1);
+      expect(presenter.getItemAtIndex(1), newCompany2);
+      expect(presenter.getCompanyGroups(), []);
       verifyInOrder([
         () => mockDashboardDataProvider.get(),
         () => view.onDidLoadData(),
@@ -307,25 +320,27 @@ void main() {
       _verifyNoMoreInteractionsOnAllMocks();
     });
 
-    test('retrieving updated data successfully with changes to number of companies', () async {
+    test('removed selected group if that group is removed from the updated data', () async {
       //given
       when(() => mockDashboardDataProvider.isLoading).thenReturn(false);
       when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(groupDashboardData));
       when(() => groupDashboardData.companies).thenReturn([company1, company2]);
       when(() => groupDashboardData.financialSummary).thenReturn(null);
-      when(() => groupDashboardData.groups).thenReturn([]);
+      when(() => groupDashboardData.groups).thenReturn([companyGroup1]);
       await presenter.loadDashboardData();
+      presenter.selectGroupAtIndex(0);
       _clearInteractionsOnAllMocks();
 
       //when
       var newData = MockGroupDashboardData();
-      var newCompany1 = MockCompany();
-      when(() => newCompany1.approvalCount).thenReturn(18);
-      when(() => newData.companies).thenReturn([newCompany1]);
+      when(() => newData.companies).thenReturn([MockCompany()]);
+      when(() => newData.financialSummary).thenReturn(null);
+      when(() => newData.groups).thenReturn([]);
       when(() => mockDashboardDataProvider.get()).thenAnswer((_) => Future.value(newData));
       await presenter.syncDataInBackground();
 
       //then
+      expect(presenter.getSelectedCompanyGroup(), null);
       verifyInOrder([
         () => mockDashboardDataProvider.get(),
         () => view.onDidLoadData(),
@@ -507,6 +522,7 @@ void main() {
       presenter.performSearch("non existent company id");
 
       //then
+      expect(presenter.getSearchText(), "non existent company id");
       verifyInOrder([() => view.updateCompanyList()]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
@@ -525,6 +541,7 @@ void main() {
       presenter.performSearch("test2");
 
       //then
+      expect(presenter.getSearchText(), "test2");
       expect(presenter.getNumberOfRows(), 1);
       expect(presenter.getItemAtIndex(0), company2);
       verifyInOrder([
@@ -548,6 +565,7 @@ void main() {
       presenter.clearSearchSelection();
 
       //then
+      expect(presenter.getSearchText(), "");
       expect(presenter.getNumberOfRows(), 2);
       verifyInOrder([
         () => view.updateCompanyList(),
@@ -661,6 +679,23 @@ void main() {
   });
 
   group('tests for getters', () {
+    test('get profile image url', () async {
+      //given
+      var user = MockUser();
+      when(() => user.profileImageUrl).thenReturn("someurl.com");
+      when(() => mockCurrentUserProvider.getCurrentUser()).thenReturn(user);
+
+      //when
+      var profileImageUrl = presenter.getProfileImageUrl();
+
+      //then
+      expect(profileImageUrl, "someurl.com");
+      verifyInOrder([
+        () => mockCurrentUserProvider.getCurrentUser(),
+      ]);
+      _verifyNoMoreInteractionsOnAllMocks();
+    });
+
     test('should not show company groups if there are no groups', () async {
       //given
       var groupDashboardData = MockGroupDashboardData();

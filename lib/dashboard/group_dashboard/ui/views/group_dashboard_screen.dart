@@ -166,6 +166,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
             Expanded(
               child: SearchBar(
                 hint: 'Search',
+                text: presenter.getSearchText(),
                 onSearchTextChanged: (searchText) => presenter.performSearch(searchText),
               ),
             ),
@@ -299,6 +300,13 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
   void showErrorMessage(String message) {
     _errorMessage = message;
     _viewSelectorNotifier.notify(ERROR_VIEW);
+  }
+
+  @override
+  void showErrorMessageBanner(String message) {
+    if (ModalRoute.of(context)?.isCurrent == false) return;
+    var snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
