@@ -6,9 +6,9 @@ void main() {
     expect(Module.values, [
       Module.Finance,
       Module.Crm,
+      Module.Hr,
       Module.Restaurant,
       Module.Retail,
-      Module.Hr,
     ]);
   });
 }

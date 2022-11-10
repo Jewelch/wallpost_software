@@ -28,7 +28,7 @@ class RestaurantDashboardPresenter {
   late double _maxBreakdownSale;
   late double _minBreakdownSale;
   DateRangeFilters dateFilters;
-  SalesBreakDownWiseOptions _selectedBreakDownWise = SalesBreakDownWiseOptions.values.first;
+  SalesBreakDownWiseOptions _selectedBreakDownWise = SalesBreakDownWiseOptions.basedOnCategory;
 
   RestaurantDashboardPresenter(this._view)
       : _salesDataProvider = AggregatedSalesDataProvider(),
