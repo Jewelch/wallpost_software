@@ -42,7 +42,6 @@ class _HRPerformanceViewState extends State<HRPerformanceView>
     return VisibilityDetector(
       key: Key('hr-performance-view'),
       onVisibilityChanged: (visibilityInfo) {
-        print(visibilityInfo.visibleFraction);
         if (visibilityInfo.visibleFraction == 1.0) _presenter.loadData();
       },
       child: PerformanceViewHolder(

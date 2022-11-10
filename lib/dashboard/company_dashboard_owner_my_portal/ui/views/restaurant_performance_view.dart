@@ -52,7 +52,6 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
       child: VisibilityDetector(
         key: Key('restaurant-performance-view'),
         onVisibilityChanged: (visibilityInfo) {
-          print(visibilityInfo.visibleFraction);
           if (visibilityInfo.visibleFraction == 1.0) _presenter.loadData();
         },
         child: PerformanceViewHolder(

@@ -42,7 +42,6 @@ class _CRMPerformanceViewState extends State<CRMPerformanceView>
     return VisibilityDetector(
       key: Key('crm-performance-view'),
       onVisibilityChanged: (visibilityInfo) {
-        print(visibilityInfo.visibleFraction);
         if (visibilityInfo.visibleFraction == 1.0) _presenter.loadData();
       },
       child: PerformanceViewHolder(
