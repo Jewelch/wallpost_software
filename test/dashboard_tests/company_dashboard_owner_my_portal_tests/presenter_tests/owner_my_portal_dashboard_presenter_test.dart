@@ -97,25 +97,8 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('loading data when service is loading does nothing', () async {
-    //given
-    when(() => dataProvider.isLoading).thenReturn(true);
-    when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
-
-    //when
-    await presenter.loadData();
-
-    //then
-    verifyInOrder([
-      () => dataProvider.isLoading,
-    ]);
-    _verifyNoMoreInteractionsOnAllMocks();
-  });
-
   test('failure to load the data', () async {
     //given
-    when(() => dataProvider.isLoading).thenReturn(false);
     when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
         .thenAnswer((_) => Future.error(InvalidResponseException()));
 
@@ -124,7 +107,6 @@ void main() {
 
     //then
     verifyInOrder([
-      () => dataProvider.isLoading,
       () => view.showLoader(),
       () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
       () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
@@ -134,7 +116,6 @@ void main() {
 
   test('successfully loading the data', () async {
     //given
-    when(() => dataProvider.isLoading).thenReturn(false);
     when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
         .thenAnswer((_) => Future.value(MockOwnerMyPortalData()));
 
@@ -143,7 +124,6 @@ void main() {
 
     //then
     verifyInOrder([
-      () => dataProvider.isLoading,
       () => view.showLoader(),
       () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
       () => view.onDidLoadData(),
@@ -153,7 +133,6 @@ void main() {
 
   test('setting filter', () async {
     //given
-    when(() => dataProvider.isLoading).thenReturn(false);
     when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
         .thenAnswer((_) => Future.value(MockOwnerMyPortalData()));
 
@@ -164,7 +143,6 @@ void main() {
     expect(presenter.selectedMonth, 2);
     expect(presenter.selectedYear, 2022);
     verifyInOrder([
-      () => dataProvider.isLoading,
       () => view.showLoader(),
       () => dataProvider.get(month: 2, year: 2022),
       () => view.onDidLoadData(),
@@ -174,7 +152,6 @@ void main() {
 
   test('setting month to 0 sets it to null in the provider', () async {
     //given
-    when(() => dataProvider.isLoading).thenReturn(false);
     when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
         .thenAnswer((_) => Future.value(MockOwnerMyPortalData()));
 
@@ -185,7 +162,6 @@ void main() {
     expect(presenter.selectedMonth, 0);
     expect(presenter.selectedYear, 2022);
     verifyInOrder([
-      () => dataProvider.isLoading,
       () => view.showLoader(),
       () => dataProvider.get(month: null, year: 2022),
       () => view.onDidLoadData(),
@@ -202,7 +178,7 @@ void main() {
       _verifyNoMoreInteractionsOnAllMocks();
     });
 
-    test('does nothing when retrieving dashboard data fails', () async {
+    test('failure to sync data in the background', () async {
       //given
       when(() => dataProvider.isLoading).thenReturn(false);
       when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
@@ -213,43 +189,21 @@ void main() {
       //when
       when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
           .thenAnswer((_) => Future.error(InvalidResponseException()));
-      presenter.syncDataInBackground();
-
-      //then
-      verifyInOrder([
-        () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
-      ]);
-      _verifyNoMoreInteractionsOnAllMocks();
-    });
-
-    test('retrieving updated data successfully with no changes', () async {
-      //given
-      var data = MockOwnerMyPortalData();
-      var approval = MockAggregatedApproval();
-      when(() => approval.approvalCount).thenReturn(10);
-      when(() => data.aggregatedApprovals).thenReturn([approval]);
-      when(() => data.absentees).thenReturn(10);
-      when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
-          .thenAnswer((_) => Future.value(data));
-      await presenter.loadData();
-      _clearInteractionsOnAllMocks();
-
-      //when
       await presenter.syncDataInBackground();
 
       //then
       verifyInOrder([
         () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
+        () => view
+            .showErrorMessageBanner("Failed to sync updated data.\n${InvalidResponseException().userReadableMessage}")
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
 
-    test('retrieving updated data successfully with changes to approval count', () async {
+    test('successfully syncing the data in the background', () async {
       //given
       var existingData = MockOwnerMyPortalData();
       var existingApproval = MockAggregatedApproval();
-      when(() => existingApproval.approvalCount).thenReturn(10);
       when(() => existingData.aggregatedApprovals).thenReturn([existingApproval]);
       when(() => dataProvider.isLoading).thenReturn(false);
       when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
@@ -259,48 +213,14 @@ void main() {
 
       //when
       var newData = MockOwnerMyPortalData();
-      var newApproval = MockAggregatedApproval();
-      when(() => newApproval.approvalCount).thenReturn(6);
-      when(() => newData.aggregatedApprovals).thenReturn([newApproval]);
+      when(() => newData.aggregatedApprovals).thenReturn([]);
       when(() => dataProvider.isLoading).thenReturn(false);
       when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
           .thenAnswer((_) => Future.value(newData));
       await presenter.syncDataInBackground();
 
       //then
-      verifyInOrder([
-        () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
-        () => view.onDidLoadData(),
-      ]);
-      _verifyNoMoreInteractionsOnAllMocks();
-    });
-
-    test('retrieving updated data successfully with changes to number of absentees', () async {
-      //given
-      var existingData = MockOwnerMyPortalData();
-      var existingApproval = MockAggregatedApproval();
-      when(() => existingApproval.approvalCount).thenReturn(10);
-      when(() => existingData.aggregatedApprovals).thenReturn([existingApproval]);
-      when(() => existingData.absentees).thenReturn(20);
-      when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
-          .thenAnswer((_) => Future.value(existingData));
-      await presenter.loadData();
-      _clearInteractionsOnAllMocks();
-
-      //when
-      var newData = MockOwnerMyPortalData();
-      var newApproval = MockAggregatedApproval();
-      when(() => newApproval.approvalCount).thenReturn(10);
-      when(() => newData.aggregatedApprovals).thenReturn([newApproval]);
-      when(() => newData.absentees).thenReturn(10);
-      when(() => dataProvider.isLoading).thenReturn(false);
-      when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
-          .thenAnswer((_) => Future.value(newData));
-      await presenter.syncDataInBackground();
-
-      //then
-      expect(presenter.getTotalApprovalCount(), 10);
+      expect(presenter.getTotalApprovalCount(), 0);
       verifyInOrder([
         () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
         () => view.onDidLoadData(),
@@ -319,7 +239,6 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-
   test('getting company performance', () async {
     //given
     var data = MockOwnerMyPortalData();
@@ -332,12 +251,12 @@ void main() {
     //then
     expect(presenter.getCompanyPerformance(), 87);
     expect(presenter.getCompanyPerformanceDisplayValue(), "87%");
-    expect(presenter.getCompanyPerformanceLabel(), "YTD Sales");
+    expect(presenter.getCompanyPerformanceLabel(), "YTD");
 
     await presenter.setFilter(month: 2, year: 2018);
     expect(presenter.getCompanyPerformance(), 87);
     expect(presenter.getCompanyPerformanceDisplayValue(), "87%");
-    expect(presenter.getCompanyPerformanceLabel(), "Feb 2018 Sales");
+    expect(presenter.getCompanyPerformanceLabel(), "Feb 2018");
   });
 
   test('getting financial summary', () async {

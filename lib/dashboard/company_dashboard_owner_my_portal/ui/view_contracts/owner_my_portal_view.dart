@@ -3,6 +3,8 @@ abstract class OwnerMyPortalView {
 
   void showErrorMessage(String errorMessage);
 
+  void showErrorMessageBanner(String errorMessage);
+
   void onDidLoadData();
 
   void goToApprovalsListScreen(String companyId);

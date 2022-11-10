@@ -59,8 +59,6 @@ class OwnerMyPortalDashboardPresenter {
   //MARK: Functions to load data
 
   Future<void> loadData() async {
-    if (_dataProvider.isLoading) return;
-
     _view.showLoader();
     try {
       _ownerMyPortalData = await _dataProvider.get(
@@ -73,38 +71,35 @@ class OwnerMyPortalDashboardPresenter {
     }
   }
 
-  void goToAggregatedApprovalsScreen() {
-    var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
-    _view.goToApprovalsListScreen(company.id);
-  }
-
-  Future<void> setFilter({required int month, required int year}) {
-    _filters.month = month;
-    _filters.year = year;
-    return loadData();
-  }
-
   //MARK: Functions to sync the dashboard data in the background
 
   Future<void> syncDataInBackground() async {
     if (_ownerMyPortalData == null) return;
 
     try {
-      var existingData = _ownerMyPortalData!;
-      var newData = await _dataProvider.get(year: 2022, month: 1);
-
-      if (_didDataChange(existingData, newData)) {
-        _ownerMyPortalData = newData;
-        _view.onDidLoadData();
-      }
-    } on WPException catch (_) {
-      //do nothing
+      _ownerMyPortalData = await _dataProvider.get(
+        month: _filters.month == 0 ? null : _filters.month,
+        year: _filters.year,
+      );
+      _view.onDidLoadData();
+    } on WPException catch (e) {
+      _view.showErrorMessageBanner("Failed to sync updated data.\n${e.userReadableMessage}");
     }
   }
 
-  bool _didDataChange(OwnerMyPortalData existingData, OwnerMyPortalData newData) {
-    return _getTotalApprovalCount(existingData) != _getTotalApprovalCount(newData) ||
-        _getAbsenteesData(existingData).value != _getAbsenteesData(newData).value;
+  //MARK: Function to go to aggregated approvals screen
+
+  void goToAggregatedApprovalsScreen() {
+    var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
+    _view.goToApprovalsListScreen(company.id);
+  }
+
+  //MARK: Function to set filters
+
+  Future<void> setFilter({required int month, required int year}) {
+    _filters.month = month;
+    _filters.year = year;
+    return loadData();
   }
 
   //MARK: Function to get financial summary
@@ -124,7 +119,7 @@ class OwnerMyPortalDashboardPresenter {
   }
 
   String getCompanyPerformanceLabel() {
-    return "${AppYears().yearAndMonthAsYtdString(_filters.year, _filters.month)} Sales";
+    return "${AppYears().yearAndMonthAsYtdString(_filters.year, _filters.month)}";
   }
 
   //MARK: Function to get absentees data
