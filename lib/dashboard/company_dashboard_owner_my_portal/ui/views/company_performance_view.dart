@@ -17,7 +17,7 @@ class CompanyPerformanceView extends StatelessWidget {
       showShadow: false,
       backgroundColor: AppColors.lightGray,
       content: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           PerformancePieChart(
             size: 50,
@@ -25,7 +25,7 @@ class CompanyPerformanceView extends StatelessWidget {
             valueText: _presenter.getCompanyPerformanceDisplayValue(),
             valueTextStyle: TextStyles.titleTextStyleBold,
           ),
-          SizedBox(width: _presenter.getTotalApprovalCount() > 0 ? 10 : 20),
+          SizedBox(width:20),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,10 +33,10 @@ class CompanyPerformanceView extends StatelessWidget {
               children: [
                 Text(
                   _presenter.getCompanyPerformanceLabel(),
-                  style: TextStyles.labelTextStyleBold,
+                  style: TextStyles.titleTextStyleBold,
                 ),
                 Text(
-                  "Company\nPerformance",
+                  "Department Performance",
                   style: TextStyles.smallLabelTextStyle.copyWith(color: AppColors.textColorBlack),
                 ),
               ],

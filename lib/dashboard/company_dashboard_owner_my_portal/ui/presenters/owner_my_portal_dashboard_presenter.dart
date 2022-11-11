@@ -124,7 +124,7 @@ class OwnerMyPortalDashboardPresenter {
   }
 
   String getCompanyPerformanceLabel() {
-    return "${AppYears().yearAndMonthAsYtdString(_filters.year, _filters.month)} Sales";
+    return "${AppYears().yearAndMonthAsYtdString(_filters.year, _filters.month)}";
   }
 
   //MARK: Function to get absentees data
