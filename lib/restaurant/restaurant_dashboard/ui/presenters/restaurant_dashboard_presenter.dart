@@ -89,8 +89,8 @@ class RestaurantDashboardPresenter {
         _minSale = sales.totalSales.toDouble;
       }
     }
+    _minBreakdownSale = _minSale;
     _maxBreakdownSale = _maxSale;
-    _maxBreakdownSale = _minSale;
   }
 
   //MARK: Functions to get sales breakdown list data
@@ -102,7 +102,7 @@ class RestaurantDashboardPresenter {
   PerformanceValue getBreakdownAtIndex(int index) {
     return PerformanceValue(
       label: _salesBreakdownItems[index].type,
-      value: _salesBreakdownItems[index].totalSales.withoutNullDecimals.commaSeparated,
+      value: _salesBreakdownItems[index].totalSales,
       textColor: _getSalesBreakDownItemColor(_salesBreakdownItems[index]),
     );
   }
