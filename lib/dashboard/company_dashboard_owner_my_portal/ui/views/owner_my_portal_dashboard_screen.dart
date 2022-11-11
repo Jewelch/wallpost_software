@@ -3,7 +3,6 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/modules_view.dart';
-import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/todays_staff_absences_view.dart';
 import 'package:wallpost/dashboard/finance_detail_views/ui/views/finance_detail_card.dart';
 import 'package:wallpost/expense/expense_create/ui/views/create_expense_request_screen.dart';
 import 'package:wallpost/expense/expense_list/ui/views/expense_list_screen.dart';
@@ -21,6 +20,7 @@ import '../presenters/module_page_view_presenter.dart';
 import '../presenters/owner_my_portal_dashboard_presenter.dart';
 import '../view_contracts/owner_my_portal_view.dart';
 import 'company_performance_view.dart';
+import 'lix_view.dart';
 import 'owner_dashboard_loader.dart';
 
 class OwnerMyPortalDashboardScreen extends StatefulWidget {
@@ -149,14 +149,14 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
 
   Widget _buildHrPerformanceView() {
     return Container(
-      height: 86,
-      child: Row(
+      margin: EdgeInsets.symmetric(horizontal: 12),
+      height: 200,
+      child: Column(
         children: [
-          SizedBox(width: 12),
           Expanded(child: CompanyPerformanceView(_presenter)),
-          SizedBox(width: 8),
-          Expanded(child: TodaysStaffAbsencesView(_presenter)),
-          SizedBox(width: 12),
+          SizedBox(height: 8),
+          Expanded(child: LixView()),
+          SizedBox(height: 12),
         ],
       ),
     );
