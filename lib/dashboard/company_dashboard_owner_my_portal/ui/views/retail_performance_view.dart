@@ -96,7 +96,7 @@ class RetailPerformanceViewState extends State<RetailPerformanceView>
         Expanded(
           child: PerformanceViewHolder(
             content: _tile(_presenter.getYTDSale()),
-            backgroundColor: AppColors.lightGray,
+            backgroundColor: AppColors.lightYellow,
             showShadow: false,
           ),
         ),
