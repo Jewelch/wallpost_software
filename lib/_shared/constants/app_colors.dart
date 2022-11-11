@@ -7,7 +7,7 @@ class AppColors {
   static const Color defaultColorDarkContrastColor = Color.fromRGBO(135, 169, 199, 1.0);
 
   //MARK: Text colors
-  static const Color textColorBlack = Color.fromRGBO(39, 39, 39, 1.0);
+  static const Color textColorBlack = Color.fromRGBO(40, 40, 40, 1.0);
   static const Color textColorGray = Color.fromRGBO(160, 160, 160, 1.0);
   static const Color textColorDarkGray = Color.fromRGBO(119, 119, 119, 1.0);
 
@@ -29,6 +29,7 @@ class AppColors {
   static const Color green = Color.fromRGBO(51, 190, 114, 1.0);
   static const Color lightGreen = Color.fromRGBO(232, 252, 243, 1.0);
   static final Color yellow = Color.fromRGBO(248, 166, 50, 1.0);
+  static final Color lightYellow = Color.fromRGBO(252, 249, 231, 1.0);
   static const Color red = Color.fromRGBO(243, 45, 44, 1.0);
   static const Color lightRed = Color.fromRGBO(252, 233, 232, 1.0);
   static const Color lightGray = Color.fromRGBO(243, 246, 249, 1.0);

@@ -103,7 +103,7 @@ void main() {
     when(() => data.todaysSale).thenReturn("1,234");
     expect(presenter.getTodaysSale().label, "Today's Sales");
     expect(presenter.getTodaysSale().value, "1,234");
-    expect(presenter.getTodaysSale().textColor, AppColors.green);
+    expect(presenter.getTodaysSale().textColor, AppColors.textColorBlack);
   });
 
   test("get ytd sales", () async {
@@ -116,6 +116,6 @@ void main() {
     when(() => data.ytdSale).thenReturn("13,234");
     expect(presenter.getYTDSale().label, "YTD Sales");
     expect(presenter.getYTDSale().value, "13,234");
-    expect(presenter.getYTDSale().textColor, AppColors.defaultColorDark);
+    expect(presenter.getYTDSale().textColor, AppColors.textColorBlack);
   });
 }

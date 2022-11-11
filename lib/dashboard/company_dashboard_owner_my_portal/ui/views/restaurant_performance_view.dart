@@ -107,7 +107,7 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
         Expanded(
           child: PerformanceViewHolder(
             content: _tile(_presenter.getYTDSale()),
-            backgroundColor: AppColors.lightGray,
+            backgroundColor: AppColors.lightYellow,
             showShadow: false,
           ),
         ),

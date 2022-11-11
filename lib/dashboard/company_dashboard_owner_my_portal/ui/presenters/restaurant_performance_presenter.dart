@@ -44,7 +44,7 @@ class RestaurantPerformancePresenter {
     return PerformanceValue(
       label: "Today's Sales",
       value: _restaurantData!.todaysSale,
-      textColor: AppColors.green,
+      textColor: AppColors.textColorBlack,
     );
   }
 
@@ -52,7 +52,7 @@ class RestaurantPerformancePresenter {
     return PerformanceValue(
       label: "${AppYears().yearAndMonthAsYtdString(_filters.year, _filters.month)} Sales",
       value: _restaurantData!.ytdSale,
-      textColor: AppColors.defaultColorDark,
+      textColor: AppColors.textColorBlack,
     );
   }
 

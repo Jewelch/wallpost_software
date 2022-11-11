@@ -114,7 +114,7 @@ class _HRPerformanceViewState extends State<HRPerformanceView>
               Expanded(
                 child: PerformanceViewHolder(
                   content: _tile(_presenter.getStaffOnLeaveToday()),
-                  backgroundColor: AppColors.lightGray,
+                  backgroundColor: AppColors.lightYellow,
                   showShadow: false,
                 ),
               ),
@@ -122,7 +122,7 @@ class _HRPerformanceViewState extends State<HRPerformanceView>
               Expanded(
                 child: PerformanceViewHolder(
                   content: _tile(_presenter.getDocumentsExpired()),
-                  backgroundColor: Color.fromRGBO(252, 233, 232, 1.0),
+                  backgroundColor: AppColors.lightYellow,
                   showShadow: false,
                 ),
               ),

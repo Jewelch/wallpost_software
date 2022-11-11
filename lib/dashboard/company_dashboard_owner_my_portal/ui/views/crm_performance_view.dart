@@ -114,7 +114,7 @@ class _CRMPerformanceViewState extends State<CRMPerformanceView>
               Expanded(
                 child: PerformanceViewHolder(
                   content: _tile(_presenter.getInPipeline()),
-                  backgroundColor: AppColors.lightGray,
+                  backgroundColor: AppColors.lightYellow,
                   showShadow: false,
                 ),
               ),
@@ -122,7 +122,7 @@ class _CRMPerformanceViewState extends State<CRMPerformanceView>
               Expanded(
                 child: PerformanceViewHolder(
                   content: _tile(_presenter.getLeadConverted()),
-                  backgroundColor: AppColors.lightRed,
+                  backgroundColor: AppColors.lightYellow,
                   showShadow: false,
                 ),
               ),

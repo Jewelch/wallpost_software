@@ -44,7 +44,7 @@ class HRPerformancePresenter {
     return PerformanceValue(
       label: "Active Staff",
       value: _hrData!.activeStaff,
-      textColor: AppColors.green,
+      textColor: AppColors.textColorBlack,
     );
   }
 
@@ -52,22 +52,15 @@ class HRPerformancePresenter {
     return PerformanceValue(
       label: "Employee Cost",
       value: _hrData!.employeeCost,
-      textColor: AppColors.green,
+      textColor: AppColors.textColorBlack,
     );
   }
 
   PerformanceValue getStaffOnLeaveToday() {
-    Color color;
-    if (_hrData!.isAnyStaffOnLeave()) {
-      color = AppColors.red;
-    } else {
-      color = AppColors.green;
-    }
-
     return PerformanceValue(
       label: "Staff On Leave",
       value: _hrData!.staffOnLeaveToday,
-      textColor: color,
+      textColor: AppColors.textColorBlack,
     );
   }
 

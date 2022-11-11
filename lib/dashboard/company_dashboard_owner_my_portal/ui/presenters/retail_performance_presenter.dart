@@ -43,7 +43,7 @@ class RetailPerformancePresenter {
     return PerformanceValue(
       label: "Today's Sales",
       value: _retailData!.todaysSale,
-      textColor: AppColors.green,
+      textColor: AppColors.textColorBlack,
     );
   }
 
@@ -51,7 +51,7 @@ class RetailPerformancePresenter {
     return PerformanceValue(
       label: "${AppYears().yearAndMonthAsYtdString(_filters.year, _filters.month)} Sales",
       value: _retailData!.ytdSale,
-      textColor: AppColors.defaultColorDark,
+      textColor: AppColors.textColorBlack,
     );
   }
 
