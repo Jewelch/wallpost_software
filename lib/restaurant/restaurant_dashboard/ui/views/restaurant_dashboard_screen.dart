@@ -136,7 +136,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                         ? Padding(
                             padding: EdgeInsets.only(top: 120),
                             child: Text(
-                              "There is no sales breakdown with these filters",
+                              "There is no sales breakdown\nfor the selected filters.",
                               textAlign: TextAlign.center,
                               style: TextStyles.titleTextStyle,
                             ),

@@ -76,17 +76,17 @@ class RestaurantDashboardPresenter {
   }
 
   void _sortBreakdownItemsFromHighSalesToLow() {
-    _salesBreakdownItems..sort((a, b) => b.totalSales.toDouble.compareTo(a.totalSales.toDouble));
+    _salesBreakdownItems..sort((a, b) => b.totalSales.compareTo(a.totalSales));
   }
 
   void _initMaxAndMinBreakdownSales() {
     double _maxSale = 0;
     double _minSale = double.maxFinite;
     for (var sales in _salesBreakdownItems) {
-      if (sales.totalSales.toDouble > _maxSale) {
-        _maxSale = sales.totalSales.toDouble;
-      } else if (sales.totalSales.toDouble < _minSale) {
-        _minSale = sales.totalSales.toDouble;
+      if (sales.totalSales > _maxSale) {
+        _maxSale = sales.totalSales;
+      } else if (sales.totalSales < _minSale) {
+        _minSale = sales.totalSales;
       }
     }
     _minBreakdownSale = _minSale;
@@ -102,15 +102,18 @@ class RestaurantDashboardPresenter {
   PerformanceValue getBreakdownAtIndex(int index) {
     return PerformanceValue(
       label: _salesBreakdownItems[index].type,
-      value: _salesBreakdownItems[index].totalSales,
+      value: _salesBreakdownItems[index].totalSalesDisplayValue,
       textColor: _getSalesBreakDownItemColor(_salesBreakdownItems[index]),
     );
   }
 
   Color _getSalesBreakDownItemColor(SalesBreakDownItem salesBreakDownItem) {
-    if (salesBreakDownItem.totalSales.toDouble == _maxBreakdownSale) return AppColors.green;
-    if (salesBreakDownItem.totalSales.toDouble == _minBreakdownSale) return AppColors.red;
-    return AppColors.yellow;
+    if (salesBreakDownItem.totalSales == _maxBreakdownSale)
+      return AppColors.green;
+    else if (salesBreakDownItem.totalSales == _minBreakdownSale)
+      return AppColors.red;
+    else
+      return AppColors.yellow;
   }
 
   // MARK: Function to change sales breakdown type
