@@ -28,7 +28,7 @@ class RestaurantDashboardPresenter {
   late double _maxBreakdownSale;
   late double _minBreakdownSale;
   DateRangeFilters dateFilters;
-  SalesBreakDownWiseOptions _selectedBreakDownWise = SalesBreakDownWiseOptions.basedOnCategory;
+  SalesBreakDownWiseOptions _selectedBreakDownWise = SalesBreakDownWiseOptions.values.first;
 
   RestaurantDashboardPresenter(this._view)
       : _salesDataProvider = AggregatedSalesDataProvider(),
@@ -40,10 +40,11 @@ class RestaurantDashboardPresenter {
   RestaurantDashboardPresenter.initWith(
     this._view,
     this._salesDataProvider,
-      this._salesBreakDownsProvider,
-      this.dateFilters,
-      this._currentUserProvider,
-      this._selectedCompanyProvider,);
+    this._salesBreakDownsProvider,
+    this.dateFilters,
+    this._currentUserProvider,
+    this._selectedCompanyProvider,
+  );
 
   // MARK: Load Aggregated Sales Data
 
@@ -61,36 +62,41 @@ class RestaurantDashboardPresenter {
 
   // MARK: Load Sales BreakDowns Data
 
-  Future loadSalesBreakDown() async {
+  Future loadSalesBreakDown({required bool singleTask}) async {
     if (_salesBreakDownsProvider.isLoading) return;
 
-    _view.showLoader();
+    singleTask ? _view.showLoader() : _view.showLloadingForSalesBreakDowns();
+
     try {
-      _salesBreakdownItems = await _salesBreakDownsProvider.getSalesBreakDowns(_selectedBreakDownWise, dateFilters);
-      _sortBreakdownItemsFromHighSalesToLow();
-      _initMaxAndMinBreakdownSales();
+      _salesBreakdownItems = await _salesBreakDownsProvider.getSalesBreakDowns(
+        _selectedBreakDownWise,
+        dateFilters,
+      );
+      sortBreakdownItemsFromHighSalesToLow();
+      initMaxAndMinBreakdownSales();
       _view.showSalesBreakDowns();
     } on WPException catch (e) {
       _view.showErrorMessage(e.userReadableMessage + "\n\nTap here to reload.");
     }
   }
 
-  void _sortBreakdownItemsFromHighSalesToLow() {
-    _salesBreakdownItems..sort((a, b) => b.totalSales.compareTo(a.totalSales));
-  }
+  void sortBreakdownItemsFromHighSalesToLow() => _salesBreakdownItems
+    ..sort(
+      (a, b) => b.totalSales.toDouble.compareTo(a.totalSales.toDouble),
+    );
 
-  void _initMaxAndMinBreakdownSales() {
+  void initMaxAndMinBreakdownSales() {
     double _maxSale = 0;
     double _minSale = double.maxFinite;
     for (var sales in _salesBreakdownItems) {
-      if (sales.totalSales > _maxSale) {
-        _maxSale = sales.totalSales;
-      } else if (sales.totalSales < _minSale) {
-        _minSale = sales.totalSales;
+      if (sales.totalSales.toDouble > _maxSale) {
+        _maxSale = sales.totalSales.toDouble;
+      } else if (sales.totalSales.toDouble < _minSale) {
+        _minSale = sales.totalSales.toDouble;
       }
     }
-    _minBreakdownSale = _minSale;
     _maxBreakdownSale = _maxSale;
+    _minBreakdownSale = _minSale;
   }
 
   //MARK: Functions to get sales breakdown list data
@@ -102,18 +108,15 @@ class RestaurantDashboardPresenter {
   PerformanceValue getBreakdownAtIndex(int index) {
     return PerformanceValue(
       label: _salesBreakdownItems[index].type,
-      value: _salesBreakdownItems[index].totalSalesDisplayValue,
+      value: _salesBreakdownItems[index].totalSales.withoutNullDecimals.commaSeparated,
       textColor: _getSalesBreakDownItemColor(_salesBreakdownItems[index]),
     );
   }
 
   Color _getSalesBreakDownItemColor(SalesBreakDownItem salesBreakDownItem) {
-    if (salesBreakDownItem.totalSales == _maxBreakdownSale)
-      return AppColors.green;
-    else if (salesBreakDownItem.totalSales == _minBreakdownSale)
-      return AppColors.red;
-    else
-      return AppColors.yellow;
+    if (salesBreakDownItem.totalSales.toDouble == _maxBreakdownSale) return AppColors.green;
+    if (salesBreakDownItem.totalSales.toDouble == _minBreakdownSale) return AppColors.red;
+    return AppColors.yellow;
   }
 
   // MARK: Function to change sales breakdown type
@@ -123,6 +126,9 @@ class RestaurantDashboardPresenter {
     _view.onDidChangeSalesBreakDownWise();
   }
 
+  // MARK: Function to check if sales breakdown type change
+  bool isSalesBreakdownChange(SalesBreakDownWiseOptions options) => options == selectedBreakDownWise;
+
   // Getters
 
   SalesBreakDownWiseOptions get selectedBreakDownWise => _selectedBreakDownWise;
@@ -131,23 +137,13 @@ class RestaurantDashboardPresenter {
 
   String getProfileImageUrl() => _currentUserProvider.getCurrentUser().profileImageUrl;
 
-  String getTotalSales() {
-    return _salesData?.totalSales ?? "0.00";
-  }
+  String getTotalSales() => _salesData?.totalSales ?? "0.00";
 
-  String getNetSale() {
-    return _salesData?.netSales ?? "0.00";
-  }
+  String getNetSale() => _salesData?.netSales ?? "0.00";
 
-  String getCostOfSales() {
-    return _salesData?.costOfSales ?? "0.00";
-  }
+  String getCostOfSales() => _salesData?.costOfSales ?? "0.00";
 
-  String getGrossProfit() {
-    return (_salesData?.grossOfProfit ?? "0.00") + "%";
-  }
+  String getGrossProfit() => (_salesData?.grossOfProfit ?? "0.00") + "%";
 
-  Color getGrossProfitTextColor() {
-    return (_salesData?.grossOfProfit ?? "0.00").isNegative ? AppColors.red : AppColors.green;
-  }
+  Color getGrossProfitTextColor() => (_salesData?.grossOfProfit ?? "0.00").isNegative ? AppColors.red : AppColors.green;
 }

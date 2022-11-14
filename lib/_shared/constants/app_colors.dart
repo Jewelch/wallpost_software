@@ -10,12 +10,15 @@ class AppColors {
   static const Color textColorBlack = Color.fromRGBO(40, 40, 40, 1.0);
   static const Color textColorGray = Color.fromRGBO(160, 160, 160, 1.0);
   static const Color textColorDarkGray = Color.fromRGBO(119, 119, 119, 1.0);
+  static const Color textColorFilter = Color(0xFF0096E3);
+  static const Color moneySuffixColor = Color.fromRGBO(75, 90, 102, 1.0);
 
   //MARK: Button colors
   static const Color disabledButtonColor = Color.fromRGBO(210, 210, 210, 1.0);
 
   //MARK: Screen colors
   static const Color screenBackgroundColor = Colors.white;
+  static const Color screenBackgroundColor2 = Color(0xFFedf3f7);
 
   //MARK: Module colors
   static const Color myPortalColor = Color.fromRGBO(191, 10, 10, 1.0);

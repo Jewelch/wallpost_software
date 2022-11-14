@@ -1,7 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
+import 'package:wallpost/_shared/extensions/string_extensions.dart';
+import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/models/performance_value.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
@@ -19,6 +23,8 @@ class MockSalesDataView extends Mock implements RestaurantDashboardView {}
 
 class MockSalesBreakDownProvider extends Mock implements SalesBreakDownsProvider {}
 
+class MockAggregatedSalesData extends Mock implements AggregatedSalesData {}
+
 class MockSalesBreakDowns extends Mock implements SalesBreakDownItem {}
 
 void main() {
@@ -27,7 +33,13 @@ void main() {
   var view = MockSalesDataView();
   var dateFilter = DateRangeFilters();
   var salesPresenter = RestaurantDashboardPresenter.initWith(
-      view, salesDataProvider, salesBreakDownProvider, dateFilter, MockCurrentUserProvider(), MockCompanyProvider());
+    view,
+    salesDataProvider,
+    salesBreakDownProvider,
+    dateFilter,
+    MockCurrentUserProvider(),
+    MockCompanyProvider(),
+  );
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
@@ -38,6 +50,11 @@ void main() {
   setUpAll(() {
     registerFallbackValue(SalesBreakDownWiseOptions.basedOnOrder);
   });
+
+  _sortSalesDataItems() => Mocks.salesBreakDownsItems
+    ..sort(
+      (a, b) => b.totalSales.toDouble.compareTo(a.totalSales.toDouble),
+    );
 
   // MARK: Test Loading Aggregated Sales Data
 
@@ -56,8 +73,7 @@ void main() {
   test('failure to load sales data', () async {
     //given
     when(() => salesDataProvider.isLoading).thenReturn(false);
-    when(() => salesDataProvider.getSalesAmounts(dateFilter))
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await salesPresenter.loadAggregatedSalesData();
@@ -85,7 +101,7 @@ void main() {
       () => salesDataProvider.isLoading,
       () => view.showLoader(),
       () => salesDataProvider.getSalesAmounts(dateFilter),
-      () => view.updateSalesData(salesData),
+      () => view.updateSalesData(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -135,10 +151,9 @@ void main() {
 
   test('successfully loading sales breakdowns', () async {
     //given
-    var salesBreakDowns = [MockSalesBreakDowns()];
     when(() => salesBreakDownProvider.isLoading).thenReturn(false);
     when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
-        .thenAnswer((_) => Future.value(salesBreakDowns));
+        .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
 
     //when
     await salesPresenter.loadSalesBreakDown();
@@ -147,9 +162,179 @@ void main() {
     verifyInOrder([
       () => salesBreakDownProvider.isLoading,
       () => view.showLoader(),
-      () => salesBreakDownProvider.getSalesBreakDowns(salesPresenter.selectedBreakDownWise, dateFilter),
-      () => view.showSalesBreakDowns(salesBreakDowns),
+      () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
+      () => view.showSalesBreakDowns(),
     ]);
+
+    expect(salesPresenter.getBreakdownAtIndex(0).value, '50');
+    expect(salesPresenter.getBreakdownAtIndex(1).value, '20');
+    expect(salesPresenter.getBreakdownAtIndex(2).value, '10');
+
     _verifyNoMoreInteractionsOnAllMocks();
   });
+
+  test(
+    "getBreakdownAtIndex() returns the break down at a specific index",
+    () async {
+      //given
+      when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
+          .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
+
+      //when
+      await salesPresenter.loadSalesBreakDown();
+
+      //then
+      verifyInOrder([
+        () => salesBreakDownProvider.isLoading,
+        () => view.showLoader(),
+        () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
+        () => view.showSalesBreakDowns(),
+      ]);
+
+      _sortSalesDataItems();
+
+      for (var i = 0; i < Mocks.salesBreakDownsItems.length; i++) {
+        final currentItem = PerformanceValue(
+          label: Mocks.salesBreakDownsItems[i].type,
+          value: Mocks.salesBreakDownsItems[i].totalSales.withoutNullDecimals.commaSeparated,
+          textColor: Mocks.colors[i],
+        );
+
+        expect(salesPresenter.getBreakdownAtIndex(i).label, currentItem.label);
+        expect(salesPresenter.getBreakdownAtIndex(i).value, currentItem.value);
+        expect(salesPresenter.getBreakdownAtIndex(i).textColor, currentItem.textColor);
+      }
+
+      _verifyNoMoreInteractionsOnAllMocks();
+    },
+  );
+
+  test(
+    "getNumberOfBreakdowns() returns 0 if it is null",
+    () async {
+      var salesBreakDowns = <SalesBreakDownItem>[];
+
+      when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter)).thenAnswer((_) => Future.value(salesBreakDowns));
+
+      //when
+      await salesPresenter.loadSalesBreakDown();
+
+      //then
+      verifyInOrder([
+        () => salesBreakDownProvider.isLoading,
+        () => view.showLoader(),
+        () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
+        () => view.showSalesBreakDowns(),
+      ]);
+
+      expect(salesPresenter.getNumberOfBreakdowns(), 0);
+
+      _verifyNoMoreInteractionsOnAllMocks();
+    },
+  );
+
+  _testSalesData({required Map mockingData, required VoidCallback expectation}) async {
+    //given
+    when(() => salesDataProvider.isLoading).thenReturn(false);
+    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer(
+      (_) => Future.value(AggregatedSalesData.fromJson(mockingData)),
+    );
+
+    //when
+    await salesPresenter.loadAggregatedSalesData();
+
+    //then
+    verifyInOrder([
+      () => salesDataProvider.isLoading,
+      () => view.showLoader(),
+      () => salesDataProvider.getSalesAmounts(dateFilter),
+      () => view.updateSalesData(),
+    ]);
+
+    expectation.call();
+
+    _verifyNoMoreInteractionsOnAllMocks();
+  }
+
+  test(
+    "getTotalSales() returns 0.00 for null value",
+    () async => _testSalesData(
+      mockingData: Mocks.salesDataRandomResponseNull,
+      expectation: () => expect(salesPresenter.getTotalSales(), "0.00"),
+    ),
+  );
+
+  test(
+    "getTotalSales() returns the correct value when provided",
+    () async => _testSalesData(
+      mockingData: Mocks.salesDataRandomResponse,
+      expectation: () => expect(salesPresenter.getTotalSales(), Mocks.salesDataRandomResponse["total_sales"]),
+    ),
+  );
+
+  test(
+    "getNetSale() returns 0.00 for null value",
+    () async => _testSalesData(
+      mockingData: Mocks.salesDataRandomResponseNull,
+      expectation: () => expect(salesPresenter.getNetSale(), "0.00"),
+    ),
+  );
+
+  test(
+    "getNetSale() returns the correct value when provided",
+    () async => _testSalesData(
+      mockingData: Mocks.salesDataRandomResponse,
+      expectation: () => expect(salesPresenter.getNetSale(), Mocks.salesDataRandomResponse["net_sales"]),
+    ),
+  );
+
+  test(
+    "getCostOfSales() returns 0.00 for null value",
+    () async => _testSalesData(
+      mockingData: Mocks.salesDataRandomResponseNull,
+      expectation: () => expect(salesPresenter.getCostOfSales(), "0.00"),
+    ),
+  );
+
+  test(
+    "getCostOfSales() returns the correct value when provided",
+    () async => _testSalesData(
+      mockingData: Mocks.salesDataRandomResponse,
+      expectation: () => expect(salesPresenter.getCostOfSales(), Mocks.salesDataRandomResponse["net_sales"]),
+    ),
+  );
+
+  test(
+    "getGrossProfit() returns 0.00 for null value",
+    () async => _testSalesData(
+      mockingData: Mocks.salesDataRandomResponseNull,
+      expectation: () => expect(salesPresenter.getGrossProfit(), "0.00" + "%"),
+    ),
+  );
+
+  test(
+    "getGrossProfit() returns the correct value when provided",
+    () async => _testSalesData(
+      mockingData: Mocks.salesDataRandomResponse,
+      expectation: () =>
+          expect(salesPresenter.getGrossProfit(), Mocks.salesDataRandomResponse["gross_profit_percentage"].toString() + "%"),
+    ),
+  );
+
+  test(
+    "getGrossProfitTextColor() returns red color if the gross of profit is negative ",
+    () async => _testSalesData(
+      mockingData: Mocks.salesDataRandomResponseNegativeProfit,
+      expectation: () => expect(salesPresenter.getGrossProfitTextColor(), Mocks.colors[2]),
+    ),
+  );
+  test(
+    "getGrossProfitTextColor() returns green color if the gross of profit is positive ",
+    () async => _testSalesData(
+      mockingData: Mocks.salesDataRandomResponse,
+      expectation: () => expect(salesPresenter.getGrossProfitTextColor(), Mocks.colors[0]),
+    ),
+  );
 }

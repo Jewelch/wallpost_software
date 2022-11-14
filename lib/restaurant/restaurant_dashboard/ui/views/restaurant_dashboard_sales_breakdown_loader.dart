@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 
-class RestaurantDashboardLoader extends StatelessWidget {
-  const RestaurantDashboardLoader({Key? key}) : super(key: key);
+class RestaurantDashboardSalesBreakdonwLoader extends StatelessWidget {
+  const RestaurantDashboardSalesBreakdonwLoader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

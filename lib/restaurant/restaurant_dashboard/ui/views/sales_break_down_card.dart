@@ -11,57 +11,75 @@ class SalesBreakDownCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: GridView.builder(
-        padding: EdgeInsets.zero,
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 7.0,
-          mainAxisSpacing: 2.0,
-          childAspectRatio: 1.8,
-        ),
-        itemCount: _presenter.getNumberOfBreakdowns(),
-        itemBuilder: (context, index) => Card(
-          borderOnForeground: true,
-          elevation: 1,
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: BorderSide(color: AppColors.tabDatePickerColor),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 5),
-                Expanded(
-                    child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    _presenter.getBreakdownAtIndex(index).value,
-                    style: TextStyle(
-                        overflow: TextOverflow.ellipsis,
-                        color: _presenter.getBreakdownAtIndex(index).textColor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600),
-                  ),
-                )),
-                SizedBox(height: 4),
-                Expanded(
-                  child: Text(
-                    _presenter.getBreakdownAtIndex(index).label,
-                    style: TextStyle(
-                      color: AppColors.textColorDarkGray,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+      padding: const EdgeInsets.symmetric(horizontal: 21),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        borderOnForeground: true,
+        elevation: 0,
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: _presenter.getNumberOfBreakdowns(),
+          itemBuilder: (context, index) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _presenter.getBreakdownAtIndex(index).label,
+                        style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                  ),
+
+                    //fixed
+                    SizedBox(
+                      width: 120,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _presenter.getBreakdownAtIndex(index).value,
+                              textAlign: TextAlign.right,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 6),
+                          Column(
+                            children: [
+                              Text(
+                                "QAR",
+                                style: TextStyle(
+                                  color: AppColors.moneySuffixColor,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 3),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              index < _presenter.getNumberOfBreakdowns() - 1 ? Divider(height: 0) : SizedBox(),
+            ],
           ),
         ),
       ),
