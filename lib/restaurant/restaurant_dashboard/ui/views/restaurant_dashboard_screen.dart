@@ -11,10 +11,10 @@ import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restauran
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/restaurant_dashboard_view.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_header_card.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_loader.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/sales_break_down_card.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/sales_break_down_loader.dart';
 
 import 'restaurant_dashboard_appbar.dart';
+import 'restaurant_dashboard_sales_break_down_card.dart';
+import 'restaurant_dashboard_sales_break_down_loader.dart';
 
 enum _ScreenStates { loading, error, data }
 
@@ -39,9 +39,8 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
     _loadSalesData();
   }
 
-  void _loadSalesData() => _salesPresenter.loadAggregatedSalesData().then(
-        (_) => _salesPresenter.loadSalesBreakDown(singleTask: false),
-      );
+  void _loadSalesData() =>
+      _salesPresenter.loadAggregatedSalesData().then((_) => _salesPresenter.loadSalesBreakDown(singleTask: false));
 
   @override
   Widget build(BuildContext context) {
@@ -117,48 +116,43 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            //fixed
                             padding: const EdgeInsets.symmetric(horizontal: 24),
-                            //WRONG COLOR & Font // Done
-                            child: Text('Sales Breakdown', style: TextStyles.largeTitleTextStyleBold),
+                            child: Text(
+                              'Sales Breakdown',
+                              style: TextStyles.largeTitleTextStyleBold.copyWith(
+                                fontFamily: "SF-Pro-Display",
+                              ),
+                            ),
                           ),
                           SizedBox(height: 20),
                           SizedBox(
-                            //fixed
                             height: 32,
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              //fixed
                               padding: const EdgeInsets.symmetric(horizontal: 24),
                               itemBuilder: (context, index) {
                                 return CustomFilterChip(
-                                    //Move this to presenter // Done
-                                    backgroundColor: _salesPresenter.getSalesBreakdownChipColor(index),
-                                    borderColor: Colors.transparent,
-                                    title: Text(
-                                      //Move this to presenter // Done
-                                      _salesPresenter.getSalesBreakDownWiseOptions(index),
-                                      style: TextStyle(
-                                          //Move this to presenter // Done
-                                          //WRONG COLOR & Font // done
-                                          color: _salesPresenter.getSalesBreakdownTextColor(index),
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: "SF-Pro-Display"),
-                                    ),
-                                    onPressed: () => setState(() => _salesPresenter.selectSalesBreakDownWiseAtIndex(index)));
+                                  backgroundColor: _salesPresenter.getSalesBreakdownChipColor(index),
+                                  borderColor: Colors.transparent,
+                                  title: Text(
+                                    _salesPresenter.getSalesBreakDownWiseOptions(index),
+                                    style: TextStyle(
+                                        color: _salesPresenter.getSalesBreakdownTextColor(index),
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: "SF-Pro-Display"),
+                                  ),
+                                  onPressed: () => setState(() => _salesPresenter.selectSalesBreakDownWiseAtIndex(index)),
+                                );
                               },
-                              //fixed
                               separatorBuilder: ((_, __) => SizedBox(width: 16)),
-                              //fixed
                               itemCount: SalesBreakDownWiseOptions.values.length,
                             ),
                           ),
                         ],
                       ),
                       SizedBox(height: 16),
-
                       ItemNotifiable<_SalesBreakDownStates>(
                           notifier: salesBreakDownsNotifier,
                           builder: (_, currentState) {
@@ -199,15 +193,11 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                                   child: Text(
                                     "There is no sales breakdown with these filters",
                                     textAlign: TextAlign.center,
-                                    //WRONG COLOR & Font // Done
-
                                     style: TextStyles.titleTextStyle,
                                   ),
                                 );
                             }
                           }),
-
-                      //fixed
                       SizedBox(height: 16),
                     ],
                   ),

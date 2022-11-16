@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 
-import 'sales_break_down_loader.dart';
+import 'restaurant_dashboard_sales_break_down_loader.dart';
 
 class RestaurantDashboardLoader extends StatelessWidget {
   const RestaurantDashboardLoader({Key? key}) : super(key: key);

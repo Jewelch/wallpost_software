@@ -97,14 +97,13 @@ class RestaurantDashboardPresenter {
     _minBreakdownSale = _minSale;
   }
 
-  //MARK: Function to get sales breakdown list data
-
+  //MARK: Gets sales breakdown list data
   int getNumberOfBreakdowns() => _salesBreakdownItems.length;
 
-  //MARK: Function to check if sales breakdown list data is empty
+  //MARK: Checks if sales breakdown list data is empty
   bool breakdownsIsEmpty() => _salesBreakdownItems.isEmpty;
 
-// MARK: Function to get readable string for sales breakdown wise option
+// MARK: Gets readable string for sales breakdown wise option
   String getSalesBreakDownWiseOptions(int index) => SalesBreakDownWiseOptions.values[index].toReadableString();
 
   PerformanceValue getBreakdownAtIndex(int index) => PerformanceValue(
@@ -119,24 +118,19 @@ class RestaurantDashboardPresenter {
     return AppColors.yellow;
   }
 
-  // MARK: Function to change sales breakdown type
-
+  // MARK: Changes sales breakdown filtering wise
   void selectSalesBreakDownWiseAtIndex(int index) {
     _selectedBreakDownWise = SalesBreakDownWiseOptions.values[index];
-    _view.updateSalesData();
     _view.onDidChangeSalesBreakDownWise();
   }
 
-  //MARK: Function to get the sales breakdown value
   String getSalesBreakdownValue(int index) => getBreakdownAtIndex(index).value;
-  //MARK: Function to get the sales breakdown label
   String getSalesBreakdownLabel(int index) => getBreakdownAtIndex(index).label;
 
-  // MARK: Function to check if sales breakdown type change
   Color getSalesBreakdownChipColor(int index) => SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise
       ? AppColors.defaultColor
       : AppColors.filtersBackgroundColor;
-  // MARK: Function to check if sales breakdown type change
+
   Color getSalesBreakdownTextColor(int index) =>
       SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise ? Colors.white : AppColors.defaultColor;
 
