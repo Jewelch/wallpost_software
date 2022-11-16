@@ -11,11 +11,14 @@ class SalesBreakDownCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
+      //fixed
       padding: const EdgeInsets.symmetric(horizontal: 21),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         borderOnForeground: true,
+        //fixed
         elevation: 0,
+        //fixed
         child: ListView.builder(
           padding: EdgeInsets.zero,
           shrinkWrap: true,
@@ -25,18 +28,24 @@ class SalesBreakDownCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
+                //fixed
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Text(
-                        _presenter.getBreakdownAtIndex(index).label,
+                        //Move this to presenter  // Done
+                        // _presenter.getSalesBreakdownLabel(index) + ' label label label label',
+
+                        _presenter.getSalesBreakdownLabel(index),
+                        //WRONG COLOR & Font
                         style: TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                            overflow: TextOverflow.ellipsis,
+                            color: AppColors.textColorBlack,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "SF-Pro-Display"),
                       ),
                     ),
 
@@ -48,26 +57,31 @@ class SalesBreakDownCard extends StatelessWidget {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              _presenter.getBreakdownAtIndex(index).value,
+                              //Move this to presenter
+                              //  _presenter.getSalesBreakdownValue(index) + ' value value value value',
+                              _presenter.getSalesBreakdownValue(index),
                               textAlign: TextAlign.right,
                               overflow: TextOverflow.ellipsis,
+
                               style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w800,
-                              ),
+                                  //WRONG COLOR & Font // Done
+                                  color: AppColors.textColorBlack,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                  fontFamily: "SF-Pro-Display"),
                             ),
                           ),
                           SizedBox(width: 6),
+                          //fixed
                           Column(
                             children: [
                               Text(
                                 "QAR",
                                 style: TextStyle(
-                                  color: AppColors.moneySuffixColor,
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                    color: AppColors.moneySuffixColor,
+                                    fontSize: 8, // 11 is not logic
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "SF-Pro-Display"),
                               ),
                               SizedBox(height: 3),
                             ],
@@ -78,7 +92,11 @@ class SalesBreakDownCard extends StatelessWidget {
                   ],
                 ),
               ),
-              index < _presenter.getNumberOfBreakdowns() - 1 ? Divider(height: 0) : SizedBox(),
+              //fixed
+              index < _presenter.getNumberOfBreakdowns() - 1
+                  ? //fixed
+                  Divider(height: 0)
+                  : SizedBox(),
             ],
           ),
         ),

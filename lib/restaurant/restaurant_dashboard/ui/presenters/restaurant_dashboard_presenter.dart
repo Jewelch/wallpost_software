@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
@@ -65,7 +63,7 @@ class RestaurantDashboardPresenter {
   Future loadSalesBreakDown({required bool singleTask}) async {
     if (_salesBreakDownsProvider.isLoading) return;
 
-    singleTask ? _view.showLoader() : _view.showLloadingForSalesBreakDowns();
+    singleTask ? _view.showLloadingForSalesBreakDowns() : _view.showLoader();
 
     try {
       _salesBreakdownItems = await _salesBreakDownsProvider.getSalesBreakDowns(
@@ -99,19 +97,21 @@ class RestaurantDashboardPresenter {
     _minBreakdownSale = _minSale;
   }
 
-  //MARK: Functions to get sales breakdown list data
+  //MARK: Function to get sales breakdown list data
 
-  int getNumberOfBreakdowns() {
-    return _salesBreakdownItems.length;
-  }
+  int getNumberOfBreakdowns() => _salesBreakdownItems.length;
 
-  PerformanceValue getBreakdownAtIndex(int index) {
-    return PerformanceValue(
-      label: _salesBreakdownItems[index].type,
-      value: _salesBreakdownItems[index].totalSales.withoutNullDecimals.commaSeparated,
-      textColor: _getSalesBreakDownItemColor(_salesBreakdownItems[index]),
-    );
-  }
+  //MARK: Function to check if sales breakdown list data is empty
+  bool breakdownsIsEmpty() => _salesBreakdownItems.isEmpty;
+
+// MARK: Function to get readable string for sales breakdown wise option
+  String getSalesBreakDownWiseOptions(int index) => SalesBreakDownWiseOptions.values[index].toReadableString();
+
+  PerformanceValue getBreakdownAtIndex(int index) => PerformanceValue(
+        label: _salesBreakdownItems[index].type,
+        value: _salesBreakdownItems[index].totalSales.withoutNullDecimals.commaSeparated,
+        textColor: _getSalesBreakDownItemColor(_salesBreakdownItems[index]),
+      );
 
   Color _getSalesBreakDownItemColor(SalesBreakDownItem salesBreakDownItem) {
     if (salesBreakDownItem.totalSales.toDouble == _maxBreakdownSale) return AppColors.green;
@@ -123,11 +123,22 @@ class RestaurantDashboardPresenter {
 
   void selectSalesBreakDownWiseAtIndex(int index) {
     _selectedBreakDownWise = SalesBreakDownWiseOptions.values[index];
+    _view.updateSalesData();
     _view.onDidChangeSalesBreakDownWise();
   }
 
+  //MARK: Function to get the sales breakdown value
+  String getSalesBreakdownValue(int index) => getBreakdownAtIndex(index).value;
+  //MARK: Function to get the sales breakdown label
+  String getSalesBreakdownLabel(int index) => getBreakdownAtIndex(index).label;
+
   // MARK: Function to check if sales breakdown type change
-  bool isSalesBreakdownChange(SalesBreakDownWiseOptions options) => options == selectedBreakDownWise;
+  Color getSalesBreakdownChipColor(int index) => SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise
+      ? AppColors.defaultColor
+      : AppColors.filtersBackgroundColor;
+  // MARK: Function to check if sales breakdown type change
+  Color getSalesBreakdownTextColor(int index) =>
+      SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise ? Colors.white : AppColors.defaultColor;
 
   // Getters
 

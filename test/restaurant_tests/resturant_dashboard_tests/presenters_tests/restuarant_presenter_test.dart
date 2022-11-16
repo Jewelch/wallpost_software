@@ -124,7 +124,7 @@ void main() {
     when(() => salesBreakDownProvider.isLoading).thenReturn(true);
 
     //when
-    await salesPresenter.loadSalesBreakDown();
+    await salesPresenter.loadSalesBreakDown(singleTask: false);
 
     //then
     verify(() => salesBreakDownProvider.isLoading);
@@ -138,7 +138,7 @@ void main() {
         .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
-    await salesPresenter.loadSalesBreakDown();
+    await salesPresenter.loadSalesBreakDown(singleTask: false);
 
     verifyInOrder([
       () => salesBreakDownProvider.isLoading,
@@ -156,7 +156,7 @@ void main() {
         .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
 
     //when
-    await salesPresenter.loadSalesBreakDown();
+    await salesPresenter.loadSalesBreakDown(singleTask: false);
 
     //then
     verifyInOrder([
@@ -182,7 +182,7 @@ void main() {
           .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
 
       //when
-      await salesPresenter.loadSalesBreakDown();
+      await salesPresenter.loadSalesBreakDown(singleTask: false);
 
       //then
       verifyInOrder([
@@ -219,7 +219,7 @@ void main() {
       when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter)).thenAnswer((_) => Future.value(salesBreakDowns));
 
       //when
-      await salesPresenter.loadSalesBreakDown();
+      await salesPresenter.loadSalesBreakDown(singleTask: false);
 
       //then
       verifyInOrder([

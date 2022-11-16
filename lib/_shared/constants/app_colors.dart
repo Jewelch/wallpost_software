@@ -7,7 +7,7 @@ class AppColors {
   static const Color defaultColorDarkContrastColor = Color.fromRGBO(135, 169, 199, 1.0);
 
   //MARK: Text colors
-  static const Color textColorBlack = Color.fromRGBO(40, 40, 40, 1.0);
+  static const Color textColorBlack = Color.fromRGBO(41, 54, 64, 1.0);
   static const Color textColorGray = Color.fromRGBO(160, 160, 160, 1.0);
   static const Color textColorDarkGray = Color.fromRGBO(119, 119, 119, 1.0);
   static const Color textColorFilter = Color(0xFF0096E3);

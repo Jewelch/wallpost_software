@@ -12,10 +12,13 @@ import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/resta
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_header_card.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_loader.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/sales_break_down_card.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/sales_break_down_loader.dart';
 
 import 'restaurant_dashboard_appbar.dart';
 
 enum _ScreenStates { loading, error, data }
+
+enum _SalesBreakDownStates { loading, error, data, noData }
 
 class RestaurantDashboardScreen extends StatefulWidget {
   @override
@@ -26,7 +29,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late RestaurantDashboardPresenter _salesPresenter = RestaurantDashboardPresenter(this);
   final salesDataNotifier = Notifier();
-  final salesBreakDownsNotifier = Notifier();
+  final salesBreakDownsNotifier = ItemNotifier<_SalesBreakDownStates>(defaultValue: _SalesBreakDownStates.loading);
   final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.loading);
   String errorMessage = "";
 
@@ -114,56 +117,97 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
+                            //fixed
                             padding: const EdgeInsets.symmetric(horizontal: 24),
+                            //WRONG COLOR & Font // Done
                             child: Text('Sales Breakdown', style: TextStyles.largeTitleTextStyleBold),
                           ),
                           SizedBox(height: 20),
                           SizedBox(
+                            //fixed
                             height: 32,
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              
+                              //fixed
                               padding: const EdgeInsets.symmetric(horizontal: 24),
                               itemBuilder: (context, index) {
                                 return CustomFilterChip(
-                                  backgroundColor: _salesPresenter.isSalesBreakdownChange(SalesBreakDownWiseOptions.values[index])
-                                      ? AppColors.defaultColor
-                                      : AppColors.filtersBackgroundColor,
-                                  borderColor: Colors.transparent,
-                                  title: Text(
-                                    SalesBreakDownWiseOptions.values[index].toReadableString(),
-                                    style: TextStyle(
-                                        color: _salesPresenter.isSalesBreakdownChange(SalesBreakDownWiseOptions.values[index])
-                                            ? Colors.white
-                                            : AppColors.defaultColor,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  onPressed: () => _salesPresenter.selectSalesBreakDownWiseAtIndex(index),
-                                );
+                                    //Move this to presenter // Done
+                                    backgroundColor: _salesPresenter.getSalesBreakdownChipColor(index),
+                                    borderColor: Colors.transparent,
+                                    title: Text(
+                                      //Move this to presenter // Done
+                                      _salesPresenter.getSalesBreakDownWiseOptions(index),
+                                      style: TextStyle(
+                                          //Move this to presenter // Done
+                                          //WRONG COLOR & Font // done
+                                          color: _salesPresenter.getSalesBreakdownTextColor(index),
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: "SF-Pro-Display"),
+                                    ),
+                                    onPressed: () => setState(() => _salesPresenter.selectSalesBreakDownWiseAtIndex(index)));
                               },
+                              //fixed
                               separatorBuilder: ((_, __) => SizedBox(width: 16)),
+                              //fixed
                               itemCount: SalesBreakDownWiseOptions.values.length,
                             ),
                           ),
                         ],
                       ),
                       SizedBox(height: 16),
-                      Notifiable(
-                        notifier: salesBreakDownsNotifier,
-                        builder: (context) =>
-                            _salesPresenter.getNumberOfBreakdowns() == 0
-                                ? Padding(
-                                    padding: EdgeInsets.only(top: 120),
-                                    child: Text(
-                                      "There is no sales breakdown with these filters",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyles.titleTextStyle,
+
+                      ItemNotifiable<_SalesBreakDownStates>(
+                          notifier: salesBreakDownsNotifier,
+                          builder: (_, currentState) {
+                            switch (currentState) {
+
+                              //* LOADING STATE
+                              case _SalesBreakDownStates.loading:
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                                  child: SalesBreakDownLoader(cornerRadius: 10, height: 350, width: double.infinity),
+                                );
+
+                              //! ERROR STATE
+                              case _SalesBreakDownStates.error:
+                                return Column(
+                                  children: [
+                                    Container(
+                                      child: TextButton(
+                                        child: Text(
+                                          errorMessage,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyles.titleTextStyle,
+                                        ),
+                                        onPressed: _loadSalesData,
+                                      ),
                                     ),
-                                  )
-                                : SalesBreakDownCard(_salesPresenter),
-                      ),
+                                  ],
+                                );
+
+                              //* DATA STATE
+                              case _SalesBreakDownStates.data:
+                                return SalesBreakDownCard(_salesPresenter);
+
+                              //* NO DATA STATE
+                              default:
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 120),
+                                  child: Text(
+                                    "There is no sales breakdown with these filters",
+                                    textAlign: TextAlign.center,
+                                    //WRONG COLOR & Font // Done
+
+                                    style: TextStyles.titleTextStyle,
+                                  ),
+                                );
+                            }
+                          }),
+
+                      //fixed
                       SizedBox(height: 16),
                     ],
                   ),
@@ -178,9 +222,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   //MARK: View functions
 
   @override
-  void showLoader() {
-    screenStateNotifier.notify(_ScreenStates.loading);
-  }
+  void showLoader() => screenStateNotifier.notify(_ScreenStates.loading);
 
   @override
   void showErrorMessage(String errorMessage) {
@@ -205,15 +247,15 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
 
   @override
   void showSalesBreakDowns() {
-    salesBreakDownsNotifier.notify();
     screenStateNotifier.notify(_ScreenStates.data);
+    _salesPresenter.breakdownsIsEmpty()
+        ? salesBreakDownsNotifier.notify(_SalesBreakDownStates.noData)
+        : salesBreakDownsNotifier.notify(_SalesBreakDownStates.data);
   }
 
   @override
-  void onDidChangeSalesBreakDownWise() => setState(() => _salesPresenter.loadSalesBreakDown(singleTask: true));
+  void onDidChangeSalesBreakDownWise() => _salesPresenter.loadSalesBreakDown(singleTask: true);
 
   @override
-  void showLloadingForSalesBreakDowns() {
-    screenStateNotifier.notify(_ScreenStates.loading);
-  }
+  void showLloadingForSalesBreakDowns() => salesBreakDownsNotifier.notify(_SalesBreakDownStates.loading);
 }

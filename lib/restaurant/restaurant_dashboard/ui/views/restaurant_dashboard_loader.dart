@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 
+import 'sales_break_down_loader.dart';
+
 class RestaurantDashboardLoader extends StatelessWidget {
   const RestaurantDashboardLoader({Key? key}) : super(key: key);
 
@@ -27,8 +29,8 @@ class RestaurantDashboardLoader extends StatelessWidget {
           _customChips(),
           SizedBox(height: 16),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: _emptyContainer(height: 350, cornerRadius: 14, width: double.infinity),
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: SalesBreakDownLoader(height: 350, cornerRadius: 14, width: double.infinity),
           )
         ],
       ),
@@ -37,12 +39,11 @@ class RestaurantDashboardLoader extends StatelessWidget {
 
   Widget _tile(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(left: 24.0, bottom: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _emptyContainer(height: 20, width: 120, cornerRadius: 6),
-          //   _emptyContainer(height: 20, width: 120, cornerRadius: 6),
+          SalesBreakDownLoader(height: 40, width: 120, cornerRadius: 6),
         ],
       ),
     );
@@ -54,9 +55,9 @@ class RestaurantDashboardLoader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: _emptyContainer(height: 80, cornerRadius: 20)),
+          Expanded(child: SalesBreakDownLoader(height: 80, cornerRadius: 20)),
           SizedBox(width: 16),
-          Expanded(child: _emptyContainer(height: 80, cornerRadius: 20)),
+          Expanded(child: SalesBreakDownLoader(height: 80, cornerRadius: 20)),
         ],
       ),
     );
@@ -67,11 +68,11 @@ class RestaurantDashboardLoader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         children: [
-          _emptyContainer(height: 40, width: 40, cornerRadius: 10),
+          SalesBreakDownLoader(height: 40, width: 40, cornerRadius: 10),
           SizedBox(width: 40),
-          Expanded(child: _emptyContainer(height: 26, cornerRadius: 6)),
+          Expanded(child: SalesBreakDownLoader(height: 26, cornerRadius: 6)),
           SizedBox(width: 40),
-          _emptyContainer(height: 40, width: 40, cornerRadius: 10),
+          SalesBreakDownLoader(height: 40, width: 40, cornerRadius: 10),
         ],
       ),
     );
@@ -80,24 +81,24 @@ class RestaurantDashboardLoader extends StatelessWidget {
   Widget _customChips() {
     return Row(
       children: [
-        SizedBox(width: 16),
-        _emptyContainer(height: 30, width: 120, cornerRadius: 12),
+        SizedBox(width: 24),
+        SalesBreakDownLoader(height: 40, width: 120, cornerRadius: 12),
         SizedBox(width: 15),
-        _emptyContainer(height: 30, width: 120, cornerRadius: 12),
+        SalesBreakDownLoader(height: 40, width: 120, cornerRadius: 12),
         SizedBox(width: 15),
-        _emptyContainer(height: 30, width: 120, cornerRadius: 12),
+        SalesBreakDownLoader(height: 40, width: 120, cornerRadius: 12),
       ],
     );
   }
 
-  _emptyContainer({required double height, double width = 80, required double cornerRadius}) {
-    return Container(
-      height: height,
-      width: width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(cornerRadius),
-      ),
-    );
-  }
+  // _emptyContainer({required double height, double width = 80, required double cornerRadius}) {
+  //   return Container(
+  //     height: height,
+  //     width: width,
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.circular(cornerRadius),
+  //     ),
+  //   );
+  // }
 }
