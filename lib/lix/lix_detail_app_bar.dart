@@ -40,7 +40,7 @@ class LixDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(width: 12),
+              SizedBox(width: 4),
               if (leadingButton != null) leadingButton!,
 
               Expanded(

@@ -60,7 +60,7 @@ class _LixInnerPageState extends State<LixInnerPage> {
     return GestureDetector(
       onTap: _launchUrl,
       child: Container(
-        margin: EdgeInsets.only(left: 16, right: 16),
+        margin: EdgeInsets.only(left: 32, right: 32),
         height: 50,
         decoration: BoxDecoration(
             color: AppColors.rose,
@@ -107,7 +107,7 @@ class _AppBar extends StatelessWidget {
       companyName: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
       onLeftMenuButtonPress: () => {},
       onAddButtonPress: () {},
-      leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
+      leadingButton: RoundedBackButton(backgroundColor:Colors.white,iconColor:AppColors.defaultColor,onPressed: () => Navigator.pop(context)),
       onTitlePress: () => Navigator.pop(context),
     );
   }

@@ -40,10 +40,9 @@ class _LixDetailScreenState extends State<LixSliderOne> {
               height: 12,
             ),
             Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
-              padding: EdgeInsets.only(left: 30, right: 30),
+              margin: EdgeInsets.only(left: 16, right: 16),
               child: Text(
-                "WallPost Software and other partners rewards high performing staff with  LIXX tokens",
+                "WallPost Software and other partners \n rewards high performing staff with \n  LIXX tokens",
                 style: TextStyles.titleTextStyle.copyWith(color: AppColors.lixTextColorLight),
                 textAlign: TextAlign.center,
               ),
@@ -95,7 +94,7 @@ class _LixDetailScreenState extends State<LixSliderOne> {
 
   Widget buildLogo(String path) {
     return Container(
-      height: 60,
+      height: 57,
       width: 150,
       padding: const EdgeInsets.all(10),
       decoration:

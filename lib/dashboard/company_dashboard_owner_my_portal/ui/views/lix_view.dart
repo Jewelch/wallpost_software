@@ -55,7 +55,12 @@ class LixView extends StatelessWidget {
                     style: TextStyles.labelTextStyle.copyWith(color: AppColors.yellow),
                   ),
                 ],
-              )
+              ),
+             Expanded(
+               child: Container(
+                 alignment: Alignment.centerRight,
+                   height: 12, width: 12, child: SvgPicture.asset('assets/icons/arrow_forward.svg', width: 40, height: 40)),
+             ),
             ],
           ),
         ),
