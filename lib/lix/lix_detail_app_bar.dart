@@ -37,7 +37,7 @@ class LixDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Stack(
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(width: 12),
@@ -48,7 +48,7 @@ class LixDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onTap: onTitlePress,
                   child: Container(
                     height: 40,
-                    padding: EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.only(top: 4),
                     child: Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
