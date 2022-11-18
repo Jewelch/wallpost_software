@@ -21,6 +21,7 @@ class _LixDetailScreenState extends State<LixSliderOne> {
   Widget _lixTile() {
     return
      Scaffold(
+       backgroundColor: Colors.white,
        body: Container(
          margin: EdgeInsets.only(left: 16,right: 16),
 
@@ -103,7 +104,7 @@ class _LixDetailScreenState extends State<LixSliderOne> {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color:Color(0xffF2F2F7))
+          border: Border.all(color:AppColors.lightGray)
       ),
       child: Image.asset(
         path,

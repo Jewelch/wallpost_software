@@ -1,10 +1,10 @@
 import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-
+import '../_wp_core/company_management/services/selected_company_provider.dart';
+import 'lix_detail_app_bar.dart';
 import 'lix_slider_one.dart';
 import 'lix_slider_two.dart';
 class LixInnerPage extends StatefulWidget {
@@ -14,18 +14,17 @@ class LixInnerPage extends StatefulWidget {
 }
 
 class _LixInnerPageState extends State<LixInnerPage> {
+
   final Uri _url = Uri.parse('https://home.libraincentix.com/');
   int pageIndex = 0;
   List<Widget> _demo = [LixSliderOne(), LixDetailsSliderTwo()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SimpleAppBar(
-        title: "Lix Details",
-        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
-      ),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
+          _AppBar(),
           Expanded(
             child: PageView(
               children: _demo,
@@ -92,5 +91,24 @@ class _LixInnerPageState extends State<LixInnerPage> {
     if (!await launchUrl(_url)) {
       throw 'Could not launch $_url';
     }
+  }
+}
+
+class _AppBar extends StatelessWidget {
+  const _AppBar({
+    Key? key,
+  }) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return LixDetailAppBar(
+      companyName: SelectedCompanyProvider().getSelectedCompanyForCurrentUser().name,
+      onLeftMenuButtonPress: () => {},
+      onAddButtonPress: () {},
+      leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
+
+      onTitlePress: () => Navigator.pop(context),
+    );
   }
 }
