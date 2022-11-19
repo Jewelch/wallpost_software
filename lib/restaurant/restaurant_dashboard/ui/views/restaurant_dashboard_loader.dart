@@ -15,9 +15,9 @@ class RestaurantDashboardLoader extends StatelessWidget {
           SizedBox(height: 16),
           _tile(context),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Container(
-              height: 220,
+              height: 170,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.white,

@@ -8,6 +8,13 @@ import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sal
 import '../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../constants/restaurant_dashboard_urls.dart';
 
+Map<String, dynamic> salesDataRandomResponse = {
+  "total_sales": "0",
+  "net_sales": "22",
+  "cost_sales": "22",
+  "gross_profit_percentage": 10,
+};
+
 class AggregatedSalesDataProvider {
   final NetworkAdapter _networkAdapter;
   final SelectedCompanyProvider _selectedCompanyProvider;
@@ -28,6 +35,7 @@ class AggregatedSalesDataProvider {
 
     _isLoading = true;
     try {
+      return AggregatedSalesData.fromJson(salesDataRandomResponse);
       var apiResponse = await _networkAdapter.get(apiRequest);
       _isLoading = false;
       return _processResponse(apiResponse);

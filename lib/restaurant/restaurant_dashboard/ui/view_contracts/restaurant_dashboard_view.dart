@@ -1,7 +1,7 @@
 abstract class RestaurantDashboardView {
   void showLoader();
 
-  void showLloadingForSalesBreakDowns();
+  void showLoadingForSalesBreakDowns();
 
   void showErrorMessage(String errorMessage);
 

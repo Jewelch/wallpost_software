@@ -7,12 +7,14 @@ class PerformanceViewHolder extends StatelessWidget {
   final Color backgroundColor;
   final EdgeInsets padding;
   final bool showShadow;
+  final double radius;
 
   PerformanceViewHolder({
     required this.content,
     this.backgroundColor = AppColors.screenBackgroundColor,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     this.showShadow = true,
+    this.radius = 20,
   });
 
   @override
@@ -21,7 +23,7 @@ class PerformanceViewHolder extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(radius),
         boxShadow: showShadow
             ? [
                 BoxShadow(

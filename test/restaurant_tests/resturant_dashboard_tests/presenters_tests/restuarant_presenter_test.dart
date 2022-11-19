@@ -1,6 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/_shared/extensions/string_extensions.dart';
@@ -117,6 +118,26 @@ void main() {
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
+  // MARK: Test changing the sales break down filter's text color
+  test('getSalesBreakdownTextColor() returns color successfully', () {
+    //when
+    salesPresenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+
+    //then
+    expect(salesPresenter.getSalesBreakdownTextColor(SalesBreakDownWiseOptions.basedOnMenu.index), Colors.white);
+    verify(() => view.onDidChangeSalesBreakDownWise());
+  });
+
+  // MARK: Test changing the sales break down chip's background color
+  test('getSalesBreakdownChipColor() returns color successfully', () {
+    //when
+    salesPresenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+
+    //then
+    expect(salesPresenter.getSalesBreakdownChipColor(SalesBreakDownWiseOptions.basedOnMenu.index), AppColors.defaultColor);
+    verify(() => view.onDidChangeSalesBreakDownWise());
+  });
+
   // MARK: Test Loading sales breakdown wise
 
   test('loading sales breakdowns when sales breakdowns provider is loading does nothing', () async {
@@ -209,6 +230,75 @@ void main() {
       _verifyNoMoreInteractionsOnAllMocks();
     },
   );
+  test(
+    "getSalesBreakdownValue() returns the break down value at a specific index",
+    () async {
+      //given
+      when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
+          .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
+
+      //when
+      await salesPresenter.loadSalesBreakDown(singleTask: false);
+
+      //then
+      verifyInOrder([
+        () => salesBreakDownProvider.isLoading,
+        () => view.showLoader(),
+        () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
+        () => view.showSalesBreakDowns(),
+      ]);
+
+      _sortSalesDataItems();
+
+      for (var i = 0; i < Mocks.salesBreakDownsItems.length; i++) {
+        final currentItem = PerformanceValue(
+          label: Mocks.salesBreakDownsItems[i].type,
+          value: Mocks.salesBreakDownsItems[i].totalSales.withoutNullDecimals.commaSeparated,
+          textColor: Mocks.colors[i],
+        );
+
+        expect(salesPresenter.getSalesBreakdownValue(i), currentItem.value);
+      }
+
+      _verifyNoMoreInteractionsOnAllMocks();
+    },
+  );
+
+  test(
+    "getSalesBreakdownLabel() returns the break down label at a specific index",
+    () async {
+      //given
+      when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
+          .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
+
+      //when
+      await salesPresenter.loadSalesBreakDown(singleTask: false);
+
+      //then
+      verifyInOrder([
+        () => salesBreakDownProvider.isLoading,
+        () => view.showLoader(),
+        () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
+        () => view.showSalesBreakDowns(),
+      ]);
+
+      _sortSalesDataItems();
+
+      for (var i = 0; i < Mocks.salesBreakDownsItems.length; i++) {
+        final currentItem = PerformanceValue(
+          label: Mocks.salesBreakDownsItems[i].type,
+          value: Mocks.salesBreakDownsItems[i].totalSales.withoutNullDecimals.commaSeparated,
+          textColor: Mocks.colors[i],
+        );
+
+        expect(salesPresenter.getSalesBreakdownLabel(i), currentItem.label);
+      }
+
+      _verifyNoMoreInteractionsOnAllMocks();
+    },
+  );
 
   test(
     "getNumberOfBreakdowns() returns 0 if it is null",
@@ -230,6 +320,30 @@ void main() {
       ]);
 
       expect(salesPresenter.getNumberOfBreakdowns(), 0);
+
+      _verifyNoMoreInteractionsOnAllMocks();
+    },
+  );
+  test(
+    "breakdownsIsEmpty() returns true if the list is empty",
+    () async {
+      var salesBreakDowns = <SalesBreakDownItem>[];
+
+      when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter)).thenAnswer((_) => Future.value(salesBreakDowns));
+
+      //when
+      await salesPresenter.loadSalesBreakDown(singleTask: false);
+
+      //then
+      verifyInOrder([
+        () => salesBreakDownProvider.isLoading,
+        () => view.showLoader(),
+        () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
+        () => view.showSalesBreakDowns(),
+      ]);
+
+      expect(salesPresenter.breakdownsIsEmpty(), true);
 
       _verifyNoMoreInteractionsOnAllMocks();
     },

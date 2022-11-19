@@ -63,7 +63,7 @@ class RestaurantDashboardPresenter {
   Future loadSalesBreakDown({required bool singleTask}) async {
     if (_salesBreakDownsProvider.isLoading) return;
 
-    singleTask ? _view.showLloadingForSalesBreakDowns() : _view.showLoader();
+    singleTask ? _view.showLoadingForSalesBreakDowns() : _view.showLoader();
 
     try {
       _salesBreakdownItems = await _salesBreakDownsProvider.getSalesBreakDowns(
