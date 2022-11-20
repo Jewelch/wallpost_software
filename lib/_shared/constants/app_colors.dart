@@ -29,6 +29,7 @@ class AppColors {
   static const Color textFieldFocusedBorderColor = AppColors.defaultColor;
 
   //MARK: Outcome colors
+  static const Color rose = Color.fromRGBO(255, 227, 201, 1);
   static const Color green = Color.fromRGBO(51, 190, 114, 1.0);
   static const Color lightGreen = Color.fromRGBO(232, 252, 243, 1.0);
   static final Color yellow = Color.fromRGBO(248, 166, 50, 1.0);
@@ -51,4 +52,8 @@ class AppColors {
 
   //MARK: Banner colors
   static const Color bannerBackgroundColor = Color.fromRGBO(248, 162, 40, 1.0);
+
+  //MARK: Banner colors
+  static const Color lixTextColorDark = Color.fromRGBO(75, 90, 102, 1.0);
+  static const Color lixTextColorLight = Color.fromRGBO(133, 151, 166, 1.0);
 }
