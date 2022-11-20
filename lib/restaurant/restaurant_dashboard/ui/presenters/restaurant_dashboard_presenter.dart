@@ -141,15 +141,7 @@ class RestaurantDashboardPresenter {
     _view.showRestaurantDashboardFilter();
   }
 
-  // Getters
-
-  SalesBreakDownWiseOptions get selectedBreakDownWise => _selectedBreakDownWise;
-
-  String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
-
-  String getCompanyCurrency() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
-
-  String getProfileImageUrl() => _currentUserProvider.getCurrentUser().profileImageUrl;
+  // MARK: Aggregated sales data getters
 
   String getTotalSales() => _salesData?.totalSales ?? "0.00";
 
@@ -160,4 +152,15 @@ class RestaurantDashboardPresenter {
   String getGrossProfit() => (_salesData?.grossOfProfit ?? "0.00") + "%";
 
   Color getGrossProfitTextColor() => (_salesData?.grossOfProfit ?? "0.00").isNegative ? AppColors.red : AppColors.green;
+
+  // Getters
+
+  SalesBreakDownWiseOptions get selectedBreakDownWise => _selectedBreakDownWise;
+
+  String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
+
+  String getCompanyCurrency() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
+
+  String getProfileImageUrl() => _currentUserProvider.getCurrentUser().profileImageUrl;
+
 }

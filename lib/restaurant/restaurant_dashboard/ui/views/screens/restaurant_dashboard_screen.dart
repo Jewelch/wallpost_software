@@ -73,41 +73,43 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   }
 
   Widget _dataView() {
-    return CustomScrollView(
-      slivers: [
-        MultiSliver(
-          children: [
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: SliverAppBarDelegate(
-                minHeight: 56 + 32 + 16,
-                maxHeight: 56 + 32 + 16,
-                child: RestaurantDashboardAppBar(_presenter),
+    return SafeArea(
+      child: CustomScrollView(
+        slivers: [
+          MultiSliver(
+            children: [
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: SliverAppBarDelegate(
+                  minHeight: 56 + 32 + 16,
+                  maxHeight: 56 + 32 + 16,
+                  child: RestaurantDashboardAppBar(_presenter),
+                ),
               ),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(height: 30),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              sliver: Notifiable(
-                notifier: salesDataNotifier,
-                builder: (context) => SliverToBoxAdapter(child: RestaurantDashboardHeaderCard(_presenter)),
+              SliverToBoxAdapter(
+                child: SizedBox(height: 30),
               ),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(height: 16),
-            ),
-            SliverSalesBreakHorizontalList(
-              presenter: _presenter,
-            ),
-            _salesBreakdownViews(),
-            SliverToBoxAdapter(
-              child: SizedBox(height: 16),
-            ),
-          ],
-        )
-      ],
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                sliver: Notifiable(
+                  notifier: salesDataNotifier,
+                  builder: (context) => SliverToBoxAdapter(child: RestaurantDashboardHeaderCard(_presenter)),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: SizedBox(height: 16),
+              ),
+              SliverSalesBreakHorizontalList(
+                presenter: _presenter,
+              ),
+              _salesBreakdownViews(),
+              SliverToBoxAdapter(
+                child: SizedBox(height: 16),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 

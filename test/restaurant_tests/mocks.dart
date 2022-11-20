@@ -18,18 +18,6 @@ class Mocks {
     "cost_sales": "22",
     "gross_profit_percentage": 10,
   };
-  static Map<String, dynamic> salesDataRandomResponseNegativeProfit = {
-    "total_sales": "0",
-    "net_sales": "22",
-    "cost_sales": "22",
-    "gross_profit_percentage": -10,
-  };
-  static Map<String, dynamic> salesDataRandomResponseNull = {
-    "total_sales": null,
-    "net_sales": null,
-    "cost_sales": null,
-    "gross_profit_percentage": null,
-  };
 
   static Map<String, dynamic> specificSalesDataResponse({
     required dynamic totalSales,

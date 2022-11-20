@@ -33,19 +33,31 @@ void main() {
   var salesBreakDownProvider = MockSalesBreakDownProvider();
   var view = MockSalesDataView();
   var dateFilter = DateRangeFilters();
-  var salesPresenter = RestaurantDashboardPresenter.initWith(
-    view,
-    salesDataProvider,
-    salesBreakDownProvider,
-    dateFilter,
-    MockCurrentUserProvider(),
-    MockCompanyProvider(),
-  );
+  late RestaurantDashboardPresenter presenter;
+
+  void _initializePresenter() {
+    presenter = RestaurantDashboardPresenter.initWith(
+      view,
+      salesDataProvider,
+      salesBreakDownProvider,
+      dateFilter,
+      MockCurrentUserProvider(),
+      MockCompanyProvider(),
+    );
+  }
+
+  _initializePresenter();
 
   void _verifyNoMoreInteractionsOnAllMocks() {
     verifyNoMoreInteractions(view);
     verifyNoMoreInteractions(salesDataProvider);
     verifyNoMoreInteractions(salesBreakDownProvider);
+  }
+
+  void _clearInteractionsOnAllMocks() {
+    clearInteractions(view);
+    clearInteractions(salesDataProvider);
+    clearInteractions(salesBreakDownProvider);
   }
 
   setUpAll(() {
@@ -59,12 +71,74 @@ void main() {
 
   // MARK: Test Loading Aggregated Sales Data
 
+  test("presenter return 0.0 for Aggregated sales data when Aggregated sales data is uninitialized yet", () {
+    _initializePresenter();
+
+    expect(presenter.getTotalSales(), "0.00");
+    expect(presenter.getNetSale(), "0.00");
+    expect(presenter.getCostOfSales(), "0.00");
+    expect(presenter.getGrossProfit(), "0.00" + "%");
+    _clearInteractionsOnAllMocks();
+  });
+
+  test("presenter return Aggregated sales data when Aggregated sales data is initialized", () async {
+    //given
+    var aggregatedSalesData = AggregatedSalesData.fromJson(Mocks.salesDataRandomResponse);
+    when(() => salesDataProvider.isLoading).thenReturn(false);
+    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer(
+      (_) => Future.value(aggregatedSalesData),
+    );
+
+    //when
+    await presenter.loadAggregatedSalesData();
+
+    expect(presenter.getTotalSales(), aggregatedSalesData.totalSales);
+    expect(presenter.getNetSale(), aggregatedSalesData.netSales);
+    expect(presenter.getCostOfSales(), aggregatedSalesData.costOfSales);
+    expect(presenter.getGrossProfit(), aggregatedSalesData.grossOfProfit + "%");
+    _clearInteractionsOnAllMocks();
+  });
+
+  test("presenter return green color if the gross of profit is positive", () async {
+    //given
+    var map = Mocks.salesDataRandomResponse;
+    map["gross_profit_percentage"] = 80;
+    var aggregatedSalesData = AggregatedSalesData.fromJson(map);
+    when(() => salesDataProvider.isLoading).thenReturn(false);
+    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer(
+      (_) => Future.value(aggregatedSalesData),
+    );
+
+    //when
+    await presenter.loadAggregatedSalesData();
+
+    expect(presenter.getGrossProfitTextColor(), AppColors.green);
+    _clearInteractionsOnAllMocks();
+  });
+
+  test("presenter return red color if the gross of profit is negative", () async {
+    //given
+    var map = Mocks.salesDataRandomResponse;
+    map["gross_profit_percentage"] = -80;
+    var aggregatedSalesData = AggregatedSalesData.fromJson(map);
+    when(() => salesDataProvider.isLoading).thenReturn(false);
+    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer(
+          (_) => Future.value(aggregatedSalesData),
+    );
+
+    //when
+    await presenter.loadAggregatedSalesData();
+
+    expect(presenter.getGrossProfitTextColor(), AppColors.red);
+    _clearInteractionsOnAllMocks();
+  });
+
   test('loading sales data when sales data provider is loading does nothing', () async {
     //given
     when(() => salesDataProvider.isLoading).thenReturn(true);
 
     //when
-    await salesPresenter.loadAggregatedSalesData();
+    await presenter.loadAggregatedSalesData();
 
     //then
     verify(() => salesDataProvider.isLoading);
@@ -78,7 +152,7 @@ void main() {
         .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
-    await salesPresenter.loadAggregatedSalesData();
+    await presenter.loadAggregatedSalesData();
 
     verifyInOrder([
       () => salesDataProvider.isLoading,
@@ -96,7 +170,7 @@ void main() {
     when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer((_) => Future.value(salesData));
 
     //when
-    await salesPresenter.loadAggregatedSalesData();
+    await presenter.loadAggregatedSalesData();
 
     //then
     verifyInOrder([
@@ -112,31 +186,30 @@ void main() {
 
   test('change selected sales breakdown wise successfully', () {
     //when
-    salesPresenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
 
     //then
-    expect(salesPresenter.selectedBreakDownWise, SalesBreakDownWiseOptions.basedOnMenu);
+    expect(presenter.selectedBreakDownWise, SalesBreakDownWiseOptions.basedOnMenu);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
   // MARK: Test changing the sales break down filter's text color
   test('getSalesBreakdownTextColor() returns color successfully', () {
     //when
-    salesPresenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
 
     //then
-    expect(salesPresenter.getSalesBreakdownTextColor(SalesBreakDownWiseOptions.basedOnMenu.index), Colors.white);
+    expect(presenter.getSalesBreakdownTextColor(SalesBreakDownWiseOptions.basedOnMenu.index), Colors.white);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
   // MARK: Test changing the sales break down chip's background color
   test('getSalesBreakdownChipColor() returns color successfully', () {
     //when
-    salesPresenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
 
     //then
-    expect(
-        salesPresenter.getSalesBreakdownChipColor(SalesBreakDownWiseOptions.basedOnMenu.index), AppColors.defaultColor);
+    expect(presenter.getSalesBreakdownChipColor(SalesBreakDownWiseOptions.basedOnMenu.index), AppColors.defaultColor);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
@@ -147,7 +220,7 @@ void main() {
     when(() => salesBreakDownProvider.isLoading).thenReturn(true);
 
     //when
-    await salesPresenter.loadSalesBreakDown(singleTask: false);
+    await presenter.loadSalesBreakDown(singleTask: false);
 
     //then
     verify(() => salesBreakDownProvider.isLoading);
@@ -161,7 +234,7 @@ void main() {
         .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
-    await salesPresenter.loadSalesBreakDown(singleTask: false);
+    await presenter.loadSalesBreakDown(singleTask: false);
 
     verifyInOrder([
       () => salesBreakDownProvider.isLoading,
@@ -179,7 +252,7 @@ void main() {
         .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
 
     //when
-    await salesPresenter.loadSalesBreakDown(singleTask: false);
+    await presenter.loadSalesBreakDown(singleTask: false);
 
     //then
     verifyInOrder([
@@ -189,9 +262,9 @@ void main() {
       () => view.showSalesBreakDowns(),
     ]);
 
-    expect(salesPresenter.getBreakdownAtIndex(0).value, '50');
-    expect(salesPresenter.getBreakdownAtIndex(1).value, '20');
-    expect(salesPresenter.getBreakdownAtIndex(2).value, '10');
+    expect(presenter.getBreakdownAtIndex(0).value, '50');
+    expect(presenter.getBreakdownAtIndex(1).value, '20');
+    expect(presenter.getBreakdownAtIndex(2).value, '10');
 
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -205,7 +278,7 @@ void main() {
           .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
 
       //when
-      await salesPresenter.loadSalesBreakDown(singleTask: false);
+      await presenter.loadSalesBreakDown(singleTask: false);
 
       //then
       verifyInOrder([
@@ -224,9 +297,9 @@ void main() {
           textColor: Mocks.colors[i],
         );
 
-        expect(salesPresenter.getBreakdownAtIndex(i).label, currentItem.label);
-        expect(salesPresenter.getBreakdownAtIndex(i).value, currentItem.value);
-        expect(salesPresenter.getBreakdownAtIndex(i).textColor, currentItem.textColor);
+        expect(presenter.getBreakdownAtIndex(i).label, currentItem.label);
+        expect(presenter.getBreakdownAtIndex(i).value, currentItem.value);
+        expect(presenter.getBreakdownAtIndex(i).textColor, currentItem.textColor);
       }
 
       _verifyNoMoreInteractionsOnAllMocks();
@@ -241,7 +314,7 @@ void main() {
           .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
 
       //when
-      await salesPresenter.loadSalesBreakDown(singleTask: false);
+      await presenter.loadSalesBreakDown(singleTask: false);
 
       //then
       verifyInOrder([
@@ -260,7 +333,7 @@ void main() {
           textColor: Mocks.colors[i],
         );
 
-        expect(salesPresenter.getSalesBreakdownValue(i), currentItem.value);
+        expect(presenter.getSalesBreakdownValue(i), currentItem.value);
       }
 
       _verifyNoMoreInteractionsOnAllMocks();
@@ -276,7 +349,7 @@ void main() {
           .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
 
       //when
-      await salesPresenter.loadSalesBreakDown(singleTask: false);
+      await presenter.loadSalesBreakDown(singleTask: false);
 
       //then
       verifyInOrder([
@@ -295,7 +368,7 @@ void main() {
           textColor: Mocks.colors[i],
         );
 
-        expect(salesPresenter.getSalesBreakdownLabel(i), currentItem.label);
+        expect(presenter.getSalesBreakdownLabel(i), currentItem.label);
       }
 
       _verifyNoMoreInteractionsOnAllMocks();
@@ -312,7 +385,7 @@ void main() {
           .thenAnswer((_) => Future.value(salesBreakDowns));
 
       //when
-      await salesPresenter.loadSalesBreakDown(singleTask: false);
+      await presenter.loadSalesBreakDown(singleTask: false);
 
       //then
       verifyInOrder([
@@ -322,7 +395,7 @@ void main() {
         () => view.showSalesBreakDowns(),
       ]);
 
-      expect(salesPresenter.getNumberOfBreakdowns(), 0);
+      expect(presenter.getNumberOfBreakdowns(), 0);
 
       _verifyNoMoreInteractionsOnAllMocks();
     },
@@ -337,7 +410,7 @@ void main() {
           .thenAnswer((_) => Future.value(salesBreakDowns));
 
       //when
-      await salesPresenter.loadSalesBreakDown(singleTask: false);
+      await presenter.loadSalesBreakDown(singleTask: false);
 
       //then
       verifyInOrder([
@@ -347,125 +420,18 @@ void main() {
         () => view.showSalesBreakDowns(),
       ]);
 
-      expect(salesPresenter.breakdownsIsEmpty(), true);
+      expect(presenter.breakdownsIsEmpty(), true);
 
       _verifyNoMoreInteractionsOnAllMocks();
     },
   );
 
-  _testSalesData({required Map mockingData, required VoidCallback expectation}) async {
-    //given
-    when(() => salesDataProvider.isLoading).thenReturn(false);
-    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer(
-      (_) => Future.value(AggregatedSalesData.fromJson(mockingData)),
-    );
-
-    //when
-    await salesPresenter.loadAggregatedSalesData();
-
-    //then
-    verifyInOrder([
-      () => salesDataProvider.isLoading,
-      () => view.showLoader(),
-      () => salesDataProvider.getSalesAmounts(dateFilter),
-      () => view.updateSalesData(),
-    ]);
-
-    expectation.call();
-
-    _verifyNoMoreInteractionsOnAllMocks();
-  }
-
-  test(
-    "getTotalSales() returns 0.00 for null value",
-    () async => _testSalesData(
-      mockingData: Mocks.salesDataRandomResponseNull,
-      expectation: () => expect(salesPresenter.getTotalSales(), "0.00"),
-    ),
-  );
-
-  test(
-    "getTotalSales() returns the correct value when provided",
-    () async => _testSalesData(
-      mockingData: Mocks.salesDataRandomResponse,
-      expectation: () => expect(salesPresenter.getTotalSales(), Mocks.salesDataRandomResponse["total_sales"]),
-    ),
-  );
-
-  test(
-    "getNetSale() returns 0.00 for null value",
-    () async => _testSalesData(
-      mockingData: Mocks.salesDataRandomResponseNull,
-      expectation: () => expect(salesPresenter.getNetSale(), "0.00"),
-    ),
-  );
-
-  test(
-    "getNetSale() returns the correct value when provided",
-    () async => _testSalesData(
-      mockingData: Mocks.salesDataRandomResponse,
-      expectation: () => expect(salesPresenter.getNetSale(), Mocks.salesDataRandomResponse["net_sales"]),
-    ),
-  );
-
-  test(
-    "getCostOfSales() returns 0.00 for null value",
-    () async => _testSalesData(
-      mockingData: Mocks.salesDataRandomResponseNull,
-      expectation: () => expect(salesPresenter.getCostOfSales(), "0.00"),
-    ),
-  );
-
-  test(
-    "getCostOfSales() returns the correct value when provided",
-    () async => _testSalesData(
-      mockingData: Mocks.salesDataRandomResponse,
-      expectation: () => expect(salesPresenter.getCostOfSales(), Mocks.salesDataRandomResponse["net_sales"]),
-    ),
-  );
-
-  test(
-    "getGrossProfit() returns 0.00 for null value",
-    () async => _testSalesData(
-      mockingData: Mocks.salesDataRandomResponseNull,
-      expectation: () => expect(salesPresenter.getGrossProfit(), "0.00" + "%"),
-    ),
-  );
-
-  test(
-    "getGrossProfit() returns the correct value when provided",
-    () async => _testSalesData(
-      mockingData: Mocks.salesDataRandomResponse,
-      expectation: () => expect(
-          salesPresenter.getGrossProfit(), Mocks.salesDataRandomResponse["gross_profit_percentage"].toString() + "%"),
-    ),
-  );
-
-  test(
-    "getGrossProfitTextColor() returns red color if the gross of profit is negative ",
-    () async => _testSalesData(
-      mockingData: Mocks.salesDataRandomResponseNegativeProfit,
-      expectation: () => expect(salesPresenter.getGrossProfitTextColor(), Mocks.colors[2]),
-    ),
-  );
-
-  test(
-    "getGrossProfitTextColor() returns green color if the gross of profit is positive ",
-    () async => _testSalesData(
-      mockingData: Mocks.salesDataRandomResponse,
-      expectation: () => expect(salesPresenter.getGrossProfitTextColor(), Mocks.colors[0]),
-    ),
-  );
-
   test("presenter notify view to show restaurant filters when restaurant filters got clicked", () {
     //when
-    salesPresenter.onFiltersGotClicked();
+    presenter.onFiltersGotClicked();
 
     //then
-    verify(
-      () => view.showRestaurantDashboardFilter(),
-    );
-
+    verify(view.showRestaurantDashboardFilter);
     _verifyNoMoreInteractionsOnAllMocks();
   });
 }
