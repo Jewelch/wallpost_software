@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 
-import '../../../../_shared/constants/app_colors.dart';
+import '../../../../../_shared/constants/app_colors.dart';
 
 class RestaurantDashBoardSliverSubHeader extends StatelessWidget {
   final Widget child;

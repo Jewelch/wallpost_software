@@ -3,7 +3,7 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 
-import '../presenters/restaurant_dashboard_presenter.dart';
+import '../../presenters/restaurant_dashboard_presenter.dart';
 
 class RestaurantDashboardHeaderCard extends StatelessWidget {
   final RestaurantDashboardPresenter _presenter;

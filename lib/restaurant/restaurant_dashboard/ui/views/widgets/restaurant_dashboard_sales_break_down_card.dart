@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-import '../presenters/restaurant_dashboard_presenter.dart';
+import '../../presenters/restaurant_dashboard_presenter.dart';
 
 class SalesBreakDownCard extends StatelessWidget {
   final RestaurantDashboardPresenter _presenter;
@@ -42,7 +42,6 @@ class SalesBreakDownCard extends StatelessWidget {
                             fontFamily: "SF-Pro-Display"),
                       ),
                     ),
-
                     SizedBox(
                       width: 120,
                       child: Row(
@@ -66,7 +65,7 @@ class SalesBreakDownCard extends StatelessWidget {
                           Column(
                             children: [
                               Text(
-                                "QAR",
+                                _presenter.getCompanyCurrency(),
                                 style: TextStyle(
                                     color: AppColors.moneySuffixColor,
                                     fontSize: 8, // 11 is not logic
@@ -82,10 +81,7 @@ class SalesBreakDownCard extends StatelessWidget {
                   ],
                 ),
               ),
-              index < _presenter.getNumberOfBreakdowns() - 1
-                  ? 
-                  Divider(height: 0)
-                  : SizedBox(),
+              index < _presenter.getNumberOfBreakdowns() - 1 ? Divider(height: 0) : SizedBox(),
             ],
           ),
         ),

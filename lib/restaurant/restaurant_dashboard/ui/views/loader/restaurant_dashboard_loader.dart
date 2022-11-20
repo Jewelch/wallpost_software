@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/seles_break_down_loader.dart';
 
-import 'restaurant_dashboard_sales_break_down_loader.dart';
+import 'restaurant_dashboard_container_loader.dart';
 
 class RestaurantDashboardLoader extends StatelessWidget {
   const RestaurantDashboardLoader({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class RestaurantDashboardLoader extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Container(
-              height: 170,
+              height: 120,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.white,
@@ -30,7 +31,7 @@ class RestaurantDashboardLoader extends StatelessWidget {
           SizedBox(height: 16),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
-            child: SalesBreakDownLoader(height: 350, cornerRadius: 14, width: double.infinity),
+            child: SalesBreakDownLoader(),
           )
         ],
       ),
@@ -43,7 +44,7 @@ class RestaurantDashboardLoader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SalesBreakDownLoader(height: 40, width: 120, cornerRadius: 6),
+          RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 6),
         ],
       ),
     );
@@ -55,9 +56,9 @@ class RestaurantDashboardLoader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: SalesBreakDownLoader(height: 80, cornerRadius: 20)),
+          Expanded(child: RestaurantContainerLoader(height: 80, cornerRadius: 20)),
           SizedBox(width: 16),
-          Expanded(child: SalesBreakDownLoader(height: 80, cornerRadius: 20)),
+          Expanded(child: RestaurantContainerLoader(height: 80, cornerRadius: 20)),
         ],
       ),
     );
@@ -68,11 +69,11 @@ class RestaurantDashboardLoader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         children: [
-          SalesBreakDownLoader(height: 40, width: 40, cornerRadius: 10),
+          RestaurantContainerLoader(height: 40, width: 40, cornerRadius: 10),
           SizedBox(width: 40),
-          Expanded(child: SalesBreakDownLoader(height: 26, cornerRadius: 6)),
+          Expanded(child: RestaurantContainerLoader(height: 26, cornerRadius: 6)),
           SizedBox(width: 40),
-          SalesBreakDownLoader(height: 40, width: 40, cornerRadius: 10),
+          RestaurantContainerLoader(height: 40, width: 40, cornerRadius: 10),
         ],
       ),
     );
@@ -82,23 +83,18 @@ class RestaurantDashboardLoader extends StatelessWidget {
     return Row(
       children: [
         SizedBox(width: 24),
-        SalesBreakDownLoader(height: 40, width: 120, cornerRadius: 12),
+        Expanded(
+          child: RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 12),
+        ),
         SizedBox(width: 15),
-        SalesBreakDownLoader(height: 40, width: 120, cornerRadius: 12),
+        Expanded(
+          child: RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 12),
+        ),
         SizedBox(width: 15),
-        SalesBreakDownLoader(height: 40, width: 120, cornerRadius: 12),
+        Expanded(
+          child: RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 12),
+        ),
       ],
     );
   }
-
-  // _emptyContainer({required double height, double width = 80, required double cornerRadius}) {
-  //   return Container(
-  //     height: height,
-  //     width: width,
-  //     decoration: BoxDecoration(
-  //       color: Colors.white,
-  //       borderRadius: BorderRadius.circular(cornerRadius),
-  //     ),
-  //   );
-  // }
 }
