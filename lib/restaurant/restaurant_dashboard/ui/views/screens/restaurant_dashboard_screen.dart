@@ -8,8 +8,8 @@ import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restauran
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/restaurant_dashboard_view.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/restaurant_dashboard_loader.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/seles_break_down_loader.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_error_view.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_appbar.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_error_view.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_header_card.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_filters.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
@@ -77,8 +77,13 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
       slivers: [
         MultiSliver(
           children: [
-            SliverToBoxAdapter(
-              child: RestaurantDashboardAppBar(_presenter),
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: SliverAppBarDelegate(
+                minHeight: 56 + 32 + 16,
+                maxHeight: 56 + 32 + 16,
+                child: RestaurantDashboardAppBar(_presenter),
+              ),
             ),
             SliverToBoxAdapter(
               child: SizedBox(height: 30),
