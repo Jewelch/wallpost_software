@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
-import 'package:wallpost/_wp_core/wpapi/exceptions/unexpected_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_request_executor.dart';
 
