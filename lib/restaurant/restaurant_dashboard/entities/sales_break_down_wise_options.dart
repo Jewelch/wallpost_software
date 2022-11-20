@@ -1,6 +1,6 @@
 enum SalesBreakDownWiseOptions {
-  basedOnOrder,
   basedOnCategory,
+  basedOnOrder,
   basedOnMenu;
 
   String toReadableString() {
@@ -8,9 +8,9 @@ enum SalesBreakDownWiseOptions {
       case basedOnOrder:
         return "Order wise";
       case basedOnCategory:
-        return "Category type wise";
+        return "Category wise";
       case basedOnMenu:
-        return "Menu type wise";
+        return "Menu wise";
     }
   }
 
