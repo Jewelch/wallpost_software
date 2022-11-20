@@ -108,7 +108,7 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
                 .map(
                   (selectableOption) => GestureDetector(
                     onTap: () {
-                      dateFilters.selectedRangeOption = selectableOption;
+                      dateFilters.setSelectedDateRangeOption(selectableOption);
                       setState(() {});
                     },
                     child: Container(
