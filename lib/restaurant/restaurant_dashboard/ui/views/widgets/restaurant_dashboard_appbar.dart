@@ -6,9 +6,9 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
 
 class RestaurantDashboardAppBar extends StatelessWidget {
-  final RestaurantDashboardPresenter salesPresenter;
+  final RestaurantDashboardPresenter presenter;
 
-  RestaurantDashboardAppBar(this.salesPresenter);
+  RestaurantDashboardAppBar(this.presenter);
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +21,9 @@ class RestaurantDashboardAppBar extends StatelessWidget {
       ),
       child: Column(
         children: [
+          SizedBox(
+            height: 8,
+          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,10 +51,13 @@ class RestaurantDashboardAppBar extends StatelessWidget {
                         children: [
                           Container(
                             child: Text(
-                              salesPresenter.getSelectedCompanyName(),
+                              presenter.getSelectedCompanyName(),
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
-                              style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
+                              style: TextStyles.largeTitleTextStyleBold.copyWith(
+                                color: AppColors.defaultColor,
+                                fontFamily: "SF-Pro-Display",
+                              ),
                             ),
                           ),
                           SizedBox(width: 8),
@@ -79,12 +85,31 @@ class RestaurantDashboardAppBar extends StatelessWidget {
                   padding: EdgeInsets.only(left: 18),
                   child: GestureDetector(
                     onTap: () {
-                      salesPresenter.onFiltersGotClicked();
+                      presenter.onFiltersGotClicked();
                     },
                     child: SvgPicture.asset(
                       "assets/icons/filter_date_icon.svg",
                       width: 18,
                       height: 18,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    presenter.onFiltersGotClicked();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(left: 8, top: 8, bottom: 8, right: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColors.lightGray),
+                    ),
+                    child: Text(
+                      presenter.dateFilters.selectedRangeOption.toReadableString(),
+                      style: TextStyles.labelTextStyle,
                     ),
                   ),
                 ),
