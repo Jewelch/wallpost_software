@@ -26,7 +26,6 @@ class RestaurantDashboardScreen extends StatefulWidget {
 }
 
 class _State extends State<RestaurantDashboardScreen> implements RestaurantDashboardView {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   late RestaurantDashboardPresenter _presenter = RestaurantDashboardPresenter(this);
   final salesDataNotifier = Notifier();
   final salesBreakDownsNotifier = ItemNotifier<_SalesBreakDownStates>(defaultValue: _SalesBreakDownStates.loading);
@@ -47,7 +46,6 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
     return RefreshIndicator(
       onRefresh: () async => _loadSalesData(),
       child: Scaffold(
-        key: scaffoldKey,
         backgroundColor: AppColors.screenBackgroundColor2,
         body: ItemNotifiable<_ScreenStates>(
           notifier: screenStateNotifier,
