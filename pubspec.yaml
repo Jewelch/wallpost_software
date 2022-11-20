@@ -44,7 +44,8 @@ dependencies:
   open_filex: ^4.0.1
   image_picker: ^0.8.5+3
   visibility_detector: ^0.3.3
-
+  sliver_tools: ^0.2.8
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
