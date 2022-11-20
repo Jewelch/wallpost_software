@@ -8,129 +8,6 @@ import 'package:wallpost/restaurant/restaurant_dashboard/constants/restaurant_da
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
 
-List<Map<String, dynamic>> salesBreakDownsData = [
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-  {
-    "type": "Fake type",
-    "total_sales": 22,
-  },
-];
-
 class SalesBreakDownsProvider {
   final NetworkAdapter _networkAdapter;
   final SelectedCompanyProvider _selectedCompanyProvider;
@@ -154,14 +31,9 @@ class SalesBreakDownsProvider {
 
     _isLoading = true;
     try {
-      var responseList = salesBreakDownsData;
-
-      var salesBreakDowns = <SalesBreakDownItem>[];
-      responseList.forEach((element) {
-        salesBreakDowns.add(SalesBreakDownItem.fromJson(element));
-      });
-
-      return salesBreakDowns;
+      var apiResponse = await _networkAdapter.get(apiRequest);
+      _isLoading = false;
+      return _processResponse(apiResponse);
     } on APIException catch (exception) {
       _isLoading = false;
       throw exception;
@@ -174,8 +46,7 @@ class SalesBreakDownsProvider {
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
-    // var responseList = apiResponse.data as List<Map<String, dynamic>>;
-    var responseList = salesBreakDownsData;
+    var responseList = apiResponse.data as List<Map<String, dynamic>>;
 
     var salesBreakDowns = <SalesBreakDownItem>[];
     try {
