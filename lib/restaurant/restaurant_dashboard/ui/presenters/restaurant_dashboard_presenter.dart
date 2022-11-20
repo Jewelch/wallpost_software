@@ -26,7 +26,7 @@ class RestaurantDashboardPresenter {
   late double _maxBreakdownSale;
   late double _minBreakdownSale;
   DateRangeFilters dateFilters;
-  SalesBreakDownWiseOptions _selectedBreakDownWise = SalesBreakDownWiseOptions.values.first;
+  SalesBreakDownWiseOptions _selectedBreakDownWise = SalesBreakDownWiseOptions.basedOnCategory;
 
   RestaurantDashboardPresenter(this._view)
       : _salesDataProvider = AggregatedSalesDataProvider(),
@@ -125,6 +125,7 @@ class RestaurantDashboardPresenter {
   }
 
   String getSalesBreakdownValue(int index) => getBreakdownAtIndex(index).value;
+
   String getSalesBreakdownLabel(int index) => getBreakdownAtIndex(index).label;
 
   Color getSalesBreakdownChipColor(int index) => SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise
@@ -134,11 +135,19 @@ class RestaurantDashboardPresenter {
   Color getSalesBreakdownTextColor(int index) =>
       SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise ? Colors.white : AppColors.defaultColor;
 
+  // MARK: Filtering functions
+
+  void onFiltersGotClicked() {
+    _view.showRestaurantDashboardFilter();
+  }
+
   // Getters
 
   SalesBreakDownWiseOptions get selectedBreakDownWise => _selectedBreakDownWise;
 
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
+
+  String getCompanyCurrency() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
 
   String getProfileImageUrl() => _currentUserProvider.getCurrentUser().profileImageUrl;
 

@@ -12,4 +12,6 @@ abstract class RestaurantDashboardView {
   void showDateRangeSelector();
 
   void onDidChangeSalesBreakDownWise();
+
+  void showRestaurantDashboardFilter();
 }
