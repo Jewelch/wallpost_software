@@ -83,11 +83,13 @@ class _SalesElement extends StatelessWidget {
       fontSize: 12.0,
       color: AppColors.textColorBlack,
       fontWeight: FontWeight.w500,
+      fontFamily: "SF-Pro-Display",
     );
 
     final valueStyle = TextStyles.headerCardMainValueTextStyle.copyWith(
       fontWeight: FontWeight.w800,
       fontSize: 17.0,
+      fontFamily: "SF-Pro-Display",
       overflow: TextOverflow.ellipsis,
     );
 

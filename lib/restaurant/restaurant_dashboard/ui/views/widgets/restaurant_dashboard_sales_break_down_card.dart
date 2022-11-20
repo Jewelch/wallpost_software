@@ -31,15 +31,14 @@ class SalesBreakDownCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        // _presenter.getSalesBreakdownLabel(index) + ' label label label label',
-
                         _presenter.getSalesBreakdownLabel(index),
                         style: TextStyle(
-                            overflow: TextOverflow.ellipsis,
-                            color: AppColors.textColorBlack,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: "SF-Pro-Display"),
+                          overflow: TextOverflow.ellipsis,
+                          color: AppColors.textColorBlack,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "SF-Pro-Display",
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -49,16 +48,15 @@ class SalesBreakDownCard extends StatelessWidget {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              //  _presenter.getSalesBreakdownValue(index) + ' value value value value',
                               _presenter.getSalesBreakdownValue(index),
                               textAlign: TextAlign.right,
                               overflow: TextOverflow.ellipsis,
-
                               style: TextStyle(
-                                  color: AppColors.textColorBlack,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w800,
-                                  fontFamily: "SF-Pro-Display"),
+                                color: AppColors.textColorBlack,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: "SF-Pro-Display",
+                              ),
                             ),
                           ),
                           SizedBox(width: 6),
@@ -67,10 +65,11 @@ class SalesBreakDownCard extends StatelessWidget {
                               Text(
                                 _presenter.getCompanyCurrency(),
                                 style: TextStyle(
-                                    color: AppColors.moneySuffixColor,
-                                    fontSize: 8, // 11 is not logic
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: "SF-Pro-Display"),
+                                  color: AppColors.moneySuffixColor,
+                                  fontSize: 8, // 11 is not logic
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: "SF-Pro-Display",
+                                ),
                               ),
                               SizedBox(height: 3),
                             ],

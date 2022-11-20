@@ -52,6 +52,7 @@ class RestaurantFilters extends StatelessWidget {
                     style: TextStyles.screenTitleTextStyle.copyWith(
                       color: AppColors.defaultColor,
                       fontWeight: FontWeight.w500,
+                      fontFamily: "SF-Pro-Display",
                     ),
                   ),
                 ),
@@ -62,6 +63,7 @@ class RestaurantFilters extends StatelessWidget {
                     style: TextStyles.screenTitleTextStyle.copyWith(
                       color: AppColors.textColorBlack,
                       fontWeight: FontWeight.w500,
+                      fontFamily: "SF-Pro-Display",
                     ),
                   ),
                 ),
@@ -73,6 +75,7 @@ class RestaurantFilters extends StatelessWidget {
                     style: TextStyles.screenTitleTextStyle.copyWith(
                       color: AppColors.defaultColor,
                       fontWeight: FontWeight.w500,
+                      fontFamily: "SF-Pro-Display",
                     ),
                   ),
                 ),
@@ -86,6 +89,7 @@ class RestaurantFilters extends StatelessWidget {
               style: TextStyles.screenTitleTextStyle.copyWith(
                 color: AppColors.textColorBlack,
                 fontWeight: FontWeight.w500,
+                fontFamily: "SF-Pro-Display",
               ),
             ),
             SizedBox(
@@ -111,7 +115,10 @@ class RestaurantFilters extends StatelessWidget {
                   children: [
                     Text(
                       dateFilters.selectedRangeOption.toReadableString(),
-                      style: TextStyles.subTitleTextStyleBold.copyWith(color: AppColors.textColorDarkGray),
+                      style: TextStyles.subTitleTextStyleBold.copyWith(
+                        color: AppColors.textColorDarkGray,
+                        fontFamily: "SF-Pro-Display",
+                      ),
                     ),
                     SvgPicture.asset("assets/icons/arrow_right_icon.svg"),
                   ],
