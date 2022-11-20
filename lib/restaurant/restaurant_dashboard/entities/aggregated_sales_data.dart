@@ -4,10 +4,10 @@ import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart
 import '../../../_shared/exceptions/mapping_exception.dart';
 
 class AggregatedSalesData extends JSONInitializable {
-  String? _totalSales;
-  String? _netSales;
-  String? _costOfSales;
-  String? _grossOfProfitPercentage;
+  late String _totalSales;
+  late String _netSales;
+  late String _costOfSales;
+  late String _grossOfProfitPercentage;
 
   AggregatedSalesData.fromJson(dynamic jsonMap) : super.fromJson(jsonMap) {
     final sift = Sift();
@@ -22,12 +22,11 @@ class AggregatedSalesData extends JSONInitializable {
     }
   }
 
-  String? get totalSales => _totalSales;
+  String get totalSales => _totalSales;
 
-  String? get netSales => _netSales;
+  String get netSales => _netSales;
 
-  String? get costOfSales => _costOfSales;
+  String get costOfSales => _costOfSales;
 
-  String? get grossOfProfit => '$_grossOfProfitPercentage';
+  String get grossOfProfit => '$_grossOfProfitPercentage';
 }
-
