@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/seles_break_down_loader.dart';
 
-import 'restaurant_dashboard_container_loader.dart';
+import 'restaurant_dashboard_loader_container.dart';
 
 class RestaurantDashboardLoader extends StatelessWidget {
   const RestaurantDashboardLoader({Key? key}) : super(key: key);

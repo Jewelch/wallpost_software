@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/restaurant_dashboard_container_loader.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/restaurant_dashboard_loader_container.dart';
 
 class SalesBreakDownLoader extends StatelessWidget {
   const SalesBreakDownLoader({Key? key}) : super(key: key);
