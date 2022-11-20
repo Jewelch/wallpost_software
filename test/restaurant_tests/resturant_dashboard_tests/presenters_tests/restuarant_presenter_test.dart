@@ -74,7 +74,8 @@ void main() {
   test('failure to load sales data', () async {
     //given
     when(() => salesDataProvider.isLoading).thenReturn(false);
-    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => salesDataProvider.getSalesAmounts(dateFilter))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await salesPresenter.loadAggregatedSalesData();
@@ -134,7 +135,8 @@ void main() {
     salesPresenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
 
     //then
-    expect(salesPresenter.getSalesBreakdownChipColor(SalesBreakDownWiseOptions.basedOnMenu.index), AppColors.defaultColor);
+    expect(
+        salesPresenter.getSalesBreakdownChipColor(SalesBreakDownWiseOptions.basedOnMenu.index), AppColors.defaultColor);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
@@ -306,7 +308,8 @@ void main() {
       var salesBreakDowns = <SalesBreakDownItem>[];
 
       when(() => salesBreakDownProvider.isLoading).thenReturn(false);
-      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter)).thenAnswer((_) => Future.value(salesBreakDowns));
+      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
+          .thenAnswer((_) => Future.value(salesBreakDowns));
 
       //when
       await salesPresenter.loadSalesBreakDown(singleTask: false);
@@ -330,7 +333,8 @@ void main() {
       var salesBreakDowns = <SalesBreakDownItem>[];
 
       when(() => salesBreakDownProvider.isLoading).thenReturn(false);
-      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter)).thenAnswer((_) => Future.value(salesBreakDowns));
+      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
+          .thenAnswer((_) => Future.value(salesBreakDowns));
 
       //when
       await salesPresenter.loadSalesBreakDown(singleTask: false);
@@ -432,8 +436,8 @@ void main() {
     "getGrossProfit() returns the correct value when provided",
     () async => _testSalesData(
       mockingData: Mocks.salesDataRandomResponse,
-      expectation: () =>
-          expect(salesPresenter.getGrossProfit(), Mocks.salesDataRandomResponse["gross_profit_percentage"].toString() + "%"),
+      expectation: () => expect(
+          salesPresenter.getGrossProfit(), Mocks.salesDataRandomResponse["gross_profit_percentage"].toString() + "%"),
     ),
   );
 
@@ -444,6 +448,7 @@ void main() {
       expectation: () => expect(salesPresenter.getGrossProfitTextColor(), Mocks.colors[2]),
     ),
   );
+
   test(
     "getGrossProfitTextColor() returns green color if the gross of profit is positive ",
     () async => _testSalesData(
@@ -451,4 +456,16 @@ void main() {
       expectation: () => expect(salesPresenter.getGrossProfitTextColor(), Mocks.colors[0]),
     ),
   );
+
+  test("presenter notify view to show restaurant filters when restaurant filters got clicked", () {
+    //when
+    salesPresenter.onFiltersGotClicked();
+
+    //then
+    verify(
+      () => view.showRestaurantDashboardFilter(),
+    );
+
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
 }
