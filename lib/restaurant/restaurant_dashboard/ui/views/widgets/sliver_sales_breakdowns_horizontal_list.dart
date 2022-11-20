@@ -44,7 +44,6 @@ class _SliverSalesBreakHorizontalListState extends State<SliverSalesBreakHorizon
                 child: Text(
                   'Sales Breakdown',
                   style: TextStyles.largeTitleTextStyleBold.copyWith(
-                    fontFamily: "SF-Pro-Display",
                   ),
                 ),
               ),
@@ -66,7 +65,6 @@ class _SliverSalesBreakHorizontalListState extends State<SliverSalesBreakHorizon
                           color: presenter.getSalesBreakdownTextColor(index),
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
-                          fontFamily: "SF-Pro-Display",
                         ),
                       ),
                       onPressed: () => setState(() => presenter.selectSalesBreakDownWiseAtIndex(index)),

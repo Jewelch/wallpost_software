@@ -37,7 +37,6 @@ class SalesBreakDownCard extends StatelessWidget {
                           color: AppColors.textColorBlack,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          fontFamily: "SF-Pro-Display",
                         ),
                       ),
                     ),
@@ -55,7 +54,6 @@ class SalesBreakDownCard extends StatelessWidget {
                                 color: AppColors.textColorBlack,
                                 fontSize: 17,
                                 fontWeight: FontWeight.w800,
-                                fontFamily: "SF-Pro-Display",
                               ),
                             ),
                           ),
@@ -68,7 +66,6 @@ class SalesBreakDownCard extends StatelessWidget {
                                   color: AppColors.moneySuffixColor,
                                   fontSize: 8, // 11 is not logic
                                   fontWeight: FontWeight.w500,
-                                  fontFamily: "SF-Pro-Display",
                                 ),
                               ),
                               SizedBox(height: 3),

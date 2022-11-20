@@ -56,7 +56,6 @@ class RestaurantDashboardAppBar extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyles.largeTitleTextStyleBold.copyWith(
                                 color: AppColors.defaultColor,
-                                fontFamily: "SF-Pro-Display",
                               ),
                             ),
                           ),
