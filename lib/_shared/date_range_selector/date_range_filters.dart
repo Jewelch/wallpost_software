@@ -34,7 +34,16 @@ enum SelectableDateRangeOptions {
 }
 
 class DateRangeFilters {
-  SelectableDateRangeOptions selectedRangeOption = SelectableDateRangeOptions.today;
+  SelectableDateRangeOptions selectedRangeOption = SelectableDateRangeOptions.thisYear;
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
+
+
+  DateRangeFilters copy(){
+    var copyDateRangeFilter =  DateRangeFilters();
+    copyDateRangeFilter.selectedRangeOption = selectedRangeOption;
+    copyDateRangeFilter.startDate = startDate;
+    copyDateRangeFilter.endDate = endDate;
+    return copyDateRangeFilter;
+  }
 }
