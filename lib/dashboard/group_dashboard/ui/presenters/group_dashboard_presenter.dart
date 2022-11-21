@@ -136,8 +136,8 @@ class GroupDashboardPresenter {
       var newData = await _groupDashboardDataProvider.get();
       if (_hasSelectedGroupBeenRemoved(newData)) _selectedGroup = null;
       _handleResponse(newData);
-    } on WPException catch (e) {
-      _view.showErrorMessageBanner("Failed to sync updated data.\n${e.userReadableMessage}");
+    } on WPException catch (_) {
+      //do nothing
     }
   }
 

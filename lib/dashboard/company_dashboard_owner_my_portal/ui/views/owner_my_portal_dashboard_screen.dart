@@ -189,13 +189,6 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
   }
 
   @override
-  void showErrorMessageBanner(String errorMessage) {
-    if (ModalRoute.of(context)?.isCurrent == false) return;
-    var snackBar = SnackBar(content: Text(errorMessage));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  @override
   void onDidLoadData() {
     _viewTypeNotifier.notify(DATA_VIEW);
   }

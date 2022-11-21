@@ -303,13 +303,6 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
   }
 
   @override
-  void showErrorMessageBanner(String message) {
-    if (ModalRoute.of(context)?.isCurrent == false) return;
-    var snackBar = SnackBar(content: Text(message));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  @override
   void onDidLoadData() {
     _viewSelectorNotifier.notify(DATA_VIEW);
   }

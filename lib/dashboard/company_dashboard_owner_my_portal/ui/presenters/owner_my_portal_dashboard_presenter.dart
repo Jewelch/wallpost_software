@@ -82,8 +82,8 @@ class OwnerMyPortalDashboardPresenter {
         year: _filters.year,
       );
       _view.onDidLoadData();
-    } on WPException catch (e) {
-      _view.showErrorMessageBanner("Failed to sync updated data.\n${e.userReadableMessage}");
+    } on WPException catch (_) {
+      //do nothing
     }
   }
 

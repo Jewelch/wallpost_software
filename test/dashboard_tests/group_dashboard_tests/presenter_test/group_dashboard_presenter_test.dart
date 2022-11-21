@@ -275,8 +275,6 @@ void main() {
       //then
       verifyInOrder([
         () => mockDashboardDataProvider.get(),
-        () => view
-            .showErrorMessageBanner("Failed to sync updated data.\n${InvalidResponseException().userReadableMessage}"),
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });

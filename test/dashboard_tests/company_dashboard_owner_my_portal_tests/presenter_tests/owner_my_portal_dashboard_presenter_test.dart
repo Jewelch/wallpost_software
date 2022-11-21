@@ -194,8 +194,6 @@ void main() {
       //then
       verifyInOrder([
         () => dataProvider.get(month: any(named: "month"), year: any(named: "year")),
-        () => view
-            .showErrorMessageBanner("Failed to sync updated data.\n${InvalidResponseException().userReadableMessage}")
       ]);
       _verifyNoMoreInteractionsOnAllMocks();
     });
