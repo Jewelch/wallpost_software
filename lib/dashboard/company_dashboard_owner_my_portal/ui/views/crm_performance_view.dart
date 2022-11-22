@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -28,12 +30,19 @@ class _CRMPerformanceViewState extends State<CRMPerformanceView>
   final int viewTypeLoader = 0;
   final int viewTypeError = 1;
   final int viewTypeData = 2;
+  Timer? _backgroundSyncTimer;
 
   @override
   void initState() {
     _presenter = CRMPerformancePresenter(this, widget._filters);
     _presenter.loadData();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _backgroundSyncTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -167,6 +176,15 @@ class _CRMPerformanceViewState extends State<CRMPerformanceView>
   @override
   void onDidLoadData() {
     _viewTypeNotifier.notify(viewTypeData);
+    _startSyncingDataAtRegularIntervals();
+  }
+
+  void _startSyncingDataAtRegularIntervals() {
+    if (_backgroundSyncTimer == null || _backgroundSyncTimer!.isActive == false) {
+      _backgroundSyncTimer = new Timer.periodic(const Duration(seconds: 30), (Timer timer) {
+        _presenter.loadData();
+      });
+    }
   }
 
   //MARK: AutomaticKeepAliveClientMixin functions to retain data

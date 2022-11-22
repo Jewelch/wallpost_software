@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
@@ -41,6 +43,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
   var _filtersBarVisibilityNotifier = ItemNotifier<bool>(defaultValue: false);
   var _companyListNotifier = Notifier();
   var _attendanceWidgetNotifier = ItemNotifier<bool>(defaultValue: false);
+  Timer? _backgroundSyncTimer;
 
   @override
   void initState() {
@@ -53,6 +56,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
 
   @override
   void dispose() {
+    _backgroundSyncTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     presenter.stopListeningToNotifications();
     super.dispose();
@@ -305,6 +309,15 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
   @override
   void onDidLoadData() {
     _viewSelectorNotifier.notify(DATA_VIEW);
+    _startSyncingDataAtRegularIntervals();
+  }
+
+  void _startSyncingDataAtRegularIntervals() {
+    if (_backgroundSyncTimer == null || _backgroundSyncTimer!.isActive == false) {
+      _backgroundSyncTimer = new Timer.periodic(const Duration(seconds: 30), (Timer timer) {
+        presenter.syncDataInBackground();
+      });
+    }
   }
 
   @override

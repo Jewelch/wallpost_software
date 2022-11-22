@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
@@ -39,6 +41,7 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
 
   var _errorMessage = "";
   var _viewTypeNotifier = ItemNotifier<int>(defaultValue: LOADER_VIEW);
+  Timer? _backgroundSyncTimer;
 
   @override
   void initState() {
@@ -50,6 +53,7 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
 
   @override
   void dispose() {
+    _backgroundSyncTimer?.cancel();
     _presenter.stopListeningToNotifications();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -191,6 +195,15 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
   @override
   void onDidLoadData() {
     _viewTypeNotifier.notify(DATA_VIEW);
+    _startSyncingDataAtRegularIntervals();
+  }
+
+  void _startSyncingDataAtRegularIntervals() {
+    if (_backgroundSyncTimer == null || _backgroundSyncTimer!.isActive == false) {
+      _backgroundSyncTimer = new Timer.periodic(const Duration(seconds: 30), (Timer timer) {
+        _presenter.syncDataInBackground();
+      });
+    }
   }
 
   @override
