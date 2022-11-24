@@ -34,7 +34,26 @@ enum SelectableDateRangeOptions {
 }
 
 class DateRangeFilters {
-  SelectableDateRangeOptions selectedRangeOption = SelectableDateRangeOptions.today;
+  SelectableDateRangeOptions _selectedRangeOption = SelectableDateRangeOptions.today;
+
+  SelectableDateRangeOptions get selectedRangeOption => _selectedRangeOption;
+
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
+
+  void setSelectedDateRangeOption(SelectableDateRangeOptions selectableDateRangeOptions) {
+    if (selectableDateRangeOptions == SelectableDateRangeOptions.thisMonth) {
+      endDate = DateTime.now();
+      startDate = startDate.subtract(Duration(days: 30));
+    }
+    this._selectedRangeOption = selectableDateRangeOptions;
+  }
+
+  DateRangeFilters copy() {
+    var copyDateRangeFilter = DateRangeFilters();
+    copyDateRangeFilter._selectedRangeOption = selectedRangeOption;
+    copyDateRangeFilter.startDate = startDate;
+    copyDateRangeFilter.endDate = endDate;
+    return copyDateRangeFilter;
+  }
 }

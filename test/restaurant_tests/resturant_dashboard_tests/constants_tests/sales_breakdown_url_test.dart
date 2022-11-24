@@ -8,7 +8,7 @@ main() {
   var dateRangeFilter = DateRangeFilters();
 
   test("creating aggregated sales data url when selected date filter is today", () {
-    dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.today;
+    dateRangeFilter.setSelectedDateRangeOption(SelectableDateRangeOptions.today);
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
@@ -17,7 +17,7 @@ main() {
   });
 
   test("creating aggregated sales data url when selected date filter is yesterday", () {
-    dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.yesterday;
+    dateRangeFilter.setSelectedDateRangeOption(SelectableDateRangeOptions.yesterday);
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
@@ -26,7 +26,7 @@ main() {
   });
 
   test("creating aggregated sales data url when selected date filter is this week", () {
-    dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.thisWeek;
+    dateRangeFilter.setSelectedDateRangeOption(SelectableDateRangeOptions.thisWeek);
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
@@ -35,9 +35,7 @@ main() {
   });
 
   test("creating aggregated sales data url when selected date filter is this month", () {
-    dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.thisMonth;
-    dateRangeFilter.startDate = DateTime.now();
-    dateRangeFilter.endDate = DateTime.now().subtract(Duration(days: 30));
+    dateRangeFilter.setSelectedDateRangeOption(SelectableDateRangeOptions.thisMonth);
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
@@ -46,7 +44,7 @@ main() {
   });
 
   test("creating aggregated sales data url when selected date filter is this year", () {
-    dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.thisYear;
+    dateRangeFilter.setSelectedDateRangeOption(SelectableDateRangeOptions.thisYear);
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
@@ -55,7 +53,7 @@ main() {
   });
 
   test("creating aggregated sales data url when selected date filter is last year", () {
-    dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.lastYear;
+    dateRangeFilter.setSelectedDateRangeOption(SelectableDateRangeOptions.lastYear);
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
@@ -64,7 +62,7 @@ main() {
   });
 
   test("creating the url when selected date url filter is custom", () {
-    dateRangeFilter.selectedRangeOption = SelectableDateRangeOptions.custom;
+    dateRangeFilter.setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
     dateRangeFilter.startDate = DateTime.now().subtract(Duration(days: 10));
     dateRangeFilter.endDate = DateTime.now().subtract(Duration(days: 1));
 

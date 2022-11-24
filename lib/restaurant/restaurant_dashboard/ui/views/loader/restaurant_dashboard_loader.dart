@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
+import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/seles_break_down_loader.dart';
+
+import 'restaurant_dashboard_loader_container.dart';
 
 class RestaurantDashboardLoader extends StatelessWidget {
   const RestaurantDashboardLoader({Key? key}) : super(key: key);
@@ -13,9 +16,9 @@ class RestaurantDashboardLoader extends StatelessWidget {
           SizedBox(height: 16),
           _tile(context),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Container(
-              height: 220,
+              height: 120,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.white,
@@ -24,13 +27,12 @@ class RestaurantDashboardLoader extends StatelessWidget {
           ),
           SizedBox(height: 16),
           _tile(context),
-          cards(context),
+          _customChips(),
           SizedBox(height: 16),
-          cards(context),
-          SizedBox(height: 16),
-          cards(context),
-          SizedBox(height: 16),
-          cards(context),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: SalesBreakDownLoader(),
+          )
         ],
       ),
     );
@@ -38,12 +40,11 @@ class RestaurantDashboardLoader extends StatelessWidget {
 
   Widget _tile(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(left: 24.0, bottom: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _emptyContainer(height: 20, width: 120, cornerRadius: 6),
-          _emptyContainer(height: 20, width: 120, cornerRadius: 6),
+          RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 6),
         ],
       ),
     );
@@ -55,9 +56,9 @@ class RestaurantDashboardLoader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: _emptyContainer(height: 80, cornerRadius: 20)),
+          Expanded(child: RestaurantContainerLoader(height: 80, cornerRadius: 20)),
           SizedBox(width: 16),
-          Expanded(child: _emptyContainer(height: 80, cornerRadius: 20)),
+          Expanded(child: RestaurantContainerLoader(height: 80, cornerRadius: 20)),
         ],
       ),
     );
@@ -68,24 +69,32 @@ class RestaurantDashboardLoader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         children: [
-          _emptyContainer(height: 40, width: 40, cornerRadius: 10),
+          RestaurantContainerLoader(height: 40, width: 40, cornerRadius: 10),
           SizedBox(width: 40),
-          Expanded(child: _emptyContainer(height: 26, cornerRadius: 6)),
+          Expanded(child: RestaurantContainerLoader(height: 26, cornerRadius: 6)),
           SizedBox(width: 40),
-          _emptyContainer(height: 40, width: 40, cornerRadius: 10),
+          RestaurantContainerLoader(height: 40, width: 40, cornerRadius: 10),
         ],
       ),
     );
   }
 
-  _emptyContainer({required double height, double width = 80, required double cornerRadius}) {
-    return Container(
-      height: height,
-      width: width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(cornerRadius),
-      ),
+  Widget _customChips() {
+    return Row(
+      children: [
+        SizedBox(width: 24),
+        Expanded(
+          child: RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 12),
+        ),
+        SizedBox(width: 15),
+        Expanded(
+          child: RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 12),
+        ),
+        SizedBox(width: 15),
+        Expanded(
+          child: RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 12),
+        ),
+      ],
     );
   }
 }

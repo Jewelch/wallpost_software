@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 
-class ModalSheetController {
-  __ModalSheetScreenState? _state;
+class CenterSheetController {
+  _CenterSheetScreenState? _state;
 
-  void _addState(__ModalSheetScreenState _state) {
+  void _addState(_CenterSheetScreenState _state) {
     this._state = _state;
   }
 
@@ -23,20 +22,18 @@ class ModalSheetController {
   }
 }
 
-class ModalSheetPresenter {
+class CenterSheetPresenter {
   static Future<dynamic> present({
     required BuildContext context,
     required Widget content,
-    required ModalSheetController controller,
+    required CenterSheetController controller,
     bool shouldDismissOnTap = true,
-    bool isCurveApplied = true,
   }) {
     return ScreenPresenter.present(
-      _ModalSheetScreen(
+      _CenterSheetScreen(
         content: content,
         controller: controller,
         shouldDismissOnTap: shouldDismissOnTap,
-        isCurveApplied: isCurveApplied,
       ),
       context,
       slideDirection: SlideDirection.none,
@@ -44,28 +41,24 @@ class ModalSheetPresenter {
   }
 }
 
-class _ModalSheetScreen extends StatefulWidget {
+class _CenterSheetScreen extends StatefulWidget {
   final Widget content;
-  final ModalSheetController? controller;
+  final CenterSheetController? controller;
   final bool shouldDismissOnTap;
-  final bool isCurveApplied;
 
-  const _ModalSheetScreen(
-      {required this.content, this.controller, required this.shouldDismissOnTap, required this.isCurveApplied});
+  const _CenterSheetScreen({required this.content, this.controller, required this.shouldDismissOnTap});
 
   @override
-  __ModalSheetScreenState createState() => __ModalSheetScreenState();
+  _CenterSheetScreenState createState() => _CenterSheetScreenState();
 }
 
-class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTickerProviderStateMixin {
+class _CenterSheetScreenState extends State<_CenterSheetScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> offset;
   late Animation<double> opacity;
-  late bool isCurveApplied;
 
   @override
   void initState() {
-    isCurveApplied = widget.isCurveApplied;
     if (widget.controller != null) widget.controller!._addState(this);
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _animationController.reverseDuration = const Duration(milliseconds: 200);
@@ -92,9 +85,9 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
         return Future.value(false);
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: Stack(
+          alignment: Alignment.center,
           children: <Widget>[
             FadeTransition(
               opacity: opacity,
@@ -113,16 +106,20 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                   child: SlideTransition(
                     position: offset,
                     child: Container(
-                      constraints: BoxConstraints.loose(const Size(double.infinity, 700)),
                       color: Colors.transparent,
-                      child: ListView(
-                        padding: EdgeInsets.zero,
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: [
-                          if (isCurveApplied) CurveBottomToTop(),
-                          isCurveApplied ? Container(color: Colors.white, child: widget.content) : widget.content,
-                        ],
+                      child: Center(
+                        child: ListView(
+                          padding: EdgeInsets.zero,
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 24),
+                              child: widget.content,
+                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24)),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

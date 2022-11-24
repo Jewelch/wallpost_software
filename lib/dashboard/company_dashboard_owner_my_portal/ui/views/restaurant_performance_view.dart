@@ -9,7 +9,7 @@ import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/view_con
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 
 import '../../../../_common_widgets/screen_presenter/screen_presenter.dart';
-import '../../../../restaurant/restaurant_dashboard/ui/views/restaurant_dashboard_screen.dart';
+import '../../../../restaurant/restaurant_dashboard/ui/views/screens/restaurant_dashboard_screen.dart';
 import '../models/owner_dashboard_filters.dart';
 import '../models/performance_value.dart';
 import '../presenters/restaurant_performance_presenter.dart';

@@ -33,7 +33,7 @@ class _LixDetailScreenState extends State<LixSliderOne> {
             Container(
               margin: EdgeInsets.only(left: 16, right: 16),
               child: Text("LIXX Is a blockchain-powered reward system",
-                  style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: AppColors.lixTextColorDark),
+                  style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: AppColors.textColorBlueGray),
                   textAlign: TextAlign.center),
             ),
             SizedBox(
@@ -43,7 +43,7 @@ class _LixDetailScreenState extends State<LixSliderOne> {
               margin: EdgeInsets.only(left: 16, right: 16),
               child: Text(
                 "WallPost Software and other partners \n rewards high performing staff with \n  LIXX tokens",
-                style: TextStyles.titleTextStyle.copyWith(color: AppColors.lixTextColorLight),
+                style: TextStyles.titleTextStyle.copyWith(color: AppColors.textColorBlueGrayLight),
                 textAlign: TextAlign.center,
               ),
             ),

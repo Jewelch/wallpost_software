@@ -7,15 +7,18 @@ class AppColors {
   static const Color defaultColorDarkContrastColor = Color.fromRGBO(135, 169, 199, 1.0);
 
   //MARK: Text colors
-  static const Color textColorBlack = Color.fromRGBO(40, 40, 40, 1.0);
+  static const Color textColorBlack = Color.fromRGBO(41, 54, 64, 1.0);
   static const Color textColorGray = Color.fromRGBO(160, 160, 160, 1.0);
   static const Color textColorDarkGray = Color.fromRGBO(119, 119, 119, 1.0);
+  static const Color textColorBlueGray = Color.fromRGBO(75, 90, 102, 1.0);
+  static const Color textColorBlueGrayLight = Color.fromRGBO(133, 151, 166, 1.0);
 
   //MARK: Button colors
   static const Color disabledButtonColor = Color.fromRGBO(210, 210, 210, 1.0);
 
   //MARK: Screen colors
   static const Color screenBackgroundColor = Colors.white;
+  static const Color screenBackgroundColor2 = Color.fromRGBO(237, 243, 247, 1);
 
   //MARK: Module colors
   static const Color myPortalColor = Color.fromRGBO(191, 10, 10, 1.0);
@@ -49,8 +52,4 @@ class AppColors {
 
   //MARK: Banner colors
   static const Color bannerBackgroundColor = Color.fromRGBO(248, 162, 40, 1.0);
-
-  //MARK: Banner colors
-  static const Color lixTextColorDark = Color.fromRGBO(75, 90, 102, 1.0);
-  static const Color lixTextColorLight = Color.fromRGBO(133, 151, 166, 1.0);
 }

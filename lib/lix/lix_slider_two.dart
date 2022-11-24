@@ -22,7 +22,7 @@ class LixDetailsSliderTwo extends StatelessWidget {
           margin: EdgeInsets.only(left: 16, right: 16),
           child: Text(
             "LIXX tokens are Binance\ncompliant utility tokens.",
-            style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: AppColors.lixTextColorDark),
+            style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: AppColors.textColorBlueGray),
             textAlign: TextAlign.center,
           ),
         ),
@@ -34,7 +34,7 @@ class LixDetailsSliderTwo extends StatelessWidget {
           padding: EdgeInsets.only(left: 30, right: 30),
           child: Text(
             "LIXX rewards are a crypto token that\ncan be redeemed or traded, do not\nexpire, and have an increasing value",
-            style: TextStyles.titleTextStyle.copyWith(color: AppColors.lixTextColorLight),
+            style: TextStyles.titleTextStyle.copyWith(color: AppColors.textColorBlueGrayLight),
             textAlign: TextAlign.center,
           ),
         )
