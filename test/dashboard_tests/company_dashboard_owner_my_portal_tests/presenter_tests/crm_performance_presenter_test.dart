@@ -124,27 +124,18 @@ void main() {
 
     //low
     when(() => data.targetAchievedPercent).thenReturn(10);
-    when(() => data.isTargetAchievedPercentLow()).thenReturn(true);
-    when(() => data.isTargetAchievedPercentMedium()).thenReturn(false);
-    when(() => data.isTargetAchievedPercentHigh()).thenReturn(false);
     expect(presenter.getTargetAchieved().label, "Target Achieved");
     expect(presenter.getTargetAchieved().value, "10%");
     expect(presenter.getTargetAchieved().textColor, AppColors.red);
 
     //medium
-    when(() => data.targetAchievedPercent).thenReturn(50);
-    when(() => data.isTargetAchievedPercentMedium()).thenReturn(true);
-    when(() => data.isTargetAchievedPercentLow()).thenReturn(false);
-    when(() => data.isTargetAchievedPercentHigh()).thenReturn(false);
+    when(() => data.targetAchievedPercent).thenReturn(70);
     expect(presenter.getTargetAchieved().label, "Target Achieved");
-    expect(presenter.getTargetAchieved().value, "50%");
+    expect(presenter.getTargetAchieved().value, "70%");
     expect(presenter.getTargetAchieved().textColor, AppColors.yellow);
 
     //high
     when(() => data.targetAchievedPercent).thenReturn(90);
-    when(() => data.isTargetAchievedPercentHigh()).thenReturn(true);
-    when(() => data.isTargetAchievedPercentLow()).thenReturn(false);
-    when(() => data.isTargetAchievedPercentMedium()).thenReturn(false);
     expect(presenter.getTargetAchieved().label, "Target Achieved");
     expect(presenter.getTargetAchieved().value, "90%");
     expect(presenter.getTargetAchieved().textColor, AppColors.green);
@@ -160,7 +151,7 @@ void main() {
     when(() => data.inPipeline).thenReturn("2,300");
     expect(presenter.getInPipeline().label, "In Pipeline");
     expect(presenter.getInPipeline().value, "2,300");
-    expect(presenter.getInPipeline().textColor, AppColors.defaultColorDark);
+    expect(presenter.getInPipeline().textColor, AppColors.textColorBlack);
   });
 
   test("get lead converted", () async {
@@ -172,27 +163,18 @@ void main() {
 
     //low
     when(() => data.leadConvertedPercent).thenReturn(10);
-    when(() => data.isLeadConvertedPercentLow()).thenReturn(true);
-    when(() => data.isLeadConvertedPercentMedium()).thenReturn(false);
-    when(() => data.isLeadConvertedPercentHigh()).thenReturn(false);
     expect(presenter.getLeadConverted().label, "Lead Converted");
     expect(presenter.getLeadConverted().value, "10%");
     expect(presenter.getLeadConverted().textColor, AppColors.red);
 
     //medium
-    when(() => data.leadConvertedPercent).thenReturn(50);
-    when(() => data.isLeadConvertedPercentMedium()).thenReturn(true);
-    when(() => data.isLeadConvertedPercentLow()).thenReturn(false);
-    when(() => data.isLeadConvertedPercentHigh()).thenReturn(false);
+    when(() => data.leadConvertedPercent).thenReturn(70);
     expect(presenter.getLeadConverted().label, "Lead Converted");
-    expect(presenter.getLeadConverted().value, "50%");
+    expect(presenter.getLeadConverted().value, "70%");
     expect(presenter.getLeadConverted().textColor, AppColors.yellow);
 
     //high
     when(() => data.leadConvertedPercent).thenReturn(90);
-    when(() => data.isLeadConvertedPercentHigh()).thenReturn(true);
-    when(() => data.isLeadConvertedPercentLow()).thenReturn(false);
-    when(() => data.isLeadConvertedPercentMedium()).thenReturn(false);
     expect(presenter.getLeadConverted().label, "Lead Converted");
     expect(presenter.getLeadConverted().value, "90%");
     expect(presenter.getLeadConverted().textColor, AppColors.green);

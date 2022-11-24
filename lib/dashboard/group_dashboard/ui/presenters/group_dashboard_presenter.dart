@@ -120,7 +120,7 @@ class GroupDashboardPresenter {
       summaryToShow = _groupDashboardData!.financialSummary;
     }
 
-    if (_groupDashboardData!.shouldShowFinancialData() && summaryToShow != null) {
+    if (summaryToShow != null && _groupDashboardData!.shouldShowFinancialData()) {
       return summaryToShow;
     } else {
       return null;
@@ -133,20 +133,16 @@ class GroupDashboardPresenter {
     if (_groupDashboardData == null) return;
 
     try {
-      var existingData = _groupDashboardData!;
       var newData = await _groupDashboardDataProvider.get();
-      if (_didDataChange(existingData, newData)) {
-        _groupDashboardData = newData;
-        _handleResponse(newData);
-      }
+      if (_hasSelectedGroupBeenRemoved(newData)) _selectedGroup = null;
+      _handleResponse(newData);
     } on WPException catch (_) {
       //do nothing
     }
   }
 
-  bool _didDataChange(GroupDashboardData existingData, GroupDashboardData newData) {
-    return _getTotalApprovalCount(existingData) != _getTotalApprovalCount(newData) ||
-        existingData.companies.length != newData.companies.length;
+  bool _hasSelectedGroupBeenRemoved(GroupDashboardData newData) {
+    return _selectedGroup != null && newData.groups.where((g) => g.groupId == _selectedGroup!.groupId).length == 0;
   }
 
   //MARK: Function to refresh the dashboard data
@@ -224,6 +220,10 @@ class GroupDashboardPresenter {
 
   String getSearchText() {
     return _searchText;
+  }
+
+  CompanyGroup? getSelectedCompanyGroup() {
+    return _selectedGroup;
   }
 
   List<CompanyGroup> getCompanyGroups() {

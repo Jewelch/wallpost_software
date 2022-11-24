@@ -17,7 +17,6 @@ class PushNotification extends JSONInitializable {
       objectId = sift.readStringFromMap(jsonMap, "reference_id");
       title = sift.readStringFromMapWithDefaultValue(notificationMap, "title", "Received Notification")!;
     } on SiftException catch (e) {
-      print(e.errorMessage);
       throw MappingException('Failed to cast PushNotification response. Error message - ${e.errorMessage}');
     }
   }

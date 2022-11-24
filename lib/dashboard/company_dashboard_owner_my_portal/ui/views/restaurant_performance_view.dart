@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -6,6 +8,8 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/view_contracts/module_performance_view.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 
+import '../../../../_common_widgets/screen_presenter/screen_presenter.dart';
+import '../../../../restaurant/restaurant_dashboard/ui/views/screens/restaurant_dashboard_screen.dart';
 import '../models/owner_dashboard_filters.dart';
 import '../models/performance_value.dart';
 import '../presenters/restaurant_performance_presenter.dart';
@@ -28,6 +32,7 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
   final int viewTypeLoader = 0;
   final int viewTypeError = 1;
   final int viewTypeData = 2;
+  Timer? _backgroundSyncTimer;
 
   @override
   void initState() {
@@ -37,27 +42,42 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
   }
 
   @override
+  void dispose() {
+    _backgroundSyncTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
-    return VisibilityDetector(
-      key: Key('restaurant-performance-view'),
-      onVisibilityChanged: (visibilityInfo) {
-        print(visibilityInfo.visibleFraction);
-        if (visibilityInfo.visibleFraction == 1.0) _presenter.loadData();
+    return GestureDetector(
+      onTap: () {
+        ScreenPresenter.present(
+          RestaurantDashboardScreen(),
+          context,
+          slideDirection: SlideDirection.fromBottom,
+        );
       },
-      child: PerformanceViewHolder(
-        content: Center(
-          child: ItemNotifiable<int>(
-            notifier: _viewTypeNotifier,
-            builder: (context, viewType) {
-              if (viewType == viewTypeLoader) {
-                return ModuleLoader();
-              } else if (viewType == viewTypeError) {
-                return _errorView();
-              } else {
-                return _dataView();
-              }
-            },
+      child: VisibilityDetector(
+        key: Key('restaurant-performance-view'),
+        onVisibilityChanged: (visibilityInfo) {
+          if (visibilityInfo.visibleFraction == 1.0) _presenter.loadData();
+        },
+        child: PerformanceViewHolder(
+          padding: EdgeInsets.all(8),
+          content: Center(
+            child: ItemNotifiable<int>(
+              notifier: _viewTypeNotifier,
+              builder: (context, viewType) {
+                if (viewType == viewTypeLoader) {
+                  return ModuleLoader();
+                } else if (viewType == viewTypeError) {
+                  return _errorView();
+                } else {
+                  return _dataView();
+                }
+              },
+            ),
           ),
         ),
       ),
@@ -83,17 +103,22 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
   }
 
   Widget _dataView() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Row(
       children: [
-        Row(
-          children: [
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getTodaysSale())),
-            Container(height: 80, width: 1, color: AppColors.defaultColor.withOpacity(0.1)),
-            Expanded(child: _tile(_presenter.getYTDSale())),
-            SizedBox(width: 12),
-          ],
+        Expanded(
+          child: PerformanceViewHolder(
+            content: _tile(_presenter.getTodaysSale()),
+            backgroundColor: AppColors.lightGreen,
+            showShadow: false,
+          ),
+        ),
+        SizedBox(width: 8),
+        Expanded(
+          child: PerformanceViewHolder(
+            content: _tile(_presenter.getYTDSale()),
+            backgroundColor: AppColors.lightYellow,
+            showShadow: false,
+          ),
         ),
       ],
     );
@@ -101,6 +126,7 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
 
   Widget _tile(PerformanceValue performanceValue) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           performanceValue.value,
@@ -130,6 +156,15 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
   @override
   void onDidLoadData() {
     _viewTypeNotifier.notify(viewTypeData);
+    _startSyncingDataAtRegularIntervals();
+  }
+
+  void _startSyncingDataAtRegularIntervals() {
+    if (_backgroundSyncTimer == null || _backgroundSyncTimer!.isActive == false) {
+      _backgroundSyncTimer = new Timer.periodic(const Duration(seconds: 30), (Timer timer) {
+        _presenter.loadData();
+      });
+    }
   }
 
   //MARK: AutomaticKeepAliveClientMixin functions to retain data

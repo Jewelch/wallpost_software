@@ -42,10 +42,10 @@ class RetailPerformanceViewState extends State<RetailPerformanceView>
     return VisibilityDetector(
       key: Key('retail-performance-view'),
       onVisibilityChanged: (visibilityInfo) {
-        print(visibilityInfo.visibleFraction);
         if (visibilityInfo.visibleFraction == 1.0) _presenter.loadData();
       },
       child: PerformanceViewHolder(
+        padding: EdgeInsets.all(8),
         content: Center(
           child: ItemNotifiable<int>(
             notifier: _viewTypeNotifier,
@@ -83,17 +83,22 @@ class RetailPerformanceViewState extends State<RetailPerformanceView>
   }
 
   Widget _dataView() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Row(
       children: [
-        Row(
-          children: [
-            SizedBox(width: 12),
-            Expanded(child: _tile(_presenter.getTodaysSale())),
-            Container(height: 80, width: 1, color: AppColors.defaultColor.withOpacity(0.1)),
-            Expanded(child: _tile(_presenter.getYTDSale())),
-            SizedBox(width: 12),
-          ],
+        Expanded(
+          child: PerformanceViewHolder(
+            content: _tile(_presenter.getTodaysSale()),
+            backgroundColor: AppColors.lightGreen,
+            showShadow: false,
+          ),
+        ),
+        SizedBox(width: 8),
+        Expanded(
+          child: PerformanceViewHolder(
+            content: _tile(_presenter.getYTDSale()),
+            backgroundColor: AppColors.lightYellow,
+            showShadow: false,
+          ),
         ),
       ],
     );
@@ -101,6 +106,7 @@ class RetailPerformanceViewState extends State<RetailPerformanceView>
 
   Widget _tile(PerformanceValue performanceValue) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           performanceValue.value,

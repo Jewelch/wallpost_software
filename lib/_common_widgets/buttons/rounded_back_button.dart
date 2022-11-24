@@ -7,5 +7,7 @@ class RoundedBackButton extends RoundedIconButton {
           iconName: 'assets/icons/back_icon.svg',
           iconSize: 18,
           onPressed: onPressed,
+          backgroundColor: backgroundColor,
+          iconColor: iconColor,
         );
 }

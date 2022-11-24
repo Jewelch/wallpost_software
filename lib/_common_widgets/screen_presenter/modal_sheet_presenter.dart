@@ -29,12 +29,14 @@ class ModalSheetPresenter {
     required Widget content,
     required ModalSheetController controller,
     bool shouldDismissOnTap = true,
+    bool isCurveApplied = true,
   }) {
     return ScreenPresenter.present(
       _ModalSheetScreen(
         content: content,
         controller: controller,
         shouldDismissOnTap: shouldDismissOnTap,
+        isCurveApplied: isCurveApplied,
       ),
       context,
       slideDirection: SlideDirection.none,
@@ -46,8 +48,10 @@ class _ModalSheetScreen extends StatefulWidget {
   final Widget content;
   final ModalSheetController? controller;
   final bool shouldDismissOnTap;
+  final bool isCurveApplied;
 
-  const _ModalSheetScreen({required this.content, this.controller, required this.shouldDismissOnTap});
+  const _ModalSheetScreen(
+      {required this.content, this.controller, required this.shouldDismissOnTap, required this.isCurveApplied});
 
   @override
   __ModalSheetScreenState createState() => __ModalSheetScreenState();
@@ -57,9 +61,11 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
   late AnimationController _animationController;
   late Animation<Offset> offset;
   late Animation<double> opacity;
+  late bool isCurveApplied;
 
   @override
   void initState() {
+    isCurveApplied = widget.isCurveApplied;
     if (widget.controller != null) widget.controller!._addState(this);
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _animationController.reverseDuration = const Duration(milliseconds: 200);
@@ -114,8 +120,8 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         children: [
-                          CurveBottomToTop(),
-                          Container(color: Colors.white, child: widget.content),
+                          if (isCurveApplied) CurveBottomToTop(),
+                          isCurveApplied ? Container(color: Colors.white, child: widget.content) : widget.content,
                         ],
                       ),
                     ),

@@ -43,27 +43,29 @@ class _YtdFilterState extends State<YtdFilter> {
     return Row(
       children: [
         SizedBox(
-          width: 80,
+          width: 110,
           child: DropdownFilter(
             items: _getMonthNamesForSelectedYear(),
             selectedValue: _getSelectedMonthName(),
             textStyle: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
             backgroundColor: Colors.white,
-            dropdownColor: AppColors.filtersBackgroundColour,
+            dropdownColor: AppColors.filtersBackgroundColor,
             dropdownArrowColor: AppColors.defaultColor,
             onDidSelectedItemAtIndex: (month) => _selectMonth(month),
+            selectedItemAlignment: AlignmentDirectional.centerEnd,
           ),
         ),
         SizedBox(
-          width: 90,
+          width: 110,
           child: DropdownFilter(
             items: _getYears(),
             selectedValue: _getSelectedYear(),
             textStyle: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
             backgroundColor: Colors.white,
-            dropdownColor: AppColors.filtersBackgroundColour,
+            dropdownColor: AppColors.filtersBackgroundColor,
             dropdownArrowColor: AppColors.defaultColor,
             onDidSelectedItemAtIndex: (index) => _selectYearAtIndex(index),
+            selectedItemAlignment: AlignmentDirectional.centerEnd,
           ),
         ),
       ],

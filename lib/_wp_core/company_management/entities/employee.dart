@@ -38,9 +38,8 @@ class Employee extends JSONInitializable {
   List<Role> _initRoles(List<String> roleStrings) {
     List<Role> roles = [];
     roleStrings.forEach((roleString) {
-      var role = initializeRoleFromString(roleString);
-      if (role == null) throw MappingException('Failed to initialize role from Employee response.');
-      roles.add(role);
+      var role = Role.initFromString(roleString);
+      if (role != null) roles.add(role);
     });
     return roles;
   }
@@ -61,6 +60,26 @@ class Employee extends JSONInitializable {
 
   bool isGM() {
     return _roles.contains(Role.GeneralManager);
+  }
+
+  bool isAFinanceManager() {
+    return _roles.contains(Role.FinanceManager);
+  }
+
+  bool isACrmManager() {
+    return _roles.contains(Role.CrmManager);
+  }
+
+  bool isAHrManager() {
+    return _roles.contains(Role.HrManager);
+  }
+
+  bool isARestaurantManager() {
+    return _roles.contains(Role.RestaurantManager);
+  }
+
+  bool isARetailManager() {
+    return _roles.contains(Role.RetailManager);
   }
 
   String get v1Id => _v1Id;

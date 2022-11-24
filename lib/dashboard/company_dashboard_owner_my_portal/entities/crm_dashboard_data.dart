@@ -29,38 +29,6 @@ class CRMDashboardData extends JSONInitializable {
     return value.contains("-");
   }
 
-  bool isTargetAchievedPercentLow() {
-    return _targetAchievedPercent <= lowPerformanceCutoff();
-  }
-
-  bool isTargetAchievedPercentMedium() {
-    return _targetAchievedPercent > lowPerformanceCutoff() && _targetAchievedPercent <= mediumPerformanceCutoff();
-  }
-
-  bool isTargetAchievedPercentHigh() {
-    return _targetAchievedPercent > mediumPerformanceCutoff();
-  }
-
-  bool isLeadConvertedPercentLow() {
-    return _leadConvertedPercent <= lowPerformanceCutoff();
-  }
-
-  bool isLeadConvertedPercentMedium() {
-    return _leadConvertedPercent > lowPerformanceCutoff() && _leadConvertedPercent <= mediumPerformanceCutoff();
-  }
-
-  bool isLeadConvertedPercentHigh() {
-    return _leadConvertedPercent > mediumPerformanceCutoff();
-  }
-
-  int lowPerformanceCutoff() {
-    return 65;
-  }
-
-  int mediumPerformanceCutoff() {
-    return 79;
-  }
-
   String get actualRevenue => _actualRevenue;
 
   int get targetAchievedPercent => _targetAchievedPercent;

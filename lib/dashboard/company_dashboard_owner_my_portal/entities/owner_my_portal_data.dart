@@ -22,7 +22,7 @@ class OwnerMyPortalData extends JSONInitializable {
       _companyPerformance = sift.readNumberFromMap(jsonMap, 'company_performance');
       _absentees = sift.readNumberFromMap(jsonMap, 'absentees').toInt();
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast Company response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast OwnerMyPortalData response. Error message - ${e.errorMessage}');
     } on MappingException {
       rethrow;
     }
@@ -35,26 +35,6 @@ class OwnerMyPortalData extends JSONInitializable {
       approvalsList.add(aggregatedApproval);
     }
     return approvalsList;
-  }
-
-  bool isCompanyPerformanceLow() {
-    return _companyPerformance <= lowPerformanceCutoff();
-  }
-
-  bool isCompanyPerformanceMedium() {
-    return _companyPerformance > lowPerformanceCutoff() && _companyPerformance <= mediumPerformanceCutoff();
-  }
-
-  bool isCompanyPerformanceHigh() {
-    return _companyPerformance > mediumPerformanceCutoff();
-  }
-
-  int lowPerformanceCutoff() {
-    return 65;
-  }
-
-  int mediumPerformanceCutoff() {
-    return 79;
   }
 
   List<AggregatedApproval> get aggregatedApprovals => _aggregatedApprovals;

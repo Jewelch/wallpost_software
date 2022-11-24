@@ -1,9 +1,9 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/header_card.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
+import '../../../../_common_widgets/graphs/performance_pie_chart.dart';
 import '../../../../_shared/constants/app_years.dart';
 import '../models/graph_value.dart';
 import '../presenters/employee_my_portal_dashboard_presenter.dart';
@@ -40,7 +40,11 @@ class EmployeeMyPortalHeaderCard extends StatelessWidget {
           Row(
             children: [
               SizedBox(width: 20),
-              _ytdPerformanceGraph(),
+              PerformancePieChart(
+                  size: 100,
+                  value: _presenter.getYTDPerformance().value.toDouble(),
+                  valueText: "${_presenter.getYTDPerformance().value}%",
+                  valueTextStyle: TextStyles.extraLargeTitleTextStyleBold),
               SizedBox(width: 12),
               Expanded(
                 child: _performanceTile(
@@ -60,72 +64,6 @@ class EmployeeMyPortalHeaderCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  //MARK: Functions to create ytd performance graph
-
-  Widget _ytdPerformanceGraph() {
-    return Container(
-      height: 100,
-      width: 100,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Center(
-              child: Text(
-                "${_presenter.getYTDPerformance().value}%",
-                style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: _presenter.getYTDPerformance().color),
-              ),
-            ),
-          ),
-          PieChart(
-            PieChartData(
-              sections: cutoffPerformanceSections(),
-              borderData: FlBorderData(show: false),
-              sectionsSpace: 0,
-              centerSpaceRadius: 41,
-              startDegreeOffset: 270.0,
-            ),
-          ),
-          PieChart(
-            PieChartData(
-              sections: actualPerformanceSections(),
-              borderData: FlBorderData(show: false),
-              sectionsSpace: 0,
-              centerSpaceRadius: 40,
-              startDegreeOffset: 270.0,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<PieChartSectionData> cutoffPerformanceSections() {
-    List<PieChartSectionData> pieChartDataList = [];
-    var graphSections = _presenter.getCutoffPerformanceGraphSections();
-    for (var graphSection in graphSections) {
-      pieChartDataList.add(_generatePieChartData(graphSection, radius: 3));
-    }
-    return pieChartDataList;
-  }
-
-  List<PieChartSectionData> actualPerformanceSections() {
-    List<PieChartSectionData> pieChartDataList = [];
-    var graphSections = _presenter.getActualPerformanceGraphSections();
-    for (var graphSection in graphSections) {
-      pieChartDataList.add(_generatePieChartData(graphSection, radius: 6));
-    }
-    return pieChartDataList;
-  }
-
-  PieChartSectionData _generatePieChartData(GraphValue graphSection, {required double radius}) {
-    return PieChartSectionData(
-      value: graphSection.value.toDouble(),
-      color: graphSection.color,
-      radius: radius,
-      title: '',
     );
   }
 

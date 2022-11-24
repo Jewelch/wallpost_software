@@ -14,6 +14,7 @@ class DropdownFilter extends StatelessWidget {
   final Color? dropdownColor;
   final TextStyle? textStyle;
   final Color? dropdownArrowColor;
+  final AlignmentDirectional selectedItemAlignment;
 
   DropdownFilter({
     required this.items,
@@ -22,10 +23,11 @@ class DropdownFilter extends StatelessWidget {
     this.hint,
     this.onDidSelectItemWithValue,
     this.onDidSelectedItemAtIndex,
-    this.backgroundColor = AppColors.filtersBackgroundColour,
+    this.backgroundColor = AppColors.filtersBackgroundColor,
     this.dropdownColor,
     this.textStyle,
     this.dropdownArrowColor = AppColors.defaultColorDark,
+    this.selectedItemAlignment = AlignmentDirectional.centerStart,
   });
 
   @override
@@ -40,13 +42,24 @@ class DropdownFilter extends StatelessWidget {
         items: items.map((item) {
           return DropdownMenuItem(
             value: item,
-            child: Text(_buildTitle(item), style: _buildTitleStyle(item)),
+            child: Text(_buildTitle(item), textScaleFactor: 1.0, style: _buildTitleStyle(item), maxLines: 1),
           );
         }).toList(),
+        selectedItemBuilder: (context) {
+          return items.map((item) {
+            return DropdownMenuItem(
+              value: item,
+              child: Text(_buildTitle(item), textScaleFactor: 1.0, style: _buildTitleStyle(item), maxLines: 1),
+              alignment: selectedItemAlignment,
+            );
+          }).toList();
+        },
+        style: TextStyle(overflow: TextOverflow.ellipsis),
         isExpanded: true,
         value: selectedValue,
-        style: TextStyle(overflow: TextOverflow.fade),
-        hint: (hint != null && hint!.isNotEmpty) ? Text(_buildTitle(hint!), style: _buildTitleStyle(hint!)) : null,
+        hint: (hint != null && hint!.isNotEmpty)
+            ? Text(_buildTitle(hint!), textScaleFactor: 1.0, style: _buildTitleStyle(hint!))
+            : null,
         onChanged: (selectedValue) {
           if (selectedValue == null) return;
           if (disabledItems.contains(selectedValue)) return;
@@ -55,11 +68,14 @@ class DropdownFilter extends StatelessWidget {
         },
         underline: SizedBox(),
         dropdownColor: dropdownColor ?? backgroundColor,
-        icon: SvgPicture.asset(
-          'assets/icons/arrow_down_icon.svg',
-          color: dropdownArrowColor,
-          width: 14,
-          height: 14,
+        icon: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: SvgPicture.asset(
+            'assets/icons/arrow_down_icon.svg',
+            color: dropdownArrowColor,
+            width: 14,
+            height: 14,
+          ),
         ),
       ),
     );

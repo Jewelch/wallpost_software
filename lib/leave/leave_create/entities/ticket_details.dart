@@ -26,7 +26,6 @@ class TicketDetails extends JSONInitializable {
       if (originAirportMap != null) originAirport = LeaveAirport.fromJson(originAirportMap);
       if (destinationAirportMap != null) destinationAirport = LeaveAirport.fromJson(destinationAirportMap);
     } on SiftException catch (e) {
-      print(e.errorMessage);
       throw MappingException('Failed to cast TicketDetails response. Error message - ${e.errorMessage}');
     }
   }

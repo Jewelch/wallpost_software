@@ -1,7 +1,6 @@
-import 'dart:ui';
-
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/_wp_core/performance/performance_calculator.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/models/owner_dashboard_filters.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/view_contracts/module_performance_view.dart';
 
@@ -49,19 +48,10 @@ class CRMPerformancePresenter {
   }
 
   PerformanceValue getTargetAchieved() {
-    Color color;
-    if (_crmData!.isTargetAchievedPercentHigh()) {
-      color = AppColors.green;
-    } else if (_crmData!.isTargetAchievedPercentMedium()) {
-      color = AppColors.yellow;
-    } else {
-      color = AppColors.red;
-    }
-
     return PerformanceValue(
       label: "Target Achieved",
       value: "${_crmData!.targetAchievedPercent}%",
-      textColor: color,
+      textColor: PerformanceCalculator().getColorForPerformance(_crmData!.targetAchievedPercent),
     );
   }
 
@@ -69,24 +59,15 @@ class CRMPerformancePresenter {
     return PerformanceValue(
       label: "In Pipeline",
       value: _crmData!.inPipeline,
-      textColor: AppColors.defaultColorDark,
+      textColor: AppColors.textColorBlack,
     );
   }
 
   PerformanceValue getLeadConverted() {
-    Color color;
-    if (_crmData!.isLeadConvertedPercentHigh()) {
-      color = AppColors.green;
-    } else if (_crmData!.isLeadConvertedPercentMedium()) {
-      color = AppColors.yellow;
-    } else {
-      color = AppColors.red;
-    }
-
     return PerformanceValue(
       label: "Lead Converted",
       value: "${_crmData!.leadConvertedPercent}%",
-      textColor: color,
+      textColor: PerformanceCalculator().getColorForPerformance(_crmData!.leadConvertedPercent),
     );
   }
 

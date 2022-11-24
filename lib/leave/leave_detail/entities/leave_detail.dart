@@ -49,7 +49,6 @@ class LeaveDetail extends JSONInitializable {
       _rejectionReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'rejected_reason', null);
       _cancellationReason = sift.readStringFromMapWithDefaultValue(jsonMap, 'cancel_reason', null);
     } on SiftException catch (e) {
-      print(e.errorMessage);
       throw MappingException('Failed to cast LeaveListItem response. Error message - ${e.errorMessage}');
     }
   }

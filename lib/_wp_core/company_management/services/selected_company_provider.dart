@@ -20,8 +20,8 @@ class SelectedCompanyProvider {
   //NOTE: Should only call this function once a company
   //has already be selected. We do not return null when
   //no company is selected because returning null from
-  // this function will mean using the force unwrap
-  // operator (!) throughout the app
+  //this function will mean using the force unwrap
+  //operator (!) throughout the app
   Company getSelectedCompanyForCurrentUser() {
     var currentUser = _currentUserProvider.getCurrentUser();
     return _companyRepository.getSelectedCompanyForUser(currentUser)!;

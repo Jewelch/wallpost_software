@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallpost/_main/ui/views/main_screen.dart';
 
-import '_common_widgets/status_bar_color/status_bar_color_setter.dart';
 import 'notification_center/notification_center.dart';
 import 'notification_router/notification_screen_router.dart';
 
@@ -43,7 +42,7 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
       navigatorKey: navigatorKey,
       scaffoldMessengerKey: snackbarKey,
       home: MainScreen(),
-      theme: ThemeData(fontFamily: '.SF UI Display'),
+      theme: ThemeData(fontFamily: 'SF-Pro-Display'),
       themeMode: ThemeMode.light,
     );
   }
@@ -52,25 +51,23 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
   initState() {
     //waiting for build to complete
     Future.microtask(() {
-      setStatusBarColor();
-      setSystemNavigationBarColor();
+      _setStatusAndSystemNavigationBarColor();
     });
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
-  void setStatusBarColor() {
-    StatusBarColorSetter().setColorToWhite();
-  }
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) StatusBarColorSetter().setColorToWhite();
+    if (state == AppLifecycleState.resumed) _setStatusAndSystemNavigationBarColor();
   }
 
-  void setSystemNavigationBarColor() {
+  void _setStatusAndSystemNavigationBarColor() {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: Colors.white,
         systemNavigationBarDividerColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark,

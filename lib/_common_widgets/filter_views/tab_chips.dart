@@ -12,7 +12,7 @@ class TabChips extends StatefulWidget {
   TabChips({
     required this.titles,
     this.onItemSelected,
-    this.chipBackgroundColor = AppColors.filtersBackgroundColour,
+    this.chipBackgroundColor = AppColors.filtersBackgroundColor,
     this.titleColor = AppColors.defaultColorDark,
   });
 

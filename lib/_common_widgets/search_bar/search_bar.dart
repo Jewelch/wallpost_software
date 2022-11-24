@@ -7,6 +7,7 @@ import 'package:wallpost/_shared/constants/app_images.dart';
 
 class SearchBar extends StatelessWidget {
   final String hint;
+  final String? text;
   final TextEditingController controller;
   final ValueChanged<String> onSearchTextChanged;
   final bool autoFocus;
@@ -14,10 +15,16 @@ class SearchBar extends StatelessWidget {
 
   SearchBar({
     required this.hint,
+    this.text,
     TextEditingController? textEditingController,
     required this.onSearchTextChanged,
     this.autoFocus = true,
-  }) : this.controller = textEditingController ?? TextEditingController();
+  }) : this.controller = textEditingController ?? TextEditingController() {
+    if (this.text != null) {
+      this.controller.text = this.text!;
+      controller.selection = TextSelection.collapsed(offset: controller.text.length);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +33,7 @@ class SearchBar extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: AppColors.filtersBackgroundColour,
+        color: AppColors.filtersBackgroundColor,
       ),
       width: double.infinity,
       child: Row(

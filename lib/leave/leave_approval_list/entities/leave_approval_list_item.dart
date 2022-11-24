@@ -23,7 +23,6 @@ class LeaveApprovalListItem {
       _endDate = sift.readDateFromMap(jsonMap, 'leave_to_actual', 'yyyy-MM-dd');
       _totalLeaveDays = sift.readNumberFromMap(jsonMap, "leave_days").toInt();
     } on SiftException catch (e) {
-      print(e.errorMessage);
       throw MappingException('Failed to cast LeaveApproval response. Error message - ${e.errorMessage}');
     }
   }

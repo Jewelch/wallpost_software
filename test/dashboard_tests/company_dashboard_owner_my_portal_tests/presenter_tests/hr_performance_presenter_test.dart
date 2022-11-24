@@ -103,7 +103,7 @@ void main() {
     when(() => data.activeStaff).thenReturn("1,234");
     expect(presenter.getActiveStaff().label, "Active Staff");
     expect(presenter.getActiveStaff().value, "1,234");
-    expect(presenter.getActiveStaff().textColor, AppColors.defaultColorDark);
+    expect(presenter.getActiveStaff().textColor, AppColors.textColorBlack);
   });
 
   test("get employee cost", () async {
@@ -116,7 +116,7 @@ void main() {
     when(() => data.employeeCost).thenReturn("12,434");
     expect(presenter.getEmployeeCost().label, "Employee Cost");
     expect(presenter.getEmployeeCost().value, "12,434");
-    expect(presenter.getEmployeeCost().textColor, AppColors.green);
+    expect(presenter.getEmployeeCost().textColor, AppColors.textColorBlack);
   });
 
   test("get staff on leave", () async {
@@ -126,19 +126,11 @@ void main() {
         .thenAnswer((_) => Future.value(data));
     await presenter.loadData();
 
-    //no staff on leave
     when(() => data.staffOnLeaveToday).thenReturn("0");
     when(() => data.isAnyStaffOnLeave()).thenReturn(false);
-    expect(presenter.getStaffOnLeaveToday().label, "Staff On Leave Today");
+    expect(presenter.getStaffOnLeaveToday().label, "Staff On Leave");
     expect(presenter.getStaffOnLeaveToday().value, "0");
-    expect(presenter.getStaffOnLeaveToday().textColor, AppColors.green);
-
-    //some staff on leave
-    when(() => data.staffOnLeaveToday).thenReturn("3");
-    when(() => data.isAnyStaffOnLeave()).thenReturn(true);
-    expect(presenter.getStaffOnLeaveToday().label, "Staff On Leave Today");
-    expect(presenter.getStaffOnLeaveToday().value, "3");
-    expect(presenter.getStaffOnLeaveToday().textColor, AppColors.red);
+    expect(presenter.getStaffOnLeaveToday().textColor, AppColors.textColorBlack);
   });
 
   test("get expired documents", () async {

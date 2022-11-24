@@ -2,6 +2,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/view_contracts/module_performance_view.dart';
 
+import '../../../../_shared/constants/app_years.dart';
 import '../../entities/retail_dashboard_data.dart';
 import '../../services/retail_dashboard_data_provider.dart';
 import '../models/owner_dashboard_filters.dart';
@@ -42,15 +43,15 @@ class RetailPerformancePresenter {
     return PerformanceValue(
       label: "Today's Sales",
       value: _retailData!.todaysSale,
-      textColor: AppColors.green,
+      textColor: AppColors.textColorBlack,
     );
   }
 
   PerformanceValue getYTDSale() {
     return PerformanceValue(
-      label: "${_filters.getMonthYearString()} Sales",
+      label: "${AppYears().yearAndMonthAsYtdString(_filters.year, _filters.month)} Sales",
       value: _retailData!.ytdSale,
-      textColor: AppColors.defaultColorDark,
+      textColor: AppColors.textColorBlack,
     );
   }
 
