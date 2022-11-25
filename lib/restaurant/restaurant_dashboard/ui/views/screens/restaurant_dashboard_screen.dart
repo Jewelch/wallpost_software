@@ -28,7 +28,8 @@ class RestaurantDashboardScreen extends StatefulWidget {
 class _State extends State<RestaurantDashboardScreen> implements RestaurantDashboardView {
   late RestaurantDashboardPresenter _presenter = RestaurantDashboardPresenter(this);
   final salesDataNotifier = Notifier();
-  final salesBreakDownsNotifier = ItemNotifier<_SalesBreakDownStates>(defaultValue: _SalesBreakDownStates.loading);
+  final salesBreakDownsNotifier =
+      ItemNotifier<_SalesBreakDownStates>(defaultValue: _SalesBreakDownStates.loading);
   final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.loading);
   String errorMessage = "";
 
@@ -38,8 +39,9 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
     _loadSalesData();
   }
 
-  void _loadSalesData() =>
-      _presenter.loadAggregatedSalesData().then((_) => _presenter.loadSalesBreakDown(singleTask: false));
+  void _loadSalesData() => _presenter
+      .loadAggregatedSalesData()
+      .then((_) => _presenter.loadSalesBreakDown(singleTask: false));
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +97,8 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   sliver: Notifiable(
                     notifier: salesDataNotifier,
-                    builder: (context) => SliverToBoxAdapter(child: RestaurantDashboardHeaderCard(_presenter)),
+                    builder: (context) =>
+                        SliverToBoxAdapter(child: RestaurantDashboardHeaderCard(_presenter)),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -125,7 +128,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
           case _SalesBreakDownStates.loading:
             return SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32),
+                padding: EdgeInsets.symmetric(horizontal: 24),
                 child: SalesBreakDownLoader(),
               ),
             );
@@ -211,7 +214,8 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   void onDidChangeSalesBreakDownWise() => _presenter.loadSalesBreakDown(singleTask: true);
 
   @override
-  void showLoadingForSalesBreakDowns() => salesBreakDownsNotifier.notify(_SalesBreakDownStates.loading);
+  void showLoadingForSalesBreakDowns() =>
+      salesBreakDownsNotifier.notify(_SalesBreakDownStates.loading);
 
   @override
   void showRestaurantDashboardFilter() async {

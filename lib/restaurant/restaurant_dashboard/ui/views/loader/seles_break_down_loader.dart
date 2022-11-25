@@ -10,47 +10,30 @@ class SalesBreakDownLoader extends StatelessWidget {
       children: [
         RestaurantContainerLoader(
           height: 60,
-          cornerRadius: 16,
+          topRadius: 16,
           width: double.infinity,
         ),
         SizedBox(height: 4),
         RestaurantContainerLoader(
           height: 60,
-          cornerRadius: 16,
           width: double.infinity,
         ),
         SizedBox(height: 4),
         RestaurantContainerLoader(
           height: 60,
-          cornerRadius: 16,
           width: double.infinity,
         ),
         SizedBox(height: 4),
         RestaurantContainerLoader(
           height: 60,
-          cornerRadius: 16,
           width: double.infinity,
         ),
         SizedBox(height: 4),
         RestaurantContainerLoader(
           height: 60,
-          cornerRadius: 16,
+          bottomRadius: 16,
           width: double.infinity,
-        ),
-        SizedBox(height: 4),
-        RestaurantContainerLoader(
-          height: 40,
-          width: double.infinity,
-        ),
-        SizedBox(height: 4),
-        RestaurantContainerLoader(
-          height: 40,
-          width: double.infinity,
-        ),
-        SizedBox(height: 4),
-        RestaurantContainerLoader(
-          height: 40,
-          width: double.infinity,
+          onBottom: true,
         ),
       ],
     );

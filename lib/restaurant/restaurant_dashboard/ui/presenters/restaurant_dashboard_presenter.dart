@@ -69,7 +69,9 @@ class RestaurantDashboardPresenter {
         dateFilters,
       );
       sortBreakdownItemsFromHighSalesToLow();
-      _salesBreakdownItems.isNotEmpty ? _view.showSalesBreakDowns() : _view.showNoSalesBreakdownMessage();
+      _salesBreakdownItems.isNotEmpty
+          ? _view.showSalesBreakDowns()
+          : _view.showNoSalesBreakdownMessage();
     } on WPException catch (e) {
       _view.showErrorMessage(e.userReadableMessage + "\n\nTap here to reload.");
     }
@@ -97,7 +99,10 @@ class RestaurantDashboardPresenter {
 
   //MARK: Functions to get the sales breakdown type filter data
 
-  String getSalesBreakDownFilterName(int index) => SalesBreakDownWiseOptions.values[index].toReadableString();
+  bool breakdownsListIsEmpty() => _salesBreakdownItems.isEmpty;
+
+  String getSalesBreakDownFilterName(int index) =>
+      SalesBreakDownWiseOptions.values[index].toReadableString();
 
   Color getSalesBreakdownFilterBackgroundColor(int index) =>
       SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise
@@ -105,7 +110,9 @@ class RestaurantDashboardPresenter {
           : AppColors.filtersBackgroundColor;
 
   Color getSalesBreakdownFilterTextColor(int index) =>
-      SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise ? Colors.white : AppColors.defaultColor;
+      SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise
+          ? Colors.white
+          : AppColors.defaultColor;
 
   //MARK: Functions to apply sales breakdown type filter
 
@@ -124,15 +131,21 @@ class RestaurantDashboardPresenter {
 
   String getGrossProfit() => (_salesData?.grossOfProfit ?? "0.00") + "%";
 
-  Color getGrossProfitTextColor() => (_salesData?.grossOfProfit ?? "0.00").isNegative ? AppColors.red : AppColors.green;
+  Color getGrossProfitTextColor() =>
+      (_salesData?.grossOfProfit ?? "0.00").isNegative ? AppColors.red : AppColors.green;
 
   // Getters
 
   SalesBreakDownWiseOptions get selectedBreakDownWise => _selectedBreakDownWise;
 
-  String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
+  String getSelectedCompanyName() =>
+      _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
-  String getCompanyCurrency() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
+  String getCompanyCurrency() =>
+      _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
 
   String getProfileImageUrl() => _currentUserProvider.getCurrentUser().profileImageUrl;
+
+  String getSalesBreakdownValue(int index) => getBreakdownAtIndex(index).value;
+  String getSalesBreakdownLabel(int index) => getBreakdownAtIndex(index).label;
 }

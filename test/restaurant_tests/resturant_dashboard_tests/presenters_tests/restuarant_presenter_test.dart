@@ -4,7 +4,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
-import 'package:wallpost/_shared/extensions/string_extensions.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/models/performance_value.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
@@ -66,12 +65,14 @@ void main() {
 
   _sortSalesDataItems() => Mocks.salesBreakDownsItems
     ..sort(
-      (a, b) => b.totalSales.toDouble.compareTo(a.totalSales.toDouble),
+      (a, b) => b.totalSales.compareTo(a.totalSales),
     );
 
   // MARK: Test Loading Aggregated Sales Data
 
-  test("presenter return 0.0 for Aggregated sales data when Aggregated sales data is uninitialized yet", () {
+  test(
+      "presenter return 0.0 for Aggregated sales data when Aggregated sales data is uninitialized yet",
+      () {
     _initializePresenter();
 
     expect(presenter.getTotalSales(), "0.00");
@@ -81,7 +82,8 @@ void main() {
     _clearInteractionsOnAllMocks();
   });
 
-  test("presenter return Aggregated sales data when Aggregated sales data is initialized", () async {
+  test("presenter return Aggregated sales data when Aggregated sales data is initialized",
+      () async {
     //given
     var aggregatedSalesData = AggregatedSalesData.fromJson(Mocks.salesDataRandomResponse);
     when(() => salesDataProvider.isLoading).thenReturn(false);
@@ -158,7 +160,8 @@ void main() {
       () => salesDataProvider.isLoading,
       () => view.showLoader(),
       () => salesDataProvider.getSalesAmounts(dateFilter),
-      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
+      () => view.showErrorMessage(
+          "${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -167,7 +170,8 @@ void main() {
     //given
     var salesData = MockSalesData();
     when(() => salesDataProvider.isLoading).thenReturn(false);
-    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer((_) => Future.value(salesData));
+    when(() => salesDataProvider.getSalesAmounts(dateFilter))
+        .thenAnswer((_) => Future.value(salesData));
 
     //when
     await presenter.loadAggregatedSalesData();
@@ -199,7 +203,8 @@ void main() {
     presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
 
     //then
-    expect(presenter.getSalesBreakdownFilterTextColor(SalesBreakDownWiseOptions.basedOnMenu.index), Colors.white);
+    expect(presenter.getSalesBreakdownFilterTextColor(SalesBreakDownWiseOptions.basedOnMenu.index),
+        Colors.white);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
@@ -209,7 +214,9 @@ void main() {
     presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
 
     //then
-    expect(presenter.getSalesBreakdownFilterBackgroundColor(SalesBreakDownWiseOptions.basedOnMenu.index),
+    expect(
+        presenter
+            .getSalesBreakdownFilterBackgroundColor(SalesBreakDownWiseOptions.basedOnMenu.index),
         AppColors.defaultColor);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
@@ -241,7 +248,8 @@ void main() {
       () => salesBreakDownProvider.isLoading,
       () => view.showLoader(),
       () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
-      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
+      () => view.showErrorMessage(
+          "${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -294,7 +302,7 @@ void main() {
       for (var i = 0; i < Mocks.salesBreakDownsItems.length; i++) {
         final currentItem = PerformanceValue(
           label: Mocks.salesBreakDownsItems[i].type,
-          value: Mocks.salesBreakDownsItems[i].totalSales.withoutNullDecimals.commaSeparated,
+          value: Mocks.salesBreakDownsItems[i].totalSales.toString(),
           textColor: Mocks.colors[i],
         );
 
@@ -330,7 +338,7 @@ void main() {
       for (var i = 0; i < Mocks.salesBreakDownsItems.length; i++) {
         final currentItem = PerformanceValue(
           label: Mocks.salesBreakDownsItems[i].type,
-          value: Mocks.salesBreakDownsItems[i].totalSales.withoutNullDecimals.commaSeparated,
+          value: Mocks.salesBreakDownsItems[i].totalSales.toString(),
           textColor: Mocks.colors[i],
         );
 
@@ -365,7 +373,7 @@ void main() {
       for (var i = 0; i < Mocks.salesBreakDownsItems.length; i++) {
         final currentItem = PerformanceValue(
           label: Mocks.salesBreakDownsItems[i].type,
-          value: Mocks.salesBreakDownsItems[i].totalSales.withoutNullDecimals.commaSeparated,
+          value: Mocks.salesBreakDownsItems[i].totalSales.toString(),
           textColor: Mocks.colors[i],
         );
 
@@ -421,7 +429,7 @@ void main() {
         () => view.showSalesBreakDowns(),
       ]);
 
-      expect(presenter.breakdownsIsEmpty(), true);
+      expect(presenter.breakdownsListIsEmpty(), true);
 
       _verifyNoMoreInteractionsOnAllMocks();
     },
