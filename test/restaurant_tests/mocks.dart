@@ -31,14 +31,17 @@ class Mocks {
     {
       "type": "21",
       "total_sales": 22,
+      "total_sales_num_format": "22",
     },
     {
       "type": "21",
       "total_sales": 22,
+      "total_sales_num_format": "22",
     },
     {
       "type": "21",
       "total_sales": 22,
+      "total_sales_num_format": "22",
     },
   ];
 

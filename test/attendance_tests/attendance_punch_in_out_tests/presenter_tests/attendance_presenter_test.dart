@@ -650,41 +650,6 @@ void main() {
     });
   });
 
-  // test("shows punch in and out time and remaining time to punch in after punch out", () async {
-  //   //given
-  //   var attendance = MockAttendanceDetails();
-  //   var attendanceLocation = MockAttendanceLocation();
-  //   when(() => mockAttendanceDetailsProvider.isLoading).thenReturn(false);
-  //   when(() => attendance.isNotPunchedIn).thenReturn(false);
-  //   when(() => attendance.isPunchedIn).thenReturn(false);
-  //   when(() => attendance.isPunchedOut).thenReturn(true);
-  //   when(() => attendance.canMarkAttendanceFromApp).thenReturn(true);
-  //   when(() => attendance.canMarkAttendanceNow).thenReturn(false);
-  //   when(() => attendance.secondsTillPunchIn).thenReturn(123);
-  //   when(() => attendance.punchInTimeString).thenReturn("09:00 AM");
-  //   when(() => attendance.punchOutTimeString).thenReturn("06:30 PM");
-  //   when(() => mockAttendanceDetailsProvider.getDetails()).thenAnswer((_) => Future.value(attendance));
-  //   when(() => mockLocationProvider.getLocation()).thenAnswer((_) => Future.value(attendanceLocation));
-  //   when(() => mockLocationProvider.getLocationAddress(any())).thenAnswer((_) => Future.value(""));
-  //
-  //   // when
-  //   await presenter.loadAttendanceDetails();
-  //
-  //   //then
-  //   verifyInOrder([
-  //         () => mockAttendanceDetailsProvider.isLoading,
-  //         () => basicView.showLoader(),
-  //         () => mockAttendanceDetailsProvider.getDetails(),
-  //         () => basicView.showCountDownView(123),
-  //         () => mockLocationProvider.getLocation(),
-  //         () => basicView.showLocation(attendanceLocation, ""),
-  //         () => detailedView.showPunchInTime("09:00 AM"),
-  //         () => detailedView.showPunchOutTime("06:30 PM"),
-  //         () => detailedView.hideBreakButton(),
-  //   ]);
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-//
   group('start break tests', () {
     test("does nothing if start break marker is loading", () async {
       //given

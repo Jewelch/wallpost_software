@@ -28,7 +28,6 @@ class BreakActionButton extends StatelessWidget {
     return Container(
       height: 40,
       child: MaterialButton(
-        minWidth: 40,
         elevation: 0,
         highlightElevation: 0,
         shape: RoundedRectangleBorder(
