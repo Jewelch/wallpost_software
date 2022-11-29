@@ -15,7 +15,8 @@ class SalesBreakDownItem extends JSONInitializable {
       _totalSalesDisplayValue = sift.readStringFromMap(jsonMap, 'total_sales_num_format');
       _type = sift.readStringFromMap(jsonMap, 'type');
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast SalesBreakDownData response. Error message - ${e.errorMessage}');
+      throw MappingException(
+          'Failed to cast SalesBreakDownData response. Error message - ${e.errorMessage}');
     }
   }
 
