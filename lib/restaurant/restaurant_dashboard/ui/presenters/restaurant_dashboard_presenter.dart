@@ -3,7 +3,6 @@ import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/extensions/string_extensions.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/services/sales_breakdowns_provider.dart';
@@ -18,7 +17,6 @@ class RestaurantDashboardPresenter {
   RestaurantDashboardView _view;
   AggregatedSalesDataProvider _salesDataProvider;
   SalesBreakDownsProvider _salesBreakDownsProvider;
-  CurrentUserProvider _currentUserProvider;
   SelectedCompanyProvider _selectedCompanyProvider;
 
   AggregatedSalesData? _salesData;
@@ -29,7 +27,6 @@ class RestaurantDashboardPresenter {
   RestaurantDashboardPresenter(this._view)
       : _salesDataProvider = AggregatedSalesDataProvider(),
         _salesBreakDownsProvider = SalesBreakDownsProvider(),
-        _currentUserProvider = CurrentUserProvider(),
         _selectedCompanyProvider = SelectedCompanyProvider(),
         dateFilters = DateRangeFilters();
 
@@ -38,7 +35,6 @@ class RestaurantDashboardPresenter {
     this._salesDataProvider,
     this._salesBreakDownsProvider,
     this.dateFilters,
-    this._currentUserProvider,
     this._selectedCompanyProvider,
   );
 
@@ -97,6 +93,8 @@ class RestaurantDashboardPresenter {
 
   //MARK: Functions to get the sales breakdown type filter data
 
+  bool breakdownsListIsEmpty() => _salesBreakdownItems.isEmpty;
+
   String getSalesBreakDownFilterName(int index) => SalesBreakDownWiseOptions.values[index].toReadableString();
 
   Color getSalesBreakdownFilterBackgroundColor(int index) =>
@@ -134,5 +132,5 @@ class RestaurantDashboardPresenter {
 
   String getCompanyCurrency() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
 
-  String getProfileImageUrl() => _currentUserProvider.getCurrentUser().profileImageUrl;
+  String getSalesBreakdownValue(int index) => getBreakdownAtIndex(index).value;
 }

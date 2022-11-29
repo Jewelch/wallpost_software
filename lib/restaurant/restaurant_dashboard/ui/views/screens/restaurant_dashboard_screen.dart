@@ -125,7 +125,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
           case _SalesBreakDownStates.loading:
             return SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32),
+                padding: EdgeInsets.symmetric(horizontal: 24),
                 child: SalesBreakDownLoader(),
               ),
             );

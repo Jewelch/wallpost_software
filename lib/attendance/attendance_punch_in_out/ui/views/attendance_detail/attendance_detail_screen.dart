@@ -46,7 +46,7 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
   static const PUNCH_IN_BUTTON_VIEW = 6;
   static const PUNCH_OUT_BUTTON_VIEW = 7;
 
-  late String _timeString;
+  String? _timeString;
   late Timer _currentTimer, _countDownTimer;
   var _errorMessage = "";
 
@@ -170,7 +170,7 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
     return _dataView(
       content: _attendanceButton(
         title: "Punch In",
-        subTitle: _timeString,
+        subTitle: _timeString ?? "",
         buttonColor: AttendanceColors.punchInButtonColor,
         onPressed: () => presenter.markPunchIn(isLocationValid: true),
       ),
@@ -179,17 +179,11 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
 
   Widget _punchOutButton() {
     return _dataView(
-      content: Column(
-        children: [
-          _attendanceButton(
-            title: "Punch Out",
-            subTitle: _timeString,
-            buttonColor: AttendanceColors.punchOutButtonColor,
-            onPressed: () => _doPunchOut(),
-          ),
-          SizedBox(height: 4),
-          presenter.shouldShowStartBreakButton() ? _startBreakButton() : _endBreakButton(),
-        ],
+      content: _attendanceButton(
+        title: "Punch Out",
+        subTitle: _timeString ?? "",
+        buttonColor: AttendanceColors.punchOutButtonColor,
+        onPressed: () => _doPunchOut(),
       ),
     );
   }
@@ -230,7 +224,12 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen>
             ],
           ),
         ),
-        SizedBox(height: 80),
+        SizedBox(height: 20),
+        presenter.shouldShowBreakButton()
+            ? Container(
+                width: 120, child: presenter.shouldShowStartBreakButton() ? _startBreakButton() : _endBreakButton())
+            : Container(),
+        SizedBox(height: 40),
         AttendanceReportWidget(),
         SizedBox(height: 30),
       ],

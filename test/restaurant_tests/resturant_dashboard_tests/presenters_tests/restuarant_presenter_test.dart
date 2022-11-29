@@ -4,7 +4,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
-import 'package:wallpost/_shared/extensions/string_extensions.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/models/performance_value.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
@@ -15,7 +14,6 @@ import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restauran
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/restaurant_dashboard_view.dart';
 
 import '../../../_mocks/mock_company_provider.dart';
-import '../../../_mocks/mock_current_user_provider.dart';
 import '../../mocks.dart';
 
 class MockSalesDataProvider extends Mock implements AggregatedSalesDataProvider {}
@@ -41,7 +39,6 @@ void main() {
       salesDataProvider,
       salesBreakDownProvider,
       dateFilter,
-      MockCurrentUserProvider(),
       MockCompanyProvider(),
     );
   }
@@ -66,7 +63,7 @@ void main() {
 
   _sortSalesDataItems() => Mocks.salesBreakDownsItems
     ..sort(
-      (a, b) => b.totalSales.toDouble.compareTo(a.totalSales.toDouble),
+      (a, b) => b.totalSales.compareTo(a.totalSales),
     );
 
   // MARK: Test Loading Aggregated Sales Data
@@ -263,9 +260,11 @@ void main() {
       () => view.showSalesBreakDowns(),
     ]);
 
-    expect(presenter.getBreakdownAtIndex(0).value, '50');
-    expect(presenter.getBreakdownAtIndex(1).value, '20');
-    expect(presenter.getBreakdownAtIndex(2).value, '10');
+    _sortSalesDataItems();
+
+    expect(presenter.getBreakdownAtIndex(0).value, Mocks.salesBreakDownsItems.first.totalSalesDisplayValue);
+    expect(presenter.getBreakdownAtIndex(1).value, Mocks.salesBreakDownsItems[1].totalSalesDisplayValue);
+    expect(presenter.getBreakdownAtIndex(2).value, Mocks.salesBreakDownsItems.last.totalSalesDisplayValue);
 
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -276,15 +275,15 @@ void main() {
       //given
       when(() => salesBreakDownProvider.isLoading).thenReturn(false);
       when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
-          .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
+          .thenAnswer((_) => Future.value(List.from(Mocks.salesBreakDownsItems)));
 
       //when
-      await presenter.loadSalesBreakDown(singleTask: false);
+      await presenter.loadSalesBreakDown(singleTask: true);
 
       //then
       verifyInOrder([
         () => salesBreakDownProvider.isLoading,
-        () => view.showLoader(),
+        () => view.showLoadingForSalesBreakDowns(),
         () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
         () => view.showSalesBreakDowns(),
       ]);
@@ -294,8 +293,8 @@ void main() {
       for (var i = 0; i < Mocks.salesBreakDownsItems.length; i++) {
         final currentItem = PerformanceValue(
           label: Mocks.salesBreakDownsItems[i].type,
-          value: Mocks.salesBreakDownsItems[i].totalSales.withoutNullDecimals.commaSeparated,
-          textColor: Mocks.colors[i],
+          value: Mocks.salesBreakDownsItems[i].totalSalesDisplayValue,
+          textColor: AppColors.textColorBlack,
         );
 
         expect(presenter.getBreakdownAtIndex(i).label, currentItem.label);
@@ -312,15 +311,15 @@ void main() {
       //given
       when(() => salesBreakDownProvider.isLoading).thenReturn(false);
       when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
-          .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
+          .thenAnswer((_) => Future.value(List.from(Mocks.salesBreakDownsItems)));
 
       //when
-      await presenter.loadSalesBreakDown(singleTask: false);
+      await presenter.loadSalesBreakDown(singleTask: true);
 
       //then
       verifyInOrder([
         () => salesBreakDownProvider.isLoading,
-        () => view.showLoader(),
+        () => view.showLoadingForSalesBreakDowns(),
         () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
         () => view.showSalesBreakDowns(),
       ]);
@@ -330,46 +329,11 @@ void main() {
       for (var i = 0; i < Mocks.salesBreakDownsItems.length; i++) {
         final currentItem = PerformanceValue(
           label: Mocks.salesBreakDownsItems[i].type,
-          value: Mocks.salesBreakDownsItems[i].totalSales.withoutNullDecimals.commaSeparated,
-          textColor: Mocks.colors[i],
+          value: Mocks.salesBreakDownsItems[i].totalSalesDisplayValue,
+          textColor: AppColors.textColorBlack,
         );
 
         expect(presenter.getSalesBreakdownValue(i), currentItem.value);
-      }
-
-      _verifyNoMoreInteractionsOnAllMocks();
-    },
-  );
-
-  test(
-    "getSalesBreakdownLabel() returns the break down label at a specific index",
-    () async {
-      //given
-      when(() => salesBreakDownProvider.isLoading).thenReturn(false);
-      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
-          .thenAnswer((_) => Future.value(Mocks.salesBreakDownsItems));
-
-      //when
-      await presenter.loadSalesBreakDown(singleTask: false);
-
-      //then
-      verifyInOrder([
-        () => salesBreakDownProvider.isLoading,
-        () => view.showLoader(),
-        () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
-        () => view.showSalesBreakDowns(),
-      ]);
-
-      _sortSalesDataItems();
-
-      for (var i = 0; i < Mocks.salesBreakDownsItems.length; i++) {
-        final currentItem = PerformanceValue(
-          label: Mocks.salesBreakDownsItems[i].type,
-          value: Mocks.salesBreakDownsItems[i].totalSales.withoutNullDecimals.commaSeparated,
-          textColor: Mocks.colors[i],
-        );
-
-        expect(presenter.getSalesBreakdownLabel(i), currentItem.label);
       }
 
       _verifyNoMoreInteractionsOnAllMocks();
@@ -386,14 +350,14 @@ void main() {
           .thenAnswer((_) => Future.value(salesBreakDowns));
 
       //when
-      await presenter.loadSalesBreakDown(singleTask: false);
+      await presenter.loadSalesBreakDown(singleTask: true);
 
       //then
       verifyInOrder([
         () => salesBreakDownProvider.isLoading,
-        () => view.showLoader(),
+        () => view.showLoadingForSalesBreakDowns(),
         () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
-        () => view.showSalesBreakDowns(),
+        () => view.showNoSalesBreakdownMessage(),
       ]);
 
       expect(presenter.getNumberOfBreakdowns(), 0);
@@ -407,21 +371,22 @@ void main() {
       var salesBreakDowns = <SalesBreakDownItem>[];
 
       when(() => salesBreakDownProvider.isLoading).thenReturn(false);
+
       when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
           .thenAnswer((_) => Future.value(salesBreakDowns));
 
       //when
-      await presenter.loadSalesBreakDown(singleTask: false);
+      await presenter.loadSalesBreakDown(singleTask: true);
 
       //then
       verifyInOrder([
         () => salesBreakDownProvider.isLoading,
-        () => view.showLoader(),
+        () => view.showLoadingForSalesBreakDowns(),
         () => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter),
-        () => view.showSalesBreakDowns(),
+        () => view.showNoSalesBreakdownMessage(),
       ]);
 
-      expect(presenter.breakdownsIsEmpty(), true);
+      expect(presenter.breakdownsListIsEmpty(), true);
 
       _verifyNoMoreInteractionsOnAllMocks();
     },
