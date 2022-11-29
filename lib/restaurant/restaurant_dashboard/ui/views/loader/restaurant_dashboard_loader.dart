@@ -18,14 +18,14 @@ class RestaurantDashboardLoader extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Container(
-              height: 120,
+              height: 160,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.white,
               ),
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 20),
           _tile(context),
           _customChips(),
           SizedBox(height: 16),
@@ -40,11 +40,16 @@ class RestaurantDashboardLoader extends StatelessWidget {
 
   Widget _tile(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 24.0, bottom: 16),
+      padding: const EdgeInsets.only(left: 24.0, bottom: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 6),
+          RestaurantContainerLoader(
+            height: 40,
+            width: 120,
+            topRadius: 6,
+            bottomRadius: 6,
+          ),
         ],
       ),
     );
@@ -56,9 +61,19 @@ class RestaurantDashboardLoader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: RestaurantContainerLoader(height: 80, cornerRadius: 20)),
+          Expanded(
+              child: RestaurantContainerLoader(
+            height: 80,
+            topRadius: 20,
+            bottomRadius: 20,
+          )),
           SizedBox(width: 16),
-          Expanded(child: RestaurantContainerLoader(height: 80, cornerRadius: 20)),
+          Expanded(
+              child: RestaurantContainerLoader(
+            height: 80,
+            topRadius: 20,
+            bottomRadius: 20,
+          )),
         ],
       ),
     );
@@ -69,11 +84,26 @@ class RestaurantDashboardLoader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         children: [
-          RestaurantContainerLoader(height: 40, width: 40, cornerRadius: 10),
+          RestaurantContainerLoader(
+            height: 40,
+            width: 40,
+            topRadius: 10,
+            bottomRadius: 10,
+          ),
           SizedBox(width: 40),
-          Expanded(child: RestaurantContainerLoader(height: 26, cornerRadius: 6)),
+          Expanded(
+              child: RestaurantContainerLoader(
+            height: 26,
+            topRadius: 6,
+            bottomRadius: 6,
+          )),
           SizedBox(width: 40),
-          RestaurantContainerLoader(height: 40, width: 40, cornerRadius: 10),
+          RestaurantContainerLoader(
+            height: 40,
+            width: 40,
+            topRadius: 10,
+            bottomRadius: 10,
+          ),
         ],
       ),
     );
@@ -84,15 +114,30 @@ class RestaurantDashboardLoader extends StatelessWidget {
       children: [
         SizedBox(width: 24),
         Expanded(
-          child: RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 12),
+          child: RestaurantContainerLoader(
+            height: 32,
+            width: 120,
+            topRadius: 12,
+            bottomRadius: 12,
+          ),
         ),
         SizedBox(width: 15),
         Expanded(
-          child: RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 12),
+          child: RestaurantContainerLoader(
+            height: 32,
+            width: 120,
+            topRadius: 12,
+            bottomRadius: 12,
+          ),
         ),
         SizedBox(width: 15),
         Expanded(
-          child: RestaurantContainerLoader(height: 40, width: 120, cornerRadius: 12),
+          child: RestaurantContainerLoader(
+            height: 32,
+            width: 120,
+            topRadius: 12,
+            bottomRadius: 12,
+          ),
         ),
       ],
     );
