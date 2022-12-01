@@ -87,7 +87,7 @@ class _SalesElement extends StatelessWidget {
 
     final valueStyle = TextStyles.headerCardMainValueTextStyle.copyWith(
       fontWeight: FontWeight.w800,
-      fontSize: 17.0,
+      fontSize: 20.0,
       overflow: TextOverflow.ellipsis,
     );
 
