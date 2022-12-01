@@ -49,13 +49,15 @@ class RestaurantDashboardAppBar extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            child: Text(
-                              presenter.getSelectedCompanyName(),
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: TextStyles.largeTitleTextStyleBold.copyWith(
-                                color: AppColors.defaultColor,
+                          Flexible(
+                            child: Container(
+                              child: Text(
+                                presenter.getSelectedCompanyName(),
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyles.largeTitleTextStyleBold.copyWith(
+                                  color: AppColors.defaultColor,
+                                ),
                               ),
                             ),
                           ),
