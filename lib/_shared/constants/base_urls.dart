@@ -37,7 +37,7 @@ class BaseUrls {
   }
 
   static String restaurantUrlV2() {
-    return BaseUrls.generateUrl(subDomain: _RESTAURANT_SUB_DOMAIN, environment: _ENVIRONMENT, version: _VERSION_2_PATH);
+    return BaseUrls.generateUrl(subDomain: _RESTAURANT_SUB_DOMAIN, environment: _STAGING, version: _VERSION_2_PATH);
   }
 
   static String miscUrlV2() {

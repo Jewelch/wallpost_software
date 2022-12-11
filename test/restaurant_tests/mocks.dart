@@ -68,4 +68,28 @@ class Mocks {
       },
     ),
   ];
+  static Map<String, dynamic> specificSalesAsCategoryResponse({
+    required dynamic categoryId,
+    required dynamic categoryName,
+    required dynamic totalQuantity,
+    required dynamic totalRevenue,
+  }) =>
+      {
+        "categoryId": categoryId,
+        "categoryName": categoryName,
+        "totalQuantity": totalQuantity,
+        "totalRevenue": totalRevenue,
+      };
+  static Map<String, dynamic> specificSalesAsItemResponse({
+    required dynamic itemId,
+    required dynamic itemName,
+    required dynamic qty,
+    required dynamic revenue,
+  }) =>
+      {
+        "itemId": itemId,
+        "item_name": itemName,
+        "qty": qty,
+        "revenue": revenue,
+      };
 }

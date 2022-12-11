@@ -22,7 +22,7 @@ class RestaurantDashboardPresenter {
   AggregatedSalesData? _salesData;
   List<SalesBreakDownItem> _salesBreakdownItems = [];
   DateRangeFilters dateFilters;
-  SalesBreakDownWiseOptions _selectedBreakDownWise = SalesBreakDownWiseOptions.basedOnCategory;
+  SalesItemOptions _selectedBreakDownWise = SalesItemOptions.basedOnCategory;
 
   RestaurantDashboardPresenter(this._view)
       : _salesDataProvider = AggregatedSalesDataProvider(),
@@ -95,20 +95,18 @@ class RestaurantDashboardPresenter {
 
   bool breakdownsListIsEmpty() => _salesBreakdownItems.isEmpty;
 
-  String getSalesBreakDownFilterName(int index) => SalesBreakDownWiseOptions.values[index].toReadableString();
+  String getSalesBreakDownFilterName(int index) => SalesItemOptions.values[index].toReadableString();
 
   Color getSalesBreakdownFilterBackgroundColor(int index) =>
-      SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise
-          ? AppColors.defaultColor
-          : AppColors.filtersBackgroundColor;
+      SalesItemOptions.values[index] == selectedBreakDownWise ? AppColors.defaultColor : AppColors.filtersBackgroundColor;
 
   Color getSalesBreakdownFilterTextColor(int index) =>
-      SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise ? Colors.white : AppColors.defaultColor;
+      SalesItemOptions.values[index] == selectedBreakDownWise ? Colors.white : AppColors.defaultColor;
 
   //MARK: Functions to apply sales breakdown type filter
 
   void selectSalesBreakDownWiseAtIndex(int index) {
-    _selectedBreakDownWise = SalesBreakDownWiseOptions.values[index];
+    _selectedBreakDownWise = SalesItemOptions.values[index];
     _view.onDidChangeSalesBreakDownWise();
   }
 
@@ -126,7 +124,7 @@ class RestaurantDashboardPresenter {
 
   // Getters
 
-  SalesBreakDownWiseOptions get selectedBreakDownWise => _selectedBreakDownWise;
+  SalesItemOptions get selectedBreakDownWise => _selectedBreakDownWise;
 
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 

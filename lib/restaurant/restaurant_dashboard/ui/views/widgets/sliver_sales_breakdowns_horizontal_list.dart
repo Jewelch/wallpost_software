@@ -70,7 +70,7 @@ class _SliverSalesBreakHorizontalListState extends State<SliverSalesBreakHorizon
                     );
                   },
                   separatorBuilder: ((_, __) => SizedBox(width: 16)),
-                  itemCount: SalesBreakDownWiseOptions.values.length,
+                  itemCount: SalesItemOptions.values.length,
                 ),
               ),
             ],

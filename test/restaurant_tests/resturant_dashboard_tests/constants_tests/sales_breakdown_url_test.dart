@@ -12,8 +12,8 @@ main() {
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
-    expect(url,
-        "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data/dashboard?date_filter_type=today");
+    expect(
+        url, "${BaseUrls.restaurantUrlV2()}/companies/1/store/0/consolidated_stats/sales_data/dashboard?date_filter_type=today");
   });
 
   test("creating aggregated sales data url when selected date filter is yesterday", () {

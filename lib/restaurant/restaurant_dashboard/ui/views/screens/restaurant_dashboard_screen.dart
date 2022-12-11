@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
@@ -13,6 +14,7 @@ import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restau
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_header_card.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_filters.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
+import 'package:wallpost/restaurant/sales_reports/item_sales/ui/views/screens/item_sales_screen.dart';
 
 import '../widgets/restaurant_dashboard_sales_break_down_card.dart';
 
@@ -38,8 +40,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
     _loadSalesData();
   }
 
-  void _loadSalesData() =>
-      _presenter.loadAggregatedSalesData().then((_) => _presenter.loadSalesBreakDown(singleTask: false));
+  void _loadSalesData() => _presenter.loadAggregatedSalesData().then((_) => _presenter.loadSalesBreakDown(singleTask: false));
 
   @override
   Widget build(BuildContext context) {
@@ -158,10 +159,23 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
             return SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.only(top: 100),
-                child: Text(
-                  "There is no sales breakdown for\nthe selected filters",
-                  textAlign: TextAlign.center,
-                  style: TextStyles.titleTextStyle,
+                child: Column(
+                  children: [
+                    Text(
+                      "There is no sales breakdown for\nthe selected filters",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.titleTextStyle,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          ScreenPresenter.present(
+                            ItemSalesScreen(),
+                            context,
+                            slideDirection: SlideDirection.fromBottom,
+                          );
+                        },
+                        child: Text('Test'))
+                  ],
                 ),
               ),
             );

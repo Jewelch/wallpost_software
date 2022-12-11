@@ -17,7 +17,7 @@ void main() {
   var mockSelectedCompanyProvider = MockCompanyProvider();
   var salesBreakDownsProvider = SalesBreakDownsProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
   var dateFilter = DateRangeFilters();
-  var salesBreakDownWiseOption = SalesBreakDownWiseOptions.basedOnMenu;
+  var salesBreakDownWiseOption = SalesItemOptions.basedOnMenu;
 
   setUpAll(() {
     final mockCompany = MockCompany();

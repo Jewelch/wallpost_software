@@ -1,4 +1,4 @@
-enum SalesBreakDownWiseOptions {
+enum SalesItemOptions {
   basedOnCategory,
   basedOnOrder,
   basedOnMenu;

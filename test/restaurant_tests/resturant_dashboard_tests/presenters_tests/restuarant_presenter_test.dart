@@ -58,7 +58,7 @@ void main() {
   }
 
   setUpAll(() {
-    registerFallbackValue(SalesBreakDownWiseOptions.basedOnOrder);
+    registerFallbackValue(SalesItemOptions.basedOnOrder);
   });
 
   _sortSalesDataItems() => Mocks.salesBreakDownsItems
@@ -145,8 +145,7 @@ void main() {
   test('failure to load sales data', () async {
     //given
     when(() => salesDataProvider.isLoading).thenReturn(false);
-    when(() => salesDataProvider.getSalesAmounts(dateFilter))
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => salesDataProvider.getSalesAmounts(dateFilter)).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await presenter.loadAggregatedSalesData();
@@ -183,31 +182,30 @@ void main() {
 
   test('change selected sales breakdown wise successfully', () {
     //when
-    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownWiseAtIndex(SalesItemOptions.basedOnMenu.index);
 
     //then
-    expect(presenter.selectedBreakDownWise, SalesBreakDownWiseOptions.basedOnMenu);
+    expect(presenter.selectedBreakDownWise, SalesItemOptions.basedOnMenu);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
   // MARK: Test changing the sales break down filter's text color
   test('getSalesBreakdownTextColor() returns color successfully', () {
     //when
-    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownWiseAtIndex(SalesItemOptions.basedOnMenu.index);
 
     //then
-    expect(presenter.getSalesBreakdownFilterTextColor(SalesBreakDownWiseOptions.basedOnMenu.index), Colors.white);
+    expect(presenter.getSalesBreakdownFilterTextColor(SalesItemOptions.basedOnMenu.index), Colors.white);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
   // MARK: Test changing the sales break down chip's background color
   test('getSalesBreakdownChipColor() returns color successfully', () {
     //when
-    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownWiseAtIndex(SalesItemOptions.basedOnMenu.index);
 
     //then
-    expect(presenter.getSalesBreakdownFilterBackgroundColor(SalesBreakDownWiseOptions.basedOnMenu.index),
-        AppColors.defaultColor);
+    expect(presenter.getSalesBreakdownFilterBackgroundColor(SalesItemOptions.basedOnMenu.index), AppColors.defaultColor);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
@@ -346,8 +344,7 @@ void main() {
       var salesBreakDowns = <SalesBreakDownItem>[];
 
       when(() => salesBreakDownProvider.isLoading).thenReturn(false);
-      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
-          .thenAnswer((_) => Future.value(salesBreakDowns));
+      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter)).thenAnswer((_) => Future.value(salesBreakDowns));
 
       //when
       await presenter.loadSalesBreakDown(singleTask: true);
@@ -372,8 +369,7 @@ void main() {
 
       when(() => salesBreakDownProvider.isLoading).thenReturn(false);
 
-      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter))
-          .thenAnswer((_) => Future.value(salesBreakDowns));
+      when(() => salesBreakDownProvider.getSalesBreakDowns(any(), dateFilter)).thenAnswer((_) => Future.value(salesBreakDowns));
 
       //when
       await presenter.loadSalesBreakDown(singleTask: true);
