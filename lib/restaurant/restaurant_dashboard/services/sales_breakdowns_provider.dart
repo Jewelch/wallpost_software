@@ -21,7 +21,7 @@ class SalesBreakDownsProvider {
   SalesBreakDownsProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
   Future<List<SalesBreakDownItem>> getSalesBreakDowns(
-      SalesItemOptions salesBreakDownWiseOption, DateRangeFilters dateRangeFilters) async {
+      SalesBreakDownWiseOptions salesBreakDownWiseOption, DateRangeFilters dateRangeFilters) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl(companyId, salesBreakDownWiseOption, dateRangeFilters);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();

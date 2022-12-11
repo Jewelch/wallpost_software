@@ -7,10 +7,10 @@ import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_do
 
 main() {
   var dateRangeFilter = DateRangeFilters();
-  var selectedWise = SalesItemOptions.basedOnOrder;
+  var selectedWise = SalesBreakDownWiseOptions.basedOnOrder;
 
   test("creating sales breakdown url when selected wise is category wise", () {
-    selectedWise = SalesItemOptions.basedOnCategory;
+    selectedWise = SalesBreakDownWiseOptions.basedOnCategory;
 
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
@@ -19,7 +19,7 @@ main() {
   });
 
   test("creating sales breakdown url when selected wise is menu item wise", () {
-    selectedWise = SalesItemOptions.basedOnMenu;
+    selectedWise = SalesBreakDownWiseOptions.basedOnMenu;
 
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 
@@ -28,7 +28,7 @@ main() {
   });
 
   test("creating sales breakdown url when selected wise is order wise", () {
-    selectedWise = SalesItemOptions.basedOnOrder;
+    selectedWise = SalesBreakDownWiseOptions.basedOnOrder;
 
     var url = RestaurantDashboardUrls.getSalesBreakDownsUrl("1", selectedWise, dateRangeFilter);
 

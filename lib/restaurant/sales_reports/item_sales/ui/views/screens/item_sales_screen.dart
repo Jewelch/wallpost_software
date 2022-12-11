@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/presenter/item_sales_presenter.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/view_contracts/item_sales_view.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/views/loader/item_sales_loader.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/views/loader/item_wise_loader.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/views/widgets/item_sales_error_view.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/views/widgets/item_sales_header_card.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/views/widgets/item_sales_wise.dart';
 
+import '../../../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../../../_shared/constants/app_colors.dart';
+import '../../../../../restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
+import '../../presenter/item_sales_presenter.dart';
+import '../../view_contracts/item_sales_view.dart';
+import '../loader/item_sales_loader.dart';
+import '../loader/item_wise_loader.dart';
 import '../widgets/item_sales_app_bar.dart';
+import '../widgets/item_sales_error_view.dart';
+import '../widgets/item_sales_header_card.dart';
+import '../widgets/item_sales_wise.dart';
 
 enum _ScreenStates { loading, error, data }
 
@@ -29,7 +29,8 @@ class ItemSalesScreen extends StatefulWidget {
 class _State extends State<ItemSalesScreen> implements ItemSalesView {
   late ItemSalesPresenter _presenter = ItemSalesPresenter(this);
   bool _isExpanded = false;
-  final salesItemWiseStateNotifier = ItemNotifier<_SalesItemWiseStates>(defaultValue: _SalesItemWiseStates.loading);
+  final salesItemWiseStateNotifier =
+      ItemNotifier<_SalesItemWiseStates>(defaultValue: _SalesItemWiseStates.loading);
   final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.loading);
   final salesItemDataNotifier = Notifier();
   String errorMessage = '';
@@ -63,17 +64,18 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
             // //* DATA STATE
             case _ScreenStates.data:
               return _dataView();
-
-            //_dataView();
           }
         },
       ),
     );
   }
 
+  bool displayBackground = false;
+
   Widget _dataView() {
     return SafeArea(
       child: Container(
+        // padding: EdgeInsets.symmetric(horizontal: 40),
         color: AppColors.screenBackgroundColor2,
         child: CustomScrollView(
           slivers: [
@@ -84,24 +86,30 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
                   delegate: SliverAppBarDelegate(
                     minHeight: 155,
                     maxHeight: 155,
-                    child: ItemSalesAppBar(_presenter),
+                    child: ItemSalesAppBar(_presenter, displayBackground),
                   ),
                 ),
-                SliverToBoxAdapter(
-                  child: SizedBox(height: 30),
-                ),
+                SliverToBoxAdapter(child: SizedBox(height: 30)),
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: SliverAppBarDelegate(
-                    minHeight: 90,
-                    maxHeight: 200,
+                    minHeight: 84,
+                    maxHeight: 170,
                     child: Notifiable(
                       notifier: salesItemDataNotifier,
-                      builder: (context) => LayoutBuilder(
-                          builder: (context, contraints) => Padding(
-                                padding: contraints.maxHeight > 150 ? EdgeInsets.symmetric(horizontal: 24) : EdgeInsets.zero,
-                                child: ItemSalesHeaderCard(_presenter, contraints.maxHeight),
-                              )),
+                      builder: (context) => LayoutBuilder(builder: (context, contraints) {
+                        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                          setState(
+                            () => displayBackground = contraints.maxHeight <= 150,
+                          );
+                        });
+                        return Padding(
+                          padding: contraints.maxHeight > 150
+                              ? EdgeInsets.symmetric(horizontal: 24)
+                              : EdgeInsets.zero,
+                          child: ItemSalesHeaderCard(_presenter, contraints.maxHeight),
+                        );
+                      }),
                     ),
                   ),
                 ),
@@ -112,6 +120,10 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
                 // SliverSalesBreakHorizontalList(
                 //   presenter: _presenter,
                 // ),
+                _salesBreakdownViews(),
+                _salesBreakdownViews(),
+                _salesBreakdownViews(),
+                _salesBreakdownViews(),
                 _salesBreakdownViews(),
 
                 SliverToBoxAdapter(
@@ -130,11 +142,11 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
       notifier: salesItemWiseStateNotifier,
       builder: (_, currentState) {
         switch (currentState) {
-          //   //* LOADING STATE
+          //* LOADING STATE
           case _SalesItemWiseStates.loading:
             return SliverToBoxAdapter(child: ItemWiseLoader());
 
-          //   // //! ERROR STATE
+          //! ERROR STATE
           case _SalesItemWiseStates.error:
             return MultiSliver(
               children: [
@@ -153,7 +165,7 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
               ],
             );
 
-          //   //* DATA STATE
+          //* DATA STATE
           case _SalesItemWiseStates.data:
             return SliverToBoxAdapter(
               child: ItemSalesWise(_presenter),
@@ -185,10 +197,13 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
 
   @override
   void showSalesReportFilter() {}
+
   @override
   void onDidChangeSalesItemWise() => _presenter.loadItemSalesData();
+
   @override
-  void showLoadingForSalesItemsWise() => salesItemWiseStateNotifier.notify(_SalesItemWiseStates.loading);
+  void showLoadingForSalesItemsWise() =>
+      salesItemWiseStateNotifier.notify(_SalesItemWiseStates.loading);
 
   @override
   void showSalesBreakDowns() {

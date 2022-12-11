@@ -1,12 +1,14 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/presenter/item_sales_presenter.dart';
+
+import '../../../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../../../_shared/constants/app_colors.dart';
+import '../../presenter/item_sales_presenter.dart';
 
 class ItemSalesCard extends StatelessWidget {
-  final ItemSalesPresenter _presenter;
-
   ItemSalesCard(this._presenter);
+  final ItemSalesPresenter _presenter;
 
   @override
   Widget build(BuildContext context) {

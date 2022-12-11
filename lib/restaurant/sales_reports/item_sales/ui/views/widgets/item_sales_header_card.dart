@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/performance_view_holder.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/presenter/item_sales_presenter.dart';
+
+import '../../../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../../../_shared/constants/app_colors.dart';
+import '../../../../../restaurant_dashboard/ui/views/widgets/performance_view_holder.dart';
+import '../../presenter/item_sales_presenter.dart';
 
 class ItemSalesHeaderCard extends StatelessWidget {
   final ItemSalesPresenter _presenter;
-  double _constraints;
+  final double _constraints;
 
   ItemSalesHeaderCard(this._presenter, this._constraints);
 
@@ -15,10 +16,16 @@ class ItemSalesHeaderCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(_constraints > 165 ? 14 : 0),
+        topRight: Radius.circular(_constraints > 165 ? 14 : 0),
+        bottomLeft: Radius.circular(14),
+        bottomRight: Radius.circular(14),
+      )),
       child: Padding(
         padding: const EdgeInsets.all(4.0),
-        child: _constraints > 170
+        child: _constraints > 165
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -47,7 +54,6 @@ class ItemSalesHeaderCard extends StatelessWidget {
               )
             : Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
@@ -63,7 +69,6 @@ class ItemSalesHeaderCard extends StatelessWidget {
                       contraints: _constraints,
                     ),
                   ),
-                  SizedBox(width: 15),
                   Expanded(
                     flex: 1,
                     child: _SalesElement(
@@ -130,13 +135,16 @@ class _SalesElement extends StatelessWidget {
         showShadow: false,
         content: isVertical
             ? Column(
-                crossAxisAlignment: contraints < 150 ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+                crossAxisAlignment:
+                    contraints < 150 ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                 children: [
                   Text(
                     value,
-                    style: contraints < 150 ? valueStyle2.copyWith(color: valueColor) : valueStyle1.copyWith(color: valueColor),
+                    style: contraints < 150
+                        ? valueStyle2.copyWith(color: valueColor)
+                        : valueStyle1.copyWith(color: valueColor),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 2),
                   Text(
                     label,
                     textAlign: TextAlign.start,
@@ -151,7 +159,7 @@ class _SalesElement extends StatelessWidget {
                     value,
                     style: valueStyle2.copyWith(color: valueColor),
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 10),
                   Text(
                     label,
                     textAlign: TextAlign.start,

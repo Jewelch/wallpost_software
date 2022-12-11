@@ -21,7 +21,7 @@ class RestaurantDashboardUrls {
 
   static String getSalesBreakDownsUrl(
     String companyId,
-    SalesItemOptions salesBreakDownWises,
+    SalesBreakDownWiseOptions salesBreakDownWises,
     DateRangeFilters dateFilters,
   ) {
     var url =

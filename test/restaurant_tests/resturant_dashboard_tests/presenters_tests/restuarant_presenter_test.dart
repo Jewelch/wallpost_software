@@ -58,7 +58,7 @@ void main() {
   }
 
   setUpAll(() {
-    registerFallbackValue(SalesItemOptions.basedOnOrder);
+    registerFallbackValue(SalesBreakDownWiseOptions.basedOnOrder);
   });
 
   _sortSalesDataItems() => Mocks.salesBreakDownsItems
@@ -182,30 +182,30 @@ void main() {
 
   test('change selected sales breakdown wise successfully', () {
     //when
-    presenter.selectSalesBreakDownWiseAtIndex(SalesItemOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
 
     //then
-    expect(presenter.selectedBreakDownWise, SalesItemOptions.basedOnMenu);
+    expect(presenter.selectedBreakDownWise, SalesBreakDownWiseOptions.basedOnMenu);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
   // MARK: Test changing the sales break down filter's text color
   test('getSalesBreakdownTextColor() returns color successfully', () {
     //when
-    presenter.selectSalesBreakDownWiseAtIndex(SalesItemOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
 
     //then
-    expect(presenter.getSalesBreakdownFilterTextColor(SalesItemOptions.basedOnMenu.index), Colors.white);
+    expect(presenter.getSalesBreakdownFilterTextColor(SalesBreakDownWiseOptions.basedOnMenu.index), Colors.white);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
   // MARK: Test changing the sales break down chip's background color
   test('getSalesBreakdownChipColor() returns color successfully', () {
     //when
-    presenter.selectSalesBreakDownWiseAtIndex(SalesItemOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
 
     //then
-    expect(presenter.getSalesBreakdownFilterBackgroundColor(SalesItemOptions.basedOnMenu.index), AppColors.defaultColor);
+    expect(presenter.getSalesBreakdownFilterBackgroundColor(SalesBreakDownWiseOptions.basedOnMenu.index), AppColors.defaultColor);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
