@@ -26,6 +26,7 @@ class FinanceDasBoardPresenter {
     _view.showLoader();
     try {
       _financeDashBoardData = await _financeDashBoardProvider.get();
+      _view.onDidLoadFinanceDashBoardData();
     } on WPException {
       _view.showErrorAndRetryView("Failed to load finance details.\nTap here to reload.");
     }
