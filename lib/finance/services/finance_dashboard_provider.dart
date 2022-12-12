@@ -8,14 +8,14 @@ import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import '../constants/finance_dashboard_urls.dart';
 import '../entities/finance_dashboard_data.dart';
 
-class FinancialDashBoardProvider{
+class FinanceDashBoardProvider{
   final NetworkAdapter _networkAdapter;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool _isLoading = false;
 
-  FinancialDashBoardProvider.initWith(this._networkAdapter);
+  FinanceDashBoardProvider.initWith(this._networkAdapter);
 
-  FinancialDashBoardProvider() : _networkAdapter = WPAPI();
+  FinanceDashBoardProvider() : _networkAdapter = WPAPI();
 
   Future<FinanceDashBoardData> get() async {
 

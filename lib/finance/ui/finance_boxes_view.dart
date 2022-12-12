@@ -4,12 +4,7 @@ import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/pe
 import '../../_common_widgets/text_styles/text_styles.dart';
 import '../../_shared/constants/app_colors.dart';
 
-class FinanceBoxesView extends StatefulWidget{
-  @override
-  State<FinanceBoxesView> createState() => _FinanceBoxesViewState();
-}
-
-class _FinanceBoxesViewState extends State<FinanceBoxesView> {
+class FinanceBoxesView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return _datView();
