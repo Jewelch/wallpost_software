@@ -1,0 +1,107 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
+import 'package:wallpost/finance/constants/finance_dashboard_urls.dart';
+import 'package:wallpost/finance/services/financial_dashboard_provider.dart';
+
+import '../../../_mocks/mock_network_adapter.dart';
+import '../../../financial_tests/mocks.dart';
+
+void main() {
+  var successfulResponse = Mocks.financialDashboardResponse;
+  var mockNetworkAdapter = MockNetworkAdapter();
+  var financialDashBoardProvider = FinancialDashBoardProvider.initWith(mockNetworkAdapter);
+
+  test('api request is built correctly', () async {
+
+    Map<String, dynamic> requestParams = {};
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await financialDashBoardProvider.get();
+
+    expect(mockNetworkAdapter.apiRequest.url, FinanceDashBoardUrls.getAttendanceDetailsUrl());
+    expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
+  });
+
+  test('throws exception when network adapter fails', () async {
+    mockNetworkAdapter.fail(NetworkFailureException());
+
+    try {
+      var _ = await financialDashBoardProvider.get();
+      fail('failed to throw the network adapter failure exception');
+    } catch (e) {
+      expect(e is NetworkFailureException, true);
+    }
+  });
+
+  test('throws InvalidResponseException when response is null', () async {
+    mockNetworkAdapter.succeed(null);
+
+    try {
+      var _ = await financialDashBoardProvider.get();
+      fail('failed to throw InvalidResponseException');
+    } catch (e) {
+      expect(e is InvalidResponseException, true);
+    }
+  });
+
+  test('throws WrongResponseFormatException when response is of the wrong format', () async {
+    mockNetworkAdapter.succeed('wrong response format');
+
+    try {
+      var _ = await financialDashBoardProvider.get();
+      fail('failed to throw WrongResponseFormatException');
+    } catch (e) {
+      expect(e is WrongResponseFormatException, true);
+    }
+  });
+
+  test('throws InvalidResponseException when response mapping fails', () async {
+    mockNetworkAdapter.succeed(Map<String, dynamic>());
+
+    try {
+      var _ = await financialDashBoardProvider.get();
+      fail('failed to throw InvalidResponseException');
+    } catch (e) {
+      expect(e is InvalidResponseException, true);
+    }
+  });
+
+  test('success', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var financialDashboard = await financialDashBoardProvider.get();
+    expect(financialDashboard.profitAndLoss,isNotNull);
+    expect(financialDashboard.income,isNotNull);
+    expect(financialDashboard.expenses,isNotNull);
+    expect(financialDashboard.bankAndCash,isNotNull);
+    expect(financialDashboard.cashIn,isNotNull);
+    expect(financialDashboard.cashOut,isNotNull);
+  });
+
+  test('test loading flag is set to true when the service is executed', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    financialDashBoardProvider.get();
+
+    expect(financialDashBoardProvider.isLoading, true);
+  });
+
+  test('test loading flag is reset after success', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await financialDashBoardProvider.get();
+
+    expect(financialDashBoardProvider.isLoading, false);
+  });
+
+  test('test loading flag is reset after failure', () async {
+    mockNetworkAdapter.fail(NetworkFailureException());
+
+    try {
+      var _ = await financialDashBoardProvider.get();
+      fail('failed to throw exception');
+    } catch (_) {
+      expect(financialDashBoardProvider.isLoading, false);
+    }
+  });
+}
