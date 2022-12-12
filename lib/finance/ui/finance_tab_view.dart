@@ -4,12 +4,20 @@ import '../../_common_widgets/filter_views/custom_filter_chip.dart';
 import '../../_shared/constants/app_colors.dart';
 
 class FinanceHorizontalTab extends StatefulWidget{
+  final VoidCallback onCashPressed,onInvoicePressed,onBillPressed;
+
+   FinanceHorizontalTab({ required this.onCashPressed, required this.onInvoicePressed, required this.onBillPressed});
+
   @override
-  State<FinanceHorizontalTab> createState() => _FinanceHorizontalTabState();
+  State<FinanceHorizontalTab> createState() => _FinanceHorizontalTabState(onCashPressed,onInvoicePressed,onBillPressed);
 }
 
 class _FinanceHorizontalTabState extends State<FinanceHorizontalTab> {
   int _selectedIndex =0;
+  final VoidCallback onCashPressed,onInvoicePressed,onBillPressed;
+
+  _FinanceHorizontalTabState(this.onCashPressed, this.onInvoicePressed, this.onBillPressed);
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -37,7 +45,12 @@ class _FinanceHorizontalTabState extends State<FinanceHorizontalTab> {
               ),
             ),
             onPressed: () => {
+
               _selectedIndex =index,
+              if(_selectedIndex==0) onCashPressed
+              else if(_selectedIndex==1)onInvoicePressed
+              else if(_selectedIndex==2)onBillPressed,
+
             setState(() {
             })
             });

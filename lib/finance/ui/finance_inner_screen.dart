@@ -47,7 +47,14 @@ class FinanceInnerScreen extends StatelessWidget{
       padding: const EdgeInsets.all(16.0),
       child: PerformanceViewHolder(
           content: Column(children: [
-            FinanceHorizontalTab(),
+            FinanceHorizontalTab(onCashPressed: () {
+
+
+            },onInvoicePressed: () {
+
+            },onBillPressed: () {
+
+            },),
             SizedBox(height: 15,),
             FinanceCashDetailAggregated(),
             SizedBox(height: 15,),
