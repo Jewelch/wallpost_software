@@ -17,6 +17,8 @@ import 'package:wallpost/finance/ui/view_contracts/finance_dasbooard_view.dart';
 
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 import '../../../restaurant/restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
+import '../bill_view.dart';
+import '../invoice_view.dart';
 import 'finance_dashboard_appbar.dart';
 import 'finance_dashboard_loader.dart';
 import 'finance_filters.dart';
@@ -104,13 +106,42 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
                   income: presenter.getIncomeDetails(),
                   expense: presenter.getExpenseDetails(),
                 ),
+                // Stack(
+                //   clipBehavior: Clip.none,
+                //   children: [
+                //     _buildBottomTabView(),
+                //     Positioned(top: 230, left: 0, right: 0, child: _buildMonthlyCashListView())
+                //   ],
+                // )
+
                 Stack(
                   clipBehavior: Clip.none,
+
                   children: [
                     _buildBottomTabView(),
-                    Positioned(top: 230, left: 0, right: 0, child: _buildMonthlyCashListView())
-                  ],
-                )
+                    if(presenter.selectedModuleIndex==0)
+                      Positioned(
+                          top: 230,
+                          left: 0,
+                          right: 0,
+
+                          child: _buildMonthlyCashListView()),
+                    if(presenter.selectedModuleIndex==1)
+                      Positioned(
+                          top: 120,
+                          left: 0,
+                          right: 0,
+
+                          child: _buildInvoiceView()),
+                    if(presenter.selectedModuleIndex==2)
+                      Positioned(
+                          top: 120,
+                          left: 0,
+                          right: 0,
+
+                          child: _buildBillView())
+
+                  ],)
               ],
             )
           ],
@@ -125,18 +156,41 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
       child: PerformanceViewHolder(
         content: Column(
           children: [
-            FinanceHorizontalTab(),
-            SizedBox(
-              height: 15,
-            ),
-            FinanceCashDetailAggregated(),
-            SizedBox(
-              height: 15,
-            ),
-            _buildMonthlyCashListHeadView()
+            FinanceHorizontalTab(presenter, () {
+              setState(() {});
+            }),
+            if (presenter.selectedModuleIndex == 0) getCashView(),
+            if (presenter.selectedModuleIndex == 1) getInvoiceView(),
+            if (presenter.selectedModuleIndex == 2) getBillView(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget getCashView(){
+
+    return Column(children: [
+      SizedBox(height: 15,),
+      FinanceCashDetailAggregated(),
+      SizedBox(height: 15,),
+
+      _buildMonthlyCashListHeadView(),
+      SizedBox(height: 15,),
+
+    ],);
+  }
+  getInvoiceView() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16,bottom: 32),
+      child: Text('Invoices To Collect',style: TextStyles.extraLargeTitleTextStyleBold,
+      ),
+    );
+  }
+  getBillView() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16,bottom: 32),
+      child: Text('Bills To Pay',style: TextStyles.extraLargeTitleTextStyleBold,),
     );
   }
 
@@ -194,8 +248,20 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   _buildMonthlyCashListView() {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16),
-      child: Container(height: 230, child: PerformanceViewHolder(content: FinanceCashMonthlyList())),
+      padding: const EdgeInsets.only(left: 16,right: 16),
+      child: Container( height:230 ,child: PerformanceViewHolder(content: FinanceCashMonthlyList())),
+    );
+  }
+  _buildInvoiceView() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16,right: 16),
+      child: Container( height:180 ,child: PerformanceViewHolder(content: InVoiceBoxView())),
+    );
+  }
+  _buildBillView() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16,right: 16),
+      child: Container( height:180 ,child: PerformanceViewHolder(content: BillBoxView())),
     );
   }
 
