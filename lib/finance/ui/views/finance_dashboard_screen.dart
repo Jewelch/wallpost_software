@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
@@ -90,9 +91,11 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     return  Column(
         children: [
           FinanceBoxesView(),
-       /*   _buildBottomTabView(),
+       */
+/*   _buildBottomTabView(),
 
-          _buildMonthlyCashListView()*/
+          _buildMonthlyCashListView()*//*
+
           Stack(
             clipBehavior: Clip.none,
 
@@ -222,4 +225,4 @@ class _AppBar extends StatelessWidget {
       onTitlePress: () => Navigator.pop(context),
     );
   }
-}
+}*/
