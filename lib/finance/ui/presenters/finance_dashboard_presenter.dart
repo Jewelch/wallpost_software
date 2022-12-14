@@ -10,6 +10,7 @@ import 'package:wallpost/finance/ui/models/finance_filter_data.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dasbooard_view.dart';
 
 class FinanceDasBoardPresenter {
+  int _selectedModuleIndex = 0;
   final FinanceDasBoardView _view;
   final FinanceDashBoardProvider _financeDashBoardProvider;
   FinanceFilterData dateFilters;
@@ -63,4 +64,23 @@ class FinanceDasBoardPresenter {
     _view.showFinanceDashboardFilter();
   }
 
+  List<String> getCashInList() {
+     List<String> values = <String>['1.2M', '3M', '4M'];
+
+    return values;
+  }
+  List<String> getCashOutList() {
+    List<String> values = <String>['1.2M', '3M', '4M'];
+
+    return values;
+  }
+  List<String> getMonthList() {
+    final List<String> entries = <String>['Jan', 'Feb', 'Mar'];
+    return entries;
+  }
+  void selectModuleAtIndex(int index) {
+    _selectedModuleIndex = index;
+  }
+
+  int get selectedModuleIndex => _selectedModuleIndex;
 }

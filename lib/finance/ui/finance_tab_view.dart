@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 
 import '../../_common_widgets/filter_views/custom_filter_chip.dart';
 import '../../_shared/constants/app_colors.dart';
 
 class FinanceHorizontalTab extends StatefulWidget{
+  final VoidCallback onPressed;
+  final FinanceDasBoardPresenter _presenter;
+
+  //FinanceHorizontalTab(this._presenter);
+  FinanceHorizontalTab( this._presenter, this.onPressed );
+
+
+
+
   @override
-  State<FinanceHorizontalTab> createState() => _FinanceHorizontalTabState();
-}
+  State<StatefulWidget> createState() {
+    return _FinanceHorizontalTabState( );
+  }}
 
 class _FinanceHorizontalTabState extends State<FinanceHorizontalTab> {
+
+
+
   int _selectedIndex =0;
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -37,7 +52,10 @@ class _FinanceHorizontalTabState extends State<FinanceHorizontalTab> {
               ),
             ),
             onPressed: () => {
+
               _selectedIndex =index,
+              widget._presenter.selectModuleAtIndex(index),
+              widget.onPressed.call(),
             setState(() {
             })
             });

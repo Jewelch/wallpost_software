@@ -35,8 +35,8 @@ class FinanceDetailCard extends StatelessWidget {
                 ),*/
                 GestureDetector(
                   onTap: () {
-                    //ScreenPresenter.present(FinanceInnerScreen() ,context);
-                    ScreenPresenter.present(FinanceDashBoardScreen() ,context);
+                    ScreenPresenter.present(FinanceInnerScreen() ,context);
+                   // ScreenPresenter.present(FinanceDashBoardScreen() ,context);
                   },
                   child: Container(
                       height: 14, width: 14, child: SvgPicture.asset('assets/icons/arrow_forward_blue.svg', width: 40, height: 40)),
