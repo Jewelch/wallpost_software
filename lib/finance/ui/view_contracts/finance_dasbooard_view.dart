@@ -4,4 +4,6 @@ abstract class FinanceDasBoardView{
   void showErrorAndRetryView(String message);
 
   void onDidLoadFinanceDashBoardData();
+
+  void showFinanceDashboardFilter();
 }

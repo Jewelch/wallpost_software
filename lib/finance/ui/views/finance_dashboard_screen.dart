@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
@@ -15,18 +16,19 @@ import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart'
 import 'package:wallpost/finance/ui/view_contracts/finance_dasbooard_view.dart';
 
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
+import '../../../restaurant/restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
+import 'finance_dashboard_appbar.dart';
+import 'finance_dashboard_loader.dart';
+import 'finance_filters.dart';
 
-
-
-class FinanceDashBoardScreen extends StatefulWidget{
+class FinanceDashBoardScreen extends StatefulWidget {
   const FinanceDashBoardScreen({Key? key}) : super(key: key);
 
   @override
   State<FinanceDashBoardScreen> createState() => _FinanceDashBoardScreenState();
 }
 
-class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> implements FinanceDasBoardView{
-
+class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> implements FinanceDasBoardView {
   late final FinanceDasBoardPresenter presenter;
   final _viewTypeNotifier = ItemNotifier(defaultValue: LOADER_VIEW);
   static const LOADER_VIEW = 1;
@@ -34,39 +36,34 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   static const DATA_VIEW = 3;
   var _errorMessage = "";
 
-
   @override
   void initState() {
-    presenter=FinanceDasBoardPresenter(this);
+    presenter = FinanceDasBoardPresenter(this);
     presenter.loadFinanceDashBoardDetails();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () async => presenter.loadFinanceDashBoardDetails(),
+      child: Scaffold(
+          backgroundColor: AppColors.screenBackgroundColor,
+          body: SafeArea(
+            child: ItemNotifiable<int>(
+              notifier: _viewTypeNotifier,
+              builder: (context, viewType) {
+                if (viewType == LOADER_VIEW) return FinanceDashboardLoader();
 
+                if (viewType == ERROR_VIEW) return _errorAndRetryView();
 
-    return Scaffold(
-      appBar: SimpleAppBar(
-        title: "Company Name",
-        leadingButton: RoundedBackButton(onPressed: () => Navigator.pop(context)),
-      ),
-      body: SafeArea(
-        child: ItemNotifiable<int>(
-          notifier: _viewTypeNotifier,
-          builder: (context, viewType) {
-            if (viewType == LOADER_VIEW) return AttendanceDetailLoader();
+                if (viewType == DATA_VIEW) return _dataView();
 
-            if (viewType == ERROR_VIEW) return _errorAndRetryView();
-
-            if (viewType == DATA_VIEW) return _dataView();
-
-            return Container();
-          },
-        ),
-      ),
+                return Container();
+              },
+            ),
+          )),
     );
-
   }
 
   //MARK: Functions to build the error and retry view
@@ -86,70 +83,82 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     );
   }
 
-  Widget _dataView(){
-    return  Column(
-        children: [
-          FinanceBoxesView(),
-       /*   _buildBottomTabView(),
-
-          _buildMonthlyCashListView()*/
-          Stack(
-            clipBehavior: Clip.none,
-
-            children: [
-            _buildBottomTabView(),
-              Positioned(
-                top: 230,
-                  left: 0,
-                  right: 0,
-
-                  child: _buildMonthlyCashListView())
-          ],)
-
-        ],
-
+  Widget _dataView() {
+    return SafeArea(
+      child: Container(
+        color: AppColors.screenBackgroundColor2,
+        child: CustomScrollView(
+          slivers: [
+            MultiSliver(
+              children: [
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: SliverAppBarDelegate(
+                    minHeight: 56 + 32 + 16,
+                    maxHeight: 56 + 32 + 16,
+                    child: FinanceDashboardAppBar(presenter),
+                  ),
+                ),
+                FinanceBoxesView(
+                  profitAndLoss: presenter.getProfitAndLossDetails(),
+                  income: presenter.getIncomeDetails(),
+                  expense: presenter.getExpenseDetails(),
+                ),
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    _buildBottomTabView(),
+                    Positioned(top: 230, left: 0, right: 0, child: _buildMonthlyCashListView())
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 
-
-
   Widget _buildBottomTabView() {
-    return  Padding(
+    return Padding(
       padding: const EdgeInsets.all(16.0),
       child: PerformanceViewHolder(
-          content: Column(children: [
+        content: Column(
+          children: [
             FinanceHorizontalTab(),
-            SizedBox(height: 15,),
+            SizedBox(
+              height: 15,
+            ),
             FinanceCashDetailAggregated(),
-            SizedBox(height: 15,),
-
+            SizedBox(
+              height: 15,
+            ),
             _buildMonthlyCashListHeadView()
-
-          ],),
-
+          ],
+        ),
       ),
     );
-
-
   }
 
   Widget _buildMonthlyCashListHeadView() {
     return Padding(
-      padding: const EdgeInsets.only(left: 16,right: 16,top: 16,bottom: 32),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 32),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap:() {
-
-            },
+            onTap: () {},
             child: Row(
               children: [
                 Container(
                     height: 15,
                     width: 20,
-                    child: SvgPicture.asset('assets/icons/back_icon.svg',
-                        width: 50, height: 50,color: AppColors.defaultColor,)),
+                    child: SvgPicture.asset(
+                      'assets/icons/back_icon.svg',
+                      width: 50,
+                      height: 50,
+                      color: AppColors.defaultColor,
+                    )),
                 Text(
                   'Previous',
                   style: TextStyle(color: AppColors.defaultColor),
@@ -159,9 +168,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
           ),
           Text('3 Months'),
           GestureDetector(
-            onTap: () {
-
-            },
+            onTap: () {},
             child: Row(
               children: [
                 Text(
@@ -171,8 +178,12 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
                 Container(
                     height: 15,
                     width: 20,
-                    child: SvgPicture.asset('assets/icons/arrow_right_icon.svg',
-                        width: 20, height: 15,color: AppColors.defaultColor,)),
+                    child: SvgPicture.asset(
+                      'assets/icons/arrow_right_icon.svg',
+                      width: 20,
+                      height: 15,
+                      color: AppColors.defaultColor,
+                    )),
               ],
             ),
           )
@@ -183,8 +194,8 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   _buildMonthlyCashListView() {
     return Padding(
-      padding: const EdgeInsets.only(left: 16,right: 16),
-      child: Container( height:230 ,child: PerformanceViewHolder(content: FinanceCashMonthlyList())),
+      padding: const EdgeInsets.only(left: 16, right: 16),
+      child: Container(height: 230, child: PerformanceViewHolder(content: FinanceCashMonthlyList())),
     );
   }
 
@@ -202,23 +213,33 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   void onDidLoadFinanceDashBoardData() {
     _viewTypeNotifier.notify(DATA_VIEW);
   }
+
+  @override
+  void showFinanceDashboardFilter() async{
+    var newDateFilter = await FinanceFilters.show(
+      context,
+      initialDateRangeFilter: presenter.dateFilters.copy(),
+    );
+    if (newDateFilter != null) {
+      presenter.dateFilters = newDateFilter;
+     // _loadSalesData();
+    }
+  }
 }
 
 class _AppBar extends StatelessWidget {
   const _AppBar({
     Key? key,
   }) : super(key: key);
-  
 
   @override
   Widget build(BuildContext context) {
     return FinanceDetailAppBar(
-      companyName:"Company name",
+      companyName: "Company name",
       onLeftMenuButtonPress: () => {},
       onAddButtonPress: () {},
-      leadingButton: RoundedBackButton(backgroundColor: Colors.white,
-          iconColor: AppColors.defaultColor,
-          onPressed: () => Navigator.pop(context)),
+      leadingButton: RoundedBackButton(
+          backgroundColor: Colors.white, iconColor: AppColors.defaultColor, onPressed: () => Navigator.pop(context)),
       onTitlePress: () => Navigator.pop(context),
     );
   }
