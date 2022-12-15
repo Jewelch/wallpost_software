@@ -4,12 +4,12 @@ import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/pe
 import '../../_common_widgets/text_styles/text_styles.dart';
 import '../../_shared/constants/app_colors.dart';
 
-class FinanceDashBoardView extends StatelessWidget {
+class FinanceDashBoardDetailsView extends StatelessWidget {
   final String profitAndLoss;
   final String income;
   final String expense;
 
-  FinanceDashBoardView({required this.profitAndLoss, required this.income, required this.expense});
+  FinanceDashBoardDetailsView({required this.profitAndLoss, required this.income, required this.expense});
 
   @override
   Widget build(BuildContext context) {

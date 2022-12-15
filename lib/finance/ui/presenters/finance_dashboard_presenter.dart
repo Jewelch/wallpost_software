@@ -1,34 +1,25 @@
-import 'dart:ui';
-
-import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/_shared/extensions/string_extensions.dart';
 import 'package:wallpost/finance/entities/finance_bill_details.dart';
-import 'package:wallpost/finance/entities/finance_cash_monthly_detail.dart';
 import 'package:wallpost/finance/entities/finance_dashboard_data.dart';
 import 'package:wallpost/finance/entities/finance_invoice_details.dart';
 import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
-import 'package:wallpost/finance/ui/models/finance_dashboard_detail.dart';
-import 'package:wallpost/finance/ui/models/finance_filter_data.dart';
-import 'package:wallpost/finance/ui/view_contracts/finance_dasbooard_view.dart';
+import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
 
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/models/owner_dashboard_filters.dart';
 
 class FinanceDasBoardPresenter {
   int _selectedModuleIndex = 0;
   int selectedMonthIndex = 0;
-  final FinanceDasBoardView _view;
+  final FinanceDashBoardView _view;
   final FinanceDashBoardProvider _financeDashBoardProvider;
-  FinanceFilterData dateFilters;
   var _filters = OwnerDashboardFilters();
 
   late FinanceDashBoardData _financeDashBoardData;
 
-  FinanceDasBoardPresenter(this._view)
-      : _financeDashBoardProvider = FinanceDashBoardProvider(),
-        dateFilters = FinanceFilterData();
+  FinanceDasBoardPresenter(this._view) : _financeDashBoardProvider = FinanceDashBoardProvider();
 
-  FinanceDasBoardPresenter.initWith(this._view, this._financeDashBoardProvider, this.dateFilters);
+  FinanceDasBoardPresenter.initWith(this._view, this._financeDashBoardProvider);
 
   //Function to load financial dashboard data
 
@@ -38,8 +29,8 @@ class FinanceDasBoardPresenter {
     _view.showLoader();
     try {
       _financeDashBoardData = await _financeDashBoardProvider.get(
-        // month: _filters.month == 0 ? null : _filters.month,
-        // year: _filters.year,
+        month: _filters.month == 0 ? null : _filters.month,
+        year: _filters.year,
       );
       _view.onDidLoadFinanceDashBoardData();
     } on WPException {
@@ -47,7 +38,7 @@ class FinanceDasBoardPresenter {
     }
   }
 
-  //MARK: Function to set filters
+  //MARK: Function to set filters and load data
 
   Future<void> setFilter({required int month, required int year}) {
     _filters.month = month;
@@ -59,10 +50,9 @@ class FinanceDasBoardPresenter {
 
   get filters => _filters;
 
-  get selectedMonth => _filters.month;
+  int get selectedMonth => _filters.month;
 
-  get selectedYear => _filters.year;
-
+  int get selectedYear => _filters.year;
 
   String getProfitAndLossDetails() {
     return _financeDashBoardData.profitAndLoss;
@@ -92,7 +82,7 @@ class FinanceDasBoardPresenter {
     return _financeDashBoardData.financeInvoiceDetails;
   }
 
-  FinanceBillDetails? getFinanceBillDetails(){
+  FinanceBillDetails? getFinanceBillDetails() {
     return _financeDashBoardData.financeBillDetails;
   }
 
@@ -136,4 +126,12 @@ class FinanceDasBoardPresenter {
   }
 
   int get selectedModuleIndex => _selectedModuleIndex;
+
+  //MARK: Function to get selected month name
+
+  String getSelectedMonthName() {
+    var years = AppYears().currentAndPastShortenedMonthsOfYear(selectedYear);
+    if (selectedMonth > 0) return years[selectedMonth];
+    return "YTD";
+  }
 }

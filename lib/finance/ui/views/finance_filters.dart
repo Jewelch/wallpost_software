@@ -1,33 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_selector.dart';
-import 'package:wallpost/finance/ui/models/finance_filter_data.dart';
-import '../../../_common_widgets/filter_views/custom_filter_chip.dart';
+import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 
-import '../../../../../_shared/date_range_selector/date_range_filters.dart';
+import '../../../_common_widgets/filter_views/custom_filter_chip.dart';
 import '../../../_shared/constants/app_years.dart';
 
 class FinanceFilters extends StatefulWidget {
-
-  final FinanceFilterData dateFilters;
+  final FinanceDasBoardPresenter presenter;
   final ModalSheetController modalSheetController;
-
-   FinanceFilters({required this.dateFilters, required this.modalSheetController});
+  FinanceFilters({required this.modalSheetController, required this.presenter});
 
   static Future<dynamic> show(BuildContext context,
-      {bool allowMultiple = false, required FinanceFilterData initialDateRangeFilter}) {
+      {bool allowMultiple = false, required FinanceDasBoardPresenter financePresenter}) {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
-        context: context,
-        content: FinanceFilters(
-          dateFilters: initialDateRangeFilter,
-          modalSheetController: modalSheetController,
-        ),
-        controller: modalSheetController,
-        isCurveApplied: false);
+      context: context,
+      content: FinanceFilters(
+        modalSheetController: modalSheetController,
+        presenter: financePresenter,
+      ),
+      controller: modalSheetController,
+      isCurveApplied: false,
+    );
   }
 
   @override
@@ -35,9 +31,8 @@ class FinanceFilters extends StatefulWidget {
 }
 
 class _FinanceFiltersState extends State<FinanceFilters> {
-  int _selectedIndex =0;
-  int _selectedMonthIndex =0;
-
+  int _selectedYearIndex = 0;
+  int _selectedMonthIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +74,12 @@ class _FinanceFiltersState extends State<FinanceFilters> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => [
+                    widget.modalSheetController.close(),
+                    widget.presenter.setFilter(month: _selectedMonthIndex, year: AppYears().years()[_selectedYearIndex])
+                  ],
                   child: Text(
-                     "Apply"
+                    "Apply"
                     "",
                     style: TextStyles.screenTitleTextStyle.copyWith(
                       color: AppColors.defaultColor,
@@ -99,11 +97,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Container(
-              child:                   getYearList(context)
-
-              ),
-
+            Container(child: getYearList(context)),
             Text(
               "Months",
               style: TextStyles.screenTitleTextStyle.copyWith(
@@ -111,10 +105,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Container(
-                child:                   getMonthList(context)
-
-            ),
+            Container(child: getMonthList(context)),
             SizedBox(height: 40),
           ],
         ),
@@ -126,18 +117,16 @@ class _FinanceFiltersState extends State<FinanceFilters> {
 
   final _years = AppYears().years();
 
-
   Widget getYearList(BuildContext context) {
     return SizedBox(
-      height: 140,
+      height: 200,
       child: new GridView.count(
         childAspectRatio: (1 / .4),
-
         crossAxisCount: 3,
-        children: new List<Widget>.generate(6, (index) {
+        children: new List<Widget>.generate(8, (index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
-           /* child: Container(
+            /* child: Container(
               color: AppColors.defaultColor,
                 child: (Text(youList[index]))),*/
             child: getSingleYearItem(index),
@@ -147,27 +136,24 @@ class _FinanceFiltersState extends State<FinanceFilters> {
     );
   }
 
-  Widget getSingleYearItem(int index ){
+  Widget getSingleYearItem(int index) {
     return CustomFilterChip(
-        backgroundColor: (index==_selectedIndex)?AppColors.defaultColor:Colors.transparent,
+        backgroundColor: (index == _selectedYearIndex) ? AppColors.defaultColor : Colors.transparent,
         borderColor: Colors.transparent,
         title: Text(
           _years[index].toString(),
           style: TextStyle(
-            color: (index==_selectedIndex)?Colors.white:AppColors.textColorGray,
+            color: (index == _selectedYearIndex) ? Colors.white : AppColors.textColorGray,
             fontSize: 17,
             fontWeight: FontWeight.w500,
           ),
         ),
         onPressed: () => {
-
-          _selectedIndex =index,
-         /* widget._presenter.selectModuleAtIndex(index),
+          _selectedYearIndex = index,
+              /* widget._presenter.selectModuleAtIndex(index),
           widget.onPressed.call(),*/
-          setState(() {
-          })
-        });
-
+              setState(() {})
+            });
   }
 
 /*
@@ -175,10 +161,9 @@ class _FinanceFiltersState extends State<FinanceFilters> {
     'July','Aug','Sep','Oct','Nov','Dec'];*/
   Widget getMonthList(BuildContext context) {
     return SizedBox(
-      height: 160,
+      height: 200,
       child: new GridView.count(
         childAspectRatio: (1 / .4),
-
         crossAxisCount: 3,
         children: new List<Widget>.generate(12, (index) {
           return Padding(
@@ -192,27 +177,25 @@ class _FinanceFiltersState extends State<FinanceFilters> {
       ),
     );
   }
-  Widget getSingleMonthItem(int index ){
+
+  Widget getSingleMonthItem(int index) {
     return CustomFilterChip(
-        backgroundColor: (index==_selectedMonthIndex)?AppColors.defaultColor:Colors.transparent,
+        backgroundColor: (index == _selectedMonthIndex) ? AppColors.defaultColor : Colors.transparent,
         borderColor: Colors.transparent,
         title: Text(
-            _getMonthNamesForSelectedYear()[index],
+          _getMonthNamesForSelectedYear()[index],
           style: TextStyle(
-            color: (index==_selectedMonthIndex)?Colors.white:AppColors.textColorGray,
+            color: (index == _selectedMonthIndex) ? Colors.white : AppColors.textColorGray,
             fontSize: 17,
             fontWeight: FontWeight.w500,
           ),
         ),
         onPressed: () => {
-
-          _selectedMonthIndex =index,
-          /* widget._presenter.selectModuleAtIndex(index),
+              _selectedMonthIndex = index,
+              /* widget._presenter.selectModuleAtIndex(index),
           widget.onPressed.call(),*/
-          setState(() {
-          })
-        });
-
+              setState(() {})
+            });
   }
 
   List<String> _getMonthNamesForSelectedYear() {

@@ -11,7 +11,7 @@ import 'package:wallpost/finance/ui/finance_dashboard_details_view.dart';
 import 'package:wallpost/finance/ui/finance_invoice_details_view.dart';
 import 'package:wallpost/finance/ui/finance_tab_view.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
-import 'package:wallpost/finance/ui/view_contracts/finance_dasbooard_view.dart';
+import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
 
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 import '../../../restaurant/restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
@@ -27,7 +27,7 @@ class FinanceDashBoardScreen extends StatefulWidget {
   State<FinanceDashBoardScreen> createState() => _FinanceDashBoardScreenState();
 }
 
-class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> implements FinanceDasBoardView {
+class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> implements FinanceDashBoardView {
   late final FinanceDasBoardPresenter presenter;
   final _viewTypeNotifier = ItemNotifier(defaultValue: LOADER_VIEW);
   static const LOADER_VIEW = 1;
@@ -98,7 +98,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
                     child: FinanceDashboardAppBar(presenter),
                   ),
                 ),
-                FinanceDashBoardView(
+                FinanceDashBoardDetailsView(
                   profitAndLoss: presenter.getProfitAndLossDetails(),
                   income: presenter.getIncomeDetails(),
                   expense: presenter.getExpenseDetails(),
@@ -299,13 +299,6 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   @override
   void showFinanceDashboardFilter() async {
-    var newDateFilter = await FinanceFilters.show(
-      context,
-      initialDateRangeFilter: presenter.dateFilters.copy(),
-    );
-    if (newDateFilter != null) {
-      presenter.dateFilters = newDateFilter;
-      // _loadSalesData();
-    }
+    await FinanceFilters.show(context, financePresenter: presenter);
   }
 }

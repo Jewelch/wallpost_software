@@ -1,6 +1,5 @@
-import 'package:wallpost/finance/entities/finance_invoice_details.dart';
 
-abstract class FinanceDasBoardView{
+abstract class FinanceDashBoardView{
   void showLoader();
 
   void showErrorAndRetryView(String message);
