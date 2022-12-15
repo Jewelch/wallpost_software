@@ -19,13 +19,16 @@ class FinanceCashDetailAggregated extends StatelessWidget{
        Column(children: [
         _tile(),
         SizedBox(height: 12,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Padding(
+          padding: const EdgeInsets.only(left: 16,right: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-          children: [
-          _subTile('assets/icons/cash_in_icon.svg','Cash In',cashIn),
-            _subTile('assets/icons/cash_out_icon.svg','Cash Out',cashOut),
-        ],)
+            children: [
+            Expanded(child: _subTile('assets/icons/cash_in_icon.svg','Cash In',cashIn)),
+              Expanded(child: _subTile('assets/icons/cash_out_icon.svg','Cash Out',cashOut)),
+          ],),
+        )
       ])
     );
   }
@@ -57,13 +60,16 @@ class FinanceCashDetailAggregated extends StatelessWidget{
        SizedBox(width: 4,),
 
         Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              value,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.textColorBlack),
+            SizedBox(
+              width: 90,
+              child: Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.textColorBlack),
+              ),
             ),
             SizedBox(height: 2),
             Text(

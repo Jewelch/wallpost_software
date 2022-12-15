@@ -47,11 +47,14 @@ class FinanceCashMonthlyList extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              value,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.textColorBlack),
+            SizedBox(
+              width: 50,
+              child: Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.textColorBlack),
+              ),
             ),
           ],
         ),
