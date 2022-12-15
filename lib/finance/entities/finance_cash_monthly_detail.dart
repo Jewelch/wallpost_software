@@ -2,12 +2,12 @@ import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
-class FinanceCashReport extends JSONInitializable {
+class FinanceCashMonthlyDetails extends JSONInitializable {
   late List<String> _months;
   late List<String> _cashIn;
   late List<String> _cashOut;
 
-  FinanceCashReport.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  FinanceCashMonthlyDetails.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       _months = sift.readStringListFromMap(jsonMap, "months");

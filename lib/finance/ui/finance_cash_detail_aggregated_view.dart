@@ -6,6 +6,13 @@ import '../../_shared/constants/app_colors.dart';
 import '../../dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 
 class FinanceCashDetailAggregated extends StatelessWidget{
+  final String bankAndCash;
+  final String cashIn;
+  final String cashOut;
+
+
+  FinanceCashDetailAggregated({required this.bankAndCash,required this.cashIn,required this.cashOut});
+
   @override
   Widget build(BuildContext context) {
     return (
@@ -16,8 +23,8 @@ class FinanceCashDetailAggregated extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
           children: [
-          _subTile('assets/icons/cash_in_icon.svg','Cash In','50000'),
-            _subTile('assets/icons/cash_out_icon.svg','Cash Out','25000'),
+          _subTile('assets/icons/cash_in_icon.svg','Cash In',cashIn),
+            _subTile('assets/icons/cash_out_icon.svg','Cash Out',cashOut),
         ],)
       ])
     );
@@ -28,7 +35,7 @@ class FinanceCashDetailAggregated extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          "250,000",
+          bankAndCash,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: AppColors.green),

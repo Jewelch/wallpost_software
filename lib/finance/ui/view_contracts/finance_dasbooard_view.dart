@@ -1,3 +1,5 @@
+import 'package:wallpost/finance/entities/finance_invoice_details.dart';
+
 abstract class FinanceDasBoardView{
   void showLoader();
 
@@ -6,4 +8,6 @@ abstract class FinanceDasBoardView{
   void onDidLoadFinanceDashBoardData();
 
   void showFinanceDashboardFilter();
+
+
 }

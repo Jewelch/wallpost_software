@@ -2,23 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/attendance/attendance_punch_in_out/ui/views/attendance_detail/attendance_detail_loader.dart';
 import 'package:wallpost/finance/ui/finanace_cash_montly_list.dart';
-import 'package:wallpost/finance/ui/finance_boxes_view.dart';
+import 'package:wallpost/finance/ui/finance_bill_details_view.dart';
 import 'package:wallpost/finance/ui/finance_cash_detail_aggregated_view.dart';
-import 'package:wallpost/finance/ui/finance_inner_appbar.dart';
+import 'package:wallpost/finance/ui/finance_dashboard_details_view.dart';
+import 'package:wallpost/finance/ui/finance_invoice_details_view.dart';
 import 'package:wallpost/finance/ui/finance_tab_view.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dasbooard_view.dart';
 
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 import '../../../restaurant/restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
-import '../bill_view.dart';
-import '../invoice_view.dart';
+
 import 'finance_dashboard_appbar.dart';
 import 'finance_dashboard_loader.dart';
 import 'finance_filters.dart';
@@ -101,47 +98,23 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
                     child: FinanceDashboardAppBar(presenter),
                   ),
                 ),
-                FinanceBoxesView(
+                FinanceDashBoardView(
                   profitAndLoss: presenter.getProfitAndLossDetails(),
                   income: presenter.getIncomeDetails(),
                   expense: presenter.getExpenseDetails(),
                 ),
-                // Stack(
-                //   clipBehavior: Clip.none,
-                //   children: [
-                //     _buildBottomTabView(),
-                //     Positioned(top: 230, left: 0, right: 0, child: _buildMonthlyCashListView())
-                //   ],
-                // )
-
                 Stack(
                   clipBehavior: Clip.none,
-
                   children: [
                     _buildBottomTabView(),
-                    if(presenter.selectedModuleIndex==0)
-                      Positioned(
-                          top: 230,
-                          left: 0,
-                          right: 0,
-
-                          child: _buildMonthlyCashListView()),
-                    if(presenter.selectedModuleIndex==1)
-                      Positioned(
-                          top: 120,
-                          left: 0,
-                          right: 0,
-
-                          child: _buildInvoiceView()),
-                    if(presenter.selectedModuleIndex==2)
-                      Positioned(
-                          top: 120,
-                          left: 0,
-                          right: 0,
-
-                          child: _buildBillView())
-
-                  ],)
+                    if (presenter.selectedModuleIndex == 0)
+                      Positioned(top: 230, left: 0, right: 0, child: _buildMonthlyCashListView()),
+                    if (presenter.selectedModuleIndex == 1)
+                      Positioned(top: 120, left: 0, right: 0, child: _buildInvoiceView()),
+                    if (presenter.selectedModuleIndex == 2)
+                      Positioned(top: 120, left: 0, right: 0, child: _buildBillView())
+                  ],
+                )
               ],
             )
           ],
@@ -168,29 +141,45 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     );
   }
 
-  Widget getCashView(){
-
-    return Column(children: [
-      SizedBox(height: 15,),
-      FinanceCashDetailAggregated(),
-      SizedBox(height: 15,),
-
-      _buildMonthlyCashListHeadView(),
-      SizedBox(height: 15,),
-
-    ],);
+  Widget getCashView() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 15,
+        ),
+        FinanceCashDetailAggregated(
+          bankAndCash: presenter.getBankAndCashDetails(),
+          cashIn: presenter.getCahInDetails(),
+          cashOut: presenter.getCashOutDetails(),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        _buildMonthlyCashListHeadView(),
+        SizedBox(
+          height: 15,
+        ),
+      ],
+    );
   }
+
   getInvoiceView() {
     return Padding(
-      padding: const EdgeInsets.only(top: 16,bottom: 32),
-      child: Text('Invoices To Collect',style: TextStyles.extraLargeTitleTextStyleBold,
+      padding: const EdgeInsets.only(top: 16, bottom: 32),
+      child: Text(
+        'Invoices To Collect',
+        style: TextStyles.extraLargeTitleTextStyleBold,
       ),
     );
   }
+
   getBillView() {
     return Padding(
-      padding: const EdgeInsets.only(top: 16,bottom: 32),
-      child: Text('Bills To Pay',style: TextStyles.extraLargeTitleTextStyleBold,),
+      padding: const EdgeInsets.only(top: 16, bottom: 32),
+      child: Text(
+        'Bills To Pay',
+        style: TextStyles.extraLargeTitleTextStyleBold,
+      ),
     );
   }
 
@@ -201,7 +190,10 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              presenter.onPreviousTextClick();
+              setState(() {});
+            },
             child: Row(
               children: [
                 Container(
@@ -222,7 +214,10 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
           ),
           Text('3 Months'),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              presenter.onNextTextClick();
+              setState(() {});
+            },
             child: Row(
               children: [
                 Text(
@@ -230,14 +225,15 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
                   style: TextStyle(color: AppColors.defaultColor),
                 ),
                 Container(
-                    height: 15,
+                  height: 15,
+                  width: 20,
+                  child: SvgPicture.asset(
+                    'assets/icons/arrow_right_icon.svg',
                     width: 20,
-                    child: SvgPicture.asset(
-                      'assets/icons/arrow_right_icon.svg',
-                      width: 20,
-                      height: 15,
-                      color: AppColors.defaultColor,
-                    )),
+                    height: 15,
+                    color: AppColors.defaultColor,
+                  ),
+                ),
               ],
             ),
           )
@@ -248,20 +244,41 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   _buildMonthlyCashListView() {
     return Padding(
-      padding: const EdgeInsets.only(left: 16,right: 16),
-      child: Container( height:230 ,child: PerformanceViewHolder(content: FinanceCashMonthlyList())),
+      padding: const EdgeInsets.only(left: 16, right: 16),
+      child: Container(
+        height: 230,
+        child: PerformanceViewHolder(
+          content: FinanceCashMonthlyList(presenter),
+        ),
+      ),
     );
   }
+
   _buildInvoiceView() {
     return Padding(
-      padding: const EdgeInsets.only(left: 16,right: 16),
-      child: Container( height:180 ,child: PerformanceViewHolder(content: InVoiceBoxView())),
+      padding: const EdgeInsets.only(left: 16, right: 16),
+      child: Container(
+        height: 180,
+        child: PerformanceViewHolder(
+          content: FinanceInvoiceDetailsView(
+            financeInvoiceDetails: presenter.getFinanceInvoiceReport()!,
+          ),
+        ),
+      ),
     );
   }
+
   _buildBillView() {
     return Padding(
-      padding: const EdgeInsets.only(left: 16,right: 16),
-      child: Container( height:180 ,child: PerformanceViewHolder(content: BillBoxView())),
+      padding: const EdgeInsets.only(left: 16, right: 16),
+      child: Container(
+        height: 180,
+        child: PerformanceViewHolder(
+          content: FinanceBillDetailsView(
+            financeBillDetails: presenter.getFinanceBillDetails()!,
+          ),
+        ),
+      ),
     );
   }
 
@@ -281,32 +298,14 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   }
 
   @override
-  void showFinanceDashboardFilter() async{
+  void showFinanceDashboardFilter() async {
     var newDateFilter = await FinanceFilters.show(
       context,
       initialDateRangeFilter: presenter.dateFilters.copy(),
     );
     if (newDateFilter != null) {
       presenter.dateFilters = newDateFilter;
-     // _loadSalesData();
+      // _loadSalesData();
     }
-  }
-}
-
-class _AppBar extends StatelessWidget {
-  const _AppBar({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FinanceDetailAppBar(
-      companyName: "Company name",
-      onLeftMenuButtonPress: () => {},
-      onAddButtonPress: () {},
-      leadingButton: RoundedBackButton(
-          backgroundColor: Colors.white, iconColor: AppColors.defaultColor, onPressed: () => Navigator.pop(context)),
-      onTitlePress: () => Navigator.pop(context),
-    );
   }
 }

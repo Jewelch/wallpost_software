@@ -2,13 +2,13 @@ import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
-class FinanceBillReport extends JSONInitializable {
+class FinanceBillDetails extends JSONInitializable {
   late String _overDue;
   late String _currentDue;
   late String _billed;
   late String _paid;
 
-  FinanceBillReport.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  FinanceBillDetails.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       _overDue = sift.readStringFromMap(jsonMap, "overdue");

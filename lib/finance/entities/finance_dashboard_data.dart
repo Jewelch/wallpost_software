@@ -3,9 +3,9 @@ import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
-import 'finance_bill_report.dart';
-import 'finance_cash_report.dart';
-import 'finance_invoice_report.dart';
+import 'finance_bill_details.dart';
+import 'finance_cash_monthly_detail.dart';
+import 'finance_invoice_details.dart';
 
 class FinanceDashBoardData extends JSONInitializable{
 
@@ -15,9 +15,9 @@ class FinanceDashBoardData extends JSONInitializable{
   late String _bankAndCash;
   late String _cashIn;
   late String _cashOut;
-  FinanceCashReport? _financeCashReport;
-  FinanceInvoiceReport? _financeInvoiceReport;
-  FinanceBillReport? _financeBillReport;
+  FinanceCashMonthlyDetails? _financeCashMonthlyDetails;
+  FinanceInvoiceDetails? _financeInvoiceDetails;
+  FinanceBillDetails? _financeBillDetails;
 
   FinanceDashBoardData.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
@@ -30,25 +30,25 @@ class FinanceDashBoardData extends JSONInitializable{
       _cashIn = '${sift.readStringFromMap(jsonMap, 'cashe_in')}';
       _cashOut = '${sift.readStringFromMap(jsonMap, 'cashe_out')}';
 
-      var financialCashReportMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'chart_data', null);
-      var financialInvoiceReportMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'invoice_report', null);
-      var financialBillReportMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'bill_report', null);
+      var financialCashMonthlyDetailsMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'chart_data', null);
+      var financialInvoiceDetailsMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'invoice_report', null);
+      var financialBillDetailsMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'bill_report', null);
 
 
-      if (financialCashReportMap != null) _financeCashReport = FinanceCashReport.fromJson(financialCashReportMap);
-      if (financialInvoiceReportMap != null) _financeInvoiceReport = FinanceInvoiceReport.fromJson(financialInvoiceReportMap);
-      if (financialBillReportMap != null) _financeBillReport = FinanceBillReport.fromJson(financialBillReportMap);
+      if (financialCashMonthlyDetailsMap != null) _financeCashMonthlyDetails = FinanceCashMonthlyDetails.fromJson(financialCashMonthlyDetailsMap);
+      if (financialInvoiceDetailsMap != null) _financeInvoiceDetails = FinanceInvoiceDetails.fromJson(financialInvoiceDetailsMap);
+      if (financialBillDetailsMap != null) _financeBillDetails = FinanceBillDetails.fromJson(financialBillDetailsMap);
 
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Finance dashboard response. Error message - ${e.errorMessage}');
     }
   }
 
-  FinanceBillReport? get financeBillReport => _financeBillReport;
+  FinanceBillDetails? get financeBillDetails => _financeBillDetails;
 
-  FinanceInvoiceReport? get financeInvoiceReport => _financeInvoiceReport;
+  FinanceInvoiceDetails? get financeInvoiceDetails => _financeInvoiceDetails;
 
-  FinanceCashReport? get financeCashReport => _financeCashReport;
+  FinanceCashMonthlyDetails? get financeCashMonthlyDetails => _financeCashMonthlyDetails;
 
   String get cashOut => _cashOut;
 

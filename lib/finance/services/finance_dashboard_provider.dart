@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/_wp_core/wpapi/services/network_adapter.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
@@ -9,19 +10,23 @@ import '../constants/finance_dashboard_urls.dart';
 import '../entities/finance_dashboard_data.dart';
 
 class FinanceDashBoardProvider{
+  final SelectedCompanyProvider _selectedCompanyProvider;
   final NetworkAdapter _networkAdapter;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool _isLoading = false;
 
-  FinanceDashBoardProvider.initWith(this._networkAdapter);
+  FinanceDashBoardProvider.initWith(this._selectedCompanyProvider,this._networkAdapter);
 
-  FinanceDashBoardProvider() : _networkAdapter = WPAPI();
+  FinanceDashBoardProvider() : _selectedCompanyProvider = SelectedCompanyProvider(),
+  _networkAdapter = WPAPI();
 
-  Future<FinanceDashBoardData> get() async {
-
+  Future<FinanceDashBoardData> get({int? year, int? month}) async {
+    var companyId = "28";
+   // var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     print("1111111111111");
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
-    var url = FinanceDashBoardUrls.getAttendanceDetailsUrl();
+    //var url = FinanceDashBoardUrls.getAttendanceDetailsUrl();
+    var url = FinanceDashBoardUrls.getFinanceInnerPageDetails(companyId, year=2022, month);
 
     var apiRequest = APIRequest.withId(url, _sessionId);
     _isLoading = true;
