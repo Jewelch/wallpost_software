@@ -5,14 +5,17 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_selector.dart';
 import 'package:wallpost/finance/ui/models/finance_filter_data.dart';
+import '../../../_common_widgets/filter_views/custom_filter_chip.dart';
 
 import '../../../../../_shared/date_range_selector/date_range_filters.dart';
+import '../../../_shared/constants/app_years.dart';
 
-class FinanceFilters extends StatelessWidget {
+class FinanceFilters extends StatefulWidget {
+
   final FinanceFilterData dateFilters;
   final ModalSheetController modalSheetController;
 
-  const FinanceFilters({required this.dateFilters, required this.modalSheetController});
+   FinanceFilters({required this.dateFilters, required this.modalSheetController});
 
   static Future<dynamic> show(BuildContext context,
       {bool allowMultiple = false, required FinanceFilterData initialDateRangeFilter}) {
@@ -26,6 +29,15 @@ class FinanceFilters extends StatelessWidget {
         controller: modalSheetController,
         isCurveApplied: false);
   }
+
+  @override
+  State<FinanceFilters> createState() => _FinanceFiltersState();
+}
+
+class _FinanceFiltersState extends State<FinanceFilters> {
+  int _selectedIndex =0;
+  int _selectedMonthIndex =0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -81,36 +93,130 @@ class FinanceFilters extends StatelessWidget {
             ),
             SizedBox(height: 24),
             Text(
-              "By Date",
+              "Year",
               style: TextStyles.screenTitleTextStyle.copyWith(
                 color: AppColors.textColorBlack,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 24),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 9, horizontal: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.textFieldBackgroundColor),
-                borderRadius: BorderRadius.circular(6),
+              child:                   getYearList(context)
+
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                   "hdghigffzhghf",
-                    style: TextStyles.subTitleTextStyleBold.copyWith(
-                      color: AppColors.textColorDarkGray,
-                    ),
-                  ),
-                  SvgPicture.asset("assets/icons/arrow_right_icon.svg"),
-                ],
+
+            Text(
+              "Months",
+              style: TextStyles.screenTitleTextStyle.copyWith(
+                color: AppColors.textColorBlack,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 80),
+            Container(
+                child:                   getMonthList(context)
+
+            ),
+            SizedBox(height: 40),
           ],
         ),
       ),
     );
+  }
+
+  int selectedCard = -1;
+
+  final _years = AppYears().years();
+
+
+  Widget getYearList(BuildContext context) {
+    return SizedBox(
+      height: 140,
+      child: new GridView.count(
+        childAspectRatio: (1 / .4),
+
+        crossAxisCount: 3,
+        children: new List<Widget>.generate(6, (index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+           /* child: Container(
+              color: AppColors.defaultColor,
+                child: (Text(youList[index]))),*/
+            child: getSingleYearItem(index),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget getSingleYearItem(int index ){
+    return CustomFilterChip(
+        backgroundColor: (index==_selectedIndex)?AppColors.defaultColor:Colors.transparent,
+        borderColor: Colors.transparent,
+        title: Text(
+          _years[index].toString(),
+          style: TextStyle(
+            color: (index==_selectedIndex)?Colors.white:AppColors.textColorGray,
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        onPressed: () => {
+
+          _selectedIndex =index,
+         /* widget._presenter.selectModuleAtIndex(index),
+          widget.onPressed.call(),*/
+          setState(() {
+          })
+        });
+
+  }
+
+/*
+  List<String> monthList=['Jan','Feb','Mar','Apr','May','Jun',
+    'July','Aug','Sep','Oct','Nov','Dec'];*/
+  Widget getMonthList(BuildContext context) {
+    return SizedBox(
+      height: 160,
+      child: new GridView.count(
+        childAspectRatio: (1 / .4),
+
+        crossAxisCount: 3,
+        children: new List<Widget>.generate(12, (index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            /* child: Container(
+              color: AppColors.defaultColor,
+                child: (Text(youList[index]))),*/
+            child: getSingleMonthItem(index),
+          );
+        }),
+      ),
+    );
+  }
+  Widget getSingleMonthItem(int index ){
+    return CustomFilterChip(
+        backgroundColor: (index==_selectedMonthIndex)?AppColors.defaultColor:Colors.transparent,
+        borderColor: Colors.transparent,
+        title: Text(
+            _getMonthNamesForSelectedYear()[index],
+          style: TextStyle(
+            color: (index==_selectedMonthIndex)?Colors.white:AppColors.textColorGray,
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        onPressed: () => {
+
+          _selectedMonthIndex =index,
+          /* widget._presenter.selectModuleAtIndex(index),
+          widget.onPressed.call(),*/
+          setState(() {
+          })
+        });
+
+  }
+
+  List<String> _getMonthNamesForSelectedYear() {
+    var years = AppYears().currentAndPastShortenedMonthsOfYear(_years.last);
+    return years;
   }
 }
