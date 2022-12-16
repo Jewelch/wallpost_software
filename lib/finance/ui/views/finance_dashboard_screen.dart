@@ -301,7 +301,8 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   @override
   void showErrorAndRetryView(String message) {
-    // TODO: implement showErrorAndRetryView
+    _viewTypeNotifier.notify(ERROR_VIEW);
+    _errorMessage = message;
   }
 
   @override

@@ -28,8 +28,8 @@ class FinanceDashBoardProvider {
     _isLoading = true;
 
     try {
-      var apiResponse = await _networkAdapter.get(apiRequest);
       _isLoading = false;
+      var apiResponse = await _networkAdapter.get(apiRequest);
       return _processResponse(apiResponse);
     } on APIException catch (exception) {
       _isLoading = false;
