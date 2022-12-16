@@ -145,7 +145,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     return Column(
       children: [
         SizedBox(
-          height: 15,
+          height: 14,
         ),
         FinanceCashDetailAggregated(
           bankAndCash: presenter.getBankAndCashDetails(),
@@ -153,11 +153,11 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
           cashOut: presenter.getCashOutDetails(),
         ),
         SizedBox(
-          height: 15,
+          height: 14,
         ),
         _buildMonthlyCashListHeadView(),
         SizedBox(
-          height: 15,
+          height: 14,
         ),
       ],
     );
@@ -185,7 +185,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   Widget _buildMonthlyCashListHeadView() {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 32),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -197,22 +197,22 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
             child: Row(
               children: [
                 Container(
-                    height: 15,
-                    width: 20,
-                    child: SvgPicture.asset(
-                      'assets/icons/back_icon.svg',
-                      width: 50,
-                      height: 50,
-                      color: AppColors.defaultColor,
-                    )),
+                  height: 14,
+                  width: 14,
+                  child: SvgPicture.asset(
+                    'assets/icons/back_icon.svg',
+                    color: AppColors.defaultColor,
+                  ),
+                ),
+                SizedBox(width: 2),
                 Text(
                   'Previous',
-                  style: TextStyle(color: AppColors.defaultColor),
+                  style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
                 ),
               ],
             ),
           ),
-          Text('3 Months'),
+          Text('3 Months', style: TextStyles.subTitleTextStyle),
           GestureDetector(
             onTap: () {
               presenter.onNextTextClick();
@@ -222,15 +222,14 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
               children: [
                 Text(
                   "Next",
-                  style: TextStyle(color: AppColors.defaultColor),
+                  style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
                 ),
+                SizedBox(width: 2),
                 Container(
-                  height: 15,
-                  width: 20,
+                  height: 14,
+                  width: 14,
                   child: SvgPicture.asset(
                     'assets/icons/arrow_right_icon.svg',
-                    width: 20,
-                    height: 15,
                     color: AppColors.defaultColor,
                   ),
                 ),
@@ -246,10 +245,22 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16),
       child: Container(
-        height: 230,
-        child: PerformanceViewHolder(
-          content: FinanceCashMonthlyList(presenter),
-        ),
+        height: 140,
+          padding: EdgeInsets.symmetric(vertical: 12,horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.defaultColorDarkContrastColor.withOpacity(0.5),
+                offset: Offset(0, 0),
+                blurRadius: 8,
+                spreadRadius: 1,
+              ),
+            ]
+               ,
+          ),
+        child: FinanceCashMonthlyList(presenter),
       ),
     );
   }
