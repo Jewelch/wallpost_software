@@ -3,10 +3,8 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-import '../../../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
-import '../../../../sales_reports/item_sales/ui/views/screens/item_sales_screen.dart';
 import '../../presenters/restaurant_dashboard_presenter.dart';
 import '../../view_contracts/restaurant_dashboard_view.dart';
 import '../loader/restaurant_dashboard_loader.dart';
@@ -132,7 +130,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
             return SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
-                child: SalesBreakDownLoader(),
+                child: SalesBreakDownLoader(count: 2),
               ),
             );
 
@@ -164,23 +162,10 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
             return SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.only(top: 100),
-                child: Column(
-                  children: [
-                    Text(
-                      "There is no sales breakdown for\nthe selected filters",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.titleTextStyle,
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          ScreenPresenter.present(
-                            ItemSalesScreen(),
-                            context,
-                            slideDirection: SlideDirection.fromBottom,
-                          );
-                        },
-                        child: Text('Test'))
-                  ],
+                child: Text(
+                  "There are no sales breakdown for\nthe selected filters",
+                  textAlign: TextAlign.center,
+                  style: TextStyles.titleTextStyle,
                 ),
               ),
             );
