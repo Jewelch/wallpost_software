@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/finance/constants/finance_dashboard_urls.dart';
 import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
 
+import '../../../_mocks/mock_company.dart';
 import '../../../_mocks/mock_company_provider.dart';
 import '../../../_mocks/mock_network_adapter.dart';
 import '../../../finance_tests/mocks.dart';
@@ -13,6 +15,13 @@ void main() {
   var mockNetworkAdapter = MockNetworkAdapter();
   var financialDashBoardProvider = FinanceDashBoardProvider.initWith(mockCompanyProvider,mockNetworkAdapter);
 
+  setUpAll(() {
+    var company = MockCompany();
+    when(() => company.id).thenReturn("someCompanyId");
+    when(() => company.currency).thenReturn("USD");
+    when(() => mockCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
+  });
+
   test('api request is built correctly', () async {
 
     Map<String, dynamic> requestParams = {};
@@ -20,7 +29,7 @@ void main() {
 
     var _ = await financialDashBoardProvider.get( year: 2022,month: 1);
 
-    expect(mockNetworkAdapter.apiRequest.url, FinanceDashBoardUrls.getFinanceInnerPageDetails("28", 2022, 1));
+    expect(mockNetworkAdapter.apiRequest.url, FinanceDashBoardUrls.getFinanceInnerPageDetails("someCompanyId", 2022, 1));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
   });
 
@@ -78,14 +87,6 @@ void main() {
     expect(financialDashboard.bankAndCash,isNotNull);
     expect(financialDashboard.cashIn,isNotNull);
     expect(financialDashboard.cashOut,isNotNull);
-  });
-
-  test('test loading flag is set to true when the service is executed', () async {
-    mockNetworkAdapter.succeed(successfulResponse);
-
-    financialDashBoardProvider.get();
-
-    expect(financialDashBoardProvider.isLoading, true);
   });
 
   test('test loading flag is reset after success', () async {
