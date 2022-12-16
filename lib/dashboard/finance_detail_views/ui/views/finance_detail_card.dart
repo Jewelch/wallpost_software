@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/header_card.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -24,11 +25,19 @@ class FinanceDetailCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Financials ", style: TextStyles.headerCardHeadingTextStyle),
-                Text(
-                  _presenter.getCurrency(),
-                  textAlign: TextAlign.end,
-                  style: TextStyles.headerCardSubLabelTextStyle.copyWith(fontSize: 17.0),
-                ),
+                _presenter.shouldShowDetailDisclosureIndicator()
+                    ? Container(
+                        padding: const EdgeInsets.only(left: 16, right: 8),
+                        height: 12,
+                        width: 12,
+                        child: SvgPicture.asset(
+                          'assets/icons/arrow_forward.svg',
+                          width: 12,
+                          height: 12,
+                          color: AppColors.defaultColor,
+                        ),
+                      )
+                    : Container(),
               ],
             ),
             SizedBox(height: 20),
