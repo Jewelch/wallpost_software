@@ -132,16 +132,16 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
             FinanceHorizontalTab(presenter, () {
               setState(() {});
             }),
-            if (presenter.selectedModuleIndex == 0) getCashView(),
-            if (presenter.selectedModuleIndex == 1) getInvoiceView(),
-            if (presenter.selectedModuleIndex == 2) getBillView(),
+            if (presenter.selectedModuleIndex == 0) _getCashDetailView(),
+            if (presenter.selectedModuleIndex == 1) _getInvoiceTittleView(),
+            if (presenter.selectedModuleIndex == 2) _getBillTittleView(),
           ],
         ),
       ),
     );
   }
 
-  Widget getCashView() {
+  Widget _getCashDetailView() {
     return Column(
       children: [
         SizedBox(
@@ -163,7 +163,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     );
   }
 
-  getInvoiceView() {
+  _getInvoiceTittleView() {
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 32),
       child: Text(
@@ -173,7 +173,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     );
   }
 
-  getBillView() {
+  _getBillTittleView() {
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 32),
       child: Text(
