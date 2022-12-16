@@ -141,7 +141,7 @@ class FinanceDashboardPresenter {
     return "YTD";
   }
 
-  //MARK: Function to get selected company name 
+  //MARK: Function to get selected company name
 
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
