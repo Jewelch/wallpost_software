@@ -108,7 +108,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
                   children: [
                     _buildBottomTabView(),
                     if (presenter.selectedModuleIndex == 0)
-                      Positioned(top: 230, left: 0, right: 0, child: _buildMonthlyCashListView()),
+                      Positioned(top: 238, left: 0, right: 0, child: _buildMonthlyCashListView()),
                     if (presenter.selectedModuleIndex == 1)
                       Positioned(top: 120, left: 0, right: 0, child: _buildInvoiceView()),
                     if (presenter.selectedModuleIndex == 2)

@@ -14,12 +14,13 @@ class FinanceCashDetailAggregated extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return (Column(children: [
+      SizedBox(height: 8,),
       _bankAndCashTile(),
       SizedBox(
         height: 16,
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 18,right : 16),
+        padding: const EdgeInsets.only(left: 35,right : 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
