@@ -8,16 +8,27 @@ import '../../../_common_widgets/filter_views/custom_filter_chip.dart';
 import '../../../_shared/constants/app_years.dart';
 
 class FinanceFilters extends StatefulWidget {
+  final _years = AppYears().years();
+
   final FinanceDasBoardPresenter presenter;
   final ModalSheetController modalSheetController;
-  FinanceFilters({required this.modalSheetController, required this.presenter});
+  late final int _initialMonth;
+  late final int _initialYear;
+  //FinanceFilters({required this.modalSheetController, required this.presenter});
+
+  FinanceFilters({required initialMonth, required initialYear, required this.modalSheetController, required this.presenter}) {
+    this._initialMonth = _isMonthValidForYear(initialMonth, initialYear) ? initialMonth : 0;
+    this._initialYear = _years.contains(initialYear) ? _years.indexOf(initialYear) : 0;
+  }
 
   static Future<dynamic> show(BuildContext context,
-      {bool allowMultiple = false, required FinanceDasBoardPresenter financePresenter}) {
+      {bool allowMultiple = false, required FinanceDasBoardPresenter financePresenter,required initialMonth, required initialYear}) {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
       context: context,
       content: FinanceFilters(
+        initialMonth: initialMonth,
+        initialYear: initialYear,
         modalSheetController: modalSheetController,
         presenter: financePresenter,
       ),
@@ -25,14 +36,24 @@ class FinanceFilters extends StatefulWidget {
       isCurveApplied: false,
     );
   }
+  bool _isMonthValidForYear(int month, int year) {
+    if (month < AppYears().currentAndPastMonthsOfYear(year).length) return true;
 
+    return false;
+  }
   @override
-  State<FinanceFilters> createState() => _FinanceFiltersState();
+  State<FinanceFilters> createState() => _FinanceFiltersState(_initialMonth,_initialYear);
 }
 
 class _FinanceFiltersState extends State<FinanceFilters> {
-  int _selectedYearIndex = 0;
-  int _selectedMonthIndex = 0;
+  int _selectedYearIndex ;
+  int _selectedMonthIndex ;
+  _FinanceFiltersState(initialMonth, int initialYear)
+      : _selectedMonthIndex = initialMonth,
+        _selectedYearIndex = initialYear;
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +136,6 @@ class _FinanceFiltersState extends State<FinanceFilters> {
 
   int selectedCard = -1;
 
-  final _years = AppYears().years();
 
   Widget getYearList(BuildContext context) {
     return SizedBox(
@@ -141,7 +161,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
         backgroundColor: (index == _selectedYearIndex) ? AppColors.defaultColor : Colors.transparent,
         borderColor: Colors.transparent,
         title: Text(
-          _years[index].toString(),
+          widget._years[index].toString(),
           style: TextStyle(
             color: (index == _selectedYearIndex) ? Colors.white : AppColors.textColorGray,
             fontSize: 17,
@@ -199,7 +219,10 @@ class _FinanceFiltersState extends State<FinanceFilters> {
   }
 
   List<String> _getMonthNamesForSelectedYear() {
-    var years = AppYears().currentAndPastShortenedMonthsOfYear(_years.last);
+    var years = AppYears().currentAndPastShortenedMonthsOfYear(widget._years.last);
     return years;
   }
+
+
+
 }

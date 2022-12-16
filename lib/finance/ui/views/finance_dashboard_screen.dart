@@ -316,6 +316,6 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   @override
   void showFinanceDashboardFilter() async {
-    await FinanceFilters.show(context, financePresenter: presenter);
+    await FinanceFilters.show(context, financePresenter: presenter, initialMonth: presenter.selectedMonth, initialYear: presenter.selectedYear);
   }
 }
