@@ -6,7 +6,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 
 class FinanceDashboardAppBar extends StatelessWidget {
-  final FinanceDasBoardPresenter presenter;
+  final FinanceDashboardPresenter presenter;
 
   FinanceDashboardAppBar(this.presenter);
 

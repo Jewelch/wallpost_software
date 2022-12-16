@@ -10,7 +10,7 @@ import '../../../_shared/constants/app_years.dart';
 class FinanceFilters extends StatefulWidget {
   final _years = AppYears().years();
 
-  final FinanceDasBoardPresenter presenter;
+  final FinanceDashboardPresenter presenter;
   final ModalSheetController modalSheetController;
   late final int _initialMonth;
   late final int _initialYear;
@@ -22,7 +22,7 @@ class FinanceFilters extends StatefulWidget {
   }
 
   static Future<dynamic> show(BuildContext context,
-      {bool allowMultiple = false, required FinanceDasBoardPresenter financePresenter,required initialMonth, required initialYear}) {
+      {bool allowMultiple = false, required FinanceDashboardPresenter financePresenter,required initialMonth, required initialYear}) {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
       context: context,

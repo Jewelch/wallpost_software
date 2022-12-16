@@ -9,7 +9,7 @@ import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
 
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/models/owner_dashboard_filters.dart';
 
-class FinanceDasBoardPresenter {
+class FinanceDashboardPresenter {
   SelectedCompanyProvider _selectedCompanyProvider;
 
   int _selectedModuleIndex = 0;
@@ -21,9 +21,9 @@ class FinanceDasBoardPresenter {
   late FinanceDashBoardData _financeDashBoardData;
 
 
-  FinanceDasBoardPresenter(this._view) : _financeDashBoardProvider = FinanceDashBoardProvider(),        _selectedCompanyProvider = SelectedCompanyProvider();
+  FinanceDashboardPresenter(this._view) : _financeDashBoardProvider = FinanceDashBoardProvider(),        _selectedCompanyProvider = SelectedCompanyProvider();
 
-  FinanceDasBoardPresenter.initWith(this._view, this._financeDashBoardProvider,this._selectedCompanyProvider);
+  FinanceDashboardPresenter.initWith(this._view, this._financeDashBoardProvider,this._selectedCompanyProvider);
 
   //Function to load financial dashboard data
 

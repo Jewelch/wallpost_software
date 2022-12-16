@@ -21,8 +21,7 @@ class FinanceDashBoardProvider {
         _networkAdapter = WPAPI();
 
   Future<FinanceDashBoardData> get({int? year, int? month}) async {
-    var companyId ='28';
-    //var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
+    var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var url = FinanceDashBoardUrls.getFinanceInnerPageDetails(companyId, year, month);
     var apiRequest = APIRequest.withId(url, _sessionId);

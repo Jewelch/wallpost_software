@@ -28,7 +28,7 @@ class FinanceDashBoardScreen extends StatefulWidget {
 }
 
 class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> implements FinanceDashBoardView {
-  late final FinanceDasBoardPresenter presenter;
+  late final FinanceDashboardPresenter presenter;
   final _viewTypeNotifier = ItemNotifier(defaultValue: LOADER_VIEW);
   static const LOADER_VIEW = 1;
   static const ERROR_VIEW = 2;
@@ -37,7 +37,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   @override
   void initState() {
-    presenter = FinanceDasBoardPresenter(this);
+    presenter = FinanceDashboardPresenter(this);
     presenter.loadFinanceDashBoardDetails();
     super.initState();
   }

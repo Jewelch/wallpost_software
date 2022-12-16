@@ -6,7 +6,7 @@ import '../../_shared/constants/app_colors.dart';
 
 class FinanceHorizontalTab extends StatefulWidget {
   final VoidCallback onPressed;
-  final FinanceDasBoardPresenter _presenter;
+  final FinanceDashboardPresenter _presenter;
 
   FinanceHorizontalTab(this._presenter, this.onPressed);
 

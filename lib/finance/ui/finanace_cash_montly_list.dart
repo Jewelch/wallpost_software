@@ -5,7 +5,7 @@ import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart'
 import '../../_common_widgets/text_styles/text_styles.dart';
 
 class FinanceCashMonthlyList extends StatelessWidget {
-  final FinanceDasBoardPresenter _presenter;
+  final FinanceDashboardPresenter _presenter;
   FinanceCashMonthlyList(this._presenter);
 
   late final List<String> monthList;
