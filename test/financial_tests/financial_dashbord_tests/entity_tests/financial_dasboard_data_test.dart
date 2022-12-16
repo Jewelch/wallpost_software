@@ -1,6 +1,0 @@
-class FinancialDashBoardData {
-
-  void main(){
-
-  }
-}

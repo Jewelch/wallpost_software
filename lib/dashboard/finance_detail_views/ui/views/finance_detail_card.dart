@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/header_card.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/finance/ui/views/finance_dashboard_screen.dart';
 
 import '../../../../../_wp_core/company_management/entities/financial_summary.dart';
@@ -33,14 +34,14 @@ class FinanceDetailCard extends StatelessWidget {
                   textAlign: TextAlign.end,
                   style: TextStyles.headerCardSubLabelTextStyle.copyWith(fontSize: 17.0),
                 ),*/
+                _presenter.isCompanySelected()?
                 GestureDetector(
                   onTap: () {
-                   // ScreenPresenter.present(FinanceInnerScreen() ,context);
                     ScreenPresenter.present(FinanceDashBoardScreen() ,context);
                   },
                   child: Container(
-                      height: 14, width: 14, child: SvgPicture.asset('assets/icons/arrow_forward_blue.svg', width: 40, height: 40)),
-                ),
+                      height: 24, width: 24, child: SvgPicture.asset('assets/icons/arrow_forward_blue.svg', width: 40, height: 40)),
+                ):Container(),
               ],
             ),
             SizedBox(height: 20),
