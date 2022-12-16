@@ -51,7 +51,7 @@ class FinanceDashboardAppBar extends StatelessWidget {
                         children: [
                           Container(
                             child: Text(
-                              "Company name",
+                              presenter.getSelectedCompanyName(),
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style: TextStyles.largeTitleTextStyleBold.copyWith(

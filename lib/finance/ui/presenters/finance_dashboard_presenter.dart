@@ -1,5 +1,6 @@
 import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/finance/entities/finance_bill_details.dart';
 import 'package:wallpost/finance/entities/finance_dashboard_data.dart';
 import 'package:wallpost/finance/entities/finance_invoice_details.dart';
@@ -9,6 +10,8 @@ import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/models/owner_dashboard_filters.dart';
 
 class FinanceDasBoardPresenter {
+  SelectedCompanyProvider _selectedCompanyProvider;
+
   int _selectedModuleIndex = 0;
   int selectedMonthIndex = 0;
   final FinanceDashBoardView _view;
@@ -17,9 +20,10 @@ class FinanceDasBoardPresenter {
 
   late FinanceDashBoardData _financeDashBoardData;
 
-  FinanceDasBoardPresenter(this._view) : _financeDashBoardProvider = FinanceDashBoardProvider();
 
-  FinanceDasBoardPresenter.initWith(this._view, this._financeDashBoardProvider);
+  FinanceDasBoardPresenter(this._view) : _financeDashBoardProvider = FinanceDashBoardProvider(),        _selectedCompanyProvider = SelectedCompanyProvider();
+
+  FinanceDasBoardPresenter.initWith(this._view, this._financeDashBoardProvider,this._selectedCompanyProvider);
 
   //Function to load financial dashboard data
 
@@ -134,4 +138,6 @@ class FinanceDasBoardPresenter {
     if (selectedMonth > 0) return years[selectedMonth];
     return "YTD";
   }
+  String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
+
 }
