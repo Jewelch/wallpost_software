@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
+
+import '../../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../../_shared/constants/app_colors.dart';
+import '../../presenters/restaurant_dashboard_presenter.dart';
 
 class RestaurantDashboardAppBar extends StatelessWidget {
   final RestaurantDashboardPresenter presenter;
+  final bool showFilters;
 
-  RestaurantDashboardAppBar(this.presenter);
+  RestaurantDashboardAppBar(this.presenter, {this.showFilters = true});
 
   @override
   Widget build(BuildContext context) {
@@ -76,43 +78,44 @@ class RestaurantDashboardAppBar extends StatelessWidget {
               SizedBox(width: 12),
             ],
           ),
-          Container(
-            height: 52,
-            child: Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 18),
-                  child: GestureDetector(
+          if (showFilters)
+            Container(
+              height: 52,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 18),
+                    child: GestureDetector(
+                      onTap: () {
+                        presenter.onFiltersGotClicked();
+                      },
+                      child: SvgPicture.asset(
+                        "assets/icons/filter_date_icon.svg",
+                        width: 18,
+                        height: 18,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  GestureDetector(
                     onTap: () {
                       presenter.onFiltersGotClicked();
                     },
-                    child: SvgPicture.asset(
-                      "assets/icons/filter_date_icon.svg",
-                      width: 18,
-                      height: 18,
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: AppColors.lightGray),
+                      ),
+                      child: Text(
+                        presenter.dateFilters.selectedRangeOption.toReadableString(),
+                        style: TextStyles.labelTextStyle,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: 16),
-                GestureDetector(
-                  onTap: () {
-                    presenter.onFiltersGotClicked();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColors.lightGray),
-                    ),
-                    child: Text(
-                      presenter.dateFilters.selectedRangeOption.toReadableString(),
-                      style: TextStyles.labelTextStyle,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
+                ],
+              ),
+            )
         ],
       ),
     );

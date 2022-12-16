@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+
+import '../custom_shapes/curve_bottom_to_top.dart';
+import 'screen_presenter.dart';
 
 class ModalSheetController {
   __ModalSheetScreenState? _state;
@@ -30,13 +31,17 @@ class ModalSheetPresenter {
     required ModalSheetController controller,
     bool shouldDismissOnTap = true,
     bool isCurveApplied = true,
+    bool showBackGroundColor = true,
+    double height = 700,
   }) {
     return ScreenPresenter.present(
       _ModalSheetScreen(
+        showBackgroundColor: showBackGroundColor,
         content: content,
         controller: controller,
         shouldDismissOnTap: shouldDismissOnTap,
         isCurveApplied: isCurveApplied,
+        height: height,
       ),
       context,
       slideDirection: SlideDirection.none,
@@ -49,9 +54,16 @@ class _ModalSheetScreen extends StatefulWidget {
   final ModalSheetController? controller;
   final bool shouldDismissOnTap;
   final bool isCurveApplied;
+  final bool showBackgroundColor;
+  final double height;
 
   const _ModalSheetScreen(
-      {required this.content, this.controller, required this.shouldDismissOnTap, required this.isCurveApplied});
+      {required this.content,
+      this.controller,
+      required this.shouldDismissOnTap,
+      required this.isCurveApplied,
+      required this.showBackgroundColor,
+      required this.height});
 
   @override
   __ModalSheetScreenState createState() => __ModalSheetScreenState();
@@ -67,13 +79,15 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
   void initState() {
     isCurveApplied = widget.isCurveApplied;
     if (widget.controller != null) widget.controller!._addState(this);
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _animationController.reverseDuration = const Duration(milliseconds: 200);
     offset = Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero)
         .chain(CurveTween(curve: Curves.decelerate))
         .animate(_animationController);
-    opacity =
-        Tween<double>(begin: 0, end: 1.0).chain(CurveTween(curve: Curves.decelerate)).animate(_animationController);
+    opacity = Tween<double>(begin: 0, end: 1.0)
+        .chain(CurveTween(curve: Curves.decelerate))
+        .animate(_animationController);
     _animationController.forward();
     super.initState();
   }
@@ -98,7 +112,9 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
           children: <Widget>[
             FadeTransition(
               opacity: opacity,
-              child: Container(color: Colors.black.withOpacity(0.7)),
+              child: widget.showBackgroundColor
+                  ? Container(color: Colors.transparent.withOpacity(0.7))
+                  : null,
             ),
             GestureDetector(
               onTap: () {
@@ -113,7 +129,7 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                   child: SlideTransition(
                     position: offset,
                     child: Container(
-                      constraints: BoxConstraints.loose(const Size(double.infinity, 700)),
+                      constraints: BoxConstraints.loose(Size(double.infinity, widget.height)),
                       color: Colors.transparent,
                       child: ListView(
                         padding: EdgeInsets.zero,
@@ -121,7 +137,9 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                         shrinkWrap: true,
                         children: [
                           if (isCurveApplied) CurveBottomToTop(),
-                          isCurveApplied ? Container(color: Colors.white, child: widget.content) : widget.content,
+                          isCurveApplied
+                              ? Container(color: Colors.white, child: widget.content)
+                              : widget.content,
                         ],
                       ),
                     ),

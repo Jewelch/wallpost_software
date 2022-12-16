@@ -6,26 +6,31 @@ import '../../../../../restaurant_dashboard/ui/views/widgets/performance_view_ho
 import '../../presenter/item_sales_presenter.dart';
 
 class ItemSalesHeaderCard extends StatelessWidget {
-  final ItemSalesPresenter _presenter;
-  final double _constraints;
+  final ItemSalesPresenter presenter;
+  final double constraints;
 
-  ItemSalesHeaderCard(this._presenter, this._constraints);
+  const ItemSalesHeaderCard(
+    this.presenter,
+    this.constraints, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
-      elevation: 0,
+      shadowColor: AppColors.shimmerColor,
+      elevation: constraints < 95 ? 10 : 0,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(_constraints > 165 ? 14 : 0),
-        topRight: Radius.circular(_constraints > 165 ? 14 : 0),
-        bottomLeft: Radius.circular(14),
-        bottomRight: Radius.circular(14),
+        topLeft: Radius.circular(constraints > 165 ? 14 : 0),
+        topRight: Radius.circular(constraints > 165 ? 14 : 0),
+        bottomLeft: Radius.circular(constraints > 100 ? 14 : 0),
+        bottomRight: Radius.circular(constraints > 100 ? 14 : 0),
       )),
       child: Padding(
         padding: const EdgeInsets.all(4.0),
-        child: _constraints > 165
+        child: constraints > 165
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -34,54 +39,48 @@ class ItemSalesHeaderCard extends StatelessWidget {
                   _SalesElement(
                     backgroundColor: AppColors.lightGreen,
                     label: "Total Revenue(QAR)",
-                    value: "1000",
-                    // _presenter.getTotalRevenue(),
+                    value: presenter.getTotalRevenue(),
                     isVertical: true,
                     valueColor: AppColors.green,
-                    flex: 2,
-                    contraints: _constraints,
+                    flex: 90,
+                    constraints: constraints,
                   ),
                   _SalesElement(
                     backgroundColor: AppColors.lightGray,
                     label: "Total Quantity (Items)",
-                    value: _presenter.getTotalQuantity(),
+                    value: presenter.getTotalOfAllItemsQuantity(),
                     isVertical: false,
                     valueColor: AppColors.textColorBlack,
-                    flex: 1,
-                    contraints: _constraints,
+                    flex: 55,
+                    constraints: constraints,
                   ),
                 ],
               )
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: _SalesElement(
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  children: [
+                    _SalesElement(
                       backgroundColor: AppColors.lightGreen,
-                      label: "Total Revenue(QAR)",
-                      value: "1000",
-                      // _presenter.getTotalRevenue(),
+                      label: "Total Revenue (QAR)",
+                      value: presenter.getTotalRevenue(),
                       isVertical: true,
                       valueColor: AppColors.green,
                       flex: 1,
-                      contraints: _constraints,
+                      constraints: constraints,
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: _SalesElement(
+                    SizedBox(width: 10),
+                    _SalesElement(
                       backgroundColor: AppColors.lightGray,
                       label: "Total Quantity (Items)",
-                      value: _presenter.getTotalQuantity(),
+                      value: presenter.getTotalOfAllItemsQuantity(),
                       isVertical: true,
                       valueColor: AppColors.textColorBlack,
                       flex: 1,
-                      contraints: _constraints,
+                      constraints: constraints,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
       ),
     );
@@ -96,7 +95,7 @@ class _SalesElement extends StatelessWidget {
     required this.valueColor,
     required this.isVertical,
     required this.flex,
-    required this.contraints,
+    required this.constraints,
   });
 
   final Color backgroundColor;
@@ -105,7 +104,7 @@ class _SalesElement extends StatelessWidget {
   final Color valueColor;
   final bool isVertical;
   final int flex;
-  final double contraints;
+  final double constraints;
 
   @override
   Widget build(BuildContext context) {
@@ -127,46 +126,50 @@ class _SalesElement extends StatelessWidget {
       fontSize: 17.0,
       overflow: TextOverflow.ellipsis,
     );
-    return Container(
-      padding: const EdgeInsets.all(4.0),
-      child: PerformanceViewHolder(
-        radius: defaultRadius,
-        backgroundColor: backgroundColor,
-        showShadow: false,
-        content: isVertical
-            ? Column(
-                crossAxisAlignment:
-                    contraints < 150 ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    value,
-                    style: contraints < 150
-                        ? valueStyle2.copyWith(color: valueColor)
-                        : valueStyle1.copyWith(color: valueColor),
-                  ),
-                  SizedBox(height: 2),
-                  Text(
-                    label,
-                    textAlign: TextAlign.start,
-                    style: labelStyle,
-                  ),
-                ],
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    value,
-                    style: valueStyle2.copyWith(color: valueColor),
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    label,
-                    textAlign: TextAlign.start,
-                    style: labelStyle,
-                  ),
-                ],
-              ),
+    return Expanded(
+      flex: flex,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4, horizontal: constraints < 165 ? 0 : 4),
+        child: PerformanceViewHolder(
+          radius: defaultRadius,
+          backgroundColor: backgroundColor,
+          showShadow: false,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          content: isVertical
+              ? Column(
+                  crossAxisAlignment:
+                      constraints < 100 ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      value,
+                      style: constraints < 119
+                          ? valueStyle2.copyWith(color: valueColor)
+                          : valueStyle1.copyWith(color: valueColor),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      label,
+                      textAlign: TextAlign.center,
+                      style: labelStyle,
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      value,
+                      style: valueStyle2.copyWith(color: valueColor),
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      label,
+                      style: labelStyle,
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }

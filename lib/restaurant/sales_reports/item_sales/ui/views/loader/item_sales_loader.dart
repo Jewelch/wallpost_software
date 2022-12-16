@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/seles_break_down_loader.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/views/loader/item_sales_loader_container.dart';
+
+import '../../../../../../_common_widgets/shimmer/shimmer_effect.dart';
+import '../../../../../restaurant_dashboard/ui/views/loader/seles_break_down_loader.dart';
+import 'item_sales_loader_container.dart';
 
 class ItemSalesLoader extends StatelessWidget {
   const ItemSalesLoader({Key? key}) : super(key: key);
@@ -9,30 +10,48 @@ class ItemSalesLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShimmerEffect(
-      child: ListView(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          _appBar(context),
-          SizedBox(height: 5),
-          _tile(context),
-          SizedBox(height: 5),
-          _filters(context),
+          ListView(
+            children: [
+              _appBar(context),
+              SizedBox(height: 2),
+              _tile(context),
+              _filters(context),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: 45),
+              _customChips(),
+              SizedBox(height: 16),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: SalesBreakDownLoader(count: 1),
+              ),
+            ],
+          ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: MediaQuery.of(context).viewPadding.bottom + 16,
+            ),
             child: Container(
-              height: 200,
+              height: 64,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.white,
               ),
             ),
           ),
-          SizedBox(height: 20),
-          _customChips(),
-          SizedBox(height: 16),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: SalesBreakDownLoader(),
-          )
         ],
       ),
     );
@@ -45,7 +64,7 @@ class ItemSalesLoader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ItemSalesContainerLoader(
-            height: 40,
+            height: 35,
             width: 120,
             topRadius: 6,
             bottomRadius: 6,
@@ -56,32 +75,34 @@ class ItemSalesLoader extends StatelessWidget {
   }
 
   Widget _filters(BuildContext context) {
+    final double height = 25;
+    final double width = 80;
     return Padding(
       padding: const EdgeInsets.only(left: 24.0, bottom: 12, right: 24.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ItemSalesContainerLoader(
-            height: 40,
+            height: height,
             width: 50,
             topRadius: 6,
             bottomRadius: 6,
           ),
           ItemSalesContainerLoader(
-            height: 40,
-            width: 80,
+            height: height,
+            width: width,
             topRadius: 6,
             bottomRadius: 6,
           ),
           ItemSalesContainerLoader(
-            height: 40,
-            width: 80,
+            height: height,
+            width: width,
             topRadius: 6,
             bottomRadius: 6,
           ),
           ItemSalesContainerLoader(
-            height: 40,
-            width: 80,
+            height: height,
+            width: width,
             topRadius: 6,
             bottomRadius: 6,
           ),

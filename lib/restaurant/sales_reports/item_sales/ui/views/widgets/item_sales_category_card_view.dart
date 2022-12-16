@@ -6,12 +6,19 @@ import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
 import '../../presenter/item_sales_presenter.dart';
 
-class ItemSalesCard extends StatelessWidget {
-  ItemSalesCard(this._presenter);
-  final ItemSalesPresenter _presenter;
+class ItemSalesCategoryViewCard extends StatelessWidget {
+  final ItemSalesPresenter presenter;
+
+  const ItemSalesCategoryViewCard(
+    this.presenter, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final double itemNameWidth = MediaQuery.of(context).size.width * .32;
+    const double quantityWidth = 70;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Card(
@@ -21,14 +28,19 @@ class ItemSalesCard extends StatelessWidget {
         elevation: 0,
         child: Column(
           children: [
+            SizedBox(height: 16),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  Spacer(flex: 2),
-                  Text(
-                    "Qty.",
-                    style: TextStyles.labelTextStyle.copyWith(fontWeight: FontWeight.w500),
+                  SizedBox(width: itemNameWidth),
+                  SizedBox(
+                    width: quantityWidth,
+                    child: Text(
+                      "Qty.",
+                      style: TextStyles.labelTextStyle.copyWith(fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   Spacer(),
                   Text(
@@ -39,11 +51,10 @@ class ItemSalesCard extends StatelessWidget {
               ),
             ),
             ListView.builder(
-              padding: EdgeInsets.zero,
+              padding: EdgeInsets.only(top: 6),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: 3,
-              // _presenter.getCategoryWiseListLength(),
+              itemCount: presenter.getDataListLength(),
               itemBuilder: (context, index) => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -52,24 +63,10 @@ class ItemSalesCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          flex: 4,
+                        SizedBox(
+                          width: itemNameWidth,
                           child: Text(
-                            "Bergur",
-                            //_presenter.getCategoryNameAtIndex(index),
-                            style: TextStyle(
-                              overflow: TextOverflow.ellipsis,
-                              color: AppColors.textColorBlack,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            maxLines: 2,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            '8',
-                            // _presenter.getCategoryQtyAtIndex(index).toString(),
+                            presenter.getCategoryNameAtIndex(index),
                             style: TextStyle(
                               overflow: TextOverflow.ellipsis,
                               color: AppColors.textColorBlack,
@@ -80,41 +77,50 @@ class ItemSalesCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                            width: 120,
+                          width: quantityWidth,
+                          child: Text(
+                            presenter.getCategoryTotalQtyAtIndex(index),
+                            style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              color: AppColors.textColorBlack,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
                             child: Row(
+                          children: [
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                presenter.getCategoryTotalToDisplayRevenueAtIndex(index),
+                                textAlign: TextAlign.right,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyles.largeTitleTextStyleBold,
+                              ),
+                            ),
+                            SizedBox(width: 3),
+                            Column(
                               children: [
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    "100",
-                                    // _presenter.getCategoryRevenueAtIndex(index).toString(),
-                                    textAlign: TextAlign.right,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyles.largeTitleTextStyleBold,
+                                Text(
+                                  'QAR',
+                                  style: TextStyle(
+                                    color: AppColors.textColorBlueGray,
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                SizedBox(width: 6),
-                                Column(
-                                  children: [
-                                    Text(
-                                      'DRR',
-                                      // _presenter.getCompanyCurrency(),
-                                      style: TextStyle(
-                                        color: AppColors.textColorBlueGray,
-                                        fontSize: 8, // 11 is not logic
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                    SizedBox(height: 3),
-                                  ],
-                                ),
+                                SizedBox(height: 3),
                               ],
-                            )),
+                            ),
+                          ],
+                        )),
                       ],
                     ),
                   ),
-                  // _presenter.getNumberOfBreakdowns()
-                  index < 3 - 1 ? Divider(height: 1) : SizedBox(),
+                  index < presenter.getDataListLength() - 1 ? Divider(height: 1) : SizedBox(),
                 ],
               ),
             ),

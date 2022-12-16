@@ -1,21 +1,18 @@
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
-import 'package:wallpost/_shared/extensions/date_extensions.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/sales_item_view_options.dart';
-
 import '../../../../_shared/constants/base_urls.dart';
 
 class ItemSalesUrls {
   static String getSalesItemUrl(
-    SalesItemWiseOptions salesItemOptions,
+    // SalesItemWiseOptions salesItemOptions,
     String companyId,
     String storeId,
-    DateRangeFilters dateFilters,
+    //  DateRangeFilters dateFilters,
   ) {
-    var url = '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/$storeId/itemsalesreport/filters?';
+    var url = '${BaseUrls.restaurantUrlV2()}/companies/52/store/$storeId/itemsalesreport/filters?';
     // if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom ||
     //     dateFilters.selectedRangeOption == SelectableDateRangeOptions.thisMonth) {
-    url += "date=${dateFilters.startDate.yyyyMMddString()}";
-    url += "&filter_type=${salesItemOptions.toRawString()}";
+    url += "date=2022-8-1";
+    // dateFilters.startDate.yyyyMMddString()
+    url += "&filter_type=category_item_wise";
     //}
     return url;
   }

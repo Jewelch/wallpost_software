@@ -1,26 +1,26 @@
 enum SalesItemWiseOptions {
-  viewAsCategoryAndItem,
-  viewAsCategory,
-  viewAsItem;
+  CategoriesAndItems,
+  CategoriesOnly,
+  itemsOnly;
 
   String toReadableString() {
     switch (this) {
-      case viewAsCategory:
+      case CategoriesOnly:
         return "Category item wise";
-      case viewAsCategoryAndItem:
+      case CategoriesAndItems:
         return "Category wise";
-      case viewAsItem:
+      case itemsOnly:
         return "Menu wise";
     }
   }
 
   String toRawString() {
     switch (this) {
-      case viewAsCategory:
+      case CategoriesOnly:
         return "category_wise";
-      case viewAsCategoryAndItem:
+      case CategoriesAndItems:
         return "category_item_wise";
-      case viewAsItem:
+      case itemsOnly:
         return "menu_item_wise";
     }
   }

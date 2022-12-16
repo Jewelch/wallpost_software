@@ -9,15 +9,13 @@ import '../../../../../restaurant_dashboard/ui/views/widgets/sliver_sales_breakd
 import '../../presenter/item_sales_presenter.dart';
 import '../../view_contracts/item_sales_view.dart';
 import '../loader/item_sales_loader.dart';
-import '../loader/item_wise_loader.dart';
 import '../widgets/item_sales_app_bar.dart';
 import '../widgets/item_sales_error_view.dart';
 import '../widgets/item_sales_header_card.dart';
 import '../widgets/item_sales_wise.dart';
+import '../widgets/share_reports_button.dart';
 
 enum _ScreenStates { loading, error, data }
-
-enum _SalesItemWiseStates { loading, error, data, noData }
 
 class ItemSalesScreen extends StatefulWidget {
   const ItemSalesScreen({super.key});
@@ -27,10 +25,8 @@ class ItemSalesScreen extends StatefulWidget {
 }
 
 class _State extends State<ItemSalesScreen> implements ItemSalesView {
-  late ItemSalesPresenter _presenter = ItemSalesPresenter(this);
-  bool _isExpanded = false;
-  final salesItemWiseStateNotifier =
-      ItemNotifier<_SalesItemWiseStates>(defaultValue: _SalesItemWiseStates.loading);
+  late ItemSalesPresenter presenter = ItemSalesPresenter(this);
+
   final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.loading);
   final salesItemDataNotifier = Notifier();
   String errorMessage = '';
@@ -38,14 +34,12 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
   @override
   void initState() {
     super.initState();
-    _loadItemSalesData();
+    presenter.loadItemSalesData();
   }
 
-  void _loadItemSalesData() => _presenter.loadItemSalesData();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.screenBackgroundColor,
       body: ItemNotifiable<_ScreenStates>(
         notifier: screenStateNotifier,
         builder: (_, currentState) {
@@ -58,7 +52,7 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
             case _ScreenStates.error:
               return SalesItemErrorView(
                 errorMessage: errorMessage,
-                onRetry: _loadItemSalesData,
+                onRetry: presenter.loadItemSalesData,
               );
 
             // //* DATA STATE
@@ -70,125 +64,66 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
     );
   }
 
-  bool displayBackground = false;
-
   Widget _dataView() {
-    return SafeArea(
-      child: Container(
-        // padding: EdgeInsets.symmetric(horizontal: 40),
+    return Scaffold(
+      appBar: AppBarWidget(presenter),
+      body: Container(
         color: AppColors.screenBackgroundColor2,
         child: CustomScrollView(
+          physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           slivers: [
             MultiSliver(
               children: [
+                SliverToBoxAdapter(child: SizedBox(height: 16)),
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: SliverAppBarDelegate(
-                    minHeight: 155,
-                    maxHeight: 155,
-                    child: ItemSalesAppBar(_presenter, displayBackground),
-                  ),
-                ),
-                SliverToBoxAdapter(child: SizedBox(height: 30)),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: SliverAppBarDelegate(
-                    minHeight: 84,
-                    maxHeight: 170,
+                    minHeight: 56 + 16,
+                    maxHeight: 166,
                     child: Notifiable(
                       notifier: salesItemDataNotifier,
                       builder: (context) => LayoutBuilder(builder: (context, contraints) {
                         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                          setState(
-                            () => displayBackground = contraints.maxHeight <= 150,
-                          );
+                          AppBarWidget.appbarNotifier.notify(contraints.maxHeight <= 100);
                         });
                         return Padding(
-                          padding: contraints.maxHeight > 150
+                          padding: contraints.maxHeight > 100
                               ? EdgeInsets.symmetric(horizontal: 24)
                               : EdgeInsets.zero,
-                          child: ItemSalesHeaderCard(_presenter, contraints.maxHeight),
+                          child: ItemSalesHeaderCard(presenter, contraints.maxHeight),
                         );
                       }),
                     ),
                   ),
                 ),
+                if (presenter.getDataListLength() != 0)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: ItemSalesWise(presenter),
+                    ),
+                  )
+                else
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 150),
+                      child: Text(
+                        "There are no sales reports for\nthe selected filters",
+                        textAlign: TextAlign.center,
+                        style: TextStyles.titleTextStyle,
+                      ),
+                    ),
+                  ),
                 SliverToBoxAdapter(
-                  child: SizedBox(height: 16),
-                ),
-
-                // SliverSalesBreakHorizontalList(
-                //   presenter: _presenter,
-                // ),
-                _salesBreakdownViews(),
-                _salesBreakdownViews(),
-                _salesBreakdownViews(),
-                _salesBreakdownViews(),
-                _salesBreakdownViews(),
-
-                SliverToBoxAdapter(
-                  child: SizedBox(height: 16),
+                  child: SizedBox(height: MediaQuery.of(context).viewPadding.bottom + 100),
                 ),
               ],
             )
           ],
         ),
       ),
-    );
-  }
-
-  Widget _salesBreakdownViews() {
-    return ItemNotifiable<_SalesItemWiseStates>(
-      notifier: salesItemWiseStateNotifier,
-      builder: (_, currentState) {
-        switch (currentState) {
-          //* LOADING STATE
-          case _SalesItemWiseStates.loading:
-            return SliverToBoxAdapter(child: ItemWiseLoader());
-
-          //! ERROR STATE
-          case _SalesItemWiseStates.error:
-            return MultiSliver(
-              children: [
-                SliverToBoxAdapter(
-                  child: Container(
-                    child: TextButton(
-                      child: Text(
-                        errorMessage,
-                        textAlign: TextAlign.center,
-                        style: TextStyles.titleTextStyle,
-                      ),
-                      onPressed: _loadItemSalesData,
-                    ),
-                  ),
-                ),
-              ],
-            );
-
-          //* DATA STATE
-          case _SalesItemWiseStates.data:
-            return SliverToBoxAdapter(
-              child: ItemSalesWise(_presenter),
-            );
-
-          //* NO DATA STATE
-          default:
-            return SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.only(top: 100),
-                child: Column(
-                  children: [
-                    Text(
-                      "There is no sales item for\nthe selected filters",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.titleTextStyle,
-                    ),
-                  ],
-                ),
-              ),
-            );
-        }
-      },
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: ShareReportButton(presenter),
     );
   }
 
@@ -199,16 +134,13 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
   void showSalesReportFilter() {}
 
   @override
-  void onDidChangeSalesItemWise() => _presenter.loadItemSalesData();
+  void onDidChangeSalesItemWise() {
+    setState(() {});
+  }
 
   @override
-  void showLoadingForSalesItemsWise() =>
-      salesItemWiseStateNotifier.notify(_SalesItemWiseStates.loading);
-
-  @override
-  void showSalesBreakDowns() {
+  void showItemSalesBreakDowns() {
     screenStateNotifier.notify(_ScreenStates.data);
-    salesItemWiseStateNotifier.notify(_SalesItemWiseStates.data);
   }
 
   @override
@@ -218,11 +150,10 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
   }
 
   @override
-  void updateSalesItemData() => screenStateNotifier.notify(_ScreenStates.data);
+  void updateItemSalesData() => screenStateNotifier.notify(_ScreenStates.data);
 
   @override
-  void showNoSalesBreakdownMessage() {
+  void showNoItemSalesBreakdownMessage() {
     screenStateNotifier.notify(_ScreenStates.data);
-    salesItemWiseStateNotifier.notify(_SalesItemWiseStates.noData);
   }
 }

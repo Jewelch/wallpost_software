@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/restaurant_dashboard_view.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/restaurant_dashboard_loader.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/seles_break_down_loader.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_appbar.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_error_view.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_header_card.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_filters.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/views/screens/item_sales_screen.dart';
 
+import '../../../../../_common_widgets/screen_presenter/screen_presenter.dart';
+import '../../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../../_shared/constants/app_colors.dart';
+import '../../../../sales_reports/item_sales/ui/views/screens/item_sales_screen.dart';
+import '../../presenters/restaurant_dashboard_presenter.dart';
+import '../../view_contracts/restaurant_dashboard_view.dart';
+import '../loader/restaurant_dashboard_loader.dart';
+import '../loader/seles_break_down_loader.dart';
+import '../widgets/report_floating_action_button.dart';
+import '../widgets/restaurant_dashboard_appbar.dart';
+import '../widgets/restaurant_dashboard_error_view.dart';
+import '../widgets/restaurant_dashboard_header_card.dart';
 import '../widgets/restaurant_dashboard_sales_break_down_card.dart';
+import '../widgets/restaurant_filters.dart';
+import '../widgets/sliver_sales_breakdowns_horizontal_list.dart';
 
 enum _ScreenStates { loading, error, data }
 
@@ -30,7 +31,8 @@ class RestaurantDashboardScreen extends StatefulWidget {
 class _State extends State<RestaurantDashboardScreen> implements RestaurantDashboardView {
   late RestaurantDashboardPresenter _presenter = RestaurantDashboardPresenter(this);
   final salesDataNotifier = Notifier();
-  final salesBreakDownsNotifier = ItemNotifier<_SalesBreakDownStates>(defaultValue: _SalesBreakDownStates.loading);
+  final salesBreakDownsNotifier =
+      ItemNotifier<_SalesBreakDownStates>(defaultValue: _SalesBreakDownStates.loading);
   final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.loading);
   String errorMessage = "";
 
@@ -40,7 +42,9 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
     _loadSalesData();
   }
 
-  void _loadSalesData() => _presenter.loadAggregatedSalesData().then((_) => _presenter.loadSalesBreakDown(singleTask: false));
+  void _loadSalesData() => _presenter
+      .loadAggregatedSalesData()
+      .then((_) => _presenter.loadSalesBreakDown(singleTask: false));
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +73,8 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
             }
           },
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: ReportsFloatingActionButton(presenter: _presenter),
       ),
     );
   }
@@ -96,7 +102,8 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   sliver: Notifiable(
                     notifier: salesDataNotifier,
-                    builder: (context) => SliverToBoxAdapter(child: RestaurantDashboardHeaderCard(_presenter)),
+                    builder: (context) =>
+                        SliverToBoxAdapter(child: RestaurantDashboardHeaderCard(_presenter)),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -106,9 +113,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                   presenter: _presenter,
                 ),
                 _salesBreakdownViews(),
-                SliverToBoxAdapter(
-                  child: SizedBox(height: 16),
-                ),
+                SliverToBoxAdapter(child: SizedBox(height: 16)),
               ],
             )
           ],
@@ -225,7 +230,8 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   void onDidChangeSalesBreakDownWise() => _presenter.loadSalesBreakDown(singleTask: true);
 
   @override
-  void showLoadingForSalesBreakDowns() => salesBreakDownsNotifier.notify(_SalesBreakDownStates.loading);
+  void showLoadingForSalesBreakDowns() =>
+      salesBreakDownsNotifier.notify(_SalesBreakDownStates.loading);
 
   @override
   void showRestaurantDashboardFilter() async {
