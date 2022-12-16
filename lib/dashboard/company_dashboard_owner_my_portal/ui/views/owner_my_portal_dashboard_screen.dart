@@ -16,6 +16,7 @@ import '../../../../_common_widgets/filter_views/ytd_filter.dart';
 import '../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../attendance/attendance_adjustment/ui/views/attendance_list_screen.dart';
+import '../../../../finance/ui/views/finance_dashboard_screen.dart';
 import '../../../aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
 import '../../../company_dashboard/ui/common_views/my_portal_item_action_view.dart';
 import '../presenters/module_page_view_presenter.dart';
@@ -115,7 +116,9 @@ class _OwnerMyPortalDashboardScreenState extends State<OwnerMyPortalDashboardScr
           child: ListView(
             padding: EdgeInsets.only(top: 44, bottom: 100),
             children: [
-              FinanceDetailCard(_presenter.getFinancialSummary()),
+              GestureDetector(
+                  onTap: () => ScreenPresenter.present(FinanceDashBoardScreen(), context),
+                  child: FinanceDetailCard(_presenter.getFinancialSummary())),
               ModulesView(_moduleViewPresenter, _presenter.filters),
               SizedBox(height: 16),
               _buildHrPerformanceView(),
