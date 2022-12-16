@@ -249,7 +249,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16),
       child: Container(
-        height: 140,
+        height: 160,
           padding: EdgeInsets.symmetric(vertical: 12,horizontal: 12),
           decoration: BoxDecoration(
             color: Colors.white,

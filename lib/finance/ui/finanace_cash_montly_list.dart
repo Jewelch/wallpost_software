@@ -26,13 +26,16 @@ class FinanceCashMonthlyList extends StatelessWidget {
       separatorBuilder: (BuildContext context, int index) => const Divider(),
       itemCount: 3,
       itemBuilder: (BuildContext context, int index) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(child: Text(monthList[index],style: TextStyles.subTitleTextStyle,)),
-            Expanded(child: _subTile('assets/icons/cash_in_icon.svg', cashInList[index], cashInList[index])),
-            Expanded(child: _subTile('assets/icons/cash_out_icon.svg', cashOutList[index], cashOutList[index])),
-          ],
+        return Padding(
+          padding: const EdgeInsets.only(top: 4.0,bottom: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: Text(monthList[index],style: TextStyles.subTitleTextStyle,)),
+              Expanded(child: _subTile('assets/icons/cash_in_icon.svg', cashInList[index], cashInList[index])),
+              Expanded(child: _subTile('assets/icons/cash_out_icon.svg', cashOutList[index], cashOutList[index])),
+            ],
+          ),
         );
       },
     );
