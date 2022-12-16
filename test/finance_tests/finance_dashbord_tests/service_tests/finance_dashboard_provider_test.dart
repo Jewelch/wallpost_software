@@ -5,7 +5,7 @@ import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
 
 import '../../../_mocks/mock_company_provider.dart';
 import '../../../_mocks/mock_network_adapter.dart';
-import '../../../financial_tests/mocks.dart';
+import '../../../finance_tests/mocks.dart';
 
 void main() {
   var successfulResponse = Mocks.financialDashboardResponse;

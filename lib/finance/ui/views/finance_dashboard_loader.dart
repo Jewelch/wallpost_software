@@ -24,7 +24,6 @@ class FinanceDashboardLoader extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-          _tile(context),
           _customChips(),
           SizedBox(height: 16),
           Padding(
@@ -99,31 +98,25 @@ class FinanceDashboardLoader extends StatelessWidget {
 
   Widget _customChips() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(width: 24),
-        Expanded(
-          child: _emptyContainer(
-            height: 32,
-            width: 120,
-            cornerRadius: 12,
-          ),
+        _emptyContainer(
+          height: 32,
+          width: 80,
+          cornerRadius: 12,
         ),
-        SizedBox(width: 15),
-        Expanded(
-          child: _emptyContainer(
-            height: 32,
-            width: 120,
-            cornerRadius: 12,
-          ),
+        _emptyContainer(
+          height: 32,
+          width: 80,
+          cornerRadius: 12,
         ),
-        SizedBox(width: 15),
-        Expanded(
-          child: _emptyContainer(
-            height: 32,
-            width: 120,
-            cornerRadius: 12,
-          ),
+        _emptyContainer(
+          height: 32,
+          width: 80,
+          cornerRadius: 12,
         ),
+        SizedBox(width: 24),
       ],
     );
   }
