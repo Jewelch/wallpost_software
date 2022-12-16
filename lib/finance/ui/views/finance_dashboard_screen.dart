@@ -189,51 +189,55 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            onTap: () {
-              presenter.onPreviousTextClick();
-              setState(() {});
-            },
-            child: Row(
-              children: [
-                Container(
-                  height: 14,
-                  width: 14,
-                  child: SvgPicture.asset(
-                    'assets/icons/back_icon.svg',
-                    color: AppColors.defaultColor,
+          Material(
+            child: InkWell(
+              onTap: () {
+                presenter.onPreviousTextClick();
+                setState(() {});
+              },
+              child: Row(
+                children: [
+                  Container(
+                    height: 14,
+                    width: 14,
+                    child: SvgPicture.asset(
+                      'assets/icons/back_icon.svg',
+                      color: AppColors.defaultColor,
+                    ),
                   ),
-                ),
-                SizedBox(width: 2),
-                Text(
-                  'Previous',
-                  style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
-                ),
-              ],
+                  SizedBox(width: 2),
+                  Text(
+                    'Previous',
+                    style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
+                  ),
+                ],
+              ),
             ),
           ),
           Text('3 Months', style: TextStyles.subTitleTextStyle),
-          GestureDetector(
-            onTap: () {
-              presenter.onNextTextClick();
-              setState(() {});
-            },
-            child: Row(
-              children: [
-                Text(
-                  "Next",
-                  style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
-                ),
-                SizedBox(width: 2),
-                Container(
-                  height: 14,
-                  width: 14,
-                  child: SvgPicture.asset(
-                    'assets/icons/arrow_right_icon.svg',
-                    color: AppColors.defaultColor,
+          Material(
+            child: InkWell(
+              onTap: () {
+                presenter.onNextTextClick();
+                setState(() {});
+              },
+              child: Row(
+                children: [
+                  Text(
+                    "Next",
+                    style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
                   ),
-                ),
-              ],
+                  SizedBox(width: 2),
+                  Container(
+                    height: 14,
+                    width: 14,
+                    child: SvgPicture.asset(
+                      'assets/icons/arrow_right_icon.svg',
+                      color: AppColors.defaultColor,
+                    ),
+                  ),
+                ],
+              ),
             ),
           )
         ],
