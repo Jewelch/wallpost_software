@@ -3,12 +3,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/custom_shapes/header_card.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/finance/ui/views/finance_dashboard_screen.dart';
 
 import '../../../../../_wp_core/company_management/entities/financial_summary.dart';
 import '../../../../_common_widgets/screen_presenter/screen_presenter.dart';
-import '../../../../finance/ui/finance_inner_screen.dart';
 import '../models/finance_detail.dart';
 import '../presenters/finance_detail_card_presenter.dart';
 
