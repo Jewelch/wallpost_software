@@ -37,8 +37,11 @@ class FinanceDetailCard extends StatelessWidget {
                   onTap: () {
                     ScreenPresenter.present(FinanceDashBoardScreen() ,context);
                   },
-                  child: Container(
-                      height: 24, width: 24, child: SvgPicture.asset('assets/icons/arrow_forward_blue.svg', width: 40, height: 40)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16,right: 8),
+                    child: Container(
+                        height: 12, width: 12, child: SvgPicture.asset('assets/icons/arrow_forward_blue.svg', width: 12, height: 12)),
+                  ),
                 ):Container(),
               ],
             ),

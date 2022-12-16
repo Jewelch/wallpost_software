@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wallpost/finance/entities/finance_invoice_details.dart';
 
-import '../../_common_widgets/text_styles/text_styles.dart';
-import '../../_shared/constants/app_colors.dart';
-import '../../dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
+import '../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../_shared/constants/app_colors.dart';
+import '../../../dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 
 class FinanceInvoiceDetailsView extends StatelessWidget {
   final FinanceInvoiceDetails financeInvoiceDetails;

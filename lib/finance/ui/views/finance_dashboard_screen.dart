@@ -4,12 +4,12 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/finance/ui/finanace_cash_montly_list.dart';
-import 'package:wallpost/finance/ui/finance_bill_details_view.dart';
-import 'package:wallpost/finance/ui/finance_cash_detail_aggregated_view.dart';
-import 'package:wallpost/finance/ui/finance_dashboard_details_view.dart';
-import 'package:wallpost/finance/ui/finance_invoice_details_view.dart';
-import 'package:wallpost/finance/ui/finance_tab_view.dart';
+import 'package:wallpost/finance/ui/views/finanace_cash_montly_list.dart';
+import 'package:wallpost/finance/ui/views/finance_bill_details_view.dart';
+import 'package:wallpost/finance/ui/views/finance_cash_detail_aggregated_view.dart';
+import 'package:wallpost/finance/ui/views/finance_dashboard_details_view.dart';
+import 'package:wallpost/finance/ui/views/finance_invoice_details_view.dart';
+import 'package:wallpost/finance/ui/views/finance_tab_view.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 
-import '../../_common_widgets/text_styles/text_styles.dart';
+import '../../../_common_widgets/text_styles/text_styles.dart';
 
 class FinanceCashMonthlyList extends StatelessWidget {
   final FinanceDashboardPresenter _presenter;

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../_common_widgets/text_styles/text_styles.dart';
-import '../../_shared/constants/app_colors.dart';
+import '../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../_shared/constants/app_colors.dart';
 
 class FinanceCashDetailAggregated extends StatelessWidget {
   final String bankAndCash;

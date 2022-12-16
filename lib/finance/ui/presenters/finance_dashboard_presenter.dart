@@ -96,7 +96,7 @@ class FinanceDashboardPresenter {
     _view.showFinanceDashboardFilter();
   }
 
-//MARK: Function to get  monthly cash details
+//MARK: Function to get  monthly chart cash details
 
   List<String>? getMonthList() {
     List<String>? monthList = _financeDashBoardData.financeCashMonthlyDetails?.months;
@@ -125,6 +125,8 @@ class FinanceDashboardPresenter {
     if (selectedMonthIndex > 0) selectedMonthIndex = selectedMonthIndex - 3;
   }
 
+  //MARK: Function to set selected module
+
   void selectModuleAtIndex(int index) {
     _selectedModuleIndex = index;
   }
@@ -138,6 +140,9 @@ class FinanceDashboardPresenter {
     if (selectedMonth > 0) return months[selectedMonth-1];
     return "YTD";
   }
+
+  //MARK: Function to get selected company name 
+
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
 }
