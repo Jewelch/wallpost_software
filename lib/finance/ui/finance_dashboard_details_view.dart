@@ -20,6 +20,8 @@ class FinanceDashBoardDetailsView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: PerformanceViewHolder(
+        padding: EdgeInsets.all(8),
+
         content: Column(
           children: [
             Row(
