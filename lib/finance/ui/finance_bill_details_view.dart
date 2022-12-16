@@ -24,16 +24,16 @@ class FinanceBillDetailsView extends StatelessWidget {
             children: [
               Expanded(
                 child: PerformanceViewHolder(
-                  content: _tile("Overdue", financeBillDetails.overDue),
-                  backgroundColor: AppColors.lightGreen,
+                  content: _tile("Overdue", financeBillDetails.overDue,AppColors.red),
+                  backgroundColor: AppColors.lightRed,
                   showShadow: false,
                 ),
               ),
               SizedBox(width: 8),
               Expanded(
                 child: PerformanceViewHolder(
-                  content: _tile("Current Due", financeBillDetails.currentDue),
-                  backgroundColor: AppColors.lightGreen,
+                  content: _tile("Current Due", financeBillDetails.currentDue,AppColors.yellow),
+                  backgroundColor: AppColors.lightYellow,
                   showShadow: false,
                 ),
               ),
@@ -46,16 +46,16 @@ class FinanceBillDetailsView extends StatelessWidget {
             children: [
               Expanded(
                 child: PerformanceViewHolder(
-                  content: _tile("Billed", financeBillDetails.billed),
-                  backgroundColor: AppColors.lightYellow,
+                  content: _tile("Billed", financeBillDetails.billed,AppColors.textColorBlack),
+                  backgroundColor: AppColors.lightGray,
                   showShadow: false,
                 ),
               ),
               SizedBox(width: 8),
               Expanded(
                 child: PerformanceViewHolder(
-                  content: _tile("Paid", financeBillDetails.paid),
-                  backgroundColor: AppColors.lightYellow,
+                  content: _tile("Paid", financeBillDetails.paid,AppColors.green),
+                  backgroundColor: AppColors.lightGreen,
                   showShadow: false,
                 ),
               ),
@@ -66,7 +66,7 @@ class FinanceBillDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _tile(String label, String value) {
+  Widget _tile(String label, String value,Color textColor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -74,7 +74,7 @@ class FinanceBillDetailsView extends StatelessWidget {
           value,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.defaultColor),
+          style: TextStyles.largeTitleTextStyleBold.copyWith(color: textColor),
         ),
         SizedBox(height: 2),
         Text(

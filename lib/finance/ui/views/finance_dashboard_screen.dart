@@ -249,7 +249,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16),
       child: Container(
-        height: 140,
+        height: 160,
           padding: EdgeInsets.symmetric(vertical: 12,horizontal: 12),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -275,6 +275,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
       child: Container(
         height: 180,
         child: PerformanceViewHolder(
+          padding: EdgeInsets.all(8),
           content: FinanceInvoiceDetailsView(
             financeInvoiceDetails: presenter.getFinanceInvoiceReport()!,
           ),
@@ -289,6 +290,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
       child: Container(
         height: 180,
         child: PerformanceViewHolder(
+          padding: EdgeInsets.all(8),
           content: FinanceBillDetailsView(
             financeBillDetails: presenter.getFinanceBillDetails()!,
           ),
