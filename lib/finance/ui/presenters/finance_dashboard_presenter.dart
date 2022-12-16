@@ -134,8 +134,8 @@ class FinanceDashboardPresenter {
   //MARK: Function to get selected month name
 
   String getSelectedMonthName() {
-    var years = AppYears().currentAndPastShortenedMonthsOfYear(selectedYear);
-    if (selectedMonth > 0) return years[selectedMonth];
+    var months = AppYears().currentAndPastShortenedMonthsOfYear(selectedYear);
+    if (selectedMonth > 0) return months[selectedMonth-1];
     return "YTD";
   }
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;

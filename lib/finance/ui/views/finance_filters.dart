@@ -17,7 +17,7 @@ class FinanceFilters extends StatefulWidget {
   //FinanceFilters({required this.modalSheetController, required this.presenter});
 
   FinanceFilters({required initialMonth, required initialYear, required this.modalSheetController, required this.presenter}) {
-    this._initialMonth = _isMonthValidForYear(initialMonth, initialYear) ? initialMonth : 0;
+    this._initialMonth = _isMonthValidForYear(initialMonth, initialYear) ? initialMonth-1 : -1;
     this._initialYear = _years.contains(initialYear) ? _years.indexOf(initialYear) : 0;
   }
 
@@ -46,11 +46,12 @@ class FinanceFilters extends StatefulWidget {
 }
 
 class _FinanceFiltersState extends State<FinanceFilters> {
-  int _selectedYearIndex ;
-  int _selectedMonthIndex ;
+
+  int _selectedMonth;
+  int _selectedYear;
   _FinanceFiltersState(initialMonth, int initialYear)
-      : _selectedMonthIndex = initialMonth,
-        _selectedYearIndex = initialYear;
+      : _selectedMonth = initialMonth,
+        _selectedYear = initialYear;
 
 
 
@@ -97,7 +98,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
                 TextButton(
                   onPressed: () => [
                     widget.modalSheetController.close(),
-                    widget.presenter.setFilter(month: _selectedMonthIndex, year: AppYears().years()[_selectedYearIndex])
+                    widget.presenter.setFilter(month: _selectedMonth+1, year: AppYears().years()[_selectedYear])
                   ],
                   child: Text(
                     "Apply"
@@ -134,7 +135,6 @@ class _FinanceFiltersState extends State<FinanceFilters> {
     );
   }
 
-  int selectedCard = -1;
 
 
   Widget getYearList(BuildContext context) {
@@ -158,18 +158,18 @@ class _FinanceFiltersState extends State<FinanceFilters> {
 
   Widget getSingleYearItem(int index) {
     return CustomFilterChip(
-        backgroundColor: (index == _selectedYearIndex) ? AppColors.defaultColor : Colors.transparent,
+        backgroundColor: (index == _selectedYear) ? AppColors.defaultColor : Colors.transparent,
         borderColor: Colors.transparent,
         title: Text(
           widget._years[index].toString(),
           style: TextStyle(
-            color: (index == _selectedYearIndex) ? Colors.white : AppColors.textColorGray,
+            color: (index == _selectedYear) ? Colors.white : AppColors.textColorGray,
             fontSize: 17,
             fontWeight: FontWeight.w500,
           ),
         ),
         onPressed: () => {
-          _selectedYearIndex = index,
+          _selectedYear = index,
               /* widget._presenter.selectModuleAtIndex(index),
           widget.onPressed.call(),*/
               setState(() {})
@@ -200,18 +200,18 @@ class _FinanceFiltersState extends State<FinanceFilters> {
 
   Widget getSingleMonthItem(int index) {
     return CustomFilterChip(
-        backgroundColor: (index == _selectedMonthIndex) ? AppColors.defaultColor : Colors.transparent,
+        backgroundColor: (index == _selectedMonth) ? AppColors.defaultColor : Colors.transparent,
         borderColor: Colors.transparent,
         title: Text(
           _getMonthNamesForSelectedYear()[index],
           style: TextStyle(
-            color: (index == _selectedMonthIndex) ? Colors.white : AppColors.textColorGray,
+            color: (index == _selectedMonth) ? Colors.white : AppColors.textColorGray,
             fontSize: 17,
             fontWeight: FontWeight.w500,
           ),
         ),
         onPressed: () => {
-              _selectedMonthIndex = index,
+          _selectedMonth = index,
               /* widget._presenter.selectModuleAtIndex(index),
           widget.onPressed.call(),*/
               setState(() {})
