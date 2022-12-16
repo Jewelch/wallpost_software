@@ -3,22 +3,24 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/finance/constants/finance_dashboard_urls.dart';
 import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
 
+import '../../../_mocks/mock_company_provider.dart';
 import '../../../_mocks/mock_network_adapter.dart';
 import '../../../financial_tests/mocks.dart';
 
 void main() {
   var successfulResponse = Mocks.financialDashboardResponse;
+  var mockCompanyProvider = MockCompanyProvider();
   var mockNetworkAdapter = MockNetworkAdapter();
-  var financialDashBoardProvider = FinanceDashBoardProvider.initWith(mockNetworkAdapter);
+  var financialDashBoardProvider = FinanceDashBoardProvider.initWith(mockCompanyProvider,mockNetworkAdapter);
 
   test('api request is built correctly', () async {
 
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    var _ = await financialDashBoardProvider.get();
+    var _ = await financialDashBoardProvider.get( year: 2022,month: 1);
 
-    expect(mockNetworkAdapter.apiRequest.url, FinanceDashBoardUrls.getAttendanceDetailsUrl());
+    expect(mockNetworkAdapter.apiRequest.url, FinanceDashBoardUrls.getFinanceInnerPageDetails("28", 2022, 1));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
   });
 
