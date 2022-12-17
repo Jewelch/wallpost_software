@@ -12,10 +12,6 @@ class FinanceInvoiceDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _dataView();
-  }
-
-  Widget _dataView() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -24,7 +20,7 @@ class FinanceInvoiceDetailsView extends StatelessWidget {
             children: [
               Expanded(
                 child: PerformanceViewHolder(
-                  content: _tile("Overdue", financeInvoiceDetails.overDue!, AppColors.red),
+                  content: _tile("Overdue", financeInvoiceDetails.overDue, AppColors.red),
                   backgroundColor: AppColors.lightRed,
                   showShadow: false,
                 ),
@@ -70,6 +66,7 @@ class FinanceInvoiceDetailsView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 4),
         Text(
           amount,
           maxLines: 1,

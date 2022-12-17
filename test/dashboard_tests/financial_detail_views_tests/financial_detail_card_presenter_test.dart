@@ -3,13 +3,23 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/color_extensions.dart';
 import 'package:wallpost/_wp_core/company_management/entities/financial_summary.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/dashboard/finance_detail_views/ui/presenters/finance_detail_card_presenter.dart';
+
+import '../../_mocks/mock_company.dart';
+import '../../_mocks/mock_company_provider.dart';
+import '../../_mocks/mock_current_user_provider.dart';
+import '../../_mocks/mock_user.dart';
+import '../../_wp_core_tests/company_management_tests/service_tests/company_selector_test.dart';
 
 class MockFinancialSummary extends Mock implements FinancialSummary {}
 
 void main() {
+
+
   test('get currency', () async {
     var summary = MockFinancialSummary();
+
     when(() => summary.currency).thenReturn("USD");
 
     var presenter = FinanceDetailCardPresenter(summary);
@@ -21,16 +31,18 @@ void main() {
     var negativeSummary = MockFinancialSummary();
     when(() => negativeSummary.profitLoss).thenReturn("-40");
     when(() => negativeSummary.isInProfit()).thenReturn(false);
+    when(() => negativeSummary.currency).thenReturn("USD");
     var details1 = FinanceDetailCardPresenter(negativeSummary).getProfitLossDetails();
-    expect(details1.label, "Profit & Loss");
+    expect(details1.label, "Profit & Loss (USD)");
     expect(details1.value, "-40");
     expect(details1.valueColor.isEqualTo(AppColors.redOnDarkDefaultColorBg), true);
 
     var positiveSummary = MockFinancialSummary();
     when(() => positiveSummary.profitLoss).thenReturn("440");
     when(() => positiveSummary.isInProfit()).thenReturn(true);
+    when(() => positiveSummary.currency).thenReturn("USD");
     var details2 = FinanceDetailCardPresenter(positiveSummary).getProfitLossDetails();
-    expect(details2.label, "Profit & Loss");
+    expect(details2.label, "Profit & Loss (USD)");
     expect(details2.value, "440");
     expect(details2.valueColor.isEqualTo(AppColors.greenOnDarkDefaultColorBg), true);
   });
@@ -88,4 +100,43 @@ void main() {
     expect(details2.value, "440");
     expect(details2.valueColor.isEqualTo(AppColors.redOnDarkDefaultColorBg), true);
   });
+
+
+  // test('get number of leave list items when there are no items', () async {
+  //   expect(presenter.getProfitAndLoss(), 0);
+  // });
+
+  // test('checking if a company is selected or not', () async {
+  //   when(() => mockCurrentUserProvider.getCurrentUser()).thenReturn(mockUser);
+  //
+  //   when(() => mockCompanyRepository.getSelectedCompanyForUser(any())).thenReturn(null);
+  //   expect(selectedCompanyProvider.isCompanySelected(), false);
+  //
+  //   when(() => mockCompanyRepository.getSelectedCompanyForUser(any())).thenReturn(MockCompany());
+  //   expect(selectedCompanyProvider.isCompanySelected(), true);
+  // });
+
+  var user = MockUser();
+  var company = MockCompany();
+  var currentUserProvider = MockCurrentUserProvider();
+  var selectedCompanyProvider = MockCompanyProvider();
+  var mockCompanyRepository = MockCompanyRepository();
+  setUpAll(() {
+    registerFallbackValue(MockUser());
+  });
+  setUp(() {
+    reset(currentUserProvider);
+    reset(mockCompanyRepository);
+  });
+
+  test('checking if a company is not selected', () async {
+    when(() => currentUserProvider.getCurrentUser()).thenReturn(user);
+
+    when(() => mockCompanyRepository.getSelectedCompanyForUser(any())).thenReturn(null);
+
+    var presenter = FinanceDetailCardPresenter(MockFinancialSummary());
+
+    expect(presenter.shouldShowDetailDisclosureIndicator(), false);
+  });
+
 }

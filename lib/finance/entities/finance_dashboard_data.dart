@@ -41,6 +41,27 @@ class FinanceDashBoardData extends JSONInitializable {
     }
   }
 
+
+  bool isInProfit() {
+    return _isZero(_profitAndLoss) || _isGreaterThanZero(_profitAndLoss);
+  }
+
+  bool isProfitCashInBank() {
+    return _isZero(_bankAndCash) || _isGreaterThanZero(_bankAndCash);
+  }
+
+  bool _isZero(String value) {
+    return value == "0";
+  }
+
+  bool _isLessThanZero(String value) {
+    return value.contains("-");
+  }
+
+  bool _isGreaterThanZero(String value) {
+    return !(_isLessThanZero(value) || _isZero(value));
+  }
+
   FinanceBillDetails? get financeBillDetails => _financeBillDetails;
 
   FinanceInvoiceDetails? get financeInvoiceDetails => _financeInvoiceDetails;
