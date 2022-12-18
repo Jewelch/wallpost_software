@@ -4,10 +4,10 @@ import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart'
 
 import '../../../_common_widgets/text_styles/text_styles.dart';
 
-class FinanceCashMonthlyList extends StatelessWidget {
+class FinanceCashMonthlyListCardView extends StatelessWidget {
   final FinanceDashboardPresenter _presenter;
 
-  FinanceCashMonthlyList(this._presenter);
+  FinanceCashMonthlyListCardView(this._presenter);
 
   @override
   Widget build(BuildContext context) {

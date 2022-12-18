@@ -5,10 +5,10 @@ import '../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../_shared/constants/app_colors.dart';
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 
-class FinanceInvoiceDetailsView extends StatelessWidget {
+class FinanceInvoiceCardView extends StatelessWidget {
   final FinanceInvoiceDetails financeInvoiceDetails;
 
-  FinanceInvoiceDetailsView({required this.financeInvoiceDetails});
+  FinanceInvoiceCardView({required this.financeInvoiceDetails});
 
   @override
   Widget build(BuildContext context) {

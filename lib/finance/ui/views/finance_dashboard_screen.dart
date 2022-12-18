@@ -4,11 +4,11 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/finance/ui/views/finance_cash_monthly_list.dart';
-import 'package:wallpost/finance/ui/views/finance_bill_details_view.dart';
-import 'package:wallpost/finance/ui/views/finance_cash_detail_aggregated_view.dart';
-import 'package:wallpost/finance/ui/views/finance_dashboard_details_view.dart';
-import 'package:wallpost/finance/ui/views/finance_invoice_details_view.dart';
+import 'package:wallpost/finance/ui/views/finance_cash_monthly_list_card_view.dart';
+import 'package:wallpost/finance/ui/views/finance_bill_card_view.dart';
+import 'package:wallpost/finance/ui/views/finance_cash_card_view.dart';
+import 'package:wallpost/finance/ui/views/finance_profit_loss_card_view.dart';
+import 'package:wallpost/finance/ui/views/finance_invoice_card_view.dart';
 import 'package:wallpost/finance/ui/views/finance_tab_view.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
@@ -31,6 +31,11 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   static const LOADER_VIEW = 1;
   static const ERROR_VIEW = 2;
   static const DATA_VIEW = 3;
+
+  static const CASH_VIEW_INDEX = 0;
+  static const INVOICE_VIEW_INDEX = 1;
+  static const BILL_VIEW_INDEX = 2;
+
   var _errorMessage = "";
 
   @override
@@ -89,17 +94,17 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
             MultiSliver(
               children: [
                 FinanceDashboardAppBar(presenter),
-                FinanceDashBoardDetailsView(presenter: presenter),
+                FinanceProfitLossCardView(presenter: presenter),
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    _buildBottomTabView(),
-                    if (presenter.selectedModuleIndex == 0)
-                      Positioned(top: 238, left: 0, right: 0, child: _buildMonthlyCashListView()),
-                    if (presenter.selectedModuleIndex == 1)
-                      Positioned(top: 120, left: 0, right: 0, child: _buildInvoiceView()),
-                    if (presenter.selectedModuleIndex == 2)
-                      Positioned(top: 120, left: 0, right: 0, child: _buildBillView())
+                    _bottomCard(),
+                    if (presenter.selectedModuleIndex == CASH_VIEW_INDEX)
+                      Positioned(top: 238, left: 0, right: 0, child: _monthlyCashInOutListCard()),
+                    if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX)
+                      Positioned(top: 120, left: 0, right: 0, child: _invoiceCard()),
+                    if (presenter.selectedModuleIndex == BILL_VIEW_INDEX)
+                      Positioned(top: 120, left: 0, right: 0, child: _billCard())
                   ],
                 )
               ],
@@ -109,8 +114,9 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
       ),
     );
   }
+  //MARK: Functions to build the bottom card view
 
-  Widget _buildBottomTabView() {
+  Widget _bottomCard() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: PerformanceViewHolder(
@@ -119,22 +125,22 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
             FinanceHorizontalTab(presenter, () {
               setState(() {});
             }),
-            if (presenter.selectedModuleIndex == 0) _getCashDetailView(),
-            if (presenter.selectedModuleIndex == 1) _titleText(title: "Invoices To Collect"),
-            if (presenter.selectedModuleIndex == 2)  _titleText(title: "Bills To Pay"),
+            if (presenter.selectedModuleIndex ==CASH_VIEW_INDEX) _cashCardData(),
+            if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX) _titleText(title: "Invoices To Collect"),
+            if (presenter.selectedModuleIndex == BILL_VIEW_INDEX)  _titleText(title: "Bills To Pay"),
           ],
         ),
       ),
     );
   }
 
-  Widget _getCashDetailView() {
+  Widget _cashCardData() {
     return Column(
       children: [
         SizedBox(height: 14),
-        FinanceCashDetailAggregated(presenter: presenter),
+        FinanceCashCardView(presenter: presenter),
         SizedBox(height: 14),
-        _buildMonthlyCashListButtonView(),
+        _monthlyCashInOutListHeader(),
         SizedBox(height: 14),
       ],
     );
@@ -148,7 +154,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   }
 
 
-  Widget _buildMonthlyCashListButtonView() {
+  Widget _monthlyCashInOutListHeader() {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
       child: Row(
@@ -195,7 +201,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     );
   }
 
-  _buildMonthlyCashListView() {
+  _monthlyCashInOutListCard() {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16),
       child: Container(
@@ -213,31 +219,31 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
             ),
           ],
         ),
-        child: FinanceCashMonthlyList(presenter),
+        child: FinanceCashMonthlyListCardView(presenter),
       ),
     );
   }
 
-  _buildInvoiceView() {
+  _invoiceCard() {
     return Container(
       height: 180,
       padding: EdgeInsets.only(left: 16, right: 16),
       child: PerformanceViewHolder(
         padding: EdgeInsets.all(8),
-        content: FinanceInvoiceDetailsView(
+        content: FinanceInvoiceCardView(
           financeInvoiceDetails: presenter.getFinanceInvoiceReport()!,
         ),
       ),
     );
   }
 
-  _buildBillView() {
+  _billCard() {
     return Container(
       height: 180,
       padding: EdgeInsets.only(left: 16, right: 16),
       child: PerformanceViewHolder(
         padding: EdgeInsets.all(8),
-        content: FinanceBillDetailsView(
+        content: FinanceBillCardView(
           financeBillDetails: presenter.getFinanceBillDetails()!,
         ),
       ),

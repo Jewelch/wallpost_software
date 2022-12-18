@@ -6,10 +6,10 @@ import '../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../_shared/constants/app_colors.dart';
 import '../presenters/finance_dashboard_presenter.dart';
 
-class FinanceDashBoardDetailsView extends StatelessWidget {
+class FinanceProfitLossCardView extends StatelessWidget {
   final FinanceDashboardPresenter presenter;
 
-  FinanceDashBoardDetailsView({required this.presenter});
+  FinanceProfitLossCardView({required this.presenter});
 
   @override
   Widget build(BuildContext context) {
