@@ -27,7 +27,6 @@ class FinanceDetailCard extends StatelessWidget {
                 Text("Financials ", style: TextStyles.headerCardHeadingTextStyle),
                 _presenter.shouldShowDetailDisclosureIndicator()
                     ? Container(
-                        padding: const EdgeInsets.only(left: 16, right: 8),
                         height: 12,
                         width: 12,
                         child: SvgPicture.asset(

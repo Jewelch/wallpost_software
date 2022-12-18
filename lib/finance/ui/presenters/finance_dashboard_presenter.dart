@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
@@ -5,6 +8,7 @@ import 'package:wallpost/finance/entities/finance_bill_details.dart';
 import 'package:wallpost/finance/entities/finance_dashboard_data.dart';
 import 'package:wallpost/finance/entities/finance_invoice_details.dart';
 import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
+import 'package:wallpost/finance/ui/models/finance_dashboard_value.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
 
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/models/owner_dashboard_filters.dart';
@@ -102,20 +106,36 @@ class FinanceDashboardPresenter {
 
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
-  String getProfitAndLoss() {
-    return _financeDashBoardData.profitAndLoss;
+  FinanceDashBoardValue getProfitAndLoss() {
+    return FinanceDashBoardValue(
+      label: _financeDashBoardData.isInProfit() ? "Profit This Year":"Loss This Year",
+      value: _financeDashBoardData.profitAndLoss,
+      valueColor:  _financeDashBoardData.isInProfit() ? _successColor() : _failureColor(),
+    );
   }
 
-  String getIncome() {
-    return _financeDashBoardData.income;
+  FinanceDashBoardValue getIncome() {
+    return FinanceDashBoardValue(
+      label:  "Income",
+      value: _financeDashBoardData.income,
+      valueColor: _successColor(),
+    );
   }
 
-  String getExpenses() {
-    return _financeDashBoardData.expenses;
+  FinanceDashBoardValue getExpenses() {
+    return FinanceDashBoardValue(
+      label:  "Expense",
+      value: _financeDashBoardData.expenses,
+      valueColor: _failureColor(),
+    );
   }
 
-  String getCashInBank() {
-    return _financeDashBoardData.bankAndCash;
+  FinanceDashBoardValue getCashInBank() {
+    return FinanceDashBoardValue(
+      label: "Available Balance In Bank/Cash",
+      value: _financeDashBoardData.bankAndCash,
+      valueColor:  _financeDashBoardData.isProfitCashInBank() ? _successColor() : _failureColor(),
+    );
   }
 
   String getCashIn() {
@@ -132,5 +152,25 @@ class FinanceDashboardPresenter {
 
   FinanceBillDetails? getFinanceBillDetails() {
     return _financeDashBoardData.financeBillDetails;
+  }
+
+  Color profitLossBoxColor(){
+    return _financeDashBoardData.isInProfit() ? _successBoxColor() : _failureBoxColor();
+  }
+
+  Color _successColor() {
+    return AppColors.green;
+  }
+
+  Color _failureColor() {
+    return AppColors.red;
+  }
+
+  Color _successBoxColor() {
+    return AppColors.lightGreen;
+  }
+
+  Color _failureBoxColor() {
+    return AppColors.lightRed;
   }
 }

@@ -1,53 +1,49 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 
 import '../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../_shared/constants/app_colors.dart';
+import '../models/finance_dashboard_value.dart';
 
 class FinanceCashDetailAggregated extends StatelessWidget {
-  final String bankAndCash;
-  final String cashIn;
-  final String cashOut;
+  final FinanceDashboardPresenter presenter;
 
-  FinanceCashDetailAggregated({required this.bankAndCash, required this.cashIn, required this.cashOut});
+  FinanceCashDetailAggregated({required this.presenter});
 
   @override
   Widget build(BuildContext context) {
     return (Column(children: [
-      SizedBox(
-        height: 8,
-      ),
-      _bankAndCashTile(),
-      SizedBox(
-        height: 16,
-      ),
+      SizedBox(height: 8),
+      _bankAndCashTile(presenter.getCashInBank()),
+      SizedBox(height: 16),
       Padding(
         padding: const EdgeInsets.only(left: 35, right: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: _cashInAndCashOutTile('assets/icons/cash_in_icon.svg', 'Cash In', cashIn)),
-            Expanded(child: _cashInAndCashOutTile('assets/icons/cash_out_icon.svg', 'Cash Out', cashOut)),
+            Expanded(child: _cashInAndCashOutTile('assets/icons/cash_in_icon.svg', 'Cash In', presenter.getCashIn())),
+            Expanded(
+                child: _cashInAndCashOutTile('assets/icons/cash_out_icon.svg', 'Cash Out', presenter.getCashOut())),
           ],
         ),
       )
     ]));
   }
 
-  Widget _bankAndCashTile() {
+  Widget _bankAndCashTile(FinanceDashBoardValue financeDashBoardValue) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          bankAndCash,
+          financeDashBoardValue.value,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyles.extraLargeTitleTextStyleBold
-              .copyWith(color: bankAndCash.contains("-") ? AppColors.red : AppColors.green),
+          style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: financeDashBoardValue.valueColor),
         ),
         SizedBox(height: 2),
         Text(
-          "Available Balance In Bank/Cash",
+          financeDashBoardValue.label,
           style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
         )
       ],
@@ -57,12 +53,8 @@ class FinanceCashDetailAggregated extends StatelessWidget {
   Widget _cashInAndCashOutTile(String icon, String label, String value) {
     return Row(
       children: [
-        Container(
-          child: SvgPicture.asset(icon, width: 28, height: 28),
-        ),
-        SizedBox(
-          width: 6,
-        ),
+        Container(child: SvgPicture.asset(icon, width: 28, height: 28)),
+        SizedBox(width: 6),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -73,10 +65,7 @@ class FinanceCashDetailAggregated extends StatelessWidget {
               style: TextStyles.largeTitleTextStyleBold.copyWith(color: AppColors.textColorBlack),
             ),
             SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
-            )
+            Text(label, style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack))
           ],
         ),
       ],

@@ -12,10 +12,6 @@ class FinanceBillDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _dataView();
-  }
-
-  Widget _dataView() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -70,6 +66,7 @@ class FinanceBillDetailsView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 4),
         Text(
           value,
           maxLines: 1,

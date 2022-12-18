@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
+import 'package:wallpost/finance/ui/models/finance_dashboard_value.dart';
 
 import '../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../_shared/constants/app_colors.dart';
+import '../presenters/finance_dashboard_presenter.dart';
 
 class FinanceDashBoardDetailsView extends StatelessWidget {
-  final String profitAndLoss;
-  final String income;
-  final String expense;
+  final FinanceDashboardPresenter presenter;
 
-  FinanceDashBoardDetailsView({required this.profitAndLoss, required this.income, required this.expense});
+  FinanceDashBoardDetailsView({required this.presenter});
 
   @override
   Widget build(BuildContext context) {
-    return _datView();
-  }
-
-  Widget _datView() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: PerformanceViewHolder(
@@ -27,8 +23,8 @@ class FinanceDashBoardDetailsView extends StatelessWidget {
               children: [
                 Expanded(
                   child: PerformanceViewHolder(
-                    content: _profitAndLossTile(profitAndLoss),
-                    backgroundColor: profitAndLoss.contains("-") ? AppColors.lightRed : AppColors.lightGreen,
+                    content: _profitLossTile(presenter.getProfitAndLoss()),
+                    backgroundColor: presenter.profitLossBoxColor() ,
                     showShadow: false,
                   ),
                 ),
@@ -39,7 +35,7 @@ class FinanceDashBoardDetailsView extends StatelessWidget {
               children: [
                 Expanded(
                   child: PerformanceViewHolder(
-                    content: _incomeAndExpenseTile(income, "Income", AppColors.green),
+                    content: _incomeAndExpenseTile(presenter.getIncome()),
                     backgroundColor: AppColors.lightGreen,
                     showShadow: false,
                   ),
@@ -47,7 +43,7 @@ class FinanceDashBoardDetailsView extends StatelessWidget {
                 SizedBox(width: 8),
                 Expanded(
                   child: PerformanceViewHolder(
-                    content: _incomeAndExpenseTile(expense, "Expense", AppColors.red),
+                    content: _incomeAndExpenseTile(presenter.getExpenses()),
                     backgroundColor: AppColors.lightRed,
                     showShadow: false,
                   ),
@@ -60,39 +56,38 @@ class FinanceDashBoardDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _profitAndLossTile(String amount) {
+  Widget _profitLossTile(FinanceDashBoardValue financeDashBoardValue) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          amount,
+          financeDashBoardValue.value,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyles.extraLargeTitleTextStyleBold
-              .copyWith(color: amount.contains("-") ? AppColors.red : AppColors.green),
+          style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: financeDashBoardValue.valueColor)
         ),
         SizedBox(height: 2),
         Text(
-          amount.contains("-") ? "Loss This Year" : "Profit This Year",
+          financeDashBoardValue.label,
           style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
         )
       ],
     );
   }
 
-  Widget _incomeAndExpenseTile(String amount, String label, Color color) {
+  Widget _incomeAndExpenseTile(FinanceDashBoardValue financeDashBoardValue) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          amount,
+          financeDashBoardValue.value,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyles.largeTitleTextStyleBold.copyWith(color: color),
+          style: TextStyles.largeTitleTextStyleBold.copyWith(color: financeDashBoardValue.valueColor),
         ),
         SizedBox(height: 2),
         Text(
-          label,
+          financeDashBoardValue.label,
           style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
         )
       ],

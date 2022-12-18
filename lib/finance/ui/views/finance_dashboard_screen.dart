@@ -12,9 +12,7 @@ import 'package:wallpost/finance/ui/views/finance_invoice_details_view.dart';
 import 'package:wallpost/finance/ui/views/finance_tab_view.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
-
-import '../../../dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
-import '../../../restaurant/restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
+import 'package:wallpost/finance/ui/views/performance_view_holder.dart';
 
 import 'finance_dashboard_app_bar.dart';
 import 'finance_dashboard_loader.dart';
@@ -90,19 +88,8 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
           slivers: [
             MultiSliver(
               children: [
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: SliverAppBarDelegate(
-                    minHeight: 56 + 32 + 16,
-                    maxHeight: 56 + 32 + 16,
-                    child: FinanceDashboardAppBar(presenter),
-                  ),
-                ),
-                FinanceDashBoardDetailsView(
-                  profitAndLoss: presenter.getProfitAndLoss(),
-                  income: presenter.getIncome(),
-                  expense: presenter.getExpenses(),
-                ),
+                FinanceDashboardAppBar(presenter),
+                FinanceDashBoardDetailsView(presenter: presenter),
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
@@ -133,8 +120,8 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
               setState(() {});
             }),
             if (presenter.selectedModuleIndex == 0) _getCashDetailView(),
-            if (presenter.selectedModuleIndex == 1) _getInvoiceTittleView(),
-            if (presenter.selectedModuleIndex == 2) _getBillTittleView(),
+            if (presenter.selectedModuleIndex == 1) _titleText(title: "Invoices To Collect"),
+            if (presenter.selectedModuleIndex == 2)  _titleText(title: "Bills To Pay"),
           ],
         ),
       ),
@@ -144,103 +131,66 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   Widget _getCashDetailView() {
     return Column(
       children: [
-        SizedBox(
-          height: 14,
-        ),
-        FinanceCashDetailAggregated(
-          bankAndCash: presenter.getCashInBank(),
-          cashIn: presenter.getCashIn(),
-          cashOut: presenter.getCashOut(),
-        ),
-        SizedBox(
-          height: 14,
-        ),
-        _buildMonthlyCashListHeadView(),
-        SizedBox(
-          height: 14,
-        ),
+        SizedBox(height: 14),
+        FinanceCashDetailAggregated(presenter: presenter),
+        SizedBox(height: 14),
+        _buildMonthlyCashListButtonView(),
+        SizedBox(height: 14),
       ],
     );
   }
 
-  _getInvoiceTittleView() {
+  _titleText({required String title}){
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 32),
-      child: Text(
-        'Invoices To Collect',
-        style: TextStyles.extraLargeTitleTextStyleBold,
-      ),
+      child: Text(title, style: TextStyles.extraLargeTitleTextStyleBold),
     );
   }
 
-  _getBillTittleView() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16, bottom: 32),
-      child: Text(
-        'Bills To Pay',
-        style: TextStyles.extraLargeTitleTextStyleBold,
-      ),
-    );
-  }
 
-  Widget _buildMonthlyCashListHeadView() {
+  Widget _buildMonthlyCashListButtonView() {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Material(
-            child: InkWell(
-              onTap: () {
+          _textButton(
+              title: "Previous",
+              icon: 'assets/icons/back_icon.svg',
+              onPressed: () {
                 presenter.onPreviousTextClick();
                 setState(() {});
-              },
-              child: Row(
-                children: [
-                  Container(
-                    height: 14,
-                    width: 14,
-                    child: SvgPicture.asset(
-                      'assets/icons/back_icon.svg',
-                      color: AppColors.defaultColor,
-                    ),
-                  ),
-                  SizedBox(width: 2),
-                  Text(
-                    'Previous',
-                    style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
-                  ),
-                ],
-              ),
-            ),
-          ),
+              }),
           Text('3 Months', style: TextStyles.subTitleTextStyle),
-          Material(
-            child: InkWell(
-              onTap: () {
+          _textButton(
+              title: "Next",
+              icon: 'assets/icons/arrow_right_icon.svg',
+              onPressed: () {
                 presenter.onNextTextClick();
                 setState(() {});
-              },
-              child: Row(
-                children: [
-                  Text(
-                    "Next",
-                    style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor),
-                  ),
-                  SizedBox(width: 2),
-                  Container(
-                    height: 14,
-                    width: 14,
-                    child: SvgPicture.asset(
-                      'assets/icons/arrow_right_icon.svg',
-                      color: AppColors.defaultColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
+              })
         ],
+      ),
+    );
+  }
+
+  Widget _textButton({required String title, required String icon, required VoidCallback onPressed}) {
+    return Material(
+      child: InkWell(
+        onTap: onPressed,
+        child: Row(
+          children: [
+            if (title == "Next")
+              Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor)),
+            Container(
+              height: 12,
+              width: 12,
+              child: SvgPicture.asset(icon, color: AppColors.defaultColor),
+            ),
+            if (title == "Previous")
+              Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor))
+          ],
+        ),
       ),
     );
   }
@@ -269,30 +219,26 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   }
 
   _buildInvoiceView() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16),
-      child: Container(
-        height: 180,
-        child: PerformanceViewHolder(
-          padding: EdgeInsets.all(8),
-          content: FinanceInvoiceDetailsView(
-            financeInvoiceDetails: presenter.getFinanceInvoiceReport()!,
-          ),
+    return Container(
+      height: 180,
+      padding: EdgeInsets.only(left: 16, right: 16),
+      child: PerformanceViewHolder(
+        padding: EdgeInsets.all(8),
+        content: FinanceInvoiceDetailsView(
+          financeInvoiceDetails: presenter.getFinanceInvoiceReport()!,
         ),
       ),
     );
   }
 
   _buildBillView() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16),
-      child: Container(
-        height: 180,
-        child: PerformanceViewHolder(
-          padding: EdgeInsets.all(8),
-          content: FinanceBillDetailsView(
-            financeBillDetails: presenter.getFinanceBillDetails()!,
-          ),
+    return Container(
+      height: 180,
+      padding: EdgeInsets.only(left: 16, right: 16),
+      child: PerformanceViewHolder(
+        padding: EdgeInsets.all(8),
+        content: FinanceBillDetailsView(
+          financeBillDetails: presenter.getFinanceBillDetails()!,
         ),
       ),
     );
