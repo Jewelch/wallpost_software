@@ -98,22 +98,26 @@ class _FinanceFiltersState extends State<FinanceFilters> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () => [
+                  onPressed: () =>
+                  {
+                    _selectedMonth=-1,
                     widget.modalSheetController.close(),
-                    widget.presenter.setFilter(month: _selectedMonth + 1, year: AppYears().years()[_selectedYear])
-                  ],
+                    widget.presenter.setFilter(month: _selectedMonth + 1,
+                        year: AppYears().getCurrentYear())
+
+                  },
                   child: Text(
-                    "Apply"
+                    "Reset"
                     "",
                     style: TextStyles.screenTitleTextStyle.copyWith(
-                      color: AppColors.defaultColor,
+                      color: AppColors.red,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 16),
             Text(
               "Year",
               style: TextStyles.screenTitleTextStyle.copyWith(
@@ -130,7 +134,8 @@ class _FinanceFiltersState extends State<FinanceFilters> {
               ),
             ),
             Container(child: getMonthList(context)),
-            SizedBox(height: 40),
+            SizedBox(height: 45),
+            _applyChangesButton()
           ],
         ),
       ),
@@ -197,6 +202,35 @@ class _FinanceFiltersState extends State<FinanceFilters> {
           ),
         ),
         onPressed: () => {_selectedMonth = index, setState(() {})});
+  }
+
+  Widget _applyChangesButton() {
+    return GestureDetector(
+      onTap: () => {
+        widget.modalSheetController.close(),
+        widget.presenter.setFilter(month: _selectedMonth + 1, year: AppYears().years()[_selectedYear])
+      },
+      child: Container(
+        margin: EdgeInsets.only(left: 16, right: 16),
+        height: 40,
+        decoration: BoxDecoration(
+            color: AppColors.defaultColor,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(15.0),
+            ),
+            ),
+        child: Center(
+          child: Text(
+            'Apply Changes',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   List<String> _getMonthNamesForSelectedYear() {
