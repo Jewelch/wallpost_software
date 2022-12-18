@@ -123,4 +123,40 @@ void main() {
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
+
+  test('show only three nearest months cash in and cash out list', () async {
+  List<String> monthList=["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+  List<String> cashInList=["5,000", "7,837", "18,603", "3,500", "0", "0", "0", "0", "0", "0", "0", "0"];
+  List<String> cashOutList=["5,000", "7,837", "18,603", "3,500", "0", "0", "0", "0", "0", "0", "0", "0"];
+    var data = MockFinanceDashBoardData();
+    //given
+    when(() => provider.isLoading).thenReturn(false);
+    when(() => provider.get(month: any(named: "month"), year: any(named: "year")))
+        .thenAnswer((_) => Future.value(data));
+
+    //when
+    await presenter.loadFinanceDashBoardDetails();
+
+    //then
+  verifyInOrder([
+        () => provider.isLoading,
+        () => view.showLoader(),
+        () => provider.get(month: any(named: "month"), year: any(named: "year")),
+        () => view.onDidLoadFinanceDashBoardData(),
+  ]);
+  when(() => data.monthsList).thenReturn(monthList.toList());
+  when(() => data.cashInList).thenReturn(cashInList.toList());
+  when(() => data.cashOutList).thenReturn(cashOutList.toList());
+  expect(presenter.getMonthList().skip(3).toList(), monthList.skip(3).toList());
+  expect(presenter.getCashInList().skip(3).toList(), cashInList.skip(3).toList());
+  expect(presenter.getCashOutList().skip(3).toList(), cashOutList.skip(3).toList());
+
+  _verifyNoMoreInteractionsOnAllMocks();
+  });
+
 }
+
+
+
+
+

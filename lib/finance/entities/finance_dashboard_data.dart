@@ -3,7 +3,6 @@ import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 
 import 'finance_bill_details.dart';
-import 'finance_cash_monthly_detail.dart';
 import 'finance_invoice_details.dart';
 
 class FinanceDashBoardData extends JSONInitializable {
@@ -13,7 +12,11 @@ class FinanceDashBoardData extends JSONInitializable {
   late String _bankAndCash;
   late String _cashIn;
   late String _cashOut;
-  late FinanceCashMonthlyDetails _financeCashMonthlyDetails;
+
+  late List<String> _monthsList;
+  late List<String> _cashInList;
+  late List<String> _cashOutList;
+
   late FinanceInvoiceDetails _financeInvoiceDetails;
   late FinanceBillDetails _financeBillDetails;
 
@@ -31,8 +34,11 @@ class FinanceDashBoardData extends JSONInitializable {
       var financialInvoiceDetailsMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'invoice_report', null);
       var financialBillDetailsMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'bill_report', null);
 
-      if (financialCashMonthlyDetailsMap != null)
-        _financeCashMonthlyDetails = FinanceCashMonthlyDetails.fromJson(financialCashMonthlyDetailsMap);
+
+      _monthsList = sift.readStringListFromMap(financialCashMonthlyDetailsMap, "months");
+      _cashInList = sift.readStringListFromMap(financialCashMonthlyDetailsMap, "cache_in");
+      _cashOutList = sift.readStringListFromMap(financialCashMonthlyDetailsMap, "cache_out");
+
       if (financialInvoiceDetailsMap != null)
         _financeInvoiceDetails = FinanceInvoiceDetails.fromJson(financialInvoiceDetailsMap);
       if (financialBillDetailsMap != null) _financeBillDetails = FinanceBillDetails.fromJson(financialBillDetailsMap);
@@ -66,8 +72,6 @@ class FinanceDashBoardData extends JSONInitializable {
 
   FinanceInvoiceDetails get financeInvoiceDetails => _financeInvoiceDetails;
 
-  FinanceCashMonthlyDetails get financeCashMonthlyDetails => _financeCashMonthlyDetails;
-
   String get cashOut => _cashOut;
 
   String get cashIn => _cashIn;
@@ -79,4 +83,10 @@ class FinanceDashBoardData extends JSONInitializable {
   String get income => _income;
 
   String get profitAndLoss => _profitAndLoss;
+
+  List<String> get cashOutList => _cashOutList;
+
+  List<String> get cashInList => _cashInList;
+
+  List<String> get monthsList => _monthsList;
 }
