@@ -63,7 +63,6 @@ class FinanceDashBoardData extends JSONInitializable {
     return !(_isLessThanZero(value) || _isZero(value));
   }
 
-  FinanceBillDetails? get financeBillDetails => _financeBillDetails;
 
   FinanceInvoiceDetails get financeInvoiceDetails => _financeInvoiceDetails;
 
