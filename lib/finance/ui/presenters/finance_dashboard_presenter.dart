@@ -45,19 +45,19 @@ class FinanceDashboardPresenter {
 
   //MARK: Function to get  monthly chart cash details
 
-  List<String>? getMonthList() {
-    List<String>? monthList = _financeDashBoardData.financeCashMonthlyDetails?.months;
-    return monthList?.skip(selectedMonthIndex).toList();
+  List<String> getMonthList() {
+    List<String> monthList = _financeDashBoardData.financeCashMonthlyDetails.months;
+    return monthList.skip(selectedMonthIndex).toList();
   }
 
-  List<String>? getCashInList() {
-    List<String>? cashInList = _financeDashBoardData.financeCashMonthlyDetails?.cashIn;
-    return cashInList?.skip(selectedMonthIndex).toList();
+  List<String> getCashInList() {
+    List<String> cashInList = _financeDashBoardData.financeCashMonthlyDetails.cashIn;
+    return cashInList.skip(selectedMonthIndex).toList();
   }
 
-  List<String>? getCashOutList() {
-    List<String>? cashOutList = _financeDashBoardData.financeCashMonthlyDetails?.cashOut;
-    return cashOutList?.skip(selectedMonthIndex).toList();
+  List<String> getCashOutList() {
+    List<String> cashOutList = _financeDashBoardData.financeCashMonthlyDetails.cashOut;
+    return cashOutList.skip(selectedMonthIndex).toList();
   }
 
   //MARK: Function to get next and previous month cash details

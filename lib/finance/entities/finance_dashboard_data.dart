@@ -13,9 +13,9 @@ class FinanceDashBoardData extends JSONInitializable {
   late String _bankAndCash;
   late String _cashIn;
   late String _cashOut;
-  FinanceCashMonthlyDetails? _financeCashMonthlyDetails;
-  FinanceInvoiceDetails? _financeInvoiceDetails;
-  FinanceBillDetails? _financeBillDetails;
+  late FinanceCashMonthlyDetails _financeCashMonthlyDetails;
+  late FinanceInvoiceDetails _financeInvoiceDetails;
+  late FinanceBillDetails _financeBillDetails;
 
   FinanceDashBoardData.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
@@ -41,11 +41,11 @@ class FinanceDashBoardData extends JSONInitializable {
     }
   }
 
-  FinanceBillDetails? get financeBillDetails => _financeBillDetails;
+  FinanceBillDetails get financeBillDetails => _financeBillDetails;
 
-  FinanceInvoiceDetails? get financeInvoiceDetails => _financeInvoiceDetails;
+  FinanceInvoiceDetails get financeInvoiceDetails => _financeInvoiceDetails;
 
-  FinanceCashMonthlyDetails? get financeCashMonthlyDetails => _financeCashMonthlyDetails;
+  FinanceCashMonthlyDetails get financeCashMonthlyDetails => _financeCashMonthlyDetails;
 
   String get cashOut => _cashOut;
 

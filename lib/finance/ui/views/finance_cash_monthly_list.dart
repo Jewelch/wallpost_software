@@ -9,16 +9,8 @@ class FinanceCashMonthlyList extends StatelessWidget {
 
   FinanceCashMonthlyList(this._presenter);
 
-  late final List<String> monthList;
-  late final List<String> cashInList;
-  late final List<String> cashOutList;
-
   @override
   Widget build(BuildContext context) {
-    monthList = _presenter.getMonthList()!;
-    cashInList = _presenter.getCashInList()!;
-    cashOutList = _presenter.getCashOutList()!;
-
     return dataView();
   }
 
@@ -34,11 +26,11 @@ class FinanceCashMonthlyList extends StatelessWidget {
             children: [
               Expanded(
                   child: Text(
-                monthList[index],
+                _presenter.getMonthList()[index],
                 style: TextStyles.subTitleTextStyle,
               )),
-              Expanded(child: _subTile('assets/icons/cash_in_icon.svg', cashInList[index], cashInList[index])),
-              Expanded(child: _subTile('assets/icons/cash_out_icon.svg', cashOutList[index], cashOutList[index])),
+              Expanded(child: _subTile('assets/icons/cash_in_icon.svg', _presenter.getCashInList()[index])),
+              Expanded(child: _subTile('assets/icons/cash_out_icon.svg', _presenter.getCashOutList()[index])),
             ],
           ),
         );
@@ -46,7 +38,7 @@ class FinanceCashMonthlyList extends StatelessWidget {
     );
   }
 
-  Widget _subTile(String icon, String label, String value) {
+  Widget _subTile(String icon, String value) {
     return Row(
       children: [
         Container(height: 28, width: 28, child: SvgPicture.asset(icon)),
