@@ -182,6 +182,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   Widget _textButton({required String title, required String icon, required VoidCallback onPressed}) {
     return Material(
+      color: Colors.transparent,
       child: InkWell(
         onTap: onPressed,
         child: Row(
@@ -189,8 +190,8 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
             if (title == "Next")
               Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor)),
             Container(
-              height: 12,
-              width: 12,
+              height: 10,
+              width: 10,
               child: SvgPicture.asset(icon, color: AppColors.defaultColor),
             ),
             if (title == "Previous")

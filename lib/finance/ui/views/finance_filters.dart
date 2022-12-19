@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
@@ -8,7 +9,7 @@ import '../../../_common_widgets/filter_views/custom_filter_chip.dart';
 import '../../../_shared/constants/app_years.dart';
 
 class FinanceFilters extends StatefulWidget {
-  final _years = AppYears().years();
+  final _years = AppYears().years().reversed.toList();
 
   final FinanceDashboardPresenter presenter;
   final ModalSheetController modalSheetController;
@@ -17,8 +18,8 @@ class FinanceFilters extends StatefulWidget {
 
   FinanceFilters(
       {required initialMonth, required initialYear, required this.modalSheetController, required this.presenter}) {
-    this._initialMonth = _isMonthValidForYear(initialMonth, initialYear) ? initialMonth - 1 : -1;
-    this._initialYear = _years.contains(initialYear) ? _years.indexOf(initialYear) : 0;
+    this._initialMonth = _isMonthValidForYear(initialMonth-1, initialYear) ? initialMonth - 1 : -1;
+    this._initialYear = _years.contains(initialYear) ? _years.indexOf(initialYear) : _years.last;
   }
 
   static Future<dynamic> show(BuildContext context,
@@ -134,7 +135,9 @@ class _FinanceFiltersState extends State<FinanceFilters> {
               ),
             ),
             Container(child: getMonthList(context)),
-            SizedBox(height: 45),
+            SizedBox(height: 16,),
+            _moreMonthButton(),
+            SizedBox(height: 40),
             _applyChangesButton()
           ],
         ),
@@ -144,8 +147,9 @@ class _FinanceFiltersState extends State<FinanceFilters> {
 
   Widget getYearList(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 150,
       child: new GridView.count(
+        padding: EdgeInsets.only(top: 12),
         childAspectRatio: (1 / .4),
         crossAxisCount: 3,
         children: new List<Widget>.generate(8, (index) {
@@ -175,8 +179,9 @@ class _FinanceFiltersState extends State<FinanceFilters> {
 
   Widget getMonthList(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: showMoreMonth?170:100,
       child: new GridView.count(
+        padding: EdgeInsets.only(top: 12),
         childAspectRatio: (1 / .4),
         crossAxisCount: 3,
         children: new List<Widget>.generate(12, (index) {
@@ -208,7 +213,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
     return GestureDetector(
       onTap: () => {
         widget.modalSheetController.close(),
-        widget.presenter.setFilter(month: _selectedMonth + 1, year: AppYears().years()[_selectedYear])
+        widget.presenter.setFilter(month: _selectedMonth + 1, year: AppYears().years().reversed.toList()[_selectedYear])
       },
       child: Container(
         margin: EdgeInsets.only(left: 16, right: 16),
@@ -237,4 +242,32 @@ class _FinanceFiltersState extends State<FinanceFilters> {
     var years = AppYears().currentAndPastShortenedMonthsOfYear(widget._years.last);
     return years;
   }
+
+  bool showMoreMonth=false;
+  _moreMonthButton() {
+    return GestureDetector(
+      onTap: () {
+          if (showMoreMonth) {
+            showMoreMonth = false;
+          } else
+            showMoreMonth = true;
+          setState(() {
+
+        });
+      },
+        child: Container(child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              showMoreMonth ? 'Less Months' : 'More Month',
+              style: TextStyle(color: AppColors.defaultColor),),
+            SizedBox(width: 4,),
+            Container(
+              height: 8,width: 8,
+                child: Center(child: SvgPicture.asset('assets/icons/arrow_down_icon.svg', color: AppColors.defaultColor)),
+                )
+          ],
+        ),));
+  }
+
 }

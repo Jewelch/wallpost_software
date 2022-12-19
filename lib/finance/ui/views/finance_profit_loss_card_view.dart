@@ -4,6 +4,7 @@ import 'package:wallpost/finance/ui/models/finance_dashboard_value.dart';
 
 import '../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../_shared/constants/app_colors.dart';
+import '../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../presenters/finance_dashboard_presenter.dart';
 
 class FinanceProfitLossCardView extends StatelessWidget {
@@ -60,18 +61,33 @@ class FinanceProfitLossCardView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          financeDashBoardValue.value,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: financeDashBoardValue.valueColor)
-        ),
+        addSubScriptWithText(financeDashBoardValue),
         SizedBox(height: 2),
         Text(
           financeDashBoardValue.label,
           style: TextStyles.labelTextStyle.copyWith(color: AppColors.textColorBlack),
         )
       ],
+    );
+  }
+  Widget addSubScriptWithText(FinanceDashBoardValue financeDashBoardValue){
+    return RichText(
+      text: TextSpan(children: [
+        TextSpan(
+            text:  financeDashBoardValue.value,
+            style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: financeDashBoardValue.valueColor)),
+        WidgetSpan(
+          child: Transform.translate(
+            offset: const Offset(4, -10),
+            child: Text(
+              SelectedCompanyProvider().getSelectedCompanyForCurrentUser().currency,
+              //superscript is usually smaller in size
+              textScaleFactor: 0.7,
+              style: TextStyle(color: financeDashBoardValue.valueColor,fontWeight: FontWeight.bold),
+            ),
+          ),
+        )
+      ]),
     );
   }
 
