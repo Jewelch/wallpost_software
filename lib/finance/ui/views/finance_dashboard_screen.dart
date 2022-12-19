@@ -118,7 +118,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   Widget _bottomCard() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16,top: 8),
       child: PerformanceViewHolder(
         content: Column(
           children: [
