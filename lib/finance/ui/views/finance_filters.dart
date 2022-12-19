@@ -19,7 +19,7 @@ class FinanceFilters extends StatefulWidget {
   FinanceFilters(
       {required initialMonth, required initialYear, required this.modalSheetController, required this.presenter}) {
     this._initialMonth = _isMonthValidForYear(initialMonth-1, initialYear) ? initialMonth - 1 : -1;
-    this._initialYear = _years.contains(initialYear) ? _years.indexOf(initialYear) : _years.last;
+    this._initialYear = _years.contains(initialYear) ? _years.indexOf(initialYear) : 0;
   }
 
   static Future<dynamic> show(BuildContext context,
