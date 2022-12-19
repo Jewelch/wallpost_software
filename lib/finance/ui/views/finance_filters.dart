@@ -19,7 +19,7 @@ class FinanceFilters extends StatefulWidget {
   FinanceFilters(
       {required initialMonth, required initialYear, required this.modalSheetController, required this.presenter}) {
     this._initialMonth = _isMonthValidForYear(initialMonth-1, initialYear) ? initialMonth - 1 : -1;
-    this._initialYear = _years.contains(initialYear) ? _years.indexOf(initialYear) : 0;
+    this._initialYear = _years.contains(initialYear) ? initialYear : _years.last;
   }
 
   static Future<dynamic> show(BuildContext context,
@@ -136,6 +136,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
             ),
             Container(child: getMonthList(context)),
             SizedBox(height: 16,),
+            if(_getMonthNamesForSelectedYear().length>5)
             _moreMonthButton(),
             SizedBox(height: 40),
             _applyChangesButton()
@@ -164,17 +165,17 @@ class _FinanceFiltersState extends State<FinanceFilters> {
 
   Widget getSingleYearItem(int index) {
     return CustomFilterChip(
-        backgroundColor: (index == _selectedYear) ? AppColors.defaultColor : Colors.transparent,
+        backgroundColor: (widget._years[index] == _selectedYear) ? AppColors.defaultColor : Colors.transparent,
         borderColor: Colors.transparent,
         title: Text(
           widget._years[index].toString(),
           style: TextStyle(
-            color: (index == _selectedYear) ? Colors.white : AppColors.textColorGray,
+            color: (widget._years[index] == _selectedYear) ? Colors.white : AppColors.textColorGray,
             fontSize: 17,
             fontWeight: FontWeight.w500,
           ),
         ),
-        onPressed: () => {_selectedYear = index, setState(() {})});
+        onPressed: () => {_selectedYear = widget._years[index], setState(() {})});
   }
 
   Widget getMonthList(BuildContext context) {
@@ -213,7 +214,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
     return GestureDetector(
       onTap: () => {
         widget.modalSheetController.close(),
-        widget.presenter.setFilter(month: _selectedMonth + 1, year: AppYears().years().reversed.toList()[_selectedYear])
+        widget.presenter.setFilter(month: _selectedMonth + 1, year:_selectedYear)
       },
       child: Container(
         margin: EdgeInsets.only(left: 16, right: 16),
@@ -239,7 +240,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
   }
 
   List<String> _getMonthNamesForSelectedYear() {
-    var years = AppYears().currentAndPastShortenedMonthsOfYear(widget._years.last);
+    var years = AppYears().currentAndPastShortenedMonthsOfYear(_selectedYear);
     return years;
   }
 
