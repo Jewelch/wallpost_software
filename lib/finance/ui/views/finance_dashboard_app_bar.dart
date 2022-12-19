@@ -3,12 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
+import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 
-class RestaurantDashboardAppBar extends StatelessWidget {
-  final RestaurantDashboardPresenter presenter;
+class FinanceDashboardAppBar extends StatelessWidget {
+  final FinanceDashboardPresenter presenter;
 
-  RestaurantDashboardAppBar(this.presenter);
+  FinanceDashboardAppBar(this.presenter);
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,7 @@ class RestaurantDashboardAppBar extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(
-            height: 8,
-          ),
+          SizedBox(height: 8),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,15 +47,13 @@ class RestaurantDashboardAppBar extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Flexible(
-                            child: Container(
-                              child: Text(
-                                presenter.getSelectedCompanyName(),
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: TextStyles.largeTitleTextStyleBold.copyWith(
-                                  color: AppColors.defaultColor,
-                                ),
+                          Container(
+                            child: Text(
+                              presenter.getSelectedCompanyName(),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyles.largeTitleTextStyleBold.copyWith(
+                                color: AppColors.defaultColor,
                               ),
                             ),
                           ),
@@ -85,9 +81,7 @@ class RestaurantDashboardAppBar extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 18),
                   child: GestureDetector(
-                    onTap: () {
-                      presenter.onFiltersGotClicked();
-                    },
+                    onTap: () => presenter.initiateFilterSelection(),
                     child: SvgPicture.asset(
                       "assets/icons/filter_date_icon.svg",
                       width: 18,
@@ -95,19 +89,32 @@ class RestaurantDashboardAppBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 16),
+                SizedBox(width: 12),
                 GestureDetector(
-                  onTap: () {
-                    presenter.onFiltersGotClicked();
-                  },
+                  onTap: () => presenter.initiateFilterSelection(),
                   child: Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(color: AppColors.lightGray),
                     ),
                     child: Text(
-                      presenter.dateFilters.selectedRangeOption.toReadableString(),
+                      presenter.getSelectedMonthName(),
+                      style: TextStyles.labelTextStyle,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 12),
+                GestureDetector(
+                  onTap: () => presenter.initiateFilterSelection(),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColors.lightGray),
+                    ),
+                    child: Text(
+                      presenter.selectedYear.toString(),
                       style: TextStyles.labelTextStyle,
                     ),
                   ),

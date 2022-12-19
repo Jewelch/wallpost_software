@@ -1,7 +1,7 @@
 name: wallpost
 description: WallPost Mobile App
 
-version: 3.0.8+187
+version: 3.0.9+188
 
 environment:
   sdk: ">=2.17.0 <3.0.5"

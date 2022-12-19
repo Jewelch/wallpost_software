@@ -89,10 +89,10 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: SizedBox(height: 30),
+                  child: SizedBox(height: 20),
                 ),
                 SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: 22),
                   sliver: Notifiable(
                     notifier: salesDataNotifier,
                     builder: (context) => SliverToBoxAdapter(child: RestaurantDashboardHeaderCard(_presenter)),

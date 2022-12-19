@@ -3,6 +3,7 @@ import 'package:wallpost/_wp_core/company_management/entities/financial_summary.
 import 'package:wallpost/dashboard/finance_detail_views/ui/models/finance_detail.dart';
 
 import '../../../../_shared/constants/app_colors.dart';
+import '../../../../_wp_core/company_management/services/selected_company_provider.dart';
 
 class FinanceDetailCardPresenter {
   final FinancialSummary _summary;
@@ -13,7 +14,7 @@ class FinanceDetailCardPresenter {
 
   FinanceDetail getProfitLossDetails() {
     return FinanceDetail(
-      label: "Profit & Loss",
+      label: "Profit & Loss (${_summary.currency})",
       value: _summary.profitLoss,
       valueColor: _summary.isInProfit() ? _successColor() : _failureColor(),
     );
@@ -53,5 +54,10 @@ class FinanceDetailCardPresenter {
 
   String getCurrency() {
     return "(${_summary.currency})";
+  }
+
+  bool shouldShowDetailDisclosureIndicator() {
+    if (SelectedCompanyProvider().isCompanySelected()) return true;
+    return false;
   }
 }

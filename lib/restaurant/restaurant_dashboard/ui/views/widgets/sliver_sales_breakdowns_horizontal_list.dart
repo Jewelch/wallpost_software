@@ -42,7 +42,7 @@ class _SliverSalesBreakHorizontalListState extends State<SliverSalesBreakHorizon
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
-                  'Sales Breakdown',
+                  'Sales Breakdown By:',
                   style: TextStyles.largeTitleTextStyleBold.copyWith(),
                 ),
               ),
