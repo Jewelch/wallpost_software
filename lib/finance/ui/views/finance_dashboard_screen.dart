@@ -149,7 +149,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   _titleText({required String title}){
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 32),
-      child: Text(title, style: TextStyles.extraLargeTitleTextStyleBold),
+      child: Text(title, style: TextStyles.extraLargeTitleTextStyleBold.copyWith(fontWeight: FontWeight.w500)),
     );
   }
 
