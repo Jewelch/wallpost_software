@@ -33,6 +33,8 @@ class FinanceDashboardPresenter {
   //Function to load financial dashboard data
 
   Future<void> loadFinanceDashBoardDetails() async {
+    _selectedModuleIndex=0;
+
     if (_financeDashBoardProvider.isLoading) return;
 
     _view.showLoader();
