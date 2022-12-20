@@ -5,23 +5,11 @@ import 'package:wallpost/_shared/extensions/color_extensions.dart';
 import 'package:wallpost/_wp_core/company_management/entities/financial_summary.dart';
 import 'package:wallpost/dashboard/finance_detail_views/ui/presenters/finance_detail_card_presenter.dart';
 
-import '../../_mocks/mock_current_user_provider.dart';
-import '../../_mocks/mock_user.dart';
-import '../../_wp_core_tests/company_management_tests/service_tests/company_selector_test.dart';
+import '../../_mocks/mock_company_provider.dart';
 
 class MockFinancialSummary extends Mock implements FinancialSummary {}
 
 void main() {
-  var user = MockUser();
-  var currentUserProvider = MockCurrentUserProvider();
-  var mockCompanyRepository = MockCompanyRepository();
-  setUpAll(() {
-    registerFallbackValue(MockUser());
-  });
-  setUp(() {
-    reset(currentUserProvider);
-    reset(mockCompanyRepository);
-  });
 
   test('get currency', () async {
     var summary = MockFinancialSummary();
@@ -107,14 +95,18 @@ void main() {
     expect(details2.valueColor.isEqualTo(AppColors.redOnDarkDefaultColorBg), true);
   });
 
-  test('checking if a company is not selected', () async {
-    when(() => currentUserProvider.getCurrentUser()).thenReturn(user);
+  test('checking if a company is selected or not', () async {
+    var selectedCompanyProvider = MockCompanyProvider();
+    var presenter = FinanceDetailCardPresenter.initWith(MockFinancialSummary(), selectedCompanyProvider);
 
-    when(() => mockCompanyRepository.getSelectedCompanyForUser(any())).thenReturn(null);
-
-    var presenter = FinanceDetailCardPresenter(MockFinancialSummary());
+    when(() => selectedCompanyProvider.isCompanySelected()).thenReturn(false);
 
     expect(presenter.shouldShowDetailDisclosureIndicator(), false);
+
+    when(() => selectedCompanyProvider.isCompanySelected()).thenReturn(true);
+
+    expect(presenter.shouldShowDetailDisclosureIndicator(), true);
   });
+
 
 }

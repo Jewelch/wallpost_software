@@ -7,8 +7,11 @@ import '../../../../_wp_core/company_management/services/selected_company_provid
 
 class FinanceDetailCardPresenter {
   final FinancialSummary _summary;
+  final SelectedCompanyProvider _selectedCompanyProvider;
 
-  FinanceDetailCardPresenter(this._summary);
+  FinanceDetailCardPresenter(this._summary): _selectedCompanyProvider = SelectedCompanyProvider();
+
+  FinanceDetailCardPresenter.initWith(this._summary, this._selectedCompanyProvider);
 
   //MARK: Functions to get financial details
 
@@ -57,7 +60,7 @@ class FinanceDetailCardPresenter {
   }
 
   bool shouldShowDetailDisclosureIndicator() {
-    if (SelectedCompanyProvider().isCompanySelected()) return true;
+    if (_selectedCompanyProvider.isCompanySelected()) return true;
     return false;
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/constants/app_years.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/finance/entities/finance_bill_details.dart';
@@ -11,6 +10,7 @@ import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
 import 'package:wallpost/finance/ui/models/finance_dashboard_value.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
 
+import '../../../_wp_core/company_management/entities/company.dart';
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/models/owner_dashboard_filters.dart';
 
 class FinanceDashboardPresenter {
@@ -90,12 +90,6 @@ class FinanceDashboardPresenter {
     _selectedModuleIndex = index;
   }
 
-  String getSelectedMonthName() {
-    var months = AppYears().currentAndPastShortenedMonthsOfYear(selectedYear);
-    if (selectedMonth > 0) return months[selectedMonth - 1];
-    return "YTD";
-  }
-
   int get selectedMonth => _filters.month;
 
   int get selectedYear => _filters.year;
@@ -104,7 +98,7 @@ class FinanceDashboardPresenter {
 
   //MARK: Getters
 
-  String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
+  Company getSelectedCompany() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
 
   FinanceDashBoardValue getProfitAndLoss() {
     return FinanceDashBoardValue(

@@ -5,6 +5,8 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 
+import '../../../_shared/constants/app_years.dart';
+
 class FinanceDashboardAppBar extends StatelessWidget {
   final FinanceDashboardPresenter presenter;
 
@@ -49,7 +51,7 @@ class FinanceDashboardAppBar extends StatelessWidget {
                         children: [
                           Container(
                             child: Text(
-                              presenter.getSelectedCompanyName(),
+                              presenter.getSelectedCompany().name,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style: TextStyles.largeTitleTextStyleBold.copyWith(
@@ -99,7 +101,7 @@ class FinanceDashboardAppBar extends StatelessWidget {
                       border: Border.all(color: AppColors.lightGray),
                     ),
                     child: Text(
-                      presenter.getSelectedMonthName(),
+                      _getMonthNamesForSelectedYear()[presenter.selectedMonth],
                       style: TextStyles.labelTextStyle,
                     ),
                   ),
@@ -125,5 +127,13 @@ class FinanceDashboardAppBar extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  //MARK: Functions to get months
+
+  List<String> _getMonthNamesForSelectedYear() {
+    var years = AppYears().currentAndPastShortenedMonthsOfYear(presenter.selectedYear);
+    years.insert(0, "YTD");
+    return years;
   }
 }
