@@ -40,6 +40,7 @@ class _FinanceHorizontalTabState extends State<FinanceHorizontalTab> {
               title: Text(
                 getTabTitle(index),
                 style: TextStyle(
+                  fontSize: 16,
                   color: (index == _selectedIndex) ? Colors.white : AppColors.defaultColor,
                 ),
               ),
