@@ -75,14 +75,14 @@ class FinanceProfitLossCardView extends StatelessWidget {
       text: TextSpan(children: [
         TextSpan(
             text:  financeDashBoardValue.value,
-            style: TextStyles.extraLargeTitleTextStyleBold.copyWith(color: financeDashBoardValue.valueColor)),
+            style: TextStyles.headerCardNumberTextStyle.copyWith(color: financeDashBoardValue.valueColor)),
         WidgetSpan(
           child: Transform.translate(
-            offset: const Offset(4, -10),
+            offset: const Offset(4, -14),
             child: Text(
               SelectedCompanyProvider().getSelectedCompanyForCurrentUser().currency,
               //superscript is usually smaller in size
-              textScaleFactor: 0.7,
+              textScaleFactor: 0.8,
               style: TextStyle(color: financeDashBoardValue.valueColor,fontWeight: FontWeight.bold),
             ),
           ),
