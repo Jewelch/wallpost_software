@@ -32,7 +32,7 @@ class FinanceCashMonthlyListCardView extends StatelessWidget {
 
                 style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.textColorGray),
               ),
-              SizedBox(width: 50,),
+              SizedBox(width: 60,),
 
               Expanded(child: _subTile('assets/icons/cash_in_icon.svg', _presenter.getCashInList()[index])),
               Expanded(child: _subTile('assets/icons/cash_out_icon.svg', _presenter.getCashOutList()[index])),
