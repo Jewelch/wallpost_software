@@ -14,22 +14,20 @@ class FinanceCashCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return (Column(children: [
-      SizedBox(height: 8),
-      _bankAndCashTile(presenter.getCashInBank()),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.only(left: 35, right: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return (Column(
+      children: [
+        SizedBox(height: 8),
+        _bankAndCashTile(presenter.getCashInBank()),
+        SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Expanded(child: _cashInAndCashOutTile('assets/icons/cash_in_icon.svg', 'Cash In', presenter.getCashIn())),
-            Expanded(
-                child: _cashInAndCashOutTile('assets/icons/cash_out_icon.svg', 'Cash Out', presenter.getCashOut())),
+            _cashInAndCashOutTile('assets/icons/cash_in_icon.svg', 'Cash In', presenter.getCashIn()),
+            _cashInAndCashOutTile('assets/icons/cash_out_icon.svg', 'Cash Out', presenter.getCashOut()),
           ],
-        ),
-      )
-    ]));
+        )
+      ],
+    ));
   }
 
   Widget _bankAndCashTile(FinanceDashBoardValue financeDashBoardValue) {

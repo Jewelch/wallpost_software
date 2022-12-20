@@ -100,7 +100,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
                   children: [
                     _bottomCard(),
                     if (presenter.selectedModuleIndex == CASH_VIEW_INDEX)
-                      Positioned(top: 236, left: 0, right: 0, child: _monthlyCashInOutListCard()),
+                      Positioned(top: 238, left: 0, right: 0, child: _monthlyCashInOutListCard()),
                     if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX)
                       Positioned(top: 112, left: 0, right: 0, child: _invoiceCard()),
                     if (presenter.selectedModuleIndex == BILL_VIEW_INDEX)
@@ -117,7 +117,8 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   //MARK: Functions to build the bottom card view
 
   Widget _bottomCard() {
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16,top: 8),
       child: PerformanceViewHolder(
         content: Column(
@@ -167,7 +168,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
                 presenter.onPreviousTextClick();
                 setState(() {});
               }),
-          Text('3 Months', style: TextStyles.subTitleTextStyle),
+          Text('3 Months', style: TextStyles.subTitleTextStyle.copyWith(fontSize:15.0)),
           _textButton(
               title: "Next",
               icon: 'assets/icons/arrow_right_icon.svg',
@@ -188,14 +189,14 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
         child: Row(
           children: [
             if (title == "Next")
-              Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor)),
+              Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor,fontSize:15.0)),
             Container(
               height: 10,
               width: 10,
               child: SvgPicture.asset(icon, color: AppColors.defaultColor),
             ),
             if (title == "Previous")
-              Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor))
+              Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor,fontSize:15.0))
           ],
         ),
       ),
