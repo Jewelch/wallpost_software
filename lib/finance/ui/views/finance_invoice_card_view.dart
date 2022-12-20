@@ -71,7 +71,7 @@ class FinanceInvoiceCardView extends StatelessWidget {
           amount,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyles.largeTitleTextStyleBold.copyWith(color: textColor),
+          style: TextStyles.largeTitleTextStyleBold.copyWith(color: textColor,fontWeight: FontWeight.w500),
         ),
         SizedBox(height: 2),
         Text(

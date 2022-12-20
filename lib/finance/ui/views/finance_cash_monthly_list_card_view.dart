@@ -50,7 +50,7 @@ class FinanceCashMonthlyListCardView extends StatelessWidget {
           value,
           maxLines: 1,
           overflow: TextOverflow.visible,
-          style: TextStyles.largeTitleTextStyleBold,
+          style: TextStyles.largeTitleTextStyleBold.copyWith(fontWeight: FontWeight.w500),
         ),
       ],
     );

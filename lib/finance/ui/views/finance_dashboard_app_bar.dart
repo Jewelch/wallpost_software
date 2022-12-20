@@ -55,7 +55,7 @@ class FinanceDashboardAppBar extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style: TextStyles.largeTitleTextStyleBold.copyWith(
-                                color: AppColors.defaultColor,
+                                color: AppColors.defaultColor,fontWeight: FontWeight.w500
                               ),
                             ),
                           ),
@@ -102,7 +102,7 @@ class FinanceDashboardAppBar extends StatelessWidget {
                     ),
                     child: Text(
                       _getMonthNamesForSelectedYear()[presenter.selectedMonth],
-                      style: TextStyles.labelTextStyle,
+                      style: TextStyles.labelTextStyle.copyWith(fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
@@ -117,7 +117,7 @@ class FinanceDashboardAppBar extends StatelessWidget {
                     ),
                     child: Text(
                       presenter.selectedYear.toString(),
-                      style: TextStyles.labelTextStyle,
+                      style: TextStyles.labelTextStyle.copyWith(fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),

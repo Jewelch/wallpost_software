@@ -75,7 +75,7 @@ class FinanceProfitLossCardView extends StatelessWidget {
       text: TextSpan(children: [
         TextSpan(
             text:  financeDashBoardValue.value,
-            style: TextStyles.headerCardNumberTextStyle.copyWith(color: financeDashBoardValue.valueColor)),
+            style: TextStyles.headerCardNumberTextStyle.copyWith(color: financeDashBoardValue.valueColor,fontWeight: FontWeight.w500)),
         WidgetSpan(
           child: Transform.translate(
             offset: const Offset(4, -14),
@@ -83,7 +83,7 @@ class FinanceProfitLossCardView extends StatelessWidget {
               SelectedCompanyProvider().getSelectedCompanyForCurrentUser().currency,
               //superscript is usually smaller in size
               textScaleFactor: 0.8,
-              style: TextStyle(color: financeDashBoardValue.valueColor,fontWeight: FontWeight.bold),
+              style: TextStyle(color: financeDashBoardValue.valueColor,fontWeight: FontWeight.w500),
             ),
           ),
         )
@@ -99,7 +99,7 @@ class FinanceProfitLossCardView extends StatelessWidget {
           financeDashBoardValue.value,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyles.largeTitleTextStyleBold.copyWith(color: financeDashBoardValue.valueColor),
+          style: TextStyles.largeTitleTextStyleBold.copyWith(color: financeDashBoardValue.valueColor,fontWeight: FontWeight.w500),
         ),
         SizedBox(height: 2),
         Text(
