@@ -26,12 +26,14 @@ class FinanceCashMonthlyListCardView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                  child: Text(
+              SizedBox(width: 16,),
+              Text(
                 _presenter.getMonthList()[index].capitalize(),
 
                 style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.textColorGray),
-              )),
+              ),
+              SizedBox(width: 50,),
+
               Expanded(child: _subTile('assets/icons/cash_in_icon.svg', _presenter.getCashInList()[index])),
               Expanded(child: _subTile('assets/icons/cash_out_icon.svg', _presenter.getCashOutList()[index])),
             ],
