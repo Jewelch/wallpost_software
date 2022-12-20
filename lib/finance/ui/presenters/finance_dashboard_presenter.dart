@@ -10,6 +10,7 @@ import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
 import 'package:wallpost/finance/ui/models/finance_dashboard_value.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
 
+import '../../../_shared/constants/app_years.dart';
 import '../../../_wp_core/company_management/entities/company.dart';
 import '../../../dashboard/company_dashboard_owner_my_portal/ui/models/owner_dashboard_filters.dart';
 
@@ -168,5 +169,15 @@ class FinanceDashboardPresenter {
 
   Color _failureBoxColor() {
     return AppColors.lightRed;
+  }
+
+  List<String> getMonthNamesForSelectedYear(int _selectedYear) {
+    var years = AppYears().currentAndPastShortenedMonthsOfYear(_selectedYear);
+    return years;
+  }
+  int getMonthCountForTheSelectedYear(int _selectedYear){
+    var monthCount = AppYears().currentAndPastShortenedMonthsOfYear(_selectedYear).length;
+    return monthCount;
+
   }
 }

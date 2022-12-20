@@ -481,4 +481,9 @@ void main() {
 
     _verifyNoMoreInteractionsOnAllMocks();
   });
+
+  test("Test current and past moth count ", () {
+   var count= presenter.getMonthCountForTheSelectedYear(2022);
+    expect(count, 12);
+  });
 }

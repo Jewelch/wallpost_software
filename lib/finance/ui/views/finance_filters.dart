@@ -136,7 +136,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
             ),
             Container(child: getMonthList(context)),
             SizedBox(height: 16,),
-            if(_getMonthNamesForSelectedYear().length>5)
+            if(widget.presenter.getMonthCountForTheSelectedYear(_selectedYear)>5)
             _moreMonthButton(),
             SizedBox(height: 40),
             _applyChangesButton()
@@ -153,7 +153,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
         padding: EdgeInsets.only(top: 12),
         childAspectRatio: (1 / .4),
         crossAxisCount: 3,
-        children: new List<Widget>.generate(8, (index) {
+        children: new List<Widget>.generate(widget._years.length, (index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: getSingleYearItem(index),
@@ -185,7 +185,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
         padding: EdgeInsets.only(top: 12),
         childAspectRatio: (1 / .4),
         crossAxisCount: 3,
-        children: new List<Widget>.generate(12, (index) {
+        children: new List<Widget>.generate(widget.presenter.getMonthCountForTheSelectedYear(_selectedYear), (index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: getSingleMonthItem(index),
@@ -200,7 +200,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
         backgroundColor: (index == _selectedMonth) ? AppColors.defaultColor : Colors.transparent,
         borderColor: Colors.transparent,
         title: Text(
-          _getMonthNamesForSelectedYear()[index],
+          widget.presenter.getMonthNamesForSelectedYear(_selectedYear)[index],
           style: TextStyle(
             color: (index == _selectedMonth) ? Colors.white : AppColors.textColorGray,
             fontSize: 17,
@@ -239,10 +239,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
     );
   }
 
-  List<String> _getMonthNamesForSelectedYear() {
-    var years = AppYears().currentAndPastShortenedMonthsOfYear(_selectedYear);
-    return years;
-  }
+
 
   bool showMoreMonth=false;
   _moreMonthButton() {
