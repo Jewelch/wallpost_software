@@ -8,11 +8,11 @@ import 'package:wallpost/finance/entities/finance_dashboard_data.dart';
 import 'package:wallpost/finance/entities/finance_invoice_details.dart';
 import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
 import 'package:wallpost/finance/ui/models/finance_dashboard_value.dart';
+import 'package:wallpost/finance/ui/models/finance_initail_filter_data.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
 
 import '../../../_shared/constants/app_years.dart';
 import '../../../_wp_core/company_management/entities/company.dart';
-import '../../../dashboard/company_dashboard_owner_my_portal/ui/models/owner_dashboard_filters.dart';
 
 class FinanceDashboardPresenter {
   SelectedCompanyProvider _selectedCompanyProvider;
@@ -21,7 +21,7 @@ class FinanceDashboardPresenter {
   int selectedMonthIndex = 0;
   final FinanceDashBoardView _view;
   final FinanceDashBoardProvider _financeDashBoardProvider;
-  var _filters = OwnerDashboardFilters();
+  var _filters = FinanceInitialFilterData();
 
   late FinanceDashBoardData _financeDashBoardData;
 
