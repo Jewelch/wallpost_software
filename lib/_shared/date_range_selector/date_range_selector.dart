@@ -4,6 +4,8 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 
+import '../../restaurant/restaurant_dashboard/ui/views/widgets/date_custom_range_selector.dart';
+
 class DateRangeSelector extends StatefulWidget {
   final CenterSheetController centerSheetController;
 
@@ -133,6 +135,22 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
                 )
                 .toList(),
             SizedBox(height: 80),
+
+            TextButton(
+              onPressed:() async {
+                await DateCustomRangeSelector.show(
+                  context,
+
+                );
+              },
+              child: Text(
+                "Custom Range",
+                style: TextStyles.screenTitleTextStyle.copyWith(
+                  color: AppColors.defaultColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ],
         ),
       ),

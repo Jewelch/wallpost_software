@@ -48,6 +48,7 @@ dependencies:
   sliver_tools: ^0.2.8
   equatable: ^2.0.5
   blur: ^3.1.0
+  syncfusion_flutter_datepicker: ^20.4.38
 
 dev_dependencies:
   flutter_test:
