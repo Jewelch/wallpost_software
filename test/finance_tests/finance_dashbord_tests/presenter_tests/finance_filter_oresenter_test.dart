@@ -1,63 +1,107 @@
-
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/finance/entities/finance_bill_details.dart';
-import 'package:wallpost/finance/entities/finance_dashboard_data.dart';
-import 'package:wallpost/finance/entities/finance_invoice_details.dart';
-import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/finance/ui/presenters/finance_filter_presenter.dart';
-import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
-
-class MockFinanceDashBoardProvider extends Mock implements FinanceDashBoardProvider {}
-
-class MockFinanceDashBoardData extends Mock implements FinanceDashBoardData {}
-
-class MockFinanceInvoiceDetails extends Mock implements FinanceInvoiceDetails{}
-
-class MockFinanceBillDetails extends Mock implements FinanceBillDetails{}
-
 
 void main() {
-  late MockFinanceDashBoardProvider provider;
   late FinanceFiltersPresenter presenter;
 
-  // void _verifyNoMoreInteractionsOnAllMocks() {
-  //   verifyNoMoreInteractions();
-  //   verifyNoMoreInteractions(provider);
-  // }
-  //
-  // void _clearInteractionsOnAllMocks() {
-  //   clearInteractions(view);
-  //   clearInteractions(provider);
-  //   clearInteractions(companyProvider);
-  // }
-
   setUp(() {
-    // view = MockFinanceDashBoardView();
-    // provider = MockFinanceDashBoardProvider();
-    // companyProvider = MockCompanyProvider();
-    // presenter = FinanceFiltersPresenter.initWith(
-    //
-    // );
-    //_clearInteractionsOnAllMocks();
+    presenter = FinanceFiltersPresenter(initialMonth: 0, initialYear: 2022);
   });
 
-  // test('failure to load the finance dashboard details', () async {
-  //   //given
-  //   when(() => provider.isLoading).thenReturn(false);
-  //   when(() => provider.get(month: any(named: "month"), year: any(named: "year")))
-  //       .thenAnswer((_) => Future.error(InvalidResponseException()));
-  //
-  //   //when
-  //   await presenter.loadFinanceDashBoardDetails();
-  //
-  //   //then
-  //   verifyInOrder([
-  //         () => provider.isLoading,
-  //         () => view.showLoader(),
-  //         () => provider.get(month: any(named: "month"), year: any(named: "year")),
-  //         () => view.showErrorAndRetryView("Failed to load finance details.\nTap here to reload."),
-  //   ]);
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
+  test('initialize month and year when selected  ytd ', () async {
+    int ytdIndex = -1;
+    presenter = FinanceFiltersPresenter(initialMonth: 0, initialYear: 2022);
+    expect(presenter.selectedYear, 2022);
+    expect(presenter.selectedMonth, ytdIndex);
+  });
+
+  test('initialize month and year ', () async {
+    int monthIndex = 2;
+    presenter = FinanceFiltersPresenter(initialMonth: 3, initialYear: 2022);
+    expect(presenter.selectedYear, 2022);
+    expect(presenter.selectedMonth, monthIndex);
+  });
+
+  test('set selected filter year', () async {
+    presenter.setFilterYear(2021);
+
+    expect(presenter.selectedYear, 2021);
+  });
+
+  test('set selected filter month', () async {
+    presenter.setFilterMonth(2);
+
+    expect(presenter.selectedMonth, 2);
+  });
+
+  test('show background color to app color when selected data ', () async {
+    int index = presenter.years.indexOf(2022);
+    presenter.setFilterYear(2022);
+    expect(presenter.getYearItemBackgroundColor(index), AppColors.defaultColor);
+  });
+
+  test('show background color to default when unselect data ', () async {
+    int index = presenter.years.indexOf(2022);
+    presenter.setFilterYear(2021);
+    expect(presenter.getYearItemBackgroundColor(index), Colors.transparent);
+  });
+
+  test('show text color to white when selected item', () async {
+    int index = presenter.years.indexOf(2022);
+    presenter.setFilterYear(2022);
+    expect(presenter.getYearItemTextColor(index), Colors.white);
+  });
+
+  test('show text color to default when unselected  item', () async {
+    int index = presenter.years.indexOf(2022);
+    presenter.setFilterYear(2021);
+    expect(presenter.getYearItemTextColor(index), AppColors.textColorGray);
+  });
+
+  test('show month background color to app color when selected data ', () async {
+    presenter.setFilterYear(2022);
+    int index = presenter.getMonthNamesForSelectedYear().indexOf('Feb');
+    presenter.setFilterMonth(1);
+    expect(presenter.getMonthItemBackgroundColor(index), AppColors.defaultColor);
+  });
+
+  test('show month background color to default when unselected data ', () async {
+    presenter.setFilterYear(2022);
+    presenter.setFilterMonth(2);
+    expect(presenter.getMonthItemBackgroundColor(1), Colors.transparent);
+  });
+
+  test('show month text color to white when selected data ', () async {
+    presenter.setFilterYear(2022);
+    int index = presenter.getMonthNamesForSelectedYear().indexOf('Mar');
+    presenter.setFilterMonth(2);
+    expect(presenter.getMonthItemTextColor(index), Colors.white);
+  });
+
+  test('show month text color to default when unselected data ', () async {
+    presenter.setFilterYear(2022);
+    presenter.setFilterMonth(2);
+    expect(presenter.getMonthItemTextColor(3), AppColors.textColorGray);
+  });
+
+  test('get month names for the selected year', () async {
+    List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    presenter.setFilterYear(2022);
+    expect(presenter.getMonthNamesForSelectedYear(), months);
+  });
+
+  test('check month count', () async {
+    presenter.setFilterYear(2022);
+    expect(presenter.getMonthCountForTheSelectedYear(), 12);
+  });
+
+  test('return true when month is valid for the year ', () async {
+    expect(presenter.isMonthValidForYear(1, 2022), true);
+  });
+
+  test('return false when month is not valid for the year', () async {
+    expect(presenter.isMonthValidForYear(13, 2022), false);
+  });
 }

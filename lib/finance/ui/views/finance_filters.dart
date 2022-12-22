@@ -6,21 +6,19 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 
 import '../../../_common_widgets/filter_views/custom_filter_chip.dart';
-import '../../../_shared/constants/app_years.dart';
 import '../presenters/finance_filter_presenter.dart';
 
 class FinanceFilters extends StatefulWidget {
-  //final _years = AppYears().years().reversed.toList();
-
   late final FinanceFiltersPresenter financeFiltersPresenter;
-
   final FinanceDashboardPresenter dashboardPresenter;
   final ModalSheetController modalSheetController;
 
-
   FinanceFilters(
-      {required initialMonth, required initialYear, required this.modalSheetController, required this.dashboardPresenter}) {
-    financeFiltersPresenter=FinanceFiltersPresenter(initialMonth: initialMonth,initialYear: initialYear) ;
+      {required initialMonth,
+      required initialYear,
+      required this.modalSheetController,
+      required this.dashboardPresenter}) {
+    financeFiltersPresenter = FinanceFiltersPresenter(initialMonth: initialMonth, initialYear: initialYear);
   }
 
   static Future<dynamic> show(BuildContext context,
@@ -47,14 +45,12 @@ class FinanceFilters extends StatefulWidget {
 }
 
 class _FinanceFiltersState extends State<FinanceFilters> {
-
-  _FinanceFiltersState();
-
+  bool showMoreMonth = false;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 25.0, right: 18, left: 18, top: 18),
+      padding: EdgeInsets.only(bottom: 24, right: 18, left: 18, top: 18),
       decoration: BoxDecoration(
           color: AppColors.screenBackgroundColor,
           borderRadius: BorderRadius.only(
@@ -91,20 +87,13 @@ class _FinanceFiltersState extends State<FinanceFilters> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () =>
-                  {
+                  onPressed: () => {
                     widget.modalSheetController.close(),
-                    widget.dashboardPresenter.setFilter(month: 0,
-                    year: widget.financeFiltersPresenter.years.first)
-
+                    widget.dashboardPresenter.setFilter(month: 0, year: widget.financeFiltersPresenter.years.first)
                   },
                   child: Text(
-                    "Reset"
-                    "",
-                    style: TextStyles.screenTitleTextStyle.copyWith(
-                      color: AppColors.red,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    "Reset",
+                    style: TextStyles.screenTitleTextStyle.copyWith(color: AppColors.red, fontWeight: FontWeight.w500),
                   ),
                 ),
               ],
@@ -112,23 +101,20 @@ class _FinanceFiltersState extends State<FinanceFilters> {
             SizedBox(height: 16),
             Text(
               "Year",
-              style: TextStyles.screenTitleTextStyle.copyWith(
-                color: AppColors.textColorBlack,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyles.screenTitleTextStyle
+                  .copyWith(color: AppColors.textColorBlack, fontWeight: FontWeight.w500),
             ),
             Container(child: getYearList(context)),
             Text(
               "Months",
-              style: TextStyles.screenTitleTextStyle.copyWith(
-                color: AppColors.textColorBlack,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyles.screenTitleTextStyle
+                  .copyWith(color: AppColors.textColorBlack, fontWeight: FontWeight.w500),
             ),
             Container(child: getMonthList(context)),
-            SizedBox(height: 16,),
-            if(widget.financeFiltersPresenter.shouldShowMoreMonthButton())
-            _moreMonthButton(),
+            SizedBox(
+              height: 16,
+            ),
+            if (widget.financeFiltersPresenter.shouldShowMoreMonthButton()) _moreMonthButton(),
             SizedBox(height: 40),
             _applyChangesButton()
           ],
@@ -167,13 +153,14 @@ class _FinanceFiltersState extends State<FinanceFilters> {
           ),
         ),
         onPressed: () => {
-          widget.financeFiltersPresenter.setFilterYear(widget.financeFiltersPresenter.years[index])
-          , setState(() {})});
+              widget.financeFiltersPresenter.setFilterYear(widget.financeFiltersPresenter.years[index]),
+              setState(() {})
+            });
   }
 
   Widget getMonthList(BuildContext context) {
     return SizedBox(
-      height: showMoreMonth?170:100,
+      height: showMoreMonth ? 170 : 100,
       child: new GridView.count(
         padding: EdgeInsets.only(top: 12),
         childAspectRatio: (1 / .4),
@@ -190,12 +177,12 @@ class _FinanceFiltersState extends State<FinanceFilters> {
 
   Widget getSingleMonthItem(int index) {
     return CustomFilterChip(
-        backgroundColor:  widget.financeFiltersPresenter.getMonthItemBackgroundColor(index),
+        backgroundColor: widget.financeFiltersPresenter.getMonthItemBackgroundColor(index),
         borderColor: Colors.transparent,
         title: Text(
           widget.financeFiltersPresenter.getMonthNamesForSelectedYear()[index],
           style: TextStyle(
-            color:widget.financeFiltersPresenter.getMonthItemTextColor(index),
+            color: widget.financeFiltersPresenter.getMonthItemTextColor(index),
             fontSize: 17,
             fontWeight: FontWeight.w500,
           ),
@@ -207,58 +194,52 @@ class _FinanceFiltersState extends State<FinanceFilters> {
     return GestureDetector(
       onTap: () => {
         widget.modalSheetController.close(),
-        widget.dashboardPresenter.setFilter(month: widget.financeFiltersPresenter.selectedMonth+1, year: widget.financeFiltersPresenter.selectedYear)
+        widget.dashboardPresenter.setFilter(
+            month: widget.financeFiltersPresenter.selectedMonth + 1, year: widget.financeFiltersPresenter.selectedYear)
       },
       child: Container(
         margin: EdgeInsets.only(left: 16, right: 16),
         height: 40,
         decoration: BoxDecoration(
-            color: AppColors.defaultColor,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15.0),
-            ),
-            ),
+          color: AppColors.defaultColor,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+        ),
         child: Center(
           child: Text(
             'Apply Changes',
             textAlign: TextAlign.left,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.white),
           ),
         ),
       ),
     );
   }
 
-
-
-  bool showMoreMonth=false;
   _moreMonthButton() {
     return GestureDetector(
-      onTap: () {
-          if (showMoreMonth) {
-            showMoreMonth = false;
-          } else
-            showMoreMonth = true;
-          setState(() {
-
-        });
-      },
-        child: Container(child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              showMoreMonth ? 'Less Months' : 'More Month',
-              style: TextStyle(color: AppColors.defaultColor),),
-            SizedBox(width: 4,),
-            Container(
-              height: 8,width: 8,
-                child: Center(child: SvgPicture.asset('assets/icons/arrow_down_icon.svg', color: AppColors.defaultColor)),
-                )
-          ],
-        ),));
+        onTap: () {
+          showMoreMonth ? showMoreMonth = false : showMoreMonth = true;
+          setState(() {});
+        },
+        child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                showMoreMonth ? 'Less Months' : 'More Months',
+                style: TextStyle(color: AppColors.defaultColor),
+              ),
+              SizedBox(width: 4),
+              Container(
+                height: 8,
+                width: 8,
+                child:
+                    Center(child: SvgPicture.asset('assets/icons/arrow_down_icon.svg', color: AppColors.defaultColor)),
+              )
+            ],
+          ),
+        ));
   }
-
 }

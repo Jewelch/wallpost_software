@@ -11,7 +11,6 @@ import 'package:wallpost/finance/ui/models/finance_dashboard_value.dart';
 import 'package:wallpost/finance/ui/models/finance_initail_filter_data.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
 
-import '../../../_shared/constants/app_years.dart';
 import '../../../_wp_core/company_management/entities/company.dart';
 
 class FinanceDashboardPresenter {
@@ -171,13 +170,5 @@ class FinanceDashboardPresenter {
     return AppColors.lightRed;
   }
 
-  List<String> getMonthNamesForSelectedYear(int _selectedYear) {
-    var years = AppYears().currentAndPastShortenedMonthsOfYear(_selectedYear);
-    return years;
-  }
-  int getMonthCountForTheSelectedYear(int _selectedYear){
-    var monthCount = AppYears().currentAndPastShortenedMonthsOfYear(_selectedYear).length;
-    return monthCount;
 
-  }
 }
