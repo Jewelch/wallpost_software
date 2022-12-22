@@ -10,7 +10,7 @@ import '../../../_shared/constants/app_years.dart';
 import '../presenters/finance_filter_presenter.dart';
 
 class FinanceFilters extends StatefulWidget {
-  final _years = AppYears().years().reversed.toList();
+  //final _years = AppYears().years().reversed.toList();
 
   late final FinanceFiltersPresenter financeFiltersPresenter;
 
@@ -95,7 +95,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
                   {
                     widget.modalSheetController.close(),
                     widget.dashboardPresenter.setFilter(month: 0,
-                    year: widget._years.first)
+                    year: widget.financeFiltersPresenter.years.first)
 
                   },
                   child: Text(
@@ -144,7 +144,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
         padding: EdgeInsets.only(top: 12),
         childAspectRatio: (1 / .4),
         crossAxisCount: 3,
-        children: new List<Widget>.generate(widget._years.length, (index) {
+        children: new List<Widget>.generate(widget.financeFiltersPresenter.years.length, (index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: getSingleYearItem(index),
@@ -159,7 +159,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
         backgroundColor: widget.financeFiltersPresenter.getYearItemBackgroundColor(index),
         borderColor: Colors.transparent,
         title: Text(
-          widget._years[index].toString(),
+          widget.financeFiltersPresenter.years[index].toString(),
           style: TextStyle(
             color: widget.financeFiltersPresenter.getYearItemTextColor(index),
             fontSize: 17,
@@ -167,7 +167,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
           ),
         ),
         onPressed: () => {
-          widget.financeFiltersPresenter.setFilterYear(widget._years[index])
+          widget.financeFiltersPresenter.setFilterYear(widget.financeFiltersPresenter.years[index])
           , setState(() {})});
   }
 
@@ -207,7 +207,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
     return GestureDetector(
       onTap: () => {
         widget.modalSheetController.close(),
-        widget.dashboardPresenter.setFilter(month: widget.financeFiltersPresenter.getSelectedMonth()+1, year: widget.financeFiltersPresenter.getSelectedYear())
+        widget.dashboardPresenter.setFilter(month: widget.financeFiltersPresenter.selectedMonth+1, year: widget.financeFiltersPresenter.selectedYear)
       },
       child: Container(
         margin: EdgeInsets.only(left: 16, right: 16),

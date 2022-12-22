@@ -22,29 +22,25 @@ class FinanceFiltersPresenter {
     this._selectedYear = _years.contains(initialYear) ? initialYear : _years.last;
 
   }
-
   setFilterYear(int year){
     this._selectedYear =year;
   }
   setFilterMonth(int month){
     this._selectedMonth =month;
   }
-  resetFilter(){
-    this._selectedYear=_years.last;
-    this._selectedMonth=-1;
-  }
-  getSelectedYear(){
-    return _selectedYear;
-  }
-  getSelectedMonth(){
-    return _selectedMonth;
-  }
-  getYears(){
-    return _years;
-  }
+  //MARK: Setters
+
+  int get selectedYear=>_selectedYear;
+
+  int get selectedMonth=>_selectedMonth;
+
+  List<int>get years =>_years;
+  //MARK: Getters
+
   bool shouldShowMoreMonthButton(){
     return getMonthNamesForSelectedYear().length>5;
   }
+  //MARK: Getters
 
   Color getYearItemBackgroundColor(int index) {
     return (_years[index] == _selectedYear)
