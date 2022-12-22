@@ -51,7 +51,7 @@ class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
           margin: const EdgeInsets.fromLTRB(50, 40, 50, 100),
           child: SfDateRangePicker(
             controller: _controller,
-            selectionMode: DateRangePickerSelectionMode.,
+            selectionMode: DateRangePickerSelectionMode.range,
             onSelectionChanged: selectionChanged,
             allowViewNavigation: false,
           ),
