@@ -33,15 +33,13 @@ class FinanceFiltersPresenter {
     this._selectedYear=_years.last;
     this._selectedMonth=-1;
   }
-  getSelectedYear(){
-    return _selectedYear;
-  }
-  getSelectedMonth(){
-    return _selectedMonth;
-  }
-  getYears(){
-    return _years;
-  }
+
+  int get selectedYear=>_selectedYear;
+
+  int get selectedMonth=>_selectedMonth;
+
+  List<int>get years =>_years;
+
   bool shouldShowMoreMonthButton(){
     return getMonthNamesForSelectedYear().length>5;
   }
