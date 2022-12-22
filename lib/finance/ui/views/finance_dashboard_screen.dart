@@ -4,14 +4,14 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/finance/ui/views/finance_cash_monthly_list_card_view.dart';
-import 'package:wallpost/finance/ui/views/finance_bill_card_view.dart';
-import 'package:wallpost/finance/ui/views/finance_cash_card_view.dart';
-import 'package:wallpost/finance/ui/views/finance_profit_loss_card_view.dart';
-import 'package:wallpost/finance/ui/views/finance_invoice_card_view.dart';
-import 'package:wallpost/finance/ui/views/finance_tab_view.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
 import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
+import 'package:wallpost/finance/ui/views/finance_bill_card_view.dart';
+import 'package:wallpost/finance/ui/views/finance_cash_card_view.dart';
+import 'package:wallpost/finance/ui/views/finance_cash_monthly_list_card_view.dart';
+import 'package:wallpost/finance/ui/views/finance_invoice_card_view.dart';
+import 'package:wallpost/finance/ui/views/finance_profit_loss_card_view.dart';
+import 'package:wallpost/finance/ui/views/finance_tab_view.dart';
 import 'package:wallpost/finance/ui/views/performance_view_holder.dart';
 
 import 'finance_dashboard_app_bar.dart';
@@ -114,21 +114,22 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
       ),
     );
   }
+
   //MARK: Functions to build the bottom card view
 
   Widget _bottomCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16,top: 8),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
       child: PerformanceViewHolder(
         content: Column(
           children: [
             FinanceHorizontalTab(presenter, () {
               setState(() {});
             }),
-            if (presenter.selectedModuleIndex ==CASH_VIEW_INDEX) _cashCardData(),
+            if (presenter.selectedModuleIndex == CASH_VIEW_INDEX) _cashCardData(),
             if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX) _titleText(title: "Invoices To Collect"),
-            if (presenter.selectedModuleIndex == BILL_VIEW_INDEX)  _titleText(title: "Bills To Pay"),
+            if (presenter.selectedModuleIndex == BILL_VIEW_INDEX) _titleText(title: "Bills To Pay"),
           ],
         ),
       ),
@@ -147,13 +148,12 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     );
   }
 
-  _titleText({required String title}){
+  _titleText({required String title}) {
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 32),
       child: Text(title, style: TextStyles.extraLargeTitleTextStyleBold.copyWith(fontWeight: FontWeight.w500)),
     );
   }
-
 
   Widget _monthlyCashInOutListHeader() {
     return Padding(
@@ -168,7 +168,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
                 presenter.onPreviousTextClick();
                 setState(() {});
               }),
-          Text('3 Months', style: TextStyles.subTitleTextStyle.copyWith(fontSize:15.0)),
+          Text('3 Months', style: TextStyles.subTitleTextStyle.copyWith(fontSize: 15.0)),
           _textButton(
               title: "Next",
               icon: 'assets/icons/arrow_right_icon.svg',
@@ -189,14 +189,14 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
         child: Row(
           children: [
             if (title == "Next")
-              Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor,fontSize:15.0)),
+              Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor, fontSize: 15.0)),
             Container(
               height: 10,
               width: 10,
               child: SvgPicture.asset(icon, color: AppColors.defaultColor),
             ),
             if (title == "Previous")
-              Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor,fontSize:15.0))
+              Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor, fontSize: 15.0))
           ],
         ),
       ),

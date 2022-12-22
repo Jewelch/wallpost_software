@@ -219,27 +219,27 @@ class _FinanceFiltersState extends State<FinanceFilters> {
 
   _moreMonthButton() {
     return GestureDetector(
-        onTap: () {
-          showMoreMonth ? showMoreMonth = false : showMoreMonth = true;
-          setState(() {});
-        },
-        child: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                showMoreMonth ? 'Less Months' : 'More Months',
-                style: TextStyle(color: AppColors.defaultColor),
-              ),
-              SizedBox(width: 4),
-              Container(
-                height: 8,
-                width: 8,
-                child:
-                    Center(child: SvgPicture.asset('assets/icons/arrow_down_icon.svg', color: AppColors.defaultColor)),
-              )
-            ],
-          ),
-        ));
+      onTap: () {
+        showMoreMonth ? showMoreMonth = false : showMoreMonth = true;
+        setState(() {});
+      },
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              showMoreMonth ? 'Less Months' : 'More Months',
+              style: TextStyle(color: AppColors.defaultColor),
+            ),
+            SizedBox(width: 4),
+            Container(
+              height: 8,
+              width: 8,
+              child: Center(child: SvgPicture.asset('assets/icons/arrow_down_icon.svg', color: AppColors.defaultColor)),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -54,9 +54,8 @@ class FinanceDashboardAppBar extends StatelessWidget {
                               presenter.getSelectedCompany().name,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
-                              style: TextStyles.largeTitleTextStyleBold.copyWith(
-                                color: AppColors.defaultColor,fontWeight: FontWeight.w500
-                              ),
+                              style: TextStyles.largeTitleTextStyleBold
+                                  .copyWith(color: AppColors.defaultColor, fontWeight: FontWeight.w500),
                             ),
                           ),
                           SizedBox(width: 8),
