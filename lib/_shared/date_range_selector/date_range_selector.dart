@@ -134,18 +134,14 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
                   ),
                 )
                 .toList(),
-            SizedBox(height: 80),
-
+            SizedBox(height: 8),
             TextButton(
-              onPressed:() async {
-                await DateCustomRangeSelector.show(
-                  context,
-
-                );
-              },
+              onPressed: () => {
+                Navigator.of(context).pop(),
+                openCustomDateRangeSelector(context)},
               child: Text(
                 "Custom Range",
-                style: TextStyles.screenTitleTextStyle.copyWith(
+                style: TextStyles.titleTextStyle.copyWith(
                   color: AppColors.defaultColor,
                   fontWeight: FontWeight.w500,
                 ),
@@ -155,6 +151,10 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
         ),
       ),
     );
+  }
+
+  Future<void> openCustomDateRangeSelector(BuildContext context) async {
+    await DateCustomRangeSelector.show(context);
   }
 
   Color _getAppropriateColor(SelectableDateRangeOptions selectableDateRangeOptions) {
