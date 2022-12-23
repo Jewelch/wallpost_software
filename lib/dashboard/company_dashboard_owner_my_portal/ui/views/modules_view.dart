@@ -47,7 +47,7 @@ class _ModulesViewState extends State<ModulesView> with TickerProviderStateMixin
             labelColor: AppColors.defaultColor,
             labelStyle: TextStyles.titleTextStyleBold,
             labelPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-            indicatorWeight: 4,
+            indicatorWeight: 2,
             indicatorSize: TabBarIndicatorSize.label,
             indicatorColor: AppColors.defaultColor,
             indicatorPadding: EdgeInsets.only(right: 10),
