@@ -10,6 +10,7 @@
 // import '../../../_mocks/mock_network_adapter.dart';
 // import '../../mocks.dart';
 //
+main() {}
 // void main() {
 //   // TODO
 //   Map<String, dynamic> successfulResponse = Mocks.salesDataRandomResponse;

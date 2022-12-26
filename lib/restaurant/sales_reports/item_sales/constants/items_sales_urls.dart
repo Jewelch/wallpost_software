@@ -8,17 +8,14 @@ class ItemSalesUrls {
     String companyId,
     DateRangeFilters dateFilters,
   ) {
-    var url = '${BaseUrls.restaurantUrlV2()}/companies/${true ? 52 : companyId}/store/0/itemsalesreport/filters';
-
-    url += "?date=2022-8-1";
+    var url = '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/itemsalesreport/filters?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
 
     if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom ||
         dateFilters.selectedRangeOption == SelectableDateRangeOptions.thisMonth) {
-      url += "?start_date=${dateFilters.startDate.yyyyMMddString()}";
+      url += "&start_date=${dateFilters.startDate.yyyyMMddString()}";
 
       url += "&end_date=${dateFilters.endDate.yyyyMMddString()}";
     }
-
     url += "&filter_type=category_item_wise";
 
     return url;

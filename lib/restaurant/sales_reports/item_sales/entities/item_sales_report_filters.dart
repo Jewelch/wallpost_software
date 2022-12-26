@@ -4,8 +4,8 @@ import 'package:wallpost/restaurant/sales_reports/item_sales/entities/sales_item
 
 class ItemSalesReportFilters {
   DateRangeFilters dateRangeFilters = DateRangeFilters();
-  SalesItemWiseOptions salesItemWiseOptions = SalesItemWiseOptions.itemsOnly;
-  ItemSalesReportSortOptions sortOptions = ItemSalesReportSortOptions.byRevenueHighToLow;
+  SalesItemWiseOptions salesItemWiseOptions = SalesItemWiseOptions.CategoriesAndItems;
+  ItemSalesReportSortOptions sortOptions = ItemSalesReportSortOptions.byRevenueLowToHigh;
 
   ItemSalesReportFilters copy() {
     var itemSalesFilters = ItemSalesReportFilters();

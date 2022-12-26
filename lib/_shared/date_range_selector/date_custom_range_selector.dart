@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-
-import '../../../../../_common_widgets/screen_presenter/center_sheet_presenter.dart';
-import '../../../../../_common_widgets/text_styles/text_styles.dart';
-import '../../../../../_shared/constants/app_colors.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/center_sheet_presenter.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 
 class DateCustomRangeSelector extends StatefulWidget {
   final CenterSheetController centerSheetController;
+  final DateRangeFilters dateFilters;
 
-  const DateCustomRangeSelector({required this.centerSheetController, Key? key}) : super(key: key);
+  const DateCustomRangeSelector({required this.centerSheetController, required this.dateFilters, Key? key})
+      : super(key: key);
 
   static Future<dynamic> show(
     BuildContext context, {
     bool allowMultiple = false,
+    required DateRangeFilters dateFilters,
   }) {
     var centerSheetController = CenterSheetController();
     return CenterSheetPresenter.present(
       context: context,
-      content: DateCustomRangeSelector(centerSheetController: centerSheetController),
+      content: DateCustomRangeSelector(
+        centerSheetController: centerSheetController,
+        dateFilters: dateFilters,
+      ),
       controller: centerSheetController,
     );
   }
@@ -28,19 +34,18 @@ class DateCustomRangeSelector extends StatefulWidget {
 }
 
 class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
-  // DateTimeRange dateRange = DateTimeRange(
-  //   start: DateTime(2021, 11, 5),
-  //   end: DateTime(2022, 12, 10),
-  // );
-  late String _startDate, _endDate;
+  late DateTime _startDate, _endDate;
+  late String startDate, endDate;
   final DateRangePickerController _controller = DateRangePickerController();
 
   @override
   void initState() {
     final DateTime today = DateTime.now();
-    _startDate = DateFormat('dd MMM').format(today).toString();
-    _endDate = DateFormat('dd MMM').format(today.add(Duration(days: 3))).toString();
-    _controller.selectedRange = PickerDateRange(today, today.add(Duration(days: 3)));
+    _endDate = today;
+    _startDate = today.subtract(Duration(days: 7));
+    startDate = DateFormat('dd MMM').format(_startDate).toString();
+    endDate = DateFormat('dd MMM').format(_endDate).toString();
+    _controller.selectedRange = PickerDateRange(_startDate, _endDate);
     super.initState();
   }
 
@@ -76,7 +81,10 @@ class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
               ),
               TextButton(
                 onPressed: () {
-                  //widget.centerSheetController.close();
+                  widget.dateFilters.setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
+                  widget.dateFilters.startDate = _startDate;
+                  widget.dateFilters.setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
+                  widget.centerSheetController.close(result: true);
                 },
                 child: Text(
                   "Apply",
@@ -93,9 +101,9 @@ class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
             padding: EdgeInsets.only(left: 24, right: 24),
             child: Row(
               children: [
-                Text('$_startDate', style: TextStyles.largeTitleTextStyleBold),
+                Text('$startDate', style: TextStyles.largeTitleTextStyleBold),
                 Text(" - ", style: TextStyles.largeTitleTextStyleBold),
-                Text('$_endDate', style: TextStyles.largeTitleTextStyleBold)
+                Text('$endDate', style: TextStyles.largeTitleTextStyleBold)
               ],
             ),
           ),
@@ -116,8 +124,10 @@ class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
-      _startDate = DateFormat('dd MMM').format(args.value.startDate).toString();
-      _endDate = DateFormat('dd MMM').format(args.value.endDate ?? args.value.startDate).toString();
+      _startDate = args.value.startDate;
+      startDate = DateFormat('dd MMM').format(_startDate).toString();
+      _endDate = args.value.endDate ?? args.value.startDate;
+      endDate = DateFormat('dd MMM').format(_endDate).toString();
     });
   }
 }
