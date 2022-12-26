@@ -1,5 +1,6 @@
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
 
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
@@ -17,7 +18,7 @@ class ReportsFloatingActionButton extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 20),
       child: GestureDetector(
         onTap: () {
-          SelectReportScreen.show(context, presenter);
+          ScreenPresenter.present(SelectReportScreen(presenter: presenter,), context,slideDirection: SlideDirection.fromBottom);
         },
         child: Stack(
           children: [

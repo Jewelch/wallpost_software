@@ -17,7 +17,7 @@ class ShareReportButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: presenter.nextWise,
+      // onTap: presenter.changeViewWise,
       child: Stack(
         children: [
           DecoratedBox(

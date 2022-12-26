@@ -3,30 +3,32 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_model.dart';
+import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_report_filters.dart';
+import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_report_sort_options.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/entities/sales_item_view_options.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/services/item_sales_provider.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/ui/presenter/item_sales_presenter.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/ui/view_contracts/item_sales_view.dart';
+import 'package:wallpost/restaurant/sales_reports/item_sales/utils/item_sales_sorter.dart';
 
-import '../../../_mocks/mock_company_provider.dart';
 import '../../mocks.dart';
+import 'helpers.dart';
 
 class MockItemSalesDataProvider extends Mock implements ItemSalesProvider {}
 
 class MockItemSalesView extends Mock implements ItemSalesView {}
+
+class MockItemSalesSorter extends Mock implements ItemSalesSorter {}
 
 void main() {
   var itemSalesDataProvider = MockItemSalesDataProvider();
   var view = MockItemSalesView();
   late ItemSalesPresenter presenter;
   var dateFilter = DateRangeFilters();
+  var itemSalesSorter = MockItemSalesSorter();
 
   void _initializePresenter() {
-    presenter = ItemSalesPresenter.initWith(
-      view,
-      MockCompanyProvider(),
-      itemSalesDataProvider,
-    );
+    presenter = ItemSalesPresenter.initWith(view, itemSalesDataProvider, itemSalesSorter);
   }
 
   _initializePresenter();
@@ -45,7 +47,7 @@ void main() {
     verifyInOrder([
       () => itemSalesDataProvider.isLoading,
       () => view.showLoader(),
-      () => itemSalesDataProvider.getItemSales(),
+      () => itemSalesDataProvider.getItemSales(any()),
       () => view.updateItemSalesData(),
       () => view.showItemSalesBreakDowns(),
     ]);
@@ -55,7 +57,7 @@ void main() {
     verifyInOrder([
       () => itemSalesDataProvider.isLoading,
       () => view.showLoader(),
-      () => itemSalesDataProvider.getItemSales(),
+      () => itemSalesDataProvider.getItemSales(any()),
       () => view.updateItemSalesData(),
       () => view.showNoItemSalesBreakdownMessage(),
     ]);
@@ -63,26 +65,27 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(SalesItemWiseOptions.CategoriesAndItems);
+    registerFallbackValue(dateFilter);
+    registerFallbackValue( ItemSalesDataModel.fromJson(Mocks.itemSalesRandomResponse));
+    registerFallbackValue( ItemSalesReportSortOptions.byNameZToA);
+
   });
 
   test('presenter returns Item Sales Data when item sales data is initialized', () async {
     //given
     var itemSalesData = ItemSalesDataModel.fromJson(Mocks.itemSalesRandomResponse);
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
 
     expect(presenter.getTotalCategories(), itemSalesData.totalCategories.toString());
-    expect(
-        presenter.getTotalOfAllItemsQuantity(), itemSalesData.totalOfAllItemsQuantities.toString());
+    expect(presenter.getTotalOfAllItemsQuantity(), itemSalesData.totalOfAllItemsQuantities.toString());
     _clearInteractionsOnAllMocks();
   });
 
-  test(
-      "presenter returns 0.0 or empty string for item sales data when item sales data is uninitialized yet",
-      () {
+  test("presenter returns 0.0 or empty string for item sales data when item sales data is uninitialized yet", () {
     _initializePresenter();
 
     // Top card
@@ -119,8 +122,7 @@ void main() {
   test('failure to load item sales data', () async {
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales())
-        .thenAnswer((_) => Future.error(InvalidResponseException()));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.error(InvalidResponseException()));
 
     //when
     await presenter.loadItemSalesData();
@@ -128,9 +130,8 @@ void main() {
     verifyInOrder([
       () => itemSalesDataProvider.isLoading,
       () => view.showLoader(),
-      () => itemSalesDataProvider.getItemSales(),
-      () => view.showErrorMessage(
-          "${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
+      () => itemSalesDataProvider.getItemSales(any()),
+      () => view.showErrorMessage("${InvalidResponseException().userReadableMessage}\n\nTap here to reload."),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -139,7 +140,7 @@ void main() {
     //given
     var itemSalesData = MockItemSalesData();
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -155,7 +156,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -172,7 +173,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -180,18 +181,16 @@ void main() {
     ///then
     _verifyInOrderAndShowData();
 
-    expect(
-        presenter.getTotalOfAllItemsQuantity(), itemSalesData.totalOfAllItemsQuantities.toString());
+    expect(presenter.getTotalOfAllItemsQuantity(), itemSalesData.totalOfAllItemsQuantities.toString());
 
     _verifyNoMoreInteractionsOnAllMocks();
   });
-  test('getTotalOfAllItemsQuantity() returns 0 when the total of all items quantity is null',
-      () async {
+  test('getTotalOfAllItemsQuantity() returns 0 when the total of all items quantity is null', () async {
     var itemSalesData = MockItemSalesData();
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -209,7 +208,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -227,7 +226,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -235,8 +234,7 @@ void main() {
     //then
     _verifyInOrderAndShowData();
 
-    expect(presenter.getCategoryCardHeader(),
-        "Categories(${itemSalesData.totalCategories.toString()})");
+    expect(presenter.getCategoryCardHeader(), "Categories(${itemSalesData.totalCategories.toString()})");
 
     _verifyNoMoreInteractionsOnAllMocks();
   });
@@ -245,7 +243,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -263,7 +261,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -280,7 +278,7 @@ void main() {
     var itemSalesData = MockItemSalesData();
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -298,7 +296,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -314,14 +312,12 @@ void main() {
 
     _verifyNoMoreInteractionsOnAllMocks();
   });
-  test(
-      'getCategoryTotalToDisplayRevenueAtIndex() returns category total to display revenue at index',
-      () async {
+  test('getCategoryTotalToDisplayRevenueAtIndex() returns category total to display revenue at index', () async {
     var itemSalesData = ItemSalesDataModel.fromJson(Mocks.itemSalesRandomResponse);
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -332,8 +328,7 @@ void main() {
     for (var i = 0; i < itemSalesData.breakdown!.length; i++) {
       final currentItem = itemSalesData.breakdown?[i];
 
-      expect(
-          presenter.getCategoryTotalToDisplayRevenueAtIndex(i), currentItem?.totalRevenueToDisplay);
+      expect(presenter.getCategoryTotalToDisplayRevenueAtIndex(i), currentItem?.totalRevenueToDisplay);
     }
 
     _verifyNoMoreInteractionsOnAllMocks();
@@ -343,7 +338,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -365,7 +360,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -389,7 +384,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -413,7 +408,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -437,7 +432,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -458,7 +453,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -483,7 +478,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -507,7 +502,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -521,8 +516,7 @@ void main() {
     for (var i = 0; i < itemsList!.length; i++) {
       final currentItem = itemsList[i];
 
-      expect(
-          presenter.getRevenueToDisplayOfSpecificItem(currentItem), currentItem.revenueToDisplay);
+      expect(presenter.getRevenueToDisplayOfSpecificItem(currentItem), currentItem.revenueToDisplay);
     }
 
     _verifyNoMoreInteractionsOnAllMocks();
@@ -533,7 +527,7 @@ void main() {
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -551,13 +545,12 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('getBreakDownRevenueForCategory() returns break down revenue for category to display',
-      () async {
+  test('getBreakDownRevenueForCategory() returns break down revenue for category to display', () async {
     var itemSalesData = ItemSalesDataModel.fromJson(Mocks.itemSalesRandomResponse);
 
     //given
     when(() => itemSalesDataProvider.isLoading).thenReturn(false);
-    when(() => itemSalesDataProvider.getItemSales()).thenAnswer((_) => Future.value(itemSalesData));
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
 
     //when
     await presenter.loadItemSalesData();
@@ -569,10 +562,104 @@ void main() {
     for (var i = 0; i < itemSalesBreakDown!.length; i++) {
       final currentItem = itemSalesBreakDown[i];
 
-      expect(
-          presenter.getBreakDownRevenueForCategory(currentItem), currentItem.totalRevenueToDisplay);
+      expect(presenter.getBreakDownRevenueForCategory(currentItem), currentItem.totalRevenueToDisplay);
     }
 
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("apply Filter do nothing when new applied filters is null", () async {
+    var newFilters;
+
+    await presenter.applyFilters(newFilters);
+
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("apply Filter do nothing when there is no different between the current filters and the new one", () async {
+    var newFilters = ItemSalesReportFilters();
+    newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
+    newFilters.sortOptions = presenter.filters.sortOptions;
+    newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
+
+    await presenter.applyFilters(newFilters);
+
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("apply Filter update the presenter filter object with the same instance in the memory", () async {
+    var newFilters = ItemSalesReportFilters();
+    newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
+    newFilters.sortOptions = presenter.filters.sortOptions;
+    newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
+
+    await presenter.applyFilters(newFilters);
+
+    expect(presenter.filters, newFilters);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test(
+      "apply Filter load the item sales from api when date filter is different than the current one and  notify ui that filters has changed",
+      () async {
+    var newFilters = ItemSalesReportFilters();
+    newFilters.dateRangeFilters = getDifferentDateRangeOption(presenter.filters.dateRangeFilters);
+    newFilters.sortOptions = presenter.filters.sortOptions;
+    newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
+
+    var itemSalesData = ItemSalesDataModel.fromJson(Mocks.itemSalesRandomResponse);
+    when(() => itemSalesDataProvider.isLoading).thenReturn(false);
+    when(() => itemSalesDataProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
+
+    await presenter.applyFilters(newFilters);
+
+    verifyInOrder([
+      () => itemSalesDataProvider.isLoading,
+      () => view.showLoader(),
+      () => itemSalesDataProvider.getItemSales(any()),
+      () => view.updateItemSalesData(),
+      () => view.showItemSalesBreakDowns(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test(
+      "apply Filter calls itemSalesSorter to sort the breakdowns with all items when new filter sort option is different than the current and update memory instance with the return one from the sorter",
+      () async {
+    var itemSalesData = ItemSalesDataModel.fromJson(Mocks.itemSalesRandomResponse);
+    var allItems = <ItemSales>[];
+    itemSalesData.breakdown?.forEach((element) => element.items?.forEach((item) => allItems.add(item)));
+    when(() => itemSalesSorter.sortBreakDowns(any(), any())).thenReturn(itemSalesData);
+    when(() => itemSalesSorter.sortAllBreakDownItems(any(), any())).thenReturn(allItems);
+
+    var newFilters = ItemSalesReportFilters();
+    newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
+    newFilters.sortOptions = getDifferentItemSaleSortFilter(presenter.filters.sortOptions);
+    newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
+
+    await presenter.applyFilters(newFilters);
+
+    verifyInOrder([
+      () => itemSalesSorter.sortBreakDowns(any(), newFilters.sortOptions),
+      () => itemSalesSorter.sortAllBreakDownItems(any(), newFilters.sortOptions),
+      () => view.onDidChangeFilters()
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+    expect(presenter.itemslist, allItems);
+    expect(presenter.itemSalesData, itemSalesData);
+  });
+
+
+  test("apply Filter notify ui that filters changed when new filter view option is different than the current",
+      () async {
+    var newFilters = ItemSalesReportFilters();
+    newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
+    newFilters.sortOptions = presenter.filters.sortOptions;
+    newFilters.salesItemWiseOptions = getDifferentItemSaleViewFilter(presenter.filters.salesItemWiseOptions);
+
+    await presenter.applyFilters(newFilters);
+
+    verify(() => view.onDidChangeFilters());
     _verifyNoMoreInteractionsOnAllMocks();
   });
 }

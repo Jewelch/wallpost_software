@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:wallpost/restaurant/sales_reports/item_sales/ui/views/widgets/restaurant_reports_filters.dart';
 
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
@@ -27,7 +28,7 @@ class ItemSalesScreen extends StatefulWidget {
 class _State extends State<ItemSalesScreen> implements ItemSalesView {
   late ItemSalesPresenter presenter = ItemSalesPresenter(this);
 
-  final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.loading);
+  final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.data);
   final salesItemDataNotifier = Notifier();
   String errorMessage = '';
 
@@ -87,9 +88,7 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
                           AppBarWidget.appbarNotifier.notify(contraints.maxHeight <= 100);
                         });
                         return Padding(
-                          padding: contraints.maxHeight > 100
-                              ? EdgeInsets.symmetric(horizontal: 24)
-                              : EdgeInsets.zero,
+                          padding: contraints.maxHeight > 100 ? EdgeInsets.symmetric(horizontal: 24) : EdgeInsets.zero,
                           child: ItemSalesHeaderCard(presenter, contraints.maxHeight),
                         );
                       }),
@@ -131,10 +130,16 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
   void showLoader() => screenStateNotifier.notify(_ScreenStates.loading);
 
   @override
-  void showSalesReportFilter() {}
+  void showSalesReportFilter() async {
+    var newFilters = await RestaurantReportsFilters.show(
+      context,
+      initialFilters: presenter.filters.copy(),
+    );
+    presenter.applyFilters(newFilters);
+  }
 
   @override
-  void onDidChangeSalesItemWise() {
+  void onDidChangeFilters() {
     setState(() {});
   }
 

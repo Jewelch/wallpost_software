@@ -8,9 +8,9 @@ class ItemSalesDataModel {
   final int? totalCategories;
   final int? totalItemsInAllCategories;
   final int? totalOfAllItemsQuantities;
-  final List<ItemSalesBreakdown>? breakdown;
+  List<ItemSalesBreakdown>? breakdown;
 
-  const ItemSalesDataModel._({
+  ItemSalesDataModel._({
     this.totalRevenue,
     this.totalCategories,
     this.totalItemsInAllCategories,
@@ -43,7 +43,7 @@ class ItemSalesBreakdown with EquatableMixin {
   final int? totalQuantity;
   final int? totalRevenue;
   final String? totalRevenueToDisplay;
-  final List<ItemSales>? items;
+  List<ItemSales>? items;
   bool isExpanded = true;
 
   ItemSalesBreakdown._({

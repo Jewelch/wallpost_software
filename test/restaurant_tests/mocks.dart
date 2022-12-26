@@ -103,6 +103,32 @@ class Mocks {
           {"itemId": 11, "itemName": "Pasta Salad", "qty": 3, "revenue": 54, "revenueToDisplay": "54"},
           {"itemId": 12, "itemName": "Creamy Vegan Pasta Salad", "qty": 2, "revenue": 56, "revenueToDisplay": "56"}
         ]
+      },
+      {
+        "categoryId": 3,
+        "categoryName": "Aalads",
+        "totalQuantity": 9,
+        "totalRevenue": 114,
+        "totalRevenueToDisplay": "114",
+        "items": [
+          {"itemId": 2, "itemName": "Aesar Salad with chicken ", "qty": 4, "revenue": 4, "revenueToDisplay": "4"},
+          {"itemId": 2, "itemName": "Cesar Salad with chicken ", "qty": 4, "revenue": 4, "revenueToDisplay": "4"},
+          {"itemId": 2, "itemName": "Besar Salad with chicken ", "qty": 4, "revenue": 4, "revenueToDisplay": "4"},
+          {"itemId": 11, "itemName": "Pasta Salad", "qty": 3, "revenue": 54, "revenueToDisplay": "54"},
+          {"itemId": 12, "itemName": "Creamy Vegan Pasta Salad", "qty": 2, "revenue": 56, "revenueToDisplay": "56"}
+        ]
+      },
+      {
+        "categoryId": 4,
+        "categoryName": "Balads",
+        "totalQuantity": 9,
+        "totalRevenue": 114,
+        "totalRevenueToDisplay": "114",
+        "items": [
+          {"itemId": 2, "itemName": "Cesar Salad with chicken ", "qty": 4, "revenue": 4, "revenueToDisplay": "4"},
+          {"itemId": 11, "itemName": "Pasta Salad", "qty": 3, "revenue": 54, "revenueToDisplay": "54"},
+          {"itemId": 12, "itemName": "Creamy Vegan Pasta Salad", "qty": 2, "revenue": 56, "revenueToDisplay": "56"}
+        ]
       }
     ]
   };

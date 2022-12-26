@@ -56,4 +56,18 @@ class DateRangeFilters {
     copyDateRangeFilter.endDate = endDate;
     return copyDateRangeFilter;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! DateRangeFilters) return false;
+    if (other.selectedRangeOption == SelectableDateRangeOptions.custom) {
+      if (other.startDate != startDate || other.endDate != endDate) return false;
+      return true;
+    }
+    return other.selectedRangeOption == selectedRangeOption;
+  }
+
+  @override
+  int get hashCode => super.hashCode;
+
 }

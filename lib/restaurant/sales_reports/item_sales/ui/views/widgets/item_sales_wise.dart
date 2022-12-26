@@ -13,6 +13,7 @@ class ItemSalesWise extends StatefulWidget {
     this.presenter, {
     super.key,
   });
+
   final ItemSalesPresenter presenter;
 
   @override
@@ -22,7 +23,7 @@ class ItemSalesWise extends StatefulWidget {
 class _ItemSalesWiseState extends State<ItemSalesWise> {
   @override
   Widget build(BuildContext context) {
-    switch (widget.presenter.salesItemWiseOption) {
+    switch (widget.presenter.filters.salesItemWiseOptions) {
       case SalesItemWiseOptions.CategoriesAndItems:
         return CategoriesAndItemsView(widget.presenter);
 
@@ -40,6 +41,7 @@ class CategoriesView extends StatefulWidget {
     this.presenter, {
     super.key,
   });
+
   final ItemSalesPresenter presenter;
 
   @override
@@ -76,6 +78,7 @@ class ItemsView extends StatefulWidget {
     this.presenter, {
     super.key,
   });
+
   final ItemSalesPresenter presenter;
 
   @override
@@ -111,6 +114,7 @@ class CategoriesAndItemsView extends StatefulWidget {
     this.presenter, {
     super.key,
   });
+
   final ItemSalesPresenter presenter;
 
   @override
@@ -165,8 +169,7 @@ class _ExpansionPanelHeader extends StatelessWidget {
               title,
               textAlign: TextAlign.right,
               overflow: TextOverflow.ellipsis,
-              style: TextStyles.largeTitleTextStyleBold
-                  .copyWith(fontSize: 20.0, fontWeight: FontWeight.w500),
+              style: TextStyles.largeTitleTextStyleBold.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500),
             ),
           ),
           Spacer(),

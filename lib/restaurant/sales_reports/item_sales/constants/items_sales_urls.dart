@@ -1,19 +1,26 @@
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
+
 import '../../../../_shared/constants/base_urls.dart';
 
 class ItemSalesUrls {
   static String getSalesItemUrl(
-    // SalesItemWiseOptions salesItemOptions,
     String companyId,
-    String storeId,
-    //  DateRangeFilters dateFilters,
+    DateRangeFilters dateFilters,
   ) {
-    var url = '${BaseUrls.restaurantUrlV2()}/companies/52/store/$storeId/itemsalesreport/filters?';
-    // if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom ||
-    //     dateFilters.selectedRangeOption == SelectableDateRangeOptions.thisMonth) {
-    url += "date=2022-8-1";
-    // dateFilters.startDate.yyyyMMddString()
+    var url = '${BaseUrls.restaurantUrlV2()}/companies/${true ? 52 : companyId}/store/0/itemsalesreport/filters';
+
+    url += "?date=2022-8-1";
+
+    if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom ||
+        dateFilters.selectedRangeOption == SelectableDateRangeOptions.thisMonth) {
+      url += "?start_date=${dateFilters.startDate.yyyyMMddString()}";
+
+      url += "&end_date=${dateFilters.endDate.yyyyMMddString()}";
+    }
+
     url += "&filter_type=category_item_wise";
-    //}
+
     return url;
   }
 }

@@ -5,7 +5,7 @@ abstract class ItemSalesView {
 
   void showErrorMessage(String message);
 
-  void onDidChangeSalesItemWise();
+  void onDidChangeFilters();
 
   void showItemSalesBreakDowns();
 

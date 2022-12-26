@@ -109,7 +109,7 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
                     },
                     child: Container(
                       margin: EdgeInsets.only(bottom: 8),
-                      padding: EdgeInsets.symmetric(vertical: 9, horizontal: 12),
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                       decoration: BoxDecoration(
                           border: Border.all(color: AppColors.textFieldBackgroundColor),
                           borderRadius: BorderRadius.circular(6)),

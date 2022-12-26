@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_model.dart';
 
 import '../../../../_shared/exceptions/wrong_response_format_exception.dart';
@@ -19,15 +20,9 @@ class ItemSalesProvider {
 
   ItemSalesProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
-  Future<ItemSalesDataModel> getItemSales(
-      // DateRangeFilters dateRangeFilters
-      ) async {
+  Future<ItemSalesDataModel> getItemSales(DateRangeFilters dateRangeFilters) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = ItemSalesUrls.getSalesItemUrl(
-      "52",
-      "0",
-      //  dateRangeFilters,
-    );
+    var url = ItemSalesUrls.getSalesItemUrl(companyId, dateRangeFilters);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 

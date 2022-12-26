@@ -36,6 +36,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
 class _AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   _AppBarWidget(this.presenter, this.displayBackground);
+
   final bool displayBackground;
   final ItemSalesPresenter presenter;
 
@@ -64,9 +65,7 @@ class ItemSalesAppBar extends StatelessWidget {
         Container(
           width: 400,
           height: 50,
-          color: displayBackground
-              ? AppColors.screenBackgroundColor
-              : AppColors.screenBackgroundColor2,
+          color: displayBackground ? AppColors.screenBackgroundColor : AppColors.screenBackgroundColor2,
         ),
         Container(
           decoration: BoxDecoration(
@@ -147,13 +146,11 @@ class ItemSalesAppBar extends StatelessWidget {
                         children: [
                           Text(
                             "Sales/Report/Sales",
-                            style:
-                                TextStyles.labelTextStyleBold.copyWith(fontWeight: FontWeight.w500),
+                            style: TextStyles.labelTextStyleBold.copyWith(fontWeight: FontWeight.w500),
                           ),
                           Text(
                             "Item Sales",
-                            style: TextStyles.extraLargeTitleTextStyleBold
-                                .copyWith(fontWeight: FontWeight.w800),
+                            style: TextStyles.extraLargeTitleTextStyleBold.copyWith(fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),
@@ -183,16 +180,16 @@ class ItemSalesAppBar extends StatelessWidget {
                         Expanded(
                           child: SizedBox(
                             height: 52,
-                            child: ListView.builder(
+                            child: ListView(
                               physics: BouncingScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              itemCount: 3,
-                              itemBuilder: (BuildContext context, int index) {
-                                return _FiltringItem(
-                                    onFilterGotClicked: () {},
-                                    filteringType: presenter.getFilterType(index));
-                              },
+                              children: presenter.filters
+                                  .toReadableListOfString()
+                                  .map(
+                                    (filterString) => _FiltringItem(presenter: presenter, filteringType: filterString),
+                                  )
+                                  .toList(),
                             ),
                           ),
                         ),
@@ -210,11 +207,11 @@ class ItemSalesAppBar extends StatelessWidget {
 }
 
 class _FiltringItem extends StatelessWidget {
-  final VoidCallback onFilterGotClicked;
+  final ItemSalesPresenter presenter;
   final String filteringType;
 
   const _FiltringItem({
-    required this.onFilterGotClicked,
+    required this.presenter,
     required this.filteringType,
   });
 
@@ -225,7 +222,7 @@ class _FiltringItem extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: onFilterGotClicked,
+            onTap: presenter.onFiltersGotClicked,
             child: Container(
               padding: EdgeInsets.all(6.0),
               decoration: BoxDecoration(
