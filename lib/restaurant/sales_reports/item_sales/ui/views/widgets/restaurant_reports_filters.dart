@@ -70,19 +70,18 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                     style: TextStyles.screenTitleTextStyle.copyWith(
                       color: AppColors.textColorBlack,
                       fontWeight: FontWeight.w500,
+                      letterSpacing: 0.0,
                     ),
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    widget.modalSheetController.close(result: widget.filters);
-                  },
+                  onPressed: () {},
                   child: Text(
-                    // "Apply"
-                    "Apply",
-                    style: TextStyles.screenTitleTextStyle.copyWith(
-                      color: AppColors.defaultColor,
+                    "Reset",
+                    style: TextStyles.largeTitleTextStyleBold.copyWith(
+                      color: AppColors.red,
                       fontWeight: FontWeight.w500,
+                      letterSpacing: 0.0,
                     ),
                   ),
                 ),
@@ -190,6 +189,28 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                     ),
                   )
                   .toList(),
+            ),
+            SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              height: 40,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    ),
+                  ),
+                  onPressed: () {
+                    widget.modalSheetController.close(result: widget.filters);
+                  },
+                  child: Text(
+                    'Apply Changes',
+                    style: TextStyles.largeTitleTextStyleBold.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.0,
+                    ),
+                  )),
             ),
             SizedBox(height: 80),
           ],

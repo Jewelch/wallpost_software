@@ -1,6 +1,6 @@
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_report_sort_options.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/sales_item_view_options.dart';
+import '../../../../_shared/date_range_selector/date_range_filters.dart';
+import 'item_sales_report_sort_options.dart';
+import 'sales_item_view_options.dart';
 
 class ItemSalesReportFilters {
   DateRangeFilters dateRangeFilters = DateRangeFilters();
