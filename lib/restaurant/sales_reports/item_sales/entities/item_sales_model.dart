@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../../../../_shared/exceptions/mapping_exception.dart';
 
 class ItemSalesDataModel {
-  final int? totalRevenue;
+  final num? totalRevenue;
   final int? totalCategories;
   final int? totalItemsInAllCategories;
   final int? totalOfAllItemsQuantities;
@@ -39,7 +39,7 @@ class ItemSalesBreakdown {
   final int? categoryId;
   final String? categoryName;
   final int? totalQuantity;
-  final int? totalRevenue;
+  final num? totalRevenue;
   final String? totalRevenueToDisplay;
   List<ItemSales>? items;
   bool isExpanded;

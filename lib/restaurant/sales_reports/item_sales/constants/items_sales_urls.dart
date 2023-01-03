@@ -7,13 +7,13 @@ class ItemSalesUrls {
     String companyId,
     DateRangeFilters dateFilters,
   ) {
+    //TODO: restore dynamic companyId before merging
     var url =
         '${BaseUrls.restaurantUrlV2()}/companies/52/store/0/itemsalesreport/filters?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
 
     if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom ||
         dateFilters.selectedRangeOption == SelectableDateRangeOptions.thisMonth) {
       url += "&start_date=${dateFilters.startDate.yyyyMMddString()}";
-
       url += "&end_date=${dateFilters.endDate.yyyyMMddString()}";
     }
 
