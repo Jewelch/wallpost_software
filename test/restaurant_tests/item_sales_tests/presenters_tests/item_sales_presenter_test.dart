@@ -11,6 +11,7 @@ import 'package:wallpost/restaurant/sales_reports/item_sales/ui/presenter/item_s
 import 'package:wallpost/restaurant/sales_reports/item_sales/ui/view_contracts/item_sales_view.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/utils/item_sales_sorter.dart';
 
+import '../../../_mocks/mock_company_provider.dart';
 import '../../mocks.dart';
 import 'helpers.dart';
 
@@ -28,7 +29,12 @@ void main() {
   var itemSalesSorter = MockItemSalesSorter();
 
   void _initializePresenter() {
-    presenter = ItemSalesPresenter.initWith(view, itemSalesDataProvider, itemSalesSorter);
+    presenter = ItemSalesPresenter.initWith(
+      view,
+      itemSalesDataProvider,
+      itemSalesSorter,
+      MockCompanyProvider(),
+    );
   }
 
   _initializePresenter();
@@ -66,9 +72,8 @@ void main() {
   setUpAll(() {
     registerFallbackValue(SalesItemWiseOptions.CategoriesAndItems);
     registerFallbackValue(dateFilter);
-    registerFallbackValue( ItemSalesDataModel.fromJson(Mocks.itemSalesRandomResponse));
-    registerFallbackValue( ItemSalesReportSortOptions.byNameZToA);
-
+    registerFallbackValue(ItemSalesDataModel.fromJson(Mocks.itemSalesRandomResponse));
+    registerFallbackValue(ItemSalesReportSortOptions.byNameZToA);
   });
 
   test('presenter returns Item Sales Data when item sales data is initialized', () async {
@@ -648,7 +653,6 @@ void main() {
     expect(presenter.itemslist, allItems);
     expect(presenter.itemSalesData, itemSalesData);
   });
-
 
   test("apply Filter notify ui that filters changed when new filter view option is different than the current",
       () async {
