@@ -1,4 +1,8 @@
-enum ItemSalesReportSortOptions { byRevenueLowToHigh, byRevenueHighToLow,byNameAToZ, byNameZToA;
+enum ItemSalesReportSortOptions {
+  byRevenueLowToHigh,
+  byRevenueHighToLow,
+  byNameAToZ,
+  byNameZToA;
 
   String toReadableString() {
     switch (this) {

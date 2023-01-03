@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_selector.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_report_filters.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_report_sort_options.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/sales_item_view_options.dart';
+
+import '../../../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
+import '../../../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../../../_shared/constants/app_colors.dart';
+import '../../../../../../_shared/date_range_selector/date_range_selector.dart';
+import '../../../entities/item_sales_report_filters.dart';
+import '../../../entities/item_sales_report_sort_options.dart';
+import '../../../entities/sales_item_view_options.dart';
 
 class RestaurantReportsFilters extends StatefulWidget {
   final ItemSalesReportFilters filters;
@@ -44,6 +45,7 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
           ),
           border: Border.all(color: Colors.transparent)),
       child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -94,7 +96,7 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 16),
             GestureDetector(
               onTap: () async {
                 var newDateFilter = await DateRangeSelector.show(
@@ -127,9 +129,7 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                 ),
               ),
             ),
-            SizedBox(height: 24),
-            Divider(),
-            SizedBox(height: 24),
+            Divider(height: 24 * 2),
             Text(
               "View as",
               style: TextStyles.screenTitleTextStyle.copyWith(
@@ -137,7 +137,7 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 16),
             Wrap(
               spacing: 12,
               direction: Axis.horizontal,
@@ -154,9 +154,7 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                   )
                   .toList(),
             ),
-            SizedBox(height: 24),
-            Divider(),
-            SizedBox(height: 24),
+            Divider(height: 24 * 2),
             Text(
               "Sort by",
               style: TextStyles.screenTitleTextStyle.copyWith(
@@ -164,11 +162,9 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 16),
             Wrap(
-              spacing: 12,
-              direction: Axis.horizontal,
-              children: ItemSalesReportSortOptions.values
+              children: [ItemSalesReportSortOptions.values.first, ItemSalesReportSortOptions.values[1]]
                   .map(
                     (sortOption) => RadioContainer(
                       title: sortOption.toReadableString(),
@@ -178,35 +174,20 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                         setState(() {});
                       },
                     ),
-
-                    // Container(
-                    //       margin: EdgeInsets.only(bottom: 8),
-                    //       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    //       decoration: BoxDecoration(
-                    //           border: Border.all(color: AppColors.textFieldBackgroundColor),
-                    //           borderRadius: BorderRadius.circular(6)),
-                    //       child: GestureDetector(
-                    //         onTap: () {
-                    //           widget.filters.sortOptions = sortOption;
-                    //           setState(() {});
-                    //         },
-                    //         child: Row(
-                    //           mainAxisSize: MainAxisSize.min,
-                    //           children: [
-                    //             Text(sortOption.toReadableString()),
-                    //             SizedBox(
-                    //               width: 16,
-                    //             ),
-                    //             Icon(
-                    //               widget.filters.salesItemWiseOptions == sortOption
-                    //                   ? Icons.radio_button_checked_rounded
-                    //                   : Icons.radio_button_off,
-                    //               color: AppColors.defaultColor,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     )
+                  )
+                  .toList(),
+            ),
+            Wrap(
+              children: [ItemSalesReportSortOptions.values[2], ItemSalesReportSortOptions.values.last]
+                  .map(
+                    (sortOption) => RadioContainer(
+                      title: sortOption.toReadableString(),
+                      isSelected: widget.filters.sortOptions == sortOption,
+                      onTap: () {
+                        widget.filters.sortOptions = sortOption;
+                        setState(() {});
+                      },
+                    ),
                   )
                   .toList(),
             ),
@@ -223,14 +204,18 @@ class RadioContainer extends StatelessWidget {
   final String title;
   final bool isSelected;
 
-  const RadioContainer({Key? key, required this.onTap, required this.title, required this.isSelected})
-      : super(key: key);
+  const RadioContainer({
+    super.key,
+    required this.onTap,
+    required this.title,
+    required this.isSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 4),
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+      margin: EdgeInsets.only(top: 4, bottom: 4, right: 10),
+      padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
           border: Border.all(color: AppColors.textFieldBackgroundColor), borderRadius: BorderRadius.circular(6)),
       child: GestureDetector(
@@ -243,9 +228,7 @@ class RadioContainer extends StatelessWidget {
               style: TextStyles.labelTextStyle
                   .copyWith(color: isSelected ? AppColors.defaultColor : AppColors.textColorDarkGray, fontSize: 13.0),
             ),
-            SizedBox(
-              width: 16,
-            ),
+            SizedBox(width: 16),
             Icon(
               isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off,
               color: AppColors.defaultColor,

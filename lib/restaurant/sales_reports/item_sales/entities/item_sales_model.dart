@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../_shared/exceptions/mapping_exception.dart';
@@ -27,8 +26,7 @@ class ItemSalesDataModel {
         totalOfAllItemsQuantities: json["totalOfAllItemsQuantities"],
         breakdown: json["breakdown"] == null
             ? null
-            : List<ItemSalesBreakdown>.from(
-                json["breakdown"].map((x) => ItemSalesBreakdown.fromJson(x))),
+            : List<ItemSalesBreakdown>.from(json["breakdown"].map((x) => ItemSalesBreakdown.fromJson(x))),
       );
     } catch (error, stackTrace) {
       debugPrint(stackTrace.toString());
@@ -37,7 +35,7 @@ class ItemSalesDataModel {
   }
 }
 
-class ItemSalesBreakdown with EquatableMixin {
+class ItemSalesBreakdown {
   final int? categoryId;
   final String? categoryName;
   final int? totalQuantity;
@@ -62,14 +60,9 @@ class ItemSalesBreakdown with EquatableMixin {
         totalQuantity: json["totalQuantity"],
         totalRevenue: json["totalRevenue"],
         totalRevenueToDisplay: json["totalRevenueToDisplay"],
-        items: json["items"] == null
-            ? null
-            : List<ItemSales>.from(json["items"].map((x) => ItemSales.fromJson(x))),
+        items: json["items"] == null ? null : List<ItemSales>.from(json["items"].map((x) => ItemSales.fromJson(x))),
         isExpanded: true,
       );
-
-  @override
-  List<Object?> get props => [categoryId, categoryName];
 }
 
 class ItemSales {
