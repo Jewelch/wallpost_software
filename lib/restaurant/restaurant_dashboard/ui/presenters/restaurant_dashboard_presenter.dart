@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
-import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/_shared/extensions/string_extensions.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/services/sales_breakdowns_provider.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/models/performance_value.dart';
 
 import '../../../../_shared/constants/app_colors.dart';
+import '../../../../_shared/date_range_selector/date_range_filters.dart';
+import '../../../../_shared/exceptions/wp_exception.dart';
+import '../../../../_shared/extensions/string_extensions.dart';
+import '../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../../entities/aggregated_sales_data.dart';
 import '../../entities/sales_break_down_item.dart';
+import '../../entities/sales_break_down_wise_options.dart';
+import '../../services/aggregated_sales_data_provider.dart';
+import '../../services/sales_breakdowns_provider.dart';
+import '../models/performance_value.dart';
 import '../view_contracts/restaurant_dashboard_view.dart';
 
 class RestaurantDashboardPresenter {
@@ -97,9 +97,10 @@ class RestaurantDashboardPresenter {
 
   String getSalesBreakDownFilterName(int index) => SalesBreakDownWiseOptions.values[index].toReadableString();
 
-  Color getSalesBreakdownFilterBackgroundColor(int index) => SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise
-      ? AppColors.defaultColor
-      : AppColors.filtersBackgroundColor;
+  Color getSalesBreakdownFilterBackgroundColor(int index) =>
+      SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise
+          ? AppColors.defaultColor
+          : AppColors.filtersBackgroundColor;
 
   Color getSalesBreakdownFilterTextColor(int index) =>
       SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise ? Colors.white : AppColors.defaultColor;

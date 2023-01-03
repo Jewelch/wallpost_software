@@ -19,13 +19,12 @@ class ShareReportButton extends StatelessWidget {
     return GestureDetector(
       // onTap: presenter.changeViewWise,
       child: Stack(
+        alignment: Alignment.center,
         children: [
           DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(18),
-              boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(.1), spreadRadius: 1, blurRadius: 15)
-              ],
+              boxShadow: [BoxShadow(color: Colors.black.withOpacity(.1), spreadRadius: 1, blurRadius: 15)],
             ),
             child: Blur(
               borderRadius: BorderRadius.circular(16),
@@ -42,26 +41,21 @@ class ShareReportButton extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            left: 10,
-            right: 10,
-            bottom: 24,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset(
-                  "assets/icons/share_icon.svg",
-                  height: 20,
-                  width: 18,
-                ),
-                SizedBox(width: 11),
-                Text(
-                  'Share Report',
-                  style: TextStyles.largeTitleTextStyleBold.copyWith(fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                "assets/icons/share_icon.svg",
+                height: 20,
+                width: 18,
+              ),
+              SizedBox(width: 11),
+              Text(
+                'Share Report',
+                style: TextStyles.largeTitleTextStyleBold.copyWith(fontWeight: FontWeight.w500),
+              ),
+            ],
           ),
         ],
       ),

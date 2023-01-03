@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/ui/views/widgets/restaurant_reports_filters.dart';
 
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
@@ -14,6 +13,7 @@ import '../widgets/item_sales_app_bar.dart';
 import '../widgets/item_sales_error_view.dart';
 import '../widgets/item_sales_header_card.dart';
 import '../widgets/item_sales_wise.dart';
+import '../widgets/restaurant_reports_filters.dart';
 import '../widgets/share_reports_button.dart';
 
 enum _ScreenStates { loading, error, data }
@@ -114,7 +114,7 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
                     ),
                   ),
                 SliverToBoxAdapter(
-                  child: SizedBox(height: MediaQuery.of(context).viewPadding.bottom + 100),
+                  child: SizedBox(height: MediaQuery.of(context).viewPadding.bottom + 120),
                 ),
               ],
             )

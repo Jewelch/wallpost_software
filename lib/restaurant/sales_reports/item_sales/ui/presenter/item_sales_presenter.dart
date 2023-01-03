@@ -1,9 +1,9 @@
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_report_filters.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/utils/item_sales_sorter.dart';
-
 import '../../../../../_shared/exceptions/wp_exception.dart';
+import '../../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../../entities/item_sales_model.dart';
+import '../../entities/item_sales_report_filters.dart';
 import '../../services/item_sales_provider.dart';
+import '../../utils/item_sales_sorter.dart';
 import '../view_contracts/item_sales_view.dart';
 
 class ItemSalesPresenter {
@@ -11,14 +11,21 @@ class ItemSalesPresenter {
   ItemSalesProvider _itemSalesDataProvider;
   ItemSalesDataModel? itemSalesData;
   ItemSalesSorter _itemSalesSorter;
+  SelectedCompanyProvider _selectedCompanyProvider;
 
   ItemSalesPresenter(this._view)
       : _itemSalesDataProvider = ItemSalesProvider(),
+        _selectedCompanyProvider = SelectedCompanyProvider(),
         _itemSalesSorter = ItemSalesSorter();
 
   ItemSalesReportFilters filters = ItemSalesReportFilters();
 
-  ItemSalesPresenter.initWith(this._view, this._itemSalesDataProvider, this._itemSalesSorter);
+  ItemSalesPresenter.initWith(
+    this._view,
+    this._itemSalesDataProvider,
+    this._itemSalesSorter,
+    this._selectedCompanyProvider,
+  );
 
   var index = 0;
 
@@ -71,7 +78,7 @@ class ItemSalesPresenter {
 
   // Getters
 
-  String getSelectedCompanyName() => "";
+  String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
   //? Top card getters
   String getTotalRevenue() => itemSalesData?.totalRevenue?.toString() ?? "0.00";

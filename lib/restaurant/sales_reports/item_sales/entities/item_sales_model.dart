@@ -42,7 +42,7 @@ class ItemSalesBreakdown {
   final int? totalRevenue;
   final String? totalRevenueToDisplay;
   List<ItemSales>? items;
-  bool isExpanded = true;
+  bool isExpanded;
 
   ItemSalesBreakdown._({
     this.categoryId,
@@ -51,7 +51,7 @@ class ItemSalesBreakdown {
     this.totalRevenue,
     this.totalRevenueToDisplay,
     this.items,
-    required this.isExpanded,
+    this.isExpanded = true,
   });
 
   factory ItemSalesBreakdown.fromJson(Map<String, dynamic> json) => ItemSalesBreakdown._(
@@ -69,7 +69,7 @@ class ItemSales {
   final int? itemId;
   final String? itemName;
   final int? qty;
-  final int? revenue;
+  final num? revenue;
   final String? revenueToDisplay;
 
   const ItemSales._({
