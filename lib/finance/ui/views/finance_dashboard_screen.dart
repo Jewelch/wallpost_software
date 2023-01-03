@@ -11,8 +11,6 @@ import 'package:wallpost/finance/ui/views/finance_cash_monthly_list_card_view.da
 import 'package:wallpost/finance/ui/views/finance_invoice_card_view.dart';
 import 'package:wallpost/finance/ui/views/finance_profit_loss_card_view.dart';
 import 'package:wallpost/finance/ui/views/finance_tab_view.dart';
-import 'package:wallpost/finance/ui/views/performance_view_holder.dart';
-
 import 'finance_dashboard_app_bar.dart';
 import 'finance_dashboard_loader.dart';
 import 'finance_filters.dart';
@@ -49,6 +47,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
     return RefreshIndicator(
       onRefresh: () async => presenter.loadFinanceDashBoardDetails(),
       child: Scaffold(
+          resizeToAvoidBottomInset: true,
           backgroundColor: AppColors.screenBackgroundColor,
           body: SafeArea(
             child: ItemNotifiable<int>(
@@ -85,48 +84,67 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   }
 
   Widget _dataView() {
-    return SingleChildScrollView(
-      child: Container(
-          color: AppColors.screenBackgroundColor2,
-          child: Column(
-            children: [
-              FinanceDashboardAppBar(presenter),
-              FinanceProfitLossCardView(presenter: presenter),
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  _bottomCard(),
-                  if (presenter.selectedModuleIndex == CASH_VIEW_INDEX)
-                    Positioned(top: 244, left: 0, right: 0, child: _monthlyCashInOutListCard()),
-                  if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX)
-                    Positioned(top: 112, left: 0, right: 0, child: _invoiceCard()),
-                  if (presenter.selectedModuleIndex == BILL_VIEW_INDEX)
-                    Positioned(top: 112, left: 0, right: 0, child: _billCard())
-                ],
-              )
-            ],
-          )),
-    );
+    return Container(
+        color: AppColors.screenBackgroundColor2,
+        child: Column(
+          children: [
+            FinanceDashboardAppBar(presenter),
+            FinanceProfitLossCardView(presenter: presenter),
+            Flexible(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        child: _bottomCard(),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                offset: Offset(0, -1),
+                                spreadRadius: 0,
+                                blurRadius: 3),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            if (presenter.selectedModuleIndex == CASH_VIEW_INDEX) _monthlyCashInOutListCard(),
+                            if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX) _invoiceCard(),
+                            if (presenter.selectedModuleIndex == BILL_VIEW_INDEX) _billCard()
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ));
   }
 
   //MARK: Functions to build the bottom card view
 
   Widget _bottomCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
-      child: PerformanceViewHolder(
-        content: Column(
-          children: [
-            FinanceHorizontalTab(presenter, () {
-              setState(() {});
-            }),
-            if (presenter.selectedModuleIndex == CASH_VIEW_INDEX) _cashCardData(),
-            if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX) _titleText(title: "Invoices To Collect"),
-            if (presenter.selectedModuleIndex == BILL_VIEW_INDEX) _titleText(title: "Bills To Pay"),
-          ],
-        ),
-      ),
+    return Column(
+      children: [
+        FinanceHorizontalTab(presenter, () {
+          setState(() {});
+        }),
+        if (presenter.selectedModuleIndex == CASH_VIEW_INDEX) _cashCardData(),
+        if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX) _titleText(title: "Invoices To Collect"),
+        if (presenter.selectedModuleIndex == BILL_VIEW_INDEX) _titleText(title: "Bills To Pay"),
+      ],
     );
   }
 
@@ -135,16 +153,15 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
       children: [
         SizedBox(height: 14),
         FinanceCashCardView(presenter: presenter),
-        SizedBox(height: 14),
+        SizedBox(height: 22),
         _monthlyCashInOutListHeader(),
-        SizedBox(height: 24),
       ],
     );
   }
 
   _titleText({required String title}) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16, bottom: 32),
+      padding: EdgeInsets.only(top: 16, bottom: 8),
       child: Text(title, style: TextStyles.extraLargeTitleTextStyleBold.copyWith(fontWeight: FontWeight.w500)),
     );
   }
@@ -198,37 +215,19 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   }
 
   _monthlyCashInOutListCard() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16),
-      child: Container(
-        height: 160,
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.defaultColorDarkContrastColor.withOpacity(0.5),
-              offset: Offset(0, 0),
-              blurRadius: 8,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: FinanceCashMonthlyListCardView(presenter),
-      ),
+    return Container(
+      height: 150,
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      child: FinanceCashMonthlyListCardView(presenter),
     );
   }
 
   _invoiceCard() {
     return Container(
       height: 200,
-      padding: EdgeInsets.only(left: 16, right: 16),
-      child: PerformanceViewHolder(
-        padding: EdgeInsets.all(8),
-        content: FinanceInvoiceCardView(
-          financeInvoiceDetails: presenter.getFinanceInvoiceReport()!,
-        ),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      child: FinanceInvoiceCardView(
+        financeInvoiceDetails: presenter.getFinanceInvoiceReport()!,
       ),
     );
   }
@@ -236,12 +235,9 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   _billCard() {
     return Container(
       height: 200,
-      padding: EdgeInsets.only(left: 16, right: 16),
-      child: PerformanceViewHolder(
-        padding: EdgeInsets.all(8),
-        content: FinanceBillCardView(
-          financeBillDetails: presenter.getFinanceBillDetails()!,
-        ),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      child: FinanceBillCardView(
+        financeBillDetails: presenter.getFinanceBillDetails()!,
       ),
     );
   }
