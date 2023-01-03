@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
@@ -86,32 +85,27 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   }
 
   Widget _dataView() {
-    return SafeArea(
+    return SingleChildScrollView(
       child: Container(
-        color: AppColors.screenBackgroundColor2,
-        child: CustomScrollView(
-          slivers: [
-            MultiSliver(
-              children: [
-                FinanceDashboardAppBar(presenter),
-                FinanceProfitLossCardView(presenter: presenter),
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    _bottomCard(),
-                    if (presenter.selectedModuleIndex == CASH_VIEW_INDEX)
-                      Positioned(top: 238, left: 0, right: 0, child: _monthlyCashInOutListCard()),
-                    if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX)
-                      Positioned(top: 112, left: 0, right: 0, child: _invoiceCard()),
-                    if (presenter.selectedModuleIndex == BILL_VIEW_INDEX)
-                      Positioned(top: 112, left: 0, right: 0, child: _billCard())
-                  ],
-                )
-              ],
-            )
-          ],
-        ),
-      ),
+          color: AppColors.screenBackgroundColor2,
+          child: Column(
+            children: [
+              FinanceDashboardAppBar(presenter),
+              FinanceProfitLossCardView(presenter: presenter),
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  _bottomCard(),
+                  if (presenter.selectedModuleIndex == CASH_VIEW_INDEX)
+                    Positioned(top: 244, left: 0, right: 0, child: _monthlyCashInOutListCard()),
+                  if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX)
+                    Positioned(top: 112, left: 0, right: 0, child: _invoiceCard()),
+                  if (presenter.selectedModuleIndex == BILL_VIEW_INDEX)
+                    Positioned(top: 112, left: 0, right: 0, child: _billCard())
+                ],
+              )
+            ],
+          )),
     );
   }
 
@@ -143,7 +137,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
         FinanceCashCardView(presenter: presenter),
         SizedBox(height: 14),
         _monthlyCashInOutListHeader(),
-        SizedBox(height: 14),
+        SizedBox(height: 24),
       ],
     );
   }
@@ -156,8 +150,8 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
   }
 
   Widget _monthlyCashInOutListHeader() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
+    return Container(
+      height: 40,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -228,7 +222,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   _invoiceCard() {
     return Container(
-      height: 180,
+      height: 200,
       padding: EdgeInsets.only(left: 16, right: 16),
       child: PerformanceViewHolder(
         padding: EdgeInsets.all(8),
@@ -241,7 +235,7 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   _billCard() {
     return Container(
-      height: 180,
+      height: 200,
       padding: EdgeInsets.only(left: 16, right: 16),
       child: PerformanceViewHolder(
         padding: EdgeInsets.all(8),
