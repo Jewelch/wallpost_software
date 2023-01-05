@@ -43,10 +43,19 @@ class DateRangeFilters {
 
   void setSelectedDateRangeOption(SelectableDateRangeOptions selectableDateRangeOptions) {
     if (selectableDateRangeOptions == SelectableDateRangeOptions.thisMonth) {
-      endDate = DateTime.now();
-      startDate = startDate.subtract(Duration(days: 30));
+      var today = DateTime.now();
+      startDate = DateTime(today.year, today.month, 1);
+      endDate = _getDateAfterOneMonthFrom(today);
     }
     this._selectedRangeOption = selectableDateRangeOptions;
+  }
+
+  DateTime _getDateAfterOneMonthFrom(DateTime date) {
+    if (date.month == 12) {
+      return DateTime(date.year + 1, 1, 1);
+    } else {
+      return DateTime(date.year, date.month + 1, 1);
+    }
   }
 
   DateRangeFilters copy() {
@@ -69,5 +78,4 @@ class DateRangeFilters {
 
   @override
   int get hashCode => super.hashCode;
-
 }

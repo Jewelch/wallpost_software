@@ -83,7 +83,7 @@ class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
                 onPressed: () {
                   widget.dateFilters.setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
                   widget.dateFilters.startDate = _startDate;
-                  widget.dateFilters.setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
+                  widget.dateFilters.endDate = _endDate;
                   widget.centerSheetController.close(result: true);
                 },
                 child: Text(
