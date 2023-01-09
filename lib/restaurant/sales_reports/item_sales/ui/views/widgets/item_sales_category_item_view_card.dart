@@ -70,13 +70,11 @@ class ItemSalesCategoryItemViewCard extends StatelessWidget {
                           SizedBox(
                             width: itemNameWidth,
                             child: Text(
-                              presenter.getNameOfSpecificItem(
-                                  //=> p
-                                  element.items?[index]),
+                              presenter.getNameOfSpecificItem(element.items?[index]),
                               style: TextStyle(
                                 overflow: TextOverflow.ellipsis,
-                                color: AppColors.textColorBlack,
-                                fontSize: 16,
+                                color: AppColors.textColorBlueGray,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),
                               maxLines: 2,
@@ -102,8 +100,7 @@ class ItemSalesCategoryItemViewCard extends StatelessWidget {
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  presenter
-                                      .getRevenueToDisplayOfSpecificItem(element.items?[index]),
+                                  presenter.getRevenueToDisplayOfSpecificItem(element.items?[index]),
                                   textAlign: TextAlign.right,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyles.largeTitleTextStyleBold,

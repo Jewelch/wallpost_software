@@ -69,8 +69,8 @@ class ItemSalesCategoryViewCard extends StatelessWidget {
                             presenter.getCategoryNameAtIndex(index),
                             style: TextStyle(
                               overflow: TextOverflow.ellipsis,
-                              color: AppColors.textColorBlack,
-                              fontSize: 16,
+                              color: AppColors.textColorBlueGray,
+                              fontSize: 15,
                               fontWeight: FontWeight.w500,
                             ),
                             maxLines: 2,
