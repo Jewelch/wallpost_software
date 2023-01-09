@@ -11,7 +11,7 @@ class ItemSalesItemViewCard extends StatelessWidget {
     this.presenter, {
     super.key,
   });
-  
+
   final ItemSalesPresenter presenter;
 
   @override
@@ -68,8 +68,8 @@ class ItemSalesItemViewCard extends StatelessWidget {
                             presenter.getItemNameAtIndex(index),
                             style: TextStyle(
                               overflow: TextOverflow.ellipsis,
-                              color: AppColors.textColorBlack,
-                              fontSize: 16,
+                              color: AppColors.textColorBlueGray,
+                              fontSize: 15,
                               fontWeight: FontWeight.w500,
                             ),
                             maxLines: 2,

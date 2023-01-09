@@ -35,13 +35,13 @@ class ItemSalesPresenter {
     _view.showLoader();
     try {
       var dateFilters = filters.dateRangeFilters;
-      itemSalesData = await _itemSalesDataProvider.getItemSales(dateFilters); // _dateRangeFilters
+      itemSalesData = await _itemSalesDataProvider.getItemSales(dateFilters);
 
       _view.updateItemSalesData();
       itemSalesData?.breakdown != null ? _view.showItemSalesBreakDowns() : _view.showNoItemSalesBreakdownMessage();
       getItemsList();
-    } on WPException catch (e) {
-      _view.showErrorMessage("${e.userReadableMessage}" + "\n\nTap here to reload.");
+    } on WPException {
+      _view.showErrorMessage("An error has occured\n\nTap here to reload.");
     }
   }
 

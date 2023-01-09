@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_model.dart';
-
+import '../../../../_shared/date_range_selector/date_range_filters.dart';
 import '../../../../_shared/exceptions/wrong_response_format_exception.dart';
 import '../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../../../../_wp_core/wpapi/services/wp_api.dart';
 import '../constants/items_sales_urls.dart';
+import '../entities/item_sales_model.dart';
 
 class ItemSalesProvider {
   final NetworkAdapter _networkAdapter;

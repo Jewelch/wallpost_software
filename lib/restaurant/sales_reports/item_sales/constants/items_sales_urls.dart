@@ -7,9 +7,8 @@ class ItemSalesUrls {
     String companyId,
     DateRangeFilters dateFilters,
   ) {
-    //TODO: restore dynamic companyId before merging
     var url =
-        '${BaseUrls.restaurantUrlV2()}/companies/52/store/0/itemsalesreport/filters?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
+        '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/itemsalesreport/filters?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
 
     if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom ||
         dateFilters.selectedRangeOption == SelectableDateRangeOptions.thisMonth) {

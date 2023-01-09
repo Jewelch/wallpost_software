@@ -51,9 +51,12 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
 
             //! ERROR STATE
             case _ScreenStates.error:
-              return SalesItemErrorView(
-                errorMessage: errorMessage,
-                onRetry: presenter.loadItemSalesData,
+              return Scaffold(
+                appBar: AppBarWidget(presenter),
+                body: SalesItemErrorView(
+                  errorMessage: errorMessage,
+                  onRetry: presenter.loadItemSalesData,
+                ),
               );
 
             // //* DATA STATE
@@ -149,8 +152,8 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
   }
 
   @override
-  void showErrorMessage(String message) {
-    this.errorMessage = errorMessage;
+  void showErrorMessage(String msg) {
+    this.errorMessage = msg;
     screenStateNotifier.notify(_ScreenStates.error);
   }
 
