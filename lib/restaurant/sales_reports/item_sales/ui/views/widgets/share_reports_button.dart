@@ -17,7 +17,7 @@ class ShareReportButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onTap: presenter.changeViewWise,
+      onTap: presenter.shareReports,
       child: Stack(
         alignment: Alignment.center,
         children: [

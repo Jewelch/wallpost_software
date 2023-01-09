@@ -14,7 +14,6 @@ import '../widgets/item_sales_error_view.dart';
 import '../widgets/item_sales_header_card.dart';
 import '../widgets/item_sales_wise.dart';
 import '../widgets/restaurant_reports_filters.dart';
-import '../widgets/share_reports_button.dart';
 
 enum _ScreenStates { loading, error, data }
 
@@ -124,8 +123,8 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: ShareReportButton(presenter),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: ShareReportButton(presenter),
     );
   }
 

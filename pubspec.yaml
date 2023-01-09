@@ -48,6 +48,7 @@ dependencies:
   equatable: ^2.0.5
   blur: ^3.1.0
   syncfusion_flutter_datepicker: ^20.4.38
+  share_plus: ^4.3.0
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,6 @@
+import 'package:image_picker/image_picker.dart';
+import 'package:share_plus/share_plus.dart';
+
 import '../../../../../_shared/exceptions/wp_exception.dart';
 import '../../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../../entities/item_sales_model.dart';
@@ -125,4 +128,12 @@ class ItemSalesPresenter {
   List<ItemSalesBreakdown> getItemSalesBreakDownList() => itemSalesData?.breakdown ?? []; // ١
 
   int getDataListLength() => itemSalesData?.breakdown?.length ?? 0;
+
+  void shareReports() {
+    Share.shareXFiles(
+      [XFile('dsdsd')],
+      text: 'Share reports text',
+      subject: 'Share reports subject',
+    );
+  }
 }

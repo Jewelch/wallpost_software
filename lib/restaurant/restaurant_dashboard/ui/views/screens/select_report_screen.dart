@@ -17,9 +17,6 @@ class SelectReportScreen extends StatefulWidget {
 }
 
 class _SelectReportScreenState extends State<SelectReportScreen> {
-  bool isHourSalesSelected = false;
-  bool isItemSalesSelected = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,133 +31,129 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
               ),
             ),
             Expanded(
-                flex: 9,
-                child: Stack(
-                  children: [
-                    Blur(
-                      blur: 4,
-                      borderRadius: BorderRadius.circular(24),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height,
-                        decoration: BoxDecoration(
-                          color: AppColors.defaultColorDark.withOpacity(.4),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
+              flex: 9,
+              child: Stack(
+                children: [
+                  Blur(
+                    blur: 4,
+                    borderRadius: BorderRadius.circular(24),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height,
+                      decoration: BoxDecoration(
+                        color: AppColors.defaultColorDark.withOpacity(.4),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                     ),
-                    Positioned(
-                      right: 1,
-                      left: 1,
-                      bottom: 32,
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(.4), borderRadius: BorderRadius.circular(24)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                Text(
-                                  "Sales Reports",
-                                  style: TextStyles.extraLargeTitleTextStyleBold,
-                                ),
-                                SizedBox(
-                                  height: 32,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isHourSalesSelected = false;
-                                            isItemSalesSelected = true;
-                                          });
-                                        },
-                                        child: Container(
-                                          height: 64,
-                                          decoration: BoxDecoration(
-                                            color: isItemSalesSelected
-                                                ? AppColors.defaultColorDarkContrastColor
-                                                : AppColors.screenBackgroundColor,
-                                            borderRadius: BorderRadius.circular(14),
-                                          ),
-                                          child: Center(
-                                              child: Text("Item Sales", style: TextStyles.subTitleTextStyleBold)),
+                  ),
+                  Positioned(
+                    right: 1,
+                    left: 1,
+                    bottom: 32,
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                          width: double.maxFinite,
+                          decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.4), borderRadius: BorderRadius.circular(24)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Text(
+                                "Sales Reports",
+                                style: TextStyles.extraLargeTitleTextStyleBold,
+                              ),
+                              SizedBox(
+                                height: 32,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(child: SizedBox()),
+                                  Expanded(
+                                    flex: 2,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        ScreenPresenter.present(
+                                          ItemSalesScreen(),
+                                          context,
+                                          slideDirection: SlideDirection.fromBottom,
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 64,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                          borderRadius: BorderRadius.circular(14),
                                         ),
+                                        child:
+                                            Center(child: Text("Item Sales", style: TextStyles.subTitleTextStyleBold)),
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 16,
-                                    ),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isHourSalesSelected = true;
-                                            isItemSalesSelected = false;
-                                          });
-                                        },
-                                        child: Container(
-                                          height: 64,
-                                          decoration: BoxDecoration(
-                                            color: isHourSalesSelected
-                                                ? AppColors.defaultColorDarkContrastColor
-                                                : AppColors.screenBackgroundColor,
-                                            borderRadius: BorderRadius.circular(14),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              "Hourly Sales",
-                                              style: TextStyles.subTitleTextStyleBold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 32,
-                                ),
-                                SizedBox(
-                                  height: 48,
-                                  width: double.maxFinite,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      ScreenPresenter.present(
-                                        ItemSalesScreen(),
-                                        context,
-                                        slideDirection: SlideDirection.fromBottom,
-                                      );
-                                    },
-                                    child: Text(
-                                      "Reports",
-                                      style: TextStyles.headerCardSubHeadingTextStyle,
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
                                   ),
+                                  Expanded(child: SizedBox()),
+                                  // Expanded(
+                                  //   child: GestureDetector(
+                                  //     onTap: () {
+                                  //       setState(() {
+                                  //         isHourSalesSelected = true;
+                                  //         isItemSalesSelected = false;
+                                  //       });
+                                  //     },
+                                  //     child: Container(
+                                  //       height: 64,
+                                  //       decoration: BoxDecoration(
+                                  //         color: isHourSalesSelected
+                                  //             ? AppColors.defaultColorDarkContrastColor
+                                  //             : AppColors.screenBackgroundColor,
+                                  //         borderRadius: BorderRadius.circular(14),
+                                  //       ),
+                                  //       child: Center(
+                                  //         child: Text(
+                                  //           "Hourly Sales",
+                                  //           style: TextStyles.subTitleTextStyleBold,
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 32,
+                              ),
+                              SizedBox(
+                                height: 48,
+                                width: double.maxFinite,
+                                child: TextButton(
+                                  onPressed: Navigator.of(context).pop,
+                                  child: Text(
+                                    "Close Menu",
+                                    style: TextStyles.largeTitleTextStyleBold.copyWith(
+                                      fontWeight: FontWeight.w100,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
                                 ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                              ],
-                            ),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ))
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
