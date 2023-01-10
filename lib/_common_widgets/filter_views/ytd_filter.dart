@@ -24,7 +24,7 @@ class YtdFilter extends StatefulWidget {
   State<YtdFilter> createState() => _YtdFilterState(_initialMonth, _initialYear);
 
   bool _isMonthValidForYear(int month, int year) {
-    if (month < AppYears().currentAndPastMonthsOfYear(year).length) return true;
+    if (month <= AppYears().currentAndPastMonthsOfYear(year).length) return true;
 
     return false;
   }
