@@ -45,6 +45,10 @@ class AppYears {
     return currentAndPastMonthsOfYear(year).map((m) => _shortenedMonthName(m)).toList();
   }
 
+  /// 1 = Jan
+  /// 2 = Feb
+  /// ...
+  /// 12 = Dec
   String getShortNameForMonth(int month) {
     return _shortenedMonthName(_monthNames[month - 1]);
   }

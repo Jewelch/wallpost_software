@@ -95,9 +95,9 @@ class TextStyles {
 
   static get headerCardMainValueTextStyle => TextStyle(
         fontFamily: _defaultFont,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w800,
         color: AppColors.textColorBlack,
-        fontSize: 24.0,
+        fontSize: 28.0,
         overflow: TextOverflow.ellipsis,
       );
 
@@ -110,15 +110,15 @@ class TextStyles {
 
   static get headerCardSubValueTextStyle => TextStyle(
         fontFamily: _defaultFont,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w800,
         color: AppColors.textColorBlack,
-        fontSize: 16.0,
+        fontSize: 20.0,
         overflow: TextOverflow.ellipsis,
       );
 
   static get headerCardSubLabelTextStyle => TextStyle(
     fontFamily: _defaultFont,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w400,
         color: AppColors.defaultColorDarkContrastColor,
         fontSize: 11.0,
       );

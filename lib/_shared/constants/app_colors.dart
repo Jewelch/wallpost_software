@@ -38,7 +38,7 @@ class AppColors {
   static const Color lightRed = Color.fromRGBO(252, 233, 232, 1.0);
   static const Color lightGray = Color.fromRGBO(243, 246, 249, 1.0);
   static const Color greenOnDarkDefaultColorBg = Color.fromRGBO(74, 240, 145, 1.0);
-  static const Color redOnDarkDefaultColorBg = Color.fromRGBO(250, 104, 100, 1.0);
+  static const Color redOnDarkDefaultColorBg = Color.fromRGBO(252, 103, 96, 1.0);
 
   //MARK: Shimmer colors
   static const Color shimmerColor = Color.fromRGBO(240, 240, 240, 1.0);
