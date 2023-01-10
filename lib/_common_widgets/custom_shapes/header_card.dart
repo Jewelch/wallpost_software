@@ -4,15 +4,16 @@ import '../../_shared/constants/app_colors.dart';
 
 class HeaderCard extends StatelessWidget {
   final Widget content;
+  final double height;
   final Color color;
 
-  HeaderCard({required this.content, this.color = AppColors.defaultColorDark});
+  HeaderCard({required this.content, this.height = 260.0, this.color = AppColors.defaultColorDark});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 260,
+      height: height,
       margin: EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         boxShadow: [
