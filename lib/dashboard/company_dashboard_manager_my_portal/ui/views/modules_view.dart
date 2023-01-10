@@ -1,0 +1,90 @@
+import 'package:flutter/material.dart';
+import 'package:wallpost/_common_widgets/custom_shapes/header_card.dart';
+import 'package:wallpost/_wp_core/company_management/entities/module.dart';
+import 'package:wallpost/dashboard/company_dashboard_manager_my_portal/ui/views/hr_performance_view.dart';
+import 'package:wallpost/dashboard/company_dashboard_manager_my_portal/ui/views/restaurant_performance_view.dart';
+import 'package:wallpost/dashboard/company_dashboard_manager_my_portal/ui/views/retail_performance_view.dart';
+
+import '../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../_shared/constants/app_colors.dart';
+import '../models/manager_dashboard_filters.dart';
+import '../presenters/module_page_view_presenter.dart';
+import 'crm_performance_view.dart';
+import 'finance_performance_view.dart';
+
+class ModulesView extends StatefulWidget {
+  final ModulePageViewPresenter _presenter;
+  final ManagerDashboardFilters _filters;
+
+  ModulesView(this._presenter, this._filters);
+
+  @override
+  State<ModulesView> createState() => _ModulesViewState();
+}
+
+class _ModulesViewState extends State<ModulesView> with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController = new TabController(
+      vsync: this,
+      length: widget._presenter.getNumberOfModules(),
+      initialIndex: widget._presenter.selectedModuleIndex,
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget._presenter.shouldDisplayModules()) return Container();
+
+    return Stack(
+      children: [
+        Container(
+          height: 30,
+          child: TabBar(
+            controller: _tabController,
+            labelColor: AppColors.defaultColor,
+            labelStyle: TextStyles.titleTextStyleBold,
+            labelPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+            indicatorWeight: 2,
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorColor: AppColors.defaultColor,
+            indicatorPadding: EdgeInsets.only(right: 10),
+            isScrollable: true,
+            tabs: widget._presenter.getModuleNames().map((moduleName) => Tab(text: moduleName)).toList(),
+            onTap: (tabIndex) => widget._presenter.selectModuleAtIndex(tabIndex),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 16),
+          child: HeaderCard(
+            height: 216,
+            content: Container(
+              height: 180,
+              margin: EdgeInsets.symmetric(horizontal: 12),
+              child: TabBarView(
+                controller: _tabController,
+                children: widget._presenter.getModules().map((module) {
+                  if (module == Module.Finance) {
+                    return FinancePerformanceView(widget._filters);
+                  } else if (module == Module.Crm) {
+                    return CRMPerformanceView(widget._filters);
+                  } else if (module == Module.Hr) {
+                    return HRPerformanceView(widget._filters);
+                  } else if (module == Module.Restaurant) {
+                    return RestaurantPerformanceView(widget._filters);
+                  } else if (module == Module.Retail) {
+                    return RetailPerformanceView(widget._filters);
+                  }
+                  return Container();
+                }).toList(),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
