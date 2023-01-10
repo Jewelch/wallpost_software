@@ -109,16 +109,17 @@ void main() {
     await presenter.loadData();
 
     //negative
+    when(() => data.currency).thenReturn("USD");
     when(() => data.profitLoss).thenReturn("-12000");
     when(() => data.isInProfit()).thenReturn(false);
-    expect(presenter.getProfitLoss().label, "Profile & Loss (USD)");
+    expect(presenter.getProfitLoss().label, "Profit & Loss (USD)");
     expect(presenter.getProfitLoss().value, "-12000");
     expect(presenter.getProfitLoss().textColor, AppColors.redOnDarkDefaultColorBg);
 
     //positive
     when(() => data.profitLoss).thenReturn("7000");
     when(() => data.isInProfit()).thenReturn(true);
-    expect(presenter.getProfitLoss().label, "Profile & Loss (USD)");
+    expect(presenter.getProfitLoss().label, "Profit & Loss (USD)");
     expect(presenter.getProfitLoss().value, "7000");
     expect(presenter.getProfitLoss().textColor, AppColors.greenOnDarkDefaultColorBg);
   });
