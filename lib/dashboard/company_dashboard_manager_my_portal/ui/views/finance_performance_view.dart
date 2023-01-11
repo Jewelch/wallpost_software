@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
@@ -95,25 +94,6 @@ class _FinancePerformanceViewState extends State<FinancePerformanceView>
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Financials ", style: TextStyles.headerCardHeadingTextStyle),
-            _presenter.shouldShowDetailDisclosureIndicator()
-                ? Container(
-                    height: 12,
-                    width: 12,
-                    child: SvgPicture.asset(
-                      'assets/icons/arrow_forward.svg',
-                      width: 12,
-                      height: 12,
-                      color: AppColors.defaultColor,
-                    ),
-                  )
-                : Container(),
-          ],
-        ),
-        SizedBox(height: 20),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
