@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wallpost/_main/ui/views/main_screen.dart';
 
+import '_main/ui/views/main_screen.dart';
 import 'notification_center/notification_center.dart';
 import 'notification_router/notification_screen_router.dart';
 
@@ -42,7 +42,10 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
       navigatorKey: navigatorKey,
       scaffoldMessengerKey: snackbarKey,
       home: MainScreen(),
-      theme: ThemeData(fontFamily: 'SF-Pro-Display'),
+      theme: ThemeData(
+        fontFamily: 'SF-Pro-Display',
+        splashColor: Colors.grey.shade100,
+      ),
       themeMode: ThemeMode.light,
     );
   }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/performance_view_holder.dart';
 
+import '../../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../../_shared/constants/app_colors.dart';
 import '../../presenters/restaurant_dashboard_presenter.dart';
+import 'performance_view_holder.dart';
 
 class RestaurantDashboardHeaderCard extends StatelessWidget {
   final RestaurantDashboardPresenter _presenter;

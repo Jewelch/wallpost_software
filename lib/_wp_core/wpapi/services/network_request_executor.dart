@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:dio/dio.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
+import '../../../_shared/helpers/pretty_dio_logger.dart';
 import 'network_adapter.dart';
 
 class NetworkRequestExecutor implements NetworkAdapter {
@@ -11,13 +11,13 @@ class NetworkRequestExecutor implements NetworkAdapter {
 
   NetworkRequestExecutor() {
     dio.interceptors.add(PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        error: true,
-        compact: true,
-        maxWidth: 90));
+      requestBody: true,
+      responseBody: true,
+      responseHeader: false,
+      error: true,
+      compact: false,
+      maxWidth: 90,
+    ));
   }
 
   @override

@@ -38,15 +38,24 @@ class DateRangeFilters {
 
   SelectableDateRangeOptions get selectedRangeOption => _selectedRangeOption;
 
-  DateTime startDate = DateTime.now();
+  DateTime startDate = DateTime.now().subtract(Duration(days: 356));
   DateTime endDate = DateTime.now();
 
   void setSelectedDateRangeOption(SelectableDateRangeOptions selectableDateRangeOptions) {
     if (selectableDateRangeOptions == SelectableDateRangeOptions.thisMonth) {
-      endDate = DateTime.now();
-      startDate = startDate.subtract(Duration(days: 30));
+      var today = DateTime.now();
+      startDate = DateTime(today.year, today.month, 1);
+      endDate = _getDateAfterOneMonthFrom(today);
     }
     this._selectedRangeOption = selectableDateRangeOptions;
+  }
+
+  DateTime _getDateAfterOneMonthFrom(DateTime date) {
+    if (date.month == 12) {
+      return DateTime(date.year + 1, 1, 1);
+    } else {
+      return DateTime(date.year, date.month + 1, 1);
+    }
   }
 
   DateRangeFilters copy() {
@@ -56,4 +65,17 @@ class DateRangeFilters {
     copyDateRangeFilter.endDate = endDate;
     return copyDateRangeFilter;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! DateRangeFilters) return false;
+    if (other.selectedRangeOption == SelectableDateRangeOptions.custom) {
+      if (other.startDate != startDate || other.endDate != endDate) return false;
+      return true;
+    }
+    return other.selectedRangeOption == selectedRangeOption;
+  }
+
+  @override
+  int get hashCode => super.hashCode;
 }

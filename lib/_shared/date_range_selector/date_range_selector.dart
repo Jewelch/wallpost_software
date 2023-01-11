@@ -4,6 +4,8 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 
+import 'date_custom_range_selector.dart';
+
 class DateRangeSelector extends StatefulWidget {
   final CenterSheetController centerSheetController;
 
@@ -109,7 +111,7 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
                     },
                     child: Container(
                       margin: EdgeInsets.only(bottom: 8),
-                      padding: EdgeInsets.symmetric(vertical: 9, horizontal: 12),
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                       decoration: BoxDecoration(
                           border: Border.all(color: AppColors.textFieldBackgroundColor),
                           borderRadius: BorderRadius.circular(6)),
@@ -132,11 +134,29 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
                   ),
                 )
                 .toList(),
-            SizedBox(height: 80),
+            SizedBox(height: 8),
+            TextButton(
+              onPressed: () => openCustomDateRangeSelector(context),
+              child: Text(
+                "Custom Range",
+                style: TextStyles.titleTextStyle.copyWith(
+                  color: AppColors.defaultColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> openCustomDateRangeSelector(BuildContext context) async {
+    var res = await DateCustomRangeSelector.show(context, dateFilters: dateFilters);
+    if (res != null) {
+      setState(() {});
+      widget.centerSheetController.close(result: dateFilters);
+    }
   }
 
   Color _getAppropriateColor(SelectableDateRangeOptions selectableDateRangeOptions) {

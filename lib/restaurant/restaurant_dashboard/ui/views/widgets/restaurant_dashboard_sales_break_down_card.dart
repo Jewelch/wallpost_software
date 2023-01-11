@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../../_shared/constants/app_colors.dart';
 import '../../presenters/restaurant_dashboard_presenter.dart';
 
 class SalesBreakDownCard extends StatelessWidget {

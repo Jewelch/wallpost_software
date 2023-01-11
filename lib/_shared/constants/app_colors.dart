@@ -28,6 +28,9 @@ class AppColors {
   static const Color textFieldBorderColor = Color.fromRGBO(220, 220, 220, 0);
   static const Color textFieldFocusedBorderColor = AppColors.defaultColor;
 
+  //MARK: Shadow colors
+  static const Color appBarShadowColor = Color.fromRGBO(226, 239, 246, 1.0);
+
   //MARK: Outcome colors
   static const Color rose = Color.fromRGBO(255, 227, 201, 1);
   static const Color green = Color.fromRGBO(51, 190, 114, 1.0);

@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/custom_shapes/curve_bottom_to_top.dart';
-import 'package:wallpost/_common_widgets/screen_presenter/screen_presenter.dart';
+
+import '../custom_shapes/curve_bottom_to_top.dart';
+import 'screen_presenter.dart';
 
 class ModalSheetController {
   __ModalSheetScreenState? _state;
@@ -30,6 +31,8 @@ class ModalSheetPresenter {
     required ModalSheetController controller,
     bool shouldDismissOnTap = true,
     bool isCurveApplied = true,
+    bool showBackGroundColor = true,
+    double height = 700,
   }) {
     return ScreenPresenter.present(
       _ModalSheetScreen(
@@ -37,6 +40,8 @@ class ModalSheetPresenter {
         controller: controller,
         shouldDismissOnTap: shouldDismissOnTap,
         isCurveApplied: isCurveApplied,
+        showBackgroundColor: showBackGroundColor,
+        height: height,
       ),
       context,
       slideDirection: SlideDirection.none,
@@ -49,9 +54,17 @@ class _ModalSheetScreen extends StatefulWidget {
   final ModalSheetController? controller;
   final bool shouldDismissOnTap;
   final bool isCurveApplied;
+  final bool showBackgroundColor;
+  final double height;
 
-  const _ModalSheetScreen(
-      {required this.content, this.controller, required this.shouldDismissOnTap, required this.isCurveApplied});
+  const _ModalSheetScreen({
+    required this.content,
+    this.controller,
+    required this.shouldDismissOnTap,
+    required this.isCurveApplied,
+    required this.showBackgroundColor,
+    required this.height,
+  });
 
   @override
   __ModalSheetScreenState createState() => __ModalSheetScreenState();
@@ -98,7 +111,7 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
           children: <Widget>[
             FadeTransition(
               opacity: opacity,
-              child: Container(color: Colors.black.withOpacity(0.7)),
+              child: widget.showBackgroundColor ? Container(color: Colors.transparent.withOpacity(0.7)) : null,
             ),
             GestureDetector(
               onTap: () {
@@ -113,7 +126,7 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                   child: SlideTransition(
                     position: offset,
                     child: Container(
-                      constraints: BoxConstraints.loose(const Size(double.infinity, 700)),
+                      constraints: BoxConstraints.loose(Size(double.infinity, widget.height)),
                       color: Colors.transparent,
                       child: ListView(
                         padding: EdgeInsets.zero,

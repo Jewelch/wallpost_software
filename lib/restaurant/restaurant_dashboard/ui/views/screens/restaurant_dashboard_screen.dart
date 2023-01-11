@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/restaurant_dashboard_view.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/restaurant_dashboard_loader.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/seles_break_down_loader.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_appbar.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_error_view.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_dashboard_header_card.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/restaurant_filters.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
 
+import '../../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../../_shared/constants/app_colors.dart';
+import '../../presenters/restaurant_dashboard_presenter.dart';
+import '../../view_contracts/restaurant_dashboard_view.dart';
+import '../loader/restaurant_dashboard_loader.dart';
+import '../loader/seles_break_down_loader.dart';
+import '../widgets/report_floating_action_button.dart';
+import '../widgets/restaurant_dashboard_appbar.dart';
+import '../widgets/restaurant_dashboard_error_view.dart';
+import '../widgets/restaurant_dashboard_header_card.dart';
 import '../widgets/restaurant_dashboard_sales_break_down_card.dart';
+import '../widgets/restaurant_filters.dart';
+import '../widgets/sliver_sales_breakdowns_horizontal_list.dart';
 
 enum _ScreenStates { loading, error, data }
 
@@ -68,6 +69,8 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
             }
           },
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: ReportsFloatingActionButton(presenter: _presenter),
       ),
     );
   }
@@ -105,9 +108,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
                   presenter: _presenter,
                 ),
                 _salesBreakdownViews(),
-                SliverToBoxAdapter(
-                  child: SizedBox(height: 16),
-                ),
+                SliverToBoxAdapter(child: SizedBox(height: 16)),
               ],
             )
           ],
@@ -126,7 +127,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
             return SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
-                child: SalesBreakDownLoader(),
+                child: SalesBreakDownLoader(count: 2),
               ),
             );
 
@@ -159,7 +160,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
               child: Padding(
                 padding: EdgeInsets.only(top: 100),
                 child: Text(
-                  "There is no sales breakdown for\nthe selected filters",
+                  "There are no sales breakdown for\nthe selected filters",
                   textAlign: TextAlign.center,
                   style: TextStyles.titleTextStyle,
                 ),
