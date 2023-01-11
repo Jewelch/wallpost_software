@@ -14,7 +14,7 @@ class HRDashboardData extends JSONInitializable {
     try {
       _activeStaff = sift.readStringFromMap(jsonMap, "active_staff");
       _staffOnLeaveToday = sift.readStringFromMap(jsonMap, "staff_on_leave");
-      _recruitment = sift.readStringFromMap(jsonMap, "recruitment");
+      _recruitment = sift.readStringFromMapWithDefaultValue(jsonMap, "recruitment", "0")!;
       _documentsExpired = sift.readStringFromMap(jsonMap, "documents_expired");
     } on SiftException catch (e) {
       throw MappingException('Failed to cast HRDashboardData response. Error message - ${e.errorMessage}');

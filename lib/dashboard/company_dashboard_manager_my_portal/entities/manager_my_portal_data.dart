@@ -13,7 +13,7 @@ class ManagerMyPortalData extends JSONInitializable {
     try {
       var aggregatedApprovalsMapList = sift.readMapListFromMap(jsonMap, 'aggregated_approvals');
       _aggregatedApprovals = _initAggregatedApprovals(aggregatedApprovalsMapList);
-      _departmentPerformance = sift.readNumberFromMap(jsonMap, 'department_performance');
+      _departmentPerformance = sift.readNumberFromMapWithDefaultValue(jsonMap, 'department_performance', 0)!;
     } on SiftException catch (e) {
       throw MappingException('Failed to cast ManagerMyPortalData response. Error message - ${e.errorMessage}');
     } on MappingException {
