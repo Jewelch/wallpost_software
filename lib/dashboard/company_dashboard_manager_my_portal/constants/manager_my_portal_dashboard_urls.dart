@@ -16,7 +16,7 @@ class ManagerMyPortalDashboardUrls {
   }
 
   static String financeDataUrl(String companyId, int? month, int? year) {
-    var url = '${BaseUrls.hrUrlV3()}/companies/$companyId/mobile/finance_data';
+    var url = '${BaseUrls.hrUrlV3()}/companies/$companyId/mobile/finance_data?';
     if (month != null) url += "month=$month";
     if (year != null) url += "&year=$year";
     return url;
