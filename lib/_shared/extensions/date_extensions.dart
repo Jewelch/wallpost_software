@@ -24,6 +24,10 @@ extension DateExtension on DateTime {
     return DateFormat('dd MMM yyyy').format(this);
   }
 
+  String toReadableStringWithHyphens() {
+    return DateFormat('dd-MMM-yyyy').format(this);
+  }
+
   bool isDateAfter(DateTime otherDate) {
     if (_daysBetween(this, otherDate) < 0) return true;
 

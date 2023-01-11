@@ -17,9 +17,15 @@ class ItemSalesReportFilters {
 
   List<String> toReadableListOfString() {
     return [
-      dateRangeFilters.selectedRangeOption.toReadableString(),
+      dateRangeFilters.toReadableString(),
       salesItemWiseOptions.toReadableString(),
       sortOptions.toReadableString()
     ];
+  }
+
+  void reset(){
+    dateRangeFilters = DateRangeFilters();
+    salesItemWiseOptions = SalesItemWiseOptions.CategoriesAndItems;
+    sortOptions = ItemSalesReportSortOptions.byRevenueLowToHigh;
   }
 }

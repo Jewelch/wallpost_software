@@ -106,7 +106,7 @@ class RestaurantFilters extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      dateFilters.selectedRangeOption.toReadableString(),
+                      dateFilters.toReadableString(),
                       style: TextStyles.subTitleTextStyleBold.copyWith(
                         color: AppColors.textColorDarkGray,
                       ),

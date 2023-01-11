@@ -140,6 +140,7 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
     var newFilters = await RestaurantReportsFilters.show(
       context,
       initialFilters: presenter.filters.copy(),
+      onResetClicked: presenter.resetFilters,
     );
     presenter.applyFilters(newFilters);
   }

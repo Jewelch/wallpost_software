@@ -1,3 +1,5 @@
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
+
 enum SelectableDateRangeOptions {
   today,
   yesterday,
@@ -7,7 +9,7 @@ enum SelectableDateRangeOptions {
   lastYear,
   custom;
 
-  String toReadableString() {
+  String toSelectableString() {
     switch (this) {
       case SelectableDateRangeOptions.today:
         return "Today";
@@ -29,7 +31,7 @@ enum SelectableDateRangeOptions {
   String toRawString() {
     return this == SelectableDateRangeOptions.custom || this == SelectableDateRangeOptions.thisMonth
         ? 'date_between'
-        : this.toReadableString().replaceAll(' ', '_').toLowerCase();
+        : this.toSelectableString().replaceAll(' ', '_').toLowerCase();
   }
 }
 
@@ -78,4 +80,23 @@ class DateRangeFilters {
 
   @override
   int get hashCode => super.hashCode;
+
+  String toReadableString() {
+    switch (this.selectedRangeOption) {
+      case SelectableDateRangeOptions.today:
+        return "Today";
+      case SelectableDateRangeOptions.yesterday:
+        return "Yesterday";
+      case SelectableDateRangeOptions.thisWeek:
+        return "This Week";
+      case SelectableDateRangeOptions.thisMonth:
+        return "This Month";
+      case SelectableDateRangeOptions.thisYear:
+        return "This Year";
+      case SelectableDateRangeOptions.lastYear:
+        return "Last Year";
+      case SelectableDateRangeOptions.custom:
+        return startDate.toReadableStringWithHyphens() + " to " + endDate.toReadableStringWithHyphens();
+    }
+  }
 }

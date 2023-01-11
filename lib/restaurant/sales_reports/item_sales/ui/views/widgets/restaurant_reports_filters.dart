@@ -12,17 +12,22 @@ import '../../../entities/sales_item_view_options.dart';
 class RestaurantReportsFilters extends StatefulWidget {
   final ItemSalesReportFilters filters;
   final ModalSheetController modalSheetController;
+  final VoidCallback onResetClicked;
 
-  const RestaurantReportsFilters({required this.filters, required this.modalSheetController});
+  const RestaurantReportsFilters(
+      {required this.filters, required this.modalSheetController, required this.onResetClicked});
 
   static Future<dynamic> show(BuildContext context,
-      {bool allowMultiple = false, required ItemSalesReportFilters initialFilters}) {
+      {bool allowMultiple = false,
+      required ItemSalesReportFilters initialFilters,
+      required VoidCallback onResetClicked}) {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
         context: context,
         content: RestaurantReportsFilters(
           filters: initialFilters,
           modalSheetController: modalSheetController,
+          onResetClicked: onResetClicked,
         ),
         controller: modalSheetController,
         isCurveApplied: false);
@@ -75,7 +80,10 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    widget.modalSheetController.close();
+                    widget.onResetClicked();
+                  },
                   child: Text(
                     "Reset",
                     style: TextStyles.largeTitleTextStyleBold.copyWith(
@@ -118,7 +126,7 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.filters.dateRangeFilters.selectedRangeOption.toReadableString(),
+                      widget.filters.dateRangeFilters.toReadableString(),
                       style: TextStyles.subTitleTextStyleBold.copyWith(
                         color: AppColors.textColorDarkGray,
                       ),

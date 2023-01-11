@@ -110,7 +110,7 @@ class RestaurantDashboardAppBar extends StatelessWidget {
                         border: Border.all(color: AppColors.lightGray),
                       ),
                       child: Text(
-                        presenter.dateFilters.selectedRangeOption.toReadableString(),
+                        presenter.dateFilters.toReadableString(),
                         style: TextStyles.labelTextStyle,
                       ),
                     ),

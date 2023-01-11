@@ -119,7 +119,7 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            selectableOption.toReadableString(),
+                            selectableOption.toSelectableString(),
                             style: TextStyles.subTitleTextStyleBold.copyWith(
                               color: _getAppropriateColor(selectableOption),
                             ),
