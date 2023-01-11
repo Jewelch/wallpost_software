@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_model.dart';
+import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_report_filters.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_report_sort_options.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/entities/sales_item_view_options.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/services/item_sales_provider.dart';
@@ -14,6 +15,7 @@ import 'package:wallpost/restaurant/sales_reports/item_sales/utils/item_sales_so
 
 import '../../../_mocks/mock_company_provider.dart';
 import '../mocks.dart';
+import 'helpers.dart';
 
 class MockItemSalesReportProvider extends Mock implements ItemSalesProvider {}
 
@@ -199,6 +201,140 @@ void main() {
     expect(presenter.getItemRevenueToDisplayAtIndex(11), "54");
   });
 
+  test("apply Filter do nothing when new applied filters is null", () async {
+    //given
+    var newFilters;
+
+    //when
+    await presenter.applyFilters(newFilters);
+
+    //then
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("apply Filter do nothing when there is no different between the current filters and the new one", () async {
+    //given
+    var newFilters = ItemSalesReportFilters();
+    newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
+    newFilters.sortOptions = presenter.filters.sortOptions;
+    newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
+
+    //when
+    await presenter.applyFilters(newFilters);
+
+    //then
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("apply Filter update the presenter filter object with the same instance in the memory", () async {
+    //given
+    var newFilters = ItemSalesReportFilters();
+    newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
+    newFilters.sortOptions = presenter.filters.sortOptions;
+    newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
+
+    //when
+    await presenter.applyFilters(newFilters);
+
+    //then
+    expect(presenter.filters, newFilters);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("apply Filter when only the change happened to the date filters call the api to load the item sales from api",
+      () async {
+    //given
+    var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesReportResponse);
+    when(() => itemSalesReportProvider.isLoading).thenReturn(false);
+    when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
+    var newFilters = ItemSalesReportFilters();
+    newFilters.dateRangeFilters = getDifferentDateRangeOption(presenter.filters.dateRangeFilters);
+
+    //when
+    await presenter.applyFilters(newFilters);
+
+    //then
+    verifyInOrder([
+      () => itemSalesReportProvider.isLoading,
+      () => view.showLoader(),
+      () => itemSalesReportProvider.getItemSales(any()),
+      () => view.onDidLoadReport(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("apply Filter when only the change happened to the sort filters calls itemSalesSorter to sort the breakdowns",
+      () async {
+    // Feed the presenter
+    var report = MockItemSalesReport();
+    var breakdown1 = MockItemSalesBreakdown();
+    when(() => breakdown1.items).thenReturn([]);
+    when(() => report.breakdown).thenReturn([breakdown1]);
+    when(() => itemSalesReportProvider.isLoading).thenReturn(false);
+    when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(report));
+    await presenter.loadItemSalesData();
+    _clearInteractionsOnAllMocks();
+
+    // given
+    var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesReportResponse);
+    var allItems = <ItemSales>[];
+    itemSalesData.breakdown.forEach((element) => element.items.forEach((item) => allItems.add(item)));
+    when(() => itemSalesSorter.sortBreakDowns(any(), any())).thenReturn(itemSalesData);
+    when(() => itemSalesSorter.sortAllBreakDownItems(any(), any())).thenReturn(allItems);
+    var newFilters = ItemSalesReportFilters();
+    newFilters.sortOptions = getDifferentItemSaleSortFilter(presenter.filters.sortOptions);
+
+    //when
+    await presenter.applyFilters(newFilters);
+
+    //then
+    verifyInOrder([
+      () => itemSalesSorter.sortBreakDowns(any(), newFilters.sortOptions),
+      () => itemSalesSorter.sortAllBreakDownItems(any(), newFilters.sortOptions),
+      () => view.onDidChangeFilters()
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
+    expect(presenter.itemSalesReport, itemSalesData);
+    expect(presenter.getItemsListLength(), allItems.length);
+  });
+
+  test("apply Filter when only the change happened to the views filters notify ui that filter had changed", () async {
+    // given
+    var newFilters = ItemSalesReportFilters();
+    newFilters.salesItemWiseOptions = getDifferentItemSaleViewFilter(presenter.filters.salesItemWiseOptions);
+
+    //when
+    await presenter.applyFilters(newFilters);
+
+    //then
+    verify(() => view.onDidChangeFilters());
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
+
+  test("reset filter return the filters to the default state and call the api", () async {
+    // given
+    var report = MockItemSalesReport();
+    var breakdown1 = MockItemSalesBreakdown();
+    when(() => breakdown1.items).thenReturn([]);
+    when(() => report.breakdown).thenReturn([breakdown1]);
+    when(() => itemSalesReportProvider.isLoading).thenReturn(false);
+    when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(report));
+
+    //when
+    await presenter.resetFilters();
+
+    //then
+    verifyInOrder([
+          () => itemSalesReportProvider.isLoading,
+          () => view.showLoader(),
+          () => itemSalesReportProvider.getItemSales(any()),
+          () => view.onDidLoadReport(),
+    ]);
+    expect(presenter.filters.dateRangeFilters.selectedRangeOption, SelectableDateRangeOptions.today);
+    expect(presenter.filters.salesItemWiseOptions, SalesItemWiseOptions.CategoriesAndItems);
+    expect(presenter.filters.sortOptions, ItemSalesReportSortOptions.byRevenueLowToHigh);
+    _verifyNoMoreInteractionsOnAllMocks();
+  });
   /*
 
 
@@ -671,97 +807,4 @@ TODO: Test the following getters
   //   _verifyNoMoreInteractionsOnAllMocks();
   // });
   //
-  // test("apply Filter do nothing when new applied filters is null", () async {
-  //   var newFilters;
-  //
-  //   await presenter.applyFilters(newFilters);
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test("apply Filter do nothing when there is no different between the current filters and the new one", () async {
-  //   var newFilters = ItemSalesReportFilters();
-  //   newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
-  //   newFilters.sortOptions = presenter.filters.sortOptions;
-  //   newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
-  //
-  //   await presenter.applyFilters(newFilters);
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test("apply Filter update the presenter filter object with the same instance in the memory", () async {
-  //   var newFilters = ItemSalesReportFilters();
-  //   newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
-  //   newFilters.sortOptions = presenter.filters.sortOptions;
-  //   newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
-  //
-  //   await presenter.applyFilters(newFilters);
-  //
-  //   expect(presenter.filters, newFilters);
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test(
-  //     "apply Filter load the item sales from api when date filter is different than the current one and  notify ui that filters has changed",
-  //     () async {
-  //   var newFilters = ItemSalesReportFilters();
-  //   newFilters.dateRangeFilters = getDifferentDateRangeOption(presenter.filters.dateRangeFilters);
-  //   newFilters.sortOptions = presenter.filters.sortOptions;
-  //   newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
-  //
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   await presenter.applyFilters(newFilters);
-  //
-  //   verifyInOrder([
-  //     () => itemSalesReportProvider.isLoading,
-  //     () => view.showLoader(),
-  //     () => itemSalesReportProvider.getItemSales(any()),
-  //     () => view.updateItemSalesData(),
-  //     () => view.showItemSalesBreakDowns(),
-  //   ]);
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test(
-  //     "apply Filter calls itemSalesSorter to sort the breakdowns with all items when new filter sort option is different than the current and update memory instance with the return one from the sorter",
-  //     () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //   var allItems = <ItemSales>[];
-  //   itemSalesData.breakdown?.forEach((element) => element.items?.forEach((item) => allItems.add(item)));
-  //   when(() => itemSalesSorter.sortBreakDowns(any(), any())).thenReturn(itemSalesData);
-  //   when(() => itemSalesSorter.sortAllBreakDownItems(any(), any())).thenReturn(allItems);
-  //
-  //   var newFilters = ItemSalesReportFilters();
-  //   newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
-  //   newFilters.sortOptions = getDifferentItemSaleSortFilter(presenter.filters.sortOptions);
-  //   newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
-  //
-  //   await presenter.applyFilters(newFilters);
-  //
-  //   verifyInOrder([
-  //     () => itemSalesSorter.sortBreakDowns(any(), newFilters.sortOptions),
-  //     () => itemSalesSorter.sortAllBreakDownItems(any(), newFilters.sortOptions),
-  //     () => view.onDidChangeFilters()
-  //   ]);
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  //   expect(presenter.itemslist, allItems);
-  //   expect(presenter.itemSalesData, itemSalesData);
-  // });
-  //
-  // test("apply Filter notify ui that filters changed when new filter view option is different than the current",
-  //     () async {
-  //   var newFilters = ItemSalesReportFilters();
-  //   newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
-  //   newFilters.sortOptions = presenter.filters.sortOptions;
-  //   newFilters.salesItemWiseOptions = getDifferentItemSaleViewFilter(presenter.filters.salesItemWiseOptions);
-  //
-  //   await presenter.applyFilters(newFilters);
-  //
-  //   verify(() => view.onDidChangeFilters());
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
 }

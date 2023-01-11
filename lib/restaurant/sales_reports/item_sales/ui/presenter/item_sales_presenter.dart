@@ -73,6 +73,11 @@ class ItemSalesPresenter {
     _view.showSalesReportFilter();
   }
 
+  Future resetFilters() async {
+    filters.reset();
+    await loadItemSalesData();
+  }
+
   // Getters
 
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
