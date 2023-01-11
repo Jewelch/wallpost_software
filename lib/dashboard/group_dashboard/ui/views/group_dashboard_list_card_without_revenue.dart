@@ -16,23 +16,15 @@ class GroupDashboardListCardWithoutRevenue extends StatelessWidget {
       onTap: onPressed,
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                _companyLogo(),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                  alignment: Alignment.center,
-                  child: Text(
-                    company.name,
-                    style: TextStyles.largeTitleTextStyleBold,
-                  ),
-                ),
-              ],
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            _companyLogo(),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(company.name, style: TextStyles.largeTitleTextStyleBold),
             ),
+            SizedBox(width: 8),
           ],
         ),
       ),
