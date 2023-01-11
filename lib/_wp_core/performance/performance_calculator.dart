@@ -18,13 +18,13 @@ class PerformanceCalculator {
     return !isLowPerformancePercent(performancePercent) && !isMediumPerformancePercent(performancePercent);
   }
 
-  Color getColorForPerformance(int performancePercent) {
+  Color getColorForPerformance(int performancePercent, {bool isOnDefaultBackground = false}) {
     if (isLowPerformancePercent(performancePercent)) {
-      return AppColors.red;
+      return isOnDefaultBackground ? AppColors.redOnDarkDefaultColorBg : AppColors.red;
     } else if (isMediumPerformancePercent(performancePercent)) {
       return AppColors.yellow;
     } else {
-      return AppColors.green;
+      return isOnDefaultBackground ? AppColors.greenOnDarkDefaultColorBg : AppColors.green;
     }
   }
 
