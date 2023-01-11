@@ -24,6 +24,13 @@ class PermissionsProvider {
         company.employee.isARetailManager();
   }
 
+  bool shouldShowEmployeeDashboard() {
+    if (shouldShowOwnerDashboard()) return false;
+    if (shouldShowManagerDashboard()) return false;
+
+    return true;
+  }
+
   bool canAccessFinanceModule() {
     var company = _companyProvider.getSelectedCompanyForCurrentUser();
     if (company.employee.isOwner() || company.employee.isGM()) {

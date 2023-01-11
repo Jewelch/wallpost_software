@@ -89,7 +89,7 @@ class Mocks {
           "image": "DOC_3e1be345-9506-4a8e-a66e-9b214200e691.png",
           "employment_id_v1": 2123,
           "line_manager": "Ishaque Sethikunhi Ameen",
-          "Roles": ["task_line_manager"],
+          "Roles": ["task_line_manager", "finance_manager"],
         },
         "request_items": [
           {
@@ -144,7 +144,7 @@ class Mocks {
           "image": "DOC_3e1be345-9506-4a8e-a66e-9b214200e691.png",
           "employment_id_v1": 2123,
           "line_manager": "Ishaque Sethikunhi Ameen",
-          "Roles": ["task_line_manager"],
+          "Roles": ["task_line_manager", "hr_manager", "sales_manager"],
         },
         "request_items": [
           {

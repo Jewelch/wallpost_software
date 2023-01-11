@@ -1,27 +1,30 @@
-import '../../../../_wp_core/company_management/services/selected_company_provider.dart';
+import 'package:wallpost/permissions/permissions_provider.dart';
+
 import '../../../../_wp_core/user_management/services/current_user_provider.dart';
 
 class CompanyDashboardPresenter {
-  final SelectedCompanyProvider _selectedCompanyProvider;
   final CurrentUserProvider _currentUserProvider;
+  PermissionsProvider _permissionsProvider;
 
   CompanyDashboardPresenter()
       : _currentUserProvider = CurrentUserProvider(),
-        _selectedCompanyProvider = SelectedCompanyProvider();
+        _permissionsProvider = PermissionsProvider();
 
-  CompanyDashboardPresenter.initWith(this._selectedCompanyProvider, this._currentUserProvider);
+  CompanyDashboardPresenter.initWith(this._currentUserProvider, this._permissionsProvider);
 
   String getProfileImageUrl() {
     return _currentUserProvider.getCurrentUser().profileImageUrl;
   }
 
   bool shouldShowOwnerDashboard() {
-    var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
-    return company.employee.isOwner() || company.employee.isGM();
+    return _permissionsProvider.shouldShowOwnerDashboard();
+  }
+
+  bool shouldShowManagerDashboard() {
+    return _permissionsProvider.shouldShowManagerDashboard();
   }
 
   bool shouldShowEmployeeDashboard() {
-    var company = _selectedCompanyProvider.getSelectedCompanyForCurrentUser();
-    return !(company.employee.isOwner() || company.employee.isGM());
+    return _permissionsProvider.shouldShowEmployeeDashboard();
   }
 }
