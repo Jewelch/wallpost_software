@@ -9,7 +9,7 @@ import '../../presenter/item_sales_presenter.dart';
 
 class ItemSalesCategoryItemViewCard extends StatelessWidget {
   final ItemSalesPresenter presenter;
-  final ItemSalesBreakdown element;
+  final CategoriesSales element;
 
   const ItemSalesCategoryItemViewCard(
     this.presenter,

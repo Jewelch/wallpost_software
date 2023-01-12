@@ -16,7 +16,7 @@ main() {
     var newItemSalesData = itemSalesSorter.sortBreakDowns(itemSalesData, ItemSalesReportSortOptions.byNameAToZ);
 
     var comparedCategoryName;
-    for (var category in newItemSalesData.breakdown!) {
+    for (var category in newItemSalesData.categoriesSales) {
       var currentString = category.categoryName;
       if (comparedCategoryName != null) {
         expect(comparedCategoryName.compareTo(currentString) <= 0, true);
@@ -25,8 +25,8 @@ main() {
     }
 
     var comparedItemName;
-    for (var category in newItemSalesData.breakdown!) {
-      for (var item in category.items ?? []) {
+    for (var category in newItemSalesData.categoriesSales) {
+      for (var item in category.items) {
         var currentString = item.itemName;
         if (comparedItemName != null) {
           expect(comparedItemName.compareTo(currentString) <= 0, true);
@@ -60,7 +60,7 @@ main() {
     var newItemSalesData = itemSalesSorter.sortBreakDowns(itemSalesData, ItemSalesReportSortOptions.byNameZToA);
 
     var comparedCategoryName;
-    for (var category in newItemSalesData.breakdown!) {
+    for (var category in newItemSalesData.categoriesSales) {
       var currentName = category.categoryName;
       if (comparedCategoryName != null) {
         expect(comparedCategoryName.compareTo(currentName) >= 0, true);
@@ -69,8 +69,8 @@ main() {
     }
 
     var comparedItemName;
-    for (var category in newItemSalesData.breakdown!) {
-      for (var item in category.items ?? []) {
+    for (var category in newItemSalesData.categoriesSales) {
+      for (var item in category.items) {
         var currentName = item.itemName;
         if (comparedItemName != null) {
           expect(comparedItemName.compareTo(currentName) >= 0, true);
@@ -104,7 +104,7 @@ main() {
     var newItemSalesData = itemSalesSorter.sortBreakDowns(itemSalesData, ItemSalesReportSortOptions.byRevenueLowToHigh);
 
     var comparedCategoryRevenue;
-    for (var category in newItemSalesData.breakdown!) {
+    for (var category in newItemSalesData.categoriesSales) {
       var currentRevenue = category.totalRevenue;
       if (comparedCategoryRevenue != null) {
         expect(comparedCategoryRevenue.compareTo(currentRevenue) <= 0, true);
@@ -113,8 +113,8 @@ main() {
     }
 
     var comparedItemRevenue;
-    for (var category in newItemSalesData.breakdown!) {
-      for (var item in category.items ?? []) {
+    for (var category in newItemSalesData.categoriesSales) {
+      for (var item in category.items) {
         var currentRevenue = item.revenue;
         if (comparedItemRevenue != null) {
           expect(comparedItemRevenue.compareTo(currentRevenue) <= 0, true);
@@ -148,7 +148,7 @@ main() {
     var newItemSalesData = itemSalesSorter.sortBreakDowns(itemSalesData, ItemSalesReportSortOptions.byRevenueHighToLow);
 
     var comparedCategoryRevenue;
-    for (var category in newItemSalesData.breakdown!) {
+    for (var category in newItemSalesData.categoriesSales) {
       var currentRevenue = category.totalRevenue;
       if (comparedCategoryRevenue != null) {
         expect(comparedCategoryRevenue.compareTo(currentRevenue) >= 0, true);
@@ -157,8 +157,8 @@ main() {
     }
 
     var comparedItemRevenue;
-    for (var category in newItemSalesData.breakdown!) {
-      for (var item in category.items ?? []) {
+    for (var category in newItemSalesData.categoriesSales) {
+      for (var item in category.items) {
         var currentRevenue = item.revenue;
         if (comparedItemRevenue != null) {
           expect(comparedItemRevenue.compareTo(currentRevenue) >= 0, true);

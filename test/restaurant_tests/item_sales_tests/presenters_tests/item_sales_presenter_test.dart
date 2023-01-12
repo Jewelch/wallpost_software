@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
@@ -21,7 +19,7 @@ class MockItemSalesReportProvider extends Mock implements ItemSalesProvider {}
 
 class MockItemSalesReport extends Mock implements ItemSalesReport {}
 
-class MockItemSalesBreakdown extends Mock implements ItemSalesBreakdown {}
+class MockItemSalesBreakdown extends Mock implements CategoriesSales {}
 
 class MockItemSalesView extends Mock implements ItemSalesView {}
 
@@ -118,7 +116,7 @@ void main() {
   test('shows message when item sales data break down is empty', () async {
     //given
     var report = MockItemSalesReport();
-    when(() => report.breakdown).thenReturn([]);
+    when(() => report.categoriesSales).thenReturn([]);
     when(() => itemSalesReportProvider.isLoading).thenReturn(false);
     when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(report));
 
@@ -141,7 +139,7 @@ void main() {
     var report = MockItemSalesReport();
     var breakdown1 = MockItemSalesBreakdown();
     when(() => breakdown1.items).thenReturn([]);
-    when(() => report.breakdown).thenReturn([breakdown1]);
+    when(() => report.categoriesSales).thenReturn([breakdown1]);
     when(() => itemSalesReportProvider.isLoading).thenReturn(false);
     when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(report));
 
@@ -269,7 +267,7 @@ void main() {
     var report = MockItemSalesReport();
     var breakdown1 = MockItemSalesBreakdown();
     when(() => breakdown1.items).thenReturn([]);
-    when(() => report.breakdown).thenReturn([breakdown1]);
+    when(() => report.categoriesSales).thenReturn([breakdown1]);
     when(() => itemSalesReportProvider.isLoading).thenReturn(false);
     when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(report));
     await presenter.loadItemSalesData();
@@ -278,7 +276,7 @@ void main() {
     // given
     var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesReportResponse);
     var allItems = <ItemSales>[];
-    itemSalesData.breakdown.forEach((element) => element.items.forEach((item) => allItems.add(item)));
+    itemSalesData.categoriesSales.forEach((element) => element.items.forEach((item) => allItems.add(item)));
     when(() => itemSalesSorter.sortBreakDowns(any(), any())).thenReturn(itemSalesData);
     when(() => itemSalesSorter.sortAllBreakDownItems(any(), any())).thenReturn(allItems);
     var newFilters = ItemSalesReportFilters();
@@ -316,7 +314,7 @@ void main() {
     var report = MockItemSalesReport();
     var breakdown1 = MockItemSalesBreakdown();
     when(() => breakdown1.items).thenReturn([]);
-    when(() => report.breakdown).thenReturn([breakdown1]);
+    when(() => report.categoriesSales).thenReturn([breakdown1]);
     when(() => itemSalesReportProvider.isLoading).thenReturn(false);
     when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(report));
 
@@ -325,10 +323,10 @@ void main() {
 
     //then
     verifyInOrder([
-          () => itemSalesReportProvider.isLoading,
-          () => view.showLoader(),
-          () => itemSalesReportProvider.getItemSales(any()),
-          () => view.onDidLoadReport(),
+      () => itemSalesReportProvider.isLoading,
+      () => view.showLoader(),
+      () => itemSalesReportProvider.getItemSales(any()),
+      () => view.onDidLoadReport(),
     ]);
     expect(presenter.filters.dateRangeFilters.selectedRangeOption, SelectableDateRangeOptions.today);
     expect(presenter.filters.salesItemWiseOptions, SalesItemWiseOptions.CategoriesAndItems);

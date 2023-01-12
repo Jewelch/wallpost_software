@@ -40,11 +40,11 @@ class ItemSalesPresenter {
       itemSalesReport = await _itemSalesDataProvider.getItemSales(dateFilters);
 
       _view.onDidLoadReport();
-      if (itemSalesReport.breakdown.isEmpty) _view.showNoItemSalesBreakdownMessage();
+      if (itemSalesReport.categoriesSales.isEmpty) _view.showNoItemSalesBreakdownMessage();
 
       //create a list of all items in all categories
       _itemsList.clear();
-      itemSalesReport.breakdown.forEach((element) => element.items.forEach((item) => _itemsList.add(item)));
+      itemSalesReport.categoriesSales.forEach((element) => element.items.forEach((item) => _itemsList.add(item)));
     } on WPException catch (e) {
       _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
     }
@@ -94,12 +94,12 @@ class ItemSalesPresenter {
 
   String getCategoryCardHeader() => "Categories(${itemSalesReport.totalCategories.toString()})";
 
-  String getCategoryNameAtIndex(int index) => itemSalesReport.breakdown[index].categoryName;
+  String getCategoryNameAtIndex(int index) => itemSalesReport.categoriesSales[index].categoryName;
 
   String getCategoryTotalToDisplayRevenueAtIndex(int index) =>
-      itemSalesReport.breakdown[index].totalRevenueToDisplay.toString();
+      itemSalesReport.categoriesSales[index].totalRevenueToDisplay.toString();
 
-  String getCategoryTotalQtyAtIndex(int index) => itemSalesReport.breakdown[index].totalQuantity.toString();
+  String getCategoryTotalQtyAtIndex(int index) => itemSalesReport.categoriesSales[index].totalQuantity.toString();
 
   // Item wise
 
@@ -121,16 +121,16 @@ class ItemSalesPresenter {
 
   String getRevenueToDisplayOfSpecificItem(ItemSales item) => item.revenueToDisplay.toString();
 
-  String getCategoryNameCardHeader(ItemSalesBreakdown breakDown) => breakDown.categoryName;
+  String getCategoryNameCardHeader(CategoriesSales breakDown) => breakDown.categoryName;
 
-  String getBreakDownRevenueForCategory(ItemSalesBreakdown breakDown) => breakDown.totalRevenueToDisplay;
+  String getBreakDownRevenueForCategory(CategoriesSales breakDown) => breakDown.totalRevenueToDisplay;
 
   void toggleCategoryExpansionStatusAtIndex(int index) =>
-      itemSalesReport.breakdown[index].isExpanded = !(itemSalesReport.breakdown[index].isExpanded);
+      itemSalesReport.categoriesSales[index].isExpanded = !(itemSalesReport.categoriesSales[index].isExpanded);
 
-  List<ItemSalesBreakdown> getItemSalesBreakDownList() => itemSalesReport.breakdown;
+  List<CategoriesSales> getItemSalesBreakDownList() => itemSalesReport.categoriesSales;
 
-  int getDataListLength() => itemSalesReport.breakdown.length;
+  int getDataListLength() => itemSalesReport.categoriesSales.length;
 
 /*
   TODO: Add feature to share reports

@@ -26,7 +26,7 @@ void main() {
     expect(itemSalesData.totalCategories, totalCategories);
     expect(itemSalesData.totalItemsInAllCategories, totalItemsInAllCategories);
     expect(itemSalesData.totalOfAllItemsQuantities, totalOfAllItemsQuantities);
-    expect(itemSalesData.breakdown!.length, 2);
+    expect(itemSalesData.categoriesSales.length, 2);
   });
 
   test('ItemSalesDataModel serialization throws a <MappingException> when data is invalid', () {
@@ -44,6 +44,7 @@ void main() {
     } catch (e) {
       expect(e, isA<MappingException>());
     }
+
     try {
       ItemSalesReport.fromJson(Mocks.specificItemSalesResponse(
         totalRevenue: 12000,

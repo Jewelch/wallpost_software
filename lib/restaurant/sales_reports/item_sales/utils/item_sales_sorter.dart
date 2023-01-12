@@ -1,44 +1,44 @@
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_model.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_report_sort_options.dart';
+import '../entities/item_sales_model.dart';
+import '../entities/item_sales_report_sort_options.dart';
 
 class ItemSalesSorter {
   ItemSalesReport sortBreakDowns(ItemSalesReport itemSalesDataModel, ItemSalesReportSortOptions sortOptions) {
-    var breakdowns = itemSalesDataModel.breakdown ;
+    var breakdowns = itemSalesDataModel.categoriesSales;
     switch (sortOptions) {
       case ItemSalesReportSortOptions.byRevenueLowToHigh:
         breakdowns.forEach((breakdown) {
-          (breakdown.items ).sort((a, b) => a.revenue.compareTo(b.revenue));
+          (breakdown.items).sort((a, b) => a.revenue.compareTo(b.revenue));
         });
         breakdowns.sort((a, b) => a.totalRevenue.compareTo(b.totalRevenue));
         return itemSalesDataModel;
       case ItemSalesReportSortOptions.byRevenueHighToLow:
         breakdowns.forEach((breakdown) {
-          (breakdown.items  ).sort((a, b) => a.revenue.compareTo(b.revenue));
+          (breakdown.items).sort((a, b) => a.revenue.compareTo(b.revenue));
           breakdown.items = breakdown.items.reversed.toList();
         });
         breakdowns.sort((a, b) => a.totalRevenue.compareTo(b.totalRevenue));
-        itemSalesDataModel.breakdown = itemSalesDataModel.breakdown.reversed.toList();
+        itemSalesDataModel.categoriesSales = itemSalesDataModel.categoriesSales.reversed.toList();
         return itemSalesDataModel;
       case ItemSalesReportSortOptions.byNameAToZ:
         breakdowns.forEach((breakdown) {
-          (breakdown.items  ).sort((a, b) => a.itemName.compareTo(b.itemName));
+          (breakdown.items).sort((a, b) => a.itemName.compareTo(b.itemName));
         });
         breakdowns.sort((a, b) => a.categoryName.compareTo(b.categoryName));
         return itemSalesDataModel;
       case ItemSalesReportSortOptions.byNameZToA:
         breakdowns.forEach((breakdown) {
-          (breakdown.items  ).sort((a, b) => a.itemName.compareTo(b.itemName));
+          (breakdown.items).sort((a, b) => a.itemName.compareTo(b.itemName));
           breakdown.items = breakdown.items.reversed.toList();
         });
         breakdowns.sort((a, b) => a.categoryName.compareTo(b.categoryName));
-        itemSalesDataModel.breakdown = itemSalesDataModel.breakdown.reversed.toList();
+        itemSalesDataModel.categoriesSales = itemSalesDataModel.categoriesSales.reversed.toList();
         return itemSalesDataModel;
     }
   }
 
   List<ItemSales> sortAllBreakDownItems(ItemSalesReport itemSalesDataModel, ItemSalesReportSortOptions sortOptions) {
     var itemsList = <ItemSales>[];
-    itemSalesDataModel.breakdown.forEach((element) => element.items.forEach((item) => itemsList.add(item)));
+    itemSalesDataModel.categoriesSales.forEach((element) => element.items.forEach((item) => itemsList.add(item)));
     switch (sortOptions) {
       case ItemSalesReportSortOptions.byRevenueLowToHigh:
         itemsList.sort((a, b) => a.revenue.compareTo(b.revenue));

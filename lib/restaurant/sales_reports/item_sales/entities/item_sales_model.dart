@@ -7,14 +7,14 @@ class ItemSalesReport {
   final int totalCategories;
   final int totalItemsInAllCategories;
   final int totalOfAllItemsQuantities;
-  List<ItemSalesBreakdown> breakdown; //TODO - rename this
+  List<CategoriesSales> categoriesSales;
 
   ItemSalesReport._({
     required this.totalRevenue,
     required this.totalCategories,
     required this.totalItemsInAllCategories,
     required this.totalOfAllItemsQuantities,
-    required this.breakdown,
+    required this.categoriesSales,
   });
 
   factory ItemSalesReport.fromJson(Map<String, dynamic> json) {
@@ -24,9 +24,9 @@ class ItemSalesReport {
         totalCategories: json["totalCategories"],
         totalItemsInAllCategories: json["totalItemsInAllCategories"],
         totalOfAllItemsQuantities: json["totalOfAllItemsQuantities"],
-        breakdown: json["breakdown"] == null
+        categoriesSales: json["breakdown"] == null
             ? []
-            : List<ItemSalesBreakdown>.from(json["breakdown"].map((x) => ItemSalesBreakdown.fromJson(x))),
+            : List<CategoriesSales>.from(json["breakdown"].map((x) => CategoriesSales.fromJson(x))),
       );
     } catch (error, stackTrace) {
       debugPrint(stackTrace.toString());
@@ -36,7 +36,7 @@ class ItemSalesReport {
 }
 
 //TODO -rename this class
-class ItemSalesBreakdown {
+class CategoriesSales {
   final int? categoryId;
   final String categoryName;
   final int totalQuantity;
@@ -45,7 +45,7 @@ class ItemSalesBreakdown {
   List<ItemSales> items;
   bool isExpanded;
 
-  ItemSalesBreakdown._({
+  CategoriesSales._({
     this.categoryId,
     required this.categoryName,
     required this.totalQuantity,
@@ -55,7 +55,7 @@ class ItemSalesBreakdown {
     this.isExpanded = true,
   });
 
-  factory ItemSalesBreakdown.fromJson(Map<String, dynamic> json) => ItemSalesBreakdown._(
+  factory CategoriesSales.fromJson(Map<String, dynamic> json) => CategoriesSales._(
         categoryId: json["categoryId"],
         categoryName: json["categoryName"],
         totalQuantity: json["totalQuantity"],
