@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
+
+import '../../_shared/constants/app_colors.dart';
 
 class TextStyles {
   static String _defaultFont = 'SF-Pro-Display';
@@ -19,7 +20,7 @@ class TextStyles {
       );
 
   static get largeTitleTextStyleBold => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontSize: 17,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.bold,
@@ -45,26 +46,26 @@ class TextStyles {
       );
 
   static get subTitleTextStyleBold => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontSize: 14,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.w600,
       );
 
   static get labelTextStyle => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontSize: 12,
         color: AppColors.textColorGray,
       );
 
   static get smallLabelTextStyle => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontSize: 11,
         color: AppColors.textColorGray,
       );
 
   static get labelTextStyleBold => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontSize: 12,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.w600,
@@ -80,7 +81,7 @@ class TextStyles {
       );
 
   static get headerCardHeadingTextStyle => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontWeight: FontWeight.w700,
         color: Colors.white,
         fontSize: 24.0,
@@ -102,7 +103,7 @@ class TextStyles {
       );
 
   static get headerCardMainLabelTextStyle => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontSize: 16,
         color: AppColors.defaultColorDarkContrastColor,
         fontWeight: FontWeight.w600,
@@ -117,14 +118,14 @@ class TextStyles {
       );
 
   static get headerCardSubLabelTextStyle => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontWeight: FontWeight.w400,
         color: AppColors.defaultColorDarkContrastColor,
         fontSize: 11.0,
       );
 
   static get headerCardMoneyLabelTextStyle => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontWeight: FontWeight.w300,
         color: AppColors.screenBackgroundColor.withOpacity(.6),
         fontSize: 17.0,

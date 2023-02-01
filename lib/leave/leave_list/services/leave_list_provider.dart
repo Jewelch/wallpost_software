@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-
+import '../../../_shared/exceptions/wrong_response_format_exception.dart';
 import '../../../_wp_core/company_management/services/selected_company_provider.dart';
+import '../../../_wp_core/wpapi/services/wp_api.dart';
 import '../constants/leave_list_urls.dart';
 import '../entities/leave_list_item.dart';
 import '../entities/leave_list_status_filter.dart';

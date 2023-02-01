@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_wp_core/company_management/entities/module.dart';
-import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/hr_performance_view.dart';
-import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/restaurant_performance_view.dart';
-import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/retail_performance_view.dart';
 
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../_shared/constants/app_colors.dart';
+import '../../../../_wp_core/company_management/entities/module.dart';
 import '../models/owner_dashboard_filters.dart';
 import '../presenters/module_page_view_presenter.dart';
-import 'crm_performance_view.dart';
+import 'hr_performance_view.dart';
+import 'restaurant_performance_view.dart';
+import 'retail_performance_view.dart';
 
 class ModulesView extends StatefulWidget {
   final ModulePageViewPresenter _presenter;
@@ -66,7 +65,7 @@ class _ModulesViewState extends State<ModulesView> with TickerProviderStateMixin
             controller: _tabController,
             children: widget._presenter.getModules().map((module) {
               if (module == Module.Crm) {
-                return CRMPerformanceView(widget._filters);
+                return RestaurantPerformanceView(widget._filters);
               } else if (module == Module.Hr) {
                 return HRPerformanceView(widget._filters);
               } else if (module == Module.Restaurant) {
