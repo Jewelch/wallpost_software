@@ -145,17 +145,4 @@ main() {
     }
   });
 
-//   // test('ItemSalesReportProvider API throws <InvalidResponseException> when entity mapping fails', () async {
-//   //   mockNetworkAdapter.succeed(<String, dynamic>{"miss_data": "anyWrongData"});
-//   //
-//   //   try {
-//   //     await itemSalesReportProvider.getItemSales(
-//   //       dateFilter,
-//   //     );
-//   //     fail('failed to throw InvalidResponseException');
-//   //   } catch (e) {
-//   //     print(e);
-//   //     expect(e is InvalidResponseException, true);
-//   //   }
-  // });
 }

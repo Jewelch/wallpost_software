@@ -13,7 +13,7 @@ import '../widgets/item_sales_app_bar.dart';
 import '../widgets/item_sales_error_view.dart';
 import '../widgets/item_sales_header_card.dart';
 import '../widgets/item_sales_wise.dart';
-import '../widgets/restaurant_reports_filters.dart';
+import '../widgets/item_sales_reports_filters.dart';
 
 enum _ScreenStates { loading, error, data }
 
@@ -137,7 +137,7 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
 
   @override
   void showSalesReportFilter() async {
-    var newFilters = await RestaurantReportsFilters.show(
+    var newFilters = await ItemSalesReportsFilters.show(
       context,
       initialFilters: presenter.filters.copy(),
       onResetClicked: presenter.resetFilters,

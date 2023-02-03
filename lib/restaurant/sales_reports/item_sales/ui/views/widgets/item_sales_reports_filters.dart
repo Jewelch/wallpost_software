@@ -9,12 +9,12 @@ import '../../../entities/item_sales_report_filters.dart';
 import '../../../entities/item_sales_report_sort_options.dart';
 import '../../../entities/sales_item_view_options.dart';
 
-class RestaurantReportsFilters extends StatefulWidget {
+class ItemSalesReportsFilters extends StatefulWidget {
   final ItemSalesReportFilters filters;
   final ModalSheetController modalSheetController;
   final VoidCallback onResetClicked;
 
-  const RestaurantReportsFilters(
+  const ItemSalesReportsFilters(
       {required this.filters, required this.modalSheetController, required this.onResetClicked});
 
   static Future<dynamic> show(BuildContext context,
@@ -24,7 +24,7 @@ class RestaurantReportsFilters extends StatefulWidget {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
         context: context,
-        content: RestaurantReportsFilters(
+        content: ItemSalesReportsFilters(
           filters: initialFilters,
           modalSheetController: modalSheetController,
           onResetClicked: onResetClicked,
@@ -34,10 +34,10 @@ class RestaurantReportsFilters extends StatefulWidget {
   }
 
   @override
-  State<RestaurantReportsFilters> createState() => _RestaurantReportsFiltersState();
+  State<ItemSalesReportsFilters> createState() => _ItemSalesReportsFiltersState();
 }
 
-class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
+class _ItemSalesReportsFiltersState extends State<ItemSalesReportsFilters> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -175,9 +175,9 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                   .map(
                     (sortOption) => RadioContainer(
                       title: sortOption.toReadableString(),
-                      isSelected: widget.filters.sortOptions == sortOption,
+                      isSelected: widget.filters.sortOption == sortOption,
                       onTap: () {
-                        widget.filters.sortOptions = sortOption;
+                        widget.filters.sortOption = sortOption;
                         setState(() {});
                       },
                     ),
@@ -189,9 +189,9 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                   .map(
                     (sortOption) => RadioContainer(
                       title: sortOption.toReadableString(),
-                      isSelected: widget.filters.sortOptions == sortOption,
+                      isSelected: widget.filters.sortOption == sortOption,
                       onTap: () {
-                        widget.filters.sortOptions = sortOption;
+                        widget.filters.sortOption = sortOption;
                         setState(() {});
                       },
                     ),

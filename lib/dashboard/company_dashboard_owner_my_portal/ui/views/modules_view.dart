@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/crm_performance_view.dart';
 
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../_shared/constants/app_colors.dart';
@@ -65,7 +66,7 @@ class _ModulesViewState extends State<ModulesView> with TickerProviderStateMixin
             controller: _tabController,
             children: widget._presenter.getModules().map((module) {
               if (module == Module.Crm) {
-                return RestaurantPerformanceView(widget._filters);
+                return CRMPerformanceView(widget._filters);
               } else if (module == Module.Hr) {
                 return HRPerformanceView(widget._filters);
               } else if (module == Module.Restaurant) {

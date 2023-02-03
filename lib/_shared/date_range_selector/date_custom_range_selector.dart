@@ -15,7 +15,6 @@ class DateCustomRangeSelector extends StatefulWidget {
 
   static Future<dynamic> show(
     BuildContext context, {
-    bool allowMultiple = false,
     required DateRangeFilters dateFilters,
   }) {
     var centerSheetController = CenterSheetController();
