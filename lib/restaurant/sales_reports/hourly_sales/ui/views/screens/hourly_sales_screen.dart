@@ -7,13 +7,13 @@ import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
 import '../../../../../restaurant_dashboard/ui/views/widgets/sliver_sales_breakdowns_horizontal_list.dart';
 import '../../presenter/hourly_sales_presenter.dart';
-import '../../view_contracts/item_sales_view.dart';
+import '../../view_contracts/hourly_sales_view.dart';
 import '../loader/hourly_sales_loader.dart';
 import '../widgets/houlry_sales_data_card_view.dart';
 import '../widgets/hourly_sales_app_bar.dart';
-import '../widgets/item_sales_error_view.dart';
-import '../widgets/item_sales_header_card.dart';
-import '../widgets/restaurant_reports_filters.dart';
+import '../widgets/hourly_sales_error_view.dart';
+import '../widgets/hourly_sales_header_card.dart';
+import '../widgets/hourly_sales_reports_filters.dart';
 
 enum _ScreenStates { loading, error, data }
 
@@ -24,7 +24,7 @@ class HourlySalesScreen extends StatefulWidget {
   State<HourlySalesScreen> createState() => _State();
 }
 
-class _State extends State<HourlySalesScreen> implements HoulySalesView {
+class _State extends State<HourlySalesScreen> implements HourlySalesView {
   late HourlySalesPresenter presenter = HourlySalesPresenter(this);
 
   final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.data);
@@ -34,7 +34,7 @@ class _State extends State<HourlySalesScreen> implements HoulySalesView {
   @override
   void initState() {
     super.initState();
-    presenter.loadItemSalesData();
+    presenter.loadHourlySalesData();
   }
 
   @override
@@ -51,10 +51,10 @@ class _State extends State<HourlySalesScreen> implements HoulySalesView {
             //! ERROR STATE
             case _ScreenStates.error:
               return Scaffold(
-                appBar: HoulrySalesAppBarWidget(presenter),
-                body: SalesItemErrorView(
+                appBar: HourlySalesAppBarWidget(presenter),
+                body: HourlySalesErrorView(
                   errorMessage: errorMessage,
-                  onRetry: presenter.loadItemSalesData,
+                  onRetry: presenter.loadHourlySalesData,
                 ),
               );
 
@@ -69,9 +69,9 @@ class _State extends State<HourlySalesScreen> implements HoulySalesView {
 
   Widget _dataView() {
     return Scaffold(
-      appBar: HoulrySalesAppBarWidget(presenter),
+      appBar: HourlySalesAppBarWidget(presenter),
       body: RefreshIndicator(
-        onRefresh: () => presenter.loadItemSalesData(),
+        onRefresh: () => presenter.loadHourlySalesData(),
         child: Container(
           color: AppColors.screenBackgroundColor2,
           child: CustomScrollView(
@@ -89,12 +89,12 @@ class _State extends State<HourlySalesScreen> implements HoulySalesView {
                         notifier: salesItemDataNotifier,
                         builder: (context) => LayoutBuilder(builder: (context, contraints) {
                           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                            HoulrySalesAppBarWidget.appbarNotifier.notify(contraints.maxHeight <= 100);
+                            HourlySalesAppBarWidget.appbarNotifier.notify(contraints.maxHeight <= 100);
                           });
                           return Padding(
                             padding:
                                 contraints.maxHeight > 100 ? EdgeInsets.symmetric(horizontal: 24) : EdgeInsets.zero,
-                            child: ItemSalesHeaderCard(presenter, contraints.maxHeight),
+                            child: HourlySalesHeaderCard(presenter, contraints.maxHeight),
                           );
                         }),
                       ),
@@ -137,17 +137,12 @@ class _State extends State<HourlySalesScreen> implements HoulySalesView {
 
   @override
   void showSalesReportFilter() async {
-    var newFilters = await RestaurantReportsFilters.show(
+    var newFilters = await HourlySalesReportsFilters.show(
       context,
       initialFilters: presenter.filters.copy(),
       onResetClicked: presenter.resetFilters,
     );
     presenter.applyFilters(newFilters);
-  }
-
-  @override
-  void onDidChangeFilters() {
-    setState(() {});
   }
 
   @override
@@ -162,7 +157,7 @@ class _State extends State<HourlySalesScreen> implements HoulySalesView {
   }
 
   @override
-  void showNoItemSalesBreakdownMessage() {
+  void showNoHourlySalesMessage() {
     screenStateNotifier.notify(_ScreenStates.data);
   }
 }

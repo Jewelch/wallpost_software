@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
-
-import '../../../../_shared/exceptions/mapping_exception.dart';
+import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
+import 'package:wallpost/restaurant/sales_reports/hourly_sales/entities/hourly_sales_item.dart';
 
 class HourlySalesReport {
   final String totalRevenue;
   final String totalTickets;
   final List<HourlySalesItem> hourlySales;
 
-  const HourlySalesReport({
+  const HourlySalesReport._({
     required this.totalRevenue,
     required this.totalTickets,
     required this.hourlySales,
@@ -15,9 +15,9 @@ class HourlySalesReport {
 
   factory HourlySalesReport.fromJson(Map<String, dynamic> json) {
     try {
-      return HourlySalesReport(
+      return HourlySalesReport._(
         totalRevenue: json['summary']["total_tickets"],
-        totalTickets: json['summary']["tickets"],
+        totalTickets: json['summary']["tickets"].toString(),
         hourlySales: json["data"] == null
             ? []
             : List<HourlySalesItem>.from(json["data"].map((x) => HourlySalesItem.fromJson(x))),
@@ -27,22 +27,4 @@ class HourlySalesReport {
       throw MappingException('Failed to cast ItemSalesDataModel response. Error message - $error');
     }
   }
-}
-
-class HourlySalesItem {
-  final String hour;
-  final String ticketsCount;
-  final String ticketsRevenue;
-
-  const HourlySalesItem._({
-    required this.hour,
-    required this.ticketsCount,
-    required this.ticketsRevenue,
-  });
-
-  factory HourlySalesItem.fromJson(Map<String, dynamic> json) => HourlySalesItem._(
-        hour: json["hour"],
-        ticketsCount: json["tickets"],
-        ticketsRevenue: json["ticket_total"],
-      );
 }

@@ -10,4 +10,13 @@ enum HourlySalesReportSortOptions {
         return "Revenue(High-Low)";
     }
   }
+
+  String toRawString() {
+    switch (this) {
+      case byRevenueLowToHigh:
+        return "asc";
+      case byRevenueHighToLow:
+        return "desc";
+    }
+  }
 }

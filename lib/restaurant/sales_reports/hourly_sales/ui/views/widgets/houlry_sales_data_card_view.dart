@@ -62,7 +62,7 @@ class HourlySalesDataCard extends StatelessWidget {
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            presenter.getCategoryTotalToDisplayRevenueAtIndex(index),
+                            presenter.getTotalRevenueAtIndex(index),
                             textAlign: TextAlign.right,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyles.headerCardSubValueTextStyle,

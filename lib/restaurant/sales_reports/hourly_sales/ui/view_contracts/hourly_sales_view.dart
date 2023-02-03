@@ -1,13 +1,11 @@
-abstract class HoulySalesView {
+abstract class HourlySalesView {
   void showLoader();
 
   void showErrorMessage(String message);
 
   void onDidLoadReport();
 
-  void showNoItemSalesBreakdownMessage();
+  void showNoHourlySalesMessage();
 
   void showSalesReportFilter();
-
-  void onDidChangeFilters();
 }

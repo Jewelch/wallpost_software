@@ -1,23 +1,24 @@
-import '../../../../_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
+
 import 'hourly_sales_report_sort_options.dart';
 
 class HourlySalesReportFilters {
-  DateRangeFilters dateRangeFilters = DateRangeFilters();
-  HourlySalesReportSortOptions sortOptions = HourlySalesReportSortOptions.byRevenueLowToHigh;
+  DateTime selectedDate = DateTime.now();
+  HourlySalesReportSortOptions sortOption = HourlySalesReportSortOptions.byRevenueLowToHigh;
 
   HourlySalesReportFilters copy() {
     var itemSalesFilters = HourlySalesReportFilters();
-    itemSalesFilters.dateRangeFilters = dateRangeFilters.copy();
-    itemSalesFilters.sortOptions = sortOptions;
+    itemSalesFilters.selectedDate = selectedDate;
+    itemSalesFilters.sortOption = sortOption;
     return itemSalesFilters;
   }
 
   List<String> toReadableListOfString() {
-    return [dateRangeFilters.toReadableString(), sortOptions.toReadableString()];
+    return [selectedDate.toReadableString(), sortOption.toReadableString()];
   }
 
   void reset() {
-    dateRangeFilters = DateRangeFilters();
-    sortOptions = HourlySalesReportSortOptions.byRevenueLowToHigh;
+    selectedDate = DateTime.now();
+    sortOption = HourlySalesReportSortOptions.byRevenueLowToHigh;
   }
 }

@@ -5,11 +5,11 @@ import '../../../../../../_shared/constants/app_colors.dart';
 import '../../../../../restaurant_dashboard/ui/views/widgets/performance_view_holder.dart';
 import '../../presenter/hourly_sales_presenter.dart';
 
-class ItemSalesHeaderCard extends StatelessWidget {
+class HourlySalesHeaderCard extends StatelessWidget {
   final HourlySalesPresenter presenter;
   final double constraints;
 
-  const ItemSalesHeaderCard(
+  const HourlySalesHeaderCard(
     this.presenter,
     this.constraints, {
     super.key,

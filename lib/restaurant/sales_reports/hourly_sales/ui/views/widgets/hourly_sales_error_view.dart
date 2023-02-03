@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 
-class SalesItemErrorView extends StatelessWidget {
+class HourlySalesErrorView extends StatelessWidget {
   final String errorMessage;
   final void Function() onRetry;
 
-  const SalesItemErrorView({
+  const HourlySalesErrorView({
     super.key,
     required this.errorMessage,
     required this.onRetry,

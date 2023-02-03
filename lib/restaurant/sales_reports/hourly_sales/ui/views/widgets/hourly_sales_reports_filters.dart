@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wallpost/_shared/date_range_selector/single_date_selector.dart';
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
 
 import '../../../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
-import '../../../../../../_shared/date_range_selector/date_range_selector.dart';
 import '../../../entities/hourly_sales_report_filters.dart';
 import '../../../entities/hourly_sales_report_sort_options.dart';
 
-class RestaurantReportsFilters extends StatefulWidget {
+class HourlySalesReportsFilters extends StatefulWidget {
   final HourlySalesReportFilters filters;
   final ModalSheetController modalSheetController;
   final VoidCallback onResetClicked;
 
-  const RestaurantReportsFilters(
+  const HourlySalesReportsFilters(
       {required this.filters, required this.modalSheetController, required this.onResetClicked});
 
   static Future<dynamic> show(BuildContext context,
@@ -23,7 +24,7 @@ class RestaurantReportsFilters extends StatefulWidget {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
         context: context,
-        content: RestaurantReportsFilters(
+        content: HourlySalesReportsFilters(
           filters: initialFilters,
           modalSheetController: modalSheetController,
           onResetClicked: onResetClicked,
@@ -33,10 +34,10 @@ class RestaurantReportsFilters extends StatefulWidget {
   }
 
   @override
-  State<RestaurantReportsFilters> createState() => _RestaurantReportsFiltersState();
+  State<HourlySalesReportsFilters> createState() => _HourlySalesReportsFiltersState();
 }
 
-class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
+class _HourlySalesReportsFiltersState extends State<HourlySalesReportsFilters> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -105,13 +106,12 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
             SizedBox(height: 16),
             GestureDetector(
               onTap: () async {
-                var newDateFilter = await DateRangeSelector.show(
+                var newDate = await SingleDateSelector.show(
                   context,
-                  onDateRangeFilterSelected: (_) {},
-                  initialDateRangeFilter: widget.filters.dateRangeFilters,
+                  initialDate: widget.filters.selectedDate,
                 );
-                if (newDateFilter != null) {
-                  widget.filters.dateRangeFilters = newDateFilter;
+                if (newDate != null) {
+                  widget.filters.selectedDate = newDate;
                   setState(() {});
                 }
               },
@@ -125,7 +125,7 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.filters.dateRangeFilters.toReadableString(),
+                      widget.filters.selectedDate.toReadableString(),
                       style: TextStyles.subTitleTextStyleBold.copyWith(
                         color: AppColors.textColorDarkGray,
                       ),
@@ -149,9 +149,9 @@ class _RestaurantReportsFiltersState extends State<RestaurantReportsFilters> {
                   .map(
                     (sortOption) => RadioContainer(
                       title: sortOption.toReadableString(),
-                      isSelected: widget.filters.sortOptions == sortOption,
+                      isSelected: widget.filters.sortOption == sortOption,
                       onTap: () {
-                        widget.filters.sortOptions = sortOption;
+                        widget.filters.sortOption = sortOption;
                         setState(() {});
                       },
                     ),

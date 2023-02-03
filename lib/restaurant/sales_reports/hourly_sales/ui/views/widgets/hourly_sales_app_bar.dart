@@ -7,8 +7,8 @@ import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
 import '../../presenter/hourly_sales_presenter.dart';
 
-class HoulrySalesAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  HoulrySalesAppBarWidget(
+class HourlySalesAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
+  HourlySalesAppBarWidget(
     this.presenter, {
     super.key,
   });
