@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/crm_performance_view.dart';
 
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../_shared/constants/app_colors.dart';
 import '../../../../_wp_core/company_management/entities/module.dart';
 import '../models/owner_dashboard_filters.dart';
 import '../presenters/module_page_view_presenter.dart';
+import 'crm_performance_view.dart';
 import 'hr_performance_view.dart';
 import 'restaurant_performance_view.dart';
 import 'retail_performance_view.dart';

@@ -33,14 +33,12 @@ class HourlySalesPresenter {
 
       _view.onDidLoadReport();
       if (itemSalesReport.hourlySales.isEmpty) _view.showNoHourlySalesMessage();
-
     } on WPException catch (e) {
       _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
     }
   }
 
   //MARK: Function to apply Filters
-
   void onFiltersGotClicked() {
     _view.showSalesReportFilter();
   }
@@ -70,15 +68,4 @@ class HourlySalesPresenter {
   String getTotalRevenueAtIndex(int index) => itemSalesReport.hourlySales[index].ticketsRevenue;
 
   int getDataListLength() => itemSalesReport.hourlySales.length;
-
-/*
-  TODO: Add feature to share reports
-  void shareReports() {
-    Share.shareXFiles(
-      [XFile('dsdsd')],
-      text: 'Share reports text',
-      subject: 'Share reports subject',
-    );
-  }
-  */
 }
