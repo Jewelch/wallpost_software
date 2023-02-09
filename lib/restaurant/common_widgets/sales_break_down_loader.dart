@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import 'restaurant_dashboard_loader_container.dart';
+import 'restaurant_loader_container.dart';
 
 class SalesBreakDownLoader extends StatelessWidget {
   const SalesBreakDownLoader({
@@ -13,7 +13,7 @@ class SalesBreakDownLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      RestaurantContainerLoader(
+      RestaurantLoaderContainer(
         height: 60,
         topRadius: 16,
         width: double.infinity,
@@ -23,13 +23,13 @@ class SalesBreakDownLoader extends StatelessWidget {
         count,
         (_) => Padding(
           padding: const EdgeInsets.only(bottom: 1),
-          child: RestaurantContainerLoader(
+          child: RestaurantLoaderContainer(
             height: 60,
             width: double.infinity,
           ),
         ),
       ),
-      RestaurantContainerLoader(
+      RestaurantLoaderContainer(
         height: 60,
         bottomRadius: 16,
         width: double.infinity,

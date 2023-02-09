@@ -3,12 +3,13 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
+import '../../../../../_common_widgets/app_bars/sliver_app_bar_delegate.dart';
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
 import '../../presenters/restaurant_dashboard_presenter.dart';
 import '../../view_contracts/restaurant_dashboard_view.dart';
 import '../loader/restaurant_dashboard_loader.dart';
-import '../loader/seles_break_down_loader.dart';
+import '../../../../common_widgets/sales_break_down_loader.dart';
 import '../widgets/report_floating_action_button.dart';
 import '../widgets/restaurant_dashboard_appbar.dart';
 import '../widgets/restaurant_dashboard_error_view.dart';

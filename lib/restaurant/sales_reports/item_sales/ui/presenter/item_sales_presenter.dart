@@ -59,9 +59,9 @@ class ItemSalesPresenter {
     if (newFilters.dateRangeFilters != oldFilter.dateRangeFilters) {
       await loadItemSalesData();
     }
-    if (newFilters.sortOptions != oldFilter.sortOptions) {
-      itemSalesReport = _itemSalesSorter.sortBreakDowns(itemSalesReport, filters.sortOptions);
-      _itemsList = _itemSalesSorter.sortAllBreakDownItems(itemSalesReport, filters.sortOptions);
+    if (newFilters.sortOption != oldFilter.sortOption) {
+      itemSalesReport = _itemSalesSorter.sortBreakDowns(itemSalesReport, filters.sortOption);
+      _itemsList = _itemSalesSorter.sortAllBreakDownItems(itemSalesReport, filters.sortOption);
       _view.onDidChangeFilters();
     }
     if (newFilters.salesItemWiseOptions != oldFilter.salesItemWiseOptions) {

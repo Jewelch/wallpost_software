@@ -112,7 +112,7 @@ class ItemSalesCategoryItemViewCard extends StatelessWidget {
                                     'QAR',
                                     style: TextStyle(
                                       color: AppColors.textColorBlueGray,
-                                      fontSize: 8,
+                                      fontSize: 9,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),

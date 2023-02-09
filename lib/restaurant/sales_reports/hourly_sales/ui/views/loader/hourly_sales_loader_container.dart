@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 
-class RestaurantContainerLoader extends StatelessWidget {
-  RestaurantContainerLoader({
+class HourlySalesContainerLoader extends StatelessWidget {
+  HourlySalesContainerLoader({
     super.key,
     this.topRadius,
     this.bottomRadius,

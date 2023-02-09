@@ -1,5 +1,3 @@
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_model.dart';
-
 class Mocks {
   static Map<String, dynamic> itemSalesReportResponse = {
     "totalRevenue": 175,

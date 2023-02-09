@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../_common_widgets/shimmer/shimmer_effect.dart';
 import '../../../../../common_widgets/sales_break_down_loader.dart';
-import 'item_sales_loader_container.dart';
+import 'hourly_sales_loader_container.dart';
 
-class ItemSalesLoader extends StatelessWidget {
-  const ItemSalesLoader({Key? key}) : super(key: key);
+class HourlySalesLoader extends StatelessWidget {
+  const HourlySalesLoader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class ItemSalesLoader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ItemSalesContainerLoader(
+          HourlySalesContainerLoader(
             height: 35,
             width: 120,
             topRadius: 6,
@@ -82,25 +82,25 @@ class ItemSalesLoader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ItemSalesContainerLoader(
+          HourlySalesContainerLoader(
             height: height,
             width: 50,
             topRadius: 6,
             bottomRadius: 6,
           ),
-          ItemSalesContainerLoader(
+          HourlySalesContainerLoader(
             height: height,
             width: width,
             topRadius: 6,
             bottomRadius: 6,
           ),
-          ItemSalesContainerLoader(
+          HourlySalesContainerLoader(
             height: height,
             width: width,
             topRadius: 6,
             bottomRadius: 6,
           ),
-          ItemSalesContainerLoader(
+          HourlySalesContainerLoader(
             height: height,
             width: width,
             topRadius: 6,
@@ -118,14 +118,14 @@ class ItemSalesLoader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-              child: ItemSalesContainerLoader(
+              child: HourlySalesContainerLoader(
             height: 80,
             topRadius: 20,
             bottomRadius: 20,
           )),
           SizedBox(width: 16),
           Expanded(
-              child: ItemSalesContainerLoader(
+              child: HourlySalesContainerLoader(
             height: 80,
             topRadius: 20,
             bottomRadius: 20,
@@ -140,7 +140,7 @@ class ItemSalesLoader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         children: [
-          ItemSalesContainerLoader(
+          HourlySalesContainerLoader(
             height: 40,
             width: 40,
             topRadius: 10,
@@ -148,13 +148,13 @@ class ItemSalesLoader extends StatelessWidget {
           ),
           SizedBox(width: 40),
           Expanded(
-              child: ItemSalesContainerLoader(
+              child: HourlySalesContainerLoader(
             height: 26,
             topRadius: 6,
             bottomRadius: 6,
           )),
           SizedBox(width: 40),
-          ItemSalesContainerLoader(
+          HourlySalesContainerLoader(
             height: 40,
             width: 40,
             topRadius: 10,
@@ -170,7 +170,7 @@ class ItemSalesLoader extends StatelessWidget {
       children: [
         SizedBox(width: 24),
         Expanded(
-          child: ItemSalesContainerLoader(
+          child: HourlySalesContainerLoader(
             height: 32,
             width: 120,
             topRadius: 12,
@@ -179,7 +179,7 @@ class ItemSalesLoader extends StatelessWidget {
         ),
         Expanded(child: SizedBox(width: 15)),
         Expanded(
-          child: ItemSalesContainerLoader(
+          child: HourlySalesContainerLoader(
             height: 32,
             width: 120,
             topRadius: 12,

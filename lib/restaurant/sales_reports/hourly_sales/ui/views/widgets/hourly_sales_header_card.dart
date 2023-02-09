@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
 import '../../../../../common_widgets/performance_view_holder.dart';
-import '../../presenter/item_sales_presenter.dart';
+import '../../presenter/hourly_sales_presenter.dart';
 
-class ItemSalesHeaderCard extends StatelessWidget {
-  final ItemSalesPresenter presenter;
+class HourlySalesHeaderCard extends StatelessWidget {
+  final HourlySalesPresenter presenter;
   final double constraints;
 
-  const ItemSalesHeaderCard(
+  const HourlySalesHeaderCard(
     this.presenter,
     this.constraints, {
     super.key,
@@ -39,7 +39,7 @@ class ItemSalesHeaderCard extends StatelessWidget {
                   _SalesElement(
                     backgroundColor: AppColors.lightGreen,
                     label: "Total Revenue(QAR)",
-                    value: presenter.getTotalRevenue(),
+                    value: presenter.itemSalesReport.totalRevenue,
                     isVertical: true,
                     valueColor: AppColors.green,
                     flex: 90,
@@ -47,8 +47,8 @@ class ItemSalesHeaderCard extends StatelessWidget {
                   ),
                   _SalesElement(
                     backgroundColor: AppColors.lightGray,
-                    label: "Total Quantity (Items)",
-                    value: presenter.getTotalOfAllItemsQuantity(),
+                    label: "Total tickets",
+                    value: presenter.itemSalesReport.totalTickets,
                     isVertical: false,
                     valueColor: AppColors.textColorBlack,
                     flex: 55,
@@ -63,7 +63,7 @@ class ItemSalesHeaderCard extends StatelessWidget {
                     _SalesElement(
                       backgroundColor: AppColors.lightGreen,
                       label: "Total Revenue (QAR)",
-                      value: presenter.getTotalRevenue(),
+                      value: presenter.itemSalesReport.totalRevenue,
                       isVertical: true,
                       valueColor: AppColors.green,
                       flex: 1,
@@ -72,8 +72,8 @@ class ItemSalesHeaderCard extends StatelessWidget {
                     SizedBox(width: 10),
                     _SalesElement(
                       backgroundColor: AppColors.lightGray,
-                      label: "Total Quantity (Items)",
-                      value: presenter.getTotalOfAllItemsQuantity(),
+                      label: "Total tickets",
+                      value: presenter.itemSalesReport.totalTickets,
                       isVertical: true,
                       valueColor: AppColors.textColorBlack,
                       flex: 1,

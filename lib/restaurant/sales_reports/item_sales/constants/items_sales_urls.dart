@@ -1,6 +1,7 @@
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
+
 import '../../../../_shared/constants/base_urls.dart';
 import '../../../../_shared/date_range_selector/date_range_filters.dart';
-import '../../../../_shared/extensions/date_extensions.dart';
 
 class ItemSalesUrls {
   static String getSalesItemUrl(

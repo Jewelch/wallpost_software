@@ -6,26 +6,26 @@ import 'package:sliver_tools/sliver_tools.dart';
 import '../../../../../../_common_widgets/app_bars/sliver_app_bar_delegate.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
-import '../../presenter/item_sales_presenter.dart';
-import '../../view_contracts/item_sales_view.dart';
-import '../loader/item_sales_loader.dart';
-import '../widgets/item_sales_app_bar.dart';
-import '../widgets/item_sales_error_view.dart';
-import '../widgets/item_sales_header_card.dart';
-import '../widgets/item_sales_reports_filters.dart';
-import '../widgets/item_sales_wise.dart';
+import '../../presenter/hourly_sales_presenter.dart';
+import '../../view_contracts/hourly_sales_view.dart';
+import '../loader/hourly_sales_loader.dart';
+import '../widgets/houlry_sales_data_card_view.dart';
+import '../widgets/hourly_sales_app_bar.dart';
+import '../widgets/hourly_sales_error_view.dart';
+import '../widgets/hourly_sales_header_card.dart';
+import '../widgets/hourly_sales_reports_filters.dart';
 
 enum _ScreenStates { loading, error, data }
 
-class ItemSalesScreen extends StatefulWidget {
-  const ItemSalesScreen({super.key});
+class HourlySalesScreen extends StatefulWidget {
+  const HourlySalesScreen({super.key});
 
   @override
-  State<ItemSalesScreen> createState() => _State();
+  State<HourlySalesScreen> createState() => _State();
 }
 
-class _State extends State<ItemSalesScreen> implements ItemSalesView {
-  late ItemSalesPresenter presenter = ItemSalesPresenter(this);
+class _State extends State<HourlySalesScreen> implements HourlySalesView {
+  late HourlySalesPresenter presenter = HourlySalesPresenter(this);
 
   final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.data);
   final salesItemDataNotifier = Notifier();
@@ -34,7 +34,7 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
   @override
   void initState() {
     super.initState();
-    presenter.loadItemSalesData();
+    presenter.loadHourlySalesData();
   }
 
   @override
@@ -46,15 +46,15 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
           switch (currentState) {
             //$ LOADING STATE
             case _ScreenStates.loading:
-              return ItemSalesLoader();
+              return HourlySalesLoader();
 
             //! ERROR STATE
             case _ScreenStates.error:
               return Scaffold(
-                appBar: AppBarWidget(presenter),
-                body: SalesItemErrorView(
+                appBar: HourlySalesAppBarWidget(presenter),
+                body: HourlySalesErrorView(
                   errorMessage: errorMessage,
-                  onRetry: presenter.loadItemSalesData,
+                  onRetry: presenter.loadHourlySalesData,
                 ),
               );
 
@@ -69,9 +69,9 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
 
   Widget _dataView() {
     return Scaffold(
-      appBar: AppBarWidget(presenter),
+      appBar: HourlySalesAppBarWidget(presenter),
       body: RefreshIndicator(
-        onRefresh: () => presenter.loadItemSalesData(),
+        onRefresh: () => presenter.loadHourlySalesData(),
         child: Container(
           color: AppColors.screenBackgroundColor2,
           child: CustomScrollView(
@@ -89,12 +89,12 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
                         notifier: salesItemDataNotifier,
                         builder: (context) => LayoutBuilder(builder: (context, contraints) {
                           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                            AppBarWidget.appbarNotifier.notify(contraints.maxHeight <= 100);
+                            HourlySalesAppBarWidget.appbarNotifier.notify(contraints.maxHeight <= 100);
                           });
                           return Padding(
                             padding:
                                 contraints.maxHeight > 100 ? EdgeInsets.symmetric(horizontal: 24) : EdgeInsets.zero,
-                            child: ItemSalesHeaderCard(presenter, contraints.maxHeight),
+                            child: HourlySalesHeaderCard(presenter, contraints.maxHeight),
                           );
                         }),
                       ),
@@ -103,8 +103,8 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
                   if (presenter.getDataListLength() != 0)
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: ItemSalesWise(presenter),
+                        padding: EdgeInsets.only(top: 24),
+                        child: HourlySalesDataCard(presenter),
                       ),
                     )
                   else
@@ -137,17 +137,12 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
 
   @override
   void showSalesReportFilter() async {
-    var newFilters = await ItemSalesReportsFilters.show(
+    var newFilters = await HourlySalesReportsFilters.show(
       context,
       initialFilters: presenter.filters.copy(),
       onResetClicked: presenter.resetFilters,
     );
     presenter.applyFilters(newFilters);
-  }
-
-  @override
-  void onDidChangeFilters() {
-    setState(() {});
   }
 
   @override
@@ -162,7 +157,7 @@ class _State extends State<ItemSalesScreen> implements ItemSalesView {
   }
 
   @override
-  void showNoItemSalesBreakdownMessage() {
+  void showNoHourlySalesMessage() {
     screenStateNotifier.notify(_ScreenStates.data);
   }
 }

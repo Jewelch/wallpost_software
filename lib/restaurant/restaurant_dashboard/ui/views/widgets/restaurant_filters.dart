@@ -3,9 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_selector.dart';
 
 import '../../../../../_shared/date_range_selector/date_range_filters.dart';
+import '../../../../../_shared/date_range_selector/date_range_selector.dart';
 
 class RestaurantFilters extends StatelessWidget {
   final DateRangeFilters dateFilters;

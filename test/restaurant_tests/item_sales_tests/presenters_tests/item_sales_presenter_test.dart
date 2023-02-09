@@ -56,26 +56,6 @@ void main() {
     _initializePresenter();
   });
 
-  // void _verifyInOrderAndShowData() {
-  //   verifyInOrder([
-  //     () => itemSalesReportProvider.isLoading,
-  //     () => view.showLoader(),
-  //     () => itemSalesReportProvider.getItemSales(any()),
-  //     () => view.updateItemSalesData(),
-  //     () => view.showItemSalesBreakDowns(),
-  //   ]);
-  // }
-  //
-  // void _verifyInOrderAndShowNoDataMessage() {
-  //   verifyInOrder([
-  //     () => itemSalesReportProvider.isLoading,
-  //     () => view.showLoader(),
-  //     () => itemSalesReportProvider.getItemSales(any()),
-  //     () => view.updateItemSalesData(),
-  //     () => view.showNoItemSalesBreakdownMessage(),
-  //   ]);
-  // }
-
   setUpAll(() {
     registerFallbackValue(MockItemSalesReport());
     registerFallbackValue(MockItemSalesBreakdown());
@@ -199,6 +179,14 @@ void main() {
     expect(presenter.getItemRevenueToDisplayAtIndex(11), "54");
   });
 
+  test('on filter got clicked notify ui to show filters', () {
+    //when
+    presenter.onFiltersGotClicked();
+
+    //then
+    verify(view.showSalesReportFilter);
+  });
+
   test("apply Filter do nothing when new applied filters is null", () async {
     //given
     var newFilters;
@@ -214,7 +202,7 @@ void main() {
     //given
     var newFilters = ItemSalesReportFilters();
     newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
-    newFilters.sortOptions = presenter.filters.sortOptions;
+    newFilters.sortOption = presenter.filters.sortOption;
     newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
 
     //when
@@ -228,7 +216,7 @@ void main() {
     //given
     var newFilters = ItemSalesReportFilters();
     newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
-    newFilters.sortOptions = presenter.filters.sortOptions;
+    newFilters.sortOption = presenter.filters.sortOption;
     newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
 
     //when
@@ -280,15 +268,15 @@ void main() {
     when(() => itemSalesSorter.sortBreakDowns(any(), any())).thenReturn(itemSalesData);
     when(() => itemSalesSorter.sortAllBreakDownItems(any(), any())).thenReturn(allItems);
     var newFilters = ItemSalesReportFilters();
-    newFilters.sortOptions = getDifferentItemSaleSortFilter(presenter.filters.sortOptions);
+    newFilters.sortOption = getDifferentItemSaleSortFilter(presenter.filters.sortOption);
 
     //when
     await presenter.applyFilters(newFilters);
 
     //then
     verifyInOrder([
-      () => itemSalesSorter.sortBreakDowns(any(), newFilters.sortOptions),
-      () => itemSalesSorter.sortAllBreakDownItems(any(), newFilters.sortOptions),
+      () => itemSalesSorter.sortBreakDowns(any(), newFilters.sortOption),
+      () => itemSalesSorter.sortAllBreakDownItems(any(), newFilters.sortOption),
       () => view.onDidChangeFilters()
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
@@ -330,479 +318,8 @@ void main() {
     ]);
     expect(presenter.filters.dateRangeFilters.selectedRangeOption, SelectableDateRangeOptions.today);
     expect(presenter.filters.salesItemWiseOptions, SalesItemWiseOptions.CategoriesAndItems);
-    expect(presenter.filters.sortOptions, ItemSalesReportSortOptions.byRevenueLowToHigh);
+    expect(presenter.filters.sortOption, ItemSalesReportSortOptions.byRevenueLowToHigh);
     _verifyNoMoreInteractionsOnAllMocks();
   });
-  /*
 
-
-TODO: Test the following getters
-
-  // Item and Category wise
-
-  String getNameOfSpecificItem(ItemSales item) => item.itemName;
-
-  String getQtyOfSpecificItem(ItemSales item) => item.qty.toString();
-
-  String getRevenueToDisplayOfSpecificItem(ItemSales item) => item.revenueToDisplay.toString();
-
-  String getCategoryNameCardHeader(ItemSalesBreakdown breakDown) => breakDown.categoryName;
-
-  String getBreakDownRevenueForCategory(ItemSalesBreakdown breakDown) => breakDown.totalRevenueToDisplay;
-
-  void toggleCategoryExpansionStatusAtIndex(int index) =>
-      itemSalesReport.breakdown[index].isExpanded = !(itemSalesReport.breakdown[index].isExpanded);
-
-  List<ItemSalesBreakdown> getItemSalesBreakDownList() => itemSalesReport.breakdown;
-
-  int getDataListLength() => itemSalesReport.breakdown.length;
-
-   */
-
-  /*
-  expect(presenter.getTotalCategories(), itemSalesData.totalCategories.toString());
-    expect(presenter.getTotalOfAllItemsQuantity(), itemSalesData.totalOfAllItemsQuantities.toString());
-   */
-  //
-  // test("presenter returns 0.0 or empty string for item sales data when item sales data is uninitialized yet", () {
-  //   _initializePresenter();
-  //
-  //   // Top card
-  //   expect(presenter.getTotalOfAllItemsQuantity(), "0");
-  //   expect(presenter.getTotalRevenue(), "0.00");
-  //
-  //   // Category wise
-  //   expect(presenter.getCategoryNameAtIndex(0), "");
-  //   expect(presenter.getCategoryTotalToDisplayRevenueAtIndex(0), "0");
-  //   expect(presenter.getCategoryTotalQtyAtIndex(0), "0");
-  //   expect(presenter.getTotalCategories(), "0");
-  //   expect(presenter.getCategoryCardHeader(), "Categories(0)");
-  //
-  //   // Item wise
-  //   expect(presenter.getItemNameAtIndex(0), "");
-  //   expect(presenter.getItemQtyAtIndex(0), "0");
-  //   expect(presenter.getItemsListLength(), 0);
-  //   expect(presenter.getItemCardHeader(), "Items(0)");
-  //
-  //   _clearInteractionsOnAllMocks();
-  // });
-
-  //
-  // test('getTotalRevenue() returns the item sales total revenue', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   // //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   expect(presenter.getTotalRevenue(), itemSalesData.totalRevenue.toString());
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  // test('getTotalOfAllItemsQuantity() returns the item sales total of all items quantity', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   ///then
-  //   _verifyInOrderAndShowData();
-  //
-  //   expect(presenter.getTotalOfAllItemsQuantity(), itemSalesData.totalOfAllItemsQuantities.toString());
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  // test('getTotalOfAllItemsQuantity() returns 0 when the total of all items quantity is null', () async {
-  //   var itemSalesData = MockItemSalesData();
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowNoDataMessage();
-  //
-  //   expect(presenter.getTotalOfAllItemsQuantity(), "0");
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('getTotalCategories() returns the item sales total categories', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   expect(presenter.getTotalCategories(), itemSalesData.totalCategories.toString());
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('getCategoryCardHeader() returns the categories card header', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   expect(presenter.getCategoryCardHeader(), "Categories(${itemSalesData.totalCategories.toString()})");
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  // test('getItemCardHeader() returns the item card header', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   expect(presenter.getItemCardHeader(), "Items(${presenter.getItemsListLength().toString()})");
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('getDataListLength() returns the length of the breakdown list', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   expect(presenter.getDataListLength(), itemSalesData.breakdown?.length);
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('getTotalRevenue() returns "0.00" if revenue is null', () async {
-  //   var itemSalesData = MockItemSalesData();
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowNoDataMessage();
-  //
-  //   expect(presenter.getTotalRevenue(), "0.00");
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('getCategoryNameAtIndex() returns category name at index', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   for (var i = 0; i < itemSalesData.breakdown!.length; i++) {
-  //     final currentItem = itemSalesData.breakdown?[i];
-  //
-  //     expect(presenter.getCategoryNameAtIndex(i), currentItem?.categoryName);
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  // test('getCategoryTotalToDisplayRevenueAtIndex() returns category total to display revenue at index', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   for (var i = 0; i < itemSalesData.breakdown!.length; i++) {
-  //     final currentItem = itemSalesData.breakdown?[i];
-  //
-  //     expect(presenter.getCategoryTotalToDisplayRevenueAtIndex(i), currentItem?.totalRevenueToDisplay);
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  // test('getCategoryQtyAtIndex() returns category total quantity at index', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   for (var i = 0; i < itemSalesData.breakdown!.length; i++) {
-  //     final currentItem = itemSalesData.breakdown?[i];
-  //
-  //     expect(presenter.getCategoryTotalQtyAtIndex(i), currentItem?.totalQuantity.toString());
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('getItemNameAtIndex() returns item name at index', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   presenter.getItemsList();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   var itemsList = presenter.itemslist;
-  //   for (var i = 0; i < itemsList!.length; i++) {
-  //     final currentItem = itemsList[i];
-  //
-  //     expect(presenter.getItemNameAtIndex(i), currentItem.itemName);
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  // test('getItemQtyAtIndex() returns item quantity at index', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   presenter.getItemsList();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   var itemsList = presenter.itemslist;
-  //   for (var i = 0; i < itemsList!.length; i++) {
-  //     final currentItem = itemsList[i];
-  //
-  //     expect(presenter.getItemQtyAtIndex(i), currentItem.qty.toString());
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  // test('getItemRevenueToDisplayAtIndex() returns item revenue to display at index', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   presenter.getItemsList();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   var itemsList = presenter.itemslist;
-  //   for (var i = 0; i < itemsList!.length; i++) {
-  //     final currentItem = itemsList[i];
-  //
-  //     expect(presenter.getItemRevenueToDisplayAtIndex(i), currentItem.revenueToDisplay);
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  // test('getItemsListLength() returns items list length', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   presenter.getItemsList();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   var itemsList = presenter.itemslist;
-  //
-  //   expect(presenter.getItemsListLength(), itemsList?.length);
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  // test('getItemNameOfSpecificItem() returns name of specific item', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   presenter.getItemsList();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   var itemsList = presenter.itemslist;
-  //   for (var i = 0; i < itemsList!.length; i++) {
-  //     final currentItem = itemsList[i];
-  //
-  //     expect(presenter.getNameOfSpecificItem(currentItem), currentItem.itemName);
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('getQtyOfSpecificItem() returns quantity of specific item', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   presenter.getItemsList();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   var itemsList = presenter.itemslist;
-  //   for (var i = 0; i < itemsList!.length; i++) {
-  //     final currentItem = itemsList[i];
-  //
-  //     expect(presenter.getQtyOfSpecificItem(currentItem), currentItem.qty.toString());
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  // test('getRevenueToDisplayOfSpecificItem() returns revenue to display of specific item', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   presenter.getItemsList();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   var itemsList = presenter.itemslist;
-  //   for (var i = 0; i < itemsList!.length; i++) {
-  //     final currentItem = itemsList[i];
-  //
-  //     expect(presenter.getRevenueToDisplayOfSpecificItem(currentItem), currentItem.revenueToDisplay);
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('getCategoryNameHeaderCard() returns category name card header', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   var itemSalesBreakDown = presenter.itemSalesData?.breakdown;
-  //   for (var i = 0; i < itemSalesBreakDown!.length; i++) {
-  //     final currentItem = itemSalesBreakDown[i];
-  //
-  //     expect(presenter.getCategoryNameCardHeader(currentItem), currentItem.categoryName);
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
-  // test('getBreakDownRevenueForCategory() returns break down revenue for category to display', () async {
-  //   var itemSalesData = ItemSalesReport.fromJson(Mocks.itemSalesRandomResponse);
-  //
-  //   //given
-  //   when(() => itemSalesReportProvider.isLoading).thenReturn(false);
-  //   when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
-  //
-  //   //when
-  //   await presenter.loadItemSalesData();
-  //
-  //   //then
-  //   _verifyInOrderAndShowData();
-  //
-  //   var itemSalesBreakDown = presenter.itemSalesData?.breakdown;
-  //   for (var i = 0; i < itemSalesBreakDown!.length; i++) {
-  //     final currentItem = itemSalesBreakDown[i];
-  //
-  //     expect(presenter.getBreakDownRevenueForCategory(currentItem), currentItem.totalRevenueToDisplay);
-  //   }
-  //
-  //   _verifyNoMoreInteractionsOnAllMocks();
-  // });
-  //
 }

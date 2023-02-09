@@ -5,13 +5,13 @@ import 'sales_item_view_options.dart';
 class ItemSalesReportFilters {
   DateRangeFilters dateRangeFilters = DateRangeFilters();
   SalesItemWiseOptions salesItemWiseOptions = SalesItemWiseOptions.CategoriesAndItems;
-  ItemSalesReportSortOptions sortOptions = ItemSalesReportSortOptions.byRevenueLowToHigh;
+  ItemSalesReportSortOptions sortOption = ItemSalesReportSortOptions.byRevenueLowToHigh;
 
   ItemSalesReportFilters copy() {
     var itemSalesFilters = ItemSalesReportFilters();
     itemSalesFilters.dateRangeFilters = dateRangeFilters.copy();
     itemSalesFilters.salesItemWiseOptions = salesItemWiseOptions;
-    itemSalesFilters.sortOptions = sortOptions;
+    itemSalesFilters.sortOption = sortOption;
     return itemSalesFilters;
   }
 
@@ -19,13 +19,13 @@ class ItemSalesReportFilters {
     return [
       dateRangeFilters.toReadableString(),
       salesItemWiseOptions.toReadableString(),
-      sortOptions.toReadableString()
+      sortOption.toReadableString()
     ];
   }
 
   void reset(){
     dateRangeFilters = DateRangeFilters();
     salesItemWiseOptions = SalesItemWiseOptions.CategoriesAndItems;
-    sortOptions = ItemSalesReportSortOptions.byRevenueLowToHigh;
+    sortOption = ItemSalesReportSortOptions.byRevenueLowToHigh;
   }
 }
