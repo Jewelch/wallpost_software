@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
+import '../../../../sales_reports/hourly_sales/ui/views/screens/hourly_sales_screen.dart';
 import '../../../../sales_reports/item_sales/ui/views/screens/item_sales_screen.dart';
 import '../../presenters/restaurant_dashboard_presenter.dart';
 
@@ -48,7 +49,7 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                   Positioned(
                     right: 1,
                     left: 1,
-                    bottom: 32,
+                    bottom: 40,
                     child: GestureDetector(
                       onTap: () {},
                       child: Padding(
@@ -72,12 +73,10 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                 height: 32,
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Expanded(child: SizedBox()),
                                   Expanded(
-                                    flex: 2,
-                                    child: GestureDetector(
+                                    child: InkWell(
+                                      splashColor: AppColors.defaultColor,
                                       onTap: () {
                                         ScreenPresenter.present(
                                           ItemSalesScreen(),
@@ -96,37 +95,31 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(child: SizedBox()),
-                                  // Expanded(
-                                  //   child: GestureDetector(
-                                  //     onTap: () {
-                                  //       setState(() {
-                                  //         isHourSalesSelected = true;
-                                  //         isItemSalesSelected = false;
-                                  //       });
-                                  //     },
-                                  //     child: Container(
-                                  //       height: 64,
-                                  //       decoration: BoxDecoration(
-                                  //         color: isHourSalesSelected
-                                  //             ? AppColors.defaultColorDarkContrastColor
-                                  //             : AppColors.screenBackgroundColor,
-                                  //         borderRadius: BorderRadius.circular(14),
-                                  //       ),
-                                  //       child: Center(
-                                  //         child: Text(
-                                  //           "Hourly Sales",
-                                  //           style: TextStyles.subTitleTextStyleBold,
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: InkWell(
+                                      splashColor: AppColors.defaultColor,
+                                      onTap: () {
+                                        ScreenPresenter.present(
+                                          HourlySalesScreen(),
+                                          context,
+                                          slideDirection: SlideDirection.fromBottom,
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 64,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                          borderRadius: BorderRadius.circular(14),
+                                        ),
+                                        child: Center(
+                                            child: Text("Hourly Sales", style: TextStyles.subTitleTextStyleBold)),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 32,
-                              ),
+                              SizedBox(height: 32),
                               SizedBox(
                                 height: 48,
                                 width: double.maxFinite,
@@ -135,16 +128,15 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                   child: Text(
                                     "Close Menu",
                                     style: TextStyles.largeTitleTextStyleBold.copyWith(
-                                      fontWeight: FontWeight.w100,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.textColorBlueGray,
                                     ),
                                   ),
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
                                 ),
                               ),
-                              SizedBox(
-                                height: 8,
-                              ),
+                              SizedBox(height: 8),
                             ],
                           ),
                         ),
