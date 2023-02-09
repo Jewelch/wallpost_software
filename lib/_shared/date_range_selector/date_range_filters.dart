@@ -1,4 +1,4 @@
-import 'package:wallpost/_shared/extensions/date_extensions.dart';
+import '../extensions/date_extensions.dart';
 
 enum SelectableDateRangeOptions {
   today,
