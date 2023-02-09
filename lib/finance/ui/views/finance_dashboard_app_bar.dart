@@ -32,11 +32,22 @@ class FinanceDashboardAppBar extends StatelessWidget {
               SizedBox(width: 12),
               GestureDetector(
                 onTap: Navigator.of(context).pop,
-                child: SvgPicture.asset(
-                  "assets/icons/arrow_back_icon.svg",
-                  color: AppColors.defaultColor,
-                  width: 16,
-                  height: 16,
+                child: Container(
+                  color: Colors.white,
+                  width: 40,
+                  height: 40,
+                  child: Center(
+                    child: SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: SvgPicture.asset(
+                        "assets/icons/arrow_back_icon.svg",
+                        color: AppColors.defaultColor,
+                        width: 16,
+                        height: 16,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(width: 24),

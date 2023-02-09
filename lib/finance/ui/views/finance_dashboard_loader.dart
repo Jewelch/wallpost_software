@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/views/loader/seles_break_down_loader.dart';
+
+import '../../../restaurant/common_widgets/sales_break_down_loader.dart';
 
 class FinanceDashboardLoader extends StatelessWidget {
   const FinanceDashboardLoader({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class FinanceDashboardLoader extends StatelessWidget {
           SizedBox(height: 16),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
-            child: SalesBreakDownLoader(),
+            child: SalesBreakDownLoader(), //TODO Remove dependency on restaurant module
           )
         ],
       ),
