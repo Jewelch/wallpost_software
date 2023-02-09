@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
+
+import '../../_shared/constants/app_colors.dart';
 
 class TextStyles {
   static String _defaultFont = 'SF-Pro-Display';
