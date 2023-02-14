@@ -63,7 +63,7 @@ class _ExpenseApprovalAlertState extends State<ExpenseApprovalAlert> implements 
         children: [
           Text("Are you sure?", style: TextStyles.extraLargeTitleTextStyleBold),
           SizedBox(height: 16),
-          Text("You want to approve ${widget.requestedBy}'s expense request?", style: TextStyles.titleTextStyleBold),
+          Text("Do you want to approve ${widget.requestedBy}'s expense request?", style: TextStyles.titleTextStyleBold),
           SizedBox(height: 30),
           Row(
             children: [
@@ -98,7 +98,7 @@ class _ExpenseApprovalAlertState extends State<ExpenseApprovalAlert> implements 
   }
 
   @override
-  void notifyInvalidRejectionReason() {
+  void notifyInvalidRejectionReason(String message) {
     //do nothing
   }
 

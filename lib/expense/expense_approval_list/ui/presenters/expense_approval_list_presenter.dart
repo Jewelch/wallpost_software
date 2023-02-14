@@ -10,9 +10,11 @@ class ExpenseApprovalListPresenter {
   final ExpenseApprovalListView _view;
   final ExpenseApprovalListProvider _approvalListProvider;
   final List<ExpenseApprovalListItem> _approvalItems = [];
+  final List<ExpenseApprovalListItem> _selectedItems = [];
   String _errorMessage = "";
   final String _noItemsMessage = "There are no approvals to show.\n\nTap here to reload.";
   int _numberOfApprovalsProcessed = 0;
+  var _isSelectionInProgress = false;
 
   ExpenseApprovalListPresenter(String companyId, this._view)
       : _approvalListProvider = ExpenseApprovalListProvider(companyId);
@@ -52,24 +54,23 @@ class ExpenseApprovalListPresenter {
     _errorMessage = "";
   }
 
+  bool _isFirstLoad() {
+    return _approvalItems.isEmpty;
+  }
+
   //MARK: Function to refresh the list
 
   Future<void> refresh() async {
     _approvalItems.clear();
+    _selectedItems.clear();
     _approvalListProvider.reset();
     getNext();
   }
 
-  //MARK: Function to select an item
+  //MARK: Function to show item detail
 
-  void selectItem(ExpenseApprovalListItem approval) {
+  void showDetail(ExpenseApprovalListItem approval) {
     _view.showExpenseDetail(approval);
-  }
-
-  //MARK: Function to check isFirstLoad
-
-  bool _isFirstLoad() {
-    return _approvalItems.isEmpty;
   }
 
   //MARK: Functions to get the list details
@@ -94,12 +95,51 @@ class ExpenseApprovalListPresenter {
     return _approvalItems[index];
   }
 
+  //MARK: Functions to handle multiple item selection
+
+  void initiateMultipleSelection() {
+    _isSelectionInProgress = true;
+    _view.onDidInitiateMultipleSelection();
+    selectAll();
+  }
+
+  void endMultipleSelection() {
+    _isSelectionInProgress = false;
+    _view.onDidEndMultipleSelection();
+  }
+
+  void toggleSelection(ExpenseApprovalListItem approvalItem) {
+    _selectedItems.contains(approvalItem) ? _selectedItems.remove(approvalItem) : _selectedItems.add(approvalItem);
+  }
+
+  void selectAll() {
+    _selectedItems.clear();
+    _selectedItems.addAll(_approvalItems);
+    _view.updateList();
+  }
+
+  void unselectAll() {
+    _selectedItems.clear();
+    _view.updateList();
+  }
+
+  bool isItemSelected(ExpenseApprovalListItem approvalItem) {
+    return _selectedItems.contains(approvalItem);
+  }
+
+  int getCountOfSelectedItems() {
+    return _selectedItems.length;
+  }
+
   //MARK: Functions for successful processing of approval or rejection
 
-  Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, String expenseId) async {
+  //TODO rename - remove mass
+  Future<void> onDidProcessMassApprovalOrRejection(dynamic didPerformAction, List<String> expenseIds) async {
     if (didPerformAction == true) {
-      _numberOfApprovalsProcessed = _numberOfApprovalsProcessed + 1;
-      _approvalItems.removeWhere((approval) => approval.id == expenseId);
+      for (var i = 0; i < expenseIds.length; i++) {
+        _numberOfApprovalsProcessed = _numberOfApprovalsProcessed + 1;
+        _approvalItems.removeWhere((approval) => approval.id == expenseIds[i]);
+      }
       _approvalItems.isNotEmpty ? _updateList() : _view.onDidProcessAllApprovals();
     }
   }
@@ -131,4 +171,6 @@ class ExpenseApprovalListPresenter {
   String get noItemsMessage => _noItemsMessage;
 
   int get numberOfApprovalsProcessed => _numberOfApprovalsProcessed;
+
+  get isSelectionInProgress => _isSelectionInProgress;
 }

@@ -31,5 +31,26 @@ class ExpenseApprover {
     }
   }
 
+  Future<void> massApprove(String companyId, List<String> expenseIds) async {
+    var url = ExpenseApprovalUrls.approveUrl(companyId);
+    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+    var apiRequest = APIRequest.withId(url, _sessionId);
+    apiRequest.addParameter("app_type", "expenseRequest");
+
+    //TODO - convert expense ids list to comma separated string
+    apiRequest.addParameter("request_ids", expenseIds);
+
+    _isLoading = true;
+
+    try {
+      await _networkAdapter.post(apiRequest);
+      _isLoading = false;
+      return null;
+    } on APIException catch (exception) {
+      _isLoading = false;
+      throw exception;
+    }
+  }
+
   bool get isLoading => _isLoading;
 }

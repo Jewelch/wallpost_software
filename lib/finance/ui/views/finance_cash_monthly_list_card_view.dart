@@ -24,13 +24,15 @@ class FinanceCashMonthlyListCardView extends StatelessWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              _presenter.getMonthList()[index].capitalize(),
-              style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.textColorGray),
+            Expanded(
+              flex: 2,
+              child: Text(
+                _presenter.getMonthList()[index].capitalize(),
+                style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.textColorGray),
+              ),
             ),
-            SizedBox(width: 28),
-            Expanded(child: _subTile('assets/icons/cash_in_icon.svg', _presenter.getCashInList()[index])),
-            Expanded(child: _subTile('assets/icons/cash_out_icon.svg', _presenter.getCashOutList()[index])),
+            Expanded(flex: 3, child: _subTile('assets/icons/cash_in_icon.svg', _presenter.getCashInList()[index])),
+            Expanded(flex: 3, child: _subTile('assets/icons/cash_out_icon.svg', _presenter.getCashOutList()[index])),
           ],
         );
       },

@@ -28,7 +28,6 @@ class ExpenseApprovalPresenter {
 
   Future<void> approve(String companyId, String expenseId) async {
     if (_didPerformApprovalSuccessfully) return;
-
     _view.showLoader();
     try {
       await _approver.approve(companyId, expenseId);
@@ -40,12 +39,26 @@ class ExpenseApprovalPresenter {
     }
   }
 
+  Future<void> massApprove(String companyId, String expenseIds) async {
+    if (_didPerformApprovalSuccessfully) return;
+
+    _view.showLoader();
+    try {
+      //TODO: // await _approver.massApprove(companyId, expenseIds);
+      _notificationCenter.updateCount();
+      _didPerformApprovalSuccessfully = true;
+      _view.onDidPerformActionSuccessfully(expenseIds);
+    } on WPException catch (e) {
+      _view.onDidFailToPerformAction("Approval Failed", e.userReadableMessage);
+    }
+  }
+
   Future<void> reject(String companyId, String expenseId, String rejectionReason) async {
     if (_didPerformRejectionSuccessfully) return;
 
     if (rejectionReason.isEmpty) {
       _reasonErrorMessage = "Please enter a valid reason";
-      _view.notifyInvalidRejectionReason();
+      _view.notifyInvalidRejectionReason("Please enter a valid reason");
       return;
     }
 
@@ -56,6 +69,27 @@ class ExpenseApprovalPresenter {
       _notificationCenter.updateCount();
       _didPerformRejectionSuccessfully = true;
       _view.onDidPerformActionSuccessfully(expenseId);
+    } on WPException catch (e) {
+      _view.onDidFailToPerformAction("Rejection Failed", e.userReadableMessage);
+    }
+  }
+
+  Future<void> massReject(String companyId, String expenseIds, String rejectionReason) async {
+    if (_didPerformRejectionSuccessfully) return;
+
+    if (rejectionReason.isEmpty) {
+      _reasonErrorMessage = "Please enter a valid reason";
+      _view.notifyInvalidRejectionReason("Please enter a valid reason");
+      return;
+    }
+
+    _reasonErrorMessage = null;
+    _view.showLoader();
+    try {
+      await _rejector.massReject(companyId, expenseIds, rejectionReason: rejectionReason);
+      _notificationCenter.updateCount();
+      _didPerformRejectionSuccessfully = true;
+      _view.onDidPerformActionSuccessfully(expenseIds);
     } on WPException catch (e) {
       _view.onDidFailToPerformAction("Rejection Failed", e.userReadableMessage);
     }

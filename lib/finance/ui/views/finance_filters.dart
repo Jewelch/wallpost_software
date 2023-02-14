@@ -105,6 +105,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
                   .copyWith(color: AppColors.textColorBlack, fontWeight: FontWeight.w500),
             ),
             Container(child: getYearList(context)),
+            SizedBox(height: 16),
             Text(
               "Months",
               style: TextStyles.screenTitleTextStyle
@@ -114,7 +115,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
             SizedBox(
               height: 16,
             ),
-            if (widget.financeFiltersPresenter.shouldShowMoreMonthButton()) _moreMonthButton(),
+            // if (widget.financeFiltersPresenter.shouldShowMoreMonthButton()) _moreMonthButton(),
             SizedBox(height: 40),
             _applyChangesButton()
           ],
@@ -160,7 +161,7 @@ class _FinanceFiltersState extends State<FinanceFilters> {
 
   Widget getMonthList(BuildContext context) {
     return SizedBox(
-      height: showMoreMonth ? 170 : 100,
+      height: 170,
       child: new GridView.count(
         padding: EdgeInsets.only(top: 12),
         childAspectRatio: (1 / .4),

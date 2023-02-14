@@ -66,7 +66,7 @@ class _ExpenseRejectionAlertState extends State<ExpenseRejectionAlert> implement
         children: [
           Text("Are you sure?", style: TextStyles.extraLargeTitleTextStyleBold),
           SizedBox(height: 16),
-          Text("You want to reject ${widget.requestedBy}'s expense request?", style: TextStyles.titleTextStyleBold),
+          Text("Do you want to reject ${widget.requestedBy}'s expense request?", style: TextStyles.titleTextStyleBold),
           SizedBox(height: 16),
           FormTextField(
             hint: 'Write your reason here',
@@ -116,7 +116,7 @@ class _ExpenseRejectionAlertState extends State<ExpenseRejectionAlert> implement
   }
 
   @override
-  void notifyInvalidRejectionReason() {
+  void notifyInvalidRejectionReason(String message) {
     if (mounted) setState(() {});
   }
 

@@ -12,4 +12,8 @@ abstract class ExpenseApprovalListView {
   void showExpenseDetail(ExpenseApprovalListItem approval);
 
   void onDidProcessAllApprovals();
+
+  void onDidInitiateMultipleSelection();
+
+  void onDidEndMultipleSelection();
 }

@@ -82,6 +82,7 @@ void main() {
       () => listProvider.isLoading,
       () => view.showLoader(),
       () => listProvider.getNext(),
+      () => view.toggleAppBarRightEndText(true),
       () => view.showNoItemsMessage(),
     ]);
     _verifyNoMoreInteractions();
@@ -101,6 +102,7 @@ void main() {
       () => listProvider.isLoading,
       () => view.showLoader(),
       () => listProvider.getNext(),
+      () => view.toggleAppBarRightEndText(true),
       () => view.updateList(),
     ]);
     _verifyNoMoreInteractions();
@@ -152,6 +154,7 @@ void main() {
       () => listProvider.isLoading,
       () => view.updateList(),
       () => listProvider.getNext(),
+      () => view.toggleAppBarRightEndText(true),
       () => view.updateList(),
     ]);
     _verifyNoMoreInteractions();
@@ -309,12 +312,93 @@ void main() {
     _clearAllInteractions();
 
     //when
-    presenter.selectItem(approval2);
+    presenter.showDetail(approval2);
 
     //then
     verifyInOrder([
       () => view.showExpenseDetail(approval2),
     ]);
+    _verifyNoMoreInteractions();
+  });
+
+  //MARK: Tests to all expense item ids
+
+  test('get to all expense ids', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
+
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    _clearAllInteractions();
+
+    //when
+    String e = 'id1,id2,id3';
+
+    //then
+    expect(presenter.getAllExpenseIds(), e);
+    _verifyNoMoreInteractions();
+  });
+
+//MARK: Tests to all selected expense item ids
+
+  test('get to all selected ids', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
+
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => approval1.checked).thenReturn(true);
+    when(() => approval2.checked).thenReturn(true);
+    when(() => approval3.checked).thenReturn(false);
+
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    _clearAllInteractions();
+
+    //when
+    String e = 'id1,id2';
+
+    //then
+    expect(presenter.getSelectedExpenseIds(), e);
+    _verifyNoMoreInteractions();
+  });
+
+//MARK: Tests to all selected expense item count
+
+  test('get selected expense item count', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
+
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => approval1.checked).thenReturn(true);
+    when(() => approval2.checked).thenReturn(true);
+    when(() => approval3.checked).thenReturn(false);
+
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    _clearAllInteractions();
+    //when
+
+    //then
+    expect(presenter.getSelectedExpenseCount(), 2);
     _verifyNoMoreInteractions();
   });
 
@@ -343,6 +427,7 @@ void main() {
     expect(presenter.getItemTypeAtIndex(1), ExpenseApprovalListItemViewType.ListItem);
     expect(presenter.getItemTypeAtIndex(2), ExpenseApprovalListItemViewType.Loader);
     verifyInOrder([
+      () => view.toggleAppBarRightEndText(true),
       () => view.updateList(),
       () => listProvider.isLoading,
       () => listProvider.didReachListEnd,

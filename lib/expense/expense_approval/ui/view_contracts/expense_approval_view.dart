@@ -1,7 +1,7 @@
 abstract class ExpenseApprovalView {
   void showLoader();
 
-  void notifyInvalidRejectionReason();
+  void notifyInvalidRejectionReason(String message);
 
   void onDidPerformActionSuccessfully(String expenseId);
 

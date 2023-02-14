@@ -32,5 +32,24 @@ class ExpenseRejector {
     }
   }
 
+  Future<void> massReject(String companyId, String expenseId, {required String rejectionReason}) async {
+    var url = ExpenseApprovalUrls.rejectUrl(companyId);
+    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+    var apiRequest = APIRequest.withId(url, _sessionId);
+    apiRequest.addParameter("app_type", "expenseRequest");
+    apiRequest.addParameter("request_ids", expenseId);
+    apiRequest.addParameter("reason", rejectionReason);
+    _isLoading = true;
+
+    try {
+      await _networkAdapter.post(apiRequest);
+      _isLoading = false;
+      return null;
+    } on APIException catch (exception) {
+      _isLoading = false;
+      throw exception;
+    }
+  }
+
   bool get isLoading => _isLoading;
 }
