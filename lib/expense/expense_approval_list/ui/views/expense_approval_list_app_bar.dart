@@ -5,6 +5,7 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 
 //TODO
 class ExpenseApprovalListAppBar extends StatefulWidget {
+  //final int noOfSelectedItems;
   final bool isMultipleSelectionInProgress;
   final VoidCallback onInitiateMultipleSelectionButtonPressed;
   final VoidCallback onEndMultipleSelectionButtonPressed;
@@ -12,6 +13,7 @@ class ExpenseApprovalListAppBar extends StatefulWidget {
   final VoidCallback onUnselectAllButtonPress;
 
   ExpenseApprovalListAppBar({
+    //required this.noOfSelectedItems,
     required this.isMultipleSelectionInProgress,
     required this.onInitiateMultipleSelectionButtonPressed,
     required this.onEndMultipleSelectionButtonPressed,
@@ -24,6 +26,7 @@ class ExpenseApprovalListAppBar extends StatefulWidget {
 }
 
 class _ExpenseApprovalListAppBarState extends State<ExpenseApprovalListAppBar> {
+  bool pressON = false;
   @override
   Widget build(BuildContext context) {
     if (widget.isMultipleSelectionInProgress) {
@@ -42,6 +45,16 @@ class _ExpenseApprovalListAppBarState extends State<ExpenseApprovalListAppBar> {
                 // if (_listPresenter.getSelectedExpenseCount() > 0)
                 //   Text("${_listPresenter.getSelectedExpenseCount()} Selected"),
                 // _buildToggleTextButtonView()
+               // Text("${widget.noOfSelectedItems} Selected"),
+                pressON?
+                TextButton(onPressed:(){
+                  pressON = false;
+                  widget.onSelectAllButtonPress();
+                }, child: Text("Select All")):
+                TextButton(onPressed:(){
+                  pressON = true;
+                  widget.onUnselectAllButtonPress();
+                }, child: Text("Unselect All"))
               ],
             ),
             Container(
