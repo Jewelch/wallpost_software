@@ -30,12 +30,11 @@ class ItemSalesReport {
       );
     } catch (error, stackTrace) {
       debugPrint(stackTrace.toString());
-      throw MappingException('Failed to cast ItemSalesDataModel response. Error message - $error');
+      throw MappingException('Failed to cast ItemSalesReport response. Error message - $error');
     }
   }
 }
 
-//TODO -rename this class
 class CategoriesSales {
   final int? categoryId;
   final String categoryName;

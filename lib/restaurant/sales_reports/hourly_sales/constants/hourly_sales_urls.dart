@@ -1,7 +1,6 @@
-import 'package:wallpost/restaurant/sales_reports/hourly_sales/entities/hourly_sales_report_filters.dart';
-
 import '../../../../_shared/constants/base_urls.dart';
 import '../../../../_shared/extensions/date_extensions.dart';
+import '../entities/hourly_sales_report_filters.dart';
 
 class HourlySalesUrls {
   static String getHourSalesUrl(String companyId, HourlySalesReportFilters filters) {
