@@ -288,7 +288,7 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
       ),
     );
     if (didApprove )
-     _listPresenter.onDidProcessMassApprovalOrRejection(didApprove, _listPresenter.getAllIds());
+     _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getAllIds());
   }
 
   //MARK: mass reject function
@@ -303,7 +303,7 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
       ),
     );
      if (didRejected)
-       _listPresenter.onDidProcessMassApprovalOrRejection(didRejected, _listPresenter.getAllIds());
+       _listPresenter.onDidProcessApprovalOrRejection(didRejected, _listPresenter.getAllIds());
   }
 
   //MARK: approve selected items function
@@ -319,7 +319,7 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
     );
 
      if (didApprove)
-       _listPresenter.onDidProcessMassApprovalOrRejection(didApprove, _listPresenter.getSelectedItemIds());
+       _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getSelectedItemIds());
   }
 
   //MARK:  reject selected  function
@@ -334,7 +334,7 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
       ),
     );
     if (didReject)
-      _listPresenter.onDidProcessMassApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
+      _listPresenter.onDidProcessApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
   }
 
   //MARK: Approval list view functions
@@ -373,7 +373,7 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
       ),
       context,
     );
-    _listPresenter.onDidProcessMassApprovalOrRejection(didPerformAction, [approval.id]);
+    _listPresenter.onDidProcessApprovalOrRejection(didPerformAction, [approval.id]);
   }
 
   @override

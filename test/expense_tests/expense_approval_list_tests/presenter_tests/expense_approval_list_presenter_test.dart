@@ -82,7 +82,6 @@ void main() {
       () => listProvider.isLoading,
       () => view.showLoader(),
       () => listProvider.getNext(),
-      () => view.toggleAppBarRightEndText(true),
       () => view.showNoItemsMessage(),
     ]);
     _verifyNoMoreInteractions();
@@ -102,7 +101,6 @@ void main() {
       () => listProvider.isLoading,
       () => view.showLoader(),
       () => listProvider.getNext(),
-      () => view.toggleAppBarRightEndText(true),
       () => view.updateList(),
     ]);
     _verifyNoMoreInteractions();
@@ -154,7 +152,6 @@ void main() {
       () => listProvider.isLoading,
       () => view.updateList(),
       () => listProvider.getNext(),
-      () => view.toggleAppBarRightEndText(true),
       () => view.updateList(),
     ]);
     _verifyNoMoreInteractions();
@@ -321,86 +318,9 @@ void main() {
     _verifyNoMoreInteractions();
   });
 
-  //MARK: Tests to all expense item ids
-
-  test('get to all expense ids', () async {
-    //given
-    when(() => listProvider.isLoading).thenReturn(false);
-
-    var approval1 = MockExpenseApprovalListItem();
-    var approval2 = MockExpenseApprovalListItem();
-    var approval3 = MockExpenseApprovalListItem();
-
-    when(() => approval1.id).thenReturn("id1");
-    when(() => approval2.id).thenReturn("id2");
-    when(() => approval3.id).thenReturn("id3");
-    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
-    await presenter.getNext();
-    _clearAllInteractions();
-
-    //when
-    String e = 'id1,id2,id3';
-
-    //then
-    expect(presenter.getAllExpenseIds(), e);
-    _verifyNoMoreInteractions();
-  });
-
-//MARK: Tests to all selected expense item ids
-
-  test('get to all selected ids', () async {
-    //given
-    when(() => listProvider.isLoading).thenReturn(false);
-
-    var approval1 = MockExpenseApprovalListItem();
-    var approval2 = MockExpenseApprovalListItem();
-    var approval3 = MockExpenseApprovalListItem();
-
-    when(() => approval1.id).thenReturn("id1");
-    when(() => approval2.id).thenReturn("id2");
-    when(() => approval3.id).thenReturn("id3");
-    when(() => approval1.checked).thenReturn(true);
-    when(() => approval2.checked).thenReturn(true);
-    when(() => approval3.checked).thenReturn(false);
-
-    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
-    await presenter.getNext();
-    _clearAllInteractions();
-
-    //when
-    String e = 'id1,id2';
-
-    //then
-    expect(presenter.getSelectedExpenseIds(), e);
-    _verifyNoMoreInteractions();
-  });
 
 //MARK: Tests to all selected expense item count
 
-  test('get selected expense item count', () async {
-    //given
-    when(() => listProvider.isLoading).thenReturn(false);
-
-    var approval1 = MockExpenseApprovalListItem();
-    var approval2 = MockExpenseApprovalListItem();
-    var approval3 = MockExpenseApprovalListItem();
-
-    when(() => approval1.id).thenReturn("id1");
-    when(() => approval2.id).thenReturn("id2");
-    when(() => approval3.id).thenReturn("id3");
-    when(() => approval1.checked).thenReturn(true);
-    when(() => approval2.checked).thenReturn(true);
-    when(() => approval3.checked).thenReturn(false);
-
-    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
-    await presenter.getNext();
-    _clearAllInteractions();
-    //when
-
-    //then
-    expect(presenter.getSelectedExpenseCount(), 2);
-    _verifyNoMoreInteractions();
-  });
 
   //MARK: Tests remove approved or rejected items
 
@@ -418,7 +338,7 @@ void main() {
     _clearAllInteractions();
 
     //when
-    await presenter.onDidProcessApprovalOrRejection(true, "id2");
+    await presenter.onDidProcessApprovalOrRejection(true, ['id2']);
 
     //then
     expect(presenter.numberOfApprovalsProcessed, 1);
@@ -427,7 +347,6 @@ void main() {
     expect(presenter.getItemTypeAtIndex(1), ExpenseApprovalListItemViewType.ListItem);
     expect(presenter.getItemTypeAtIndex(2), ExpenseApprovalListItemViewType.Loader);
     verifyInOrder([
-      () => view.toggleAppBarRightEndText(true),
       () => view.updateList(),
       () => listProvider.isLoading,
       () => listProvider.didReachListEnd,
@@ -446,12 +365,12 @@ void main() {
     when(() => approval3.id).thenReturn("id3");
     when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
     await presenter.getNext();
-    await presenter.onDidProcessApprovalOrRejection(true, "id1");
-    await presenter.onDidProcessApprovalOrRejection(true, "id2");
+    await presenter.onDidProcessApprovalOrRejection(true, ["id1"]);
+    await presenter.onDidProcessApprovalOrRejection(true, ["id2"]);
     _clearAllInteractions();
 
     //when
-    await presenter.onDidProcessApprovalOrRejection(true, "id3");
+    await presenter.onDidProcessApprovalOrRejection(true, ["id3"]);
 
     //then
     expect(presenter.numberOfApprovalsProcessed, 3);
@@ -462,10 +381,10 @@ void main() {
   });
 
   test("does not reload data when processing approval or rejection with null or false", () async {
-    presenter.onDidProcessApprovalOrRejection(null, "someExpenseId");
+    presenter.onDidProcessApprovalOrRejection(null, ["someExpenseId"]);
     _verifyNoMoreInteractions();
 
-    presenter.onDidProcessApprovalOrRejection(false, "someExpenseId");
+    presenter.onDidProcessApprovalOrRejection(false, ["someExpenseId"]);
     _verifyNoMoreInteractions();
   });
 

@@ -186,7 +186,7 @@ class _ExpenseApprovalListItemCardState extends State<ExpenseApprovalListItemCar
       ),
     );
     if (didApprove)
-      widget.listPresenter.onDidProcessMassApprovalOrRejection(
+      widget.listPresenter.onDidProcessApprovalOrRejection(
         didApprove,
         [widget.approval.id],
       );
@@ -202,7 +202,7 @@ class _ExpenseApprovalListItemCardState extends State<ExpenseApprovalListItemCar
       ),
     );
     if (didReject)
-      widget.listPresenter.onDidProcessMassApprovalOrRejection(
+      widget.listPresenter.onDidProcessApprovalOrRejection(
         didReject,
         [widget.approval.id],
       );
