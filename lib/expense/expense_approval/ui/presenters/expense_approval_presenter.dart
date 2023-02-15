@@ -39,15 +39,15 @@ class ExpenseApprovalPresenter {
     }
   }
 
-  Future<void> massApprove(String companyId, String expenseIds) async {
+  Future<void> massApprove(String companyId, List<String> expenseIds) async {
     if (_didPerformApprovalSuccessfully) return;
 
     _view.showLoader();
     try {
-      //TODO: // await _approver.massApprove(companyId, expenseIds);
+       await _approver.massApprove(companyId, expenseIds);
       _notificationCenter.updateCount();
       _didPerformApprovalSuccessfully = true;
-      _view.onDidPerformActionSuccessfully(expenseIds);
+      _view.onDidPerformActionSuccessfully(expenseIds.join(','));
     } on WPException catch (e) {
       _view.onDidFailToPerformAction("Approval Failed", e.userReadableMessage);
     }
@@ -74,7 +74,7 @@ class ExpenseApprovalPresenter {
     }
   }
 
-  Future<void> massReject(String companyId, String expenseIds, String rejectionReason) async {
+  Future<void> massReject(String companyId, List<String> expenseIds, String rejectionReason) async {
     if (_didPerformRejectionSuccessfully) return;
 
     if (rejectionReason.isEmpty) {
@@ -89,7 +89,7 @@ class ExpenseApprovalPresenter {
       await _rejector.massReject(companyId, expenseIds, rejectionReason: rejectionReason);
       _notificationCenter.updateCount();
       _didPerformRejectionSuccessfully = true;
-      _view.onDidPerformActionSuccessfully(expenseIds);
+      _view.onDidPerformActionSuccessfully(expenseIds.join(','));
     } on WPException catch (e) {
       _view.onDidFailToPerformAction("Rejection Failed", e.userReadableMessage);
     }

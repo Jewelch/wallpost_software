@@ -44,7 +44,7 @@ class _ExpenseApprovalConfirmationAlertState extends State<ExpenseApprovalConfir
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           TextButton(
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () => Navigator.pop(context),
               child: Text("Cancel",
                   style: TextStyles.headerCardSubHeadingTextStyle.copyWith(
                     color: AppColors.red,
@@ -94,12 +94,12 @@ class _ExpenseApprovalConfirmationAlertState extends State<ExpenseApprovalConfir
     //if (mounted) setState(() {});
 
     Alert.showSimpleAlert(
-        context: context, title: title, message: message, onPressed: () => Navigator.pop(context, 'FAILED'));
+        context: context, title: title, message: message, onPressed: () => Navigator.pop(context));
   }
 
   @override
   void onDidPerformActionSuccessfully(String expenseId) {
-    Navigator.pop(context, 'APPROVED');
+    Navigator.pop(context, true);
   }
 
   @override
