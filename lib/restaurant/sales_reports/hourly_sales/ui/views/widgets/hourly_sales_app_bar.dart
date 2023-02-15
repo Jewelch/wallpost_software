@@ -17,7 +17,7 @@ class HourlySalesAppBarWidget extends StatelessWidget implements PreferredSizeWi
   final HourlySalesPresenter presenter;
 
   @override
-  Size get preferredSize => const Size(1200, 150);
+  Size get preferredSize => const Size(1200, 152);
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +91,8 @@ class ItemSalesAppBar extends StatelessWidget {
                           child: SvgPicture.asset(
                             "assets/icons/arrow_back_icon.svg",
                             color: AppColors.defaultColor,
-                            width: 16,
-                            height: 16,
+                            width: 18,
+                            height: 18,
                           ),
                         ),
                         SizedBox(width: 24),
@@ -140,11 +140,13 @@ class ItemSalesAppBar extends StatelessWidget {
                         SizedBox(width: 14),
                       ],
                     ),
+                    SizedBox(height: 4),
                     Padding(
                       padding: const EdgeInsets.only(left: 4, top: 6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(),
                           Text(
                             "Sales/Report/Sales",
                             style: TextStyles.labelTextStyleBold.copyWith(fontWeight: FontWeight.w500),

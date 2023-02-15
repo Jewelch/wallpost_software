@@ -24,24 +24,24 @@ class RestaurantDashboardAppBar extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: 8,
+            height: 6,
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(width: 12),
+              SizedBox(width: 18),
               GestureDetector(
                 onTap: Navigator.of(context).pop,
                 child: SvgPicture.asset(
                   "assets/icons/arrow_back_icon.svg",
                   color: AppColors.defaultColor,
-                  width: 16,
-                  height: 16,
+                  width: 18,
+                  height: 18,
                 ),
               ),
-              SizedBox(width: 24),
+              SizedBox(width: 18),
               Expanded(
                 child: GestureDetector(
                   onTap: Navigator.of(context).pop,
