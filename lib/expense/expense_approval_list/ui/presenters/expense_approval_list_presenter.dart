@@ -130,7 +130,17 @@ class ExpenseApprovalListPresenter {
   int getCountOfSelectedItems() {
     return _selectedItems.length;
   }
+  int getCountOfAllItems() {
+    return _approvalItems.length;
+  }
 
+  List<String> getSelectedItemIds() {
+    return _selectedItems.map((e) => e.id).toList();
+  }
+
+  List<String> getAllIds() {
+    return _approvalItems.map((e) => e.id).toList();
+  }
   //MARK: Functions for successful processing of approval or rejection
 
   //TODO rename - remove mass

@@ -12,7 +12,7 @@ import 'package:wallpost/expense/expense_approval_list/ui/views/action_button.da
 
 class ExpenseRejectionAllConfirmationAlert extends StatefulWidget {
   final int noOfSelectedItems;
-  final String expenseIds;
+  final List<String> expenseIds;
   final String companyId;
 
   ExpenseRejectionAllConfirmationAlert({
@@ -50,7 +50,7 @@ class _ExpenseRejectionAllConfirmationAlertState extends State<ExpenseRejectionA
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(context),
             child: Text("Cancel",
                 style: TextStyles.headerCardSubHeadingTextStyle
                     .copyWith(color: AppColors.red, fontWeight: FontWeight.w500)),
@@ -120,7 +120,7 @@ class _ExpenseRejectionAllConfirmationAlertState extends State<ExpenseRejectionA
 
   @override
   void onDidPerformActionSuccessfully(String expenseId) {
-    Navigator.pop(context, 'REJECTED');
+    Navigator.pop(context, true);
   }
 
   @override
@@ -129,8 +129,7 @@ class _ExpenseRejectionAllConfirmationAlertState extends State<ExpenseRejectionA
       context: context,
       title: title,
       message: message,
-      onPressed: () => Navigator.pop(context, 'FAILED'),
+      onPressed: () => Navigator.pop(context),
     );
   }
-//TODO: same as approval all confirmation class return values
 }

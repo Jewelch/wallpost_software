@@ -176,7 +176,8 @@ class _ExpenseApprovalListItemCardState extends State<ExpenseApprovalListItemCar
   }
 
   void _approve() async {
-    String didApprove = await showDialog(
+
+    var didApprove = await showDialog(
       context: context,
       builder: (_) => ExpenseApprovalConfirmationAlert(
         expenseId: widget.approval.id,
@@ -184,15 +185,15 @@ class _ExpenseApprovalListItemCardState extends State<ExpenseApprovalListItemCar
         requestedBy: widget.approval.requestedBy,
       ),
     );
-    if (didApprove == 'APPROVED')
+    if (didApprove)
       widget.listPresenter.onDidProcessMassApprovalOrRejection(
-        true,
+        didApprove,
         [widget.approval.id],
       );
   }
 
   void _reject() async {
-    String didReject = await showDialog(
+    var didReject = await showDialog(
       context: context,
       builder: (_) => ExpenseRejectionConfirmationAlert(
         expenseId: widget.approval.id,
@@ -200,9 +201,9 @@ class _ExpenseApprovalListItemCardState extends State<ExpenseApprovalListItemCar
         requestedBy: widget.approval.requestedBy,
       ),
     );
-    if (didReject == 'REJECTED')
+    if (didReject)
       widget.listPresenter.onDidProcessMassApprovalOrRejection(
-        true,
+        didReject,
         [widget.approval.id],
       );
   }

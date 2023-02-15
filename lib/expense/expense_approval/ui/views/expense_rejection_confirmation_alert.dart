@@ -46,7 +46,7 @@ class _ExpenseRejectionConfirmationAlertState extends State<ExpenseRejectionConf
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(context),
             child: Text("Cancel",
                 style: TextStyles.headerCardSubHeadingTextStyle
                     .copyWith(color: AppColors.red, fontWeight: FontWeight.w500)),
@@ -108,12 +108,12 @@ class _ExpenseRejectionConfirmationAlertState extends State<ExpenseRejectionConf
   @override
   void onDidFailToPerformAction(String title, String message) {
     Alert.showSimpleAlert(
-        context: context, title: title, message: message, onPressed: () => Navigator.pop(context, 'FAILED'));
+        context: context, title: title, message: message, onPressed: () => Navigator.pop(context));
   }
 
   @override
   void onDidPerformActionSuccessfully(String expenseId) {
-    Navigator.pop(context, 'REJECTED');
+    Navigator.pop(context, true);
   }
 
   @override

@@ -37,8 +37,7 @@ class ExpenseApprover {
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameter("app_type", "expenseRequest");
 
-    //TODO - convert expense ids list to comma separated string
-    apiRequest.addParameter("request_ids", expenseIds);
+    apiRequest.addParameter("request_ids", expenseIds.join(','));
 
     _isLoading = true;
 

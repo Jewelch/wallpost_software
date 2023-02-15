@@ -277,67 +277,62 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
   //MARK: mass approve function
 
   void _approveAll() async {
-    String didApprove = await showDialog(
+    var didApprove = await showDialog(
       context: context,
       builder: (_) => ExpenseApprovalAllConfirmationAlert(
-        noOfSelectedItems: 0,
-        expenseIds: "",
+        noOfSelectedItems: _listPresenter.getCountOfAllItems(),
+        expenseIds: _listPresenter.getAllIds(),
         companyId: _listPresenter.getItemAtIndex(0).companyId,
       ),
     );
-//TODO
-//     if (didApprove == 'APPROVED')
-//       _listPresenter.onDidProcessMassApprovalOrRejection(true, _listPresenter.getAllExpenseIdsAsList());
+    if (didApprove )
+     _listPresenter.onDidProcessMassApprovalOrRejection(didApprove, _listPresenter.getAllIds());
   }
 
   //MARK: mass reject function
 
   void _rejectAll() async {
-    String didRejected = await showDialog(
+    var didRejected = await showDialog(
       context: context,
       builder: (_) => ExpenseRejectionAllConfirmationAlert(
-        noOfSelectedItems: 0,
-        expenseIds: "",
+        noOfSelectedItems:  _listPresenter.getCountOfAllItems(),
+        expenseIds: _listPresenter.getAllIds(),
         companyId: _listPresenter.getItemAtIndex(0).companyId,
       ),
     );
-    //TODO
-    // if (didRejected == 'REJECTED')
-    //   _listPresenter.onDidProcessMassApprovalOrRejection(true, _listPresenter.getSelectedExpenseIdsAsList());
+     if (didRejected)
+       _listPresenter.onDidProcessMassApprovalOrRejection(didRejected, _listPresenter.getAllIds());
   }
 
   //MARK: approve selected items function
 
   void _approveSelectedItems() async {
-    String didApprove = await showDialog(
+    var didApprove = await showDialog(
       context: context,
       builder: (_) => ExpenseApprovalAllConfirmationAlert(
-        noOfSelectedItems: 0, //TODO _listPresenter.getSelectedExpenseCount(),
-        expenseIds: "",
+        noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
+        expenseIds: _listPresenter.getSelectedItemIds(),
         companyId: _listPresenter.getItemAtIndex(0).companyId,
       ),
     );
 
-    //TODO
-    // if (didApprove == 'APPROVED')
-    //   _listPresenter.onDidProcessMassApprovalOrRejection(true, _listPresenter.getSelectedExpenseIdsAsList());
+     if (didApprove)
+       _listPresenter.onDidProcessMassApprovalOrRejection(didApprove, _listPresenter.getSelectedItemIds());
   }
 
   //MARK:  reject selected  function
 
   void _rejectSelectedItems() async {
-    String didReject = await showDialog(
+    var didReject = await showDialog(
       context: context,
       builder: (_) => ExpenseRejectionAllConfirmationAlert(
-        noOfSelectedItems: 0, //TODO _listPresenter.getSelectedExpenseCount(),
-        expenseIds: "",
+        noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
+        expenseIds: _listPresenter.getSelectedItemIds(),
         companyId: _listPresenter.getItemAtIndex(0).companyId,
       ),
     );
-
-    //TODO
-    // if (didReject == 'REJECTED')
-    //   _listPresenter.onDidProcessMassApprovalOrRejection(true, _listPresenter.getSelectedExpenseIdsAsList());
+    if (didReject)
+      _listPresenter.onDidProcessMassApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
   }
 
   //MARK: Approval list view functions
