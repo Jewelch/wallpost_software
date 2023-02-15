@@ -112,9 +112,11 @@ class ExpenseApprovalListPresenter {
     _selectedItems.contains(approvalItem) ? _selectedItems.remove(approvalItem) : _selectedItems.add(approvalItem);
     _view.updateList();
   }
+
   bool isAllItemAreSelected() {
     return _selectedItems.length==_approvalItems.length;
   }
+
   void selectAll() {
     _selectedItems.clear();
     _selectedItems.addAll(_approvalItems);
@@ -144,6 +146,7 @@ class ExpenseApprovalListPresenter {
   List<String> getAllIds() {
     return _approvalItems.map((e) => e.id).toList();
   }
+
   //MARK: Functions for successful processing of approval or rejection
 
   Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, List<String> expenseIds) async {

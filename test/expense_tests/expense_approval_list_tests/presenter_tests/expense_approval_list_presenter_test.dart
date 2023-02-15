@@ -318,10 +318,6 @@ void main() {
     _verifyNoMoreInteractions();
   });
 
-
-//MARK: Tests to all selected expense item count
-
-
   //MARK: Tests remove approved or rejected items
 
   test("successfully performing action on one of three items updates the list", () async {
@@ -423,5 +419,136 @@ void main() {
     when(() => expense.requestedBy).thenReturn("some name");
 
     expect(presenter.getRequestedBy(expense), "some name");
+  });
+  // Test on 15-02-2023
+
+  test('initiate multiple selection', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    when(() => listProvider.isLoading).thenReturn(false);
+    when(() => listProvider.didReachListEnd).thenReturn(false);
+    _clearAllInteractions();
+
+    //when
+    presenter.initiateMultipleSelection();
+
+    //then
+    verifyInOrder([() => view.onDidInitiateMultipleSelection(),
+                    () => view.updateList()]);
+
+    expect(presenter.isAllItemAreSelected(),true);
+
+    _verifyNoMoreInteractions();
+
+  });
+
+  test('end multiple selection', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    when(() => listProvider.isLoading).thenReturn(false);
+    when(() => listProvider.didReachListEnd).thenReturn(false);
+    _clearAllInteractions();
+
+    //when
+    presenter.endMultipleSelection();
+
+    //then
+    verifyInOrder([() => view.onDidEndMultipleSelection(),
+       ]);
+    expect(presenter.isAllItemAreSelected(),false);
+
+    _verifyNoMoreInteractions();
+  });
+
+  test('toggle selection', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    when(() => listProvider.isLoading).thenReturn(false);
+    when(() => listProvider.didReachListEnd).thenReturn(false);
+    _clearAllInteractions();
+
+    //when
+    presenter.toggleSelection(approval2);
+
+    //then
+    verifyInOrder([() => view.updateList(),
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
+  test('select all items', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    when(() => listProvider.isLoading).thenReturn(false);
+    when(() => listProvider.didReachListEnd).thenReturn(false);
+    _clearAllInteractions();
+
+    //when
+    presenter.selectAll();
+
+    //then
+    verifyInOrder([() => view.updateList(),
+    ]);
+
+    _verifyNoMoreInteractions();
+  });
+
+  test('un select all items', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    when(() => listProvider.isLoading).thenReturn(false);
+    when(() => listProvider.didReachListEnd).thenReturn(false);
+    _clearAllInteractions();
+
+    //when
+    presenter.unselectAll();
+
+    //then
+    verifyInOrder([() => view.updateList(),
+    ]);
+
+    _verifyNoMoreInteractions();
+  });
+
+  test('count of all item', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockExpenseApprovalListItem();
+    var approval2 = MockExpenseApprovalListItem();
+    var approval3 = MockExpenseApprovalListItem();
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    when(() => listProvider.isLoading).thenReturn(false);
+    when(() => listProvider.didReachListEnd).thenReturn(false);
+    _clearAllInteractions();
+
+    expect(presenter.getCountOfAllItems(),3);
+
+    _verifyNoMoreInteractions();
   });
 }
