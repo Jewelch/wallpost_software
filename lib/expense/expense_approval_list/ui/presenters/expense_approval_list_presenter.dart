@@ -143,8 +143,7 @@ class ExpenseApprovalListPresenter {
   }
   //MARK: Functions for successful processing of approval or rejection
 
-  //TODO rename - remove mass
-  Future<void> onDidProcessMassApprovalOrRejection(dynamic didPerformAction, List<String> expenseIds) async {
+  Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, List<String> expenseIds) async {
     if (didPerformAction == true) {
       for (var i = 0; i < expenseIds.length; i++) {
         _numberOfApprovalsProcessed = _numberOfApprovalsProcessed + 1;
