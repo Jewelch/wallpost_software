@@ -172,17 +172,10 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
   }
 
   Widget _listItem(index) {
-    // if (!showCheckBoxList)
     return ExpenseApprovalListItemCard(
       listPresenter: _listPresenter,
       approval: _listPresenter.getItemAtIndex(index),
     );
-    // else {
-    //   return ExpenseApprovalListItemCardWithCheckBox(
-    //     listPresenter: _listPresenter,
-    //     approval: _listPresenter.getItemAtIndex(index),
-    //   );
-    // }
   }
 
   Widget _listLoader() {
@@ -285,8 +278,7 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
         companyId: _listPresenter.getItemAtIndex(0).companyId,
       ),
     );
-    if (didApprove )
-     _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getAllIds());
+    if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getAllIds());
   }
 
   //MARK: mass reject function
@@ -295,13 +287,12 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
     var didRejected = await showDialog(
       context: context,
       builder: (_) => ExpenseRejectionAllConfirmationAlert(
-        noOfSelectedItems:  _listPresenter.getCountOfAllItems(),
+        noOfSelectedItems: _listPresenter.getCountOfAllItems(),
         expenseIds: _listPresenter.getAllIds(),
         companyId: _listPresenter.getItemAtIndex(0).companyId,
       ),
     );
-     if (didRejected)
-       _listPresenter.onDidProcessApprovalOrRejection(didRejected, _listPresenter.getAllIds());
+    if (didRejected) _listPresenter.onDidProcessApprovalOrRejection(didRejected, _listPresenter.getAllIds());
   }
 
   //MARK: approve selected items function
@@ -316,8 +307,7 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
       ),
     );
 
-     if (didApprove)
-       _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getSelectedItemIds());
+    if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getSelectedItemIds());
   }
 
   //MARK:  reject selected  function
@@ -331,8 +321,7 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
         companyId: _listPresenter.getItemAtIndex(0).companyId,
       ),
     );
-    if (didReject)
-      _listPresenter.onDidProcessApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
+    if (didReject) _listPresenter.onDidProcessApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
   }
 
   //MARK: Approval list view functions

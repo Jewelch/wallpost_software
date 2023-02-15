@@ -141,6 +141,7 @@ class ExpenseApprovalListPresenter {
   List<String> getAllIds() {
     return _approvalItems.map((e) => e.id).toList();
   }
+
   //MARK: Functions for successful processing of approval or rejection
 
   Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, List<String> expenseIds) async {
