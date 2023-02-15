@@ -110,8 +110,11 @@ class ExpenseApprovalListPresenter {
 
   void toggleSelection(ExpenseApprovalListItem approvalItem) {
     _selectedItems.contains(approvalItem) ? _selectedItems.remove(approvalItem) : _selectedItems.add(approvalItem);
+    _view.updateList();
   }
-
+  bool isAllItemAreSelected() {
+    return _selectedItems.length==_approvalItems.length;
+  }
   void selectAll() {
     _selectedItems.clear();
     _selectedItems.addAll(_approvalItems);

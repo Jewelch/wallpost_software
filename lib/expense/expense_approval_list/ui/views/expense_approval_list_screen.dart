@@ -134,6 +134,8 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
       child: Column(
         children: [
           ExpenseApprovalListAppBar(
+            noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
+            isAllItemAreSelected: _listPresenter.isAllItemAreSelected(),
             isMultipleSelectionInProgress: _listPresenter.isSelectionInProgress,
             onInitiateMultipleSelectionButtonPressed: () => _listPresenter.initiateMultipleSelection(),
             onEndMultipleSelectionButtonPressed: () => _listPresenter.endMultipleSelection(),
@@ -383,12 +385,6 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
 
   void _dismiss() {
     Navigator.pop(context, _listPresenter.numberOfApprovalsProcessed);
-  }
-
-  @override
-  void toggleAppBarRightEndText(bool isSelected) {
-    // _checkBoxSelectorNotifier.notify(isSelected);
-    setState(() {});
   }
 
   @override
