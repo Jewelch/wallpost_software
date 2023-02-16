@@ -84,9 +84,9 @@ class ItemSalesPresenter {
 
   // Top card getters
 
-  String getTotalRevenue() => itemSalesReport.totalRevenue.toString();
+  String getTotalRevenue() => itemSalesReport.totalRevenue;
 
-  String getTotalOfAllItemsQuantity() => itemSalesReport.totalOfAllItemsQuantities.toString();
+  String getTotalOfAllItemsQuantity() => itemSalesReport.totalOfAllItemsQuantities;
 
   // Category wise
 
@@ -97,9 +97,9 @@ class ItemSalesPresenter {
   String getCategoryNameAtIndex(int index) => itemSalesReport.categoriesSales[index].categoryName;
 
   String getCategoryTotalToDisplayRevenueAtIndex(int index) =>
-      itemSalesReport.categoriesSales[index].totalRevenueToDisplay.toString();
+      itemSalesReport.categoriesSales[index].totalRevenueToDisplay;
 
-  String getCategoryTotalQtyAtIndex(int index) => itemSalesReport.categoriesSales[index].totalQuantity.toString();
+  String getCategoryTotalQtyAtIndex(int index) => itemSalesReport.categoriesSales[index].totalQuantity;
 
   // Item wise
 
@@ -109,7 +109,7 @@ class ItemSalesPresenter {
 
   String getItemNameAtIndex(int index) => _itemsList[index].itemName;
 
-  String getItemQtyAtIndex(int index) => _itemsList[index].qty.toString();
+  String getItemQtyAtIndex(int index) => _itemsList[index].qty;
 
   String getItemRevenueToDisplayAtIndex(int index) => _itemsList[index].revenueToDisplay.toString();
 
@@ -117,7 +117,7 @@ class ItemSalesPresenter {
 
   String getNameOfSpecificItem(ItemSales item) => item.itemName;
 
-  String getQtyOfSpecificItem(ItemSales item) => item.qty.toString();
+  String getQtyOfSpecificItem(ItemSales item) => item.qty;
 
   String getRevenueToDisplayOfSpecificItem(ItemSales item) => item.revenueToDisplay.toString();
 
