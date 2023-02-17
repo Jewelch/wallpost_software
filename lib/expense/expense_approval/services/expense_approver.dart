@@ -19,16 +19,8 @@ class ExpenseApprover {
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameter("app_type", "expenseRequest");
     apiRequest.addParameter("request_id", expenseId);
-    _isLoading = true;
 
-    try {
-      await _networkAdapter.post(apiRequest);
-      _isLoading = false;
-      return null;
-    } on APIException catch (exception) {
-      _isLoading = false;
-      throw exception;
-    }
+    await _executeRequest(apiRequest);
   }
 
   Future<void> massApprove(String companyId, List<String> expenseIds) async {
@@ -37,8 +29,12 @@ class ExpenseApprover {
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameter("app_type", "expenseRequest");
     apiRequest.addParameter("request_ids", expenseIds.join(','));
-    _isLoading = true;
 
+    await _executeRequest(apiRequest);
+  }
+
+  Future<void> _executeRequest(APIRequest apiRequest) async {
+    _isLoading = true;
     try {
       await _networkAdapter.post(apiRequest);
       _isLoading = false;

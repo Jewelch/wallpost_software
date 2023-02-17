@@ -13,12 +13,27 @@ void main() {
     mockNetworkAdapter.reset();
   });
 
-  test('api request is built and executed correctly', () async {
+  test('api request is built and executed correctly for single item approval', () async {
     Map<String, dynamic> requestParams = {};
     requestParams.addAll({"app_type": "expenseRequest", "request_id": "someExpenseId"});
     mockNetworkAdapter.succeed(successfulResponse);
 
     var _ = await approver.approve("someCompanyId", "someExpenseId");
+
+    expect(mockNetworkAdapter.apiRequest.url, ExpenseApprovalUrls.approveUrl("someCompanyId"));
+    expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
+    expect(mockNetworkAdapter.didCallPost, true);
+  });
+
+  test('api request is built and executed correctly for multiple item approval', () async {
+    Map<String, dynamic> requestParams = {};
+    requestParams.addAll({
+      "app_type": "expenseRequest",
+      "request_ids": "id1,id2",
+    });
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await approver.massApprove("someCompanyId", ["id1", "id2"]);
 
     expect(mockNetworkAdapter.apiRequest.url, ExpenseApprovalUrls.approveUrl("someCompanyId"));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
