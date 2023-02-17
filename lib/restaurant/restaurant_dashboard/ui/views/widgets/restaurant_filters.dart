@@ -68,7 +68,6 @@ class RestaurantFilters extends StatelessWidget {
                 TextButton(
                   onPressed: () {},
                   child: Text(
-                    // "Apply"
                     "",
                     style: TextStyles.screenTitleTextStyle.copyWith(
                       color: AppColors.defaultColor,

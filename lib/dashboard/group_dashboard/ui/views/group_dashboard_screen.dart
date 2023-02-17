@@ -315,7 +315,7 @@ class _GroupDashboardScreenState extends State<GroupDashboardScreen>
   void _startSyncingDataAtRegularIntervals() {
     if (_backgroundSyncTimer == null || _backgroundSyncTimer!.isActive == false) {
       _backgroundSyncTimer = new Timer.periodic(const Duration(seconds: 30), (Timer timer) {
-        presenter.syncDataInBackground();
+        // presenter.syncDataInBackground();
       });
     }
   }

@@ -163,16 +163,18 @@ class _ExpansionPanelHeader extends StatelessWidget {
     return IntrinsicHeight(
       child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0),
-            child: Text(
-              title,
-              textAlign: TextAlign.right,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyles.largeTitleTextStyleBold.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0),
+              child: Text(
+                title,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyles.largeTitleTextStyleBold.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500),
+              ),
             ),
           ),
-          Spacer(),
+          SizedBox(width: 10),
           Text(
             totalRevenue.toString(),
             textAlign: TextAlign.right,

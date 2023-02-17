@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
+import '../../../../common_widgets/restaurant_app_bar.dart';
 import '../../presenters/restaurant_dashboard_presenter.dart';
 
 class RestaurantDashboardAppBar extends StatelessWidget {
@@ -23,63 +24,8 @@ class RestaurantDashboardAppBar extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(
-            height: 6,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(width: 18),
-              GestureDetector(
-                onTap: Navigator.of(context).pop,
-                child: SvgPicture.asset(
-                  "assets/icons/arrow_back_icon.svg",
-                  color: AppColors.defaultColor,
-                  width: 18,
-                  height: 18,
-                ),
-              ),
-              SizedBox(width: 18),
-              Expanded(
-                child: GestureDetector(
-                  onTap: Navigator.of(context).pop,
-                  child: Container(
-                    height: 40,
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: Container(
-                              child: Text(
-                                presenter.getSelectedCompanyName(),
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: TextStyles.largeTitleTextStyleBold.copyWith(
-                                  color: AppColors.defaultColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          SvgPicture.asset(
-                            "assets/icons/arrow_down_icon.svg",
-                            color: AppColors.defaultColor,
-                            width: 16,
-                            height: 16,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 24),
-              SizedBox(width: 12),
-            ],
-          ),
+          SizedBox(height: 6),
+          RestaurantAppBar(companyName: presenter.getSelectedCompanyName()),
           if (showFilters)
             Container(
               height: 52,

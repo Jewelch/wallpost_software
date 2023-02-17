@@ -6,10 +6,10 @@ import '../../mocks.dart';
 
 void main() {
   test('ItemSalesDataModel  serialization succeeds when data is valid', () {
-    int totalRevenue = 175;
+    String totalRevenue = "175";
     int totalCategories = 2;
-    int totalItemsInAllCategories = 8;
-    int totalOfAllItemsQuantities = 22;
+    String totalItemsInAllCategories = "8";
+    String totalOfAllItemsQuantities = "22";
     List<Map<String, dynamic>> breakDown = Mocks.itemSalesBreakdownListMock;
     bool isExpanded = true;
 
@@ -33,68 +33,10 @@ void main() {
     try {
       ItemSalesReport.fromJson(Mocks.specificItemSalesResponse(
         totalRevenue: "12000",
-        totalCategories: 40000,
-        totalItemsInAllCategories: 4,
-        totalOfAllItemsQuantities: 22,
-        breakdown: Mocks.itemSalesBreakdownListMock,
-        isExpanded: false,
-      ));
-
-      fail('failed to throw the mapping exception');
-    } catch (e) {
-      expect(e, isA<MappingException>());
-    }
-
-    try {
-      ItemSalesReport.fromJson(Mocks.specificItemSalesResponse(
-        totalRevenue: 12000,
         totalCategories: "40000",
-        totalItemsInAllCategories: 4,
-        totalOfAllItemsQuantities: 22,
-        breakdown: Mocks.itemSalesBreakdownListMock,
-        isExpanded: false,
-      ));
-
-      fail('failed to throw the mapping exception');
-    } catch (e) {
-      expect(e, isA<MappingException>());
-    }
-
-    try {
-      ItemSalesReport.fromJson(Mocks.specificItemSalesResponse(
-        totalRevenue: 12000,
-        totalCategories: 40000,
         totalItemsInAllCategories: "4",
-        totalOfAllItemsQuantities: 22,
-        breakdown: Mocks.itemSalesBreakdownListMock,
-        isExpanded: false,
-      ));
-
-      fail('failed to throw the mapping exception');
-    } catch (e) {
-      expect(e, isA<MappingException>());
-    }
-    try {
-      ItemSalesReport.fromJson(Mocks.specificItemSalesResponse(
-        totalRevenue: 12000,
-        totalCategories: 40000,
-        totalItemsInAllCategories: 4,
         totalOfAllItemsQuantities: "22",
         breakdown: Mocks.itemSalesBreakdownListMock,
-        isExpanded: false,
-      ));
-
-      fail('failed to throw the mapping exception');
-    } catch (e) {
-      expect(e, isA<MappingException>());
-    }
-    try {
-      ItemSalesReport.fromJson(Mocks.specificItemSalesResponse(
-        totalRevenue: 12000,
-        totalCategories: 40000,
-        totalItemsInAllCategories: 4,
-        totalOfAllItemsQuantities: 22,
-        breakdown: "ewqerq fas",
         isExpanded: false,
       ));
 

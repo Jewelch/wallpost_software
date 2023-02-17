@@ -63,7 +63,7 @@ class SalesBreakDownCard extends StatelessWidget {
                                 _presenter.getCompanyCurrency(),
                                 style: TextStyle(
                                   color: AppColors.textColorBlueGray,
-                                  fontSize: 8, // 11 is not logic
+                                  fontSize: 8,
                                   fontWeight: FontWeight.w800,
                                 ),
                               ),

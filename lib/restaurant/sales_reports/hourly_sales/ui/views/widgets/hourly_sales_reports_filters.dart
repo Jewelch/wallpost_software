@@ -145,7 +145,7 @@ class _HourlySalesReportsFiltersState extends State<HourlySalesReportsFilters> {
             ),
             SizedBox(height: 16),
             Wrap(
-              children: [HourlySalesReportSortOptions.values.first, HourlySalesReportSortOptions.values[1]]
+              children: HourlySalesReportSortOptions.values
                   .map(
                     (sortOption) => RadioContainer(
                       title: sortOption.toReadableString(),

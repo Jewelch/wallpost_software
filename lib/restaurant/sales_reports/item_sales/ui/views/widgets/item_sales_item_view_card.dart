@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field
-
 import 'package:flutter/material.dart';
 
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';

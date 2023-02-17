@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field
-
 import 'package:flutter/material.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_model.dart';
 
