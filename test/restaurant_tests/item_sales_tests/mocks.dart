@@ -1,6 +1,7 @@
 class Mocks {
   static Map<String, dynamic> itemSalesReportResponse = {
     "totalRevenue": "175",
+    "totalRevenueToDisplay": "175",
     "totalCategories": 2,
     "totalItemsInAllCategoriesToDisplay": "8",
     "totalOfAllItemsQuantitiesToDisplay": "22",
