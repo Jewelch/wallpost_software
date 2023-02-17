@@ -3,20 +3,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-//TODO
 class ExpenseApprovalListAppBar extends StatefulWidget {
+  final int noOfSelectedItems;
   final bool isMultipleSelectionInProgress;
+  final bool isAllItemAreSelected;
   final VoidCallback onInitiateMultipleSelectionButtonPressed;
   final VoidCallback onEndMultipleSelectionButtonPressed;
   final VoidCallback onSelectAllButtonPress;
   final VoidCallback onUnselectAllButtonPress;
 
   ExpenseApprovalListAppBar({
+    required this.noOfSelectedItems,
     required this.isMultipleSelectionInProgress,
     required this.onInitiateMultipleSelectionButtonPressed,
     required this.onEndMultipleSelectionButtonPressed,
     required this.onSelectAllButtonPress,
     required this.onUnselectAllButtonPress,
+    required this.isAllItemAreSelected,
   });
 
   @override
@@ -24,6 +27,8 @@ class ExpenseApprovalListAppBar extends StatefulWidget {
 }
 
 class _ExpenseApprovalListAppBarState extends State<ExpenseApprovalListAppBar> {
+  bool pressON = false;
+
   @override
   Widget build(BuildContext context) {
     if (widget.isMultipleSelectionInProgress) {
@@ -39,9 +44,18 @@ class _ExpenseApprovalListAppBarState extends State<ExpenseApprovalListAppBar> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(onPressed: widget.onEndMultipleSelectionButtonPressed, child: Text("Cancel")),
-                // if (_listPresenter.getSelectedExpenseCount() > 0)
-                //   Text("${_listPresenter.getSelectedExpenseCount()} Selected"),
-                // _buildToggleTextButtonView()
+                if (widget.noOfSelectedItems > 0) Text("${widget.noOfSelectedItems} Selected"),
+                widget.isAllItemAreSelected
+                    ? TextButton(
+                        onPressed: () {
+                          widget.onUnselectAllButtonPress();
+                        },
+                        child: Text("Unselect All"))
+                    : TextButton(
+                        onPressed: () {
+                          widget.onSelectAllButtonPress();
+                        },
+                        child: Text("Select All"))
               ],
             ),
             Container(

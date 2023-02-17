@@ -107,8 +107,7 @@ class _ExpenseRejectionConfirmationAlertState extends State<ExpenseRejectionConf
 
   @override
   void onDidFailToPerformAction(String title, String message) {
-    Alert.showSimpleAlert(
-        context: context, title: title, message: message, onPressed: () => Navigator.pop(context));
+    Alert.showSimpleAlert(context: context, title: title, message: message, onPressed: () => Navigator.pop(context));
   }
 
   @override
@@ -120,6 +119,4 @@ class _ExpenseRejectionConfirmationAlertState extends State<ExpenseRejectionConf
   void showLoader() {
     _showLoaderNotifier.notify(true);
   }
-
-//TODO: same as approval all confirmation class return values
 }

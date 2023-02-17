@@ -63,6 +63,7 @@ class ExpenseApprovalListPresenter {
   Future<void> refresh() async {
     _approvalItems.clear();
     _selectedItems.clear();
+    _isSelectionInProgress = false;
     _approvalListProvider.reset();
     getNext();
   }
@@ -110,6 +111,7 @@ class ExpenseApprovalListPresenter {
 
   void toggleSelection(ExpenseApprovalListItem approvalItem) {
     _selectedItems.contains(approvalItem) ? _selectedItems.remove(approvalItem) : _selectedItems.add(approvalItem);
+    _view.updateList();
   }
 
   void selectAll() {
@@ -123,6 +125,10 @@ class ExpenseApprovalListPresenter {
     _view.updateList();
   }
 
+  bool areAllItemsSelected() {
+    return _selectedItems.length == _approvalItems.length;
+  }
+
   bool isItemSelected(ExpenseApprovalListItem approvalItem) {
     return _selectedItems.contains(approvalItem);
   }
@@ -130,16 +136,9 @@ class ExpenseApprovalListPresenter {
   int getCountOfSelectedItems() {
     return _selectedItems.length;
   }
-  int getCountOfAllItems() {
-    return _approvalItems.length;
-  }
 
   List<String> getSelectedItemIds() {
     return _selectedItems.map((e) => e.id).toList();
-  }
-
-  List<String> getAllIds() {
-    return _approvalItems.map((e) => e.id).toList();
   }
 
   //MARK: Functions for successful processing of approval or rejection
@@ -149,10 +148,13 @@ class ExpenseApprovalListPresenter {
       for (var i = 0; i < expenseIds.length; i++) {
         _numberOfApprovalsProcessed = _numberOfApprovalsProcessed + 1;
         _approvalItems.removeWhere((approval) => approval.id == expenseIds[i]);
+        _selectedItems.removeWhere((approval) => approval.id == expenseIds[i]);
       }
       _approvalItems.isNotEmpty ? _updateList() : _view.onDidProcessAllApprovals();
     }
   }
+
+  get isSelectionInProgress => _isSelectionInProgress;
 
   //MARK: Getters
 
@@ -176,11 +178,17 @@ class ExpenseApprovalListPresenter {
     return approval.requestedBy;
   }
 
+  int getCountOfAllItems() {
+    return _approvalItems.length;
+  }
+
+  List<String> getAllIds() {
+    return _approvalItems.map((e) => e.id).toList();
+  }
+
   String get errorMessage => _errorMessage;
 
   String get noItemsMessage => _noItemsMessage;
 
   int get numberOfApprovalsProcessed => _numberOfApprovalsProcessed;
-
-  get isSelectionInProgress => _isSelectionInProgress;
 }

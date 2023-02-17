@@ -36,9 +36,7 @@ class ExpenseApprover {
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameter("app_type", "expenseRequest");
-
     apiRequest.addParameter("request_ids", expenseIds.join(','));
-
     _isLoading = true;
 
     try {

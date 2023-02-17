@@ -22,8 +22,6 @@ class ExpenseDetailProvider {
 
   ExpenseDetailProvider.initWith(this._companyId, this._networkAdapter);
 
-  // MARK: functions to get expense requests
-
   Future<ExpenseRequest> get(String expenseId) async {
     var url = ExpenseDetailUrls.getExpenseDetailUrl(_companyId, expenseId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();

@@ -22,7 +22,6 @@ class ExpenseApprovalConfirmationAlert extends StatefulWidget {
 
 class _ExpenseApprovalConfirmationAlertState extends State<ExpenseApprovalConfirmationAlert>
     implements ExpenseApprovalView {
-  //TODO: same as approval all confirmation class return values
   late ExpenseApprovalPresenter _presenter;
   var _showLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
 
@@ -91,10 +90,7 @@ class _ExpenseApprovalConfirmationAlertState extends State<ExpenseApprovalConfir
 
   @override
   void onDidFailToPerformAction(String title, String message) {
-    //if (mounted) setState(() {});
-
-    Alert.showSimpleAlert(
-        context: context, title: title, message: message, onPressed: () => Navigator.pop(context));
+    Alert.showSimpleAlert(context: context, title: title, message: message, onPressed: () => Navigator.pop(context));
   }
 
   @override
