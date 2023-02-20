@@ -181,7 +181,7 @@ class _ExpansionPanelHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyles.largeTitleTextStyleBold.copyWith(fontSize: 20.0),
           ),
-          SizedBox(width: 3),
+          SizedBox(width: 2),
           Align(
               heightFactor: 1.5,
               alignment: Alignment.topLeft,

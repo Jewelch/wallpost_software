@@ -30,12 +30,10 @@ class HourlySalesLoader extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 45),
-              _customChips(),
-              SizedBox(height: 16),
+              SizedBox(height: 32),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
-                child: SalesBreakDownLoader(count: 1),
+                child: SalesBreakDownLoader(count: 3),
               ),
             ],
           ),
@@ -111,30 +109,6 @@ class HourlySalesLoader extends StatelessWidget {
     );
   }
 
-  Widget cards(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-              child: HourlySalesContainerLoader(
-            height: 80,
-            topRadius: 20,
-            bottomRadius: 20,
-          )),
-          SizedBox(width: 16),
-          Expanded(
-              child: HourlySalesContainerLoader(
-            height: 80,
-            topRadius: 20,
-            bottomRadius: 20,
-          )),
-        ],
-      ),
-    );
-  }
-
   Widget _appBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -162,32 +136,6 @@ class HourlySalesLoader extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _customChips() {
-    return Row(
-      children: [
-        SizedBox(width: 24),
-        Expanded(
-          child: HourlySalesContainerLoader(
-            height: 32,
-            width: 120,
-            topRadius: 12,
-            bottomRadius: 12,
-          ),
-        ),
-        Expanded(child: SizedBox(width: 15)),
-        Expanded(
-          child: HourlySalesContainerLoader(
-            height: 32,
-            width: 120,
-            topRadius: 12,
-            bottomRadius: 12,
-          ),
-        ),
-        SizedBox(width: 24),
-      ],
     );
   }
 }

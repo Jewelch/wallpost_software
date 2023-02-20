@@ -111,30 +111,6 @@ class ItemSalesLoader extends StatelessWidget {
     );
   }
 
-  Widget cards(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-              child: ItemSalesContainerLoader(
-            height: 80,
-            topRadius: 20,
-            bottomRadius: 20,
-          )),
-          SizedBox(width: 16),
-          Expanded(
-              child: ItemSalesContainerLoader(
-            height: 80,
-            topRadius: 20,
-            bottomRadius: 20,
-          )),
-        ],
-      ),
-    );
-  }
-
   Widget _appBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
