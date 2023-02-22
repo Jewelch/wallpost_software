@@ -8,4 +8,8 @@ abstract class AttendanceAdjustmentApprovalListView {
   void updateList();
 
   void onDidProcessAllApprovals();
+
+  void onDidInitiateMultipleSelection();
+
+  void onDidEndMultipleSelection();
 }

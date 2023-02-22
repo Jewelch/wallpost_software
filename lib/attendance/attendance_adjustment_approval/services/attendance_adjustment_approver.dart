@@ -18,8 +18,22 @@ class AttendanceAdjustmentApprover {
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameter("app_type", "attendanceAdjustmentRequest");
     apiRequest.addParameter("request_id", attendanceAdjustmentId);
-    _isLoading = true;
 
+    await _executeRequest(apiRequest);
+  }
+
+  Future<void> massApprove(String companyId, List<String> attendanceAdjustmentIds) async {
+    var url = AttendanceAdjustmentApprovalUrls.approveUrl(companyId);
+    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+    var apiRequest = APIRequest.withId(url, _sessionId);
+    apiRequest.addParameter("app_type", "attendanceAdjustmentRequest");
+    apiRequest.addParameter("request_id",attendanceAdjustmentIds.join(','));
+
+    await _executeRequest(apiRequest);
+  }
+
+  Future<void> _executeRequest(APIRequest apiRequest) async {
+    _isLoading = true;
     try {
       await _networkAdapter.post(apiRequest);
       _isLoading = false;
