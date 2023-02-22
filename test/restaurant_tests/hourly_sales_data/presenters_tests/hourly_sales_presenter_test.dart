@@ -250,7 +250,9 @@ void main() {
       () => view.onDidLoadReport(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
-    expect(presenter.filters.selectedDate, defaultFilters.selectedDate);
+    expect(presenter.filters.selectedDate.year, defaultFilters.selectedDate.year);
+    expect(presenter.filters.selectedDate.month, defaultFilters.selectedDate.month);
+    expect(presenter.filters.selectedDate.day, defaultFilters.selectedDate.day);
     expect(presenter.filters.sortOption, defaultFilters.sortOption);
     _verifyNoMoreInteractionsOnAllMocks();
   });

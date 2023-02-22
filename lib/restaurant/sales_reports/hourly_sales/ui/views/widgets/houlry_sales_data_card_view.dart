@@ -31,32 +31,27 @@ class HourlySalesDataCard extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Text(
+                      presenter.getHourAtIndex(index),
+                      style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        color: AppColors.textColorBlueGray,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 1,
+                    ),
+                    SizedBox(height: 3),
+                    Row(
                       children: [
-                        Text(
-                          presenter.getHourAtIndex(index),
-                          style: TextStyle(
-                            overflow: TextOverflow.ellipsis,
-                            color: AppColors.textColorBlueGray,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 1,
-                        ),
                         Text(
                           presenter.getTicketsNumberAtIndex(index),
                           style: TextStyles.headerCardSubValueTextStyle.copyWith(fontWeight: FontWeight.w500),
                           maxLines: 1,
                         ),
-                      ],
-                    ),
-                    Expanded(
-                        child: Row(
-                      children: [
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -66,7 +61,7 @@ class HourlySalesDataCard extends StatelessWidget {
                             style: TextStyles.headerCardSubValueTextStyle,
                           ),
                         ),
-                        SizedBox(width: 3),
+                        SizedBox(width: 2),
                         Column(
                           children: [
                             Text(
@@ -81,7 +76,7 @@ class HourlySalesDataCard extends StatelessWidget {
                           ],
                         ),
                       ],
-                    )),
+                    ),
                   ],
                 ),
               ),
