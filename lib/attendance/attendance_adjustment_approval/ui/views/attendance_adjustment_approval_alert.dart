@@ -91,22 +91,29 @@ class _AttendanceAdjustmentApprovalAlertState extends State<AttendanceAdjustment
     );
   }
 
-  @override
-  void notifyInvalidRejectionReason() {}
-
-  @override
-  void onDidFailToPerformAction(String title, String message) {
-    Alert.showSimpleAlert(context: context, title: title, message: message, onPressed: () => Navigator.pop(context));
-  }
-
-  @override
-  void onDidPerformActionSuccessfully(String attendanceAdjustmentId) {
-    Navigator.pop(context, true);
-  }
+  //MARK: View functions
 
   @override
   void showLoader() {
     _showLoaderNotifier.notify(true);
+  }
+
+  @override
+  void notifyInvalidRejectionReason() {}
+
+  @override
+  void onDidPerformActionSuccessfully(String expenseId) {
+    Navigator.pop(context, true);
+  }
+
+  @override
+  void onDidFailToPerformAction(String title, String message) {
+    Alert.showSimpleAlert(
+      context: context,
+      title: title,
+      message: message,
+      onPressed: () => Navigator.pop(context),
+    );
   }
 }
 

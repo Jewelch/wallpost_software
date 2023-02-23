@@ -1,0 +1,111 @@
+import 'package:flutter/material.dart';
+import 'package:notifiable/item_notifiable.dart';
+import 'package:wallpost/_common_widgets/alert/alert.dart';
+import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/attendance_adjustment_approval/ui/presenters/attendance_adjustment_approval_presenter.dart';
+import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/action_button.dart';
+
+import '../view_contracts/attendance_adjustment_approval_view.dart';
+
+class AttendanceAdjustmentApprovalAllAlert extends StatefulWidget {
+  final int noOfSelectedItems;
+  final List<String> expenseIds;
+  final String companyId;
+
+  AttendanceAdjustmentApprovalAllAlert({
+    required this.noOfSelectedItems,
+    required this.expenseIds,
+    required this.companyId,
+  });
+
+  @override
+  State<AttendanceAdjustmentApprovalAllAlert> createState() => _AttendanceAdjustmentApprovalAllAlertState();
+}
+
+class _AttendanceAdjustmentApprovalAllAlertState extends State<AttendanceAdjustmentApprovalAllAlert> implements AttendanceAdjustmentApprovalView{
+  late AttendanceAdjustmentApprovalPresenter _presenter;
+  var _showLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
+
+  @override
+  void initState() {
+    _presenter = AttendanceAdjustmentApprovalPresenter(this);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      titlePadding: EdgeInsets.symmetric(horizontal: 4),
+      contentPadding: EdgeInsets.all(14),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel",
+                style: TextStyles.headerCardSubHeadingTextStyle
+                    .copyWith(color: AppColors.red, fontWeight: FontWeight.w500)),
+          ),
+          SizedBox(width: 22),
+          Text(
+            "Approve All (${widget.noOfSelectedItems})",
+            style: TextStyles.headerCardSubHeadingTextStyle
+                .copyWith(color: AppColors.textColorBlack, fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Are you sure you want to approve all ${widget.noOfSelectedItems} selected requests ?",
+              style: TextStyles.headerCardSubHeadingTextStyle.copyWith(color: AppColors.textColorBlack),
+              textAlign: TextAlign.left),
+          SizedBox(height: 18),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Expanded(
+              child: ItemNotifiable<bool>(
+                notifier: _showLoaderNotifier,
+                builder: (context, showLoader) => ActionButton(
+                  title: "Yes Approve All",
+                  icon: Icon(Icons.check, size: 22, color: Colors.white),
+                  color: AppColors.green,
+                  showLoader: showLoader,
+                  onPressed: () {
+                    _presenter.massApprove(widget.companyId, widget.expenseIds);
+                  },
+                ),
+              ),
+            ),
+          ])
+        ],
+      ),
+    );
+  }
+
+  @override
+  void showLoader() {
+    _showLoaderNotifier.notify(true);
+  }
+
+  @override
+  void notifyInvalidRejectionReason() {}
+
+  @override
+  void onDidPerformActionSuccessfully(String expenseId) {
+    Navigator.pop(context, true);
+  }
+
+  @override
+  void onDidFailToPerformAction(String title, String message) {
+    Alert.showSimpleAlert(
+      context: context,
+      title: title,
+      message: message,
+      onPressed: () => Navigator.pop(context),
+    );
+  }
+}
