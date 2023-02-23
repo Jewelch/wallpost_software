@@ -12,12 +12,12 @@ import 'package:wallpost/expense/expense_approval_list/ui/views/action_button.da
 
 class AttendanceAdjustmentRejectionAllAlert extends StatefulWidget {
   final int noOfSelectedItems;
-  final List<String> expenseIds;
+  final List<String> attendanceAdjustmentIds;
   final String companyId;
 
   AttendanceAdjustmentRejectionAllAlert({
     required this.noOfSelectedItems,
-    required this.expenseIds,
+    required this.attendanceAdjustmentIds,
     required this.companyId,
   });
 
@@ -95,7 +95,7 @@ class _AttendanceAdjustmentRejectionAllAlertState extends State<AttendanceAdjust
                   color: AppColors.red,
                   showLoader: showLoader,
                   onPressed: () {
-                    _presenter.massReject(widget.companyId, widget.expenseIds, _reasonTextController.text);
+                    _presenter.massReject(widget.companyId, widget.attendanceAdjustmentIds, _reasonTextController.text);
                   },
                 ),
               ),
@@ -115,7 +115,9 @@ class _AttendanceAdjustmentRejectionAllAlertState extends State<AttendanceAdjust
   }
 
   @override
-  void notifyInvalidRejectionReason() {}
+  void notifyInvalidRejectionReason(String message) {
+    _reasonErrorNotifier.notify(message);
+  }
 
   @override
   void onDidPerformActionSuccessfully(String expenseId) {

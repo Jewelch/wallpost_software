@@ -10,12 +10,12 @@ import '../view_contracts/attendance_adjustment_approval_view.dart';
 
 class AttendanceAdjustmentApprovalAllAlert extends StatefulWidget {
   final int noOfSelectedItems;
-  final List<String> expenseIds;
+  final List<String> attendanceAdjustmentIds;
   final String companyId;
 
   AttendanceAdjustmentApprovalAllAlert({
     required this.noOfSelectedItems,
-    required this.expenseIds,
+    required this.attendanceAdjustmentIds,
     required this.companyId,
   });
 
@@ -75,7 +75,7 @@ class _AttendanceAdjustmentApprovalAllAlertState extends State<AttendanceAdjustm
                   color: AppColors.green,
                   showLoader: showLoader,
                   onPressed: () {
-                    _presenter.massApprove(widget.companyId, widget.expenseIds);
+                    _presenter.massApprove(widget.companyId, widget.attendanceAdjustmentIds);
                   },
                 ),
               ),
@@ -92,7 +92,7 @@ class _AttendanceAdjustmentApprovalAllAlertState extends State<AttendanceAdjustm
   }
 
   @override
-  void notifyInvalidRejectionReason() {}
+  void notifyInvalidRejectionReason(String message) {}
 
   @override
   void onDidPerformActionSuccessfully(String expenseId) {

@@ -1,7 +1,7 @@
 abstract class AttendanceAdjustmentApprovalView {
   void showLoader();
 
-  void notifyInvalidRejectionReason();
+  void notifyInvalidRejectionReason(String message);
 
   void onDidPerformActionSuccessfully(String attendanceAdjustmentId);
 

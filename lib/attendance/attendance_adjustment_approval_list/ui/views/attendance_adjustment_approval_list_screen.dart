@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/attendance_adjustment_approval/ui/views/attendance_adjustment_rejection_all_alert.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_list_view.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/action_button.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_app_bar.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_item_card.dart';
 
-import '../../../../_common_widgets/app_bars/simple_app_bar.dart';
-import '../../../../_common_widgets/buttons/rounded_back_button.dart';
+import '../../../attendance_adjustment_approval/ui/views/attendance_adjustment_approval_all_alert.dart';
 import '../models/attendance_adjustment_approval_list_item_view_type.dart';
 import 'attendance_adjustment_approval_list_loader.dart';
 
@@ -268,58 +268,58 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
   //MARK: mass approve function
 
   void _approveAll() async {
-    // var didApprove = await showDialog(
-    //   context: context,
-    //   builder: (_) => ExpenseApprovalAllConfirmationAlert(
-    //     noOfSelectedItems: _listPresenter.getCountOfAllItems(),
-    //     expenseIds: _listPresenter.getAllIds(),
-    //     companyId: _listPresenter.getItemAtIndex(0).companyId,
-    //   ),
-    // );
-    // if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getAllIds());
+    var didApprove = await showDialog(
+      context: context,
+      builder: (_) => AttendanceAdjustmentApprovalAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfAllItems(),
+        attendanceAdjustmentIds: _listPresenter.getAllIds(),
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+    if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getAllIds());
   }
 
   //MARK: mass reject function
 
   void _rejectAll() async {
-    // var didRejected = await showDialog(
-    //   context: context,
-    //   builder: (_) => ExpenseRejectionAllConfirmationAlert(
-    //     noOfSelectedItems: _listPresenter.getCountOfAllItems(),
-    //     expenseIds: _listPresenter.getAllIds(),
-    //     companyId: _listPresenter.getItemAtIndex(0).companyId,
-    //   ),
-    // );
-    // if (didRejected) _listPresenter.onDidProcessApprovalOrRejection(didRejected, _listPresenter.getAllIds());
+    var didRejected = await showDialog(
+      context: context,
+      builder: (_) => AttendanceAdjustmentRejectionAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfAllItems(),
+        attendanceAdjustmentIds: _listPresenter.getAllIds(),
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+    if (didRejected) _listPresenter.onDidProcessApprovalOrRejection(didRejected, _listPresenter.getAllIds());
   }
 
   //MARK: approve selected items function
 
   void _approveSelectedItems() async {
-    // var didApprove = await showDialog(
-    //   context: context,
-    //   builder: (_) => ExpenseApprovalAllConfirmationAlert(
-    //     noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
-    //     expenseIds: _listPresenter.getSelectedItemIds(),
-    //     companyId: _listPresenter.getItemAtIndex(0).companyId,
-    //   ),
-    // );
-    //
-    // if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getSelectedItemIds());
+    var didApprove = await showDialog(
+      context: context,
+      builder: (_) => AttendanceAdjustmentApprovalAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
+        attendanceAdjustmentIds: _listPresenter.getSelectedItemIds(),
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+
+    if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getSelectedItemIds());
   }
 
   //MARK:  reject selected  function
 
   void _rejectSelectedItems() async {
-    // var didReject = await showDialog(
-    //   context: context,
-    //   builder: (_) => ExpenseRejectionAllConfirmationAlert(
-    //     noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
-    //     expenseIds: _listPresenter.getSelectedItemIds(),
-    //     companyId: _listPresenter.getItemAtIndex(0).companyId,
-    //   ),
-    // );
-    // if (didReject) _listPresenter.onDidProcessApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
+    var didReject = await showDialog(
+      context: context,
+      builder: (_) => AttendanceAdjustmentRejectionAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
+        attendanceAdjustmentIds: _listPresenter.getSelectedItemIds(),
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+    if (didReject) _listPresenter.onDidProcessApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
   }
 
   //MARK: Approval list view functions

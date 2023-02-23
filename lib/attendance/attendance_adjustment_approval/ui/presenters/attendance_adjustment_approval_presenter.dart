@@ -59,7 +59,7 @@ class AttendanceAdjustmentApprovalPresenter {
 
     if (rejectionReason.isEmpty) {
       _reasonErrorMessage = "Please enter a valid reason";
-      _view.notifyInvalidRejectionReason();
+      _view.notifyInvalidRejectionReason(_reasonErrorMessage!);
       return;
     }
 
@@ -80,7 +80,7 @@ class AttendanceAdjustmentApprovalPresenter {
 
     if (rejectionReason.isEmpty) {
       _reasonErrorMessage = "Please enter a valid reason";
-      _view.notifyInvalidRejectionReason();
+      _view.notifyInvalidRejectionReason(_reasonErrorMessage!);
       return;
     }
 

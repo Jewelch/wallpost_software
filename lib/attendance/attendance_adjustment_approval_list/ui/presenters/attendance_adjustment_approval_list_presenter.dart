@@ -143,15 +143,6 @@ class AttendanceAdjustmentApprovalListPresenter {
 
   //MARK: Functions for successful processing of approval or rejection
 
-  // Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, String attendanceAdjustmentId) async {
-  //   if (didPerformAction == true) {
-  //     _numberOfApprovalsProcessed = _numberOfApprovalsProcessed + 1;
-  //     _approvalItems.removeWhere((approval) => approval.id == attendanceAdjustmentId);
-  //     _approvalItems.isNotEmpty ? _updateList() : _view.onDidProcessAllApprovals();
-  //   }
-  // }
-
-
   Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, List<String> attendanceAdjustmentIds) async {
     if (didPerformAction == true) {
       for (var i = 0; i < attendanceAdjustmentIds.length; i++) {
@@ -219,6 +210,14 @@ class AttendanceAdjustmentApprovalListPresenter {
 
   String getAdjustmentReason(AttendanceAdjustmentApprovalListItem approval) {
     return approval.adjustmentReason;
+  }
+
+  int getCountOfAllItems() {
+    return _approvalItems.length;
+  }
+
+  List<String> getAllIds() {
+    return _approvalItems.map((e) => e.id).toList();
   }
 
   String get errorMessage => _errorMessage;
