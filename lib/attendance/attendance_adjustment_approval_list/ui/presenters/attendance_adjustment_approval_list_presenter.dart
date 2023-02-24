@@ -61,6 +61,7 @@ class AttendanceAdjustmentApprovalListPresenter {
 
   Future<void> refresh() async {
     _approvalItems.clear();
+    _selectedItems.clear();
     _approvalListProvider.reset();
     _isSelectionInProgress = false;
     getNext();

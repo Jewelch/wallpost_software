@@ -27,7 +27,7 @@ class AttendanceAdjustmentApprover {
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameter("app_type", "attendanceAdjustmentRequest");
-    apiRequest.addParameter("request_id",attendanceAdjustmentIds.join(','));
+    apiRequest.addParameter("request_ids",attendanceAdjustmentIds.join(','));
 
     await _executeRequest(apiRequest);
   }
