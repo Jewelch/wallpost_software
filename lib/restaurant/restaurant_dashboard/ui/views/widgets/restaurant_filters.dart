@@ -90,7 +90,6 @@ class RestaurantFilters extends StatelessWidget {
               onTap: () async {
                 var newDateFilter = await DateRangeSelector.show(
                   context,
-                  onDateRangeFilterSelected: (_) {},
                   initialDateRangeFilter: dateFilters,
                 );
                 if (newDateFilter != null) modalSheetController.close(result: newDateFilter);

@@ -108,7 +108,6 @@ class _ItemSalesReportsFiltersState extends State<ItemSalesReportsFilters> {
               onTap: () async {
                 var newDateFilter = await DateRangeSelector.show(
                   context,
-                  onDateRangeFilterSelected: (_) {},
                   initialDateRangeFilter: widget.filters.dateRangeFilters,
                 );
                 if (newDateFilter != null) {
