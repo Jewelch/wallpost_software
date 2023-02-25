@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
-import '../../presenters/restaurant_dashboard_presenter.dart';
 import '../../../../common_widgets/performance_view_holder.dart';
+import '../../presenters/restaurant_dashboard_presenter.dart';
 
 class RestaurantDashboardHeaderCard extends StatelessWidget {
   final RestaurantDashboardPresenter _presenter;
@@ -28,13 +28,13 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
                   backgroundColor: AppColors.lightGreen,
                   label: "Total Sales",
                   value: _presenter.getTotalSales(),
-                  valueColor: AppColors.green,
+                  valueColor: AppColors.brightGreen,
                 ),
                 _SalesElement(
                   backgroundColor: AppColors.lightGreen,
                   label: "Net Sales",
                   value: _presenter.getNetSale(),
-                  valueColor: AppColors.green,
+                  valueColor: AppColors.brightGreen,
                 ),
               ],
             ),

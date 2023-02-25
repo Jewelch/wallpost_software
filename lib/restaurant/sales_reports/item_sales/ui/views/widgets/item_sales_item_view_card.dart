@@ -99,7 +99,7 @@ class ItemSalesItemViewCard extends StatelessWidget {
                                 style: TextStyles.largeTitleTextStyleBold,
                               ),
                             ),
-                            SizedBox(width: 2),
+                            SizedBox(width: 3),
                             Column(
                               children: [
                                 Text(

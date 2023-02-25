@@ -61,7 +61,7 @@ class HourlySalesDataCard extends StatelessWidget {
                             style: TextStyles.headerCardSubValueTextStyle,
                           ),
                         ),
-                        SizedBox(width: 2),
+                        SizedBox(width: 3),
                         Column(
                           children: [
                             Text(

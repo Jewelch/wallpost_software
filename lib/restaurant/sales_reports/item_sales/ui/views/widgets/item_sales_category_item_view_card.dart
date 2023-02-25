@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_model.dart';
 
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
+import '../../../entities/item_sales_model.dart';
 import '../../presenter/item_sales_presenter.dart';
 
 class ItemSalesCategoryItemViewCard extends StatelessWidget {
@@ -103,7 +103,7 @@ class ItemSalesCategoryItemViewCard extends StatelessWidget {
                                   style: TextStyles.largeTitleTextStyleBold,
                                 ),
                               ),
-                              SizedBox(width: 2),
+                              SizedBox(width: 3),
                               Column(
                                 children: [
                                   Text(

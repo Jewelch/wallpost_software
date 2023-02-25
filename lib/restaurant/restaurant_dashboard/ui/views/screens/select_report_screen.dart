@@ -6,6 +6,7 @@ import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
 import '../../../../sales_reports/hourly_sales/ui/views/screens/hourly_sales_screen.dart';
 import '../../../../sales_reports/item_sales/ui/views/screens/item_sales_screen.dart';
+import '../../../../sales_reports/sales_summary/ui/views/screens/sales_summary_screen.dart';
 import '../../presenters/restaurant_dashboard_presenter.dart';
 
 class SelectReportScreen extends StatefulWidget {
@@ -118,6 +119,25 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                     ),
                                   ),
                                 ],
+                              ),
+                              SizedBox(height: 8),
+                              InkWell(
+                                splashColor: AppColors.defaultColor,
+                                onTap: () {
+                                  ScreenPresenter.present(
+                                    SummarySalesScreen(),
+                                    context,
+                                    slideDirection: SlideDirection.fromBottom,
+                                  );
+                                },
+                                child: Container(
+                                  height: 64,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: Center(child: Text("Sales Summary", style: TextStyles.subTitleTextStyleBold)),
+                                ),
                               ),
                               SizedBox(height: 32),
                               SizedBox(
