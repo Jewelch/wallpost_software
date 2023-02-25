@@ -35,7 +35,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             isExpanded: widget.presenter.collectionsAreExpanded,
             canTapOnHeader: true,
             headerBuilder: ((_, __) => _ExpansionPanelHeader('Collections')),
-            body: CollectionsAndCategoriesExpansionCard(
+            body: _CollectionsAndCategoriesExpansionCard(
               widget.presenter,
               widget.presenter.getCollection(),
               displayQuantities: false,
@@ -58,7 +58,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             isExpanded: widget.presenter.categoriesAreExpanded,
             canTapOnHeader: true,
             headerBuilder: ((_, __) => _ExpansionPanelHeader('Categories')),
-            body: CollectionsAndCategoriesExpansionCard(
+            body: _CollectionsAndCategoriesExpansionCard(
               widget.presenter,
               widget.presenter.getCategories(),
               displayQuantities: true,
@@ -70,17 +70,17 @@ class _CategoriesViewState extends State<CategoriesView> {
             isExpanded: widget.presenter.summaryIsExpanded,
             canTapOnHeader: true,
             headerBuilder: ((_, __) => _ExpansionPanelHeader('Summary')),
-            body: SummaryExpansionCard(widget.presenter),
+            body: _SummaryExpansionCard(widget.presenter),
           ),
       ],
     );
   }
 }
 
-class SummaryExpansionCard extends StatelessWidget {
+class _SummaryExpansionCard extends StatelessWidget {
   final SummarySalesPresenter presenter;
 
-  const SummaryExpansionCard(this.presenter, {super.key});
+  const _SummaryExpansionCard(this.presenter);
 
   @override
   Widget build(BuildContext context) {
@@ -109,23 +109,23 @@ class SummaryExpansionCard extends StatelessWidget {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               children: [
-                SummaryElement(
+                _SummaryElement(
                   title: 'Gross Sales',
                   value: presenter.summaryGrossSales,
                 ),
-                SummaryElement(
+                _SummaryElement(
                   title: 'Discount',
                   value: presenter.summaryDiscounts,
                 ),
-                SummaryElement(
+                _SummaryElement(
                   title: 'Refund',
                   value: presenter.summaryRefunds,
                 ),
-                SummaryElement(
+                _SummaryElement(
                   title: 'Tax',
                   value: presenter.summaryTax,
                 ),
-                SummaryElement(
+                _SummaryElement(
                   title: 'Net Sales',
                   value: presenter.summaryNetSales,
                   shouldDisplayDivider: false,
@@ -139,9 +139,8 @@ class SummaryExpansionCard extends StatelessWidget {
   }
 }
 
-class SummaryElement extends StatelessWidget {
-  const SummaryElement({
-    super.key,
+class _SummaryElement extends StatelessWidget {
+  const _SummaryElement({
     required this.title,
     required this.value,
     this.shouldDisplayDivider = true,
@@ -229,16 +228,15 @@ class _ExpansionPanelHeader extends StatelessWidget {
   }
 }
 
-class CollectionsAndCategoriesExpansionCard extends StatelessWidget {
+class _CollectionsAndCategoriesExpansionCard extends StatelessWidget {
   final SummarySalesPresenter presenter;
   final List<CollectionsModel> collectionsAndCategories;
   final bool displayQuantities;
 
-  const CollectionsAndCategoriesExpansionCard(
+  const _CollectionsAndCategoriesExpansionCard(
     this.presenter,
     this.collectionsAndCategories, {
     required this.displayQuantities,
-    super.key,
   });
 
   @override
