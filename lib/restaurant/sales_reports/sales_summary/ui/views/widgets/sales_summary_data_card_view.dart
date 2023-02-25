@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:wallpost/restaurant/sales_reports/sales_summary/entities/sales_summary_details.dart';
 
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
-import '../../../entities/sales_summary_models.dart';
 import '../../presenter/sales_summary_presenter.dart';
 
 class CategoriesView extends StatefulWidget {
@@ -11,7 +11,7 @@ class CategoriesView extends StatefulWidget {
     super.key,
   });
 
-  final SummarySalesPresenter presenter;
+  final SalesSummaryPresenter presenter;
 
   @override
   State<CategoriesView> createState() => _CategoriesViewState();
@@ -29,45 +29,45 @@ class _CategoriesViewState extends State<CategoriesView> {
         setState(() {});
       },
       children: [
-        if (widget.presenter.collectionsAvailble)
+        if (widget.presenter.isSalesSummaryCollectionsHasData)
           ExpansionPanel(
             backgroundColor: AppColors.screenBackgroundColor2,
-            isExpanded: widget.presenter.collectionsAreExpanded,
+            isExpanded: widget.presenter.isCollectionsExpanded,
             canTapOnHeader: true,
             headerBuilder: ((_, __) => _ExpansionPanelHeader('Collections')),
-            body: _CollectionsAndCategoriesExpansionCard(
+            body: _SalesSummaryItemExpansionCard(
               widget.presenter,
-              widget.presenter.getCollection(),
+              widget.presenter.getSalesSummaryCollections(),
               displayQuantities: false,
             ),
           ),
-        if (widget.presenter.orderTypesAvailble)
+        if (widget.presenter.isSalesSummaryOrderTypeHasData)
           ExpansionPanel(
             backgroundColor: AppColors.screenBackgroundColor2,
-            isExpanded: widget.presenter.orderTypesAreExpanded,
+            isExpanded: widget.presenter.isOrderTypesExpanded,
             canTapOnHeader: true,
             headerBuilder: ((_, __) => _ExpansionPanelHeader('Order Type')),
             body: _OrderTypesExpansionCard(
               widget.presenter,
-              widget.presenter.getOrderTypes(),
+              widget.presenter.getSalesSummaryOrderTypes(),
             ),
           ),
-        if (widget.presenter.categoriesAvailble)
+        if (widget.presenter.isSalesSummaryCategoriesHasData)
           ExpansionPanel(
             backgroundColor: AppColors.screenBackgroundColor2,
-            isExpanded: widget.presenter.categoriesAreExpanded,
+            isExpanded: widget.presenter.isCategoriesExpanded,
             canTapOnHeader: true,
             headerBuilder: ((_, __) => _ExpansionPanelHeader('Categories')),
-            body: _CollectionsAndCategoriesExpansionCard(
+            body: _SalesSummaryItemExpansionCard(
               widget.presenter,
-              widget.presenter.getCategories(),
+              widget.presenter.getSalesSummaryCategories(),
               displayQuantities: true,
             ),
           ),
-        if (widget.presenter.summaryAvailble)
+        if (widget.presenter.isSalesSummaryHasDetails)
           ExpansionPanel(
             backgroundColor: AppColors.screenBackgroundColor2,
-            isExpanded: widget.presenter.summaryIsExpanded,
+            isExpanded: widget.presenter.isSummaryExpanded,
             canTapOnHeader: true,
             headerBuilder: ((_, __) => _ExpansionPanelHeader('Summary')),
             body: _SummaryExpansionCard(widget.presenter),
@@ -78,7 +78,7 @@ class _CategoriesViewState extends State<CategoriesView> {
 }
 
 class _SummaryExpansionCard extends StatelessWidget {
-  final SummarySalesPresenter presenter;
+  final SalesSummaryPresenter presenter;
 
   const _SummaryExpansionCard(this.presenter);
 
@@ -111,23 +111,23 @@ class _SummaryExpansionCard extends StatelessWidget {
               children: [
                 _SummaryElement(
                   title: 'Gross Sales',
-                  value: presenter.summaryGrossSales,
+                  value: presenter.getSalesSummaryGross,
                 ),
                 _SummaryElement(
                   title: 'Discount',
-                  value: presenter.summaryDiscounts,
+                  value: presenter.getSalesSummaryDiscounts,
                 ),
                 _SummaryElement(
                   title: 'Refund',
-                  value: presenter.summaryRefunds,
+                  value: presenter.getSalesSummaryRefunds,
                 ),
                 _SummaryElement(
                   title: 'Tax',
-                  value: presenter.summaryTax,
+                  value: presenter.getSalesSummaryTax,
                 ),
                 _SummaryElement(
                   title: 'Net Sales',
-                  value: presenter.summaryNetSales,
+                  value: presenter.getSalesSummaryNet,
                   shouldDisplayDivider: false,
                 ),
               ],
@@ -228,14 +228,14 @@ class _ExpansionPanelHeader extends StatelessWidget {
   }
 }
 
-class _CollectionsAndCategoriesExpansionCard extends StatelessWidget {
-  final SummarySalesPresenter presenter;
-  final List<CollectionsModel> collectionsAndCategories;
+class _SalesSummaryItemExpansionCard extends StatelessWidget {
+  final SalesSummaryPresenter presenter;
+  final List<SalesSummaryItem> salesSummaryItem;
   final bool displayQuantities;
 
-  const _CollectionsAndCategoriesExpansionCard(
+  const _SalesSummaryItemExpansionCard(
     this.presenter,
-    this.collectionsAndCategories, {
+    this.salesSummaryItem, {
     required this.displayQuantities,
   });
 
@@ -279,7 +279,7 @@ class _CollectionsAndCategoriesExpansionCard extends StatelessWidget {
               padding: EdgeInsets.only(top: 6),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: presenter.collectionsAndCategoriesLength(collectionsAndCategories),
+              itemCount: salesSummaryItem.length,
               itemBuilder: (context, index) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -292,7 +292,7 @@ class _CollectionsAndCategoriesExpansionCard extends StatelessWidget {
                           SizedBox(
                             width: itemNameWidth,
                             child: Text(
-                              presenter.collectionOrCategoryName(index, collectionsAndCategories),
+                              presenter.getSalesSummaryItemNameAt(index, salesSummaryItem),
                               style: TextStyle(
                                 overflow: TextOverflow.ellipsis,
                                 color: AppColors.textColorBlueGray,
@@ -306,7 +306,7 @@ class _CollectionsAndCategoriesExpansionCard extends StatelessWidget {
                             SizedBox(
                               width: quantityWidth,
                               child: Text(
-                                presenter.collectionOrCategoryQuantity(index, collectionsAndCategories),
+                                presenter.getSalesSummaryItemQuantityAt(index, salesSummaryItem),
                                 style: TextStyle(
                                   overflow: TextOverflow.ellipsis,
                                   color: AppColors.textColorBlack,
@@ -323,7 +323,7 @@ class _CollectionsAndCategoriesExpansionCard extends StatelessWidget {
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  presenter.collectionOrCategoryRevenue(index, collectionsAndCategories),
+                                  presenter.getSalesSummaryItemRevenueAt(index, salesSummaryItem),
                                   textAlign: TextAlign.right,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyles.largeTitleTextStyleBold,
@@ -348,7 +348,7 @@ class _CollectionsAndCategoriesExpansionCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    index < (collectionsAndCategories.length) - 1 ? Divider(height: 1) : SizedBox(),
+                    index < (salesSummaryItem.length) - 1 ? Divider(height: 1) : SizedBox(),
                   ],
                 );
               },
@@ -361,10 +361,10 @@ class _CollectionsAndCategoriesExpansionCard extends StatelessWidget {
 }
 
 class _OrderTypesExpansionCard extends StatelessWidget {
-  final SummarySalesPresenter presenter;
-  final List<OrderTypesModel> collections;
+  final SalesSummaryPresenter presenter;
+  final List<SaleSummaryOrderType> orderTypeList;
 
-  const _OrderTypesExpansionCard(this.presenter, this.collections);
+  const _OrderTypesExpansionCard(this.presenter, this.orderTypeList);
 
   @override
   Widget build(BuildContext context) {
@@ -405,7 +405,7 @@ class _OrderTypesExpansionCard extends StatelessWidget {
               padding: EdgeInsets.only(top: 6),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: collections.length,
+              itemCount: orderTypeList.length,
               itemBuilder: (context, index) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -418,7 +418,7 @@ class _OrderTypesExpansionCard extends StatelessWidget {
                           SizedBox(
                             width: itemNameWidth,
                             child: Text(
-                              presenter.orderTypeNameAt(index),
+                              presenter.getOrderTypeNameAt(index),
                               style: TextStyle(
                                 overflow: TextOverflow.ellipsis,
                                 color: AppColors.textColorBlueGray,
@@ -473,7 +473,7 @@ class _OrderTypesExpansionCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    index < (collections.length) - 1 ? Divider(height: 1) : SizedBox(),
+                    index < (orderTypeList.length) - 1 ? Divider(height: 1) : SizedBox(),
                   ],
                 );
               },
