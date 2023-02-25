@@ -1,7 +1,10 @@
-
 import '../../../../_shared/constants/base_urls.dart';
 import '../entities/summary_sales_report_filters.dart';
 
+//  Associated Jira Ticket
+//  https://wallpost.atlassian.net/browse/WMA-203
+/// STAGING [BaseUrls.restaurantUrlV2()
+///
 class SummarySalesUrls {
   static String getSummarySalesUrl(String companyId, SummarySalesReportFilters filters) {
     var selectedDate = filters.selectedDate;
