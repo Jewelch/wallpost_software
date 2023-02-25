@@ -1,16 +1,15 @@
-import '../../../../_shared/constants/base_urls.dart';
-import '../entities/summary_sales_report_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/extensions/date_extensions.dart';
 
-//  Associated Jira Ticket
-//  https://wallpost.atlassian.net/browse/WMA-203
-/// STAGING [BaseUrls.restaurantUrlV2()
-///
+import '../../../../_shared/constants/base_urls.dart';
+
 class SummarySalesUrls {
-  static String getSummarySalesUrl(String companyId, SummarySalesReportFilters filters) {
-    var selectedDate = filters.selectedDate;
+  static String getSummarySalesUrl(String companyId, DateRangeFilters filters) {
+    // var selectedDate = filters.selectedDate;
     var url = '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/salessummaryreport?';
     url += '&consumedByMobile=true';
-    url += '&date_filter_type=date_between&from_date=2023-01-03&to_date=2023-02-10';
+
+    url += '&date_filter_type=date_between&from_date=${filters.startDate.yyyyMMddString()}&to_date=${filters.endDate.yyyyMMddString()}';
     return url;
   }
 }

@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:wallpost/_shared/date_range_selector/date_custom_range_selector.dart';
 
 import '../../../../../../_common_widgets/app_bars/sliver_app_bar_delegate.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
 import '../../presenter/sales_summary_presenter.dart';
-import '../../view_contracts/summary_sales_view.dart';
+import '../../view_contracts/sales_summary_view.dart';
 import '../loader/sales_summary_loader.dart';
 import '../widgets/sales_summary_app_bar.dart';
 import '../widgets/sales_summary_data_card_view.dart';
 import '../widgets/sales_summary_error_view.dart';
 import '../widgets/sales_summary_header_card.dart';
-import '../widgets/sales_summary_reports_filters.dart';
 
 enum _ScreenStates { loading, error, data }
 
@@ -24,8 +24,8 @@ class SummarySalesScreen extends StatefulWidget {
   State<SummarySalesScreen> createState() => _State();
 }
 
-class _State extends State<SummarySalesScreen> implements SummarySalesView {
-  late SummarySalesPresenter presenter = SummarySalesPresenter(this);
+class _State extends State<SummarySalesScreen> implements SalesSummaryView {
+  late SalesSummaryPresenter presenter = SalesSummaryPresenter(this);
 
   final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.data);
   final salesItemDataNotifier = Notifier();
@@ -99,7 +99,7 @@ class _State extends State<SummarySalesScreen> implements SummarySalesView {
                       ),
                     ),
                   ),
-                  if (!presenter.noDataAvailable)
+                  if (presenter.isSalesSummaryHasDetails)
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: EdgeInsets.only(top: 24),
@@ -136,12 +136,8 @@ class _State extends State<SummarySalesScreen> implements SummarySalesView {
 
   @override
   void showSalesSummaryFilter() async {
-    var newFilters = await SummarySalesReportsFilters.show(
-      context,
-      initialFilters: presenter.filters.copy(),
-      onResetClicked: presenter.resetFilters,
-    );
-    presenter.applyFilters(newFilters);
+    var filters = await DateCustomRangeSelector.show(context, dateFilters: presenter.dateRangeFilters.copy());
+    presenter.applyFilters(filters);
   }
 
   @override
@@ -153,10 +149,5 @@ class _State extends State<SummarySalesScreen> implements SummarySalesView {
   void showErrorMessage(String msg) {
     this.errorMessage = msg;
     screenStateNotifier.notify(_ScreenStates.error);
-  }
-
-  @override
-  void showNoSalesSummaryMessage() {
-    screenStateNotifier.notify(_ScreenStates.data);
   }
 }

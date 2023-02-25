@@ -6,7 +6,7 @@ import '../../../../../common_widgets/performance_view_holder.dart';
 import '../../presenter/sales_summary_presenter.dart';
 
 class SummarySalesHeaderCard extends StatelessWidget {
-  final SummarySalesPresenter presenter;
+  final SalesSummaryPresenter presenter;
   final double constraints;
 
   const SummarySalesHeaderCard(
@@ -31,7 +31,7 @@ class SummarySalesHeaderCard extends StatelessWidget {
       child: _SalesElement(
         backgroundColor: AppColors.lightGreen,
         label: "Total Sales (QAR)",
-        value: presenter.salesSummary.summary?.netSales ?? '',
+        value: presenter.salesSummary.summary.netSales,
         isVertical: true,
         valueColor: AppColors.brightGreen,
         flex: 90,

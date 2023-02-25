@@ -15,7 +15,7 @@ class SummarySalesAppBarWidget extends StatelessWidget implements PreferredSizeW
   });
 
   static final appbarNotifier = ItemNotifier<bool>(defaultValue: false);
-  final SummarySalesPresenter presenter;
+  final SalesSummaryPresenter presenter;
 
   @override
   Size get preferredSize => const Size(1200, 152);
@@ -39,7 +39,7 @@ class _AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   _AppBarWidget(this.presenter, this.displayBackground);
 
   final bool displayBackground;
-  final SummarySalesPresenter presenter;
+  final SalesSummaryPresenter presenter;
 
   @override
   Size get preferredSize => const Size(1200, 0);
@@ -49,7 +49,7 @@ class _AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class ItemSalesAppBar extends StatelessWidget {
-  final SummarySalesPresenter presenter;
+  final SalesSummaryPresenter presenter;
   final bool displayBackground;
 
   const ItemSalesAppBar(
@@ -130,8 +130,7 @@ class ItemSalesAppBar extends StatelessWidget {
                             physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
-                            children: presenter.filters
-                                .toReadableListOfString()
+                            children: [presenter.dateRangeFilters.toReadableString()]
                                 .map(
                                   (filterString) => _FiltringItem(presenter: presenter, filteringType: filterString),
                                 )
@@ -152,7 +151,7 @@ class ItemSalesAppBar extends StatelessWidget {
 }
 
 class _FiltringItem extends StatelessWidget {
-  final SummarySalesPresenter presenter;
+  final SalesSummaryPresenter presenter;
   final String filteringType;
 
   const _FiltringItem({
