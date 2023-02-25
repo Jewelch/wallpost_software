@@ -39,9 +39,8 @@ class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
 
   @override
   void initState() {
-    final DateTime today = DateTime.now();
-    _endDate = today;
-    _startDate = today.subtract(Duration(days: 7));
+    _endDate = widget.dateFilters.endDate;
+    _startDate = widget.dateFilters.startDate;
     startDate = DateFormat('dd MMM').format(_startDate).toString();
     endDate = DateFormat('dd MMM').format(_endDate).toString();
     _controller.selectedRange = PickerDateRange(_startDate, _endDate);
@@ -83,7 +82,7 @@ class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
                   widget.dateFilters.setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
                   widget.dateFilters.startDate = _startDate;
                   widget.dateFilters.endDate = _endDate;
-                  widget.centerSheetController.close(result: true);
+                  widget.centerSheetController.close(result: widget.dateFilters);
                 },
                 child: Text(
                   "Apply",

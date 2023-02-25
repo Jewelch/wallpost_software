@@ -40,7 +40,7 @@ class DateRangeFilters {
 
   SelectableDateRangeOptions get selectedRangeOption => _selectedRangeOption;
 
-  DateTime startDate = DateTime.now().subtract(Duration(days: 356));
+  DateTime startDate = DateTime.now().subtract(Duration(days: 20));
   DateTime endDate = DateTime.now();
 
   void setSelectedDateRangeOption(SelectableDateRangeOptions selectableDateRangeOptions) {
