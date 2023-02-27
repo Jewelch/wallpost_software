@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
-import 'package:wallpost/_common_widgets/buttons/capsule_action_button.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/entities/attendance_adjustment_approval_list_item.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/action_button.dart';

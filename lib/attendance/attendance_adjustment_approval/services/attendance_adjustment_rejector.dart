@@ -12,11 +12,8 @@ class AttendanceAdjustmentRejector {
 
   AttendanceAdjustmentRejector() : _networkAdapter = WPAPI();
 
-  Future<void> reject(
-    String companyId,
-    String attendanceAdjustmentId, {
-    required String rejectionReason,
-  }) async {
+  Future<void> reject(String companyId, String attendanceAdjustmentId,
+      {required String rejectionReason}) async {
     var url = AttendanceAdjustmentApprovalUrls.rejectUrl(companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
@@ -28,10 +25,7 @@ class AttendanceAdjustmentRejector {
   }
 
   Future<void> massReject(
-      String companyId,
-      List<String> attendanceAdjustmentIds, {
-        required String rejectionReason,
-      }) async {
+      String companyId, List<String> attendanceAdjustmentIds, {required String rejectionReason}) async {
     var url = AttendanceAdjustmentApprovalUrls.rejectUrl(companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);

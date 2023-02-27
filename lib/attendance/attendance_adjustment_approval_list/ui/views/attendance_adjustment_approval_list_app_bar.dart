@@ -60,7 +60,7 @@ class _AttendanceAdjustmentApprovalListAppBarState extends State<AttendanceAdjus
             ),
             Container(
                 margin: EdgeInsets.only(left: 16),
-                child: Text("Payroll Adjustment Approvals", style: TextStyles.largeTitleTextStyleBold)),
+                child: Text("Approvals", style: TextStyles.extraLargeTitleTextStyleBold)),
             SizedBox(height: 8)
           ],
         ),
@@ -101,7 +101,7 @@ class _AttendanceAdjustmentApprovalListAppBarState extends State<AttendanceAdjus
             ),
             Container(
                 margin: EdgeInsets.only(left: 16),
-                child: Text("Payroll Adjustment Approvals", style: TextStyles.largeTitleTextStyleBold)),
+                child: Text("Approvals", style: TextStyles.extraLargeTitleTextStyleBold)),
             SizedBox(height: 8)
           ],
         ),
