@@ -4,8 +4,7 @@ import 'package:wallpost/_common_widgets/alert/alert.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval/ui/presenters/attendance_adjustment_approval_presenter.dart';
-import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/action_button.dart';
-
+import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 import '../view_contracts/attendance_adjustment_approval_view.dart';
 
 class AttendanceAdjustmentApprovalAllAlert extends StatefulWidget {
@@ -70,10 +69,10 @@ class _AttendanceAdjustmentApprovalAllAlertState extends State<AttendanceAdjustm
             Expanded(
               child: ItemNotifiable<bool>(
                 notifier: _showLoaderNotifier,
-                builder: (context, showLoader) => ActionButton(
+                builder: (context, showLoader) => RoundedRectangleActionButton(
                   title: "Yes Approve All",
                   icon: Icon(Icons.check, size: 22, color: Colors.white),
-                  color: AppColors.green,
+                  backgroundColor: AppColors.green,
                   showLoader: showLoader,
                   onPressed: () {
                     _presenter.massApprove(widget.companyId, widget.attendanceAdjustmentIds);

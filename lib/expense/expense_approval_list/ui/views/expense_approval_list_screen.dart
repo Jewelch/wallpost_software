@@ -5,10 +5,9 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/expense/expense_approval/ui/views/expense_approval_all_confirmation_alert.dart';
 import 'package:wallpost/expense/expense_approval/ui/views/expense_rejection_all_confirmation_alert.dart';
 import 'package:wallpost/expense/expense_approval_list/entities/expense_approval_list_item.dart';
-import 'package:wallpost/expense/expense_approval_list/ui/views/action_button.dart';
 import 'package:wallpost/expense/expense_approval_list/ui/views/expense_approval_list_app_bar.dart';
 import 'package:wallpost/expense/expense_detail/ui/views/expense_detail_screen.dart';
-
+import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 import '../../../../_shared/constants/app_colors.dart';
 import '../models/expense_approval_list_item_view_type.dart';
 import '../presenters/expense_approval_list_presenter.dart';
@@ -212,19 +211,19 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
           children: [
             SizedBox(width: 12),
             Expanded(
-              child: ActionButton(
+              child: RoundedRectangleActionButton(
                 title: "Approve",
                 icon: Icon(Icons.check, size: 18, color: Colors.white),
-                color: AppColors.green,
+                backgroundColor: AppColors.green,
                 onPressed: () => _approveSelectedItems(),
               ),
             ),
             SizedBox(width: 16),
             Expanded(
-              child: ActionButton(
+              child: RoundedRectangleActionButton(
                 title: "Reject",
                 icon: Icon(Icons.close, size: 18, color: Colors.white),
-                color: AppColors.red,
+                backgroundColor: AppColors.red,
                 onPressed: () => _rejectSelectedItems(),
               ),
             ),
@@ -246,19 +245,19 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
       child: Row(
         children: [
           Expanded(
-            child: ActionButton(
+            child: RoundedRectangleActionButton(
               title: "Approve All",
               icon: Icon(Icons.check, size: 18, color: Colors.white),
-              color: AppColors.green,
+              backgroundColor: AppColors.green,
               onPressed: () => _approveAll(),
             ),
           ),
           SizedBox(width: 16),
           Expanded(
-            child: ActionButton(
+            child: RoundedRectangleActionButton(
               title: "Reject All",
               icon: Icon(Icons.close, size: 18, color: Colors.white),
-              color: AppColors.red,
+              backgroundColor: AppColors.red,
               onPressed: () => _rejectAll(),
             ),
           ),

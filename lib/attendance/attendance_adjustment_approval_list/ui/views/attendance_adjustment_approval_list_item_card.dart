@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/entities/attendance_adjustment_approval_list_item.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
-import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/action_button.dart';
-
+import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../_shared/constants/app_colors.dart';
 import '../../../attendance_adjustment_approval/ui/views/attendance_adjustment_approval_alert.dart';
@@ -122,18 +121,18 @@ class _AttendanceAdjustmentApprovalListCardState extends State<AttendanceAdjustm
                       return Row(
                         children: [
                           Expanded(
-                            child: ActionButton(
+                            child: RoundedRectangleActionButton(
                               title: "Approve",
-                              color: AppColors.green,
+                              backgroundColor: AppColors.green,
                               onPressed: () => _approve(),
                               showLoader: isLoading,
                             ),
                           ),
                           SizedBox(width: 16),
                           Expanded(
-                            child: ActionButton(
+                            child: RoundedRectangleActionButton(
                               title: "Reject",
-                              color: AppColors.red,
+                              backgroundColor: AppColors.red,
                               onPressed: () => _reject(),
                               disabled: isLoading ? true : false,
                             ),

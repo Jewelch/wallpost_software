@@ -5,10 +5,9 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval/ui/views/attendance_adjustment_rejection_all_alert.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_list_view.dart';
-import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/action_button.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_app_bar.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_item_card.dart';
-
+import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 import '../../../attendance_adjustment_approval/ui/views/attendance_adjustment_approval_all_alert.dart';
 import '../models/attendance_adjustment_approval_list_item_view_type.dart';
 import 'attendance_adjustment_approval_list_loader.dart';
@@ -210,19 +209,19 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
           children: [
             SizedBox(width: 12),
             Expanded(
-              child: ActionButton(
+              child: RoundedRectangleActionButton(
                 title: "Approve",
                 icon: Icon(Icons.check, size: 18, color: Colors.white),
-                color: AppColors.green,
+                backgroundColor: AppColors.green,
                 onPressed: () => _approveSelectedItems(),
               ),
             ),
             SizedBox(width: 16),
             Expanded(
-              child: ActionButton(
+              child: RoundedRectangleActionButton(
                 title: "Reject",
                 icon: Icon(Icons.close, size: 18, color: Colors.white),
-                color: AppColors.red,
+                backgroundColor: AppColors.red,
                 onPressed: () => _rejectSelectedItems(),
               ),
             ),
@@ -244,19 +243,19 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
       child: Row(
         children: [
           Expanded(
-            child: ActionButton(
+            child: RoundedRectangleActionButton(
               title: "Approve All",
               icon: Icon(Icons.check, size: 18, color: Colors.white),
-              color: AppColors.green,
+              backgroundColor: AppColors.green,
               onPressed: () => _approveAll(),
             ),
           ),
           SizedBox(width: 16),
           Expanded(
-            child: ActionButton(
+            child: RoundedRectangleActionButton(
               title: "Reject All",
               icon: Icon(Icons.close, size: 18, color: Colors.white),
-              color: AppColors.red,
+              backgroundColor: AppColors.red,
               onPressed: () => _rejectAll(),
             ),
           ),
