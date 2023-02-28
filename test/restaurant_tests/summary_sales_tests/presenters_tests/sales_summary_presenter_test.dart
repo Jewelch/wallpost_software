@@ -365,9 +365,9 @@ void main() {
     expect(presenter.isSalesSummaryOrderTypeHasData, true);
     expect(presenter.isSalesSummaryCategoriesHasData, true);
 
-    expect(presenter.getSalesSummaryCollections(), report.details.collections);
-    expect(presenter.getSalesSummaryOrderTypes(), report.details.orderTypes);
-    expect(presenter.getSalesSummaryCategories(), report.details.categories);
+    expect(presenter.getSalesSummaryCollections, report.details.collections);
+    expect(presenter.getSalesSummaryOrderTypes, report.details.orderTypes);
+    expect(presenter.getSalesSummaryCategories, report.details.categories);
 
     expect(presenter.getSalesSummaryItemNameAt(0, report.details.categories), "Burger");
     expect(presenter.getSalesSummaryItemNameAt(0, report.details.collections), "CASH");
@@ -385,5 +385,26 @@ void main() {
     expect(presenter.getSalesSummaryRefunds, "0");
     expect(presenter.getSalesSummaryTax, "0");
     expect(presenter.getSalesSummaryNet, "1,274,454");
+  });
+
+  test("reset filter return the filters to the default state and call the api", () async {
+    // given
+    var report = MockSummarySalesReport();
+    when(() => salesSummaryReportProvider.isLoading).thenReturn(false);
+    when(() => salesSummaryReportProvider.getSummarySales(any())).thenAnswer((_) => Future.value(report));
+
+    //when
+    await presenter.resetFilters();
+
+    //then
+    expect(presenter.dateRangeFilters, DateRangeFilters());
+
+    verifyInOrder([
+      () => salesSummaryReportProvider.isLoading,
+      () => view.showLoader(),
+      () => salesSummaryReportProvider.getSummarySales(any()),
+      () => view.onDidLoadReport(),
+    ]);
+    _verifyNoMoreInteractionsOnAllMocks();
   });
 }

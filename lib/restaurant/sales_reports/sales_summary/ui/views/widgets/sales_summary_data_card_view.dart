@@ -37,7 +37,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             headerBuilder: ((_, __) => _ExpansionPanelHeader('Collections')),
             body: _SalesSummaryItemExpansionCard(
               widget.presenter,
-              widget.presenter.getSalesSummaryCollections(),
+              widget.presenter.getSalesSummaryCollections,
               displayQuantities: false,
             ),
           ),
@@ -49,7 +49,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             headerBuilder: ((_, __) => _ExpansionPanelHeader('Order Type')),
             body: _OrderTypesExpansionCard(
               widget.presenter,
-              widget.presenter.getSalesSummaryOrderTypes(),
+              widget.presenter.getSalesSummaryOrderTypes,
             ),
           ),
         if (widget.presenter.isSalesSummaryCategoriesHasData)
@@ -60,7 +60,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             headerBuilder: ((_, __) => _ExpansionPanelHeader('Categories')),
             body: _SalesSummaryItemExpansionCard(
               widget.presenter,
-              widget.presenter.getSalesSummaryCategories(),
+              widget.presenter.getSalesSummaryCategories,
               displayQuantities: true,
             ),
           ),

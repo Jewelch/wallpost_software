@@ -1,9 +1,8 @@
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
-import 'package:wallpost/restaurant/sales_reports/sales_summary/entities/sales_summary_details.dart';
-
+import '../../../../../_shared/date_range_selector/date_range_filters.dart';
 import '../../../../../_shared/exceptions/wp_exception.dart';
 import '../../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../../entities/sales_summary.dart';
+import '../../entities/sales_summary_details.dart';
 import '../../services/sales_summary_provider.dart';
 import '../view_contracts/sales_summary_view.dart';
 
@@ -106,11 +105,23 @@ class SalesSummaryPresenter {
 
   bool get isSalesSummaryCategoriesHasData => salesSummary.details.categories.isNotEmpty;
 
-  List<SalesSummaryItem> getSalesSummaryCollections() => salesSummary.details.collections;
+  List<SalesSummaryItem> get getSalesSummaryCollections => salesSummary.details.collections;
 
-  getSalesSummaryOrderTypes() => salesSummary.details.orderTypes;
+  List<SaleSummaryOrderType> get getSalesSummaryOrderTypes => salesSummary.details.orderTypes;
 
-  getSalesSummaryCategories() => salesSummary.details.categories;
+  List<SalesSummaryItem> get getSalesSummaryCategories => salesSummary.details.categories;
+
+  String get getSalesSummaryGross => salesSummary.summary.grossSales;
+
+  String get getSalesSummaryDiscounts => salesSummary.summary.discounts;
+
+  String get getSalesSummaryRefunds => salesSummary.summary.refund;
+
+  String get getSalesSummaryTax => salesSummary.summary.tax;
+
+  String get getSalesSummaryNet => salesSummary.summary.netSales;
+
+  String get getSelectedCompanyName => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
   String getSalesSummaryItemNameAt(int index, List<SalesSummaryItem> summaryItem) => summaryItem[index].item;
 
@@ -125,16 +136,4 @@ class SalesSummaryPresenter {
   String orderTypePercentageAt(int index) => salesSummary.details.orderTypes[index].percent;
 
   String orderTypeRevenueAt(int index) => salesSummary.details.orderTypes[index].totalSales;
-
-  String get getSalesSummaryGross => salesSummary.summary.grossSales;
-
-  String get getSalesSummaryDiscounts => salesSummary.summary.discounts;
-
-  String get getSalesSummaryRefunds => salesSummary.summary.refund;
-
-  String get getSalesSummaryTax => salesSummary.summary.tax;
-
-  String get getSalesSummaryNet => salesSummary.summary.netSales;
-
-  String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 }

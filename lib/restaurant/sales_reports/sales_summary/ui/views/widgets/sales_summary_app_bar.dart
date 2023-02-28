@@ -81,7 +81,7 @@ class ItemSalesAppBar extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  RestaurantAppBar(companyName: presenter.getSelectedCompanyName()),
+                  RestaurantAppBar(companyName: presenter.getSelectedCompanyName),
                   SizedBox(height: 4),
                   Padding(
                     padding: const EdgeInsets.only(left: 24, top: 6),
