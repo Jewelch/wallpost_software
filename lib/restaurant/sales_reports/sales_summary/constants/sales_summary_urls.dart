@@ -5,10 +5,8 @@ import '../../../../_shared/constants/base_urls.dart';
 
 class SummarySalesUrls {
   static String getSummarySalesUrl(String companyId, DateRangeFilters filters) {
-    // var selectedDate = filters.selectedDate;
     var url = '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/salessummaryreport?';
     url += '&consumedByMobile=true';
-
     url += '&date_filter_type=date_between&from_date=${filters.startDate.yyyyMMddString()}&to_date=${filters.endDate.yyyyMMddString()}';
     return url;
   }

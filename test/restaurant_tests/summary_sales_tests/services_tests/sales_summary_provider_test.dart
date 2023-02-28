@@ -12,7 +12,6 @@ import '../_mocks.dart';
 
 main() {
   final successfulResponse = successfulSalesSummaryResponse;
-
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockSelectedCompanyProvider = MockCompanyProvider();
   var dateFilter = DateRangeFilters();
@@ -85,6 +84,17 @@ main() {
 
     await Future.delayed(Duration(milliseconds: 100));
     expect(didReceiveResponseForTheSecondRequest, true);
+  });
+
+  test('SalesSummaryReportProvider API throws <InvalidResponseException> when item mapping fails', () async {
+    mockNetworkAdapter.succeed({"summary": {}});
+
+    try {
+      await salesSummaryReportProvider.getSummarySales(dateFilter);
+      fail('failed to throw InvalidResponseException');
+    } catch (e) {
+      expect(e is InvalidResponseException, true);
+    }
   });
 
   test('SalesSummaryReportProvider API succeeds', () async {

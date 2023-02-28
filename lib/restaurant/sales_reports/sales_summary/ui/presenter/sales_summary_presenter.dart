@@ -11,14 +11,12 @@ class SalesSummaryPresenter {
   final SalesSummaryView _view;
   final SalesSummaryProvider _itemSalesDataProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
-
   late SalesSummary salesSummary;
+  DateRangeFilters dateRangeFilters = DateRangeFilters()..setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
 
   SalesSummaryPresenter(this._view)
       : _itemSalesDataProvider = SalesSummaryProvider(),
         _selectedCompanyProvider = SelectedCompanyProvider();
-
-  DateRangeFilters dateRangeFilters = DateRangeFilters()..setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
 
   SalesSummaryPresenter.initWith(
     this._view,
@@ -62,19 +60,19 @@ class SalesSummaryPresenter {
 
   // MARK: expand and un expand ui
 
-  bool _isCollectionExpanded = false;
+  bool _isCollectionExpanded = true;
 
   bool get isCollectionsExpanded => _isCollectionExpanded;
 
-  bool _isOrderTypesExpanded = false;
+  bool _isOrderTypesExpanded = true;
 
   bool get isOrderTypesExpanded => _isOrderTypesExpanded;
 
-  bool _isCategoriesExpanded = false;
+  bool _isCategoriesExpanded = true;
 
   bool get isCategoriesExpanded => _isCategoriesExpanded;
 
-  bool _isSummaryExpanded = false;
+  bool _isSummaryExpanded = true;
 
   bool get isSummaryExpanded => _isSummaryExpanded;
 
@@ -108,7 +106,7 @@ class SalesSummaryPresenter {
 
   bool get isSalesSummaryCategoriesHasData => salesSummary.details.categories.isNotEmpty;
 
-  getSalesSummaryCollections() => salesSummary.details.collections;
+  List<SalesSummaryItem> getSalesSummaryCollections() => salesSummary.details.collections;
 
   getSalesSummaryOrderTypes() => salesSummary.details.orderTypes;
 

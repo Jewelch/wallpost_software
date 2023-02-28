@@ -37,6 +37,7 @@ class BaseUrls {
   }
 
   static String restaurantUrlV2() {
+    //TODO - Change to production
     return BaseUrls.generateUrl(subDomain: _RESTAURANT_SUB_DOMAIN, environment: _STAGING, version: _VERSION_2_PATH);
   }
 
