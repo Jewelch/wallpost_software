@@ -3,35 +3,37 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
+import 'package:wallpost/_common_widgets/form_widgets/form_text_field.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/expense/expense_approval/ui/presenters/expense_approval_presenter.dart';
-import 'package:wallpost/expense/expense_approval/ui/view_contracts/expense_approval_view.dart';
+import 'package:wallpost/attendance/attendance_adjustment_approval/ui/presenters/attendance_adjustment_approval_presenter.dart';
+import 'package:wallpost/attendance/attendance_adjustment_approval/ui/view_contracts/attendance_adjustment_approval_view.dart';
 
-class ExpenseApprovalAllConfirmationAlert extends StatefulWidget {
+class AttendanceAdjustmentRejectionAllAlert extends StatefulWidget {
   final int noOfSelectedItems;
-  final List<String> expenseIds;
+  final List<String> attendanceAdjustmentIds;
   final String companyId;
 
-  ExpenseApprovalAllConfirmationAlert({
+  AttendanceAdjustmentRejectionAllAlert({
     required this.noOfSelectedItems,
-    required this.expenseIds,
+    required this.attendanceAdjustmentIds,
     required this.companyId,
   });
 
   @override
-  State<ExpenseApprovalAllConfirmationAlert> createState() => _ExpenseApprovalAllConfirmationAlertState();
+  State<AttendanceAdjustmentRejectionAllAlert> createState() => _AttendanceAdjustmentRejectionAllAlertState();
 }
 
-class _ExpenseApprovalAllConfirmationAlertState extends State<ExpenseApprovalAllConfirmationAlert>
-    implements ExpenseApprovalView {
-  late ExpenseApprovalPresenter _presenter;
+class _AttendanceAdjustmentRejectionAllAlertState extends State<AttendanceAdjustmentRejectionAllAlert>
+    implements AttendanceAdjustmentApprovalView {
+  late AttendanceAdjustmentApprovalPresenter _presenter;
+  final _reasonTextController = TextEditingController();
+  var _reasonErrorNotifier = ItemNotifier<String?>(defaultValue: null);
   var _showLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
 
   @override
   void initState() {
-    _presenter = ExpenseApprovalPresenter(this);
+    _presenter = AttendanceAdjustmentApprovalPresenter(this);
     super.initState();
   }
 
@@ -54,30 +56,45 @@ class _ExpenseApprovalAllConfirmationAlertState extends State<ExpenseApprovalAll
           ),
           SizedBox(width: 22),
           Text(
-            "Approve All (${widget.noOfSelectedItems})",
+            "Reject All (${widget.noOfSelectedItems})",
             style: TextStyles.headerCardSubHeadingTextStyle
                 .copyWith(color: AppColors.textColorBlack, fontWeight: FontWeight.w500),
-          ),
+          )
         ],
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Are you sure you want to approve all ${widget.noOfSelectedItems} selected requests ?",
+          Text("Are you sure you want to reject all ${widget.noOfSelectedItems} selected requests ?",
               style: TextStyles.headerCardSubHeadingTextStyle.copyWith(color: AppColors.textColorBlack),
               textAlign: TextAlign.left),
+          SizedBox(height: 16),
+          ItemNotifiable<String?>(
+            notifier: _reasonErrorNotifier,
+            builder: (context, value) => FormTextField(
+              hint: 'Write your reason here',
+              controller: _reasonTextController,
+              autoFocus: true,
+              errorText: value,
+              minLines: 3,
+              maxLines: 8,
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.done,
+              isEnabled: _presenter.isRejectionInProgress() ? false : true,
+            ),
+          ),
           SizedBox(height: 18),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Expanded(
               child: ItemNotifiable<bool>(
                 notifier: _showLoaderNotifier,
-                builder: (context, showLoader) => RoundedRectangleActionButton(
-                  title: "Yes Approve All",
-                  icon: Icon(Icons.check, size: 22, color: Colors.white),
-                  backgroundColor: AppColors.green,
+                builder: (context, showLoader) => ActionButton(
+                  title: "Yes Reject All",
+                  icon: Icon(Icons.close, size: 22, color: Colors.white),
+                  color: AppColors.red,
                   showLoader: showLoader,
                   onPressed: () {
-                    _presenter.massApprove(widget.companyId, widget.expenseIds);
+                    _presenter.massReject(widget.companyId, widget.attendanceAdjustmentIds, _reasonTextController.text);
                   },
                 ),
               ),
@@ -96,10 +113,12 @@ class _ExpenseApprovalAllConfirmationAlertState extends State<ExpenseApprovalAll
   }
 
   @override
-  void notifyInvalidRejectionReason(String message) {}
+  void notifyInvalidRejectionReason(String message) {
+    _reasonErrorNotifier.notify(message);
+  }
 
   @override
-  void onDidPerformActionSuccessfully(String expenseId) {
+  void onDidPerformActionSuccessfully(String attendanceAdjustmentId) {
     Navigator.pop(context, true);
   }
 

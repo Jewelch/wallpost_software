@@ -8,7 +8,8 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/expense/expense_approval/ui/presenters/expense_approval_presenter.dart';
 import 'package:wallpost/expense/expense_approval/ui/view_contracts/expense_approval_view.dart';
-import 'package:wallpost/expense/expense_approval_list/ui/views/action_button.dart';
+
+import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 
 class ExpenseRejectionConfirmationAlert extends StatefulWidget {
   final String expenseId;
@@ -83,10 +84,10 @@ class _ExpenseRejectionConfirmationAlertState extends State<ExpenseRejectionConf
             Expanded(
               child: ItemNotifiable<bool>(
                 notifier: _showLoaderNotifier,
-                builder: (context, showLoader) => ActionButton(
+                builder: (context, showLoader) => RoundedRectangleActionButton(
                   title: "Yes Reject",
                   icon: Icon(Icons.close, size: 22, color: Colors.white),
-                  color: AppColors.red,
+                  backgroundColor: AppColors.red,
                   showLoader: showLoader,
                   onPressed: () {
                     _presenter.reject(widget.companyId, widget.expenseId, _reasonTextController.text);

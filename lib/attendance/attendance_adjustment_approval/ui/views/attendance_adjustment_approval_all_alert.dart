@@ -1,37 +1,36 @@
-import 'dart:core';
-
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
-import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/expense/expense_approval/ui/presenters/expense_approval_presenter.dart';
-import 'package:wallpost/expense/expense_approval/ui/view_contracts/expense_approval_view.dart';
+import 'package:wallpost/attendance/attendance_adjustment_approval/ui/presenters/attendance_adjustment_approval_presenter.dart';
+import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/action_button.dart';
 
-class ExpenseApprovalAllConfirmationAlert extends StatefulWidget {
+import '../view_contracts/attendance_adjustment_approval_view.dart';
+
+class AttendanceAdjustmentApprovalAllAlert extends StatefulWidget {
   final int noOfSelectedItems;
-  final List<String> expenseIds;
+  final List<String> attendanceAdjustmentIds;
   final String companyId;
 
-  ExpenseApprovalAllConfirmationAlert({
+  AttendanceAdjustmentApprovalAllAlert({
     required this.noOfSelectedItems,
-    required this.expenseIds,
+    required this.attendanceAdjustmentIds,
     required this.companyId,
   });
 
   @override
-  State<ExpenseApprovalAllConfirmationAlert> createState() => _ExpenseApprovalAllConfirmationAlertState();
+  State<AttendanceAdjustmentApprovalAllAlert> createState() => _AttendanceAdjustmentApprovalAllAlertState();
 }
 
-class _ExpenseApprovalAllConfirmationAlertState extends State<ExpenseApprovalAllConfirmationAlert>
-    implements ExpenseApprovalView {
-  late ExpenseApprovalPresenter _presenter;
+class _AttendanceAdjustmentApprovalAllAlertState extends State<AttendanceAdjustmentApprovalAllAlert>
+    implements AttendanceAdjustmentApprovalView {
+  late AttendanceAdjustmentApprovalPresenter _presenter;
   var _showLoaderNotifier = ItemNotifier<bool>(defaultValue: false);
 
   @override
   void initState() {
-    _presenter = ExpenseApprovalPresenter(this);
+    _presenter = AttendanceAdjustmentApprovalPresenter(this);
     super.initState();
   }
 
@@ -71,13 +70,13 @@ class _ExpenseApprovalAllConfirmationAlertState extends State<ExpenseApprovalAll
             Expanded(
               child: ItemNotifiable<bool>(
                 notifier: _showLoaderNotifier,
-                builder: (context, showLoader) => RoundedRectangleActionButton(
+                builder: (context, showLoader) => ActionButton(
                   title: "Yes Approve All",
                   icon: Icon(Icons.check, size: 22, color: Colors.white),
-                  backgroundColor: AppColors.green,
+                  color: AppColors.green,
                   showLoader: showLoader,
                   onPressed: () {
-                    _presenter.massApprove(widget.companyId, widget.expenseIds);
+                    _presenter.massApprove(widget.companyId, widget.attendanceAdjustmentIds);
                   },
                 ),
               ),
@@ -88,8 +87,6 @@ class _ExpenseApprovalAllConfirmationAlertState extends State<ExpenseApprovalAll
     );
   }
 
-  //MARK: View functions
-
   @override
   void showLoader() {
     _showLoaderNotifier.notify(true);
@@ -99,7 +96,7 @@ class _ExpenseApprovalAllConfirmationAlertState extends State<ExpenseApprovalAll
   void notifyInvalidRejectionReason(String message) {}
 
   @override
-  void onDidPerformActionSuccessfully(String expenseId) {
+  void onDidPerformActionSuccessfully(String attendanceAdjustmentId) {
     Navigator.pop(context, true);
   }
 
