@@ -79,7 +79,6 @@ void main() {
       await salesBreakDownsProvider.getSalesBreakDowns(salesBreakDownWiseOption, dateFilter);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
-      print(e);
       expect(e is InvalidResponseException, true);
     }
   });

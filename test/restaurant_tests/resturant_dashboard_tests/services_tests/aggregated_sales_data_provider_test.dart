@@ -82,7 +82,6 @@ void main() {
       );
       fail('failed to throw InvalidResponseException');
     } catch (e) {
-      print(e);
       expect(e is InvalidResponseException, true);
     }
   });
