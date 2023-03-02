@@ -3,6 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
+import '../../../../_common_widgets/buttons/rounded_back_button.dart';
+
 class ExpenseApprovalListAppBar extends StatefulWidget {
   final int noOfSelectedItems;
   final bool isMultipleSelectionInProgress;
@@ -80,14 +82,10 @@ class _ExpenseApprovalListAppBarState extends State<ExpenseApprovalListAppBar> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: SvgPicture.asset(
-                    "assets/icons/arrow_back_icon.svg",
-                    color: AppColors.defaultColor,
-                    width: 16,
-                    height: 16,
-                  ),
+                RoundedBackButton(
+                    iconColor: AppColors.defaultColor,
+                    backgroundColor: Colors.white,
+                    onPressed: () => Navigator.pop(context)
                 ),
                 IconButton(
                   onPressed: widget.onInitiateMultipleSelectionButtonPressed,
