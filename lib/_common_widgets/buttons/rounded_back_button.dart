@@ -8,6 +8,6 @@ class RoundedBackButton extends RoundedIconButton {
           iconSize: 18,
           onPressed: onPressed,
           backgroundColor: backgroundColor,
-          iconColor: Colors.white,
+          iconColor: iconColor ?? Colors.white
         );
 }
