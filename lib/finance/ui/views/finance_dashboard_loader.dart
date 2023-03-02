@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/shimmer/shimmer_effect.dart';
 
-import '../../../restaurant/common_widgets/sales_break_down_loader.dart';
-
 class FinanceDashboardLoader extends StatelessWidget {
   const FinanceDashboardLoader({Key? key}) : super(key: key);
 
@@ -29,7 +27,30 @@ class FinanceDashboardLoader extends StatelessWidget {
           SizedBox(height: 16),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
-            child: SalesBreakDownLoader(), //TODO Remove dependency on restaurant module
+            child: Column(children: [
+              _loaderContainer(
+                height: 60,
+                topRadius: 16,
+                width: double.infinity,
+              ),
+              SizedBox(height: 1),
+              ...List.generate(
+                5,
+                (_) => Padding(
+                  padding: const EdgeInsets.only(bottom: 1),
+                  child: _loaderContainer(
+                    height: 60,
+                    width: double.infinity,
+                  ),
+                ),
+              ),
+              _loaderContainer(
+                height: 60,
+                bottomRadius: 16,
+                width: double.infinity,
+                onBottom: true,
+              ),
+            ]),
           )
         ],
       ),
@@ -97,6 +118,34 @@ class FinanceDashboardLoader extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(cornerRadius),
+      ),
+    );
+  }
+
+  Widget _loaderContainer({
+    double? height,
+    double? width,
+    double? topRadius,
+    double? bottomRadius,
+    double? padding,
+    bool onBottom = false,
+  }) {
+    return ShimmerEffect(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: padding ?? 0.0),
+        child: Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(topRadius ?? 0),
+              topRight: Radius.circular(topRadius ?? 0),
+              bottomLeft: Radius.circular(bottomRadius ?? 0),
+              bottomRight: Radius.circular(bottomRadius ?? 0),
+            ),
+          ),
+        ),
       ),
     );
   }
