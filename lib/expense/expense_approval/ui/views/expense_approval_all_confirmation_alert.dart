@@ -75,6 +75,9 @@ class _ExpenseApprovalAllConfirmationAlertState extends State<ExpenseApprovalAll
                   title: "Yes Approve All",
                   icon: Icon(Icons.check, size: 22, color: Colors.white),
                   backgroundColor: AppColors.green,
+                  isIconLeftAligned: false,
+                  height: 44,
+                  borderRadiusCircular: 16,
                   showLoader: showLoader,
                   onPressed: () {
                     _presenter.massApprove(widget.companyId, widget.expenseIds);

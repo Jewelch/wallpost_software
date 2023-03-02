@@ -77,6 +77,9 @@ class _AttendanceAdjustmentApprovalAlertState extends State<AttendanceAdjustment
                   icon: Icon(Icons.check, size: 22, color: Colors.white),
                   backgroundColor: AppColors.green,
                   showLoader: showLoader,
+                  isIconLeftAligned: false,
+                  height: 44,
+                  borderRadiusCircular: 16,
                   onPressed: () {
                     _presenter.approve(widget.companyId, widget.attendanceAdjustmentId);
                   },

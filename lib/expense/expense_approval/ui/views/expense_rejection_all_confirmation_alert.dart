@@ -94,6 +94,9 @@ class _ExpenseRejectionAllConfirmationAlertState extends State<ExpenseRejectionA
                   title: "Yes Reject All",
                   icon: Icon(Icons.close, size: 22, color: Colors.white),
                   backgroundColor: AppColors.red,
+                  isIconLeftAligned: false,
+                  height: 44,
+                  borderRadiusCircular: 16,
                   showLoader: showLoader,
                   onPressed: () {
                     _presenter.massReject(widget.companyId, widget.expenseIds, _reasonTextController.text);

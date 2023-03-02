@@ -88,6 +88,9 @@ class _ExpenseRejectionConfirmationAlertState extends State<ExpenseRejectionConf
                   title: "Yes Reject",
                   icon: Icon(Icons.close, size: 22, color: Colors.white),
                   backgroundColor: AppColors.red,
+                  isIconLeftAligned: false,
+                  height: 44,
+                  borderRadiusCircular: 16,
                   showLoader: showLoader,
                   onPressed: () {
                     _presenter.reject(widget.companyId, widget.expenseId, _reasonTextController.text);

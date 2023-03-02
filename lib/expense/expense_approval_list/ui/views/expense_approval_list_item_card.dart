@@ -126,6 +126,8 @@ class _ExpenseApprovalListItemCardState extends State<ExpenseApprovalListItemCar
                                 child: RoundedRectangleActionButton(
                                   title: "Approve",
                                   backgroundColor: AppColors.green,
+                                  height: 44,
+                                  borderRadiusCircular: 16,
                                   onPressed: () => _approve(),
                                   showLoader: isLoading,
                                 ),
@@ -135,6 +137,8 @@ class _ExpenseApprovalListItemCardState extends State<ExpenseApprovalListItemCar
                                 child: RoundedRectangleActionButton(
                                   title: "Reject",
                                   backgroundColor: AppColors.red,
+                                  height: 44,
+                                  borderRadiusCircular: 16,
                                   onPressed: () => _reject(),
                                   disabled: isLoading ? true : false,
                                 ),

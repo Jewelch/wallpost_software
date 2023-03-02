@@ -13,6 +13,9 @@ class RoundedRectangleActionButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool disabled;
   final bool showLoader;
+  final bool isIconLeftAligned;
+  final double height;
+  final double borderRadiusCircular;
   final MainAxisAlignment alignment;
 
   RoundedRectangleActionButton({
@@ -27,20 +30,23 @@ class RoundedRectangleActionButton extends StatelessWidget {
     required this.onPressed,
     this.disabled = false,
     this.showLoader = false,
+    this.isIconLeftAligned = true,
+    this.height = 50,
+    this.borderRadiusCircular=8,
     this.alignment = MainAxisAlignment.center,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: height,
       child: MaterialButton(
-        minWidth: 50,
+        minWidth: height,
         elevation: 0,
         highlightElevation: 0,
         shape: RoundedRectangleBorder(
           side: BorderSide(color: borderColor ?? (disabled ? disabledBackgroundColor : backgroundColor)),
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(borderRadiusCircular),
         ),
         padding: EdgeInsets.only(left: 8, right: 8),
         onPressed: (disabled || showLoader) ? null : onPressed,
@@ -59,6 +65,7 @@ class RoundedRectangleActionButton extends StatelessWidget {
       if (icon != null) icon!,
       if (icon != null && title.isNotEmpty) SizedBox(width: 8),
       if (title.isNotEmpty)
+        isIconLeftAligned?
         Flexible(
           child: Row(
             mainAxisAlignment: alignment,
@@ -86,7 +93,33 @@ class RoundedRectangleActionButton extends StatelessWidget {
                 ),
             ],
           ),
-        ),
+        ):  Row(
+          mainAxisAlignment: alignment,
+          children: [
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 16,
+                color: disabled ? disabledTextColor : textColor,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            if (subtitle.isNotEmpty) SizedBox(height: 6),
+            if (subtitle.isNotEmpty)
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Color.fromRGBO(130, 130, 130, 1.0),
+                ),
+              ),
+          ],
+        )
+
     ];
   }
 
