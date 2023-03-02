@@ -207,7 +207,6 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
         ),
         child: Row(
           children: [
-            SizedBox(width: 12),
             Expanded(
               child: RoundedRectangleActionButton(
                 title: "Approve",
@@ -231,7 +230,6 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
                 onPressed: () => _rejectSelectedItems(),
               ),
             ),
-            SizedBox(width: 12),
           ],
         ),
       );

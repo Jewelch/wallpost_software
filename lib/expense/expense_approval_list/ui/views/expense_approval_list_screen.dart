@@ -209,7 +209,6 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
         ),
         child: Row(
           children: [
-            SizedBox(width: 12),
             Expanded(
               child: RoundedRectangleActionButton(
                 title: "Approve",
@@ -233,7 +232,6 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
                 onPressed: () => _rejectSelectedItems(),
               ),
             ),
-            SizedBox(width: 12),
           ],
         ),
       );
