@@ -96,8 +96,6 @@ class ManagerMyPortalDashboardPresenter {
   Future<void> setFilter({required int month, required int year}) {
     _filters.month = month;
     _filters.year = year;
-
-    print(_filters.month);
     return loadData();
   }
 
