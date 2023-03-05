@@ -104,7 +104,8 @@ class NetworkRequestExecutor implements NetworkAdapter {
   APIException _processError(DioError error) {
     if (error.response == null || error.response!.statusCode == null) {
       //Something happened in setting up or sending the request that triggered an Error
-      return RequestException(error.message);
+      // TODO check this *changes because updating dependencies*
+      return RequestException(error.message ?? "");
     } else {
       // The request was made and the server responded with a statusCode != 200
       return HTTPException(error.response!.statusCode!, error.response!.data);
