@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:wallpost/_shared/date_range_selector/date_custom_range_selector.dart';
+import 'package:wallpost/_shared/date_range_selector/date_range_selector.dart';
 
 import '../../../../../../_common_widgets/app_bars/sliver_app_bar_delegate.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
@@ -136,7 +136,7 @@ class _State extends State<SummarySalesScreen> implements SalesSummaryView {
 
   @override
   void showSalesSummaryFilter() async {
-    var filters = await DateCustomRangeSelector.show(context, dateFilters: presenter.dateRangeFilters.copy());
+    var filters = await DateRangeSelector.show(context, initialDateRangeFilter: presenter.dateRangeFilters.copy());
     presenter.applyFilters(filters);
   }
 

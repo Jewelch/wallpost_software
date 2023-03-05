@@ -9,31 +9,30 @@ enum SelectableDateRangeOptions {
   lastYear,
   custom;
 
-  String toSelectableString() {
-    switch (this) {
-      case SelectableDateRangeOptions.today:
-        return "Today";
-      case SelectableDateRangeOptions.yesterday:
-        return "Yesterday";
-      case SelectableDateRangeOptions.thisWeek:
-        return "This Week";
-      case SelectableDateRangeOptions.thisMonth:
-        return "This Month";
-      case SelectableDateRangeOptions.thisYear:
-        return "This Year";
-      case SelectableDateRangeOptions.lastYear:
-        return "Last Year";
-      case SelectableDateRangeOptions.custom:
-        return "Custom";
-    }
-  }
-
-  String toRawString() {
-    return this == SelectableDateRangeOptions.custom || this == SelectableDateRangeOptions.thisMonth
-        ? 'date_between'
-        : this.toSelectableString().replaceAll(' ', '_').toLowerCase();
+String toSelectableString() {
+  switch (this) {
+    case SelectableDateRangeOptions.today:
+      return "Today";
+    case SelectableDateRangeOptions.yesterday:
+      return "Yesterday";
+    case SelectableDateRangeOptions.thisWeek:
+      return "This Week";
+    case SelectableDateRangeOptions.thisMonth:
+      return "This Month";
+    case SelectableDateRangeOptions.thisYear:
+      return "This Year";
+    case SelectableDateRangeOptions.lastYear:
+      return "Last Year";
+    case SelectableDateRangeOptions.custom:
+      return "Custom";
   }
 }
+
+String toRawString() {
+  return this == SelectableDateRangeOptions.custom || this == SelectableDateRangeOptions.thisMonth
+      ? 'date_between'
+      : this.toSelectableString().replaceAll(' ', '_').toLowerCase();
+}}
 
 class DateRangeFilters {
   SelectableDateRangeOptions _selectedRangeOption = SelectableDateRangeOptions.today;
@@ -44,19 +43,32 @@ class DateRangeFilters {
   DateTime endDate = DateTime.now();
 
   void setSelectedDateRangeOption(SelectableDateRangeOptions selectableDateRangeOptions) {
-    if (selectableDateRangeOptions == SelectableDateRangeOptions.thisMonth) {
-      var today = DateTime.now();
-      startDate = DateTime(today.year, today.month, 1);
-      endDate = _getDateAfterOneMonthFrom(today);
-    }
     this._selectedRangeOption = selectableDateRangeOptions;
-  }
-
-  DateTime _getDateAfterOneMonthFrom(DateTime date) {
-    if (date.month == 12) {
-      return DateTime(date.year + 1, 1, 1);
-    } else {
-      return DateTime(date.year, date.month + 1, 1);
+    endDate = DateTime.now();
+    switch (selectableDateRangeOptions) {
+      case SelectableDateRangeOptions.today:
+        startDate = DateTime.now();
+        break;
+      case SelectableDateRangeOptions.yesterday:
+        var yesterday = DateTime.now().subtract(Duration(days: 1));
+        startDate = yesterday;
+        endDate = yesterday;
+        break;
+      case SelectableDateRangeOptions.thisWeek:
+        startDate = endDate.subtract(Duration(days: 7));
+        break;
+      case SelectableDateRangeOptions.thisMonth:
+        startDate = DateTime(endDate.year, endDate.month, 1);
+        break;
+      case SelectableDateRangeOptions.thisYear:
+        startDate = DateTime(endDate.year, 1, 1);
+        break;
+      case SelectableDateRangeOptions.lastYear:
+        startDate = endDate.subtract(Duration(days: 365));
+        break;
+      case SelectableDateRangeOptions.custom:
+      // Nothing this happen in DateCustomRangeSelector Widget
+        break;
     }
   }
 
