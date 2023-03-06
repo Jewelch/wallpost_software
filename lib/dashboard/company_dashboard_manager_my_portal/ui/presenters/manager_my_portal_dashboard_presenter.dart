@@ -58,10 +58,7 @@ class ManagerMyPortalDashboardPresenter {
   Future<void> loadData() async {
     _view.showLoader();
     try {
-      _managerMyPortalData = await _dataProvider.get(
-        month: _filters.month == 0 ? null : _filters.month,
-        year: _filters.year,
-      );
+      _managerMyPortalData = await _dataProvider.get(month: filters.month, year: _filters.year);
       _view.onDidLoadData();
     } on WPException catch (e) {
       _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
