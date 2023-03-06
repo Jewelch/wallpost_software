@@ -79,9 +79,8 @@ class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
               ),
               TextButton(
                 onPressed: () {
-                  widget.dateFilters.setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
-                  widget.dateFilters.startDate = _startDate;
-                  widget.dateFilters.endDate = _endDate;
+                  widget.dateFilters.setSelectedDateRangeOption(SelectableDateRangeOptions.custom,
+                      customStartDate: _startDate, customEndDate: _endDate);
                   widget.centerSheetController.close(result: widget.dateFilters);
                 },
                 child: Text(

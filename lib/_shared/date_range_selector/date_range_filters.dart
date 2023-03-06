@@ -9,41 +9,42 @@ enum SelectableDateRangeOptions {
   lastYear,
   custom;
 
-String toSelectableString() {
-  switch (this) {
-    case SelectableDateRangeOptions.today:
-      return "Today";
-    case SelectableDateRangeOptions.yesterday:
-      return "Yesterday";
-    case SelectableDateRangeOptions.thisWeek:
-      return "This Week";
-    case SelectableDateRangeOptions.thisMonth:
-      return "This Month";
-    case SelectableDateRangeOptions.thisYear:
-      return "This Year";
-    case SelectableDateRangeOptions.lastYear:
-      return "Last Year";
-    case SelectableDateRangeOptions.custom:
-      return "Custom";
+  String toSelectableString() {
+    switch (this) {
+      case SelectableDateRangeOptions.today:
+        return "Today";
+      case SelectableDateRangeOptions.yesterday:
+        return "Yesterday";
+      case SelectableDateRangeOptions.thisWeek:
+        return "This Week";
+      case SelectableDateRangeOptions.thisMonth:
+        return "This Month";
+      case SelectableDateRangeOptions.thisYear:
+        return "This Year";
+      case SelectableDateRangeOptions.lastYear:
+        return "Last Year";
+      case SelectableDateRangeOptions.custom:
+        return "Custom";
+    }
+  }
+
+  String toRawString() {
+    return this == SelectableDateRangeOptions.custom || this == SelectableDateRangeOptions.thisMonth
+        ? 'date_between'
+        : this.toSelectableString().replaceAll(' ', '_').toLowerCase();
   }
 }
-
-String toRawString() {
-  return this == SelectableDateRangeOptions.custom || this == SelectableDateRangeOptions.thisMonth
-      ? 'date_between'
-      : this.toSelectableString().replaceAll(' ', '_').toLowerCase();
-}}
 
 class DateRangeFilters {
   SelectableDateRangeOptions _selectedRangeOption = SelectableDateRangeOptions.today;
 
   SelectableDateRangeOptions get selectedRangeOption => _selectedRangeOption;
 
-  DateTime startDate = DateTime.now().subtract(Duration(days: 20));
+  DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
 
-  void setSelectedDateRangeOption(SelectableDateRangeOptions selectableDateRangeOptions) {
-    this._selectedRangeOption = selectableDateRangeOptions;
+  void setSelectedDateRangeOption(SelectableDateRangeOptions selectableDateRangeOptions,{DateTime? customStartDate,DateTime? customEndDate}) {
+    _selectedRangeOption = selectableDateRangeOptions;
     endDate = DateTime.now();
     switch (selectableDateRangeOptions) {
       case SelectableDateRangeOptions.today:
@@ -55,7 +56,7 @@ class DateRangeFilters {
         endDate = yesterday;
         break;
       case SelectableDateRangeOptions.thisWeek:
-        startDate = endDate.subtract(Duration(days: 7));
+        startDate = _mostRecentMonday(endDate);
         break;
       case SelectableDateRangeOptions.thisMonth:
         startDate = DateTime(endDate.year, endDate.month, 1);
@@ -64,13 +65,20 @@ class DateRangeFilters {
         startDate = DateTime(endDate.year, 1, 1);
         break;
       case SelectableDateRangeOptions.lastYear:
-        startDate = endDate.subtract(Duration(days: 365));
+        var today = DateTime.now();
+        startDate = DateTime(today.year - 1, 1, 1);
+        endDate = DateTime(today.year - 1, 12, 31);
         break;
       case SelectableDateRangeOptions.custom:
-      // Nothing this happen in DateCustomRangeSelector Widget
+        // CAUTIONS: don't change selected date range option to custom with out passing the optional start date and end data
+        assert(customStartDate != null && customEndDate != null);
+        startDate = customStartDate!;
+        endDate = customEndDate!;
         break;
     }
   }
+
+  DateTime _mostRecentMonday(DateTime date) => DateTime(date.year, date.month, date.day - (date.weekday - 1));
 
   DateRangeFilters copy() {
     var copyDateRangeFilter = DateRangeFilters();
