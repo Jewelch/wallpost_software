@@ -62,9 +62,9 @@ main() {
   });
 
   test("creating the url when selected date url filter is custom", () {
-    dateRangeFilter.setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
-    dateRangeFilter.startDate = DateTime.now().subtract(Duration(days: 10));
-    dateRangeFilter.endDate = DateTime.now().subtract(Duration(days: 1));
+    var startDate  = DateTime.now().subtract(Duration(days: 10));
+    var endDate = DateTime.now().subtract(Duration(days: 1));
+    dateRangeFilter.setSelectedDateRangeOption(SelectableDateRangeOptions.custom,customStartDate: startDate,customEndDate: endDate);
 
     var url = RestaurantDashboardUrls.getSalesAmountsUrl("1", dateRangeFilter);
 
