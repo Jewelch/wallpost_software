@@ -11,7 +11,7 @@ class SalesSummaryPresenter {
   final SalesSummaryProvider _itemSalesDataProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
   late SalesSummary salesSummary;
-  DateRangeFilters dateRangeFilters = DateRangeFilters()..setSelectedDateRangeOption(SelectableDateRangeOptions.custom);
+  DateRangeFilters dateRangeFilters = DateRangeFilters();
 
   SalesSummaryPresenter(this._view)
       : _itemSalesDataProvider = SalesSummaryProvider(),
