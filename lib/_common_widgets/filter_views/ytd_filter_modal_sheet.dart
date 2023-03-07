@@ -74,7 +74,7 @@ class _YTDFilterModalSheetState extends State<YTDFilterModalSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 60,
+            height: 40,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
