@@ -28,6 +28,16 @@ class PerformanceCalculator {
     }
   }
 
+  Color getBackgroundColorForPerformance(int performancePercent) {
+    if (isLowPerformancePercent(performancePercent)) {
+      return AppColors.lightRed;
+    } else if (isMediumPerformancePercent(performancePercent)) {
+      return AppColors.lightYellow;
+    } else {
+      return AppColors.lightGreen;
+    }
+  }
+
   int get lowPerformanceCutoff => _lowPerformanceCutoff;
 
   int get mediumPerformanceCutoff => _mediumPerformanceCutoff;
