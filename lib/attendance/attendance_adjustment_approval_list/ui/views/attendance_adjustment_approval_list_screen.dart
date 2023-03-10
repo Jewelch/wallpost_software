@@ -34,11 +34,14 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
   @override
   void initState() {
     _listPresenter = AttendanceAdjustmentApprovalListPresenter(widget.companyId, this);
-    _listPresenter.getNext();
+    _loadData();
     _setupScrollDownToLoadMoreItems();
     super.initState();
   }
-
+  void _loadData() async{
+    await _listPresenter.getNext();
+    _listPresenter.initiateMultipleSelection();
+  }
   void _setupScrollDownToLoadMoreItems() {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {

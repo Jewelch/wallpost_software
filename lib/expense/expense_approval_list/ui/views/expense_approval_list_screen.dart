@@ -36,9 +36,13 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
   @override
   void initState() {
     _listPresenter = ExpenseApprovalListPresenter(widget.companyId, this);
-    _listPresenter.getNext();
+     loadData();
     _setupScrollDownToLoadMoreItems();
     super.initState();
+  }
+  void loadData() async{
+    await _listPresenter.getNext();
+    _listPresenter.initiateMultipleSelection();
   }
 
   void _setupScrollDownToLoadMoreItems() {
