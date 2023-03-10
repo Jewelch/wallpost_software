@@ -7,6 +7,7 @@ import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/prese
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_list_view.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_app_bar.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_item_card.dart';
+
 import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 import '../../../attendance_adjustment_approval/ui/views/attendance_adjustment_approval_all_alert.dart';
 import '../models/attendance_adjustment_approval_list_item_view_type.dart';
@@ -34,9 +35,14 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
   @override
   void initState() {
     _listPresenter = AttendanceAdjustmentApprovalListPresenter(widget.companyId, this);
-    _listPresenter.getNext();
+    _loadData();
     _setupScrollDownToLoadMoreItems();
     super.initState();
+  }
+
+  void _loadData() async {
+    await _listPresenter.getNext();
+    _listPresenter.initiateMultipleSelection();
   }
 
   void _setupScrollDownToLoadMoreItems() {
@@ -138,6 +144,7 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
             onEndMultipleSelectionButtonPressed: () => _listPresenter.endMultipleSelection(),
             onSelectAllButtonPress: () => _listPresenter.selectAll(),
             onUnselectAllButtonPress: () => _listPresenter.unselectAll(),
+            onBackButtonPress: () => _dismiss(),
           ),
           SizedBox(height: 20),
           Expanded(child: _listView()),

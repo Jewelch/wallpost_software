@@ -12,6 +12,7 @@ class ExpenseApprovalListAppBar extends StatefulWidget {
   final VoidCallback onEndMultipleSelectionButtonPressed;
   final VoidCallback onSelectAllButtonPress;
   final VoidCallback onUnselectAllButtonPress;
+  final VoidCallback onBackButtonPress;
 
   ExpenseApprovalListAppBar({
     required this.noOfSelectedItems,
@@ -21,6 +22,7 @@ class ExpenseApprovalListAppBar extends StatefulWidget {
     required this.onSelectAllButtonPress,
     required this.onUnselectAllButtonPress,
     required this.isAllItemAreSelected,
+    required this.onBackButtonPress,
   });
 
   @override
@@ -82,9 +84,9 @@ class _ExpenseApprovalListAppBarState extends State<ExpenseApprovalListAppBar> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 RoundedBackButton(
-                    iconColor: AppColors.defaultColor,
-                    backgroundColor: Colors.white,
-                    onPressed: () => Navigator.pop(context)
+                  iconColor: AppColors.defaultColor,
+                  backgroundColor: Colors.white,
+                  onPressed: widget.onBackButtonPress,
                 ),
                 IconButton(
                   onPressed: widget.onInitiateMultipleSelectionButtonPressed,

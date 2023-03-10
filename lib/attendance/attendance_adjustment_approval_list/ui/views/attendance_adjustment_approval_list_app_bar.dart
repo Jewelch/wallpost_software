@@ -12,6 +12,7 @@ class AttendanceAdjustmentApprovalListAppBar extends StatefulWidget {
   final VoidCallback onEndMultipleSelectionButtonPressed;
   final VoidCallback onSelectAllButtonPress;
   final VoidCallback onUnselectAllButtonPress;
+  final VoidCallback onBackButtonPress;
 
   AttendanceAdjustmentApprovalListAppBar({
     required this.noOfSelectedItems,
@@ -21,6 +22,7 @@ class AttendanceAdjustmentApprovalListAppBar extends StatefulWidget {
     required this.onSelectAllButtonPress,
     required this.onUnselectAllButtonPress,
     required this.isAllItemAreSelected,
+    required this.onBackButtonPress,
   });
 
   @override
@@ -82,10 +84,9 @@ class _AttendanceAdjustmentApprovalListAppBarState extends State<AttendanceAdjus
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 RoundedBackButton(
-                  iconColor: AppColors.defaultColor,
+                    iconColor: AppColors.defaultColor,
                     backgroundColor: Colors.white,
-                    onPressed: () => Navigator.pop(context)
-                ),
+                    onPressed: () => Navigator.pop(context)),
                 IconButton(
                   onPressed: widget.onInitiateMultipleSelectionButtonPressed,
                   icon: Icon(

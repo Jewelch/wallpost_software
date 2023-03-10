@@ -63,7 +63,6 @@ class ExpenseApprovalListPresenter {
   Future<void> refresh() async {
     _approvalItems.clear();
     _selectedItems.clear();
-    _isSelectionInProgress = false;
     _approvalListProvider.reset();
     getNext();
   }

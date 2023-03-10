@@ -7,6 +7,7 @@ import 'package:wallpost/expense/expense_approval/ui/views/expense_rejection_all
 import 'package:wallpost/expense/expense_approval_list/entities/expense_approval_list_item.dart';
 import 'package:wallpost/expense/expense_approval_list/ui/views/expense_approval_list_app_bar.dart';
 import 'package:wallpost/expense/expense_detail/ui/views/expense_detail_screen.dart';
+
 import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 import '../../../../_shared/constants/app_colors.dart';
 import '../models/expense_approval_list_item_view_type.dart';
@@ -36,9 +37,14 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
   @override
   void initState() {
     _listPresenter = ExpenseApprovalListPresenter(widget.companyId, this);
-    _listPresenter.getNext();
+    loadData();
     _setupScrollDownToLoadMoreItems();
     super.initState();
+  }
+
+  void loadData() async {
+    await _listPresenter.getNext();
+    _listPresenter.initiateMultipleSelection();
   }
 
   void _setupScrollDownToLoadMoreItems() {
@@ -140,6 +146,7 @@ class _ExpenseApprovalListScreenState extends State<ExpenseApprovalListScreen> i
             onEndMultipleSelectionButtonPressed: () => _listPresenter.endMultipleSelection(),
             onSelectAllButtonPress: () => _listPresenter.selectAll(),
             onUnselectAllButtonPress: () => _listPresenter.unselectAll(),
+            onBackButtonPress: () => _dismiss(),
           ),
           SizedBox(height: 20),
           Expanded(child: _listView()),
