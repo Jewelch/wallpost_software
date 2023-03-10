@@ -20,10 +20,17 @@ class TextStyles {
       );
 
   static get largeTitleTextStyleBold => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontSize: 17,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.bold,
+      );
+
+  static get largeTitleTextStyle => TextStyle(
+        fontFamily: _defaultFont,
+        fontSize: 17,
+        color: AppColors.textColorBlack,
+        fontWeight: FontWeight.normal,
       );
 
   static get titleTextStyle => TextStyle(
