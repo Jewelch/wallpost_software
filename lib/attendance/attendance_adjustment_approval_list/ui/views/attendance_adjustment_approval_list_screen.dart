@@ -141,6 +141,7 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
             onEndMultipleSelectionButtonPressed: () => _listPresenter.endMultipleSelection(),
             onSelectAllButtonPress: () => _listPresenter.selectAll(),
             onUnselectAllButtonPress: () => _listPresenter.unselectAll(),
+            onBackButtonPress:() => _dismiss(),
           ),
           SizedBox(height: 20),
           Expanded(child: _listView()),

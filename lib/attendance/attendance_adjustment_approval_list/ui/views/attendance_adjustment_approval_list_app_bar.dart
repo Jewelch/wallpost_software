@@ -12,6 +12,7 @@ class AttendanceAdjustmentApprovalListAppBar extends StatefulWidget {
   final VoidCallback onEndMultipleSelectionButtonPressed;
   final VoidCallback onSelectAllButtonPress;
   final VoidCallback onUnselectAllButtonPress;
+  final VoidCallback onBackButtonPress;
 
   AttendanceAdjustmentApprovalListAppBar({
     required this.noOfSelectedItems,
@@ -21,6 +22,8 @@ class AttendanceAdjustmentApprovalListAppBar extends StatefulWidget {
     required this.onSelectAllButtonPress,
     required this.onUnselectAllButtonPress,
     required this.isAllItemAreSelected,
+    required this.onBackButtonPress,
+
   });
 
   @override
