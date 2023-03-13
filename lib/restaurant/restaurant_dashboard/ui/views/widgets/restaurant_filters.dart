@@ -17,19 +17,19 @@ class RestaurantFilters extends StatelessWidget {
       {bool allowMultiple = false, required DateRangeFilters initialDateRangeFilter}) {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
-        context: context,
-        content: RestaurantFilters(
-          dateFilters: initialDateRangeFilter,
-          modalSheetController: modalSheetController,
-        ),
-        controller: modalSheetController,
-        isCurveApplied: false);
+      context: context,
+      content: RestaurantFilters(
+        dateFilters: initialDateRangeFilter,
+        modalSheetController: modalSheetController,
+      ),
+      controller: modalSheetController,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 25.0, right: 18, left: 18, top: 18),
+      padding: EdgeInsets.only(bottom: 25.0, right: 18, left: 18),
       decoration: BoxDecoration(
           color: AppColors.screenBackgroundColor,
           borderRadius: BorderRadius.only(

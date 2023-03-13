@@ -13,7 +13,7 @@ void main() {
     mockNetworkAdapter.reset();
   });
 
-  test('api request is built and executed correctly', () async {
+  test('api request is built and executed correctly for single item rejecting', () async {
     Map<String, dynamic> requestParams = {};
     requestParams.addAll({
       "app_type": "attendanceAdjustmentRequest",
@@ -23,6 +23,22 @@ void main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     var _ = await rejector.reject("someCompanyId", "someApprovalId", rejectionReason: "some reason");
+
+    expect(mockNetworkAdapter.apiRequest.url, AttendanceAdjustmentApprovalUrls.rejectUrl("someCompanyId"));
+    expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
+    expect(mockNetworkAdapter.didCallPost, true);
+  });
+
+  test('api request is built and executed correctly for multiple items rejecting', () async {
+    Map<String, dynamic> requestParams = {};
+    requestParams.addAll({
+      "app_type": "attendanceAdjustmentRequest",
+      "request_ids": "id1,id2",
+      "reason": "some reason",
+    });
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await rejector.massReject("someCompanyId", ["id1", "id2"], rejectionReason: "some reason");
 
     expect(mockNetworkAdapter.apiRequest.url, AttendanceAdjustmentApprovalUrls.rejectUrl("someCompanyId"));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);

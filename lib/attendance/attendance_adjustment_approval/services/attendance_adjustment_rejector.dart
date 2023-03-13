@@ -12,19 +12,31 @@ class AttendanceAdjustmentRejector {
 
   AttendanceAdjustmentRejector() : _networkAdapter = WPAPI();
 
-  Future<void> reject(
-    String companyId,
-    String attendanceAdjustmentId, {
-    required String rejectionReason,
-  }) async {
+  Future<void> reject(String companyId, String attendanceAdjustmentId, {required String rejectionReason}) async {
     var url = AttendanceAdjustmentApprovalUrls.rejectUrl(companyId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
     apiRequest.addParameter("app_type", "attendanceAdjustmentRequest");
     apiRequest.addParameter("request_id", attendanceAdjustmentId);
     apiRequest.addParameter("reason", rejectionReason);
-    _isLoading = true;
 
+    await _executeRequest(apiRequest);
+  }
+
+  Future<void> massReject(String companyId, List<String> attendanceAdjustmentIds,
+      {required String rejectionReason}) async {
+    var url = AttendanceAdjustmentApprovalUrls.rejectUrl(companyId);
+    _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+    var apiRequest = APIRequest.withId(url, _sessionId);
+    apiRequest.addParameter("app_type", "attendanceAdjustmentRequest");
+    apiRequest.addParameter("request_ids", attendanceAdjustmentIds.join(','));
+    apiRequest.addParameter("reason", rejectionReason);
+
+    await _executeRequest(apiRequest);
+  }
+
+  Future<void> _executeRequest(APIRequest apiRequest) async {
+    _isLoading = true;
     try {
       await _networkAdapter.post(apiRequest);
       _isLoading = false;

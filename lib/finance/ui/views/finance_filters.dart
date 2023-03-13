@@ -36,7 +36,6 @@ class FinanceFilters extends StatefulWidget {
         dashboardPresenter: financePresenter,
       ),
       controller: modalSheetController,
-      isCurveApplied: false,
     );
   }
 

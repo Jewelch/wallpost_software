@@ -23,14 +23,14 @@ class HourlySalesReportsFilters extends StatefulWidget {
       required VoidCallback onResetClicked}) {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
-        context: context,
-        content: HourlySalesReportsFilters(
-          filters: initialFilters,
-          modalSheetController: modalSheetController,
-          onResetClicked: onResetClicked,
-        ),
-        controller: modalSheetController,
-        isCurveApplied: false);
+      context: context,
+      content: HourlySalesReportsFilters(
+        filters: initialFilters,
+        modalSheetController: modalSheetController,
+        onResetClicked: onResetClicked,
+      ),
+      controller: modalSheetController,
+    );
   }
 
   @override
@@ -41,7 +41,7 @@ class _HourlySalesReportsFiltersState extends State<HourlySalesReportsFilters> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 24.0, right: 18, left: 18, top: 18),
+      padding: EdgeInsets.only(bottom: 24.0, right: 18, left: 18),
       decoration: BoxDecoration(
           color: AppColors.screenBackgroundColor,
           borderRadius: BorderRadius.only(

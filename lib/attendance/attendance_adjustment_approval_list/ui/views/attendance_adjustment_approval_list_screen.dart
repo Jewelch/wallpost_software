@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/attendance/attendance_adjustment_approval/ui/views/attendance_adjustment_rejection_all_alert.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/presenters/attendance_adjustment_approval_list_presenter.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/view_contracts/attendance_adjustment_approval_list_view.dart';
+import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_app_bar.dart';
 import 'package:wallpost/attendance/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_item_card.dart';
 
-import '../../../../_common_widgets/app_bars/simple_app_bar.dart';
-import '../../../../_common_widgets/buttons/rounded_back_button.dart';
+import '../../../../_common_widgets/buttons/rounded_action_button.dart';
+import '../../../attendance_adjustment_approval/ui/views/attendance_adjustment_approval_all_alert.dart';
 import '../models/attendance_adjustment_approval_list_item_view_type.dart';
 import 'attendance_adjustment_approval_list_loader.dart';
 
@@ -32,9 +35,14 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
   @override
   void initState() {
     _listPresenter = AttendanceAdjustmentApprovalListPresenter(widget.companyId, this);
-    _listPresenter.getNext();
+    _loadData();
     _setupScrollDownToLoadMoreItems();
     super.initState();
+  }
+
+  void _loadData() async {
+    await _listPresenter.getNext();
+    _listPresenter.initiateMultipleSelection();
   }
 
   void _setupScrollDownToLoadMoreItems() {
@@ -54,10 +62,6 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: SimpleAppBar(
-          title: "Payroll Adjustment Approvals",
-          leadingButton: RoundedBackButton(onPressed: () => _dismiss()),
-        ),
         body: SafeArea(
           child: ItemNotifiable(
             notifier: _viewTypeNotifier,
@@ -128,11 +132,25 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
   }
 
   Widget _dataView() {
-    return Column(
-      children: [
-        SizedBox(height: 20),
-        Expanded(child: _listView()),
-      ],
+    return Container(
+      color: AppColors.screenBackgroundColor2,
+      child: Column(
+        children: [
+          AttendanceAdjustmentApprovalListAppBar(
+            noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
+            isAllItemAreSelected: _listPresenter.areAllItemsSelected(),
+            isMultipleSelectionInProgress: _listPresenter.isSelectionInProgress,
+            onInitiateMultipleSelectionButtonPressed: () => _listPresenter.initiateMultipleSelection(),
+            onEndMultipleSelectionButtonPressed: () => _listPresenter.endMultipleSelection(),
+            onSelectAllButtonPress: () => _listPresenter.selectAll(),
+            onUnselectAllButtonPress: () => _listPresenter.unselectAll(),
+            onBackButtonPress: () => _dismiss(),
+          ),
+          SizedBox(height: 20),
+          Expanded(child: _listView()),
+          _listPresenter.isSelectionInProgress ? _approveAndRejectActionButton() : _approveAllAndRejectAllActionButton()
+        ],
+      ),
     );
   }
 
@@ -185,6 +203,141 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
     );
   }
 
+  Widget _approveAndRejectActionButton() {
+    if (_listPresenter.getCountOfSelectedItems() > 0)
+      return Container(
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: RoundedRectangleActionButton(
+                title: "Approve",
+                icon: Icon(Icons.check, size: 18, color: Colors.white),
+                backgroundColor: AppColors.green,
+                isIconLeftAligned: false,
+                height: 44,
+                borderRadiusCircular: 16,
+                onPressed: () => _approveSelectedItems(),
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: RoundedRectangleActionButton(
+                title: "Reject",
+                icon: Icon(Icons.close, size: 18, color: Colors.white),
+                backgroundColor: AppColors.red,
+                isIconLeftAligned: false,
+                height: 44,
+                borderRadiusCircular: 16,
+                onPressed: () => _rejectSelectedItems(),
+              ),
+            ),
+          ],
+        ),
+      );
+    return Container();
+  }
+
+  Widget _approveAllAndRejectAllActionButton() {
+    return Container(
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: RoundedRectangleActionButton(
+              title: "Approve All",
+              icon: Icon(Icons.check, size: 18, color: Colors.white),
+              backgroundColor: AppColors.green,
+              isIconLeftAligned: false,
+              height: 44,
+              borderRadiusCircular: 16,
+              onPressed: () => _approveAll(),
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: RoundedRectangleActionButton(
+              title: "Reject All",
+              icon: Icon(Icons.close, size: 18, color: Colors.white),
+              backgroundColor: AppColors.red,
+              isIconLeftAligned: false,
+              height: 44,
+              borderRadiusCircular: 16,
+              onPressed: () => _rejectAll(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //MARK: mass approve function
+
+  void _approveAll() async {
+    var didApprove = await showDialog(
+      context: context,
+      builder: (_) => AttendanceAdjustmentApprovalAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfAllItems(),
+        attendanceAdjustmentIds: _listPresenter.getAllIds(),
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+    if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getAllIds());
+  }
+
+  //MARK: mass reject function
+
+  void _rejectAll() async {
+    var didRejected = await showDialog(
+      context: context,
+      builder: (_) => AttendanceAdjustmentRejectionAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfAllItems(),
+        attendanceAdjustmentIds: _listPresenter.getAllIds(),
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+    if (didRejected) _listPresenter.onDidProcessApprovalOrRejection(didRejected, _listPresenter.getAllIds());
+  }
+
+  //MARK: approve selected items function
+
+  void _approveSelectedItems() async {
+    var didApprove = await showDialog(
+      context: context,
+      builder: (_) => AttendanceAdjustmentApprovalAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
+        attendanceAdjustmentIds: _listPresenter.getSelectedItemIds(),
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+
+    if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getSelectedItemIds());
+  }
+
+  //MARK:  reject selected  function
+
+  void _rejectSelectedItems() async {
+    var didReject = await showDialog(
+      context: context,
+      builder: (_) => AttendanceAdjustmentRejectionAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
+        attendanceAdjustmentIds: _listPresenter.getSelectedItemIds(),
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+    if (didReject) _listPresenter.onDidProcessApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
+  }
+
   //MARK: Approval list view functions
 
   @override
@@ -216,5 +369,15 @@ class _AttendanceAdjustmentApprovalListScreenState extends State<AttendanceAdjus
 
   void _dismiss() {
     Navigator.pop(context, _listPresenter.numberOfApprovalsProcessed);
+  }
+
+  @override
+  void onDidEndMultipleSelection() {
+    _viewTypeNotifier.notify(viewTypeList);
+  }
+
+  @override
+  void onDidInitiateMultipleSelection() {
+    _viewTypeNotifier.notify(viewTypeList);
   }
 }

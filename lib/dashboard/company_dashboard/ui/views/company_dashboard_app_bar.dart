@@ -49,6 +49,7 @@ class CompanyDashboardAppBar extends StatelessWidget implements PreferredSizeWid
                   onTap: onTitlePress,
                   child: Container(
                     height: 40,
+                    color: Colors.white,
                     padding: EdgeInsets.only(top: 10),
                     child: Center(
                       child: Row(
@@ -76,6 +77,7 @@ class CompanyDashboardAppBar extends StatelessWidget implements PreferredSizeWid
               ),
               SizedBox(width: 24),
               // _addButton(), uncomment to show the add button
+              SizedBox(width: 12),
               SizedBox(width: 12),
             ],
           ),
