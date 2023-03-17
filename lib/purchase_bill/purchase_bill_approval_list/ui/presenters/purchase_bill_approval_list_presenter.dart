@@ -70,7 +70,7 @@ class PurchaseBillApprovalListPresenter{
   //MARK: Function to show item detail
 
   void showDetail(PurchaseBillApprovalBillItem approval) {
-    _view.showExpenseDetail(approval);
+    _view.showBillDetail(approval);
   }
 
   //MARK: Functions to get the list details
@@ -95,6 +95,64 @@ class PurchaseBillApprovalListPresenter{
     return _approvalItems[index];
   }
 
+  //MARK: Functions to handle multiple item selection
+
+  void initiateMultipleSelection() {
+    _isSelectionInProgress = true;
+    _view.onDidInitiateMultipleSelection();
+    selectAll();
+  }
+
+  void endMultipleSelection() {
+    _isSelectionInProgress = false;
+    _view.onDidEndMultipleSelection();
+  }
+
+  void toggleSelection(PurchaseBillApprovalBillItem approvalItem) {
+    _selectedItems.contains(approvalItem) ? _selectedItems.remove(approvalItem) : _selectedItems.add(approvalItem);
+    _view.updateList();
+  }
+
+  void selectAll() {
+    _selectedItems.clear();
+    _selectedItems.addAll(_approvalItems);
+    _view.updateList();
+  }
+
+  void unselectAll() {
+    _selectedItems.clear();
+    _view.updateList();
+  }
+
+  bool areAllItemsSelected() {
+    return _selectedItems.length == _approvalItems.length;
+  }
+
+  bool isItemSelected(PurchaseBillApprovalBillItem approvalItem) {
+    return _selectedItems.contains(approvalItem);
+  }
+
+  int getCountOfSelectedItems() {
+    return _selectedItems.length;
+  }
+
+  List<String> getSelectedItemIds() {
+    return _selectedItems.map((e) => e.id).toList();
+  }
+
+  //MARK: Functions for successful processing of approval or rejection
+
+  Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, List<String> billIds) async {
+    if (didPerformAction == true) {
+      for (var i = 0; i < billIds.length; i++) {
+        _numberOfApprovalsProcessed = _numberOfApprovalsProcessed + 1;
+        _approvalItems.removeWhere((approval) => approval.id == billIds[i]);
+        _selectedItems.removeWhere((approval) => approval.id == billIds[i]);
+      }
+      _approvalItems.isNotEmpty ? _updateList() : _view.onDidProcessAllApprovals();
+    }
+  }
+
 
   //MARK: Getters
 
@@ -102,9 +160,34 @@ class PurchaseBillApprovalListPresenter{
     return _approvalItems.length;
   }
 
+  //MARK: Getters
+
+  String getSupplierName(PurchaseBillApprovalBillItem approval) {
+    return approval.supplierName;
+  }
+
+  String getTotalAmount(PurchaseBillApprovalBillItem approval) {
+    return approval.amount;
+  }
+
+  String getBillNumber(PurchaseBillApprovalBillItem approval) {
+    return approval.billNumber;
+  }
+
+  String getBillDate(PurchaseBillApprovalBillItem approval) {
+    return approval.billDate;
+  }
+
+  String getDueDate(PurchaseBillApprovalBillItem approval) {
+    return approval.dueDate;
+  }
+
+
   get isSelectionInProgress => _isSelectionInProgress;
 
   String get errorMessage => _errorMessage;
 
   String get noItemsMessage => _noItemsMessage;
+
+  int get numberOfApprovalsProcessed => _numberOfApprovalsProcessed;
 }

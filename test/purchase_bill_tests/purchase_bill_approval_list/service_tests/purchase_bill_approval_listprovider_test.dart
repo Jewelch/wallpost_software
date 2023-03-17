@@ -3,7 +3,7 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/constants/purchase_bill_approval_list_urls.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/services/purchase_bill_approval_list_provider.dart';
 
-import '../../_mocks/mock_network_adapter.dart';
+import '../../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {

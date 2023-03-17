@@ -343,8 +343,273 @@ void main(){
 
     //then
     verifyInOrder([
-          () => view.showExpenseDetail(approval2),
+          () => view.showBillDetail(approval2),
     ]);
     _verifyNoMoreInteractions();
+  });
+
+  //MARK: remove approved or rejected items
+
+  test("successfully performing action on one of three items updates the list", () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    _clearAllInteractions();
+
+    //when
+    await presenter.onDidProcessApprovalOrRejection(true, ['id2']);
+
+    //then
+    expect(presenter.numberOfApprovalsProcessed, 1);
+    expect(presenter.getNumberOfListItems(), 3);
+    expect(presenter.getItemTypeAtIndex(0), PurchaseBillApprovalListItemViewType.ListItem);
+    expect(presenter.getItemTypeAtIndex(1), PurchaseBillApprovalListItemViewType.ListItem);
+    expect(presenter.getItemTypeAtIndex(2), PurchaseBillApprovalListItemViewType.Loader);
+    verifyInOrder([
+          () => view.updateList(),
+          () => listProvider.isLoading,
+          () => listProvider.didReachListEnd,
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
+  test("successfully performing action on all items", () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    await presenter.onDidProcessApprovalOrRejection(true, ["id1"]);
+    await presenter.onDidProcessApprovalOrRejection(true, ["id2"]);
+    _clearAllInteractions();
+
+    //when
+    await presenter.onDidProcessApprovalOrRejection(true, ["id3"]);
+
+    //then
+    expect(presenter.numberOfApprovalsProcessed, 3);
+    verifyInOrder([
+          () => view.onDidProcessAllApprovals(),
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
+  test("does not reload data when processing approval or rejection with null or false", () async {
+    presenter.onDidProcessApprovalOrRejection(null, ["someBillId"]);
+    _verifyNoMoreInteractions();
+
+    presenter.onDidProcessApprovalOrRejection(false, ["someBillId"]);
+    _verifyNoMoreInteractions();
+  });
+
+
+  test("successfully performing action on selected items removes those items from the selected items list", () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+
+    //when
+    presenter.toggleSelection(approval1);
+    presenter.toggleSelection(approval3);
+    _clearAllInteractions();
+    await presenter.onDidProcessApprovalOrRejection(true, ["id1", "id3"]);
+
+    //then
+    expect(presenter.getCountOfSelectedItems(), 0);
+  });
+
+  //MARK: Tests for multiple selection
+
+  test('initiate multiple selection initiates the selection and selects all items', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    _clearAllInteractions();
+
+    //when
+    presenter.initiateMultipleSelection();
+
+    //then
+    verifyInOrder([
+          () => view.onDidInitiateMultipleSelection(),
+          () => view.updateList(),
+    ]);
+    _verifyNoMoreInteractions();
+    expect(presenter.areAllItemsSelected(), true);
+    expect(presenter.isItemSelected(approval1), true);
+    expect(presenter.isItemSelected(approval2), true);
+    expect(presenter.isItemSelected(approval3), true);
+    expect(presenter.getCountOfSelectedItems(), 3);
+    expect(presenter.getSelectedItemIds(), ["id1", "id2", "id3"]);
+    expect(presenter.isSelectionInProgress, true);
+  });
+
+  test('end multiple selection and retains the selections', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    presenter.initiateMultipleSelection();
+    _clearAllInteractions();
+
+    //when
+    presenter.endMultipleSelection();
+
+    //then
+    verifyInOrder([
+          () => view.onDidEndMultipleSelection(),
+    ]);
+    _verifyNoMoreInteractions();
+    expect(presenter.areAllItemsSelected(), true);
+    expect(presenter.isItemSelected(approval1), true);
+    expect(presenter.isItemSelected(approval2), true);
+    expect(presenter.isItemSelected(approval3), true);
+    expect(presenter.getCountOfSelectedItems(), 3);
+    expect(presenter.getSelectedItemIds(), ["id1", "id2", "id3"]);
+    expect(presenter.isSelectionInProgress, false);
+  });
+
+  test('toggle selection', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    _clearAllInteractions();
+
+    //when
+    presenter.toggleSelection(approval2);
+    presenter.toggleSelection(approval1);
+
+    //then
+    verifyInOrder([
+          () => view.updateList(),
+          () => view.updateList(),
+    ]);
+    _verifyNoMoreInteractions();
+    expect(presenter.areAllItemsSelected(), false);
+    expect(presenter.isItemSelected(approval1), true);
+    expect(presenter.isItemSelected(approval2), true);
+    expect(presenter.isItemSelected(approval3), false);
+    expect(presenter.getCountOfSelectedItems(), 2);
+    expect(presenter.getSelectedItemIds(), ["id2", "id1"]);
+  });
+
+  test('select all items', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    _clearAllInteractions();
+
+    //when
+    presenter.selectAll();
+
+    //then
+    verifyInOrder([
+          () => view.updateList(),
+    ]);
+    _verifyNoMoreInteractions();
+    expect(presenter.areAllItemsSelected(), true);
+    expect(presenter.isItemSelected(approval1), true);
+    expect(presenter.isItemSelected(approval2), true);
+    expect(presenter.isItemSelected(approval3), true);
+    expect(presenter.getCountOfSelectedItems(), 3);
+    expect(presenter.getSelectedItemIds(), ["id1", "id2", "id3"]);
+  });
+
+  test('unselect all items', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    presenter.selectAll();
+    _clearAllInteractions();
+
+    //when
+    presenter.unselectAll();
+
+    //then
+    verifyInOrder([
+          () => view.updateList(),
+    ]);
+    _verifyNoMoreInteractions();
+    expect(presenter.areAllItemsSelected(), false);
+    expect(presenter.isItemSelected(approval1), false);
+    expect(presenter.isItemSelected(approval2), false);
+    expect(presenter.isItemSelected(approval3), false);
+    expect(presenter.getCountOfSelectedItems(), 0);
+    expect(presenter.getSelectedItemIds(), []);
+  });
+
+  test('selection is cleared after refresh', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    presenter.selectAll();
+    _clearAllInteractions();
+
+    //when
+    await presenter.refresh();
+
+    //then
+    expect(presenter.areAllItemsSelected(), false);
+    expect(presenter.isItemSelected(approval1), false);
+    expect(presenter.isItemSelected(approval2), false);
+    expect(presenter.isItemSelected(approval3), false);
+    expect(presenter.getCountOfSelectedItems(), 0);
+    expect(presenter.getSelectedItemIds(), []);
+    expect(presenter.isSelectionInProgress, false);
   });
 }

@@ -9,5 +9,11 @@ abstract class PurchaseBillApprovalListView{
 
   void showNoItemsMessage();
 
-  void showExpenseDetail(PurchaseBillApprovalBillItem approvalBillItem);
+  void showBillDetail(PurchaseBillApprovalBillItem approvalBillItem);
+
+  void onDidInitiateMultipleSelection();
+
+  void onDidEndMultipleSelection();
+
+  void onDidProcessAllApprovals();
 }
