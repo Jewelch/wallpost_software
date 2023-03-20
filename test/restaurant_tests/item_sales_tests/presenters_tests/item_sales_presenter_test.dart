@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/selectable_date_range_option.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_model.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_report_filters.dart';
@@ -28,7 +29,7 @@ class MockItemSalesSorter extends Mock implements ItemSalesSorter {}
 void main() {
   var itemSalesReportProvider = MockItemSalesReportProvider();
   var view = MockItemSalesView();
-  var dateFilter = DateRangeFilters();
+  var dateFilter = DateRange();
   var itemSalesSorter = MockItemSalesSorter();
   late ItemSalesPresenter presenter;
 
@@ -201,7 +202,7 @@ void main() {
   test("apply Filter do nothing when there is no different between the current filters and the new one", () async {
     //given
     var newFilters = ItemSalesReportFilters();
-    newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
+    newFilters.dateFilters = presenter.filters.dateFilters;
     newFilters.sortOption = presenter.filters.sortOption;
     newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
 
@@ -215,7 +216,7 @@ void main() {
   test("apply Filter update the presenter filter object with the same instance in the memory", () async {
     //given
     var newFilters = ItemSalesReportFilters();
-    newFilters.dateRangeFilters = presenter.filters.dateRangeFilters;
+    newFilters.dateFilters = presenter.filters.dateFilters;
     newFilters.sortOption = presenter.filters.sortOption;
     newFilters.salesItemWiseOptions = presenter.filters.salesItemWiseOptions;
 
@@ -234,7 +235,7 @@ void main() {
     when(() => itemSalesReportProvider.isLoading).thenReturn(false);
     when(() => itemSalesReportProvider.getItemSales(any())).thenAnswer((_) => Future.value(itemSalesData));
     var newFilters = ItemSalesReportFilters();
-    newFilters.dateRangeFilters = getDifferentDateRangeOption(presenter.filters.dateRangeFilters);
+    newFilters.dateFilters = getDifferentDateRangeOption(presenter.filters.dateFilters);
 
     //when
     await presenter.applyFilters(newFilters);
@@ -316,7 +317,7 @@ void main() {
       () => itemSalesReportProvider.getItemSales(any()),
       () => view.onDidLoadReport(),
     ]);
-    expect(presenter.filters.dateRangeFilters.selectedRangeOption, SelectableDateRangeOptions.today);
+    expect(presenter.filters.dateFilters.selectedRangeOption, SelectableDateRangeOptions.today);
     expect(presenter.filters.salesItemWiseOptions, SalesItemWiseOptions.CategoriesAndItems);
     expect(presenter.filters.sortOption, ItemSalesReportSortOptions.byRevenueLowToHigh);
     _verifyNoMoreInteractionsOnAllMocks();

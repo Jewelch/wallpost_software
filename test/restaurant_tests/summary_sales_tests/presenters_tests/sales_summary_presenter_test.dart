@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/selectable_date_range_option.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/restaurant/sales_reports/sales_summary/entities/sales_summary.dart';
 import 'package:wallpost/restaurant/sales_reports/sales_summary/entities/sales_summary_details.dart';
@@ -26,7 +27,7 @@ class MockSalesSummaryView extends Mock implements SalesSummaryView {}
 void main() {
   var salesSummaryReportProvider = MockSalesSummaryReportProvider();
   var view = MockSalesSummaryView();
-  var dateFilter = DateRangeFilters();
+  var dateFilter = DateRange();
   late SalesSummaryPresenter presenter;
 
   void _initializePresenter() {
@@ -130,9 +131,9 @@ void main() {
 
   test("apply Filter do nothing when there is no different between the current filters and the new one", () async {
     //given
-    var newFilters = DateRangeFilters();
-    newFilters.startDate = presenter.dateRangeFilters.startDate;
-    newFilters.endDate = presenter.dateRangeFilters.endDate;
+    var newFilters = DateRange();
+    newFilters.startDate = presenter.dateFilters.startDate;
+    newFilters.endDate = presenter.dateFilters.endDate;
 
     //when
     await presenter.applyFilters(newFilters);
@@ -144,14 +145,14 @@ void main() {
   test("apply Filter with different filter update the presenter filter object with the same instance in the memory",
       () async {
     //given
-    var newFilters = DateRangeFilters();
-    newFilters.startDate = presenter.dateRangeFilters.startDate.add(Duration(days: 1));
+    var newFilters = DateRange();
+    newFilters.startDate = presenter.dateFilters.startDate.add(Duration(days: 1));
 
     //when
     await presenter.applyFilters(newFilters);
 
     //then
-    expect(presenter.dateRangeFilters, newFilters);
+    expect(presenter.dateFilters, newFilters);
     _clearInteractionsOnAllMocks();
   });
 
@@ -160,8 +161,8 @@ void main() {
     var report = MockSummarySalesReport();
     when(() => salesSummaryReportProvider.isLoading).thenReturn(false);
     when(() => salesSummaryReportProvider.getSummarySales(any())).thenAnswer((_) => Future.value(report));
-    var newFilters = DateRangeFilters();
-    newFilters.startDate = presenter.dateRangeFilters.startDate.add(Duration(days: 2));
+    var newFilters = DateRange();
+    newFilters.startDate = presenter.dateFilters.startDate.add(Duration(days: 2));
 
     //when
     await presenter.applyFilters(newFilters);
@@ -397,7 +398,7 @@ void main() {
     await presenter.resetFilters();
 
     //then
-    expect(presenter.dateRangeFilters, DateRangeFilters());
+    expect(presenter.dateFilters.selectedRangeOption,SelectableDateRangeOptions.today);
 
     verifyInOrder([
       () => salesSummaryReportProvider.isLoading,

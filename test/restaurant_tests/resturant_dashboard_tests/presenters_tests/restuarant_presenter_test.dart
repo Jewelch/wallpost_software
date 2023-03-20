@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/models/performance_value.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
@@ -30,7 +30,7 @@ void main() {
   var salesDataProvider = MockSalesDataProvider();
   var salesBreakDownProvider = MockSalesBreakDownProvider();
   var view = MockSalesDataView();
-  var dateFilter = DateRangeFilters();
+  var dateFilter = DateRange();
   late RestaurantDashboardPresenter presenter;
 
   void _initializePresenter() {

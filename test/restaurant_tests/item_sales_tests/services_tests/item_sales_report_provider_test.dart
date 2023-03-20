@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/constants/items_sales_urls.dart';
 import 'package:wallpost/restaurant/sales_reports/item_sales/services/item_sales_provider.dart';
@@ -22,7 +22,7 @@ main() {
 
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockSelectedCompanyProvider = MockCompanyProvider();
-  var dateFilter = DateRangeFilters();
+  var dateFilter = DateRange();
   var itemSalesReportProvider = ItemSalesProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
 
   setUpAll(() {
