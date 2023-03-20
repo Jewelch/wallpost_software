@@ -86,7 +86,7 @@ class WPAPI implements NetworkAdapter {
   }
 
   @override
-  Future<APIResponse> postWithNonce(APIRequest apiRequest, {bool forceRefresh: true}) async {
+  Future<APIResponse> postWithNonce(APIRequest apiRequest, {bool forceRefresh = true}) async {
     var wpHeaders = await _buildWPHeaders(forceRefresh: forceRefresh);
     var nonce = await _nonceProvider.getNonce(wpHeaders);
     apiRequest.addHeaders(wpHeaders);
