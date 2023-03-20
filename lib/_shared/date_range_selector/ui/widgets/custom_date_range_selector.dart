@@ -4,43 +4,45 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/center_sheet_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/ui/presenters/date_range_presenter.dart';
 
-class DateCustomRangeSelector extends StatefulWidget {
+import '../../entities/selectable_date_range_option.dart';
+
+class CustomDateRangeSelector extends StatefulWidget {
   final CenterSheetController centerSheetController;
-  final DateRangeFilters dateFilters;
+  final DateRangePresenter presenter;
 
-  const DateCustomRangeSelector({required this.centerSheetController, required this.dateFilters, Key? key})
+  const CustomDateRangeSelector({required this.centerSheetController, required this.presenter, Key? key})
       : super(key: key);
 
   static Future<dynamic> show(
     BuildContext context, {
-    required DateRangeFilters dateFilters,
+    required DateRangePresenter dateFilters,
   }) {
     var centerSheetController = CenterSheetController();
     return CenterSheetPresenter.present(
       context: context,
-      content: DateCustomRangeSelector(
+      content: CustomDateRangeSelector(
         centerSheetController: centerSheetController,
-        dateFilters: dateFilters,
+        presenter: dateFilters,
       ),
       controller: centerSheetController,
     );
   }
 
   @override
-  State<DateCustomRangeSelector> createState() => _DateCustomRangeSelectorState();
+  State<CustomDateRangeSelector> createState() => _CustomDateRangeSelectorState();
 }
 
-class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
+class _CustomDateRangeSelectorState extends State<CustomDateRangeSelector> {
   late DateTime _startDate, _endDate;
   late String startDate, endDate;
   final DateRangePickerController _controller = DateRangePickerController();
 
   @override
   void initState() {
-    _endDate = widget.dateFilters.endDate;
-    _startDate = widget.dateFilters.startDate;
+    _endDate = widget.presenter.dateRange.endDate;
+    _startDate = widget.presenter.dateRange.startDate;
     startDate = DateFormat('dd MMM').format(_startDate).toString();
     endDate = DateFormat('dd MMM').format(_endDate).toString();
     _controller.selectedRange = PickerDateRange(_startDate, _endDate);
@@ -79,9 +81,9 @@ class _DateCustomRangeSelectorState extends State<DateCustomRangeSelector> {
               ),
               TextButton(
                 onPressed: () {
-                  widget.dateFilters.setSelectedDateRangeOption(SelectableDateRangeOptions.custom,
+                  widget.presenter.onSelectDateRangeOption(SelectableDateRangeOptions.custom,
                       customStartDate: _startDate, customEndDate: _endDate);
-                  widget.centerSheetController.close(result: widget.dateFilters);
+                  widget.centerSheetController.close(result: widget.presenter);
                 },
                 child: Text(
                   "Apply",
