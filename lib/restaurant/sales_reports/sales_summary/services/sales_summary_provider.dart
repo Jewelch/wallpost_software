@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
 
 import '../../../../_shared/exceptions/wrong_response_format_exception.dart';
 import '../../../../_wp_core/company_management/services/selected_company_provider.dart';
@@ -20,9 +20,9 @@ class SalesSummaryProvider {
 
   SalesSummaryProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
-  Future<SalesSummary> getSummarySales(DateRangeFilters filters) async {
+  Future<SalesSummary> getSummarySales(DateRange dateRange) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = SummarySalesUrls.getSummarySalesUrl(companyId, filters);
+    var url = SummarySalesUrls.getSummarySalesUrl(companyId, dateRange);
 
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);

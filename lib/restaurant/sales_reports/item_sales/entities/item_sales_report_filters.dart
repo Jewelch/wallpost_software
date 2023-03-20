@@ -1,15 +1,16 @@
-import '../../../../_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
+
 import 'item_sales_report_sort_options.dart';
 import 'sales_item_view_options.dart';
 
 class ItemSalesReportFilters {
-  DateRangeFilters dateRangeFilters = DateRangeFilters();
+  DateRange dateFilters = DateRange();
   SalesItemWiseOptions salesItemWiseOptions = SalesItemWiseOptions.CategoriesAndItems;
   ItemSalesReportSortOptions sortOption = ItemSalesReportSortOptions.byRevenueLowToHigh;
 
   ItemSalesReportFilters copy() {
     var itemSalesFilters = ItemSalesReportFilters();
-    itemSalesFilters.dateRangeFilters = dateRangeFilters.copy();
+    itemSalesFilters.dateFilters = dateFilters.copy();
     itemSalesFilters.salesItemWiseOptions = salesItemWiseOptions;
     itemSalesFilters.sortOption = sortOption;
     return itemSalesFilters;
@@ -17,14 +18,14 @@ class ItemSalesReportFilters {
 
   List<String> toReadableListOfString() {
     return [
-      dateRangeFilters.toReadableString(),
+      dateFilters.toReadableString(),
       salesItemWiseOptions.toReadableString(),
       sortOption.toReadableString()
     ];
   }
 
   void reset(){
-    dateRangeFilters = DateRangeFilters();
+    dateFilters = DateRange();
     salesItemWiseOptions = SalesItemWiseOptions.CategoriesAndItems;
     sortOption = ItemSalesReportSortOptions.byRevenueLowToHigh;
   }

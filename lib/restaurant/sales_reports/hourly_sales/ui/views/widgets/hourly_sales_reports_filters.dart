@@ -5,7 +5,7 @@ import 'package:wallpost/_shared/extensions/date_extensions.dart';
 import '../../../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
-import '../../../../../../_shared/date_range_selector/single_date_selector.dart';
+import '../../../../../../_shared/date_range_selector/ui/widgets/single_date_selector.dart';
 import '../../../entities/hourly_sales_report_filters.dart';
 import '../../../entities/hourly_sales_report_sort_options.dart';
 

@@ -3,23 +3,24 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
 
-import '../../../../../_shared/date_range_selector/date_range_filters.dart';
-import '../../../../../_shared/date_range_selector/date_range_selector.dart';
+import '../../../../../_shared/date_range_selector/ui/widgets/date_range_selector.dart';
 
 class RestaurantFilters extends StatelessWidget {
-  final DateRangeFilters dateFilters;
+  final DateRange dateFilters;
   final ModalSheetController modalSheetController;
 
   const RestaurantFilters({required this.dateFilters, required this.modalSheetController});
 
   static Future<dynamic> show(BuildContext context,
-      {bool allowMultiple = false, required DateRangeFilters initialDateRangeFilter}) {
+      {bool allowMultiple = false, required DateRange initialDateRange}) {
     var modalSheetController = ModalSheetController();
+
     return ModalSheetPresenter.present(
         context: context,
         content: RestaurantFilters(
-          dateFilters: initialDateRangeFilter,
+          dateFilters: initialDateRange,
           modalSheetController: modalSheetController,
         ),
         controller: modalSheetController,
@@ -46,7 +47,9 @@ class RestaurantFilters extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                  onPressed: Navigator.of(context).pop,
+                  onPressed: Navigator
+                      .of(context)
+                      .pop,
                   child: Text(
                     "Cancel",
                     style: TextStyles.screenTitleTextStyle.copyWith(
@@ -90,7 +93,7 @@ class RestaurantFilters extends StatelessWidget {
               onTap: () async {
                 var newDateFilter = await DateRangeSelector.show(
                   context,
-                  initialDateRangeFilter: dateFilters,
+                  initialDateRange: dateFilters,
                 );
                 if (newDateFilter != null) modalSheetController.close(result: newDateFilter);
               },

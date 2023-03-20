@@ -186,7 +186,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   void showDateRangeSelector() async {
     var dateRange = await RestaurantFilters.show(
       context,
-      initialDateRangeFilter: _presenter.dateFilters,
+      initialDateRange: _presenter.dateFilters,
     );
     if (dateRange != null) {
       _presenter.dateFilters = dateRange;
@@ -219,7 +219,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
   void showRestaurantDashboardFilter() async {
     var newDateFilter = await RestaurantFilters.show(
       context,
-      initialDateRangeFilter: _presenter.dateFilters.copy(),
+      initialDateRange: _presenter.dateFilters,
     );
     if (newDateFilter != null) {
       _presenter.dateFilters = newDateFilter;

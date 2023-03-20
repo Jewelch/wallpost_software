@@ -1,21 +1,19 @@
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
 
 import '../../../../_shared/constants/base_urls.dart';
-import '../../../../_shared/date_range_selector/date_range_filters.dart';
+import '../../../../_shared/date_range_selector/entities/date_range.dart';
 
 class ItemSalesUrls {
   static String getSalesItemUrl(
     String companyId,
-    DateRangeFilters dateFilters,
+    DateRange dateRange,
   ) {
     var url =
-        '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/itemsalesreport/filters?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
+        '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/itemsalesreport/filters';
 
-    if (dateFilters.selectedRangeOption == SelectableDateRangeOptions.custom ||
-        dateFilters.selectedRangeOption == SelectableDateRangeOptions.thisMonth) {
-      url += "&start_date=${dateFilters.startDate.yyyyMMddString()}";
-      url += "&end_date=${dateFilters.endDate.yyyyMMddString()}";
-    }
+    url +=
+    '?date_filter_type=date_between&start_date=${dateRange.startDate.yyyyMMddString()}&end_date=${dateRange.endDate.yyyyMMddString()}';
+
 
     return url;
   }

@@ -36,7 +36,7 @@ class ItemSalesPresenter {
 
     _view.showLoader();
     try {
-      var dateFilters = filters.dateRangeFilters;
+      var dateFilters = filters.dateFilters;
       itemSalesReport = await _itemSalesDataProvider.getItemSales(dateFilters);
 
       _view.onDidLoadReport();
@@ -56,7 +56,7 @@ class ItemSalesPresenter {
     if (newFilters == null) return;
     var oldFilter = filters;
     filters = newFilters;
-    if (newFilters.dateRangeFilters != oldFilter.dateRangeFilters) {
+    if (newFilters.dateFilters != oldFilter.dateFilters) {
       await loadItemSalesData();
     }
     if (newFilters.sortOption != oldFilter.sortOption) {

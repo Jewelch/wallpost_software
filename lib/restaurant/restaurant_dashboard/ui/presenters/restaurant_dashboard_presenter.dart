@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../_shared/constants/app_colors.dart';
-import '../../../../_shared/date_range_selector/date_range_filters.dart';
+import '../../../../_shared/date_range_selector/entities/date_range.dart';
 import '../../../../_shared/exceptions/wp_exception.dart';
 import '../../../../_shared/extensions/string_extensions.dart';
 import '../../../../_wp_core/company_management/services/selected_company_provider.dart';
@@ -21,14 +21,14 @@ class RestaurantDashboardPresenter {
 
   AggregatedSalesData? _salesData;
   List<SalesBreakDownItem> _salesBreakdownItems = [];
-  DateRangeFilters dateFilters;
+  DateRange dateFilters;
   SalesBreakDownWiseOptions _selectedBreakDownWise = SalesBreakDownWiseOptions.basedOnCategory;
 
   RestaurantDashboardPresenter(this._view)
       : _salesDataProvider = AggregatedSalesDataProvider(),
         _salesBreakDownsProvider = SalesBreakDownsProvider(),
         _selectedCompanyProvider = SelectedCompanyProvider(),
-        dateFilters = DateRangeFilters();
+        dateFilters = DateRange();
 
   RestaurantDashboardPresenter.initWith(
     this._view,

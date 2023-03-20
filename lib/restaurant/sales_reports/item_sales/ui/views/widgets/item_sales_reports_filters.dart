@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
-import '../../../../../../_shared/date_range_selector/date_range_selector.dart';
+import '../../../../../../_shared/date_range_selector/ui/widgets/date_range_selector.dart';
 import '../../../entities/item_sales_report_filters.dart';
 import '../../../entities/item_sales_report_sort_options.dart';
 import '../../../entities/sales_item_view_options.dart';
@@ -108,10 +108,10 @@ class _ItemSalesReportsFiltersState extends State<ItemSalesReportsFilters> {
               onTap: () async {
                 var newDateFilter = await DateRangeSelector.show(
                   context,
-                  initialDateRangeFilter: widget.filters.dateRangeFilters,
+                  initialDateRange: widget.filters.dateFilters,
                 );
                 if (newDateFilter != null) {
-                  widget.filters.dateRangeFilters = newDateFilter;
+                  widget.filters.dateFilters = newDateFilter;
                   setState(() {});
                 }
               },
@@ -125,7 +125,7 @@ class _ItemSalesReportsFiltersState extends State<ItemSalesReportsFilters> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.filters.dateRangeFilters.toReadableString(),
+                      widget.filters.dateFilters.toReadableString(),
                       style: TextStyles.subTitleTextStyleBold.copyWith(
                         color: AppColors.textColorDarkGray,
                       ),

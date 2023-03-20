@@ -130,7 +130,7 @@ class ItemSalesAppBar extends StatelessWidget {
                             physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
-                            children: [presenter.dateRangeFilters.toReadableString()]
+                            children: [presenter.dateFilters.toReadableString()]
                                 .map(
                                   (filterString) => _FiltringItem(presenter: presenter, filteringType: filterString),
                                 )

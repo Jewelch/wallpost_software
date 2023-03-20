@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
 
-import '../../../_shared/date_range_selector/date_range_filters.dart';
 import '../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../constants/restaurant_dashboard_urls.dart';
 
@@ -20,9 +20,9 @@ class AggregatedSalesDataProvider {
 
   AggregatedSalesDataProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
 
-  Future<AggregatedSalesData> getSalesAmounts(DateRangeFilters dateFilters) async {
+  Future<AggregatedSalesData> getSalesAmounts(DateRange dateRange) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = RestaurantDashboardUrls.getSalesAmountsUrl(companyId, dateFilters);
+    var url = RestaurantDashboardUrls.getSalesAmountsUrl(companyId, dateRange);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 

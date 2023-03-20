@@ -1,4 +1,5 @@
-import '../../../../../_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
+
 import '../../../../../_shared/exceptions/wp_exception.dart';
 import '../../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../../entities/sales_summary.dart';
@@ -11,7 +12,7 @@ class SalesSummaryPresenter {
   final SalesSummaryProvider _itemSalesDataProvider;
   final SelectedCompanyProvider _selectedCompanyProvider;
   late SalesSummary salesSummary;
-  DateRangeFilters dateRangeFilters = DateRangeFilters();
+  DateRange dateFilters = DateRange();
 
   SalesSummaryPresenter(this._view)
       : _itemSalesDataProvider = SalesSummaryProvider(),
@@ -30,7 +31,7 @@ class SalesSummaryPresenter {
 
     _view.showLoader();
     try {
-      salesSummary = await _itemSalesDataProvider.getSummarySales(dateRangeFilters);
+      salesSummary = await _itemSalesDataProvider.getSummarySales(dateFilters);
       _view.onDidLoadReport();
     } on WPException catch (e) {
       _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
@@ -43,17 +44,17 @@ class SalesSummaryPresenter {
     _view.showSalesSummaryFilter();
   }
 
-  Future applyFilters(DateRangeFilters? newFilters) async {
+  Future applyFilters(DateRange? newFilters) async {
     if (newFilters == null) return;
-    if (newFilters.startDate.toIso8601String() != dateRangeFilters.startDate.toIso8601String() ||
-        newFilters.endDate.toIso8601String() != dateRangeFilters.endDate.toIso8601String()) {
-      dateRangeFilters = newFilters;
+    if (newFilters.startDate.toIso8601String() != dateFilters.startDate.toIso8601String() ||
+        newFilters.endDate.toIso8601String() != dateFilters.endDate.toIso8601String()) {
+      dateFilters = newFilters;
       await loadSalesSummaryData();
     }
   }
 
   Future resetFilters() async {
-    dateRangeFilters = DateRangeFilters();
+    dateFilters = DateRange();
     await loadSalesSummaryData();
   }
 
