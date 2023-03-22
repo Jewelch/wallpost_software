@@ -3,15 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/dashboard/company_dashboard_manager_my_portal/ui/view_contracts/module_performance_view.dart';
 
 import '../../../../_common_widgets/screen_presenter/screen_presenter.dart';
-import '../../../../restaurant/restaurant_dashboard/ui/views/screens/restaurant_dashboard_screen.dart';
+import '../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../_shared/constants/app_colors.dart';
+import '../../../../restaurant_and_retail/dashboard/ui/views/screens/dashboard_screen.dart';
 import '../models/manager_dashboard_filters.dart';
 import '../models/performance_value.dart';
 import '../presenters/restaurant_performance_presenter.dart';
+import '../view_contracts/module_performance_view.dart';
 import 'module_loader.dart';
 
 class RestaurantPerformanceView extends StatefulWidget {
@@ -52,7 +52,7 @@ class _RestaurantPerformanceViewState extends State<RestaurantPerformanceView>
     return GestureDetector(
       onTap: () {
         ScreenPresenter.present(
-          RestaurantDashboardScreen(),
+          DashboardScreen(dashboardContext: DashboardContext.restaurant),
           context,
           slideDirection: SlideDirection.fromBottom,
         );
