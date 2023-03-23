@@ -1,7 +1,7 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
-import 'package:wallpost/restaurant/sales_reports/item_sales/entities/item_sales_model.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/entities/aggregated_sales_data.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/entities/sales_break_down_item.dart';
+import 'package:wallpost/restaurant_and_retail/sales_reports/item_sales/entities/item_sales_model.dart';
 
 class MockSalesData extends Mock implements AggregatedSalesData {}
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../_common_widgets/shimmer/shimmer_effect.dart';
-import '../../../../common_widgets/restaurant_loader_container.dart';
+import '../../../../common_widgets/restaurant_retail_loader_container.dart';
 import '../../../../common_widgets/sales_break_down_loader.dart';
 
-class RestaurantDashboardLoader extends StatelessWidget {
-  const RestaurantDashboardLoader({Key? key}) : super(key: key);
+class RestaurantRetailDashboardLoader extends StatelessWidget {
+  const RestaurantRetailDashboardLoader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class RestaurantDashboardLoader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          RestaurantLoaderContainer(
+          RestaurantRetailLoaderContainer(
             height: 40,
             width: 120,
             topRadius: 6,
@@ -62,14 +62,14 @@ class RestaurantDashboardLoader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-              child: RestaurantLoaderContainer(
+              child: RestaurantRetailLoaderContainer(
             height: 80,
             topRadius: 20,
             bottomRadius: 20,
           )),
           SizedBox(width: 16),
           Expanded(
-              child: RestaurantLoaderContainer(
+              child: RestaurantRetailLoaderContainer(
             height: 80,
             topRadius: 20,
             bottomRadius: 20,
@@ -84,7 +84,7 @@ class RestaurantDashboardLoader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         children: [
-          RestaurantLoaderContainer(
+          RestaurantRetailLoaderContainer(
             height: 40,
             width: 40,
             topRadius: 10,
@@ -92,13 +92,13 @@ class RestaurantDashboardLoader extends StatelessWidget {
           ),
           SizedBox(width: 40),
           Expanded(
-              child: RestaurantLoaderContainer(
+              child: RestaurantRetailLoaderContainer(
             height: 26,
             topRadius: 6,
             bottomRadius: 6,
           )),
           SizedBox(width: 40),
-          RestaurantLoaderContainer(
+          RestaurantRetailLoaderContainer(
             height: 40,
             width: 40,
             topRadius: 10,
@@ -114,7 +114,7 @@ class RestaurantDashboardLoader extends StatelessWidget {
       children: [
         SizedBox(width: 24),
         Expanded(
-          child: RestaurantLoaderContainer(
+          child: RestaurantRetailLoaderContainer(
             height: 32,
             width: 120,
             topRadius: 12,
@@ -123,7 +123,7 @@ class RestaurantDashboardLoader extends StatelessWidget {
         ),
         SizedBox(width: 15),
         Expanded(
-          child: RestaurantLoaderContainer(
+          child: RestaurantRetailLoaderContainer(
             height: 32,
             width: 120,
             topRadius: 12,
@@ -132,7 +132,7 @@ class RestaurantDashboardLoader extends StatelessWidget {
         ),
         SizedBox(width: 15),
         Expanded(
-          child: RestaurantLoaderContainer(
+          child: RestaurantRetailLoaderContainer(
             height: 32,
             width: 120,
             topRadius: 12,

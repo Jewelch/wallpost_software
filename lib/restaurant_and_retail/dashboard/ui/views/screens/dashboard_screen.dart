@@ -7,28 +7,38 @@ import '../../../../../_common_widgets/app_bars/sliver_app_bar_delegate.dart';
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
 import '../../../../common_widgets/sales_break_down_loader.dart';
-import '../../presenters/restaurant_dashboard_presenter.dart';
-import '../../view_contracts/restaurant_dashboard_view.dart';
-import '../loader/restaurant_dashboard_loader.dart';
+import '../../presenters/dashboard_presenter.dart';
+import '../../view_contracts/dashboard_view.dart';
+import '../loader/restaurant_retail_dashboard_loader.dart';
+import '../widgets/dashboard_appbar.dart';
+import '../widgets/dashboard_error_view.dart';
+import '../widgets/dashboard_filters.dart';
+import '../widgets/dashboard_header_card.dart';
+import '../widgets/dashboard_sales_break_down_card.dart';
 import '../widgets/report_floating_action_button.dart';
-import '../widgets/restaurant_dashboard_appbar.dart';
-import '../widgets/restaurant_dashboard_error_view.dart';
-import '../widgets/restaurant_dashboard_header_card.dart';
-import '../widgets/restaurant_dashboard_sales_break_down_card.dart';
-import '../widgets/restaurant_filters.dart';
 import '../widgets/sliver_sales_breakdowns_horizontal_list.dart';
 
 enum _ScreenStates { loading, error, data }
 
 enum _SalesBreakDownStates { loading, error, data, noData }
 
-class RestaurantDashboardScreen extends StatefulWidget {
+enum DashboardContext { restaurant, retail }
+
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({required this.dashboardContext});
+
+  final DashboardContext dashboardContext;
+
   @override
-  State<RestaurantDashboardScreen> createState() => _State();
+  State<DashboardScreen> createState() => _State();
 }
 
-class _State extends State<RestaurantDashboardScreen> implements RestaurantDashboardView {
-  late RestaurantDashboardPresenter _presenter = RestaurantDashboardPresenter(this);
+class _State extends State<DashboardScreen> implements DashboardView {
+  late DashboardPresenter _presenter = DashboardPresenter(
+    this,
+    dashboardContext: widget.dashboardContext,
+  );
+
   final salesDataNotifier = Notifier();
   final salesBreakDownsNotifier = ItemNotifier<_SalesBreakDownStates>(defaultValue: _SalesBreakDownStates.loading);
   final screenStateNotifier = ItemNotifier<_ScreenStates>(defaultValue: _ScreenStates.loading);
@@ -55,7 +65,7 @@ class _State extends State<RestaurantDashboardScreen> implements RestaurantDashb
             switch (currentState) {
               //$ LOADING STATE
               case _ScreenStates.loading:
-                return RestaurantDashboardLoader();
+                return RestaurantRetailDashboardLoader();
 
               //! ERROR STATE
               case _ScreenStates.error:
