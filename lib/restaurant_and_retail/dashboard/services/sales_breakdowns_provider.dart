@@ -1,30 +1,36 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/constants/restaurant_dashboard_urls.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
-
 import '../../../_shared/date_range_selector/date_range_filters.dart';
+import '../../../_shared/exceptions/wrong_response_format_exception.dart';
+import '../../../_wp_core/company_management/services/selected_company_provider.dart';
+import '../../../_wp_core/wpapi/services/wp_api.dart';
+import '../constants/dashboard_urls.dart';
+import '../entities/sales_break_down_item.dart';
+import '../entities/sales_break_down_wise_options.dart';
+import '../ui/views/screens/dashboard_screen.dart';
 
 class SalesBreakDownsProvider {
   final NetworkAdapter _networkAdapter;
   final SelectedCompanyProvider _selectedCompanyProvider;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool _isLoading = false;
+  final DashboardContext dashboardContext;
 
-  SalesBreakDownsProvider()
+  SalesBreakDownsProvider({required this.dashboardContext})
       : _networkAdapter = WPAPI(),
         _selectedCompanyProvider = SelectedCompanyProvider();
 
-  SalesBreakDownsProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
+  SalesBreakDownsProvider.initWith(
+    this._networkAdapter,
+    this._selectedCompanyProvider,
+    this.dashboardContext,
+  );
 
   Future<List<SalesBreakDownItem>> getSalesBreakDowns(
       SalesBreakDownWiseOptions salesBreakDownWiseOption, DateRangeFilters dateRangeFilters) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = RestaurantDashboardUrls.getSalesBreakDownsUrl(companyId, salesBreakDownWiseOption, dateRangeFilters);
+    var url =
+        DashboardUrls.getSalesBreakDownsUrl(companyId, salesBreakDownWiseOption, dateRangeFilters, dashboardContext);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 

@@ -71,10 +71,7 @@ class ManagerMyPortalDashboardPresenter {
     if (_managerMyPortalData == null) return;
 
     try {
-      _managerMyPortalData = await _dataProvider.get(
-        month: _filters.month == 0 ? null : _filters.month,
-        year: _filters.year,
-      );
+      _managerMyPortalData = await _dataProvider.get(month: _filters.month, year: _filters.year);
       _view.onDidLoadData();
     } on WPException catch (_) {
       //do nothing

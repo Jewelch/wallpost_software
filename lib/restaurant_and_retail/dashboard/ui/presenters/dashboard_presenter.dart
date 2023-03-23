@@ -11,10 +11,11 @@ import '../../entities/sales_break_down_wise_options.dart';
 import '../../services/aggregated_sales_data_provider.dart';
 import '../../services/sales_breakdowns_provider.dart';
 import '../models/performance_value.dart';
-import '../view_contracts/restaurant_dashboard_view.dart';
+import '../view_contracts/dashboard_view.dart';
+import '../views/screens/dashboard_screen.dart';
 
-class RestaurantDashboardPresenter {
-  RestaurantDashboardView _view;
+class DashboardPresenter {
+  DashboardView _view;
   AggregatedSalesDataProvider _salesDataProvider;
   SalesBreakDownsProvider _salesBreakDownsProvider;
   SelectedCompanyProvider _selectedCompanyProvider;
@@ -23,14 +24,16 @@ class RestaurantDashboardPresenter {
   List<SalesBreakDownItem> _salesBreakdownItems = [];
   DateRangeFilters dateFilters;
   SalesBreakDownWiseOptions _selectedBreakDownWise = SalesBreakDownWiseOptions.basedOnCategory;
+  final DashboardContext dashboardContext;
 
-  RestaurantDashboardPresenter(this._view)
-      : _salesDataProvider = AggregatedSalesDataProvider(),
-        _salesBreakDownsProvider = SalesBreakDownsProvider(),
+  DashboardPresenter(this._view, {required this.dashboardContext})
+      : _salesDataProvider = AggregatedSalesDataProvider(dashboardContext: dashboardContext),
+        _salesBreakDownsProvider = SalesBreakDownsProvider(dashboardContext: dashboardContext),
         _selectedCompanyProvider = SelectedCompanyProvider(),
         dateFilters = DateRangeFilters();
 
-  RestaurantDashboardPresenter.initWith(
+  DashboardPresenter.initWith(
+    this.dashboardContext,
     this._view,
     this._salesDataProvider,
     this._salesBreakDownsProvider,
@@ -95,20 +98,27 @@ class RestaurantDashboardPresenter {
 
   bool breakdownsListIsEmpty() => _salesBreakdownItems.isEmpty;
 
-  String getSalesBreakDownFilterName(int index) => SalesBreakDownWiseOptions.values[index].toReadableString();
+  List<SalesBreakDownWiseOptions> getSalesBreakdownFilters() {
+    if (dashboardContext == DashboardContext.restaurant) {
+      return SalesBreakDownWiseOptions.values;
+    } else {
+      return [SalesBreakDownWiseOptions.basedOnCategory, SalesBreakDownWiseOptions.basedOnMenu];
+    }
+  }
 
-  Color getSalesBreakdownFilterBackgroundColor(int index) =>
-      SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise
-          ? AppColors.defaultColor
-          : AppColors.filtersBackgroundColor;
+  String getSalesBreakDownFilterName(SalesBreakDownWiseOptions salesBreakdownOption) =>
+      salesBreakdownOption.toReadableString();
 
-  Color getSalesBreakdownFilterTextColor(int index) =>
-      SalesBreakDownWiseOptions.values[index] == selectedBreakDownWise ? Colors.white : AppColors.defaultColor;
+  Color getSalesBreakdownFilterBackgroundColor(SalesBreakDownWiseOptions salesBreakdownOption) =>
+      salesBreakdownOption == selectedBreakDownWise ? AppColors.defaultColor : AppColors.filtersBackgroundColor;
+
+  Color getSalesBreakdownFilterTextColor(SalesBreakDownWiseOptions salesBreakdownOption) =>
+      salesBreakdownOption == selectedBreakDownWise ? Colors.white : AppColors.defaultColor;
 
   //MARK: Functions to apply sales breakdown type filter
 
-  void selectSalesBreakDownWiseAtIndex(int index) {
-    _selectedBreakDownWise = SalesBreakDownWiseOptions.values[index];
+  void selectSalesBreakDownFilter(SalesBreakDownWiseOptions breakdownOption) {
+    _selectedBreakDownWise = breakdownOption;
     _view.onDidChangeSalesBreakDownWise();
   }
 

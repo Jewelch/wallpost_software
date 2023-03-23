@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/filter_views/custom_filter_chip.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
 
 import '../../../../../_common_widgets/app_bars/sliver_app_bar_delegate.dart';
+import '../../../../../_common_widgets/filter_views/custom_filter_chip.dart';
+import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
+import '../../presenters/dashboard_presenter.dart';
 
 class SliverSalesBreakHorizontalList extends StatefulWidget {
-  final RestaurantDashboardPresenter presenter;
+  final DashboardPresenter presenter;
 
   const SliverSalesBreakHorizontalList({Key? key, required this.presenter}) : super(key: key);
 
@@ -17,7 +16,7 @@ class SliverSalesBreakHorizontalList extends StatefulWidget {
 }
 
 class _SliverSalesBreakHorizontalListState extends State<SliverSalesBreakHorizontalList> {
-  late RestaurantDashboardPresenter presenter;
+  late DashboardPresenter presenter;
 
   @override
   void initState() {
@@ -51,25 +50,26 @@ class _SliverSalesBreakHorizontalListState extends State<SliverSalesBreakHorizon
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
+                  itemCount: presenter.getSalesBreakdownFilters().length,
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   physics: BouncingScrollPhysics(),
+                  separatorBuilder: ((_, __) => SizedBox(width: 16)),
                   itemBuilder: (context, index) {
+                    var filter = presenter.getSalesBreakdownFilters()[index];
                     return CustomFilterChip(
-                      backgroundColor: presenter.getSalesBreakdownFilterBackgroundColor(index),
+                      backgroundColor: presenter.getSalesBreakdownFilterBackgroundColor(filter),
                       borderColor: Colors.transparent,
                       title: Text(
-                        presenter.getSalesBreakDownFilterName(index),
+                        presenter.getSalesBreakDownFilterName(filter),
                         style: TextStyle(
-                          color: presenter.getSalesBreakdownFilterTextColor(index),
+                          color: presenter.getSalesBreakdownFilterTextColor(filter),
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      onPressed: () => setState(() => presenter.selectSalesBreakDownWiseAtIndex(index)),
+                      onPressed: () => setState(() => presenter.selectSalesBreakDownFilter(filter)),
                     );
                   },
-                  separatorBuilder: ((_, __) => SizedBox(width: 16)),
-                  itemCount: SalesBreakDownWiseOptions.values.length,
                 ),
               ),
             ],

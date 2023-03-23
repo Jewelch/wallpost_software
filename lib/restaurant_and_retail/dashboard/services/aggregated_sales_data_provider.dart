@@ -1,28 +1,33 @@
 import 'dart:async';
 
-import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
-
 import '../../../_shared/date_range_selector/date_range_filters.dart';
+import '../../../_shared/exceptions/wrong_response_format_exception.dart';
 import '../../../_wp_core/company_management/services/selected_company_provider.dart';
-import '../constants/restaurant_dashboard_urls.dart';
+import '../../../_wp_core/wpapi/services/wp_api.dart';
+import '../constants/dashboard_urls.dart';
+import '../entities/aggregated_sales_data.dart';
+import '../ui/views/screens/dashboard_screen.dart';
 
 class AggregatedSalesDataProvider {
   final NetworkAdapter _networkAdapter;
   final SelectedCompanyProvider _selectedCompanyProvider;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool _isLoading = false;
+  final DashboardContext dashboardContext;
 
-  AggregatedSalesDataProvider()
+  AggregatedSalesDataProvider({required this.dashboardContext})
       : _networkAdapter = WPAPI(),
         _selectedCompanyProvider = SelectedCompanyProvider();
 
-  AggregatedSalesDataProvider.initWith(this._networkAdapter, this._selectedCompanyProvider);
+  AggregatedSalesDataProvider.initWith(
+    this._networkAdapter,
+    this._selectedCompanyProvider,
+    this.dashboardContext,
+  );
 
   Future<AggregatedSalesData> getSalesAmounts(DateRangeFilters dateFilters) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = RestaurantDashboardUrls.getSalesAmountsUrl(companyId, dateFilters);
+    var url = DashboardUrls.getSalesAmountsUrl(companyId, dateFilters, dashboardContext);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 

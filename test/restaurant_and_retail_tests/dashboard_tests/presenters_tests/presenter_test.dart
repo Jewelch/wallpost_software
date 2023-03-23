@@ -185,7 +185,7 @@ void main() {
 
   test('change selected sales breakdown wise successfully', () {
     //when
-    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownFilter(SalesBreakDownWiseOptions.basedOnMenu);
 
     //then
     expect(presenter.selectedBreakDownWise, SalesBreakDownWiseOptions.basedOnMenu);
@@ -195,20 +195,20 @@ void main() {
   // MARK: Test changing the sales break down filter's text color
   test('getSalesBreakdownTextColor() returns color successfully', () {
     //when
-    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownFilter(SalesBreakDownWiseOptions.basedOnMenu);
 
     //then
-    expect(presenter.getSalesBreakdownFilterTextColor(SalesBreakDownWiseOptions.basedOnMenu.index), Colors.white);
+    expect(presenter.getSalesBreakdownFilterTextColor(SalesBreakDownWiseOptions.basedOnMenu), Colors.white);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
 
   // MARK: Test changing the sales break down chip's background color
   test('getSalesBreakdownChipColor() returns color successfully', () {
     //when
-    presenter.selectSalesBreakDownWiseAtIndex(SalesBreakDownWiseOptions.basedOnMenu.index);
+    presenter.selectSalesBreakDownFilter(SalesBreakDownWiseOptions.basedOnMenu);
 
     //then
-    expect(presenter.getSalesBreakdownFilterBackgroundColor(SalesBreakDownWiseOptions.basedOnMenu.index),
+    expect(presenter.getSalesBreakdownFilterBackgroundColor(SalesBreakDownWiseOptions.basedOnMenu),
         AppColors.defaultColor);
     verify(() => view.onDidChangeSalesBreakDownWise());
   });
