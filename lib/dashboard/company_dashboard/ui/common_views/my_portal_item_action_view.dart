@@ -19,7 +19,7 @@ class MyPortalItemActionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 120,
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
         children: [
           Row(

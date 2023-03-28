@@ -13,9 +13,11 @@ class AttendanceAdjustmentApprovalListPresenter {
   final AttendanceAdjustmentApprovalListView _view;
   final AttendanceAdjustmentApprovalListProvider _approvalListProvider;
   final List<AttendanceAdjustmentApprovalListItem> _approvalItems = [];
+  final List<AttendanceAdjustmentApprovalListItem> _selectedItems = [];
   String _errorMessage = "";
   final String _noItemsMessage = "There are no approvals to show.\n\nTap here to reload.";
   int _numberOfApprovalsProcessed = 0;
+  var _isSelectionInProgress = false;
 
   AttendanceAdjustmentApprovalListPresenter(String companyId, this._view)
       : _approvalListProvider = AttendanceAdjustmentApprovalListProvider(companyId);
@@ -59,6 +61,7 @@ class AttendanceAdjustmentApprovalListPresenter {
 
   Future<void> refresh() async {
     _approvalItems.clear();
+    _selectedItems.clear();
     _approvalListProvider.reset();
     getNext();
   }
@@ -91,12 +94,62 @@ class AttendanceAdjustmentApprovalListPresenter {
     return _approvalItems[index];
   }
 
+  //MARK: Functions to handle multiple item selection
+
+  void initiateMultipleSelection() {
+    _isSelectionInProgress = true;
+    _view.onDidInitiateMultipleSelection();
+    selectAll();
+  }
+
+  void endMultipleSelection() {
+    _isSelectionInProgress = false;
+    _view.onDidEndMultipleSelection();
+  }
+
+  void toggleSelection(AttendanceAdjustmentApprovalListItem approvalItem) {
+    _selectedItems.contains(approvalItem) ? _selectedItems.remove(approvalItem) : _selectedItems.add(approvalItem);
+    _view.updateList();
+  }
+
+  void selectAll() {
+    _selectedItems.clear();
+    _selectedItems.addAll(_approvalItems);
+    _view.updateList();
+  }
+
+  void unselectAll() {
+    _selectedItems.clear();
+    _view.updateList();
+  }
+
+  bool areAllItemsSelected() {
+    return _selectedItems.length == _approvalItems.length;
+  }
+
+  bool isItemSelected(AttendanceAdjustmentApprovalListItem approvalItem) {
+    return _selectedItems.contains(approvalItem);
+  }
+
+  int getCountOfSelectedItems() {
+    return _selectedItems.length;
+  }
+
+  List<String> getSelectedItemIds() {
+    return _selectedItems.map((e) => e.id).toList();
+  }
+
+  get isSelectionInProgress => _isSelectionInProgress;
+
   //MARK: Functions for successful processing of approval or rejection
 
-  Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, String attendanceAdjustmentId) async {
+  Future<void> onDidProcessApprovalOrRejection(dynamic didPerformAction, List<String> attendanceAdjustmentIds) async {
     if (didPerformAction == true) {
-      _numberOfApprovalsProcessed = _numberOfApprovalsProcessed + 1;
-      _approvalItems.removeWhere((approval) => approval.id == attendanceAdjustmentId);
+      for (var i = 0; i < attendanceAdjustmentIds.length; i++) {
+        _numberOfApprovalsProcessed = _numberOfApprovalsProcessed + 1;
+        _approvalItems.removeWhere((approval) => approval.id == attendanceAdjustmentIds[i]);
+        _selectedItems.removeWhere((approval) => approval.id == attendanceAdjustmentIds[i]);
+      }
       _approvalItems.isNotEmpty ? _updateList() : _view.onDidProcessAllApprovals();
     }
   }
@@ -157,6 +210,14 @@ class AttendanceAdjustmentApprovalListPresenter {
 
   String getAdjustmentReason(AttendanceAdjustmentApprovalListItem approval) {
     return approval.adjustmentReason;
+  }
+
+  int getCountOfAllItems() {
+    return _approvalItems.length;
+  }
+
+  List<String> getAllIds() {
+    return _approvalItems.map((e) => e.id).toList();
   }
 
   String get errorMessage => _errorMessage;

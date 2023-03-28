@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../custom_shapes/curve_bottom_to_top.dart';
+import '../list_view/no_glow_scroll_behavior.dart';
 import 'screen_presenter.dart';
 
 class ModalSheetController {
@@ -29,19 +29,15 @@ class ModalSheetPresenter {
     required BuildContext context,
     required Widget content,
     required ModalSheetController controller,
+    double? height,
     bool shouldDismissOnTap = true,
-    bool isCurveApplied = true,
-    bool showBackGroundColor = true,
-    double height = 700,
   }) {
     return ScreenPresenter.present(
       _ModalSheetScreen(
         content: content,
         controller: controller,
         shouldDismissOnTap: shouldDismissOnTap,
-        isCurveApplied: isCurveApplied,
-        showBackgroundColor: showBackGroundColor,
-        height: height,
+        height: height ?? 700,
       ),
       context,
       slideDirection: SlideDirection.none,
@@ -53,16 +49,12 @@ class _ModalSheetScreen extends StatefulWidget {
   final Widget content;
   final ModalSheetController? controller;
   final bool shouldDismissOnTap;
-  final bool isCurveApplied;
-  final bool showBackgroundColor;
   final double height;
 
   const _ModalSheetScreen({
     required this.content,
     this.controller,
     required this.shouldDismissOnTap,
-    required this.isCurveApplied,
-    required this.showBackgroundColor,
     required this.height,
   });
 
@@ -74,11 +66,9 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
   late AnimationController _animationController;
   late Animation<Offset> offset;
   late Animation<double> opacity;
-  late bool isCurveApplied;
 
   @override
   void initState() {
-    isCurveApplied = widget.isCurveApplied;
     if (widget.controller != null) widget.controller!._addState(this);
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _animationController.reverseDuration = const Duration(milliseconds: 200);
@@ -111,7 +101,7 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
           children: <Widget>[
             FadeTransition(
               opacity: opacity,
-              child: widget.showBackgroundColor ? Container(color: Colors.transparent.withOpacity(0.7)) : null,
+              child: Container(color: Colors.transparent.withOpacity(0.7)),
             ),
             GestureDetector(
               onTap: () {
@@ -128,14 +118,24 @@ class __ModalSheetScreenState extends State<_ModalSheetScreen> with SingleTicker
                     child: Container(
                       constraints: BoxConstraints.loose(Size(double.infinity, widget.height)),
                       color: Colors.transparent,
-                      child: ListView(
-                        padding: EdgeInsets.zero,
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: [
-                          if (isCurveApplied) CurveBottomToTop(),
-                          isCurveApplied ? Container(color: Colors.white, child: widget.content) : widget.content,
-                        ],
+                      child: ScrollConfiguration(
+                        behavior: NoGlowScrollBehavior(),
+                        child: ListView(
+                          padding: EdgeInsets.zero,
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                                color: Colors.white,
+                              ),
+                              padding: EdgeInsets.only(top: 18),
+                              child: widget.content,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

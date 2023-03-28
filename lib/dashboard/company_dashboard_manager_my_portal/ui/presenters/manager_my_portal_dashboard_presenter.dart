@@ -58,10 +58,7 @@ class ManagerMyPortalDashboardPresenter {
   Future<void> loadData() async {
     _view.showLoader();
     try {
-      _managerMyPortalData = await _dataProvider.get(
-        month: _filters.month == 0 ? null : _filters.month,
-        year: _filters.year,
-      );
+      _managerMyPortalData = await _dataProvider.get(month: filters.month, year: _filters.year);
       _view.onDidLoadData();
     } on WPException catch (e) {
       _view.showErrorMessage("${e.userReadableMessage}\n\nTap here to reload.");
@@ -74,10 +71,7 @@ class ManagerMyPortalDashboardPresenter {
     if (_managerMyPortalData == null) return;
 
     try {
-      _managerMyPortalData = await _dataProvider.get(
-        month: _filters.month == 0 ? null : _filters.month,
-        year: _filters.year,
-      );
+      _managerMyPortalData = await _dataProvider.get(month: _filters.month, year: _filters.year);
       _view.onDidLoadData();
     } on WPException catch (_) {
       //do nothing
@@ -96,8 +90,6 @@ class ManagerMyPortalDashboardPresenter {
   Future<void> setFilter({required int month, required int year}) {
     _filters.month = month;
     _filters.year = year;
-
-    print(_filters.month);
     return loadData();
   }
 

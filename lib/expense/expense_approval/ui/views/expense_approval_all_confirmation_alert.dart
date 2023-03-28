@@ -3,11 +3,11 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/alert/alert.dart';
+import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/expense/expense_approval/ui/presenters/expense_approval_presenter.dart';
 import 'package:wallpost/expense/expense_approval/ui/view_contracts/expense_approval_view.dart';
-import 'package:wallpost/expense/expense_approval_list/ui/views/action_button.dart';
 
 class ExpenseApprovalAllConfirmationAlert extends StatefulWidget {
   final int noOfSelectedItems;
@@ -71,10 +71,13 @@ class _ExpenseApprovalAllConfirmationAlertState extends State<ExpenseApprovalAll
             Expanded(
               child: ItemNotifiable<bool>(
                 notifier: _showLoaderNotifier,
-                builder: (context, showLoader) => ActionButton(
+                builder: (context, showLoader) => RoundedRectangleActionButton(
                   title: "Yes Approve All",
                   icon: Icon(Icons.check, size: 22, color: Colors.white),
-                  color: AppColors.green,
+                  backgroundColor: AppColors.green,
+                  isIconLeftAligned: false,
+                  height: 44,
+                  borderRadiusCircular: 16,
                   showLoader: showLoader,
                   onPressed: () {
                     _presenter.massApprove(widget.companyId, widget.expenseIds);

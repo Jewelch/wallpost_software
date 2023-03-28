@@ -75,9 +75,9 @@ class _YtdFilterState extends State<YtdFilter> {
   //MARK: Functions to get months and years
 
   List<String> _getMonthNamesForSelectedYear() {
-    var years = AppYears().currentAndPastShortenedMonthsOfYear(_selectedYear);
-    years.insert(0, "YTD");
-    return years;
+    var months = AppYears().currentAndPastShortenedMonthsOfYear(_selectedYear);
+    months.insert(0, "YTD");
+    return months;
   }
 
   List<String> _getYears() {

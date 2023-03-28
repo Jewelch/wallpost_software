@@ -98,7 +98,7 @@ void main() {
     //then
     expect(presenter.getRejectionReasonError(), "Please enter a valid reason");
     verifyInOrder([
-      () => view.notifyInvalidRejectionReason(),
+      () => view.notifyInvalidRejectionReason("Please enter a valid reason"),
     ]);
     _verifyNoMoreInteractions();
   });

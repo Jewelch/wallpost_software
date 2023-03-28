@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+
+import '../../../../_common_widgets/buttons/rounded_back_button.dart';
 
 class ExpenseApprovalListAppBar extends StatefulWidget {
   final int noOfSelectedItems;
@@ -11,6 +12,7 @@ class ExpenseApprovalListAppBar extends StatefulWidget {
   final VoidCallback onEndMultipleSelectionButtonPressed;
   final VoidCallback onSelectAllButtonPress;
   final VoidCallback onUnselectAllButtonPress;
+  final VoidCallback onBackButtonPress;
 
   ExpenseApprovalListAppBar({
     required this.noOfSelectedItems,
@@ -20,6 +22,7 @@ class ExpenseApprovalListAppBar extends StatefulWidget {
     required this.onSelectAllButtonPress,
     required this.onUnselectAllButtonPress,
     required this.isAllItemAreSelected,
+    required this.onBackButtonPress,
   });
 
   @override
@@ -80,14 +83,10 @@ class _ExpenseApprovalListAppBarState extends State<ExpenseApprovalListAppBar> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: SvgPicture.asset(
-                    "assets/icons/arrow_back_icon.svg",
-                    color: AppColors.defaultColor,
-                    width: 16,
-                    height: 16,
-                  ),
+                RoundedBackButton(
+                  iconColor: AppColors.defaultColor,
+                  backgroundColor: Colors.white,
+                  onPressed: widget.onBackButtonPress,
                 ),
                 IconButton(
                   onPressed: widget.onInitiateMultipleSelectionButtonPressed,
