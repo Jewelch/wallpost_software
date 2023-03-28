@@ -8,7 +8,7 @@ import 'notification_center/notification_center.dart';
 import 'notification_router/notification_screen_router.dart';
 
 //this navigator key is used for routing when context is not available
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigator sadasKey = GlobalKey<NavigatorState>();
 
 //this key is used for showing snack bar when scaffold is not available
 final GlobalKey<ScaffoldMessengerState> snackbarKey = GlobalKey<ScaffoldMessengerState>();
