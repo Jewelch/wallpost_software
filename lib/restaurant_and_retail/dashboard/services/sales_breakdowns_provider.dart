@@ -5,7 +5,7 @@ import 'package:wallpost/_wp_core/company_management/services/selected_company_p
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
 import '../../../_shared/date_range_selector/entities/date_range.dart';
-import '../constants/dashboard_urls.dart';
+import '../constants/restaurant_retail_dashboard_urls.dart';
 import '../entities/sales_break_down_item.dart';
 import '../entities/sales_break_down_wise_options.dart';
 import '../ui/views/screens/dashboard_screen.dart';
@@ -28,8 +28,8 @@ class SalesBreakDownsProvider {
   Future<List<SalesBreakDownItem>> getSalesBreakDowns(
       SalesBreakDownWiseOptions salesBreakDownWiseOption, DateRange dateRangeFilters) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url =
-        DashboardUrls.getSalesBreakDownsUrl(companyId, salesBreakDownWiseOption, dateRangeFilters, dashboardContext);
+    var url = RestaurantRetailDashboardUrls.getSalesBreakDownsUrl(
+        companyId, salesBreakDownWiseOption, dateRangeFilters, dashboardContext);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 

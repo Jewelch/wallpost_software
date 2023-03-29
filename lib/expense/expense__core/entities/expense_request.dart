@@ -1,4 +1,4 @@
-import 'package:sift/Sift.dart';
+import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/mapping_exception.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
 import 'package:wallpost/_shared/money/money.dart';

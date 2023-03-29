@@ -1,4 +1,4 @@
-import 'package:sift/Sift.dart';
+import 'package:sift/sift.dart';
 import 'package:wallpost/crm/dashboard/entities/service_performance.dart';
 import 'package:wallpost/crm/dashboard/entities/staff_performance.dart';
 

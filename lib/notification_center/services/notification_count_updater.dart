@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:sift/Sift.dart';
+import 'package:sift/sift.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/user_management/services/current_user_provider.dart';
 

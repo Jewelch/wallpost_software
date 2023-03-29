@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/restaurant_and_retail/dashboard/constants/dashboard_urls.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/constants/restaurant_retail_dashboard_urls.dart';
 import 'package:wallpost/restaurant_and_retail/dashboard/entities/sales_break_down_wise_options.dart';
 import 'package:wallpost/restaurant_and_retail/dashboard/services/sales_breakdowns_provider.dart';
 import 'package:wallpost/restaurant_and_retail/dashboard/ui/views/screens/dashboard_screen.dart';
@@ -41,7 +41,7 @@ void main() {
 
     expect(
         mockNetworkAdapter.apiRequest.url,
-        DashboardUrls.getSalesBreakDownsUrl(
+        RestaurantRetailDashboardUrls.getSalesBreakDownsUrl(
           'someCompanyId',
           salesBreakDownWiseOption,
           dateFilter,

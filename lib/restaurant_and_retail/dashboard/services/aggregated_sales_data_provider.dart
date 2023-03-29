@@ -5,7 +5,7 @@ import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
 import '../../../_shared/date_range_selector/entities/date_range.dart';
 import '../../../_wp_core/company_management/services/selected_company_provider.dart';
-import '../constants/dashboard_urls.dart';
+import '../constants/restaurant_retail_dashboard_urls.dart';
 import '../entities/aggregated_sales_data.dart';
 import '../ui/views/screens/dashboard_screen.dart';
 
@@ -28,7 +28,7 @@ class AggregatedSalesDataProvider {
 
   Future<AggregatedSalesData> getSalesAmounts(DateRange dateRange) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = DashboardUrls.getSalesAmountsUrl(companyId, dateRange,dashboardContext);
+    var url = RestaurantRetailDashboardUrls.getSalesAmountsUrl(companyId, dateRange, dashboardContext);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 
