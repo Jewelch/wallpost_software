@@ -1,18 +1,18 @@
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
 
 import '../../../../_shared/constants/base_urls.dart';
-import '../../../_shared/date_range_selector/date_range_filters.dart';
+import '../../../_shared/date_range_selector/entities/date_range.dart';
+import '../entities/sales_break_down_wise_options.dart';
+import '../ui/views/screens/dashboard_screen.dart';
 
-class RestaurantDashboardUrls {
+class DashboardUrls {
   static String getSalesAmountsUrl(
     String companyId,
-      DateRange dateRange,
+    DateRange dateRange,
     DashboardContext dashboardContext,
   ) {
-
-
-    var url = '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_data/dashboard';
+    var url =
+        '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_data/dashboard';
     url +=
         '?date_filter_type=date_between&start_date=${dateRange.startDate.yyyyMMddString()}&end_date=${dateRange.endDate.yyyyMMddString()}';
     if (dashboardContext == DashboardContext.retail) url += "&forRetail=true";
@@ -29,7 +29,6 @@ class RestaurantDashboardUrls {
         '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_breakdown/by/${salesBreakDownWises.toRawString()}/mobile';
     url +=
         '?date_filter_type=date_between&start_date=${dateRange.startDate.yyyyMMddString()}&end_date=${dateRange.endDate.yyyyMMddString()}';
-        '${BaseUrls.restaurantUrlV2()}/companies/$companyId/store/0/consolidated_stats/sales_breakdown/by/${salesBreakDownWises.toRawString()}/mobile?date_filter_type=${dateFilters.selectedRangeOption.toRawString()}';
 
     if (dashboardContext == DashboardContext.retail) url += "&forRetail=true";
 

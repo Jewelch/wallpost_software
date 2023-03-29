@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_selector.dart';
 
 import '../../../../../../_common_widgets/app_bars/sliver_app_bar_delegate.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
+import '../../../../../../_shared/date_range_selector/ui/widgets/date_range_selector.dart';
 import '../../presenter/sales_summary_presenter.dart';
 import '../../view_contracts/sales_summary_view.dart';
 import '../loader/sales_summary_loader.dart';

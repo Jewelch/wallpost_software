@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/date_range_selector/date_range_filters.dart';
+import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/models/performance_value.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/aggregated_sales_data.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_item.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/entities/sales_break_down_wise_options.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/services/aggregated_sales_data_provider.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/services/sales_breakdowns_provider.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/presenters/restaurant_dashboard_presenter.dart';
-import 'package:wallpost/restaurant/restaurant_dashboard/ui/view_contracts/restaurant_dashboard_view.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/entities/aggregated_sales_data.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/entities/sales_break_down_item.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/entities/sales_break_down_wise_options.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/services/aggregated_sales_data_provider.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/services/sales_breakdowns_provider.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/ui/presenters/dashboard_presenter.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/ui/view_contracts/dashboard_view.dart';
+import 'package:wallpost/restaurant_and_retail/dashboard/ui/views/screens/dashboard_screen.dart';
 
 import '../../../_mocks/mock_company_provider.dart';
 import '../../mocks.dart';
@@ -30,8 +31,8 @@ void main() {
   var salesDataProvider = MockSalesDataProvider();
   var salesBreakDownProvider = MockSalesBreakDownProvider();
   var view = MockSalesDataView();
-  var dateFilter = DateRangeFilters();
-  late RestaurantDashboardPresenter presenter;
+  var dateFilter = DateRange();
+  late DashboardPresenter presenter;
 
   void _initializePresenter() {
     presenter = DashboardPresenter.initWith(

@@ -15,13 +15,18 @@ void main() {
   Map<String, dynamic> successfulResponse = Mocks.salesDataRandomResponse;
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockSelectedCompanyProvider = MockCompanyProvider();
-  var dateFilter = DateRangeFilters();
-  var salesDataProvider = AggregatedSalesDataProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+  var dateFilter = DateRange();
+  var salesDataProvider = AggregatedSalesDataProvider.initWith(
+    mockNetworkAdapter,
+    mockSelectedCompanyProvider,
+    DashboardContext.restaurant,
+  );
 
   setUpAll(() {
     final mockCompany = MockCompany();
     when(() => mockCompany.id).thenReturn("someCompanyId");
-    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(mockCompany);
+    when(() => mockSelectedCompanyProvider.getSelectedCompanyForCurrentUser())
+        .thenReturn(mockCompany);
   });
 
   test('SalesAmounts API request is built and executed correctly', () async {
@@ -41,7 +46,9 @@ void main() {
     expect(mockNetworkAdapter.didCallGet, isTrue);
   });
 
-  test('SalesAmounts API throws <NetworkFailureException> when network adapter fails', () async {
+  test(
+      'SalesAmounts API throws <NetworkFailureException> when network adapter fails',
+      () async {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
@@ -54,7 +61,9 @@ void main() {
     }
   });
 
-  test('SalesAmounts API throws <InvalidResponseException> when response is null', () async {
+  test(
+      'SalesAmounts API throws <InvalidResponseException> when response is null',
+      () async {
     mockNetworkAdapter.succeed(null);
 
     try {
@@ -67,7 +76,9 @@ void main() {
     }
   });
 
-  test('SalesAmounts API throws <WrongResponseFormatException> when response is of the wrong format', () async {
+  test(
+      'SalesAmounts API throws <WrongResponseFormatException> when response is of the wrong format',
+      () async {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
@@ -80,7 +91,9 @@ void main() {
     }
   });
 
-  test('SalesAmounts API throws <InvalidResponseException> when entity mapping fails', () async {
+  test(
+      'SalesAmounts API throws <InvalidResponseException> when entity mapping fails',
+      () async {
     mockNetworkAdapter.succeed(<String, dynamic>{"miss_data": "anyWrongData"});
 
     try {
@@ -93,10 +106,12 @@ void main() {
     }
   });
 
-  test('SalesAmounts API response is ignored if it is from another session', () async {
+  test('SalesAmounts API response is ignored if it is from another session',
+      () async {
     var didReceiveResponseForTheSecondRequest = false;
 
-    mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 200);
+    mockNetworkAdapter.succeed(successfulResponse,
+        afterDelayInMilliSeconds: 200);
     salesDataProvider.getSalesAmounts(dateFilter).then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
@@ -123,7 +138,8 @@ void main() {
     }
   });
 
-  test('test loading flag is set to true when the service is executed', () async {
+  test('test loading flag is set to true when the service is executed',
+      () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
     salesDataProvider.getSalesAmounts(

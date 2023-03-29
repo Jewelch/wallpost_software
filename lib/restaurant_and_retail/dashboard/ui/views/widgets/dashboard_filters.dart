@@ -4,8 +4,9 @@ import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
-import '../../../../../_shared/date_range_selector/date_range_filters.dart';
-import '../../../../../_shared/date_range_selector/date_range_selector.dart';
+import '../../../../../_shared/date_range_selector/entities/date_range.dart';
+import '../../../../../_shared/date_range_selector/ui/widgets/date_range_selector.dart';
+
 
 class RestaurantFilters extends StatelessWidget {
   final DateRange dateFilters;
@@ -19,11 +20,11 @@ class RestaurantFilters extends StatelessWidget {
     return ModalSheetPresenter.present(
         context: context,
         content: RestaurantFilters(
-          dateFilters: initialDateRangeFilter,
+          dateFilters: initialDateRange,
           modalSheetController: modalSheetController,
         ),
         controller: modalSheetController,
-        isCurveApplied: false);
+       );
   }
 
   @override

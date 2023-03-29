@@ -1,4 +1,4 @@
-import '../../../../_shared/date_range_selector/date_range_filters.dart';
+import '../../../../_shared/date_range_selector/entities/date_range.dart';
 import 'item_sales_report_sort_options.dart';
 import 'sales_item_view_options.dart';
 
@@ -24,7 +24,7 @@ class ItemSalesReportFilters {
   }
 
   void reset(){
-    dateRangeFilters = DateRangeFilters();
+    dateFilters = DateRange();
     salesItemWiseOptions = SalesItemWiseOptions.CategoriesAndItems;
     sortOption = ItemSalesReportSortOptions.byRevenueLowToHigh;
   }
