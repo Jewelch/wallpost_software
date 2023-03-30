@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/constants/purchase_bill_approval_list_urls.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/entities/purchase_bill_approval_list_item.dart';
@@ -43,21 +42,12 @@ class PurchaseBillApprovalListProvider {
   }
 
   Future<List<PurchaseBillApprovalBillItem>> _processResponse(APIResponse apiResponse) async {
-    //returning if the response is from another session
     if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<PurchaseBillApprovalBillItem>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
-    var responseMapList = readApprovalMapList(apiResponse.data);
+    var responseMapList = apiResponse.data as List<Map<String, dynamic>>;
     return _readItemsFromResponse(responseMapList);
-  }
-
-  List<Map<String, dynamic>> readApprovalMapList(Map<String, dynamic> response) {
-    try {
-      return Sift().readMapListFromMap(response, "detail");
-    } on SiftException {
-      throw InvalidResponseException();
-    }
   }
 
   List<PurchaseBillApprovalBillItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {

@@ -42,7 +42,7 @@ class PurchaseBillDetailLoader extends StatelessWidget {
   Widget _tile() {
     return Row(
       children: [
-        _emptyContainer(height: 26, width: 120),
+        _emptyContainer(height: 26, width: 100),
         SizedBox(width: 20),
         _emptyContainer(height: 26, width: 200),
       ],

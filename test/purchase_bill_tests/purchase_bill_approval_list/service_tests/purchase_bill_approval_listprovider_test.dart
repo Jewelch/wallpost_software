@@ -7,7 +7,7 @@ import '../../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 void main() {
-  Map<String, dynamic> successfulResponse = Mocks.approvalListResponse;
+  List<Map<String, dynamic>> successfulResponse = Mocks.approvalListResponse;
   var mockNetworkAdapter = MockNetworkAdapter();
   var approvalListProvider = PurchaseBillApprovalListProvider.initWith("someCompanyId", mockNetworkAdapter);
 

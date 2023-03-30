@@ -1,31 +1,40 @@
 class Mocks {
   static Map<String, dynamic> purchaseBillDetailResponse = {
-    "bill_id": 5256,
-    "supplier_name": "Alan",
-    "bill_number": "22/00053",
-    "bill_date": "2022-03-25",
-    "due_date": "2022-03-25",
-    "amount": "321",
-    "profile_photo": null,
-    "terms": "",
-    "memo": "",
-    "supplier_id": 257,
-    "warehouse_name": "warehouse2",
-    "biller_name": null,
-    "decision_status": "Approved",
-    "reject_message": null,
-    "payment_status": "Unpaid",
+    "bill_id": 2271,
+    "bill_to": "testsupp",
+    "bill_no": "22/00089",
+    "due_date": "2022-11-02",
+    "currency": "EGP",
+    "app_type": "billRequest",
     "items": [
       {
-        "item_id": 1591,
-        "item_name": "A4 paper",
-        "quantity": "1",
-        "rate": "321",
-        "total": "321",
-        "description": ""
+        "item_name": "abcd",
+        "description": "",
+        "quantity": "10",
+        "price": 30,
+        "amount": "300.00",
+        "uom": "Kilogram",
+        "discount": 0
       }
     ],
-    "attachments": [],
-    "expenses": []
+    "expenses": [],
+    "summary": {
+      "items_total": "300.00",
+      "expenses_total": "0.00",
+      "sub_total": "300.00",
+      "total_discount": "0.00",
+      "grandtotal_discount": "0.00",
+      "total": "357.60",
+      "taxes": [
+        {
+          "type": "VAT",
+          "amount": 57
+        },
+        {
+          "type": "Stamp Duty",
+          "amount": 0.6
+        }
+      ]
+    }
   };
 }

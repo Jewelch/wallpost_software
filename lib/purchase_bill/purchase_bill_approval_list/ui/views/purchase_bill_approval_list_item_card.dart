@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_approval/ui/views/purchase_bill_approval_alert.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_approval/ui/views/purchase_bill_rejection_alert.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/entities/purchase_bill_approval_list_item.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/ui/presenters/purchase_bill_approval_list_presenter.dart';
 import '../../../../_common_widgets/buttons/rounded_action_button.dart';
@@ -70,32 +72,27 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                           ),
                         ),
                         SizedBox(width: 16),
-                        Text(
-                          widget.listPresenter.getTotalAmount(widget.approval),
-                          style: TextStyles.titleTextStyleBold,
-                        ),
+                        Wrap(
+                          children: [
+                            Text(
+                              widget.listPresenter.getTotalAmount(widget.approval),
+                              style: TextStyles.titleTextStyleBold,
+                            ),
+                            SizedBox(width: 2),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 1),
+                              child: Text(widget.listPresenter.getCurrency(widget.approval),
+                                  style: TextStyles.smallLabelTextStyle.copyWith(color: AppColors.textColorBlueGray)),
+                            )
+                          ],
+                        )
+                        ,
                       ],
                     ),
                     SizedBox(height: 12),
-                    Container(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: _labelAndValue(
-                                "Bill No - ",
-                                widget.listPresenter.getBillNumber(widget.approval),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          _labelAndValue(
-                            "Date - ",
-                            widget.listPresenter.getBillDate(widget.approval),
-                          ),
-                        ],
-                      ),
+                    _labelAndValue(
+                      "Bill No - ",
+                      widget.listPresenter.getBillNumber(widget.approval),
                     ),
                     SizedBox(height: 12),
                     Row(
@@ -177,35 +174,34 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
   }
 
   void _approve() async {
-    //
-    // var didApprove = await showDialog(
-    //   context: context,
-    //   builder: (_) => ExpenseApprovalConfirmationAlert(
-    //     expenseId: widget.approval.id,
-    //     companyId: widget.approval.companyId,
-    //     requestedBy: widget.approval.requestedBy,
-    //   ),
-    // );
-    // if (didApprove)
-    //   widget.listPresenter.onDidProcessApprovalOrRejection(
-    //     didApprove,
-    //     [widget.approval.id],
-    //   );
+    var didApprove = await showDialog(
+      context: context,
+      builder: (_) => PurchaseBillApprovalAlert(
+        billId: widget.approval.id,
+        companyId:widget.approval.companyId,
+          supplierName:widget.approval.supplierName
+      ),
+    );
+    if (didApprove)
+      widget.listPresenter.onDidProcessApprovalOrRejection(
+        didApprove,
+        [widget.approval.id],
+      );
   }
 
   void _reject() async {
-    // var didReject = await showDialog(
-    //   context: context,
-    //   builder: (_) => ExpenseRejectionConfirmationAlert(
-    //     expenseId: widget.approval.id,
-    //     companyId: widget.approval.companyId,
-    //     requestedBy: widget.approval.requestedBy,
-    //   ),
-    // );
-    // if (didReject)
-    //   widget.listPresenter.onDidProcessApprovalOrRejection(
-    //     didReject,
-    //     [widget.approval.id],
-    //   );
+    var didReject = await showDialog(
+      context: context,
+      builder: (_) => PurchaseBillRejectionAlert(
+        billId: widget.approval.id,
+        companyId:widget.approval.companyId,
+        supplierName: widget.approval.supplierName,
+      ),
+    );
+    if (didReject)
+      widget.listPresenter.onDidProcessApprovalOrRejection(
+        didReject,
+        [widget.approval.id],
+      );
   }
 }

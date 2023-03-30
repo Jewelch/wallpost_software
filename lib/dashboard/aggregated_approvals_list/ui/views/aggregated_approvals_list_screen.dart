@@ -8,6 +8,7 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/color_utils.dart';
 import 'package:wallpost/leave/leave_approval_list/ui/views/leave_approval_list_screen.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_approval_list/ui/views/purchase_bill_approval_list_screen.dart';
 
 import '../../../../_common_widgets/buttons/rounded_back_button.dart';
 import '../../../../attendance/attendance_adjustment_approval_list/ui/views/attendance_adjustment_approval_list_screen.dart';
@@ -214,6 +215,11 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
     } else if (aggregatedApproval.isLeaveRequestApproval()) {
       numberOfApprovalsProcessed = await ScreenPresenter.present(
         LeaveApprovalListScreen(companyId: aggregatedApproval.companyId),
+        context,
+      );
+    }else if (aggregatedApproval.isBillRequestApproval()) {
+      numberOfApprovalsProcessed = await ScreenPresenter.present(
+        PurchaseBillApprovalListScreen(companyId: aggregatedApproval.companyId),
         context,
       );
     }

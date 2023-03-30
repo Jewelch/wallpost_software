@@ -6,7 +6,7 @@ import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/view_contracts/pu
 
 class PurchaseBillDetailPresenter {
   final String _companyId;
-  final String _expenseId;
+  final String _billId;
   final bool _didLaunchDetailScreenForApproval;
   final PurchaseBillDetailView _view;
   final PurchaseBillDetailProvider _purchaseBillDetailProvider;
@@ -15,7 +15,7 @@ class PurchaseBillDetailPresenter {
 
   PurchaseBillDetailPresenter(
     this._companyId,
-    this._expenseId, {
+    this._billId, {
     bool didLaunchDetailScreenForApproval = false,
     required PurchaseBillDetailView view,
   })  : this._didLaunchDetailScreenForApproval = didLaunchDetailScreenForApproval,
@@ -24,7 +24,7 @@ class PurchaseBillDetailPresenter {
 
   PurchaseBillDetailPresenter.initWith(
     this._companyId,
-    this._expenseId,
+    this._billId,
     this._view,
     this._purchaseBillDetailProvider, {
     bool didLaunchDetailScreenForApproval = false,
@@ -36,7 +36,7 @@ class PurchaseBillDetailPresenter {
     _errorMessage = null;
     _view.showLoader();
     try {
-      _billItemDetail = await _purchaseBillDetailProvider.get(_expenseId);
+      _billItemDetail = await _purchaseBillDetailProvider.get(_billId);
       _view.onDidLoadDetails();
     } on WPException catch (e) {
       _errorMessage = "${e.userReadableMessage}\n\nTap here to reload.";
@@ -47,37 +47,45 @@ class PurchaseBillDetailPresenter {
   //MARK: Functions for approval and rejection
 
   void initiateApproval() {
-   // _view.processApproval(_companyId, _expenseId, _billItemDetail.supplierName);
+    _view.processApproval(_companyId, _billItemDetail.id, _billItemDetail.billTo);
   }
 
   void initiateRejection() {
-    //_view.processRejection(_companyId, _expenseId, _expenseRequest.requestedBy);
+    _view.processRejection(_companyId, _billItemDetail.id, _billItemDetail.billTo);
   }
 
   //MARK: Getters
 
-  // bool shouldShowApprovalActions() {
-  //  // return _didLaunchDetailScreenForApproval && _expenseRequest.approvalStatus == ExpenseRequestApprovalStatus.pending;
-  // }
-
   String getSupplierName() {
-    return _billItemDetail.supplierName;
-  }
-
-  String getTotalAmount() {
-    return _billItemDetail.amount;
+    return _billItemDetail.billTo;
   }
 
   String getBillNumber() {
     return _billItemDetail.billNumber;
   }
 
-  String getBillDate() {
-    return _billItemDetail.billDate;
-  }
-
   String getDueDate() {
     return _billItemDetail.dueDate;
+  }
+
+  String getCurrency() {
+    return _billItemDetail.currency;
+  }
+
+  String getSubTotal() {
+    return _billItemDetail.subTotal;
+  }
+
+  String getDiscount() {
+    return _billItemDetail.grandTotalDiscount;
+  }
+
+  String getTax() {
+    return _billItemDetail.totalTax;
+  }
+
+  String getTotal() {
+    return _billItemDetail.total;
   }
 
   //MARK: Functions to get list details
@@ -90,23 +98,6 @@ class PurchaseBillDetailPresenter {
     return _billItemDetail.billItemData[index];
   }
 
-  // String? getStatus() {
-  //   return PurchaseBillDetailApprovalItem.statusMessage;
-  // }
-  //
-  // Color getStatusColor() {
-  //   if (_expenseRequest.approvalStatus == ExpenseRequestApprovalStatus.pending) {
-  //     return AppColors.yellow;
-  //   } else if (_expenseRequest.approvalStatus == ExpenseRequestApprovalStatus.rejected) {
-  //     return AppColors.red;
-  //   } else {
-  //     return AppColors.green;
-  //   }
-  // }
-  //
-  // String? getRejectionReason() {
-  //   return _expenseRequest.rejectionReason;
-  // }
 
   String? get errorMessage => _errorMessage;
 }

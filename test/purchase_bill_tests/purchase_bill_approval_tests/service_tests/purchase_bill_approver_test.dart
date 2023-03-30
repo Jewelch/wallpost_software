@@ -1,0 +1,90 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_approval/constants/purchase_bill_approval_urls.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_approval/services/purchase_bill_approver.dart';
+
+import '../../../_mocks/mock_network_adapter.dart';
+
+void main() {
+  Map<String, dynamic> successfulResponse = {};
+  var mockNetworkAdapter = MockNetworkAdapter();
+  var approver = PurchaseBillApproval.initWith(mockNetworkAdapter);
+
+  setUp(() {
+    mockNetworkAdapter.reset();
+  });
+
+  test('api request is built and executed correctly for single item approval', () async {
+    Map<String, dynamic> requestParams = {};
+    requestParams.addAll({"app_type": "billRequest", "request_id": "someBillId"});
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await approver.approve("someCompanyId", "someBillId");
+
+    expect(mockNetworkAdapter.apiRequest.url, PurchaseBillApprovalUrls.approveUrl("someCompanyId"));
+    expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
+    expect(mockNetworkAdapter.didCallPost, true);
+  });
+
+  test('api request is built and executed correctly for multiple item approval', () async {
+    Map<String, dynamic> requestParams = {};
+    requestParams.addAll({
+      "app_type": "billRequest",
+      "request_ids": "id1,id2",
+    });
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await approver.massApprove("someCompanyId", ["id1", "id2"]);
+
+    expect(mockNetworkAdapter.apiRequest.url, PurchaseBillApprovalUrls.approveUrl("someCompanyId"));
+    expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
+    expect(mockNetworkAdapter.didCallPost, true);
+  });
+
+  test('throws exception when network adapter fails', () async {
+    mockNetworkAdapter.fail(NetworkFailureException());
+
+    try {
+      var _ = await approver.approve("someCompanyId", "someBillId");
+      fail('failed to throw the network adapter failure exception');
+    } catch (e) {
+      expect(e is NetworkFailureException, true);
+    }
+  });
+
+  test('success', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    try {
+      var _ = await approver.approve("someCompanyId", "someBillId");
+    } catch (e) {
+      fail('failed to complete successfully. exception thrown $e');
+    }
+  });
+
+  test('test loading flag is set to true when the service is executed', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    approver.approve("someCompanyId", "someBillId");
+
+    expect(approver.isLoading, true);
+  });
+
+  test('test loading flag is reset after success', () async {
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await approver.approve("someCompanyId", "someBillId");
+
+    expect(approver.isLoading, false);
+  });
+
+  test('test loading flag is reset after failure', () async {
+    mockNetworkAdapter.fail(NetworkFailureException());
+
+    try {
+      var _ = await approver.approve("someCompanyId", "someBillId");
+      fail('failed to throw exception');
+    } catch (_) {
+      expect(approver.isLoading, false);
+    }
+  });
+}

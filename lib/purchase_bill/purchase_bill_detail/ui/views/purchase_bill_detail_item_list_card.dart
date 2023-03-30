@@ -38,7 +38,7 @@ class PurchaseBillDetailItemListCard extends StatelessWidget {
             SizedBox(height: 8),
             Text("${billDetailListItem.quantity} x ${billDetailListItem.rate}"),
             SizedBox(height: 8),
-            Text(billDetailListItem.description)
+            Text(billDetailListItem.description),
           ],
         ),
       ),

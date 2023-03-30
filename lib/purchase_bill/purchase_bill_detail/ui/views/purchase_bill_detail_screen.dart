@@ -3,6 +3,7 @@ import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_approval/ui/views/purchase_bill_approval_alert.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/presenters/purchase_bill_detail_presenter.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/view_contracts/purchase_bill_detail_view.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/views/purchase_bill_detail_app_bar.dart';
@@ -28,7 +29,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
   late PurchaseBillDetailPresenter _presenter;
   final int viewTypeLoader = 1;
   final int viewTypeError = 2;
-  final int viewTypeExpenseDetails = 3;
+  final int viewTypePurchaseBillDetails = 3;
   final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: 1);
 
   @override
@@ -88,43 +89,44 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
   Widget _buildBillDetailDetailsView() {
     return RefreshIndicator(
       onRefresh: () => _presenter.loadDetail(),
-      child: ListView(
-        physics: AlwaysScrollableScrollPhysics(),
-        children: [
-          SizedBox(height: 20),
-          _labelAndValue("Bill To", _presenter.getSupplierName()),
-          Divider(color: AppColors.appBarShadowColor),
-          _labelAndValue("Bill No", _presenter.getBillNumber()),
-          Divider(color: AppColors.appBarShadowColor),
-          _labelAndValue("Due Date", _presenter.getDueDate()),
-          Divider(color: AppColors.appBarShadowColor),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              "Items/Services",
-              style: TextStyles.largeTitleTextStyleBold,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14),
+        child: ListView(
+          physics: AlwaysScrollableScrollPhysics(),
+          children: [
+            SizedBox(height: 20),
+            _labelAndValue("Bill To", _presenter.getSupplierName()),
+            Divider(color: AppColors.appBarShadowColor),
+            _labelAndValue("Bill No", _presenter.getBillNumber()),
+            Divider(color: AppColors.appBarShadowColor),
+            _labelAndValue("Due Date", _presenter.getDueDate()),
+            Divider(color: AppColors.appBarShadowColor),
+            SizedBox(height: 20),
+            Text("Items/Services", style: TextStyles.largeTitleTextStyleBold),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text("Cost", style: TextStyles.labelTextStyle),
             ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            itemCount: _presenter.getNumberOfListItems(),
-            itemBuilder: (context, index) => PurchaseBillDetailItemListCard(
-              presenter: _presenter,
-              billDetailListItem: _presenter.getItemAtIndex(index),
+            ListView.separated(
+              shrinkWrap: true,
+              separatorBuilder: (BuildContext context, int index) => Divider(color: AppColors.appBarShadowColor),
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              itemCount: _presenter.getNumberOfListItems(),
+              itemBuilder: (context, index) => PurchaseBillDetailItemListCard(
+                presenter: _presenter,
+                billDetailListItem: _presenter.getItemAtIndex(index),
+              ),
             ),
-          ),
-          Divider(color: AppColors.appBarShadowColor),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              "Total Summary",
-              style: TextStyles.largeTitleTextStyleBold,
-            ),
-          ),
-        ],
+            Divider(color: AppColors.appBarShadowColor),
+            SizedBox(height: 20),
+            Text("Total Summary", style: TextStyles.largeTitleTextStyleBold),
+            _summaryValue("Sub Total", _presenter.getSubTotal()),
+            _summaryValue("Discount", _presenter.getDiscount()),
+            _summaryValue("Tax", _presenter.getTax()),
+            _summaryValue("Total", _presenter.getTotal())
+
+          ],
+        ),
       ),
     );
   }
@@ -147,7 +149,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
               isIconLeftAligned: false,
               height: 44,
               borderRadiusCircular: 16,
-              onPressed: () => {},
+              onPressed: () => {_presenter.initiateApproval()},
             ),
           ),
           SizedBox(width: 16),
@@ -159,7 +161,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
               isIconLeftAligned: false,
               height: 44,
               borderRadiusCircular: 16,
-              onPressed: () => {},
+              onPressed: () => {_presenter.initiateRejection()},
             ),
           ),
         ],
@@ -171,7 +173,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
     if (value == null || value.isEmpty) return Container();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -197,6 +199,46 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
     );
   }
 
+  Widget _summaryValue(String label, String? value, {Color? valueColor}) {
+    if (value == null || value.isEmpty) return Container();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              "$label:",
+              style: TextStyles.titleTextStyle,
+            ),
+          ),
+          Wrap(
+            children: [
+              Text(
+                value,
+                style:
+                TextStyles.titleTextStyleBold.copyWith(
+                  color:valueColor?? AppColors.textColorBlack,
+                ),
+              ),
+              SizedBox(width: 2),
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: Text(_presenter.getCurrency(),
+                    style: TextStyles.smallLabelTextStyle.copyWith(color: AppColors.textColorBlueGray)),
+              )
+            ],
+          )
+
+        ],
+      ),
+    );
+  }
+
+
   //MARK: Detail view functions
 
   @override
@@ -211,38 +253,42 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
 
   @override
   void onDidLoadDetails() {
-    _viewTypeNotifier.notify(viewTypeExpenseDetails);
+    _viewTypeNotifier.notify(viewTypePurchaseBillDetails);
   }
 
   @override
-  void processApproval(String companyId, String expenseId, String requestedBy) {
-    _approve(companyId, expenseId, requestedBy);
+  void processApproval(String companyId, String billId, String billTo) {
+    _approve(companyId, billId, billTo);
   }
 
   @override
-  void processRejection(String companyId, String expenseId, String requestedBy) {
-    _showRejectionSheet(companyId, expenseId, requestedBy, context);
+  void processRejection(String companyId, String billId, String billTo) {
+    _showRejectionSheet(companyId, billId, billTo);
   }
 
   //MARK: Functions to approve and reject
 
-  void _approve(String companyId, String expenseId, String requestedBy) async {
-    // var didApprove = await ExpenseApprovalAlert.show(
-    //   context: context,
-    //   expenseId: expenseId,
-    //   companyId: companyId,
-    //   requestedBy: requestedBy,
-    // );
-    // if (didApprove == true) Navigator.pop(context, true);
+  void _approve(String companyId, String billId, String billTo) async {
+    var didApprove = await showDialog(
+      context: context,
+      builder: (_) => PurchaseBillApprovalAlert(
+          billId: billId,
+          companyId:companyId,
+          supplierName:billTo
+      ),
+    );
+    if (didApprove == true) Navigator.pop(context, true);
   }
 
-  void _showRejectionSheet(String companyId, String expenseId, String requestedBy, BuildContext context) async {
-    // var didReject = await ExpenseRejectionAlert.show(
-    //   context: context,
-    //   expenseId: expenseId,
-    //   companyId: companyId,
-    //   requestedBy: requestedBy,
-    // );
-    // if (didReject == true) Navigator.pop(context, true);
+  void _showRejectionSheet(String companyId, String billId, String billTo) async {
+    var didReject = await showDialog(
+      context: context,
+      builder: (_) => PurchaseBillApprovalAlert(
+        billId: billId,
+        companyId:companyId,
+        supplierName: billTo,
+      ),
+    );
+    if (didReject == true) Navigator.pop(context, true);
   }
 }

@@ -182,6 +182,13 @@ class PurchaseBillApprovalListPresenter{
     return approval.dueDate;
   }
 
+  String getCurrency(PurchaseBillApprovalBillItem approval) {
+    return approval.currency;
+  }
+
+  List<String> getAllIds() {
+    return _approvalItems.map((e) => e.id).toList();
+  }
 
   get isSelectionInProgress => _isSelectionInProgress;
 

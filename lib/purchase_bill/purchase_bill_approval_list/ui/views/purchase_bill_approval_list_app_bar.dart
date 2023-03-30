@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
 import '../../../../_common_widgets/buttons/rounded_back_button.dart';
 
 class PurchaseBillApprovalListAppBar extends StatefulWidget {
+  final String selectedCompanyName;
   final int noOfSelectedItems;
   final bool isMultipleSelectionInProgress;
   final bool isAllItemAreSelected;
@@ -15,6 +17,7 @@ class PurchaseBillApprovalListAppBar extends StatefulWidget {
   final VoidCallback onBackButtonPress;
 
   PurchaseBillApprovalListAppBar({
+    required this.selectedCompanyName,
     required this.noOfSelectedItems,
     required this.isMultipleSelectionInProgress,
     required this.onInitiateMultipleSelectionButtonPressed,
@@ -96,6 +99,38 @@ class _PurchaseBillApprovalListAppBarState extends State<PurchaseBillApprovalLis
                     color: AppColors.defaultColor,
                   ),
                 ),
+                // SizedBox(width: 24),
+                // Expanded(
+                //   child: GestureDetector(
+                //     onTap: Navigator.of(context).pop,
+                //     child: Container(
+                //       height: 40,
+                //       child: Center(
+                //         child: Row(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Container(
+                //               child: Text(
+                //                 widget.selectedCompanyName,
+                //                 overflow: TextOverflow.ellipsis,
+                //                 textAlign: TextAlign.center,
+                //                 style: TextStyles.largeTitleTextStyleBold
+                //                     .copyWith(color: AppColors.defaultColor, fontWeight: FontWeight.w500),
+                //               ),
+                //             ),
+                //             SizedBox(width: 8),
+                //             SvgPicture.asset(
+                //               "assets/icons/arrow_down_icon.svg",
+                //               color: AppColors.defaultColor,
+                //               width: 16,
+                //               height: 16,
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             Container(

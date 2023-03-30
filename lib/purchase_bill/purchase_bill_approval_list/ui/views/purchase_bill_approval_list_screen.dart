@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_approval/ui/views/purchase_bill_approval_all_alert.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/entities/purchase_bill_approval_list_item.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/ui/models/purchase_bill_approval_list_item_view_type.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/ui/presenters/purchase_bill_approval_list_presenter.dart';
@@ -13,6 +14,7 @@ import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/views/purchase_bi
 import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 import '../../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../../_shared/constants/app_colors.dart';
+import '../../../purchase_bill_approval/ui/views/purchase_bill_rejection_all_alert.dart';
 
 
 class PurchaseBillApprovalListScreen extends StatefulWidget {
@@ -138,6 +140,7 @@ class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalLis
       child: Column(
         children: [
           PurchaseBillApprovalListAppBar(
+            selectedCompanyName: "",
             noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
             isAllItemAreSelected: _listPresenter.areAllItemsSelected(),
             isMultipleSelectionInProgress: _listPresenter.isSelectionInProgress,
@@ -285,58 +288,58 @@ class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalLis
   //MARK: mass approve function
 
   void _approveAll() async {
-    // var didApprove = await showDialog(
-    //   context: context,
-    //   builder: (_) => ExpenseApprovalAllConfirmationAlert(
-    //     noOfSelectedItems: _listPresenter.getCountOfAllItems(),
-    //     expenseIds: _listPresenter.getAllIds(),
-    //     companyId: _listPresenter.getItemAtIndex(0).companyId,
-    //   ),
-    // );
-    // if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getAllIds());
+    var didApprove = await showDialog(
+      context: context,
+      builder: (_) => PurchaseBillApprovalAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfAllItems(),
+        billIds: _listPresenter.getAllIds(),
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+    if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getAllIds());
   }
 
   //MARK: mass reject function
 
   void _rejectAll() async {
-    // var didRejected = await showDialog(
-    //   context: context,
-    //   builder: (_) => ExpenseRejectionAllConfirmationAlert(
-    //     noOfSelectedItems: _listPresenter.getCountOfAllItems(),
-    //     expenseIds: _listPresenter.getAllIds(),
-    //     companyId: _listPresenter.getItemAtIndex(0).companyId,
-    //   ),
-    // );
-    // if (didRejected) _listPresenter.onDidProcessApprovalOrRejection(didRejected, _listPresenter.getAllIds());
+    var didRejected = await showDialog(
+      context: context,
+      builder: (_) => PurchaseBillRejectionAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfAllItems(),
+        billIds: _listPresenter.getAllIds(),
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+    if (didRejected) _listPresenter.onDidProcessApprovalOrRejection(didRejected, _listPresenter.getAllIds());
   }
 
   //MARK: approve selected items function
 
   void _approveSelectedItems() async {
-    // var didApprove = await showDialog(
-    //   context: context,
-    //   builder: (_) => ExpenseApprovalAllConfirmationAlert(
-    //     noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
-    //     expenseIds: _listPresenter.getSelectedItemIds(),
-    //     companyId: _listPresenter.getItemAtIndex(0).companyId,
-    //   ),
-    // );
-    //
-    // if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getSelectedItemIds());
+    var didApprove = await showDialog(
+      context: context,
+      builder: (_) => PurchaseBillApprovalAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
+        billIds: _listPresenter.getSelectedItemIds(),
+        companyId:_listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+
+    if (didApprove) _listPresenter.onDidProcessApprovalOrRejection(didApprove, _listPresenter.getSelectedItemIds());
   }
 
   //MARK:  reject selected  function
 
   void _rejectSelectedItems() async {
-    // var didReject = await showDialog(
-    //   context: context,
-    //   builder: (_) => ExpenseRejectionAllConfirmationAlert(
-    //     noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
-    //     expenseIds: _listPresenter.getSelectedItemIds(),
-    //     companyId: _listPresenter.getItemAtIndex(0).companyId,
-    //   ),
-    // );
-    // if (didReject) _listPresenter.onDidProcessApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
+    var didReject = await showDialog(
+      context: context,
+      builder: (_) => PurchaseBillRejectionAllAlert(
+        noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
+        billIds: _listPresenter.getSelectedItemIds(),
+        companyId:_listPresenter.getItemAtIndex(0).companyId,
+      ),
+    );
+    if (didReject) _listPresenter.onDidProcessApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
   }
 
   //MARK: Approval list view functions

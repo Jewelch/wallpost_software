@@ -48,6 +48,10 @@ class AggregatedApproval extends JSONInitializable {
     return _approvalType == "Leave Request";
   }
 
+  bool isBillRequestApproval() {
+    return _approvalType == "Bill Request";
+  }
+
   void setCount(int count) {
     _approvalCount = count;
   }

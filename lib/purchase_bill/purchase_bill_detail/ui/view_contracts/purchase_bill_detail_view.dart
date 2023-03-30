@@ -5,7 +5,7 @@ abstract class PurchaseBillDetailView {
 
   void onDidLoadDetails();
 
-  void processApproval(String companyId, String expenseId, String requestedBy);
+  void processApproval(String companyId, String billId, String billTo);
 
-  void processRejection(String companyId, String expenseId, String requestedBy);
+  void processRejection(String companyId, String billId, String billTo);
 }
