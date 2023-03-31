@@ -5,7 +5,7 @@ import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bi
 
 import '../../../_shared/exceptions/mapping_exception.dart';
 
-class PurchaseBillDetailData extends JSONInitializable {
+class PurchaseBillDetail extends JSONInitializable {
   late String _id;
   late String _billTo;
   late String _billNumber;
@@ -19,7 +19,7 @@ class PurchaseBillDetailData extends JSONInitializable {
   late String _total;
   late String _totalTax;
 
-  PurchaseBillDetailData.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  PurchaseBillDetail.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       _id = "${sift.readNumberFromMap(jsonMap, "bill_id")}";

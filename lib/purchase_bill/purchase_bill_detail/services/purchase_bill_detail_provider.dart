@@ -22,7 +22,7 @@ class PurchaseBillDetailProvider {
 
   PurchaseBillDetailProvider.initWith(this._companyId, this._networkAdapter);
 
-  Future<PurchaseBillDetailData> get(String billId) async {
+  Future<PurchaseBillDetail> get(String billId) async {
     var url = PurchaseBillDetailUrls.getPurchaseBillDetailUrl(_companyId, billId);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
@@ -38,14 +38,14 @@ class PurchaseBillDetailProvider {
     }
   }
 
-  Future<PurchaseBillDetailData> _processResponse(APIResponse apiResponse) async {
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<PurchaseBillDetailData>().future;
+  Future<PurchaseBillDetail> _processResponse(APIResponse apiResponse) async {
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<PurchaseBillDetail>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
-      return PurchaseBillDetailData.fromJson(responseMap);
+      return PurchaseBillDetail.fromJson(responseMap);
     } catch (_) {
       throw InvalidResponseException();
     }

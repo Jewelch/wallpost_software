@@ -9,7 +9,7 @@ class PurchaseBillDetailPresenter {
   final String _billId;
   final PurchaseBillDetailView _view;
   final PurchaseBillDetailProvider _purchaseBillDetailProvider;
-  late PurchaseBillDetailData _billDetailData;
+  late PurchaseBillDetail _billDetailData;
   String? _errorMessage;
 
   PurchaseBillDetailPresenter(
@@ -45,11 +45,11 @@ class PurchaseBillDetailPresenter {
   //MARK: Functions for approval and rejection
 
   void initiateApproval() {
-    _view.processApproval(_companyId, _billDetailData.id, _billDetailData.billTo);
+    _view.processApproval(_companyId, _billId, _billDetailData.billTo);
   }
 
   void initiateRejection() {
-    _view.processRejection(_companyId, _billDetailData.id, _billDetailData.billTo);
+    _view.processRejection(_companyId, _billId, _billDetailData.billTo);
   }
 
   //MARK: Getters
