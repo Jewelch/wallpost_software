@@ -102,29 +102,40 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
             _labelAndValue("Due Date", _presenter.getDueDate()),
             Divider(color: AppColors.appBarShadowColor),
             SizedBox(height: 20),
-            Text("Items/Services", style: TextStyles.largeTitleTextStyleBold),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text("Cost", style: TextStyles.labelTextStyle),
-            ),
-            ListView.separated(
-              shrinkWrap: true,
-              separatorBuilder: (BuildContext context, int index) => Divider(color: AppColors.appBarShadowColor),
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              itemCount: _presenter.getNumberOfListItems(),
-              itemBuilder: (context, index) => PurchaseBillDetailItemListCard(
-                presenter: _presenter,
-                billDetailListItem: _presenter.getItemAtIndex(index),
-              ),
-            ),
-            Divider(color: AppColors.appBarShadowColor),
-            SizedBox(height: 20),
+            _presenter.getNumberOfListItems() > 0
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Items/Services", style: TextStyles.largeTitleTextStyleBold),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text("Cost", style: TextStyles.labelTextStyle),
+                        ),
+                      ),
+                      ListView.separated(
+                        shrinkWrap: true,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            Divider(color: AppColors.appBarShadowColor),
+                        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                        itemCount: _presenter.getNumberOfListItems(),
+                        itemBuilder: (context, index) => PurchaseBillDetailItemListCard(
+                          presenter: _presenter,
+                          billDetailListItem: _presenter.getItemAtIndex(index),
+                        ),
+                      ),
+                      Divider(color: AppColors.appBarShadowColor),
+                      SizedBox(height: 20),
+                    ],
+                  )
+                : Container(),
             Text("Total Summary", style: TextStyles.largeTitleTextStyleBold),
+            SizedBox(height: 4),
             _summaryValue("Sub Total", _presenter.getSubTotal()),
             _summaryValue("Discount", _presenter.getDiscount()),
             _summaryValue("Tax", _presenter.getTax()),
             _summaryValue("Total", _presenter.getTotal())
-
           ],
         ),
       ),
@@ -143,7 +154,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
         children: [
           Expanded(
             child: RoundedRectangleActionButton(
-              title: "Approve All",
+              title: "Approve",
               icon: Icon(Icons.check, size: 18, color: Colors.white),
               backgroundColor: AppColors.green,
               isIconLeftAligned: false,
@@ -155,7 +166,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
           SizedBox(width: 16),
           Expanded(
             child: RoundedRectangleActionButton(
-              title: "Reject All",
+              title: "Reject",
               icon: Icon(Icons.close, size: 18, color: Colors.white),
               backgroundColor: AppColors.red,
               isIconLeftAligned: false,
@@ -199,31 +210,29 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
     );
   }
 
-  Widget _summaryValue(String label, String? value, {Color? valueColor}) {
+  Widget _summaryValue(String label, String? value) {
     if (value == null || value.isEmpty) return Container();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              "$label:",
-              style: TextStyles.titleTextStyle,
-            ),
-          ),
+          (label == 'Total')
+              ? Text(label, style: TextStyles.titleTextStyleBold)
+              : Text(label, style: TextStyles.titleTextStyle),
           Wrap(
             children: [
-              Text(
-                value,
-                style:
-                TextStyles.titleTextStyleBold.copyWith(
-                  color:valueColor?? AppColors.textColorBlack,
-                ),
-              ),
+              (label == 'Discount')
+                  ? Text(
+                      value,
+                      style: TextStyles.titleTextStyleBold.copyWith(color: AppColors.red),
+                    )
+                  : Text(
+                      value,
+                      style: TextStyles.titleTextStyleBold.copyWith(color: AppColors.textColorBlack),
+                    ),
               SizedBox(width: 2),
               Padding(
                 padding: const EdgeInsets.only(top: 1),
@@ -232,12 +241,10 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
               )
             ],
           )
-
         ],
       ),
     );
   }
-
 
   //MARK: Detail view functions
 
@@ -263,7 +270,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
 
   @override
   void processRejection(String companyId, String billId, String billTo) {
-    _showRejectionSheet(companyId, billId, billTo);
+    _reject(companyId, billId, billTo);
   }
 
   //MARK: Functions to approve and reject
@@ -271,21 +278,17 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
   void _approve(String companyId, String billId, String billTo) async {
     var didApprove = await showDialog(
       context: context,
-      builder: (_) => PurchaseBillApprovalAlert(
-          billId: billId,
-          companyId:companyId,
-          supplierName:billTo
-      ),
+      builder: (_) => PurchaseBillApprovalAlert(billId: billId, companyId: companyId, supplierName: billTo),
     );
     if (didApprove == true) Navigator.pop(context, true);
   }
 
-  void _showRejectionSheet(String companyId, String billId, String billTo) async {
+  void _reject(String companyId, String billId, String billTo) async {
     var didReject = await showDialog(
       context: context,
       builder: (_) => PurchaseBillApprovalAlert(
         billId: billId,
-        companyId:companyId,
+        companyId: companyId,
         supplierName: billTo,
       ),
     );

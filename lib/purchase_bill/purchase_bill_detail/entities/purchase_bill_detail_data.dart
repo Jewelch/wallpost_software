@@ -1,17 +1,17 @@
 import 'package:sift/Sift.dart';
 import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart';
-import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail_item_data.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail_item.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail_tax.dart';
 
 import '../../../_shared/exceptions/mapping_exception.dart';
 
-class PurchaseBillDetailApprovalItem extends JSONInitializable {
+class PurchaseBillDetailData extends JSONInitializable {
   late String _id;
   late String _billTo;
   late String _billNumber;
   late String _dueDate;
   late String _currency;
-  late List<PurchaseBillDetailItemData> _billDetailItemData;
+  late List<PurchaseBillDetailItem> _billDetailItem;
 
   late String _itemsTotal;
   late String _subTotal;
@@ -19,7 +19,7 @@ class PurchaseBillDetailApprovalItem extends JSONInitializable {
   late String _total;
   late String _totalTax;
 
-  PurchaseBillDetailApprovalItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  PurchaseBillDetailData.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       _id = "${sift.readNumberFromMap(jsonMap, "bill_id")}";
@@ -29,7 +29,7 @@ class PurchaseBillDetailApprovalItem extends JSONInitializable {
       _currency = sift.readStringFromMap(jsonMap, "currency");
 
       var billItemMapArray = sift.readMapListFromMap(jsonMap, 'items');
-      _billDetailItemData = _getPurchaseBillItemList(billItemMapArray);
+      _billDetailItem = _getPurchaseBillItemList(billItemMapArray);
 
       var summaryMap = sift.readMapFromMap(jsonMap, 'summary');
       _itemsTotal = sift.readStringFromMap(summaryMap, 'items_total');
@@ -45,10 +45,10 @@ class PurchaseBillDetailApprovalItem extends JSONInitializable {
     }
   }
 
-  List<PurchaseBillDetailItemData> _getPurchaseBillItemList(List<Map<String, dynamic>> itemMapList) {
-    List<PurchaseBillDetailItemData> itemList = [];
+  List<PurchaseBillDetailItem> _getPurchaseBillItemList(List<Map<String, dynamic>> itemMapList) {
+    List<PurchaseBillDetailItem> itemList = [];
     for (var itemMap in itemMapList) {
-      var item = PurchaseBillDetailItemData.fromJson(itemMap);
+      var item = PurchaseBillDetailItem.fromJson(itemMap);
       itemList.add(item);
     }
     return itemList;
@@ -72,7 +72,7 @@ class PurchaseBillDetailApprovalItem extends JSONInitializable {
 
   String get id => _id;
 
-  List<PurchaseBillDetailItemData> get billItemData => _billDetailItemData;
+  List<PurchaseBillDetailItem> get billDetailItem => _billDetailItem;
 
   String get currency => _currency;
 
