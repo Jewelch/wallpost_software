@@ -3,11 +3,11 @@ import 'package:wallpost/purchase_bill/purchase_bill_approval_list/entities/purc
 abstract class PurchaseBillApprovalListView{
   void showLoader();
 
-  void updateList();
-
   void showErrorMessage();
 
   void showNoItemsMessage();
+
+  void updateList();
 
   void showBillDetail(PurchaseBillApprovalBillItem approvalBillItem);
 

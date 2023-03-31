@@ -76,7 +76,7 @@ void main() {
   });
 
   test('throws InvalidResponseException when entity mapping fails', () async {
-    mockNetworkAdapter.succeed(<String, dynamic>{});
+    mockNetworkAdapter.succeed([<String, dynamic>{}]);
 
     try {
       var _ = await approvalListProvider.getNext();

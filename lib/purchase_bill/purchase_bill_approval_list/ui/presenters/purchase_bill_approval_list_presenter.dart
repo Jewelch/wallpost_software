@@ -160,14 +160,8 @@ class PurchaseBillApprovalListPresenter{
     return _approvalItems.length;
   }
 
-  //MARK: Getters
-
-  String getSupplierName(PurchaseBillApprovalBillItem approval) {
+  String? getSupplierName(PurchaseBillApprovalBillItem approval) {
     return approval.supplierName;
-  }
-
-  String getTotalAmount(PurchaseBillApprovalBillItem approval) {
-    return approval.amount;
   }
 
   String getBillNumber(PurchaseBillApprovalBillItem approval) {
@@ -184,6 +178,10 @@ class PurchaseBillApprovalListPresenter{
 
   String getCurrency(PurchaseBillApprovalBillItem approval) {
     return approval.currency;
+  }
+
+  String getTotalAmount(PurchaseBillApprovalBillItem approval) {
+    return approval.amount;
   }
 
   List<String> getAllIds() {

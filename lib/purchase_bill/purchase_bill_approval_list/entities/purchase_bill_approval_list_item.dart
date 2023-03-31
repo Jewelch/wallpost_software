@@ -7,7 +7,7 @@ class PurchaseBillApprovalBillItem extends JSONInitializable{
 
   late String _id;
   late String _companyId;
-  late String _supplierName;
+  late String? _supplierName;
   late String _billNumber;
   late String _billDate;
   late String _dueDate;
@@ -21,7 +21,7 @@ class PurchaseBillApprovalBillItem extends JSONInitializable{
     try {
       _id = "${sift.readNumberFromMap(jsonMap, "bill_id")}";
       _companyId="${sift.readNumberFromMap(jsonMap, "company_id")}";
-      _supplierName = sift.readStringFromMap(jsonMap, "supplier_name");
+      _supplierName = sift.readStringFromMapWithDefaultValue(jsonMap, "supplier_name","");
       _billNumber = sift.readStringFromMap(jsonMap, "bill_number");
       _billDate = sift.readStringFromMap(jsonMap, "bill_date");
       _dueDate = sift.readStringFromMap(jsonMap, "due_date");
@@ -47,7 +47,7 @@ class PurchaseBillApprovalBillItem extends JSONInitializable{
 
   String get billNumber => _billNumber;
 
-  String get supplierName => _supplierName;
+  String? get supplierName => _supplierName;
 
   String get id => _id;
 

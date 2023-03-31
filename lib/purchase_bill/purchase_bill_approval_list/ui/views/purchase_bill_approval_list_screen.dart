@@ -16,7 +16,6 @@ import '../../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../../_shared/constants/app_colors.dart';
 import '../../../purchase_bill_approval/ui/views/purchase_bill_rejection_all_alert.dart';
 
-
 class PurchaseBillApprovalListScreen extends StatefulWidget {
   final String companyId;
 
@@ -26,7 +25,8 @@ class PurchaseBillApprovalListScreen extends StatefulWidget {
   State<PurchaseBillApprovalListScreen> createState() => _PurchaseBillApprovalListScreenState();
 }
 
-class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalListScreen> implements PurchaseBillApprovalListView {
+class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalListScreen>
+    implements PurchaseBillApprovalListView {
   late PurchaseBillApprovalListPresenter _listPresenter;
   final ItemNotifier<int> _viewTypeNotifier = ItemNotifier(defaultValue: 0);
   final _scrollController = ScrollController();
@@ -321,7 +321,7 @@ class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalLis
       builder: (_) => PurchaseBillApprovalAllAlert(
         noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
         billIds: _listPresenter.getSelectedItemIds(),
-        companyId:_listPresenter.getItemAtIndex(0).companyId,
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
       ),
     );
 
@@ -336,7 +336,7 @@ class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalLis
       builder: (_) => PurchaseBillRejectionAllAlert(
         noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
         billIds: _listPresenter.getSelectedItemIds(),
-        companyId:_listPresenter.getItemAtIndex(0).companyId,
+        companyId: _listPresenter.getItemAtIndex(0).companyId,
       ),
     );
     if (didReject) _listPresenter.onDidProcessApprovalOrRejection(didReject, _listPresenter.getSelectedItemIds());
@@ -372,7 +372,7 @@ class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalLis
   void _goToPurchaseBillDetailScreen(PurchaseBillApprovalBillItem approval) async {
     var didPerformAction = await ScreenPresenter.present(
       PurchaseBillDetailScreen(
-       companyId: widget.companyId,
+        companyId: widget.companyId,
         billId: approval.id,
         isLaunchingDetailScreenForApproval: true,
       ),
@@ -386,12 +386,6 @@ class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalLis
     _dismiss();
   }
 
-  //MARK: Function to dismiss the screen
-
-  void _dismiss() {
-    Navigator.pop(context, _listPresenter.numberOfApprovalsProcessed);
-  }
-
   @override
   void onDidEndMultipleSelection() {
     _viewTypeNotifier.notify(viewTypeList);
@@ -400,5 +394,11 @@ class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalLis
   @override
   void onDidInitiateMultipleSelection() {
     _viewTypeNotifier.notify(viewTypeList);
+  }
+
+  //MARK: Function to dismiss the screen
+
+  void _dismiss() {
+    Navigator.pop(context, _listPresenter.numberOfApprovalsProcessed);
   }
 }

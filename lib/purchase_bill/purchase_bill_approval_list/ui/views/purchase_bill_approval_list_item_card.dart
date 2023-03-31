@@ -67,7 +67,7 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                       children: [
                         Expanded(
                           child: Text(
-                            widget.listPresenter.getSupplierName(widget.approval),
+                            widget.listPresenter.getSupplierName(widget.approval)!,
                             style: TextStyles.titleTextStyleBold,
                           ),
                         ),
@@ -179,7 +179,7 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
       builder: (_) => PurchaseBillApprovalAlert(
         billId: widget.approval.id,
         companyId:widget.approval.companyId,
-          supplierName:widget.approval.supplierName
+          supplierName:widget.approval.supplierName!
       ),
     );
     if (didApprove)
@@ -195,7 +195,7 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
       builder: (_) => PurchaseBillRejectionAlert(
         billId: widget.approval.id,
         companyId:widget.approval.companyId,
-        supplierName: widget.approval.supplierName,
+        supplierName: widget.approval.supplierName!,
       ),
     );
     if (didReject)
