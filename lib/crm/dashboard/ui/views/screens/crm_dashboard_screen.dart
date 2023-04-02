@@ -6,6 +6,7 @@ import 'package:wallpost/crm/dashboard/ui/view_contracts/crm_dashboard_view.dart
 
 import '../../../../../_common_widgets/app_bars/sliver_app_bar_delegate.dart';
 import '../../../../../_common_widgets/filter_views/custom_filter_chip.dart';
+import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
 import '../../presenters/crm_dashboard_presenter.dart';
 import '../loader/crm_dashboard_loader.dart';
@@ -90,6 +91,16 @@ class _State extends State<CrmDashboardScreen> implements CrmDashboardView {
                   sliver: SliverToBoxAdapter(child: CrmDashboardHeaderCard(_presenter)),
                 ),
                 SliverToBoxAdapter(child: SizedBox(height: 24)),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Text(
+                      'Performance:',
+                      style: TextStyles.largeTitleTextStyleBold.copyWith(),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(child: SizedBox(height: 4)),
                 SliverToBoxAdapter(
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 8),
