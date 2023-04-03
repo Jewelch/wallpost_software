@@ -81,7 +81,7 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                             SizedBox(width: 2),
                             Padding(
                               padding: const EdgeInsets.only(top: 1),
-                              child: Text(widget.listPresenter.getCurrency(widget.approval),
+                              child: Text(widget.listPresenter.getCurrency(widget.approval)!,
                                   style: TextStyles.smallLabelTextStyle.copyWith(color: AppColors.textColorBlueGray)),
                             )
                           ],

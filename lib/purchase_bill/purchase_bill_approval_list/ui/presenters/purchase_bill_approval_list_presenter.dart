@@ -184,7 +184,7 @@ class PurchaseBillApprovalListPresenter {
     return approval.dueDate;
   }
 
-  String getCurrency(PurchaseBillApprovalBillItem approval) {
+  String? getCurrency(PurchaseBillApprovalBillItem approval) {
     return approval.currency;
   }
 
