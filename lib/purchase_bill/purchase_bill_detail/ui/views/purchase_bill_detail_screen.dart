@@ -106,12 +106,12 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Items/Services", style: TextStyles.largeTitleTextStyleBold),
+                      Text("Items/Services", style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500,)),
                       Align(
                         alignment: Alignment.centerRight,
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 8),
-                          child: Text("Cost", style: TextStyles.labelTextStyle),
+                          child: Text("Cost", style: TextStyles.labelTextStyle.copyWith(fontWeight: FontWeight.w500)),
                         ),
                       ),
                       ListView.separated(
@@ -130,12 +130,12 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
                     ],
                   )
                 : Container(),
-            Text("Total Summary", style: TextStyles.largeTitleTextStyleBold),
+            Text("Total Summary", style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500,)),
             SizedBox(height: 4),
-            _summaryValue("Sub Total", _presenter.getSubTotal()),
-            _summaryValue("Discount", _presenter.getDiscount()),
-            _summaryValue("Tax", _presenter.getTax()),
-            _summaryValue("Total", _presenter.getTotal())
+            _summaryValue("Sub Total", _presenter.getSubTotal(), AppColors.textColorBlack,AppColors.textColorBlueGray),
+            _summaryValue("Discount", _presenter.getDiscount(),AppColors.red,AppColors.red),
+            _summaryValue("Tax", _presenter.getTax() ,AppColors.textColorBlack,AppColors.textColorBlueGray),
+            _summaryValue("Total", _presenter.getTotal(), AppColors.textColorBlack,AppColors.textColorBlueGray)
           ],
         ),
       ),
@@ -147,8 +147,17 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.screenBackgroundColor2,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+
+          boxShadow: [
+          BoxShadow(
+          color: AppColors.lightGray,
+          blurRadius: 4,
+          spreadRadius: 10,
+          offset: Offset(8, 8)
+      ),
+      ]
       ),
       child: Row(
         children: [
@@ -191,8 +200,8 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
           SizedBox(
             width: 120,
             child: Text(
-              "$label:",
-              style: TextStyles.titleTextStyleBold.copyWith(color: AppColors.textColorGray),
+              label,
+              style: TextStyles.titleTextStyle.copyWith(color: AppColors.textColorBlueGrayLight,fontWeight: FontWeight.w500,fontSize:16.0),
             ),
           ),
           SizedBox(width: 12),
@@ -201,7 +210,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
               value,
               style: valueStyle ??
                   TextStyles.titleTextStyle.copyWith(
-                    color: AppColors.textColorBlack,
+                    color: AppColors.textColorBlack,fontWeight: FontWeight.w500,fontSize:16.0
                   ),
             ),
           )
@@ -210,7 +219,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
     );
   }
 
-  Widget _summaryValue(String label, String? value) {
+  Widget _summaryValue(String label, String? value,Color valueTextColor,Color currencyTextColor) {
     if (value == null || value.isEmpty) return Container();
 
     return Padding(
@@ -220,24 +229,20 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           (label == 'Total')
-              ? Text(label, style: TextStyles.titleTextStyleBold)
-              : Text(label, style: TextStyles.titleTextStyle),
+              ? Text(label, style: TextStyles.titleTextStyleBold.copyWith(fontWeight: FontWeight.w800,fontSize:16.0))
+              : Text(label, style: TextStyles.titleTextStyle.copyWith(color: AppColors.textColorBlueGray,fontWeight: FontWeight.w500,fontSize:16.0)),
           Wrap(
             children: [
-              (label == 'Discount')
-                  ? Text(
+                   Text(
                       value,
-                      style: TextStyles.titleTextStyleBold.copyWith(color: AppColors.red),
-                    )
-                  : Text(
-                      value,
-                      style: TextStyles.titleTextStyleBold.copyWith(color: AppColors.textColorBlack),
+                      style: TextStyles.titleTextStyleBold.copyWith(color:valueTextColor,fontWeight: FontWeight.w800,fontSize:17.0),
                     ),
+
               SizedBox(width: 2),
               Padding(
                 padding: const EdgeInsets.only(top: 1),
                 child: Text(_presenter.getCurrency(),
-                    style: TextStyles.smallLabelTextStyle.copyWith(color: AppColors.textColorBlueGray)),
+                    style: TextStyles.smallLabelTextStyle.copyWith(color: currencyTextColor,fontWeight: FontWeight.w500)),
               )
             ],
           )

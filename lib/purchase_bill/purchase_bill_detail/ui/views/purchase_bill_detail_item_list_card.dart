@@ -25,26 +25,26 @@ class PurchaseBillDetailItemListCard extends StatelessWidget {
             children: [
               Text(
                 billDetailListItem.itemName,
-                style: TextStyles.titleTextStyle,
+                style: TextStyles.titleTextStyle.copyWith(color: AppColors.textColorBlueGray,fontWeight: FontWeight.w500,fontSize:16.0),
               ),
               Wrap(
                 children: [
                   Text(
                     billDetailListItem.total,
-                    style: TextStyles.titleTextStyleBold.copyWith(color: AppColors.textColorBlack),
+                    style: TextStyles.titleTextStyleBold.copyWith(color: AppColors.textColorBlack,fontWeight: FontWeight.w800,fontSize:17.0),
                   ),
                   SizedBox(width: 2),
                   Padding(
                     padding: const EdgeInsets.only(top: 1),
                     child: Text(presenter.getCurrency(),
-                        style: TextStyles.smallLabelTextStyle.copyWith(color: AppColors.textColorBlueGray)),
+                        style: TextStyles.smallLabelTextStyle.copyWith(color: AppColors.textColorBlueGray,fontWeight: FontWeight.w500)),
                   )
                 ],
               ),
             ],
           ),
           SizedBox(height: 8),
-          Text("${billDetailListItem.quantity} x ${billDetailListItem.rate}"),
+          Text("${billDetailListItem.quantity} x ${billDetailListItem.rate}",style: TextStyles.titleTextStyle.copyWith(color: AppColors.textColorBlueGray,fontWeight: FontWeight.w500,fontSize:13.0),),
           SizedBox(height: 4),
           Text(billDetailListItem.description),
         ],

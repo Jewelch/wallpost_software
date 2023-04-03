@@ -66,7 +66,7 @@ class _PurchaseBillApprovalListAppBarState extends State<PurchaseBillApprovalLis
             ),
             Container(
                 margin: EdgeInsets.only(left: 16),
-                child: Text("Purchase Bills", style: TextStyles.largeTitleTextStyleBold)),
+                child: Text("Purchase Bills", style: TextStyles.extraLargeTitleTextStyleBold)),
             SizedBox(height: 8)
           ],
         ),
@@ -136,7 +136,7 @@ class _PurchaseBillApprovalListAppBarState extends State<PurchaseBillApprovalLis
             ),
             Container(
                 margin: EdgeInsets.only(left: 16),
-                child: Text("Purchase Bills", style: TextStyles.largeTitleTextStyleBold)),
+                child: Text("Purchase Bills", style: TextStyles.extraLargeTitleTextStyleBold)),
             SizedBox(height: 8)
           ],
         ),

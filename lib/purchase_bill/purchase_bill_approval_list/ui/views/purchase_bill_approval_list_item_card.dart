@@ -68,7 +68,7 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                         Expanded(
                           child: Text(
                             widget.listPresenter.getSupplierName(widget.approval)!,
-                            style: TextStyles.titleTextStyleBold,
+                            style: TextStyles.titleTextStyleBold.copyWith(color: AppColors.textColorBlueGray),
                           ),
                         ),
                         SizedBox(width: 16),
@@ -76,7 +76,7 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                           children: [
                             Text(
                               widget.listPresenter.getTotalAmount(widget.approval),
-                              style: TextStyles.titleTextStyleBold,
+                              style: TextStyles.largeTitleTextStyleBold,
                             ),
                             SizedBox(width: 2),
                             Padding(
@@ -105,12 +105,12 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                         ),
                         Icon(
                           Icons.arrow_forward_ios_sharp,
-                          color: AppColors.textColorBlack,
+                          color: AppColors.defaultColor,
                           size: 16,
                         ),
                       ],
                     ),
-                    if (!widget.listPresenter.isSelectionInProgress) SizedBox(height: 20),
+                    if (!widget.listPresenter.isSelectionInProgress) SizedBox(height: 8),
                     if (!widget.listPresenter.isSelectionInProgress)
                       ItemNotifiable<bool>(
                         notifier: _loadingNotifier,
@@ -120,9 +120,10 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                               Expanded(
                                 child: RoundedRectangleActionButton(
                                   title: "Approve",
-                                  backgroundColor: AppColors.green,
-                                  height: 44,
-                                  borderRadiusCircular: 16,
+                                  backgroundColor: AppColors.lightGreen,
+                                  textColor: AppColors.green,
+                                  height: 40,
+                                  borderRadiusCircular: 14,
                                   onPressed: () => _approve(),
                                   showLoader: isLoading,
                                 ),
@@ -131,9 +132,10 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                               Expanded(
                                 child: RoundedRectangleActionButton(
                                   title: "Reject",
-                                  backgroundColor: AppColors.red,
-                                  height: 44,
-                                  borderRadiusCircular: 16,
+                                  backgroundColor: AppColors.lightRed,
+                                  textColor: AppColors.red,
+                                  height: 40,
+                                  borderRadiusCircular: 14,
                                   onPressed: () => _reject(),
                                   disabled: isLoading ? true : false,
                                 ),
@@ -157,7 +159,7 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
       children: [
         Text(
           label,
-          style: TextStyles.labelTextStyleBold.copyWith(color: AppColors.textColorGray),
+          style: TextStyles.labelTextStyleBold.copyWith(color: AppColors.textColorBlueGrayLight),
           overflow: TextOverflow.ellipsis,
         ),
         Text(

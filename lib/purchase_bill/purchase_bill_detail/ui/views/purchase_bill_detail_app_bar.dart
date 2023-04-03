@@ -44,7 +44,7 @@ class PurchaseBillDetailAppBar extends StatelessWidget {
           ),
           Container(
               margin: EdgeInsets.only(left: 16),
-              child: Text(supplierName, style: TextStyles.largeTitleTextStyleBold)),
+              child: Text(supplierName, style: TextStyles.extraLargeTitleTextStyleBold)),
           SizedBox(height: 8)
         ],
       ),
