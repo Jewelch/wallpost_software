@@ -140,7 +140,7 @@ class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalLis
       child: Column(
         children: [
           PurchaseBillApprovalListAppBar(
-            selectedCompanyName: "",
+            selectedCompanyName:_listPresenter.getCompanyName(),
             noOfSelectedItems: _listPresenter.getCountOfSelectedItems(),
             isAllItemAreSelected: _listPresenter.areAllItemsSelected(),
             isMultipleSelectionInProgress: _listPresenter.isSelectionInProgress,

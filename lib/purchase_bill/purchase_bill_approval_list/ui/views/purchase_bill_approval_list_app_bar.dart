@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 
@@ -90,6 +91,37 @@ class _PurchaseBillApprovalListAppBarState extends State<PurchaseBillApprovalLis
                   backgroundColor: Colors.white,
                   onPressed: widget.onBackButtonPress,
                 ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: Navigator.of(context).pop,
+                    child: Container(
+                      height: 40,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              child: Text(
+                                widget.selectedCompanyName,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyles.largeTitleTextStyleBold
+                                    .copyWith(color: AppColors.defaultColor, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            // SizedBox(width: 8),
+                            // SvgPicture.asset(
+                            //   "assets/icons/arrow_down_icon.svg",
+                            //   color: AppColors.defaultColor,
+                            //   width: 16,
+                            //   height: 16,
+                            // ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 IconButton(
                   onPressed: widget.onInitiateMultipleSelectionButtonPressed,
                   icon: Icon(
@@ -99,37 +131,7 @@ class _PurchaseBillApprovalListAppBarState extends State<PurchaseBillApprovalLis
                   ),
                 ),
                 // SizedBox(width: 24),
-                // Expanded(
-                //   child: GestureDetector(
-                //     onTap: Navigator.of(context).pop,
-                //     child: Container(
-                //       height: 40,
-                //       child: Center(
-                //         child: Row(
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           children: [
-                //             Container(
-                //               child: Text(
-                //                 widget.selectedCompanyName,
-                //                 overflow: TextOverflow.ellipsis,
-                //                 textAlign: TextAlign.center,
-                //                 style: TextStyles.largeTitleTextStyleBold
-                //                     .copyWith(color: AppColors.defaultColor, fontWeight: FontWeight.w500),
-                //               ),
-                //             ),
-                //             SizedBox(width: 8),
-                //             SvgPicture.asset(
-                //               "assets/icons/arrow_down_icon.svg",
-                //               color: AppColors.defaultColor,
-                //               width: 16,
-                //               height: 16,
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
+
               ],
             ),
             Container(

@@ -1,3 +1,4 @@
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/entities/purchase_bill_approval_list_item.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/services/purchase_bill_approval_list_provider.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/ui/models/purchase_bill_approval_list_item_view_type.dart';
@@ -5,24 +6,32 @@ import 'package:wallpost/purchase_bill/purchase_bill_approval_list/ui/view_contr
 
 import '../../../../_shared/exceptions/wp_exception.dart';
 
-class PurchaseBillApprovalListPresenter{
+class PurchaseBillApprovalListPresenter {
   final PurchaseBillApprovalListView _view;
   final PurchaseBillApprovalListProvider _approvalListProvider;
   final List<PurchaseBillApprovalBillItem> _approvalItems = [];
   final List<PurchaseBillApprovalBillItem> _selectedItems = [];
+  final SelectedCompanyProvider _selectedCompanyProvider;
   String _errorMessage = "";
   final String _noItemsMessage = "There are no approvals to show.\n\nTap here to reload.";
   int _numberOfApprovalsProcessed = 0;
   var _isSelectionInProgress = false;
 
   PurchaseBillApprovalListPresenter(String companyId, this._view)
-      : _approvalListProvider = PurchaseBillApprovalListProvider(companyId);
+      : _approvalListProvider = PurchaseBillApprovalListProvider(companyId),
+        _selectedCompanyProvider = SelectedCompanyProvider();
 
-  PurchaseBillApprovalListPresenter.initWith(this._view, this._approvalListProvider);
+  PurchaseBillApprovalListPresenter.initWith(
+    this._view,
+    this._approvalListProvider,
+    this._selectedCompanyProvider,
+  );
 
 //MARK: Functions to load data
 
   Future<void> getNext() async {
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+    print(_selectedCompanyProvider.isCompanySelected());
     if (_approvalListProvider.isLoading) return;
     _isFirstLoad() ? _view.showLoader() : _view.updateList();
     _resetErrors();
@@ -153,7 +162,6 @@ class PurchaseBillApprovalListPresenter{
     }
   }
 
-
   //MARK: Getters
 
   int getCountOfAllItems() {
@@ -195,4 +203,9 @@ class PurchaseBillApprovalListPresenter{
   String get noItemsMessage => _noItemsMessage;
 
   int get numberOfApprovalsProcessed => _numberOfApprovalsProcessed;
+
+  String getCompanyName() {
+    if (_selectedCompanyProvider.isCompanySelected()) return _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
+    return "";
+  }
 }
