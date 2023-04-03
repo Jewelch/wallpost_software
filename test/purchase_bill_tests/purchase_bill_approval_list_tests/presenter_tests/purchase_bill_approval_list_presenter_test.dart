@@ -2,6 +2,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
+import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/entities/purchase_bill_approval_list_item.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/services/purchase_bill_approval_list_provider.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/ui/models/purchase_bill_approval_list_item_view_type.dart';
@@ -14,10 +15,13 @@ class MockPurchaseBillApprovalListProvider extends Mock implements PurchaseBillA
 
 class MockPurchaseBillApprovalListItem extends Mock implements PurchaseBillApprovalBillItem{}
 
+class MockCompanyProvider extends Mock implements SelectedCompanyProvider{}
+
 void main(){
   var view=MockPurchaseBillApprovalListView();
   var listProvider=MockPurchaseBillApprovalListProvider();
   late PurchaseBillApprovalListPresenter presenter;
+  var selectedCompanyProvider = MockCompanyProvider();
 
   void _verifyNoMoreInteractions() {
     verifyNoMoreInteractions(view);
@@ -31,7 +35,7 @@ void main(){
 
   setUp(() {
     _clearAllInteractions();
-    presenter = PurchaseBillApprovalListPresenter.initWith(view, listProvider);
+    presenter = PurchaseBillApprovalListPresenter.initWith(view, listProvider,selectedCompanyProvider);
   });
 
   //MARK: Tests for loading the list
@@ -612,4 +616,77 @@ void main(){
     expect(presenter.getSelectedItemIds(), []);
     expect(presenter.isSelectionInProgress, false);
   });
+
+  //MARK: Tests for getters
+
+  test("getting supplier name", () {
+    var purchaseBill = MockPurchaseBillApprovalListItem();
+    when(() => purchaseBill.supplierName).thenReturn("supplier1");
+
+    expect(presenter.getSupplierName(purchaseBill), "supplier1");
+  });
+
+  test("getting bill number", () {
+    var purchaseBill = MockPurchaseBillApprovalListItem();
+    when(() => purchaseBill.billNumber).thenReturn("12/2020");
+
+    expect(presenter.getBillNumber(purchaseBill), "12/2020");
+  });
+
+  test("getting bill number", () {
+    var purchaseBill = MockPurchaseBillApprovalListItem();
+    when(() => purchaseBill.billNumber).thenReturn("12/2020");
+
+    expect(presenter.getBillNumber(purchaseBill), "12/2020");
+  });
+
+  test("getting due date", () {
+    var purchaseBill = MockPurchaseBillApprovalListItem();
+    when(() => purchaseBill.dueDate).thenReturn("2021-05-11");
+
+    expect(presenter.getDueDate(purchaseBill), "2021-05-11");
+  });
+
+  test("getting currency", () {
+    var purchaseBill = MockPurchaseBillApprovalListItem();
+    when(() => purchaseBill.currency).thenReturn("INR");
+
+    expect(presenter.getCurrency(purchaseBill), "INR");
+  });
+
+  test("getting total amount", () {
+    var purchaseBill = MockPurchaseBillApprovalListItem();
+    when(() => purchaseBill.amount).thenReturn("300.00");
+
+    expect(presenter.getTotalAmount(purchaseBill), "300.00");
+  });
+
+  test('get count of all items', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+    _clearAllInteractions();
+
+    expect(presenter.getCountOfAllItems(), 3);
+  });
+
+  test('get all ids', () async {
+    //given
+    when(() => listProvider.isLoading).thenReturn(false);
+    var approval1 = MockPurchaseBillApprovalListItem();
+    var approval2 = MockPurchaseBillApprovalListItem();
+    var approval3 = MockPurchaseBillApprovalListItem();
+    when(() => approval1.id).thenReturn("id1");
+    when(() => approval2.id).thenReturn("id2");
+    when(() => approval3.id).thenReturn("id3");
+    when(() => listProvider.getNext()).thenAnswer((_) => Future.value([approval1, approval2, approval3]));
+    await presenter.getNext();
+
+    expect(presenter.getAllIds(), ["id1", "id2", "id3"]);
+  });
+
 }
