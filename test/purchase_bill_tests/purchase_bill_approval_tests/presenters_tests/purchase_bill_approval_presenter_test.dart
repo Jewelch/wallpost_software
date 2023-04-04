@@ -57,6 +57,23 @@ void main() {
     _verifyNoMoreInteractions();
   });
 
+  test('failure to mass approve', () async {
+    //given
+
+    when(() => approver.massApprove(any(), any())).thenAnswer((_) => Future.error(InvalidResponseException()));
+
+    //when
+    await presenter.massApprove("someCompanyId", ["someBillId1","someBillId2"]);
+
+    //then
+    verifyInOrder([
+          () => view.showLoader(),
+          () => approver.massApprove("someCompanyId", ["someBillId1","someBillId2"]),
+          () => view.onDidFailToPerformAction("Approval Failed", InvalidResponseException().userReadableMessage),
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
   test('successfully approving a request', () async {
     //given
     when(() => approver.approve(any(), any())).thenAnswer((_) => Future.value(null));
@@ -70,6 +87,23 @@ void main() {
       () => approver.approve("someCompanyId", "someBillId"),
       () => notificationCenter.updateCount(),
       () => view.onDidPerformActionSuccessfully("someBillId"),
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
+  test('successfully mass approving a request', () async {
+    //given
+    when(() => approver.massApprove(any(), any())).thenAnswer((_) => Future.value(null));
+
+    //when
+    await presenter.massApprove("someCompanyId", ["someBillId1,someBillId2"]);
+
+    //then
+    verifyInOrder([
+          () => view.showLoader(),
+          () => approver.massApprove("someCompanyId", ["someBillId1,someBillId2"]),
+          () => notificationCenter.updateCount(),
+          () => view.onDidPerformActionSuccessfully("someBillId1,someBillId2"),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -103,6 +137,22 @@ void main() {
     _verifyNoMoreInteractions();
   });
 
+  test('notifying invalid rejection reason when mass reject', () async {
+    //given
+    when(() => rejector.massReject(any(), any(), rejectionReason: any(named: "rejectionReason")))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
+
+    //when
+    await presenter.massReject("someCompanyId", ["someBillId1,someBillId2"], "");
+
+    //then
+    expect(presenter.getRejectionReasonError(), "Please enter a valid reason");
+    verifyInOrder([
+          () => view.notifyInvalidRejectionReason("Please enter a valid reason"),
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
   test('failure to reject', () async {
     //given
     when(() => rejector.reject(any(), any(), rejectionReason: any(named: "rejectionReason")))
@@ -116,6 +166,23 @@ void main() {
       () => view.showLoader(),
       () => rejector.reject("someCompanyId", "someBillId", rejectionReason: "some reason"),
       () => view.onDidFailToPerformAction("Rejection Failed", InvalidResponseException().userReadableMessage),
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
+  test('failure to mass reject', () async {
+    //given
+    when(() => rejector.massReject(any(), any(), rejectionReason: any(named: "rejectionReason")))
+        .thenAnswer((_) => Future.error(InvalidResponseException()));
+
+    //when
+    await presenter.massReject("someCompanyId", ["someBillId1","someBillId2"], "some reason");
+
+    //then
+    verifyInOrder([
+          () => view.showLoader(),
+          () => rejector.massReject("someCompanyId", ["someBillId1","someBillId2"], rejectionReason: "some reason"),
+          () => view.onDidFailToPerformAction("Rejection Failed", InvalidResponseException().userReadableMessage),
     ]);
     _verifyNoMoreInteractions();
   });
@@ -134,6 +201,24 @@ void main() {
       () => rejector.reject("someCompanyId", "someBillId", rejectionReason: "some reason"),
       () => notificationCenter.updateCount(),
       () => view.onDidPerformActionSuccessfully("someBillId"),
+    ]);
+    _verifyNoMoreInteractions();
+  });
+
+  test('successfully mass rejecting a request', () async {
+    //given
+    when(() => rejector.massReject(any(), any(), rejectionReason: any(named: "rejectionReason")))
+        .thenAnswer((_) => Future.value(null));
+
+    //when
+    await presenter.massReject("someCompanyId",["someBillId1","someBillId2"], "some reason");
+
+    //then
+    verifyInOrder([
+          () => view.showLoader(),
+          () => rejector.massReject("someCompanyId",["someBillId1","someBillId2"], rejectionReason: "some reason"),
+          () => notificationCenter.updateCount(),
+          () => view.onDidPerformActionSuccessfully("someBillId1,someBillId2"),
     ]);
     _verifyNoMoreInteractions();
   });

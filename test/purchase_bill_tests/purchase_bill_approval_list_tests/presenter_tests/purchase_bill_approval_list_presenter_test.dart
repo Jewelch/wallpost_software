@@ -9,6 +9,8 @@ import 'package:wallpost/purchase_bill/purchase_bill_approval_list/ui/models/pur
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/ui/presenters/purchase_bill_approval_list_presenter.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/ui/view_contracts/purchase_bill_approval_list_view.dart';
 
+import '../../../_mocks/mock_company.dart';
+
 class MockPurchaseBillApprovalListView extends Mock implements PurchaseBillApprovalListView{}
 
 class MockPurchaseBillApprovalListProvider extends Mock implements PurchaseBillApprovalListProvider{}
@@ -687,6 +689,19 @@ void main(){
     await presenter.getNext();
 
     expect(presenter.getAllIds(), ["id1", "id2", "id3"]);
+  });
+
+  test('getting selected company name', () async {
+    var company = MockCompany();
+
+    when(() => selectedCompanyProvider.isCompanySelected()).thenReturn(false);
+    expect(presenter.getCompanyName(), "");
+
+    when(() => selectedCompanyProvider.isCompanySelected()).thenReturn(true);
+    when(() => selectedCompanyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
+    when(() => company.name).thenReturn("company name");
+
+    expect(presenter.getCompanyName(), "company name");
   });
 
 }
