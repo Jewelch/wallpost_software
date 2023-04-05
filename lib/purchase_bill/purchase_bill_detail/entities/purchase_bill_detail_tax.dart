@@ -14,7 +14,7 @@ class PurchaseBillDetailTax extends JSONInitializable {
       _type = sift.readStringFromMap(jsonMap, "type");
 
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast purchase bill approval response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast tax details response. Error message - ${e.errorMessage}');
     }
   }
 

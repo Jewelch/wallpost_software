@@ -1,5 +1,5 @@
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
-import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail_data.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail_item.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/services/purchase_bill_detail_provider.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/view_contracts/purchase_bill_detail_view.dart';

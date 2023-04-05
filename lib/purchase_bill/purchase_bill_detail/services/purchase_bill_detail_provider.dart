@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/constants/purchase_bill_detail_urls.dart';
-import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail_data.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail.dart';
 
 
 class PurchaseBillDetailProvider {

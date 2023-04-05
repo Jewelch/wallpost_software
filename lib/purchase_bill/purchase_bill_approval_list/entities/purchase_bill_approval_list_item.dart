@@ -35,23 +35,24 @@ class PurchaseBillApprovalListItem extends JSONInitializable{
     }
   }
 
-  String get paymentStatus => _paymentStatus;
+  String get id => _id;
 
-  String get decisionStatus => _decisionStatus;
+  String get companyId => _companyId;
 
-  String get amount => _amount;
+  String? get supplierName => _supplierName;
+
+  String get billNumber => _billNumber;
 
   String get dueDate => _dueDate;
 
   String get billDate => _billDate;
 
-  String get billNumber => _billNumber;
-
-  String? get supplierName => _supplierName;
-
-  String get id => _id;
+  String get amount => _amount;
 
   String? get currency => _currency;
 
-  String get companyId => _companyId;
+  String get paymentStatus => _paymentStatus;
+
+  String get decisionStatus => _decisionStatus;
+
 }

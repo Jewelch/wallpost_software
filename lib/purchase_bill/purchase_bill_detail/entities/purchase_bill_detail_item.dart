@@ -20,17 +20,17 @@ class PurchaseBillDetailItem extends JSONInitializable {
       _total = sift.readStringFromMap(jsonMap, "amount");
       _description=sift.readStringFromMapWithDefaultValue(jsonMap, 'description')!;
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast purchase bill response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast bill detail list item response. Error message - ${e.errorMessage}');
     }
   }
 
-  String get total => _total;
-
-  String get rate => _rate;
+  String get itemName => _itemName;
 
   String get quantity => _quantity;
 
-  String get itemName => _itemName;
+  String get rate => _rate;
+
+  String get total => _total;
 
   String get description => _description;
 

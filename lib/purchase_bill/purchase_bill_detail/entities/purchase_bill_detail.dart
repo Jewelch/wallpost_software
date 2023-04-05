@@ -27,21 +27,18 @@ class PurchaseBillDetail extends JSONInitializable {
       _billNumber = sift.readStringFromMap(jsonMap, "bill_no");
       _dueDate = sift.readStringFromMap(jsonMap, "due_date");
       _currency = sift.readStringFromMap(jsonMap, "currency");
-
       var billItemMapArray = sift.readMapListFromMap(jsonMap, 'items');
       _billDetailItem = _getPurchaseBillItemList(billItemMapArray);
-
       var summaryMap = sift.readMapFromMap(jsonMap, 'summary');
       _itemsTotal = sift.readStringFromMap(summaryMap, 'items_total');
       _subTotal = sift.readStringFromMap(summaryMap, 'sub_total');
       _grandTotalDiscount = sift.readStringFromMap(summaryMap, 'grandtotal_discount');
       _total = sift.readStringFromMap(summaryMap, 'total');
-
       var taxArray = sift.readMapListFromMap(summaryMap, 'taxes');
       _totalTax = _getTotalTax(taxArray);
 
     } on SiftException catch (e) {
-      throw MappingException('Failed to cast Purchase Bill Approval response. Error message - ${e.errorMessage}');
+      throw MappingException('Failed to cast purchase bill detail response. Error message - ${e.errorMessage}');
     }
   }
 
@@ -64,17 +61,17 @@ class PurchaseBillDetail extends JSONInitializable {
     return tax.toString();
   }
 
-  String get billTo => _billTo;
+  String get id => _id;
 
-  String get dueDate => _dueDate;
+  String get billTo => _billTo;
 
   String get billNumber => _billNumber;
 
-  String get id => _id;
-
-  List<PurchaseBillDetailItem> get billDetailItem => _billDetailItem;
+  String get dueDate => _dueDate;
 
   String get currency => _currency;
+
+  List<PurchaseBillDetailItem> get billDetailItem => _billDetailItem;
 
   String get itemsTotal => _itemsTotal;
 
