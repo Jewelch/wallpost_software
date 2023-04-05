@@ -98,7 +98,7 @@ class _PurchaseBillApprovalAllAlertState extends State<PurchaseBillApprovalAllAl
   void notifyInvalidRejectionReason(String message) {}
 
   @override
-  void onDidPerformActionSuccessfully(String attendanceAdjustmentId) {
+  void onDidPerformActionSuccessfully(String billId) {
     Navigator.pop(context, true);
   }
 

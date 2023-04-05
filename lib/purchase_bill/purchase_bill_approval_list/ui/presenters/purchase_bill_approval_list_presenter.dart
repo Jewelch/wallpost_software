@@ -9,8 +9,8 @@ import '../../../../_shared/exceptions/wp_exception.dart';
 class PurchaseBillApprovalListPresenter {
   final PurchaseBillApprovalListView _view;
   final PurchaseBillApprovalListProvider _approvalListProvider;
-  final List<PurchaseBillApprovalBillItem> _approvalItems = [];
-  final List<PurchaseBillApprovalBillItem> _selectedItems = [];
+  final List<PurchaseBillApprovalListItem> _approvalItems = [];
+  final List<PurchaseBillApprovalListItem> _selectedItems = [];
   final SelectedCompanyProvider _selectedCompanyProvider;
   String _errorMessage = "";
   final String _noItemsMessage = "There are no approvals to show.\n\nTap here to reload.";
@@ -43,7 +43,7 @@ class PurchaseBillApprovalListPresenter {
     }
   }
 
-  void _handleResponse(List<PurchaseBillApprovalBillItem> newListItems) {
+  void _handleResponse(List<PurchaseBillApprovalListItem> newListItems) {
     _approvalItems.addAll(newListItems);
     _updateList();
   }
@@ -76,7 +76,7 @@ class PurchaseBillApprovalListPresenter {
 
   //MARK: Function to show item detail
 
-  void showDetail(PurchaseBillApprovalBillItem approval) {
+  void showDetail(PurchaseBillApprovalListItem approval) {
     _view.showBillDetail(approval);
   }
 
@@ -98,7 +98,7 @@ class PurchaseBillApprovalListPresenter {
     return PurchaseBillApprovalListItemViewType.EmptySpace;
   }
 
-  PurchaseBillApprovalBillItem getItemAtIndex(int index) {
+  PurchaseBillApprovalListItem getItemAtIndex(int index) {
     return _approvalItems[index];
   }
 
@@ -115,7 +115,7 @@ class PurchaseBillApprovalListPresenter {
     _view.onDidEndMultipleSelection();
   }
 
-  void toggleSelection(PurchaseBillApprovalBillItem approvalItem) {
+  void toggleSelection(PurchaseBillApprovalListItem approvalItem) {
     _selectedItems.contains(approvalItem) ? _selectedItems.remove(approvalItem) : _selectedItems.add(approvalItem);
     _view.updateList();
   }
@@ -135,7 +135,7 @@ class PurchaseBillApprovalListPresenter {
     return _selectedItems.length == _approvalItems.length;
   }
 
-  bool isItemSelected(PurchaseBillApprovalBillItem approvalItem) {
+  bool isItemSelected(PurchaseBillApprovalListItem approvalItem) {
     return _selectedItems.contains(approvalItem);
   }
 
@@ -166,23 +166,23 @@ class PurchaseBillApprovalListPresenter {
     return _approvalItems.length;
   }
 
-  String? getSupplierName(PurchaseBillApprovalBillItem approval) {
+  String? getSupplierName(PurchaseBillApprovalListItem approval) {
     return approval.supplierName;
   }
 
-  String getBillNumber(PurchaseBillApprovalBillItem approval) {
+  String getBillNumber(PurchaseBillApprovalListItem approval) {
     return approval.billNumber;
   }
 
-  String getDueDate(PurchaseBillApprovalBillItem approval) {
+  String getDueDate(PurchaseBillApprovalListItem approval) {
     return approval.dueDate;
   }
 
-  String? getCurrency(PurchaseBillApprovalBillItem approval) {
+  String? getCurrency(PurchaseBillApprovalListItem approval) {
     return approval.currency;
   }
 
-  String getTotalAmount(PurchaseBillApprovalBillItem approval) {
+  String getTotalAmount(PurchaseBillApprovalListItem approval) {
     return approval.amount;
   }
 

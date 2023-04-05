@@ -365,11 +365,11 @@ class _PurchaseBillApprovalListScreenState extends State<PurchaseBillApprovalLis
   }
 
   @override
-  void showBillDetail(PurchaseBillApprovalBillItem approval) {
+  void showBillDetail(PurchaseBillApprovalListItem approval) {
     _goToPurchaseBillDetailScreen(approval);
   }
 
-  void _goToPurchaseBillDetailScreen(PurchaseBillApprovalBillItem approval) async {
+  void _goToPurchaseBillDetailScreen(PurchaseBillApprovalListItem approval) async {
     var didPerformAction = await ScreenPresenter.present(
       PurchaseBillDetailScreen(
         companyId: widget.companyId,

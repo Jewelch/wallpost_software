@@ -26,7 +26,7 @@ class PurchaseBillApprovalListProvider {
     isLoading = false;
   }
 
-  Future<List<PurchaseBillApprovalBillItem>> getNext() async {
+  Future<List<PurchaseBillApprovalListItem>> getNext() async {
     var url = PurchaseBillApprovalListUrls.pendingApprovalListUrl(_companyId, _pageNumber, _perPage);
     var apiRequest = APIRequest.withId(url, _sessionId);
     isLoading = true;
@@ -41,8 +41,8 @@ class PurchaseBillApprovalListProvider {
     }
   }
 
-  Future<List<PurchaseBillApprovalBillItem>> _processResponse(APIResponse apiResponse) async {
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<PurchaseBillApprovalBillItem>>().future;
+  Future<List<PurchaseBillApprovalListItem>> _processResponse(APIResponse apiResponse) async {
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<List<PurchaseBillApprovalListItem>>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
@@ -50,11 +50,11 @@ class PurchaseBillApprovalListProvider {
     return _readItemsFromResponse(responseMapList);
   }
 
-  List<PurchaseBillApprovalBillItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
+  List<PurchaseBillApprovalListItem> _readItemsFromResponse(List<Map<String, dynamic>> responseMapList) {
     try {
-      var approvalList = <PurchaseBillApprovalBillItem>[];
+      var approvalList = <PurchaseBillApprovalListItem>[];
       for (var responseMap in responseMapList) {
-        var approval = PurchaseBillApprovalBillItem.fromJson(responseMap);
+        var approval = PurchaseBillApprovalListItem.fromJson(responseMap);
         approvalList.add(approval);
       }
       _updatePaginationRelatedData(approvalList.length);

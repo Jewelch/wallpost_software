@@ -9,7 +9,7 @@ abstract class PurchaseBillApprovalListView{
 
   void updateList();
 
-  void showBillDetail(PurchaseBillApprovalBillItem approvalBillItem);
+  void showBillDetail(PurchaseBillApprovalListItem approvalListItem);
 
   void onDidInitiateMultipleSelection();
 

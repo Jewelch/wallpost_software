@@ -3,7 +3,7 @@ import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart
 
 import '../../../_shared/exceptions/mapping_exception.dart';
 
-class PurchaseBillApprovalBillItem extends JSONInitializable{
+class PurchaseBillApprovalListItem extends JSONInitializable{
 
   late String _id;
   late String _companyId;
@@ -16,7 +16,7 @@ class PurchaseBillApprovalBillItem extends JSONInitializable{
   late String _decisionStatus;
   late String _paymentStatus;
 
-  PurchaseBillApprovalBillItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
+  PurchaseBillApprovalListItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
       _id = "${sift.readNumberFromMap(jsonMap, "bill_id")}";

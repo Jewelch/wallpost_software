@@ -10,7 +10,7 @@ import '../../../../_common_widgets/buttons/rounded_action_button.dart';
 
 class PurchaseBillApprovalListItemCard extends StatefulWidget {
   final PurchaseBillApprovalListPresenter listPresenter;
-  final PurchaseBillApprovalBillItem approval;
+  final PurchaseBillApprovalListItem approval;
 
   PurchaseBillApprovalListItemCard({
     required this.listPresenter,

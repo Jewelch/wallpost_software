@@ -15,7 +15,7 @@ class MockPurchaseBillApprovalListView extends Mock implements PurchaseBillAppro
 
 class MockPurchaseBillApprovalListProvider extends Mock implements PurchaseBillApprovalListProvider{}
 
-class MockPurchaseBillApprovalListItem extends Mock implements PurchaseBillApprovalBillItem{}
+class MockPurchaseBillApprovalListItem extends Mock implements PurchaseBillApprovalListItem{}
 
 class MockCompanyProvider extends Mock implements SelectedCompanyProvider{}
 
