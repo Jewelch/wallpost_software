@@ -52,16 +52,8 @@ class _PurchaseBillApprovalListAppBarState extends State<PurchaseBillApprovalLis
                 TextButton(onPressed: widget.onEndMultipleSelectionButtonPressed, child: Text("Cancel")),
                 if (widget.noOfSelectedItems > 0) Text("${widget.noOfSelectedItems} Selected"),
                 widget.isAllItemAreSelected
-                    ? TextButton(
-                        onPressed: () {
-                          widget.onUnselectAllButtonPress();
-                        },
-                        child: Text("Unselect All"))
-                    : TextButton(
-                        onPressed: () {
-                          widget.onSelectAllButtonPress();
-                        },
-                        child: Text("Select All"))
+                    ? TextButton(onPressed: () => widget.onUnselectAllButtonPress(), child: Text("Unselect All"))
+                    : TextButton(onPressed: () => widget.onSelectAllButtonPress(), child: Text("Select All"))
               ],
             ),
             Container(
@@ -91,37 +83,38 @@ class _PurchaseBillApprovalListAppBarState extends State<PurchaseBillApprovalLis
                   backgroundColor: Colors.white,
                   onPressed: widget.onBackButtonPress,
                 ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: Navigator.of(context).pop,
-                    child: Container(
-                      height: 40,
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              child: Text(
-                                widget.selectedCompanyName,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: TextStyles.largeTitleTextStyleBold
-                                    .copyWith(color: AppColors.defaultColor, fontWeight: FontWeight.w500),
+                if (widget.selectedCompanyName != "")
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: Navigator.of(context).pop,
+                      child: Container(
+                        height: 40,
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                child: Text(
+                                  widget.selectedCompanyName,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyles.largeTitleTextStyleBold
+                                      .copyWith(color: AppColors.defaultColor, fontWeight: FontWeight.w500),
+                                ),
                               ),
-                            ),
-                            // SizedBox(width: 8),
-                            // SvgPicture.asset(
-                            //   "assets/icons/arrow_down_icon.svg",
-                            //   color: AppColors.defaultColor,
-                            //   width: 16,
-                            //   height: 16,
-                            // ),
-                          ],
+                              SizedBox(width: 8),
+                              SvgPicture.asset(
+                                "assets/icons/arrow_down_icon.svg",
+                                width: 16,
+                                height: 16,
+                                color: AppColors.defaultColor,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
                 IconButton(
                   onPressed: widget.onInitiateMultipleSelectionButtonPressed,
                   icon: Icon(
@@ -129,9 +122,8 @@ class _PurchaseBillApprovalListAppBarState extends State<PurchaseBillApprovalLis
                     size: 22,
                     color: AppColors.defaultColor,
                   ),
-                ),
+                )
                 // SizedBox(width: 24),
-
               ],
             ),
             Container(

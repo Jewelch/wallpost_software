@@ -4,6 +4,7 @@ import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval/ui/views/purchase_bill_approval_alert.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_approval/ui/views/purchase_bill_rejection_alert.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/presenters/purchase_bill_detail_presenter.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/view_contracts/purchase_bill_detail_view.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/views/purchase_bill_detail_app_bar.dart';
@@ -291,7 +292,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
   void _reject(String companyId, String billId, String billTo) async {
     var didReject = await showDialog(
       context: context,
-      builder: (_) => PurchaseBillApprovalAlert(
+      builder: (_) => PurchaseBillRejectionAlert(
         billId: billId,
         companyId: companyId,
         supplierName: billTo,
