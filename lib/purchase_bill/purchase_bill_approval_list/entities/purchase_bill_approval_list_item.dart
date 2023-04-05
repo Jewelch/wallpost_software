@@ -9,8 +9,8 @@ class PurchaseBillApprovalListItem extends JSONInitializable{
   late String _companyId;
   late String? _supplierName;
   late String _billNumber;
-  late String _billDate;
-  late String _dueDate;
+  late DateTime _billDate;
+  late DateTime _dueDate;
   late String _amount;
   late String? _currency;
   late String _decisionStatus;
@@ -23,8 +23,8 @@ class PurchaseBillApprovalListItem extends JSONInitializable{
       _companyId="${sift.readNumberFromMap(jsonMap, "company_id")}";
       _supplierName = sift.readStringFromMapWithDefaultValue(jsonMap, "supplier_name","");
       _billNumber = sift.readStringFromMap(jsonMap, "bill_number");
-      _billDate = sift.readStringFromMap(jsonMap, "bill_date");
-      _dueDate = sift.readStringFromMap(jsonMap, "due_date");
+      _billDate = sift.readDateFromMap(jsonMap, "bill_date", "yyyy-MM-dd");
+      _dueDate = sift.readDateFromMap(jsonMap, "due_date", "yyyy-MM-dd");
       _amount ="${sift.readNumberFromMap(jsonMap, "amount")}";
       _currency = sift.readStringFromMapWithDefaultValue(jsonMap, "currency","");
       _decisionStatus = sift.readStringFromMap(jsonMap, "decision_status");
@@ -43,9 +43,9 @@ class PurchaseBillApprovalListItem extends JSONInitializable{
 
   String get billNumber => _billNumber;
 
-  String get dueDate => _dueDate;
+  DateTime get dueDate => _dueDate;
 
-  String get billDate => _billDate;
+  DateTime get billDate => _billDate;
 
   String get amount => _amount;
 

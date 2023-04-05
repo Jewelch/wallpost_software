@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/entities/purchase_bill_approval_list_item.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_approval_list/services/purchase_bill_approval_list_provider.dart';
@@ -175,7 +176,7 @@ class PurchaseBillApprovalListPresenter {
   }
 
   String getDueDate(PurchaseBillApprovalListItem approval) {
-    return approval.dueDate;
+    return DateFormat("dd-MMM-yyyy").format(approval.dueDate);
   }
 
   String? getCurrency(PurchaseBillApprovalListItem approval) {

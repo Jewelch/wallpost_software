@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail_item.dart';
@@ -63,7 +64,7 @@ class PurchaseBillDetailPresenter {
   }
 
   String getDueDate() {
-    return _billDetailData.dueDate;
+    return DateFormat("dd-MMM-yyyy").format(_billDetailData.dueDate);
   }
 
   String getCurrency() {

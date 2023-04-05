@@ -165,10 +165,10 @@ void main() {
     var billDetail = MockPurchaseBillDetail();
     when(() => detailProvider.isLoading).thenReturn(false);
     when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(billDetail));
-    when(() => billDetail.dueDate).thenReturn("2022-11-02");
+    when(() => billDetail.dueDate).thenReturn(DateTime(2022, 08, 20));
     await presenter.loadDetail();
 
-    expect(presenter.getDueDate(), "2022-11-02");
+    expect(presenter.getDueDate(), "20-Aug-2022");
   });
 
   test('get currency', () async {

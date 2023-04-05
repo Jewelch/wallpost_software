@@ -644,9 +644,9 @@ void main(){
 
   test("getting due date", () {
     var purchaseBill = MockPurchaseBillApprovalListItem();
-    when(() => purchaseBill.dueDate).thenReturn("2021-05-11");
+    when(() => purchaseBill.dueDate).thenReturn(DateTime(2022, 08, 20));
 
-    expect(presenter.getDueDate(purchaseBill), "2021-05-11");
+    expect(presenter.getDueDate(purchaseBill), "20-Aug-2022");
   });
 
   test("getting currency", () {
