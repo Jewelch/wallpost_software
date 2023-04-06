@@ -12,7 +12,6 @@ class PurchaseBillDetailTax extends JSONInitializable {
     try {
       _amount = "${sift.readNumberFromMap(jsonMap, "amount")}";
       _type = sift.readStringFromMap(jsonMap, "type");
-
     } on SiftException catch (e) {
       throw MappingException('Failed to cast tax details response. Error message - ${e.errorMessage}');
     }

@@ -3,8 +3,7 @@ import 'package:wallpost/_shared/json_serialization_base/json_initializable.dart
 
 import '../../../_shared/exceptions/mapping_exception.dart';
 
-class PurchaseBillApprovalListItem extends JSONInitializable{
-
+class PurchaseBillApprovalListItem extends JSONInitializable {
   late String _id;
   late String _companyId;
   late String? _supplierName;
@@ -20,16 +19,15 @@ class PurchaseBillApprovalListItem extends JSONInitializable{
     var sift = Sift();
     try {
       _id = "${sift.readNumberFromMap(jsonMap, "bill_id")}";
-      _companyId="${sift.readNumberFromMap(jsonMap, "company_id")}";
-      _supplierName = sift.readStringFromMapWithDefaultValue(jsonMap, "supplier_name","");
+      _companyId = "${sift.readNumberFromMap(jsonMap, "company_id")}";
+      _supplierName = sift.readStringFromMapWithDefaultValue(jsonMap, "supplier_name", "");
       _billNumber = sift.readStringFromMap(jsonMap, "bill_number");
       _billDate = sift.readDateFromMap(jsonMap, "bill_date", "yyyy-MM-dd");
       _dueDate = sift.readDateFromMap(jsonMap, "due_date", "yyyy-MM-dd");
-      _amount ="${sift.readNumberFromMap(jsonMap, "amount")}";
-      _currency = sift.readStringFromMapWithDefaultValue(jsonMap, "currency","");
+      _amount = "${sift.readNumberFromMap(jsonMap, "amount")}";
+      _currency = sift.readStringFromMapWithDefaultValue(jsonMap, "currency", "");
       _decisionStatus = sift.readStringFromMap(jsonMap, "decision_status");
       _paymentStatus = sift.readStringFromMap(jsonMap, "payment_status");
-
     } on SiftException catch (e) {
       throw MappingException('Failed to cast Purchase Bill Approval response. Error message - ${e.errorMessage}');
     }
@@ -54,5 +52,4 @@ class PurchaseBillApprovalListItem extends JSONInitializable{
   String get paymentStatus => _paymentStatus;
 
   String get decisionStatus => _decisionStatus;
-
 }

@@ -24,6 +24,4 @@ class PurchaseBillDetailExpenses extends JSONInitializable {
   String get amount => _amount;
 
   String get description => _description;
-
-
 }

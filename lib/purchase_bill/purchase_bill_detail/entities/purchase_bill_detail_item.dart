@@ -10,7 +10,6 @@ class PurchaseBillDetailItem extends JSONInitializable {
   late String _total;
   late String _description;
 
-
   PurchaseBillDetailItem.fromJson(Map<String, dynamic> jsonMap) : super.fromJson(jsonMap) {
     var sift = Sift();
     try {
@@ -18,7 +17,7 @@ class PurchaseBillDetailItem extends JSONInitializable {
       _quantity = sift.readStringFromMap(jsonMap, "quantity");
       _rate = "${sift.readNumberFromMap(jsonMap, "price")}";
       _total = sift.readStringFromMap(jsonMap, "amount");
-      _description=sift.readStringFromMapWithDefaultValue(jsonMap, 'description')!;
+      _description = sift.readStringFromMapWithDefaultValue(jsonMap, 'description')!;
     } on SiftException catch (e) {
       throw MappingException('Failed to cast bill detail list item response. Error message - ${e.errorMessage}');
     }
@@ -33,5 +32,4 @@ class PurchaseBillDetailItem extends JSONInitializable {
   String get total => _total;
 
   String get description => _description;
-
 }

@@ -200,7 +200,8 @@ class PurchaseBillApprovalListPresenter {
   int get numberOfApprovalsProcessed => _numberOfApprovalsProcessed;
 
   String getCompanyName() {
-    if (_selectedCompanyProvider.isCompanySelected()) return _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
+    if (_selectedCompanyProvider.isCompanySelected())
+      return _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
     return "";
   }
 }

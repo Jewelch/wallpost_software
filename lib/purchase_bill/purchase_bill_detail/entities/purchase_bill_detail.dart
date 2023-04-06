@@ -42,7 +42,6 @@ class PurchaseBillDetail extends JSONInitializable {
       _total = sift.readStringFromMap(summaryMap, 'total');
       var taxArray = sift.readMapListFromMap(summaryMap, 'taxes');
       _totalTax = _getTotalTax(taxArray);
-
     } on SiftException catch (e) {
       throw MappingException('Failed to cast purchase bill detail response. Error message - ${e.errorMessage}');
     }
