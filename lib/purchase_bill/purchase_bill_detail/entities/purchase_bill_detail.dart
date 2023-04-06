@@ -16,7 +16,6 @@ class PurchaseBillDetail extends JSONInitializable {
   late List<PurchaseBillDetailExpenses> _billDetailExpensesItem;
   late String _itemsTotal;
   late String _subTotal;
-  late String _expenseTotal;
   late String _totalDiscount;
   late String _total;
   late String _totalTax;
@@ -39,7 +38,6 @@ class PurchaseBillDetail extends JSONInitializable {
       var summaryMap = sift.readMapFromMap(jsonMap, 'summary');
       _itemsTotal = sift.readStringFromMap(summaryMap, 'items_total');
       _subTotal = sift.readStringFromMap(summaryMap, 'sub_total');
-      _expenseTotal = sift.readStringFromMap(summaryMap, 'expenses_total');
       _totalDiscount = sift.readStringFromMap(summaryMap, 'total_discount');
       _total = sift.readStringFromMap(summaryMap, 'total');
       var taxArray = sift.readMapListFromMap(summaryMap, 'taxes');
@@ -93,8 +91,6 @@ class PurchaseBillDetail extends JSONInitializable {
   List<PurchaseBillDetailExpenses> get billDetailExpenseItem => _billDetailExpensesItem;
 
   String get itemsTotal => _itemsTotal;
-
-  String get expenseTotal => _expenseTotal;
 
   String get subTotal => _subTotal;
 
