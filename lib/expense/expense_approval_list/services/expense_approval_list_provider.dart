@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:sift/Sift.dart';
+import 'package:sift/sift.dart';
 import 'package:wallpost/expense/expense_approval_list/entities/expense_approval_list_item.dart';
 
 import '../../../_shared/exceptions/wrong_response_format_exception.dart';

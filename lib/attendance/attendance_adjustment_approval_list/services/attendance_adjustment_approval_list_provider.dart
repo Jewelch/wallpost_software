@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:sift/Sift.dart';
+import 'package:sift/sift.dart';
 
 import '../../../_shared/exceptions/wrong_response_format_exception.dart';
 import '../../../_wp_core/wpapi/services/wp_api.dart';

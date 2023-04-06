@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/view_contracts/module_performance_view.dart';
-import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
 
+import '../../../../_common_widgets/screen_presenter/screen_presenter.dart';
+import '../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../_shared/constants/app_colors.dart';
+import '../../../../restaurant_and_retail/dashboard/ui/views/screens/dashboard_screen.dart';
 import '../models/owner_dashboard_filters.dart';
 import '../models/performance_value.dart';
 import '../presenters/retail_performance_presenter.dart';
+import '../view_contracts/module_performance_view.dart';
 import 'module_loader.dart';
+import 'performance_view_holder.dart';
 
 class RetailPerformanceView extends StatefulWidget {
   final OwnerDashboardFilters _filters;
@@ -83,24 +85,33 @@ class RetailPerformanceViewState extends State<RetailPerformanceView>
   }
 
   Widget _dataView() {
-    return Row(
-      children: [
-        Expanded(
-          child: PerformanceViewHolder(
-            content: _tile(_presenter.getTodaysSale()),
-            backgroundColor: AppColors.lightGreen,
-            showShadow: false,
+    return InkWell(
+      onTap: () {
+        ScreenPresenter.present(
+          DashboardScreen(dashboardContext: DashboardContext.retail),
+          context,
+          slideDirection: SlideDirection.fromBottom,
+        );
+      },
+      child: Row(
+        children: [
+          Expanded(
+            child: PerformanceViewHolder(
+              content: _tile(_presenter.getTodaysSale()),
+              backgroundColor: AppColors.lightGreen,
+              showShadow: false,
+            ),
           ),
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: PerformanceViewHolder(
-            content: _tile(_presenter.getYTDSale()),
-            backgroundColor: AppColors.lightYellow,
-            showShadow: false,
+          SizedBox(width: 8),
+          Expanded(
+            child: PerformanceViewHolder(
+              content: _tile(_presenter.getYTDSale()),
+              backgroundColor: AppColors.lightYellow,
+              showShadow: false,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

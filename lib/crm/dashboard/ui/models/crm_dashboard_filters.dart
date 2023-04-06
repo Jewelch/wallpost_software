@@ -12,9 +12,9 @@ enum PerformanceType {
 
   String toReadableString() {
     if (this == PerformanceType.staffPerformance) {
-      return "Staff Performance";
+      return "Staff";
     } else {
-      return "Service Performance";
+      return "Service";
     }
   }
 }

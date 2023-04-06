@@ -149,11 +149,15 @@ class CrmDashboardPresenter {
   }
 
   PerformanceValue getSalesGrowth() {
+    var performancePercent = int.parse(_dashboardData.salesGrowthPercentage);
+    Color textColor = PerformanceCalculator().getColorForPerformance(performancePercent);
+    Color backgroundColor = PerformanceCalculator().getBackgroundColorForPerformance(performancePercent);
+
     return PerformanceValue(
       label: "Sales Growth",
       value: "${_dashboardData.salesGrowthPercentage}%",
-      textColor: AppColors.brightGreen,
-      backgroundColor: AppColors.lightGreen,
+      textColor: textColor,
+      backgroundColor: backgroundColor,
     );
   }
 

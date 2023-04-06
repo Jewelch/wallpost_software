@@ -165,7 +165,7 @@ void main() {
     when(() => data.targetAchievedPercentage).thenReturn("20");
     when(() => data.inPipeline).thenReturn("30");
     when(() => data.leadConversionPercentage).thenReturn("70");
-    when(() => data.salesGrowthPercentage).thenReturn("80");
+    when(() => data.salesGrowthPercentage).thenReturn("30");
 
     when(() => dataProvider.isLoading).thenReturn(false);
     when(() => dataProvider.get(month: any(named: "month"), year: any(named: "year")))
@@ -193,9 +193,9 @@ void main() {
     expect(presenter.getLeadConversion().backgroundColor, AppColors.lightYellow);
 
     expect(presenter.getSalesGrowth().label, "Sales Growth");
-    expect(presenter.getSalesGrowth().value, "80%");
-    expect(presenter.getSalesGrowth().textColor, AppColors.brightGreen);
-    expect(presenter.getSalesGrowth().backgroundColor, AppColors.lightGreen);
+    expect(presenter.getSalesGrowth().value, "30%");
+    expect(presenter.getSalesGrowth().textColor, AppColors.red);
+    expect(presenter.getSalesGrowth().backgroundColor, AppColors.lightRed);
   });
 
   test('getting number of list items and list item tiles', () async {

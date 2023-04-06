@@ -162,7 +162,7 @@ void main() {
     expect(presenter.selectedYear, 2022);
     verifyInOrder([
       () => view.showLoader(),
-      () => dataProvider.get(month: null, year: 2022),
+      () => dataProvider.get(month: 0, year: 2022),
       () => view.onDidLoadData(),
     ]);
     _verifyNoMoreInteractionsOnAllMocks();
