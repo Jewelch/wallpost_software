@@ -5,6 +5,8 @@ import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bi
 import 'package:wallpost/purchase_bill/purchase_bill_detail/services/purchase_bill_detail_provider.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/view_contracts/purchase_bill_detail_view.dart';
 
+import '../../entities/purchase_bill_detail_expenses.dart';
+
 class PurchaseBillDetailPresenter {
   final String _companyId;
   final String _billId;
@@ -76,7 +78,7 @@ class PurchaseBillDetailPresenter {
   }
 
   String getDiscount() {
-    return _billDetailData.grandTotalDiscount;
+    return _billDetailData.totalDiscount;
   }
 
   String getTax() {
@@ -93,8 +95,16 @@ class PurchaseBillDetailPresenter {
     return _billDetailData.billDetailItem.length;
   }
 
+  int getNumberOfExpensesListItems() {
+    return _billDetailData.billDetailExpenseItem.length;
+  }
+
   PurchaseBillDetailItem getItemAtIndex(int index) {
     return _billDetailData.billDetailItem[index];
+  }
+
+  PurchaseBillDetailExpenses getExpensesItemAtIndex(int index) {
+    return _billDetailData.billDetailExpenseItem[index];
   }
 
   String? get errorMessage => _errorMessage;

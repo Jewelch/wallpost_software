@@ -191,14 +191,14 @@ void main() {
     expect(presenter.getSubTotal(), "300.00");
   });
 
-  test('get grand total discount', () async {
+  test('get total discount', () async {
     var billDetail = MockPurchaseBillDetail();
     when(() => detailProvider.isLoading).thenReturn(false);
     when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(billDetail));
-    when(() => billDetail.grandTotalDiscount).thenReturn("4");
+    when(() => billDetail.totalDiscount).thenReturn("4.00");
     await presenter.loadDetail();
 
-    expect(presenter.getDiscount(), "4");
+    expect(presenter.getDiscount(), "4.00");
   });
 
   test('get grand total tax', () async {

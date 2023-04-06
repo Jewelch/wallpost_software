@@ -8,6 +8,7 @@ import 'package:wallpost/purchase_bill/purchase_bill_approval/ui/views/purchase_
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/presenters/purchase_bill_detail_presenter.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/view_contracts/purchase_bill_detail_view.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/views/purchase_bill_detail_app_bar.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/views/purchase_bill_detail_expenses_list_card.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/views/purchase_bill_detail_item_list_card.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/views/purchase_bill_detail_loader.dart';
 
@@ -103,11 +104,12 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
             _labelAndValue("Due Date", _presenter.getDueDate()),
             Divider(color: AppColors.appBarShadowColor),
             SizedBox(height: 20),
-            _presenter.getNumberOfListItems() > 0
-                ? Column(
+            if(_presenter.getNumberOfListItems() > 0)
+                 Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Items/Services", style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500,)),
+                      Text("Items/Services",
+                          style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500)),
                       Align(
                         alignment: Alignment.centerRight,
                         child: Padding(
@@ -129,16 +131,102 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
                       Divider(color: AppColors.appBarShadowColor),
                       SizedBox(height: 20),
                     ],
-                  )
-                : Container(),
-            Text("Total Summary", style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500,)),
+                  ),
+
+           if(_presenter.getNumberOfExpensesListItems() > 0)
+                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text("Expenses",
+                        style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500)),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text("Cost", style: TextStyles.labelTextStyle.copyWith(fontWeight: FontWeight.w500)),
+                      ),
+                    ),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Divider(color: AppColors.appBarShadowColor),
+                      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                      itemCount: _presenter.getNumberOfExpensesListItems(),
+                      itemBuilder: (context, index) => PurchaseBillDetailExpensesListCard(
+                        presenter: _presenter,
+                        billDetailExpensesItem: _presenter.getExpensesItemAtIndex(index),
+                      ),
+                    ),
+                    Divider(color: AppColors.appBarShadowColor),
+                    SizedBox(height: 20),
+                  ]),
+            Text("Total Summary",
+                style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500)),
             SizedBox(height: 4),
-            _summaryValue("Sub Total", _presenter.getSubTotal(), AppColors.textColorBlack,AppColors.textColorBlueGray),
-            _summaryValue("Discount", _presenter.getDiscount(),AppColors.red,AppColors.red),
-            _summaryValue("Tax", _presenter.getTax() ,AppColors.textColorBlack,AppColors.textColorBlueGray),
-            _summaryValue("Total", _presenter.getTotal(), AppColors.textColorBlack,AppColors.textColorBlueGray)
+            _summaryValue("Sub Total", _presenter.getSubTotal(), AppColors.textColorBlack, AppColors.textColorBlueGray,""),
+            _summaryValue("Discount", _presenter.getDiscount(), AppColors.red, AppColors.red,"-"),
+            _summaryValue("Tax", _presenter.getTax(), AppColors.textColorBlack, AppColors.textColorBlueGray,"+"),
+            _summaryValue("Total", _presenter.getTotal(), AppColors.textColorBlack, AppColors.textColorBlueGray,"")
           ],
         ),
+      ),
+    );
+  }
+
+
+  Widget _labelAndValue(String label, String? value, {TextStyle? valueStyle}) {
+    if (value == null || value.isEmpty) return Container();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+              width: 120,
+              child: Text(label,
+                  style: TextStyles.titleTextStyle
+                      .copyWith(color: AppColors.textColorBlueGrayLight, fontWeight: FontWeight.w500, fontSize: 16.0))),
+          SizedBox(width: 12),
+          Expanded(
+              child: Text(value,
+                  style: valueStyle ??
+                      TextStyles.titleTextStyle
+                          .copyWith(color: AppColors.textColorBlack, fontWeight: FontWeight.w500, fontSize: 16.0)))
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryValue(String label, String? value, Color valueTextColor, Color currencyTextColor,String symbol) {
+    if (value == null || value.isEmpty) return Container();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          (label == 'Total')
+              ? Text(label, style: TextStyles.titleTextStyleBold.copyWith(fontWeight: FontWeight.w800, fontSize: 16.0))
+              : Text(label,
+                  style: TextStyles.titleTextStyle
+                      .copyWith(color: AppColors.textColorBlueGray, fontWeight: FontWeight.w500, fontSize: 16.0)),
+          Wrap(
+            children: [
+              Text(
+                symbol+value,
+                style: TextStyles.titleTextStyleBold
+                    .copyWith(color: valueTextColor, fontWeight: FontWeight.w800, fontSize: 17.0),
+              ),
+              SizedBox(width: 2),
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: Text(_presenter.getCurrency(),
+                    style:
+                        TextStyles.smallLabelTextStyle.copyWith(color: currencyTextColor, fontWeight: FontWeight.w500)),
+              )
+            ],
+          )
+        ],
       ),
     );
   }
@@ -147,19 +235,9 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
     return Container(
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-
-          boxShadow: [
-          BoxShadow(
-          color: AppColors.lightGray,
-          blurRadius: 4,
-          spreadRadius: 10,
-          offset: Offset(8, 8)
-      ),
-      ]
-      ),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [
+        BoxShadow(color: AppColors.lightGray, blurRadius: 4, spreadRadius: 10, offset: Offset(8, 8)),
+      ]),
       child: Row(
         children: [
           Expanded(
@@ -185,68 +263,6 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
               onPressed: () => {_presenter.initiateRejection()},
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _labelAndValue(String label, String? value, {TextStyle? valueStyle}) {
-    if (value == null || value.isEmpty) return Container();
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: TextStyles.titleTextStyle.copyWith(color: AppColors.textColorBlueGrayLight,fontWeight: FontWeight.w500,fontSize:16.0),
-            ),
-          ),
-          SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              value,
-              style: valueStyle ??
-                  TextStyles.titleTextStyle.copyWith(
-                    color: AppColors.textColorBlack,fontWeight: FontWeight.w500,fontSize:16.0
-                  ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _summaryValue(String label, String? value,Color valueTextColor,Color currencyTextColor) {
-    if (value == null || value.isEmpty) return Container();
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          (label == 'Total')
-              ? Text(label, style: TextStyles.titleTextStyleBold.copyWith(fontWeight: FontWeight.w800,fontSize:16.0))
-              : Text(label, style: TextStyles.titleTextStyle.copyWith(color: AppColors.textColorBlueGray,fontWeight: FontWeight.w500,fontSize:16.0)),
-          Wrap(
-            children: [
-                   Text(
-                      value,
-                      style: TextStyles.titleTextStyleBold.copyWith(color:valueTextColor,fontWeight: FontWeight.w800,fontSize:17.0),
-                    ),
-
-              SizedBox(width: 2),
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: Text(_presenter.getCurrency(),
-                    style: TextStyles.smallLabelTextStyle.copyWith(color: currencyTextColor,fontWeight: FontWeight.w500)),
-              )
-            ],
-          )
         ],
       ),
     );
