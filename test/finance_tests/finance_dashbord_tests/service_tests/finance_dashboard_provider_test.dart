@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/finance/constants/finance_dashboard_urls.dart';
-import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
+import 'package:wallpost/finance/dashboard/constants/finance_dashboard_urls.dart';
+import 'package:wallpost/finance/dashboard/services/finance_dashboard_provider.dart';
 
 import '../../../_mocks/mock_company.dart';
 import '../../../_mocks/mock_company_provider.dart';

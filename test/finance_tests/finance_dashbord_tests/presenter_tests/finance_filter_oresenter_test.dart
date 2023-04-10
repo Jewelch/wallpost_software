@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/finance/ui/presenters/finance_filter_presenter.dart';
+import 'package:wallpost/finance/dashboard/ui/presenters/finance_filter_presenter.dart';
 
 void main() {
   late FinanceFiltersPresenter presenter;

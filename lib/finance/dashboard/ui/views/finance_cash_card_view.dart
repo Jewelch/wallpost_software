@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
+import 'package:wallpost/finance/dashboard/ui/presenters/finance_dashboard_presenter.dart';
 
-import '../../../_common_widgets/text_styles/text_styles.dart';
-import '../../../_shared/constants/app_colors.dart';
-import '../../../_wp_core/company_management/services/selected_company_provider.dart';
+import '../../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../../_shared/constants/app_colors.dart';
+import '../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../models/finance_dashboard_value.dart';
 
 class FinanceCashCardView extends StatelessWidget {

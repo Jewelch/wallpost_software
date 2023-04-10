@@ -1,4 +1,4 @@
-import '../../_shared/constants/base_urls.dart';
+import '../../../_shared/constants/base_urls.dart';
 
 class FinanceDashBoardUrls {
   static String getFinanceInnerPageDetails(String companyId, int? year, int? month) {

@@ -3,15 +3,15 @@ import 'dart:ui';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
-import 'package:wallpost/finance/entities/finance_bill_details.dart';
-import 'package:wallpost/finance/entities/finance_dashboard_data.dart';
-import 'package:wallpost/finance/entities/finance_invoice_details.dart';
-import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
-import 'package:wallpost/finance/ui/models/finance_dashboard_value.dart';
-import 'package:wallpost/finance/ui/models/finance_initail_filter_data.dart';
-import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
+import 'package:wallpost/finance/dashboard/entities/finance_bill_details.dart';
+import 'package:wallpost/finance/dashboard/entities/finance_dashboard_data.dart';
+import 'package:wallpost/finance/dashboard/entities/finance_invoice_details.dart';
+import 'package:wallpost/finance/dashboard/services/finance_dashboard_provider.dart';
+import 'package:wallpost/finance/dashboard/ui/models/finance_dashboard_value.dart';
+import 'package:wallpost/finance/dashboard/ui/models/finance_initail_filter_data.dart';
+import 'package:wallpost/finance/dashboard/ui/view_contracts/finance_dashboard_view.dart';
 
-import '../../../_wp_core/company_management/entities/company.dart';
+import '../../../../_wp_core/company_management/entities/company.dart';
 
 class FinanceDashboardPresenter {
   SelectedCompanyProvider _selectedCompanyProvider;

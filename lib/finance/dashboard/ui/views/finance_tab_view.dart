@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
+import 'package:wallpost/finance/dashboard/ui/presenters/finance_dashboard_presenter.dart';
 
-import '../../../_common_widgets/filter_views/custom_filter_chip.dart';
-import '../../../_shared/constants/app_colors.dart';
+import '../../../../_common_widgets/filter_views/custom_filter_chip.dart';
+import '../../../../_shared/constants/app_colors.dart';
 
 class FinanceHorizontalTab extends StatefulWidget {
   final VoidCallback onPressed;

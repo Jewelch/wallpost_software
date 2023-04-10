@@ -3,14 +3,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
-import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
-import 'package:wallpost/finance/ui/views/finance_bill_card_view.dart';
-import 'package:wallpost/finance/ui/views/finance_cash_card_view.dart';
-import 'package:wallpost/finance/ui/views/finance_cash_monthly_list_card_view.dart';
-import 'package:wallpost/finance/ui/views/finance_invoice_card_view.dart';
-import 'package:wallpost/finance/ui/views/finance_profit_loss_card_view.dart';
-import 'package:wallpost/finance/ui/views/finance_tab_view.dart';
+import 'package:wallpost/finance/dashboard/ui/presenters/finance_dashboard_presenter.dart';
+import 'package:wallpost/finance/dashboard/ui/view_contracts/finance_dashboard_view.dart';
+import 'package:wallpost/finance/dashboard/ui/views/finance_bill_card_view.dart';
+import 'package:wallpost/finance/dashboard/ui/views/finance_cash_card_view.dart';
+import 'package:wallpost/finance/dashboard/ui/views/finance_cash_monthly_list_card_view.dart';
+import 'package:wallpost/finance/dashboard/ui/views/finance_invoice_card_view.dart';
+import 'package:wallpost/finance/dashboard/ui/views/finance_profit_loss_card_view.dart';
+import 'package:wallpost/finance/dashboard/ui/views/finance_tab_view.dart';
+
 import 'finance_dashboard_app_bar.dart';
 import 'finance_dashboard_loader.dart';
 import 'finance_filters.dart';
@@ -204,7 +205,10 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
             Container(
               height: 10,
               width: 10,
-              child: SvgPicture.asset(icon, color: AppColors.defaultColor),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(AppColors.defaultColor, BlendMode.srcIn),
+              ),
             ),
             if (title == "Previous")
               Text(title, style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.defaultColor, fontSize: 15.0))

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wallpost/dashboard/company_dashboard_owner_my_portal/ui/views/performance_view_holder.dart';
-import 'package:wallpost/finance/ui/models/finance_dashboard_value.dart';
+import 'package:wallpost/finance/dashboard/ui/models/finance_dashboard_value.dart';
 
-import '../../../_common_widgets/text_styles/text_styles.dart';
-import '../../../_shared/constants/app_colors.dart';
-import '../../../_wp_core/company_management/services/selected_company_provider.dart';
+import '../../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../_shared/constants/app_colors.dart';
+import '../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../presenters/finance_dashboard_presenter.dart';
 
 class FinanceProfitLossCardView extends StatelessWidget {

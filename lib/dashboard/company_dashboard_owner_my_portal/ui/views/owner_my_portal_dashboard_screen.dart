@@ -16,7 +16,7 @@ import '../../../../_common_widgets/filter_views/ytd_filter.dart';
 import '../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../attendance/attendance_adjustment/ui/views/attendance_list_screen.dart';
-import '../../../../finance/ui/views/finance_dashboard_screen.dart';
+import '../../../../finance/dashboard/ui/views/finance_dashboard_screen.dart';
 import '../../../aggregated_approvals_list/ui/views/aggregated_approvals_list_screen.dart';
 import '../../../company_dashboard/ui/common_views/my_portal_item_action_view.dart';
 import '../presenters/module_page_view_presenter.dart';

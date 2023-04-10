@@ -3,9 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
+import 'package:wallpost/finance/dashboard/ui/presenters/finance_dashboard_presenter.dart';
 
-import '../../../_shared/constants/app_years.dart';
+import '../../../../_shared/constants/app_years.dart';
 
 class FinanceDashboardAppBar extends StatelessWidget {
   final FinanceDashboardPresenter presenter;
@@ -42,7 +42,7 @@ class FinanceDashboardAppBar extends StatelessWidget {
                       height: 16,
                       child: SvgPicture.asset(
                         "assets/icons/arrow_back_icon.svg",
-                        color: AppColors.defaultColor,
+                        colorFilter: ColorFilter.mode(AppColors.defaultColor, BlendMode.srcIn),
                         width: 16,
                         height: 16,
                       ),
@@ -72,7 +72,7 @@ class FinanceDashboardAppBar extends StatelessWidget {
                           SizedBox(width: 8),
                           SvgPicture.asset(
                             "assets/icons/arrow_down_icon.svg",
-                            color: AppColors.defaultColor,
+                            colorFilter: ColorFilter.mode(AppColors.defaultColor, BlendMode.srcIn),
                             width: 16,
                             height: 16,
                           ),

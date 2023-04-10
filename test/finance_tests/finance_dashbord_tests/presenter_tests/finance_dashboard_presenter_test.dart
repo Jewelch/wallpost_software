@@ -3,12 +3,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/_shared/extensions/color_extensions.dart';
-import 'package:wallpost/finance/entities/finance_bill_details.dart';
-import 'package:wallpost/finance/entities/finance_dashboard_data.dart';
-import 'package:wallpost/finance/entities/finance_invoice_details.dart';
-import 'package:wallpost/finance/services/finance_dashboard_provider.dart';
-import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
-import 'package:wallpost/finance/ui/view_contracts/finance_dashboard_view.dart';
+import 'package:wallpost/finance/dashboard/entities/finance_bill_details.dart';
+import 'package:wallpost/finance/dashboard/entities/finance_dashboard_data.dart';
+import 'package:wallpost/finance/dashboard/entities/finance_invoice_details.dart';
+import 'package:wallpost/finance/dashboard/services/finance_dashboard_provider.dart';
+import 'package:wallpost/finance/dashboard/ui/presenters/finance_dashboard_presenter.dart';
+import 'package:wallpost/finance/dashboard/ui/view_contracts/finance_dashboard_view.dart';
 
 import '../../../_mocks/mock_company.dart';
 import '../../../_mocks/mock_company_provider.dart';
@@ -17,9 +17,9 @@ class MockFinanceDashBoardProvider extends Mock implements FinanceDashBoardProvi
 
 class MockFinanceDashBoardData extends Mock implements FinanceDashBoardData {}
 
-class MockFinanceInvoiceDetails extends Mock implements FinanceInvoiceDetails{}
+class MockFinanceInvoiceDetails extends Mock implements FinanceInvoiceDetails {}
 
-class MockFinanceBillDetails extends Mock implements FinanceBillDetails{}
+class MockFinanceBillDetails extends Mock implements FinanceBillDetails {}
 
 class MockFinanceDashBoardView extends Mock implements FinanceDashBoardView {}
 
@@ -215,13 +215,14 @@ void main() {
   });
 
   test("getting selected company", () {
-    var company=MockCompany();
+    var company = MockCompany();
     when(() => companyProvider.getSelectedCompanyForCurrentUser()).thenReturn(company);
 
     expect(presenter.getSelectedCompany(), company);
   });
 
-  test('getting profit and loss this year of finance details'
+  test(
+      'getting profit and loss this year of finance details'
       'show text color red when value is negative '
       'show text color green when value is positive', () async {
     //given
@@ -312,9 +313,10 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('getting cash in bank data of financial details'
-       'show text color red when value is negative'
-       'show text color green when value is positive', () async {
+  test(
+      'getting cash in bank data of financial details'
+      'show text color red when value is negative'
+      'show text color green when value is positive', () async {
     //given
     var data = MockFinanceDashBoardData();
 
@@ -402,7 +404,7 @@ void main() {
   test('getting finance invoice details of financial details', () async {
     //given
     var data = MockFinanceDashBoardData();
-    var invoiceDetails=MockFinanceInvoiceDetails();
+    var invoiceDetails = MockFinanceInvoiceDetails();
 
     when(() => provider.isLoading).thenReturn(false);
     when(() => provider.get(month: any(named: "month"), year: any(named: "year")))
@@ -413,10 +415,10 @@ void main() {
 
     //then
     verifyInOrder([
-          () => provider.isLoading,
-          () => view.showLoader(),
-          () => provider.get(month: any(named: "month"), year: any(named: "year")),
-          () => view.onDidLoadFinanceDashBoardData(),
+      () => provider.isLoading,
+      () => view.showLoader(),
+      () => provider.get(month: any(named: "month"), year: any(named: "year")),
+      () => view.onDidLoadFinanceDashBoardData(),
     ]);
     when(() => data.financeInvoiceDetails).thenReturn(invoiceDetails);
     var details1 = presenter.getFinanceInvoiceReport();
@@ -428,7 +430,7 @@ void main() {
   test('getting finance bill details of financial details', () async {
     //given
     var data = MockFinanceDashBoardData();
-    var billDetails=MockFinanceBillDetails();
+    var billDetails = MockFinanceBillDetails();
 
     when(() => provider.isLoading).thenReturn(false);
     when(() => provider.get(month: any(named: "month"), year: any(named: "year")))
@@ -439,10 +441,10 @@ void main() {
 
     //then
     verifyInOrder([
-          () => provider.isLoading,
-          () => view.showLoader(),
-          () => provider.get(month: any(named: "month"), year: any(named: "year")),
-          () => view.onDidLoadFinanceDashBoardData(),
+      () => provider.isLoading,
+      () => view.showLoader(),
+      () => provider.get(month: any(named: "month"), year: any(named: "year")),
+      () => view.onDidLoadFinanceDashBoardData(),
     ]);
     when(() => data.financeBillDetails).thenReturn(billDetails);
     var details1 = presenter.getFinanceBillDetails();
@@ -451,7 +453,8 @@ void main() {
     _verifyNoMoreInteractionsOnAllMocks();
   });
 
-  test('getting profit and loss box color of financial dashboard'
+  test(
+      'getting profit and loss box color of financial dashboard'
       'show box color light red when value is negative '
       'show box color light green when value is positive', () async {
     //given

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
+import 'package:wallpost/finance/dashboard/ui/presenters/finance_dashboard_presenter.dart';
 
-import '../../../_common_widgets/filter_views/custom_filter_chip.dart';
+import '../../../../_common_widgets/filter_views/custom_filter_chip.dart';
 import '../presenters/finance_filter_presenter.dart';
 
 class FinanceFilters extends StatefulWidget {
@@ -212,32 +211,6 @@ class _FinanceFiltersState extends State<FinanceFilters> {
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: 16, color: Colors.white),
           ),
-        ),
-      ),
-    );
-  }
-
-  _moreMonthButton() {
-    return GestureDetector(
-      onTap: () {
-        showMoreMonth ? showMoreMonth = false : showMoreMonth = true;
-        setState(() {});
-      },
-      child: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              showMoreMonth ? 'Less Months' : 'More Months',
-              style: TextStyle(color: AppColors.defaultColor),
-            ),
-            SizedBox(width: 4),
-            Container(
-              height: 8,
-              width: 8,
-              child: Center(child: SvgPicture.asset('assets/icons/arrow_down_icon.svg', color: AppColors.defaultColor)),
-            )
-          ],
         ),
       ),
     );

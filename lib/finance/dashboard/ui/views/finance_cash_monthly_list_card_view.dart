@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/string_extensions.dart';
-import 'package:wallpost/finance/ui/presenters/finance_dashboard_presenter.dart';
+import 'package:wallpost/finance/dashboard/ui/presenters/finance_dashboard_presenter.dart';
 
-import '../../../_common_widgets/text_styles/text_styles.dart';
+import '../../../../_common_widgets/text_styles/text_styles.dart';
 
 class FinanceCashMonthlyListCardView extends StatelessWidget {
   final FinanceDashboardPresenter _presenter;
