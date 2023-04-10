@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail_expenses.dart';
+import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail_item.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/services/purchase_bill_detail_provider.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/presenters/purchase_bill_detail_presenter.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/ui/view_contracts/purchase_bill_detail_view.dart';
@@ -12,6 +14,10 @@ class MockPurchaseBillDetailView extends Mock implements PurchaseBillDetailView 
 class MockPurchaseBillDetailProvider extends Mock implements PurchaseBillDetailProvider {}
 
 class MockPurchaseBillDetail extends Mock implements PurchaseBillDetail {}
+
+class MockPurchaseBillDetailItem extends Mock implements PurchaseBillDetailItem {}
+
+class MockPurchaseBillDetailExpenses extends Mock implements PurchaseBillDetailExpenses {}
 
 void main() {
   late MockPurchaseBillDetailView view;
@@ -219,6 +225,71 @@ void main() {
     await presenter.loadDetail();
 
     expect(presenter.getTotal(), "400.00");
+  });
+
+  test('get number of list items', () async {
+    //when
+    var billDetail = MockPurchaseBillDetail();
+    var billDetailItem1=MockPurchaseBillDetailItem();
+    var billDetailItem2=MockPurchaseBillDetailItem();
+    var billDetailItem3=MockPurchaseBillDetailItem();
+    when(() => detailProvider.isLoading).thenReturn(false);
+    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(billDetail));
+    when(() => billDetail.billDetailItem).thenReturn([billDetailItem1,billDetailItem2,billDetailItem3]);
+    await presenter.loadDetail();
+    when(() => detailProvider.isLoading).thenReturn(false);
+
+    //then
+    expect(presenter.getNumberOfListItems(), 3);
+  });
+
+  test('get number of expense list items', () async {
+    //when
+    var billDetail = MockPurchaseBillDetail();
+    var billDetailExpense1=MockPurchaseBillDetailExpenses();
+    var billDetailExpense2=MockPurchaseBillDetailExpenses();
+    when(() => detailProvider.isLoading).thenReturn(false);
+    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(billDetail));
+    when(() => billDetail.billDetailExpenseItem).thenReturn([billDetailExpense1,billDetailExpense2]);
+    await presenter.loadDetail();
+    when(() => detailProvider.isLoading).thenReturn(false);
+
+    //then
+    expect(presenter.getNumberOfExpensesListItems(), 2);
+  });
+
+  test('getting list item at index', () async {
+    //when
+    var billDetail = MockPurchaseBillDetail();
+    var billDetailItem1=MockPurchaseBillDetailItem();
+    var billDetailItem2=MockPurchaseBillDetailItem();
+    var billDetailItem3=MockPurchaseBillDetailItem();
+    when(() => detailProvider.isLoading).thenReturn(false);
+    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(billDetail));
+    when(() => billDetail.billDetailItem).thenReturn([billDetailItem1,billDetailItem2,billDetailItem3]);
+    await presenter.loadDetail();
+    when(() => detailProvider.isLoading).thenReturn(false);
+
+    //then
+    expect(presenter.getItemAtIndex(0), billDetailItem1);
+    expect(presenter.getItemAtIndex(1), billDetailItem2);
+    expect(presenter.getItemAtIndex(2), billDetailItem3);
+  });
+
+  test('getting expense list item at index', () async {
+    //when
+    var billDetail = MockPurchaseBillDetail();
+    var billDetailExpense1=MockPurchaseBillDetailExpenses();
+    var billDetailExpense2=MockPurchaseBillDetailExpenses();
+    when(() => detailProvider.isLoading).thenReturn(false);
+    when(() => detailProvider.get(any())).thenAnswer((_) => Future.value(billDetail));
+    when(() => billDetail.billDetailExpenseItem).thenReturn([billDetailExpense1,billDetailExpense2]);
+    await presenter.loadDetail();
+    when(() => detailProvider.isLoading).thenReturn(false);
+
+    //then
+    expect(presenter.getExpensesItemAtIndex(0), billDetailExpense1);
+    expect(presenter.getExpensesItemAtIndex(1), billDetailExpense2);
   });
 
 }
