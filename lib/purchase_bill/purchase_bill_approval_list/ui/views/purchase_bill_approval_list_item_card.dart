@@ -67,8 +67,10 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                       children: [
                         Expanded(
                           child: Text(
-                            widget.listPresenter.getSupplierName(widget.approval)!,
+                             widget.listPresenter.getSupplierName(widget.approval)!,
                             style: TextStyles.titleTextStyleBold.copyWith(color: AppColors.textColorBlueGray),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           ),
                         ),
                         SizedBox(width: 16),
@@ -91,7 +93,7 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                     ),
                     SizedBox(height: 12),
                     _labelAndValue(
-                      "Bill No - ",
+                      "Requested No - ",
                       widget.listPresenter.getBillNumber(widget.approval),
                     ),
                     SizedBox(height: 12),
