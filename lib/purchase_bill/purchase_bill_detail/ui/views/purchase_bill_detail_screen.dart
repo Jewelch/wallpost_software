@@ -92,40 +92,54 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
     return RefreshIndicator(
       onRefresh: () => _presenter.loadDetail(),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14),
         child: ListView(
           physics: AlwaysScrollableScrollPhysics(),
           children: [
             SizedBox(height: 20),
-            _labelAndValue("Bill To", _presenter.getSupplierName()),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _labelAndValue("Bill To", _presenter.getSupplierName()),
+            ),
             Divider(color: AppColors.appBarShadowColor),
-            _labelAndValue("Bill No", _presenter.getBillNumber()),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _labelAndValue("Bill No", _presenter.getBillNumber()),
+            ),
             Divider(color: AppColors.appBarShadowColor),
-            _labelAndValue("Due Date", _presenter.getDueDate()),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _labelAndValue("Due Date", _presenter.getDueDate()),
+            ),
             Divider(color: AppColors.appBarShadowColor),
             SizedBox(height: 20),
             if(_presenter.getNumberOfListItems() > 0)
                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Items/Services",
-                          style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text("Items/Services",
+                            style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500)),
+                      ),
                       Align(
                         alignment: Alignment.centerRight,
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.only(bottom: 8,right: 20),
                           child: Text("Cost", style: TextStyles.labelTextStyle.copyWith(fontWeight: FontWeight.w500)),
                         ),
                       ),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        separatorBuilder: (BuildContext context, int index) =>
-                            Divider(color: AppColors.appBarShadowColor),
-                        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                        itemCount: _presenter.getNumberOfListItems(),
-                        itemBuilder: (context, index) => PurchaseBillDetailItemListCard(
-                          presenter: _presenter,
-                          billDetailListItem: _presenter.getItemAtIndex(index),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          separatorBuilder: (BuildContext context, int index) =>
+                              Divider(color: AppColors.appBarShadowColor),
+                          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                          itemCount: _presenter.getNumberOfListItems(),
+                          itemBuilder: (context, index) => PurchaseBillDetailItemListCard(
+                            presenter: _presenter,
+                            billDetailListItem: _presenter.getItemAtIndex(index),
+                          ),
                         ),
                       ),
                       Divider(color: AppColors.appBarShadowColor),
@@ -135,36 +149,57 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
 
            if(_presenter.getNumberOfExpensesListItems() > 0)
                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text("Expenses",
-                        style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text("Expenses",
+                          style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500)),
+                    ),
                     Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.only(bottom: 8,right: 20),
                         child: Text("Cost", style: TextStyles.labelTextStyle.copyWith(fontWeight: FontWeight.w500)),
                       ),
                     ),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Divider(color: AppColors.appBarShadowColor),
-                      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                      itemCount: _presenter.getNumberOfExpensesListItems(),
-                      itemBuilder: (context, index) => PurchaseBillDetailExpensesListCard(
-                        presenter: _presenter,
-                        billDetailExpensesItem: _presenter.getExpensesItemAtIndex(index),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            Divider(color: AppColors.appBarShadowColor),
+                        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                        itemCount: _presenter.getNumberOfExpensesListItems(),
+                        itemBuilder: (context, index) => PurchaseBillDetailExpensesListCard(
+                          presenter: _presenter,
+                          billDetailExpensesItem: _presenter.getExpensesItemAtIndex(index),
+                        ),
                       ),
                     ),
                     Divider(color: AppColors.appBarShadowColor),
                     SizedBox(height: 20),
                   ]),
-            Text("Total Summary",
-                style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text("Total Summary",
+                  style: TextStyles.largeTitleTextStyle.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500)),
+            ),
             SizedBox(height: 4),
-            _summaryValue("Sub Total", _presenter.getSubTotal(), AppColors.textColorBlack, AppColors.textColorBlueGray,""),
-            _summaryValue("Discount", _presenter.getDiscount(), AppColors.red, AppColors.red,"-"),
-            _summaryValue("Tax", _presenter.getTax(), AppColors.textColorBlack, AppColors.textColorBlueGray,"+"),
-            _summaryValue("Total", _presenter.getTotal(), AppColors.textColorBlack, AppColors.textColorBlueGray,"")
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _summaryValue("Sub Total", _presenter.getSubTotal(), AppColors.textColorBlack, AppColors.textColorBlueGray,""),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _summaryValue("Discount", _presenter.getDiscount(), AppColors.red, AppColors.red,"-"),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _summaryValue("Tax", _presenter.getTax(), AppColors.textColorBlack, AppColors.textColorBlueGray,"+"),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _summaryValue("Total", _presenter.getTotal(), AppColors.textColorBlack, AppColors.textColorBlueGray,""),
+            )
           ],
         ),
       ),
