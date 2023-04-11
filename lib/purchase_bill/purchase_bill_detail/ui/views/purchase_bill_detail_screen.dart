@@ -100,17 +100,17 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: _labelAndValue("Bill To", _presenter.getSupplierName()),
             ),
-            Divider(color: AppColors.appBarShadowColor),
+            Divider(color: AppColors.disabledButtonColor),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: _labelAndValue("Bill No", _presenter.getBillNumber()),
             ),
-            Divider(color: AppColors.appBarShadowColor),
+            Divider(color: AppColors.disabledButtonColor),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: _labelAndValue("Due Date", _presenter.getDueDate()),
             ),
-            Divider(color: AppColors.appBarShadowColor),
+            Divider(color: AppColors.disabledButtonColor),
             SizedBox(height: 20),
             if(_presenter.getNumberOfListItems() > 0)
                  Column(
@@ -142,7 +142,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
                           ),
                         ),
                       ),
-                      Divider(color: AppColors.appBarShadowColor),
+                      Divider(color: AppColors.disabledButtonColor),
                       SizedBox(height: 20),
                     ],
                   ),
@@ -175,7 +175,7 @@ class _PurchaseBillDetailScreenState extends State<PurchaseBillDetailScreen> imp
                         ),
                       ),
                     ),
-                    Divider(color: AppColors.appBarShadowColor),
+                    Divider(color: AppColors.disabledButtonColor),
                     SizedBox(height: 20),
                   ]),
             Padding(
