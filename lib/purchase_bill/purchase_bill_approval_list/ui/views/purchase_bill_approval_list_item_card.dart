@@ -27,10 +27,10 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(width: 1, color: AppColors.listItemBorderColor),
       ),
       child: InkWell(
@@ -93,8 +93,7 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                               size: 16,
                             )
                           ],
-                        )
-                        ,
+                        ),
                       ],
                     ),
                     SizedBox(height: 12),
