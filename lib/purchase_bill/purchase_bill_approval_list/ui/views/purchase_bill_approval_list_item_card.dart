@@ -80,11 +80,17 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                               widget.listPresenter.getTotalAmount(widget.approval),
                               style: TextStyles.largeTitleTextStyleBold,
                             ),
-                            SizedBox(width: 2),
+
                             Padding(
                               padding: const EdgeInsets.only(top: 1),
                               child: Text(widget.listPresenter.getCurrency(widget.approval)!,
                                   style: TextStyles.smallLabelTextStyle.copyWith(color: AppColors.textColorBlueGray)),
+                            ),
+                            SizedBox(width: 8),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: AppColors.defaultColor,
+                              size: 16,
                             )
                           ],
                         )
@@ -97,20 +103,9 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                       widget.listPresenter.getBillNumber(widget.approval),
                     ),
                     SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _labelAndValue(
-                            "Due on - ",
-                            widget.listPresenter.getDueDate(widget.approval),
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios_sharp,
-                          color: AppColors.defaultColor,
-                          size: 16,
-                        ),
-                      ],
+                    _labelAndValue(
+                      "Due on - ",
+                      widget.listPresenter.getDueDate(widget.approval),
                     ),
                     if (!widget.listPresenter.isSelectionInProgress) SizedBox(height: 8),
                     if (!widget.listPresenter.isSelectionInProgress)
