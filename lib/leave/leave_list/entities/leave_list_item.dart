@@ -7,8 +7,6 @@ import '../../leave__core/entities/leave_status.dart';
 class LeaveListItem extends JSONInitializable {
   late String _leaveId;
   late String _companyId;
-  late String _applicantName;
-  late String _applicantProfileImageUrl;
   late DateTime _startDate;
   late DateTime _endDate;
   late num _totalLeaveDays;
@@ -26,8 +24,6 @@ class LeaveListItem extends JSONInitializable {
       var extraInfoMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'extra_info', {});
       _leaveId = '${sift.readNumberFromMap(jsonMap, 'id')}';
       _companyId = '${sift.readNumberFromMap(jsonMap, 'company_id')}';
-      _applicantName = "sift.readStringFromMap(employeeMap, 'fullName')";
-      _applicantProfileImageUrl = "sift.readStringFromMap(employeeMap, 'profile_image')";
       _startDate = sift.readDateFromMap(jsonMap, 'leave_from', 'yyyy-MM-dd');
       _endDate = sift.readDateFromMap(jsonMap, 'leave_to', 'yyyy-MM-dd');
       _totalLeaveDays = sift.readNumberFromMap(jsonMap, 'leave_days');
@@ -70,10 +66,6 @@ class LeaveListItem extends JSONInitializable {
   String get leaveId => _leaveId;
 
   String get companyId => _companyId;
-
-  String get applicantName => _applicantName;
-
-  String get applicantProfileImageUrl => _applicantProfileImageUrl;
 
   DateTime get startDate => _startDate;
 
