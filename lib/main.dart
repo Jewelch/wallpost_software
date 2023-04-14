@@ -42,6 +42,12 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
       navigatorKey: navigatorKey,
       scaffoldMessengerKey: snackbarKey,
       home: MainScreen(),
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: RemoveScrollGlowBehaviour(),
+          child: child!,
+        );
+      },
       theme: ThemeData(
         fontFamily: 'SF-Pro-Display',
         splashColor: Colors.grey.shade100,
@@ -76,5 +82,14 @@ class _WallPostAppState extends State<WallPostApp> with WidgetsBindingObserver {
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
     );
+  }
+}
+
+//This removes the scroll glow from the entire app
+
+class RemoveScrollGlowBehaviour extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
   }
 }
