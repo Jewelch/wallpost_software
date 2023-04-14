@@ -52,15 +52,18 @@ class TextStyles {
         color: AppColors.textColorBlack,
       );
 
+  static get subTitleTextStyleThin =>
+      TextStyle(fontFamily: _defaultFont, fontSize: 14, color: AppColors.textColorBlack, fontWeight: FontWeight.w400);
+
   static get subTitleTextStyleBold => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontSize: 14,
         color: AppColors.textColorBlack,
         fontWeight: FontWeight.w600,
       );
 
   static get labelTextStyle => TextStyle(
-    fontFamily: _defaultFont,
+        fontFamily: _defaultFont,
         fontSize: 12,
         color: AppColors.textColorGray,
       );
