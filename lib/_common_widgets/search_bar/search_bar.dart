@@ -5,6 +5,8 @@ import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/constants/app_images.dart';
 
+import '../keyboard_dismisser/keyboard_dismisser.dart';
+
 class SearchBar extends StatelessWidget {
   final String hint;
   final String? text;
@@ -32,7 +34,7 @@ class SearchBar extends StatelessWidget {
       height: 44,
       margin: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         color: AppColors.filtersBackgroundColor,
       ),
       width: double.infinity,
@@ -43,7 +45,7 @@ class SearchBar extends StatelessWidget {
             AppImages.searchIcon,
             width: 18,
             height: 18,
-            color: AppColors.defaultColorDark,
+            colorFilter: ColorFilter.mode(AppColors.defaultColorDark, BlendMode.srcIn),
           ),
           Expanded(
             child: TextField(
@@ -66,6 +68,7 @@ class SearchBar extends StatelessWidget {
                             onPressed: () {
                               if (controller.text.isEmpty) return;
                               controller.clear();
+                              KeyboardDismisser.dismissKeyboard();
                               onSearchTextChanged('');
                             },
                           )
