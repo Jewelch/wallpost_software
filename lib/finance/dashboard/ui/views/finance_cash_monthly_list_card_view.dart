@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/_shared/constants/app_colors.dart';
 import 'package:wallpost/_shared/extensions/string_extensions.dart';
 import 'package:wallpost/finance/dashboard/ui/presenters/finance_dashboard_presenter.dart';
 
@@ -18,6 +17,7 @@ class FinanceCashMonthlyListCardView extends StatelessWidget {
 
   Widget dataView() {
     return ListView.separated(
+      physics: NeverScrollableScrollPhysics(),
       separatorBuilder: (BuildContext context, int index) => const Divider(),
       itemCount: 3,
       itemBuilder: (BuildContext context, int index) {
@@ -28,7 +28,7 @@ class FinanceCashMonthlyListCardView extends StatelessWidget {
               flex: 2,
               child: Text(
                 _presenter.getMonthList()[index].capitalize(),
-                style: TextStyles.subTitleTextStyle.copyWith(color: AppColors.textColorGray),
+                style: TextStyles.titleTextStyle,
               ),
             ),
             Expanded(flex: 3, child: _subTile('assets/icons/cash_in_icon.svg', _presenter.getCashInList()[index])),
