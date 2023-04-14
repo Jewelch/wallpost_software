@@ -217,7 +217,7 @@ class _AggregatedApprovalsListScreenState extends State<AggregatedApprovalsListS
         LeaveApprovalListScreen(companyId: aggregatedApproval.companyId),
         context,
       );
-    }else if (aggregatedApproval.isBillRequestApproval()) {
+    } else if (aggregatedApproval.isBillRequestApproval()) {
       numberOfApprovalsProcessed = await ScreenPresenter.present(
         PurchaseBillApprovalListScreen(companyId: aggregatedApproval.companyId),
         context,
