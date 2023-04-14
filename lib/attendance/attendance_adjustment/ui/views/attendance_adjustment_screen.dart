@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wallpost/_common_widgets/app_bars/app_bar_divider.dart';
 import 'package:wallpost/_common_widgets/app_bars/simple_app_bar.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_action_button.dart';
 import 'package:wallpost/_common_widgets/buttons/rounded_back_button.dart';
@@ -57,11 +56,11 @@ class _AttendanceAdjustmentScreenState extends State<AttendanceAdjustmentScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppBarDivider(),
+        Divider(height: 1, color: Colors.black26),
         SizedBox(height: 20),
         _attendanceInfo(),
         SizedBox(height: 20),
-        AppBarDivider(),
+        Divider(height: 1, color: Colors.black26),
         SizedBox(height: 30),
         _adjustedTimeFields(),
         SizedBox(height: 30),
