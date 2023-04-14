@@ -111,7 +111,7 @@ class ItemSalesAppBar extends StatelessWidget {
                             presenter.onFiltersGotClicked();
                           },
                           child: SvgPicture.asset(
-                            "assets/icons/filter_date_icon.svg",
+                            "assets/icons/filter_icon.svg",
                             width: 18,
                             height: 18,
                           ),
