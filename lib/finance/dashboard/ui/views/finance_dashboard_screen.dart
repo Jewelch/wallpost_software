@@ -11,6 +11,7 @@ import 'package:wallpost/finance/dashboard/ui/views/finance_cash_monthly_list_ca
 import 'package:wallpost/finance/dashboard/ui/views/finance_invoice_card_view.dart';
 import 'package:wallpost/finance/dashboard/ui/views/finance_profit_loss_card_view.dart';
 import 'package:wallpost/finance/dashboard/ui/views/finance_tab_view.dart';
+import 'package:wallpost/finance/dashboard/ui/views/report_floating_action_button.dart';
 
 import 'finance_dashboard_app_bar.dart';
 import 'finance_dashboard_loader.dart';
@@ -45,25 +46,28 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async => presenter.loadFinanceDashBoardDetails(),
-      child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          backgroundColor: AppColors.screenBackgroundColor,
-          body: SafeArea(
-            child: ItemNotifiable<int>(
-              notifier: _viewTypeNotifier,
-              builder: (context, viewType) {
-                if (viewType == LOADER_VIEW) return FinanceDashboardLoader();
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: AppColors.screenBackgroundColor,
+      body: RefreshIndicator(
+        onRefresh: () async => presenter.loadFinanceDashBoardDetails(),
+        child: SafeArea(
+          child: ItemNotifiable<int>(
+            notifier: _viewTypeNotifier,
+            builder: (context, viewType) {
+              if (viewType == LOADER_VIEW) return FinanceDashboardLoader();
 
-                if (viewType == ERROR_VIEW) return _errorAndRetryView();
+              if (viewType == ERROR_VIEW) return _errorAndRetryView();
 
-                if (viewType == DATA_VIEW) return _dataView();
+              if (viewType == DATA_VIEW) return _dataView();
 
-                return Container();
-              },
-            ),
-          )),
+              return Container();
+            },
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ReportsFloatingActionButton(),
     );
   }
 
@@ -86,52 +90,58 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
 
   Widget _dataView() {
     return Container(
-        color: AppColors.screenBackgroundColor2,
-        child: Column(
-          children: [
-            FinanceDashboardAppBar(presenter),
-            FinanceProfitLossCardView(presenter: presenter),
-            Flexible(
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                        child: _bottomCard(),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
-                                offset: Offset(0, -1),
-                                spreadRadius: 0,
-                                blurRadius: 3),
-                          ],
+      color: AppColors.screenBackgroundColor2,
+      child: Column(
+        children: [
+          FinanceDashboardAppBar(presenter),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  FinanceProfitLossCardView(presenter: presenter),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                          child: _bottomCard(),
                         ),
-                        child: Column(
-                          children: [
-                            if (presenter.selectedModuleIndex == CASH_VIEW_INDEX) _monthlyCashInOutListCard(),
-                            if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX) _invoiceCard(),
-                            if (presenter.selectedModuleIndex == BILL_VIEW_INDEX) _billCard()
-                          ],
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.15),
+                                  offset: Offset(0, -1),
+                                  spreadRadius: 0,
+                                  blurRadius: 3),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              if (presenter.selectedModuleIndex == CASH_VIEW_INDEX) _monthlyCashInOutListCard(),
+                              if (presenter.selectedModuleIndex == INVOICE_VIEW_INDEX) _invoiceCard(),
+                              if (presenter.selectedModuleIndex == BILL_VIEW_INDEX) _billCard()
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                  SizedBox(height: 200),
+                ],
               ),
-            )
-          ],
-        ));
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   //MARK: Functions to build the bottom card view
@@ -173,21 +183,27 @@ class _FinanceDashBoardScreenState extends State<FinanceDashBoardScreen> impleme
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _textButton(
-              title: "Previous",
-              icon: 'assets/icons/back_icon.svg',
-              onPressed: () {
-                presenter.onPreviousTextClick();
-                setState(() {});
-              }),
+          SizedBox(
+            height: 40,
+            child: _textButton(
+                title: "Previous",
+                icon: 'assets/icons/back_icon.svg',
+                onPressed: () {
+                  presenter.onPreviousTextClick();
+                  setState(() {});
+                }),
+          ),
           Text('3 Months', style: TextStyles.subTitleTextStyle.copyWith(fontSize: 15.0)),
-          _textButton(
-              title: "Next",
-              icon: 'assets/icons/arrow_right_icon.svg',
-              onPressed: () {
-                presenter.onNextTextClick();
-                setState(() {});
-              })
+          SizedBox(
+            height: 40,
+            child: _textButton(
+                title: "Next",
+                icon: 'assets/icons/arrow_right_icon.svg',
+                onPressed: () {
+                  presenter.onNextTextClick();
+                  setState(() {});
+                }),
+          )
         ],
       ),
     );
