@@ -29,6 +29,22 @@ void main() {
     expect(mockNetworkAdapter.didCallPost, true);
   });
 
+  test('api request is built and executed correctly for multiple item', () async {
+    Map<String, dynamic> requestParams = {};
+    requestParams.addAll({
+      "app_type": "billRequest",
+      "request_ids": "id1,id2",
+      "reason": "some reason",
+    });
+    mockNetworkAdapter.succeed(successfulResponse);
+
+    var _ = await rejector.massReject("someCompanyId", ["id1", "id2"], rejectionReason: 'some reason');
+
+    expect(mockNetworkAdapter.apiRequest.url, PurchaseBillApprovalUrls.rejectUrl("someCompanyId"));
+    expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
+    expect(mockNetworkAdapter.didCallPost, true);
+  });
+
   test('throws exception when network adapter fails', () async {
     mockNetworkAdapter.fail(NetworkFailureException());
 
