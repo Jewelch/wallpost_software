@@ -8,13 +8,19 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 class SingleDateSelector extends StatefulWidget {
   final CenterSheetController centerSheetController;
   final DateTime initialDate;
+  final DateTime? maxDate;
 
-  const SingleDateSelector({required this.centerSheetController, required this.initialDate, Key? key})
-      : super(key: key);
+  const SingleDateSelector({
+    required this.centerSheetController,
+    required this.initialDate,
+    this.maxDate,
+    Key? key,
+  }) : super(key: key);
 
   static Future<dynamic> show(
     BuildContext context, {
     required DateTime initialDate,
+    DateTime? maxDate,
   }) {
     var centerSheetController = CenterSheetController();
     return CenterSheetPresenter.present(
@@ -22,6 +28,7 @@ class SingleDateSelector extends StatefulWidget {
       content: SingleDateSelector(
         centerSheetController: centerSheetController,
         initialDate: initialDate,
+        maxDate: maxDate,
       ),
       controller: centerSheetController,
     );
@@ -103,8 +110,11 @@ class _SingleDateSelectorState extends State<SingleDateSelector> {
             padding: EdgeInsets.only(left: 16, right: 16),
             child: SfDateRangePicker(
               controller: _controller,
+              initialDisplayDate: _selectedDate,
+              initialSelectedDate: _selectedDate,
+              maxDate: widget.maxDate,
               selectionMode: DateRangePickerSelectionMode.single,
-              allowViewNavigation: false,
+              allowViewNavigation: true,
               onSelectionChanged: (_) {
                 setState(() {});
               },
