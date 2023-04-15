@@ -29,10 +29,7 @@ class ModalSheetDetailDisclosureFilter extends StatelessWidget {
         ),
         SizedBox(height: 16),
         GestureDetector(
-          onTap: () {
-            print("asdfasdfasfsf $onPressed");
-            onPressed.call();
-          },
+          onTap: () => onPressed.call(),
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             decoration: BoxDecoration(

@@ -117,11 +117,7 @@ class FiltersBarState extends State<FiltersBar> {
   }
 
   int _getNumberOfItems() {
-    var a = widget.items.length + (widget.trailingButton != null ? 1 : 0);
-    print("---------------------------");
-    print("$a");
-    print("---------------------------");
-    return a;
+    return widget.items.length + (widget.trailingButton != null ? 1 : 0);
   }
 
   VoidCallback _getActionForItemAtIndex(int index) {
