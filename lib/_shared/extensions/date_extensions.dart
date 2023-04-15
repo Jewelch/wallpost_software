@@ -43,6 +43,11 @@ extension DateExtension on DateTime {
     to = DateTime(to.year, to.month, to.day);
     return (to.difference(from).inHours / 24).round();
   }
+
+  bool isToday() {
+    var today = DateTime.now();
+    return this.year == today.year && this.month == today.month && this.day == today.day;
+  }
 }
 
 extension TimeExtension on TimeOfDay {
