@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wallpost/_common_widgets/screen_presenter/center_sheet_presenter.dart';
 import 'package:wallpost/_common_widgets/text_styles/text_styles.dart';
 import 'package:wallpost/_shared/constants/app_colors.dart';
-import 'package:wallpost/_shared/date_range_selector/ui/presenters/date_range_presenter.dart';
 import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
+import 'package:wallpost/_shared/date_range_selector/ui/presenters/date_range_presenter.dart';
 
 import '../../entities/selectable_date_range_option.dart';
 import 'custom_date_range_selector.dart';
@@ -16,7 +16,11 @@ class DateRangeSelector extends StatefulWidget {
   DateRangeSelector({required this.centerSheetController, required this.initialDateFilters, Key? key})
       : super(key: key);
 
-  static Future<dynamic> show(BuildContext context, {bool allowMultiple = false, required DateRange initialDateRange}) {
+  static Future<dynamic> show(
+    BuildContext context, {
+    bool allowMultiple = false,
+    required DateRange initialDateRange,
+  }) {
     var centerSheetController = CenterSheetController();
     var dateRangeFilters = DateRangePresenter();
     dateRangeFilters.dateRange = initialDateRange.copy();
