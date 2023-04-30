@@ -54,51 +54,51 @@ class _State extends State<InventoryStockReportScreen> implements InventoryStock
       child: Scaffold(
         backgroundColor: AppColors.screenBackgroundColor,
         resizeToAvoidBottomInset: false,
-        body: Container(
-          color: AppColors.screenBackgroundColor2,
-          child: ItemNotifiable<_ScreenStates>(
-            notifier: _screenStateNotifier,
-            builder: (_, currentState) {
-              switch (currentState) {
-                //$ LOADING STATE
-                case _ScreenStates.loading:
-                  return ListView(
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      CompanyNameAppBar(_presenter.getCompanyName()),
-                      InventoryStockLoaderTop(),
-                      InventoryStockLoaderBottom(),
-                    ],
-                  );
+        body: SafeArea(
+          child: Container(
+            color: AppColors.screenBackgroundColor2,
+            child: ItemNotifiable<_ScreenStates>(
+              notifier: _screenStateNotifier,
+              builder: (_, currentState) {
+                switch (currentState) {
+                  //$ LOADING STATE
+                  case _ScreenStates.loading:
+                    return ListView(
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        CompanyNameAppBar(_presenter.getCompanyName()),
+                        InventoryStockLoaderTop(),
+                        InventoryStockLoaderBottom(),
+                      ],
+                    );
 
-                //! ERROR STATE
-                case _ScreenStates.error:
-                  return Column(
-                    children: [
-                      CompanyNameAppBar(_presenter.getCompanyName()),
-                      Expanded(
-                        child: InventoryStockReportErrorWidget(
-                          errorMessage: _presenter.errorMessage,
-                          onRetryButtonPressed: () => _presenter.loadData(),
+                  //! ERROR STATE
+                  case _ScreenStates.error:
+                    return Column(
+                      children: [
+                        CompanyNameAppBar(_presenter.getCompanyName()),
+                        Expanded(
+                          child: InventoryStockReportErrorWidget(
+                            errorMessage: _presenter.errorMessage,
+                            onRetryButtonPressed: () => _presenter.loadData(),
+                          ),
                         ),
-                      ),
-                    ],
-                  );
+                      ],
+                    );
 
-                //* DATA STATE
-                case _ScreenStates.data:
-                  return SafeArea(
-                    child: RefreshIndicator(
+                  //* DATA STATE
+                  case _ScreenStates.data:
+                    return RefreshIndicator(
                       edgeOffset: 216,
                       onRefresh: () {
                         _presenter.refreshWithUpdatedFilters();
                         return Future.value(false);
                       },
                       child: _dataView(),
-                    ),
-                  );
-              }
-            },
+                    );
+                }
+              },
+            ),
           ),
         ),
       ),
