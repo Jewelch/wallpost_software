@@ -5,8 +5,6 @@ import 'package:wallpost/finance/reports/inventory_stock_report/ui/views/filter_
 
 import '../../../../../../_common_widgets/filter_views/filters_modal_sheet/filters_list_view.dart';
 import '../../../../../../_common_widgets/filter_views/filters_modal_sheet/filters_list_view_detail_disclosure_filter.dart';
-import '../../../../../../_common_widgets/filter_views/filters_modal_sheet/filters_list_view_radio_group_filter.dart';
-import '../../../../../../_common_widgets/filter_views/radio_group.dart';
 import '../../../../../../_shared/date_range_selector/ui/widgets/single_date_selector.dart';
 import '../../../entities/inventory_stock_report_filter.dart';
 import '../../presenters/inventory_stock_report_presenter.dart';
@@ -60,19 +58,6 @@ class _InventoryStockReportFiltersScreenState extends State<InventoryStockReport
           itemTitle: newFilters.getWarehouseFilterTitle(),
           onPressed: () => _launchWarehouseSelection(),
         ),
-        FiltersListViewRadioGroupFilter(
-          filterTitle: "Sort By",
-          radioGroup: RadioGroup(
-            items: [
-              "Price: Lowest",
-              "Price: Highest",
-              "Quantity: Lowest First",
-              "Quantity: Highest First",
-            ],
-            selectedIndex: null,
-            onDidSelectRadioItemAtIndex: (index) {},
-          ),
-        )
       ],
       onCancelButtonPressed: () => widget.modalSheetController.close(),
       onResetButtonPressed: () {

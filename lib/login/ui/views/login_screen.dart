@@ -41,6 +41,8 @@ class _LoginScreenState extends State<LoginScreen> implements LoginView {
   @override
   Widget build(BuildContext context) {
     return OnTapKeyboardDismisser(
+      dismissOnTap: true,
+      dismissOnScroll: false,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColors.screenBackgroundColor,
