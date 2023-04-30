@@ -27,10 +27,10 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(width: 1, color: AppColors.listItemBorderColor),
       ),
       child: InkWell(
@@ -69,6 +69,8 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                           child: Text(
                             widget.listPresenter.getSupplierName(widget.approval)!,
                             style: TextStyles.titleTextStyleBold.copyWith(color: AppColors.textColorBlueGray),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           ),
                         ),
                         SizedBox(width: 16),
@@ -78,37 +80,30 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                               widget.listPresenter.getTotalAmount(widget.approval),
                               style: TextStyles.largeTitleTextStyleBold,
                             ),
-                            SizedBox(width: 2),
                             Padding(
                               padding: const EdgeInsets.only(top: 1),
                               child: Text(widget.listPresenter.getCurrency(widget.approval)!,
                                   style: TextStyles.smallLabelTextStyle.copyWith(color: AppColors.textColorBlueGray)),
+                            ),
+                            SizedBox(width: 8),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: AppColors.defaultColor,
+                              size: 16,
                             )
                           ],
-                        )
-                        ,
+                        ),
                       ],
                     ),
                     SizedBox(height: 12),
                     _labelAndValue(
-                      "Bill No - ",
+                      "Request No - ",
                       widget.listPresenter.getBillNumber(widget.approval),
                     ),
                     SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _labelAndValue(
-                            "Due on - ",
-                            widget.listPresenter.getDueDate(widget.approval),
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios_sharp,
-                          color: AppColors.defaultColor,
-                          size: 16,
-                        ),
-                      ],
+                    _labelAndValue(
+                      "Due on - ",
+                      widget.listPresenter.getDueDate(widget.approval),
                     ),
                     if (!widget.listPresenter.isSelectionInProgress) SizedBox(height: 8),
                     if (!widget.listPresenter.isSelectionInProgress)
