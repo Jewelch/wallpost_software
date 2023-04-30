@@ -4,11 +4,11 @@ import '../../../_shared/constants/app_colors.dart';
 import '../../text_styles/text_styles.dart';
 import '../radio_group.dart';
 
-class ModalSheetRadioGroupFilter extends StatelessWidget {
+class FiltersListViewRadioGroupFilter extends StatelessWidget {
   final String filterTitle;
   final RadioGroup radioGroup;
 
-  const ModalSheetRadioGroupFilter({
+  const FiltersListViewRadioGroupFilter({
     required this.filterTitle,
     required this.radioGroup,
     Key? key,

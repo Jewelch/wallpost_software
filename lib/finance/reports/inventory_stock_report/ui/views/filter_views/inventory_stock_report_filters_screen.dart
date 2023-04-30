@@ -3,9 +3,9 @@ import 'package:wallpost/_common_widgets/screen_presenter/modal_sheet_presenter.
 import 'package:wallpost/finance/reports/inventory_stock_report/entities/inventory_stock_warehouse.dart';
 import 'package:wallpost/finance/reports/inventory_stock_report/ui/views/filter_views/warehouse_list_screen.dart';
 
-import '../../../../../../_common_widgets/filter_views/filters_modal_sheet/filters_modal_sheet.dart';
-import '../../../../../../_common_widgets/filter_views/filters_modal_sheet/modal_sheet_detail_disclosure_filter.dart';
-import '../../../../../../_common_widgets/filter_views/filters_modal_sheet/modal_sheet_radio_group_filter.dart';
+import '../../../../../../_common_widgets/filter_views/filters_modal_sheet/filters_list_view.dart';
+import '../../../../../../_common_widgets/filter_views/filters_modal_sheet/filters_list_view_detail_disclosure_filter.dart';
+import '../../../../../../_common_widgets/filter_views/filters_modal_sheet/filters_list_view_radio_group_filter.dart';
 import '../../../../../../_common_widgets/filter_views/radio_group.dart';
 import '../../../../../../_shared/date_range_selector/ui/widgets/single_date_selector.dart';
 import '../../../entities/inventory_stock_report_filter.dart';
@@ -50,17 +50,17 @@ class _InventoryStockReportFiltersScreenState extends State<InventoryStockReport
   Widget build(BuildContext context) {
     return FiltersListView(
       filters: [
-        ModalSheetDetailDisclosureFilter(
+        FiltersListViewDetailDisclosureFilter(
           filterTitle: "Date",
           itemTitle: newFilters.getDateFilterTitle(),
           onPressed: () => _launchDateSelection(),
         ),
-        ModalSheetDetailDisclosureFilter(
+        FiltersListViewDetailDisclosureFilter(
           filterTitle: "Warehouse",
           itemTitle: newFilters.getWarehouseFilterTitle(),
           onPressed: () => _launchWarehouseSelection(),
         ),
-        ModalSheetRadioGroupFilter(
+        FiltersListViewRadioGroupFilter(
           filterTitle: "Sort By",
           radioGroup: RadioGroup(
             items: [

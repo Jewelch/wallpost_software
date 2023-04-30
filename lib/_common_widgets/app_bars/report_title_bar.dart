@@ -21,11 +21,11 @@ class ReportTitleBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Finance/Reports",
+                subtitle,
                 style: TextStyles.labelTextStyleBold.copyWith(fontWeight: FontWeight.w500),
               ),
               Text(
-                "Inventory Stock",
+                title,
                 style: TextStyles.extraLargeTitleTextStyleBold.copyWith(fontWeight: FontWeight.w800),
               ),
             ],

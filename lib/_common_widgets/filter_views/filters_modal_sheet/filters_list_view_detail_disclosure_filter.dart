@@ -4,12 +4,12 @@ import 'package:flutter_svg/svg.dart';
 import '../../../_shared/constants/app_colors.dart';
 import '../../text_styles/text_styles.dart';
 
-class ModalSheetDetailDisclosureFilter extends StatelessWidget {
+class FiltersListViewDetailDisclosureFilter extends StatelessWidget {
   final String filterTitle;
   final String itemTitle;
   final VoidCallback onPressed;
 
-  const ModalSheetDetailDisclosureFilter({
+  const FiltersListViewDetailDisclosureFilter({
     required this.filterTitle,
     required this.itemTitle,
     required this.onPressed,
