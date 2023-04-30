@@ -27,7 +27,9 @@ class PurchaseBillDetail extends JSONInitializable {
       _billTo = sift.readStringFromMap(jsonMap, "bill_to");
       _billNumber = sift.readStringFromMap(jsonMap, "bill_no");
       _dueDate = sift.readDateFromMap(jsonMap, "due_date", "yyyy-MM-dd");
-      _currency = "USD";
+      //TODO - fix currency mapping - there is no currency in the response
+      //_currency = sift.readStringFromMap(jsonMap, "currency");
+      _currency = "";
 
       var billItemMapArray = sift.readMapListFromMap(jsonMap, 'items');
       _billDetailItem = _getPurchaseBillItemList(billItemMapArray);
@@ -43,7 +45,6 @@ class PurchaseBillDetail extends JSONInitializable {
       var taxArray = sift.readMapListFromMap(summaryMap, 'taxes');
       _totalTax = _getTotalTax(taxArray);
     } on SiftException catch (e) {
-      print(e.errorMessage);
       throw MappingException('Failed to cast purchase bill detail response. Error message - ${e.errorMessage}');
     }
   }
