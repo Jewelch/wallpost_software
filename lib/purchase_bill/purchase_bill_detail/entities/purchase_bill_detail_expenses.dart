@@ -15,6 +15,7 @@ class PurchaseBillDetailExpenses extends JSONInitializable {
       _description = sift.readStringFromMap(jsonMap, "description");
       _amount = sift.readStringFromMap(jsonMap, "amount");
     } on SiftException catch (e) {
+      print(e.errorMessage);
       throw MappingException('Failed to cast bill detail expenses response. Error message - ${e.errorMessage}');
     }
   }

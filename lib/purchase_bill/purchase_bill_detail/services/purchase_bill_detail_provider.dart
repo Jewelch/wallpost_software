@@ -45,8 +45,10 @@ class PurchaseBillDetailProvider {
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
+      print("herere!!");
       return PurchaseBillDetail.fromJson(responseMap);
-    } catch (_) {
+    } catch (e) {
+      print("failll - $e");
       throw InvalidResponseException();
     }
   }

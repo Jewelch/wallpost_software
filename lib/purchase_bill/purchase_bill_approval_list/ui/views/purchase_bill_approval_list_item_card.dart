@@ -98,7 +98,7 @@ class _PurchaseBillApprovalListItemCardState extends State<PurchaseBillApprovalL
                     ),
                     SizedBox(height: 12),
                     _labelAndValue(
-                      "Requested No - ",
+                      "Request No - ",
                       widget.listPresenter.getBillNumber(widget.approval),
                     ),
                     SizedBox(height: 12),
