@@ -27,9 +27,7 @@ class PurchaseBillDetail extends JSONInitializable {
       _billTo = sift.readStringFromMap(jsonMap, "bill_to");
       _billNumber = sift.readStringFromMap(jsonMap, "bill_no");
       _dueDate = sift.readDateFromMap(jsonMap, "due_date", "yyyy-MM-dd");
-      //TODO - fix currency mapping - there is no currency in the response
-      //_currency = sift.readStringFromMap(jsonMap, "currency");
-      _currency = "";
+      _currency = sift.readStringFromMap(jsonMap, "currency");
 
       var billItemMapArray = sift.readMapListFromMap(jsonMap, 'items');
       _billDetailItem = _getPurchaseBillItemList(billItemMapArray);
