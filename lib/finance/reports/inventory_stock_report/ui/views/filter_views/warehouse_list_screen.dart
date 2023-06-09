@@ -82,6 +82,7 @@ class _WarehouseListScreenState extends State<WarehouseListScreen> implements Wa
       child: Column(
         children: [
           _topBar(),
+          asdfasdf
           SearchBar(
             hint: "Search",
             autoFocus: false,
