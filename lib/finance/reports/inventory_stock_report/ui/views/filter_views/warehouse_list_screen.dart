@@ -79,8 +79,7 @@ class _WarehouseListScreenState extends State<WarehouseListScreen> implements Wa
 
     return Container(
       height: 500,
-      child: Column(
-        children: [
+      child: Column(asdfasdf
           _topBar(),
           SearchBar(
             hint: "Search",
