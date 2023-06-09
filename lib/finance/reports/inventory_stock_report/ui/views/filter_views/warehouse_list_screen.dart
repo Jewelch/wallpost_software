@@ -82,7 +82,6 @@ class _WarehouseListScreenState extends State<WarehouseListScreen> implements Wa
       child: Column(
         children: [
           _topBar(),
-          testcommit
           SearchBar(
             hint: "Search",
             autoFocus: false,
