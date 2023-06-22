@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../_common_widgets/shimmer/shimmer_effect.dart';
-import '../../../../../../restaurant_and_retail/common_widgets/sales_break_down_loader.dart';
 import 'profit_loss_loader_container.dart';
+import 'profit_loss_widget_loader.dart';
 
 class ProfitsLossesLoader extends StatelessWidget {
   const ProfitsLossesLoader({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class ProfitsLossesLoader extends StatelessWidget {
               SizedBox(height: 16),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
-                child: SalesBreakDownLoader(count: 1),
+                child: ProfitLossLoaderWidget(count: 1),
               ),
             ],
           ),

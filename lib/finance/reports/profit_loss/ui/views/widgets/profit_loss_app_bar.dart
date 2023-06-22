@@ -129,7 +129,7 @@ class ProfitsLossesAppBar extends StatelessWidget {
                         children: presenter.filters
                             .toReadableListOfString()
                             .map(
-                              (filterString) => _FiltringItem(presenter: presenter, filteringType: filterString),
+                              (filterString) => _FilterItem(presenter: presenter, filteringType: filterString),
                             )
                             .toList(),
                       ),
@@ -145,11 +145,11 @@ class ProfitsLossesAppBar extends StatelessWidget {
   }
 }
 
-class _FiltringItem extends StatelessWidget {
+class _FilterItem extends StatelessWidget {
   final ProfitsLossesPresenter presenter;
   final String filteringType;
 
-  const _FiltringItem({
+  const _FilterItem({
     required this.presenter,
     required this.filteringType,
   });

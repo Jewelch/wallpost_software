@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import 'profit_loss_loader_container1.dart';
+import 'profit_loss_loader_container.dart';
 
 class ProfitLossLoaderWidget extends StatelessWidget {
   const ProfitLossLoaderWidget({
@@ -13,7 +13,7 @@ class ProfitLossLoaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      ProfitLossLoaderContainer1(
+      ProfitsLossesContainerLoader(
         height: 60,
         topRadius: 16,
         width: double.infinity,
@@ -23,13 +23,13 @@ class ProfitLossLoaderWidget extends StatelessWidget {
         count,
         (_) => Padding(
           padding: const EdgeInsets.only(bottom: 1),
-          child: ProfitLossLoaderContainer1(
+          child: ProfitsLossesContainerLoader(
             height: 60,
             width: double.infinity,
           ),
         ),
       ),
-      ProfitLossLoaderContainer1(
+      ProfitsLossesContainerLoader(
         height: 60,
         bottomRadius: 16,
         width: double.infinity,
