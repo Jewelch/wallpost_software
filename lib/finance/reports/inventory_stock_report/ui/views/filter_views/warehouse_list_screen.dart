@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
 import 'package:wallpost/_common_widgets/screen_presenter/center_sheet_presenter.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/finance/reports/inventory_stock_report/entities/inventory_stock_warehouse.dart';

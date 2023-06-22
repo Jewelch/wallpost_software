@@ -5,7 +5,7 @@ import 'package:wallpost/restaurant_and_retail/sales_reports/item_sales/entities
 
 DateRange getDifferentDateRangeOption(DateRange oldDateRangeFilters) {
   DateRange newDateFilter = DateRange();
-  if (SelectableDateRangeOptions.thisYear == newDateFilter.selectedRangeOption) {
+  if (SelectableDateRangeOptions.thisYear == oldDateRangeFilters.selectedRangeOption) {
     newDateFilter.selectedRangeOption = SelectableDateRangeOptions.thisMonth;
   } else {
     newDateFilter.selectedRangeOption = SelectableDateRangeOptions.thisYear;

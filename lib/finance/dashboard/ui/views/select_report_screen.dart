@@ -5,6 +5,7 @@ import '../../../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
 import '../../../reports/inventory_stock_report/ui/views/inventory_stock_report_screen.dart';
+import '../../../reports/profit_loss/ui/views/screens/profit_loss_screen.dart';
 
 class SelectReportScreen extends StatefulWidget {
   const SelectReportScreen({Key? key}) : super(key: key);
@@ -78,6 +79,25 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                   ),
                                   child:
                                       Center(child: Text("Inventory Stock", style: TextStyles.subTitleTextStyleBold)),
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              InkWell(
+                                splashColor: AppColors.defaultColor,
+                                onTap: () {
+                                  ScreenPresenter.present(
+                                    ProfitsLossesScreen(),
+                                    context,
+                                    slideDirection: SlideDirection.fromBottom,
+                                  );
+                                },
+                                child: Container(
+                                  height: 64,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: Center(child: Text("Loss & Profit", style: TextStyles.subTitleTextStyleBold)),
                                 ),
                               ),
                               SizedBox(height: 32),

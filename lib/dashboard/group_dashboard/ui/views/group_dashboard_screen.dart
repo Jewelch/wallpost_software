@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
 import 'package:wallpost/_common_widgets/filter_views/multi_select_filter_chips.dart';
