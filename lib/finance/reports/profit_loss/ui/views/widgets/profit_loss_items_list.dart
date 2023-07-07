@@ -43,11 +43,17 @@ class ProfitLossWidgetItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      trailing: profitLossItem.children.isEmpty ? SizedBox(width: 24) : null,
-      title: _ExpansionPanelHeader(profitLossItem.name, profitLossItem.amount, considerColors: isColored),
-      backgroundColor: AppColors.screenBackgroundColor2,
-      children: [ProfitsLossesChildrenCard(profitLossItem, isColored: isColored)],
+    return Theme(
+      data: Theme.of(context).copyWith(
+        dividerColor: Colors.transparent, // Set the divider color to transparent
+      ),
+      child: ExpansionTile(
+        trailing: profitLossItem.children.isEmpty ? SizedBox(width: 24) : null,
+        title: _ExpansionPanelHeader(profitLossItem.name, profitLossItem.amount, considerColors: isColored),
+        backgroundColor: AppColors.screenBackgroundColor2,
+        children:
+            profitLossItem.children.isEmpty ? [] : [ProfitsLossesChildrenCard(profitLossItem, isColored: isColored)],
+      ),
     );
   }
 }
@@ -77,7 +83,7 @@ class _ExpansionPanelHeader extends StatelessWidget {
           ),
           SizedBox(width: 10),
           Text(
-            amount.toString(),
+            amount,
             textAlign: TextAlign.right,
             overflow: TextOverflow.ellipsis,
             style: TextStyles.largeTitleTextStyleBold.copyWith(

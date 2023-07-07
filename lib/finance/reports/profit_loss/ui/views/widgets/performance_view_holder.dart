@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../_shared/constants/app_colors.dart';
 
-
 class PerformanceViewHolder extends StatelessWidget {
   final Widget content;
   final Color backgroundColor;

@@ -51,10 +51,10 @@ class ProfitLossItem {
 
   ProfitLossItem.fromJson(Map<String, dynamic> json)
       : name = json['name'],
-        amount = json['amount'],
+        amount = json['amount'].toString().replaceAll(",", "."),
         children = (json['childrens'] as List? ?? []).map((e) => ProfitLossItem.fromJson(e)).toList();
 
   ProfitLossItem.fromJsonWithName(this.name, Map<String, dynamic> json)
-      : amount = json['amounts'],
+      : amount = json['amounts'].toString().replaceAll(",", "."),
         children = (json['childrens'] as List? ?? []).map((e) => ProfitLossItem.fromJson(e)).toList();
 }

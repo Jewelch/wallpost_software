@@ -8,7 +8,8 @@ if (localPropertiesFile.exists()) {
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
+if (!keystorePropertiesFile.exists()) {
+        throw new GradleException("keystorePropertiesFile")
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 

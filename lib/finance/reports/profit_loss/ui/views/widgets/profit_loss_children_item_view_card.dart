@@ -101,10 +101,12 @@ class ProfitsLossesChildrenCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  children: [
-                    ProfitsLossesChildrenCard(profitLossItems[index], isColored: isColored),
-                    index < profitLossItems.length - 1 ? Divider(height: 1) : SizedBox(),
-                  ],
+                  children: profitLossItems[index].children.isEmpty
+                      ? []
+                      : [
+                          ProfitsLossesChildrenCard(profitLossItems[index], isColored: isColored),
+                          index < profitLossItems.length - 1 ? Divider(height: 1) : SizedBox(),
+                        ],
                 );
               },
             ),

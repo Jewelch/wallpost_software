@@ -4,7 +4,7 @@ description: WallPost Mobile App
 version: 3.0.18+198
 
 environment:
-  sdk: ">=2.17.0 <3.0.5"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -54,7 +54,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mocktail: 0.3.0
-  mutation_test: ^1.2.2
   random_string: 2.3.1
 
 # The following section is specific to Flutter.
