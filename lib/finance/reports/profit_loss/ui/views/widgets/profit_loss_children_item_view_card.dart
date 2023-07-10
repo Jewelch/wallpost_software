@@ -18,30 +18,15 @@ class ProfitsLossesChildrenCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(profitLossItems.length);
-    final double itemNameWidth = MediaQuery.of(context).size.width * .32;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Card(
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        borderOnForeground: true,
-        elevation: 0,
+    return Card(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      borderOnForeground: true,
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         child: Column(
           children: [
-            SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  SizedBox(width: itemNameWidth),
-                  Spacer(),
-                  Text(
-                    "Revenue",
-                    style: TextStyles.labelTextStyle.copyWith(fontWeight: FontWeight.w500),
-                  )
-                ],
-              ),
-            ),
             ListView.builder(
               padding: EdgeInsets.only(top: 6),
               shrinkWrap: true,
@@ -58,15 +43,13 @@ class ProfitsLossesChildrenCard extends StatelessWidget {
                           profitLossItems[index].name,
                           style: TextStyle(
                             overflow: TextOverflow.ellipsis,
-                            color: AppColors.textColorBlueGray,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                            color: AppColors.textColorBlueGrayLight,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
                           ),
                           maxLines: 2,
                         ),
                       ),
-                      // Spacer(),
-
                       Row(
                         children: [
                           SizedBox(width: 8),
@@ -76,12 +59,12 @@ class ProfitsLossesChildrenCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyles.largeTitleTextStyleBold.copyWith(
                                 color: isColored
-                                    ? (num.parse(profitLossItems[index].amount) >= 0
-                                        ? num.parse(profitLossItems[index].amount) > 0
-                                            ? Colors.green
-                                            : Colors.black
-                                        : Colors.red)
-                                    : Colors.black),
+                                    ? (profitLossItems[index].formattedAmount >= 0
+                                        ? profitLossItems[index].formattedAmount > 0
+                                            ? AppColors.brightGreen
+                                            : AppColors.textColorBlack
+                                        : AppColors.red)
+                                    : AppColors.textColorBlack),
                           ),
                           SizedBox(width: 3),
                           Column(
@@ -105,7 +88,13 @@ class ProfitsLossesChildrenCard extends StatelessWidget {
                       ? []
                       : [
                           ProfitsLossesChildrenCard(profitLossItems[index], isColored: isColored),
-                          index < profitLossItems.length - 1 ? Divider(height: 1) : SizedBox(),
+                          // index < profitLossItems.length - 1
+                          //     ? Divider(
+                          //         thickness: 1.5,
+                          //         height: 1,
+                          //         color: AppColors.appBarShadowColor,
+                          //       )
+                          //     : SizedBox.shrink(),
                         ],
                 );
               },

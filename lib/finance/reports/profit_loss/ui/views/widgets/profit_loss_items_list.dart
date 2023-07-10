@@ -43,27 +43,31 @@ class ProfitLossWidgetItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(profitLossItem.amount);
     return Theme(
-      data: Theme.of(context).copyWith(
-        dividerColor: Colors.transparent, // Set the divider color to transparent
-      ),
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
         trailing: profitLossItem.children.isEmpty ? SizedBox(width: 24) : null,
-        title: _ExpansionPanelHeader(profitLossItem.name, profitLossItem.amount, considerColors: isColored),
+        title: _ExpansionPanelHeader(profitLossItem, considerColors: isColored),
         backgroundColor: AppColors.screenBackgroundColor2,
-        children:
-            profitLossItem.children.isEmpty ? [] : [ProfitsLossesChildrenCard(profitLossItem, isColored: isColored)],
+        children: profitLossItem.children.isEmpty
+            ? []
+            : [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ProfitsLossesChildrenCard(profitLossItem, isColored: isColored),
+                )
+              ],
       ),
     );
   }
 }
 
 class _ExpansionPanelHeader extends StatelessWidget {
-  final String title;
-  final String amount;
+  final ProfitLossItem item;
   final bool considerColors;
 
-  const _ExpansionPanelHeader(this.title, this.amount, {required this.considerColors});
+  const _ExpansionPanelHeader(this.item, {required this.considerColors});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +78,7 @@ class _ExpansionPanelHeader extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 24.0),
               child: Text(
-                title,
+                item.name,
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyles.largeTitleTextStyleBold.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500),
@@ -83,18 +87,18 @@ class _ExpansionPanelHeader extends StatelessWidget {
           ),
           SizedBox(width: 10),
           Text(
-            amount,
+            item.amount,
             textAlign: TextAlign.right,
             overflow: TextOverflow.ellipsis,
             style: TextStyles.largeTitleTextStyleBold.copyWith(
                 fontSize: 20.0,
                 color: considerColors
-                    ? (num.parse(amount) >= 0
-                        ? num.parse(amount) > 0
-                            ? Colors.green
-                            : Colors.black
-                        : Colors.red)
-                    : Colors.black),
+                    ? (item.formattedAmount >= 0
+                        ? item.formattedAmount > 0
+                            ? AppColors.brightGreen
+                            : AppColors.textColorBlack
+                        : AppColors.red)
+                    : AppColors.textColorBlack),
           ),
           SizedBox(width: 2),
           Align(

@@ -47,14 +47,15 @@ class ProfitsLossesReport {
 class ProfitLossItem {
   final String name;
   final String amount;
+  num get formattedAmount => num.parse(amount.replaceAll(",", "."));
   final List<ProfitLossItem> children;
 
   ProfitLossItem.fromJson(Map<String, dynamic> json)
       : name = json['name'],
-        amount = json['amount'].toString().replaceAll(",", "."),
+        amount = json['amount'].toString(),
         children = (json['childrens'] as List? ?? []).map((e) => ProfitLossItem.fromJson(e)).toList();
 
   ProfitLossItem.fromJsonWithName(this.name, Map<String, dynamic> json)
-      : amount = json['amounts'].toString().replaceAll(",", "."),
+      : amount = json['amounts'].toString(),
         children = (json['childrens'] as List? ?? []).map((e) => ProfitLossItem.fromJson(e)).toList();
 }

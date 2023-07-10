@@ -83,16 +83,15 @@ class _State extends State<ProfitsLossesScreen> implements ProfitsLossesView {
                     pinned: true,
                     delegate: SliverAppBarDelegate(
                       minHeight: 56 + 16,
-                      maxHeight: 100,
+                      maxHeight: 90 + 16,
                       child: Notifiable(
                         notifier: profitLossDataNotifier,
                         builder: (context) => LayoutBuilder(builder: (context, contraints) {
                           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                            AppBarWidget.appbarNotifier.notify(contraints.maxHeight <= 100);
+                            AppBarWidget.appbarNotifier.notify(contraints.maxHeight <= 90);
                           });
                           return Padding(
-                            padding:
-                                contraints.maxHeight > 100 ? EdgeInsets.symmetric(horizontal: 24) : EdgeInsets.zero,
+                            padding: contraints.maxHeight > 90 ? EdgeInsets.symmetric(horizontal: 24) : EdgeInsets.zero,
                             child: ProfitsLossesHeaderCard(presenter, contraints.maxHeight),
                           );
                         }),

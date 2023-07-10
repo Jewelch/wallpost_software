@@ -70,9 +70,10 @@ class ProfitsLossesPresenter {
 
   String getNetProfit() => profitLossReport.netProfit.amount;
 
-  String getNetSaleTitle() => num.parse(profitLossReport.netProfit.amount) > 0 ? "Net Profit" : "Net Loss";
+  String getNetSaleTitle() => profitLossReport.netProfit.formattedAmount > 0 ? "Net Profit" : "Net Loss";
 
   Color getNetSaleColor() =>
-      num.parse(profitLossReport.netProfit.amount) >= 0 ? AppColors.lightGreen : AppColors.lightRed;
-  Color getNetSaleTextColor() => num.parse(profitLossReport.netProfit.amount) >= 0 ? AppColors.green : AppColors.red;
+      profitLossReport.netProfit.formattedAmount >= 0 ? AppColors.lightGreen : AppColors.lightRed;
+  Color getNetSaleTextColor() =>
+      profitLossReport.netProfit.formattedAmount >= 0 ? AppColors.brightGreen : AppColors.red;
 }

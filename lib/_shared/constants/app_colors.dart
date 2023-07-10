@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  AppColors._();
+
   static const Color defaultColor = Color.fromRGBO(0, 150, 227, 1.0);
   static const Color defaultColorWithTransparency = Color.fromRGBO(0, 150, 227, 0.6);
   static const Color defaultColorDark = Color.fromRGBO(0, 60, 129, 1.0);
