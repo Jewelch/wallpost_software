@@ -18,26 +18,44 @@ class ProfitsLossesExpansions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ProfitLossWidgetItem(presenter.profitLossReport.revenue, isColored: true),
+        ProfitLossWidgetItem(presenter.profitLossReport.revenue),
         ProfitLossWidgetItem(presenter.profitLossReport.costOfSales),
-        ProfitLossWidgetItem(presenter.profitLossReport.grossProfit, isColored: true),
+        _ProfitHeaderDivider(),
+        ProfitLossWidgetItem(presenter.profitLossReport.grossProfit, isProfit: true),
+        _ProfitHeaderDivider(),
         ProfitLossWidgetItem(presenter.profitLossReport.expense),
-        ProfitLossWidgetItem(presenter.profitLossReport.operatingProfit),
+        _ProfitHeaderDivider(),
+        ProfitLossWidgetItem(presenter.profitLossReport.operatingProfit, isProfit: true),
+        _ProfitHeaderDivider(),
         ProfitLossWidgetItem(presenter.profitLossReport.otherExpenses),
         ProfitLossWidgetItem(presenter.profitLossReport.otherRevenues),
-        ProfitLossWidgetItem(presenter.profitLossReport.netProfit, isColored: true),
+        _ProfitHeaderDivider(),
+        ProfitLossWidgetItem(presenter.profitLossReport.netProfit, isProfit: true),
+        _ProfitHeaderDivider(),
       ],
+    );
+  }
+}
+
+class _ProfitHeaderDivider extends StatelessWidget {
+  const _ProfitHeaderDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Divider(height: 2),
     );
   }
 }
 
 class ProfitLossWidgetItem extends StatelessWidget {
   final ProfitLossItem profitLossItem;
-  final bool isColored;
+  final bool isProfit;
 
   const ProfitLossWidgetItem(
     this.profitLossItem, {
-    this.isColored = false,
+    this.isProfit = false,
     super.key,
   });
 
@@ -47,15 +65,20 @@ class ProfitLossWidgetItem extends StatelessWidget {
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
-        trailing: profitLossItem.children.isEmpty ? SizedBox(width: 24) : null,
-        title: _ExpansionPanelHeader(profitLossItem, considerColors: isColored),
-        backgroundColor: AppColors.screenBackgroundColor2,
+        childrenPadding: EdgeInsets.zero,
+        // collapsedBackgroundColor: AppColors.green,
+        // backgroundColor: AppColors.rose,
+        collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        tilePadding: EdgeInsets.symmetric(horizontal: 24),
+        trailing: profitLossItem.children.isEmpty ? SizedBox.shrink() : null,
+        title: _ExpansionPanelHeader(profitLossItem, isProfit: isProfit),
         children: profitLossItem.children.isEmpty
             ? []
             : [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: ProfitsLossesChildrenCard(profitLossItem, isColored: isColored),
+                  child: ProfitsLossesChildrenCard(profitLossItem, isParent: true),
                 )
               ],
       ),
@@ -65,9 +88,9 @@ class ProfitLossWidgetItem extends StatelessWidget {
 
 class _ExpansionPanelHeader extends StatelessWidget {
   final ProfitLossItem item;
-  final bool considerColors;
+  final bool isProfit;
 
-  const _ExpansionPanelHeader(this.item, {required this.considerColors});
+  const _ExpansionPanelHeader(this.item, {required this.isProfit});
 
   @override
   Widget build(BuildContext context) {
@@ -75,25 +98,30 @@ class _ExpansionPanelHeader extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0),
-              child: Text(
-                item.name,
-                maxLines: 3,
-                textAlign: TextAlign.left,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyles.largeTitleTextStyleBold.copyWith(fontSize: 17.0, fontWeight: FontWeight.w500),
-              ),
+            child: Text(
+              item.name,
+              maxLines: 3,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              style: isProfit
+                  ? TextStyles.largeTitleTextStyleBold.copyWith(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textColorBlueGrayLight,
+                    )
+                  : TextStyles.largeTitleTextStyleBold.copyWith(
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.w500,
+                    ),
             ),
           ),
-          SizedBox(width: 10),
           Text(
             item.amount,
             textAlign: TextAlign.right,
             overflow: TextOverflow.ellipsis,
             style: TextStyles.largeTitleTextStyleBold.copyWith(
                 fontSize: 18.0,
-                color: considerColors
+                color: isProfit
                     ? (item.formattedAmount >= 0
                         ? item.formattedAmount > 0
                             ? AppColors.brightGreen
@@ -101,7 +129,6 @@ class _ExpansionPanelHeader extends StatelessWidget {
                         : AppColors.red)
                     : AppColors.textColorBlack),
           ),
-          SizedBox(width: 2),
         ],
       ),
     );
