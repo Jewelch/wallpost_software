@@ -61,6 +61,10 @@ class HourlySalesPresenter {
 
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
+  String getCompanyCurrency() {
+    return _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
+  }
+
   String getHourAtIndex(int index) => itemSalesReport.hourlySales[index].hour;
 
   String getTicketsNumberAtIndex(int index) => 'Tickets(${itemSalesReport.hourlySales[index].ticketsCount})';

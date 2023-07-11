@@ -65,7 +65,7 @@ class HourlySalesDataCard extends StatelessWidget {
                         Column(
                           children: [
                             Text(
-                              'QAR',
+                              '${presenter.getCompanyCurrency()}',
                               style: TextStyle(
                                 color: AppColors.textColorBlueGray,
                                 fontSize: 9,

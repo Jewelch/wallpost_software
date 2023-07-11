@@ -30,7 +30,7 @@ class ProfitsLossesHeaderCard extends StatelessWidget {
       )),
       child: _SalesElement(
         backgroundColor: presenter.getNetSaleColor(),
-        label: "Net Profit (QAR)",
+        label: "Net Profit (${presenter.getCompanyCurrency()})",
         value: presenter.getNetProfit(),
         isVertical: true,
         valueColor: presenter.getNetSaleTextColor(),

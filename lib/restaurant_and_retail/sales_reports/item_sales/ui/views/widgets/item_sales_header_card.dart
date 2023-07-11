@@ -38,7 +38,7 @@ class ItemSalesHeaderCard extends StatelessWidget {
                 children: [
                   _SalesElement(
                     backgroundColor: AppColors.lightGreen,
-                    label: "Total Revenue(QAR)",
+                    label: "Total Revenue(${presenter.getCompanyCurrency()})",
                     value: presenter.getTotalRevenue(),
                     isVertical: true,
                     valueColor: AppColors.green,
@@ -62,7 +62,7 @@ class ItemSalesHeaderCard extends StatelessWidget {
                   children: [
                     _SalesElement(
                       backgroundColor: AppColors.lightGreen,
-                      label: "Total Revenue (QAR)",
+                      label: "Total Revenue (${presenter.getCompanyCurrency()})",
                       value: presenter.getTotalRevenue(),
                       isVertical: true,
                       valueColor: AppColors.green,

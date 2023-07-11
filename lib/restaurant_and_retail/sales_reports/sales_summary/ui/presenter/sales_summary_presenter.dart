@@ -124,6 +124,10 @@ class SalesSummaryPresenter {
 
   String get getSelectedCompanyName => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
+  String getCompanyCurrency() {
+    return _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
+  }
+
   String getSalesSummaryItemNameAt(int index, List<SalesSummaryItem> summaryItem) => summaryItem[index].item;
 
   String getSalesSummaryItemQuantityAt(int index, List<SalesSummaryItem> collectionsAndCategories) =>

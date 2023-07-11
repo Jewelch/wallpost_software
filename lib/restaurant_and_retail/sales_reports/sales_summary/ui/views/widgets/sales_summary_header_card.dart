@@ -30,7 +30,7 @@ class SummarySalesHeaderCard extends StatelessWidget {
       )),
       child: _SalesElement(
         backgroundColor: AppColors.lightGreen,
-        label: "Total Sales (QAR)",
+        label: "Total Sales (${presenter.getCompanyCurrency()})",
         value: presenter.salesSummary.summary.netSales,
         isVertical: true,
         valueColor: AppColors.brightGreen,

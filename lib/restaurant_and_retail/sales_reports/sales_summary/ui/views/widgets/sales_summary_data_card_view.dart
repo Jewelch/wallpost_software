@@ -110,22 +110,27 @@ class _SummaryExpansionCard extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               children: [
                 _SummaryElement(
+                  presenter: presenter,
                   title: 'Gross Sales',
                   value: presenter.getSalesSummaryGross,
                 ),
                 _SummaryElement(
+                  presenter: presenter,
                   title: 'Discount',
                   value: presenter.getSalesSummaryDiscounts,
                 ),
                 _SummaryElement(
+                  presenter: presenter,
                   title: 'Refund',
                   value: presenter.getSalesSummaryRefunds,
                 ),
                 _SummaryElement(
+                  presenter: presenter,
                   title: 'Tax',
                   value: presenter.getSalesSummaryTax,
                 ),
                 _SummaryElement(
+                  presenter: presenter,
                   title: 'Net Sales',
                   value: presenter.getSalesSummaryNet,
                   shouldDisplayDivider: false,
@@ -140,9 +145,12 @@ class _SummaryExpansionCard extends StatelessWidget {
 }
 
 class _SummaryElement extends StatelessWidget {
+  final SalesSummaryPresenter presenter;
+
   const _SummaryElement({
     required this.title,
     required this.value,
+    required this.presenter,
     this.shouldDisplayDivider = true,
   });
 
@@ -186,7 +194,7 @@ class _SummaryElement extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        'QAR',
+                        '${presenter.getCompanyCurrency()}',
                         style: TextStyle(
                           color: AppColors.textColorBlueGray,
                           fontSize: 9,
@@ -333,7 +341,7 @@ class _SalesSummaryItemExpansionCard extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    'QAR',
+                                    '${presenter.getCompanyCurrency()}',
                                     style: TextStyle(
                                       color: AppColors.textColorBlueGray,
                                       fontSize: 9,
@@ -458,7 +466,7 @@ class _OrderTypesExpansionCard extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    'QAR',
+                                    '${presenter.getCompanyCurrency()}',
                                     style: TextStyle(
                                       color: AppColors.textColorBlueGray,
                                       fontSize: 9,

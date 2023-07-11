@@ -82,6 +82,10 @@ class ItemSalesPresenter {
 
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
+  String getCompanyCurrency() {
+    return _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
+  }
+
   // Top card getters
 
   String getTotalRevenue() => itemSalesReport.totalRevenue;

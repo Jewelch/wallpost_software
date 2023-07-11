@@ -66,6 +66,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             headerBuilder: ((context, isExpanded) => _ExpansionPanelHeader(
                   widget.presenter.getCategoryCardHeader(),
                   widget.presenter.getTotalRevenue(),
+                  widget.presenter,
                 )),
             body: ItemSalesCategoryViewCard(widget.presenter),
           )
@@ -102,6 +103,7 @@ class _ItemsViewState extends State<ItemsView> {
             headerBuilder: ((_, isExpanded) => _ExpansionPanelHeader(
                   widget.presenter.getItemCardHeader(),
                   widget.presenter.getTotalRevenue(),
+                  widget.presenter,
                 )),
             body: ItemSalesItemViewCard(widget.presenter),
           )
@@ -140,6 +142,7 @@ class _CategoriesAndItemsViewState extends State<CategoriesAndItemsView> {
               headerBuilder: ((_, __) => _ExpansionPanelHeader(
                     widget.presenter.getCategoryNameCardHeader(breakDown),
                     widget.presenter.getBreakDownRevenueForCategory(breakDown),
+                    widget.presenter,
                   )),
               body: ItemSalesCategoryItemViewCard(widget.presenter, breakDown),
             ),
@@ -152,10 +155,12 @@ class _CategoriesAndItemsViewState extends State<CategoriesAndItemsView> {
 class _ExpansionPanelHeader extends StatelessWidget {
   final String title;
   final String totalRevenue;
+  final ItemSalesPresenter presenter;
 
   const _ExpansionPanelHeader(
     this.title,
     this.totalRevenue,
+    this.presenter,
   );
 
   @override
@@ -186,7 +191,7 @@ class _ExpansionPanelHeader extends StatelessWidget {
               heightFactor: 1.5,
               alignment: Alignment.topLeft,
               child: Text(
-                "QAR",
+                "${presenter.getCompanyCurrency()}",
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   color: AppColors.textColorBlueGray,
