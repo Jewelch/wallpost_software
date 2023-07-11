@@ -79,9 +79,10 @@ class _ExpansionPanelHeader extends StatelessWidget {
               padding: const EdgeInsets.only(left: 24.0),
               child: Text(
                 item.name,
+                maxLines: 3,
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyles.largeTitleTextStyleBold.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500),
+                style: TextStyles.largeTitleTextStyleBold.copyWith(fontSize: 17.0, fontWeight: FontWeight.w500),
               ),
             ),
           ),
@@ -91,7 +92,7 @@ class _ExpansionPanelHeader extends StatelessWidget {
             textAlign: TextAlign.right,
             overflow: TextOverflow.ellipsis,
             style: TextStyles.largeTitleTextStyleBold.copyWith(
-                fontSize: 20.0,
+                fontSize: 18.0,
                 color: considerColors
                     ? (item.formattedAmount >= 0
                         ? item.formattedAmount > 0
@@ -101,18 +102,6 @@ class _ExpansionPanelHeader extends StatelessWidget {
                     : AppColors.textColorBlack),
           ),
           SizedBox(width: 2),
-          Align(
-              heightFactor: 1.5,
-              alignment: Alignment.topLeft,
-              child: Text(
-                "QAR",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: AppColors.textColorBlueGray,
-                  fontSize: 8,
-                  fontWeight: FontWeight.w500,
-                ),
-              )),
         ],
       ),
     );

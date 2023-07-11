@@ -25,7 +25,6 @@ class ProfitsLossesReport {
 
   factory ProfitsLossesReport.fromJson(Map<String, dynamic> json) {
     try {
-      print(json);
       return ProfitsLossesReport._(
         revenue: ProfitLossItem.fromJsonWithName('Revenue', json['Revenue']),
         costOfSales: ProfitLossItem.fromJsonWithName('Cost of Sales', json['Cost of Sales']),
@@ -37,7 +36,6 @@ class ProfitsLossesReport {
         netProfit: ProfitLossItem.fromJsonWithName('Net Profit', json['Net Profit']),
       );
     } catch (error, stackTrace) {
-      print(error);
       debugPrint(stackTrace.toString());
       throw MappingException('Failed to cast ProfitsLossesReport response. Error message - $error');
     }
@@ -47,7 +45,7 @@ class ProfitsLossesReport {
 class ProfitLossItem {
   final String name;
   final String amount;
-  num get formattedAmount => num.parse(amount.replaceAll(",", "."));
+  num get formattedAmount => num.parse(amount.replaceAll(",", ""));
   final List<ProfitLossItem> children;
 
   ProfitLossItem.fromJson(Map<String, dynamic> json)
