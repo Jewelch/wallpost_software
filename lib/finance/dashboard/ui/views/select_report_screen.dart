@@ -77,8 +77,7 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                     color: AppColors.screenBackgroundColor.withOpacity(.7),
                                     borderRadius: BorderRadius.circular(14),
                                   ),
-                                  child:
-                                      Center(child: Text("Inventory Stock", style: TextStyles.subTitleTextStyleBold)),
+                                  child: Center(child: Text("Stock", style: TextStyles.subTitleTextStyleBold)),
                                 ),
                               ),
                               SizedBox(height: 16),
@@ -97,7 +96,7 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                     color: AppColors.screenBackgroundColor.withOpacity(.7),
                                     borderRadius: BorderRadius.circular(14),
                                   ),
-                                  child: Center(child: Text("Loss & Profit", style: TextStyles.subTitleTextStyleBold)),
+                                  child: Center(child: Text("Profit & Loss", style: TextStyles.subTitleTextStyleBold)),
                                 ),
                               ),
                               SizedBox(height: 32),

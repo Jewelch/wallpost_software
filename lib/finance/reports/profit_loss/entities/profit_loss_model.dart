@@ -44,6 +44,7 @@ class ProfitsLossesReport {
 
 class ProfitLossItem {
   final String name;
+  String get exactName => formattedAmount < 0 ? name.replaceAll("Profit", "Loss") : name;
   final String amount;
   num get formattedAmount => num.parse(amount.replaceAll(",", ""));
   final List<ProfitLossItem> children;

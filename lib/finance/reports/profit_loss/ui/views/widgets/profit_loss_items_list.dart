@@ -66,8 +66,6 @@ class ProfitLossWidgetItem extends StatelessWidget {
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
         childrenPadding: EdgeInsets.zero,
-        // collapsedBackgroundColor: AppColors.green,
-        // backgroundColor: AppColors.rose,
         collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         tilePadding: EdgeInsets.symmetric(horizontal: 24),
@@ -99,7 +97,7 @@ class _ExpansionPanelHeader extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              item.name,
+              isProfit ? item.exactName : item.name,
               maxLines: 3,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,

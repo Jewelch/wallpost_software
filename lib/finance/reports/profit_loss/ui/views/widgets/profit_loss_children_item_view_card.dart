@@ -47,7 +47,7 @@ class ProfitsLossesChildrenCard extends StatelessWidget {
                         profitLossItems[index].name,
                         style: TextStyle(
                           overflow: TextOverflow.ellipsis,
-                          color: AppColors.textColorBlueGrayLight,
+                          color: AppColors.textColorBlueGray,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -57,7 +57,6 @@ class ProfitsLossesChildrenCard extends StatelessWidget {
                     SizedBox(
                       width: 100,
                       child: Text(
-                        // "989,877,652",
                         profitLossItems[index].amount,
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,

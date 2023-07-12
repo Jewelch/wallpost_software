@@ -67,7 +67,7 @@ class ProfitsLossesPresenter {
   // Getters
 
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
-  
+
   String getCompanyCurrency() {
     return _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
   }
