@@ -34,6 +34,8 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>WallPost needs access to your camera to capture photos that you would like to upload.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>WallPost would like you access your location to mark your attendance.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>WallPost would like you access your location to mark your attendance.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
