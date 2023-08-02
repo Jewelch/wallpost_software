@@ -25,16 +25,16 @@ class BalanceSheetHeaderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _SalesElement(
-                  backgroundColor: AppColors.lightGreen,
+                  backgroundColor: AppColors.lightGray,
                   label: "Assets",
                   value: _presenter.getAssets(),
-                  valueColor: AppColors.brightGreen,
+                  valueColor: AppColors.textColorBlack,
                 ),
                 _SalesElement(
-                  backgroundColor: AppColors.lightGreen,
+                  backgroundColor: AppColors.lightGray,
                   label: "Liability",
                   value: _presenter.getLiabilites(),
-                  valueColor: AppColors.brightGreen,
+                  valueColor: AppColors.textColorBlack,
                 ),
               ],
             ),
@@ -42,7 +42,7 @@ class BalanceSheetHeaderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _SalesElement(
-                  backgroundColor: AppColors.lightYellow,
+                  backgroundColor: AppColors.lightGray,
                   label: "Equity",
                   value: _presenter.getEquity(),
                   valueColor: AppColors.textColorBlack,
