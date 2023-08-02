@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:wallpost/_common_widgets/app_bars/company_name_app_bar.dart';
-import 'package:wallpost/finance/reports/financial_reports/ui/presenters/balance_sheet_presenter.dart';
+import 'package:wallpost/finance/reports/balance_sheet/ui/presenters/balance_sheet_presenter.dart';
 
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';

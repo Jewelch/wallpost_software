@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notifiable/item_notifiable.dart';
 import 'package:notifiable/notifiable.dart';
-import 'package:wallpost/finance/reports/financial_reports/ui/presenters/balance_sheet_presenter.dart';
-import 'package:wallpost/finance/reports/financial_reports/ui/views/loader/balance_sheet_loader.dart';
+import 'package:wallpost/finance/reports/balance_sheet/ui/presenters/balance_sheet_presenter.dart';
+import 'package:wallpost/finance/reports/balance_sheet/ui/views/loader/balance_sheet_loader.dart';
 
 import '../../../../../../_shared/constants/app_colors.dart';
 import '../../view_contracts/balance_sheet_view.dart';
@@ -130,10 +130,10 @@ class _DataView extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 24, bottom: 40),
+                  padding: EdgeInsets.only(top: 24),
                   child: BalanceSheetList(presenter),
                 ),
-                SizedBox(height: MediaQuery.of(context).viewPadding.bottom + 120),
+                SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
               ],
             ),
           ),

@@ -28,7 +28,10 @@ class BalanceSheetList extends StatelessWidget {
         _BalanceSheetHeaderDivider(),
         _AmountItem(presenter.balanceSheetReport.totalLiabilityAndOwnersEquity),
         _BalanceSheetHeaderDivider(),
-        _AmountItem(presenter.balanceSheetReport.profitLossAccount),
+        _AmountItem(
+          presenter.balanceSheetReport.profitLossAccount,
+          isProfit: true,
+        ),
         _BalanceSheetHeaderDivider(),
         _AmountItem(
           presenter.balanceSheetReport.difference,
@@ -123,10 +126,16 @@ class _AmountItem extends StatelessWidget {
         ),
         title: Text(
           item.name,
-          style: TextStyles.largeTitleTextStyleBold.copyWith(
-            fontSize: 17.0,
-            fontWeight: FontWeight.w500,
-          ),
+          style: isProfit
+              ? TextStyles.largeTitleTextStyleBold.copyWith(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textColorBlueGrayLight,
+                )
+              : TextStyles.largeTitleTextStyleBold.copyWith(
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.w500,
+                ),
         ),
       ),
     );
