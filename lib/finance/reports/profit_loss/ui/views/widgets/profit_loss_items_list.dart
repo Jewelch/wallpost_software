@@ -19,6 +19,7 @@ class ProfitsLossesExpansions extends StatelessWidget {
     return Column(
       children: [
         ProfitLossWidgetItem(presenter.profitLossReport.revenue),
+        _ProfitHeaderDivider(),
         ProfitLossWidgetItem(presenter.profitLossReport.costOfSales),
         _ProfitHeaderDivider(),
         ProfitLossWidgetItem(presenter.profitLossReport.grossProfit, isProfit: true),
@@ -28,6 +29,7 @@ class ProfitsLossesExpansions extends StatelessWidget {
         ProfitLossWidgetItem(presenter.profitLossReport.operatingProfit, isProfit: true),
         _ProfitHeaderDivider(),
         ProfitLossWidgetItem(presenter.profitLossReport.otherExpenses),
+        _ProfitHeaderDivider(),
         ProfitLossWidgetItem(presenter.profitLossReport.otherRevenues),
         _ProfitHeaderDivider(),
         ProfitLossWidgetItem(presenter.profitLossReport.netProfit, isProfit: true),

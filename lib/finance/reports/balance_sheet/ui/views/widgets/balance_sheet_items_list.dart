@@ -19,30 +19,35 @@ class BalanceSheetList extends StatelessWidget {
     return Column(
       children: [
         ProfitLossWidgetItem(presenter.balanceSheetReport.assets),
+        _BalanceSheetHeaderDivider(),
         ProfitLossWidgetItem(presenter.balanceSheetReport.liabilities),
-        _ProfitHeaderDivider(),
-        ProfitLossWidgetItem(presenter.balanceSheetReport.equity, isProfit: true),
-        _ProfitHeaderDivider(),
+        _BalanceSheetHeaderDivider(),
+        ProfitLossWidgetItem(presenter.balanceSheetReport.equity),
+        _BalanceSheetHeaderDivider(),
         _AmountItem(presenter.balanceSheetReport.totalAssets),
-        _ProfitHeaderDivider(),
-        _AmountItem(presenter.balanceSheetReport.totalLiabilityAndOwnersEquity, isProfit: true),
-        _ProfitHeaderDivider(),
+        _BalanceSheetHeaderDivider(),
+        _AmountItem(presenter.balanceSheetReport.totalLiabilityAndOwnersEquity),
+        _BalanceSheetHeaderDivider(),
         _AmountItem(presenter.balanceSheetReport.profitLossAccount),
-        _AmountItem(presenter.balanceSheetReport.difference),
-        _ProfitHeaderDivider(),
+        _BalanceSheetHeaderDivider(),
+        _AmountItem(
+          presenter.balanceSheetReport.difference,
+          isProfit: true,
+        ),
+        _BalanceSheetHeaderDivider(),
       ],
     );
   }
 }
 
-class _ProfitHeaderDivider extends StatelessWidget {
-  const _ProfitHeaderDivider();
+class _BalanceSheetHeaderDivider extends StatelessWidget {
+  const _BalanceSheetHeaderDivider();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Divider(height: 2),
+      child: Divider(height: 8),
     );
   }
 }
@@ -83,17 +88,17 @@ class ProfitLossWidgetItem extends StatelessWidget {
 }
 
 class _AmountItem extends StatelessWidget {
-  final AmountModel profitLossItem;
+  final AmountModel item;
   final bool isProfit;
 
   const _AmountItem(
-    this.profitLossItem, {
+    this.item, {
     this.isProfit = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    print(profitLossItem.amount);
+    print(item.amount);
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
@@ -101,8 +106,28 @@ class _AmountItem extends StatelessWidget {
         collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         tilePadding: EdgeInsets.symmetric(horizontal: 24),
-        trailing: Text(profitLossItem.amount),
-        title: Text(profitLossItem.name),
+        trailing: Padding(
+          padding: const EdgeInsets.only(right: 40),
+          child: Text(
+            item.amount,
+            style: TextStyles.largeTitleTextStyleBold.copyWith(
+                fontSize: 18.0,
+                color: isProfit
+                    ? (item.formattedAmount >= 0
+                        ? item.formattedAmount > 0
+                            ? AppColors.brightGreen
+                            : AppColors.textColorBlack
+                        : AppColors.red)
+                    : AppColors.textColorBlack),
+          ),
+        ),
+        title: Text(
+          item.name,
+          style: TextStyles.largeTitleTextStyleBold.copyWith(
+            fontSize: 17.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
     );
   }
@@ -156,97 +181,3 @@ class _ExpansionPanelHeader extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-//   final BalanceSheetPresenter _presenter;
-
-//   BalanceSheetList(this._presenter);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final BalanceSheetData balanceSheetData = _presenter.balanceSheetData!;
-
-//     return ListView(
-//       padding: EdgeInsets.only(top: 24, bottom: 40),
-//       physics: NeverScrollableScrollPhysics(),
-//       shrinkWrap: true,
-//       children: [
-//         ListTile(
-//           title: Text('Assets'),
-//           subtitle: _buildSheetDetails(balanceSheetData.assets),
-//         ),
-//         ListTile(
-//           title: Text('Liabilities'),
-//           subtitle: _buildSheetDetails(balanceSheetData.liabilities),
-//         ),
-//         ListTile(
-//           title: Text('Equity'),
-//           subtitle: _buildSheetDetails(balanceSheetData.equity),
-//         ),
-//         ListTile(
-//           title: Text('Total Assets'),
-//           subtitle: _buildAmount(balanceSheetData.totalAssets),
-//         ),
-//         ListTile(
-//           title: Text('Total Liability and Owners Equity'),
-//           subtitle: _buildAmount(balanceSheetData.totalLiabilityAndOwnersEquity),
-//         ),
-//         ListTile(
-//           title: Text('Profit & Loss Account'),
-//           subtitle: _buildAmount(balanceSheetData.profitLossAccount),
-//         ),
-//         ListTile(
-//           title: Text('Difference'),
-//           subtitle: _buildAmount(balanceSheetData.difference),
-//         ),
-//       ],
-//     );
-//   }
-
-//   List<Widget> _buildChildrenExpansionTiles(List<SheetDetailsModel> children) {
-//     return children.map((child) {
-//       return ExpansionTile(
-//         title: Text(child.name ?? ''),
-//         children: [
-//           ListTile(title: Text('Group Name: ${child.groupName ?? ''}')),
-//           ListTile(title: Text('Amount: ${child.amount ?? ''}')),
-//           if (child.children != null && child.children!.isNotEmpty) ..._buildChildrenExpansionTiles(child.children!),
-//         ],
-//       );
-//     }).toList();
-//   }
-
-//   Widget _buildSheetDetails(SheetDetailsModel? sheetDetails) {
-//     if (sheetDetails != null) {
-//       return Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text('Name: ${sheetDetails.name ?? ''}'),
-//           if (sheetDetails.children != null && sheetDetails.children!.isNotEmpty)
-//             ..._buildChildrenExpansionTiles(sheetDetails.children!),
-//         ],
-//       );
-//     } else {
-//       return Text('N/A');
-//     }
-//   }
-
-//   Widget _buildAmount(AmountModel? amountModel) {
-//     if (amountModel != null) {
-//       return Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text('Name: ${amountModel.name ?? ''}'),
-//           Text('Amount: ${amountModel.amount ?? ''}'),
-//         ],
-//       );
-//     } else {
-//       return Text('N/A');
-//     }
-//   }
-// }

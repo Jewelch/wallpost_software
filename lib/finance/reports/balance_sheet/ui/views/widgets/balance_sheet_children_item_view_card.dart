@@ -5,19 +5,19 @@ import '../../../../../../_shared/constants/app_colors.dart';
 import '../../../entities/balance_sheet_data.dart';
 
 class BalanceSheetChildrenCard extends StatelessWidget {
-  final SheetDetailsModel profitLossItem;
-  List<SheetDetailsModel> get profitLossItems => profitLossItem.children!;
+  final SheetDetailsModel item;
+  List<SheetDetailsModel> get children => item.children;
   final bool isParent;
 
   const BalanceSheetChildrenCard(
-    this.profitLossItem, {
+    this.item, {
     required this.isParent,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    print(profitLossItems.length);
+    print(children.length);
     return Card(
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -29,7 +29,7 @@ class BalanceSheetChildrenCard extends StatelessWidget {
             padding: EdgeInsets.only(top: 1),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: profitLossItems.length,
+            itemCount: children.length,
             itemBuilder: (context, index) {
               return ExpansionTile(
                 collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(isParent ? 14 : 0)),
@@ -38,13 +38,13 @@ class BalanceSheetChildrenCard extends StatelessWidget {
                 backgroundColor: !isParent ? AppColors.screenBackgroundColor2 : Colors.white,
                 childrenPadding: EdgeInsets.zero,
                 tilePadding: EdgeInsets.only(left: 16, right: 8),
-                trailing: (profitLossItems[index].children?.isEmpty ?? true) ? SizedBox.shrink() : null,
+                trailing: (children[index].children.isEmpty) ? SizedBox.shrink() : null,
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Text(
-                        profitLossItems[index].name ?? "",
+                        children[index].name,
                         style: TextStyle(
                           overflow: TextOverflow.ellipsis,
                           color: AppColors.textColorBlueGray,
@@ -57,7 +57,7 @@ class BalanceSheetChildrenCard extends StatelessWidget {
                     SizedBox(
                       width: 100,
                       child: Text(
-                        profitLossItems[index].amount ?? "",
+                        children[index].amount,
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyles.largeTitleTextStyleBold.copyWith(
@@ -68,10 +68,10 @@ class BalanceSheetChildrenCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                children: (profitLossItems[index].children?.isEmpty ?? true)
+                children: (children[index].children.isEmpty)
                     ? []
                     : [
-                        BalanceSheetChildrenCard(profitLossItems[index], isParent: false),
+                        BalanceSheetChildrenCard(children[index], isParent: false),
                       ],
               );
             },

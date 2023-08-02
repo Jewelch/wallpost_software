@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../../_shared/constants/app_colors.dart';
 import '../../../../../_shared/exceptions/wp_exception.dart';
-import '../../../../../_shared/extensions/string_extensions.dart';
 import '../../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../../entities/balance_sheet_data.dart';
 import '../../entities/profit_loss_report_filters.dart';
@@ -28,7 +27,7 @@ class BalanceSheetPresenter {
 
   BalanceSheetReportFilters filters = BalanceSheetReportFilters();
 
-  //MARK: Load Aggregated Sales Data
+  //MARK: Load balance sheet Data
 
   Future getBalance() async {
     if (_balanceSheetProvider.isLoading) return;
@@ -42,11 +41,11 @@ class BalanceSheetPresenter {
     }
   }
 
+  //MARK: Filtering behavior
+
   void onFiltersGotClicked() {
     _view.showFilter();
   }
-
-  //MARK: Function to apply Filters
 
   Future applyFilters(BalanceSheetReportFilters? newFilters) async {
     if (newFilters == null) return;
@@ -64,28 +63,25 @@ class BalanceSheetPresenter {
     await getBalance();
   }
 
-  //MARK: Aggregated sales data getters
+  // UI Getters
 
-  // String getTotalSales() => _salesData?.totalSales ?? "0.00";
-  String getTotalSales() => "0.00";
+  String getAssets() => balanceSheetReport.assets.amount;
 
-  String getNetSale() => "0.00";
+  String getLiabilites() => balanceSheetReport.liabilities.amount;
 
-  String getCostOfSales() => "0.00";
+  String getEquity() => balanceSheetReport.equity.amount;
 
-  String getGrossProfit() => "0.00";
+  String getProfitLossExactTitle() => balanceSheetReport.profitLossAccount.formattedAmount > 0 ? "Profit" : "Loss";
 
-  Color getGrossProfitBackgroundColor() => "10.00".isNegative ? AppColors.lightRed : AppColors.lightGreen;
+  String getProfit() => balanceSheetReport.profitLossAccount.amount;
 
-  Color getGrossProfitTextColor() => "10.00".isNegative ? AppColors.red : AppColors.green;
+  Color getProfitLossBackgroundColor() =>
+      balanceSheetReport.profitLossAccount.formattedAmount.isNegative ? AppColors.lightRed : AppColors.lightGreen;
 
-  // Getters
+  Color getProfitLossTextColor() =>
+      balanceSheetReport.profitLossAccount.formattedAmount.isNegative ? AppColors.red : AppColors.green;
 
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
   String getCompanyCurrency() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
-
-  String getAssetsAmount() => balanceSheetReport.assets.amount;
-
-  String getProfitLossExactTitle() => balanceSheetReport.profitLossAccount.formattedAmount > 0 ? "Profit" : "Loss";
 }
