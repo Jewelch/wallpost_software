@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
-import '../../../../profit_loss/entities/profit_loss_model.dart';
+import '../../../entities/balance_sheet_data.dart';
 
 class BalanceSheetChildrenCard extends StatelessWidget {
-  final ProfitLossItem profitLossItem;
-  List<ProfitLossItem> get profitLossItems => profitLossItem.children;
+  final SheetDetailsModel profitLossItem;
+  List<SheetDetailsModel> get profitLossItems => profitLossItem.children!;
   final bool isParent;
 
   const BalanceSheetChildrenCard(
@@ -38,13 +38,13 @@ class BalanceSheetChildrenCard extends StatelessWidget {
                 backgroundColor: !isParent ? AppColors.screenBackgroundColor2 : Colors.white,
                 childrenPadding: EdgeInsets.zero,
                 tilePadding: EdgeInsets.only(left: 16, right: 8),
-                trailing: profitLossItems[index].children.isEmpty ? SizedBox.shrink() : null,
+                trailing: (profitLossItems[index].children?.isEmpty ?? true) ? SizedBox.shrink() : null,
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Text(
-                        profitLossItems[index].name,
+                        profitLossItems[index].name ?? "",
                         style: TextStyle(
                           overflow: TextOverflow.ellipsis,
                           color: AppColors.textColorBlueGray,
@@ -57,7 +57,7 @@ class BalanceSheetChildrenCard extends StatelessWidget {
                     SizedBox(
                       width: 100,
                       child: Text(
-                        profitLossItems[index].amount,
+                        profitLossItems[index].amount ?? "",
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyles.largeTitleTextStyleBold.copyWith(
@@ -68,7 +68,7 @@ class BalanceSheetChildrenCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                children: profitLossItems[index].children.isEmpty
+                children: (profitLossItems[index].children?.isEmpty ?? true)
                     ? []
                     : [
                         BalanceSheetChildrenCard(profitLossItems[index], isParent: false),

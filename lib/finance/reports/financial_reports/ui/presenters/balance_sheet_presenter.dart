@@ -4,7 +4,6 @@ import '../../../../../_shared/constants/app_colors.dart';
 import '../../../../../_shared/exceptions/wp_exception.dart';
 import '../../../../../_shared/extensions/string_extensions.dart';
 import '../../../../../_wp_core/company_management/services/selected_company_provider.dart';
-import '../../../profit_loss/entities/profit_loss_model.dart';
 import '../../entities/balance_sheet_data.dart';
 import '../../entities/profit_loss_report_filters.dart';
 import '../../services/balance_sheet_provider.dart';
@@ -15,9 +14,7 @@ class BalanceSheetPresenter {
   BalanceSheetProvider _balanceSheetProvider;
   SelectedCompanyProvider _selectedCompanyProvider;
 
-  BalanceSheetData? balanceSheetData;
-
-  late ProfitsLossesReport profitLossReport;
+  late BalanceSheetData balanceSheetReport;
 
   BalanceSheetPresenter(this._view)
       : _balanceSheetProvider = BalanceSheetProvider(),
@@ -38,7 +35,7 @@ class BalanceSheetPresenter {
 
     _view.showLoader();
     try {
-      balanceSheetData = await _balanceSheetProvider.getBalance(filters.dateFilters);
+      balanceSheetReport = await _balanceSheetProvider.getBalance(filters.dateFilters);
       _view.onDidLoadBalanceSheet();
     } on WPException catch (e) {
       _view.showErrorMessage(e.userReadableMessage + "\n\nTap here to reload.");
@@ -87,4 +84,8 @@ class BalanceSheetPresenter {
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 
   String getCompanyCurrency() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().currency;
+
+  String getAssetsAmount() => balanceSheetReport.assets.amount;
+
+  String getProfitLossExactTitle() => balanceSheetReport.profitLossAccount.formattedAmount > 0 ? "Profit" : "Loss";
 }
