@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
 import '../../../../../../crm/common_widgets/performance_view_holder.dart';
-import '../../presenters/dashboard_presenter.dart';
+import '../../presenters/balance_sheet_presenter.dart';
 
-class RestaurantDashboardHeaderCard extends StatelessWidget {
-  final DashboardPresenter _presenter;
+class BalanceSheetHeaderCard extends StatelessWidget {
+  final BalanceSheetPresenter _presenter;
 
-  RestaurantDashboardHeaderCard(this._presenter);
+  BalanceSheetHeaderCard(this._presenter);
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +25,16 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _SalesElement(
-                  backgroundColor: AppColors.lightGreen,
-                  label: "Total Sales",
+                  backgroundColor: AppColors.lightGray,
+                  label: "Assets",
                   value: _presenter.getTotalSales(),
-                  valueColor: AppColors.brightGreen,
+                  valueColor: AppColors.textColorBlack,
                 ),
                 _SalesElement(
-                  backgroundColor: AppColors.lightGreen,
-                  label: "Net Sales",
+                  backgroundColor: AppColors.lightGray,
+                  label: "Liability",
                   value: _presenter.getNetSale(),
-                  valueColor: AppColors.brightGreen,
+                  valueColor: AppColors.textColorBlack,
                 ),
               ],
             ),
@@ -42,16 +42,16 @@ class RestaurantDashboardHeaderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _SalesElement(
-                  backgroundColor: AppColors.lightYellow,
-                  label: "Cost of Sales",
+                  backgroundColor: AppColors.lightGray,
+                  label: "Equity",
                   value: _presenter.getCostOfSales(),
                   valueColor: AppColors.textColorBlack,
                 ),
                 _SalesElement(
-                  backgroundColor: AppColors.lightGray,
-                  label: "Gross Profit",
+                  backgroundColor: _presenter.getGrossProfitBackgroundColor(),
+                  label: "Profit",
                   value: _presenter.getGrossProfit(),
-                  valueColor: AppColors.yellow,
+                  valueColor: _presenter.getGrossProfitTextColor(),
                 ),
               ],
             ),

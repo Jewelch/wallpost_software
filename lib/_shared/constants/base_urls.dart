@@ -47,6 +47,6 @@ class BaseUrls {
   }
 
   static String financeUrlV2() {
-    return BaseUrls.generateUrl(subDomain: _FINANCE_SUB_DOMAIN, environment: _PRODUCTION, version: _VERSION_1_PATH);
+    return BaseUrls.generateUrl(subDomain: _FINANCE_SUB_DOMAIN, environment: _STAGING, version: _VERSION_1_PATH);
   }
 }

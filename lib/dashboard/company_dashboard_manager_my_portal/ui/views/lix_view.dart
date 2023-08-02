@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallpost/dashboard/company_dashboard_manager_my_portal/ui/views/performance_view_holder.dart';
 
 import '../../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../_shared/constants/app_colors.dart';
+import '../../../../crm/common_widgets/performance_view_holder.dart';
 import '../../../../lix/lix_details.dart';
 
 class LixView extends StatelessWidget {

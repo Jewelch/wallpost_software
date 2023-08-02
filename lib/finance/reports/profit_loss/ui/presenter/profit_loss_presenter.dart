@@ -15,8 +15,6 @@ class ProfitsLossesPresenter {
 
   late ProfitsLossesReport profitLossReport;
 
-  var index = 0;
-
   ProfitsLossesPresenter(this._view)
       : _profitLossDataProvider = ProfitsLossesProvider(),
         _selectedCompanyProvider = SelectedCompanyProvider();

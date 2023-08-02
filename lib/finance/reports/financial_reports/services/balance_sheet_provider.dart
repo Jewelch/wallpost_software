@@ -5,30 +5,27 @@ import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
 import '../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../../../../_shared/date_range_selector/entities/date_range.dart';
-import '../constants/restaurant_retail_dashboard_urls.dart';
-import '../entities/aggregated_sales_data.dart';
-import '../ui/views/screens/dashboard_screen.dart';
+import '../constants/balance_sheet_urls.dart';
+import '../entities/balance_sheet_data.dart';
 
-class AggregatedSalesDataProvider {
+class BalanceSheetProvider {
   final NetworkAdapter _networkAdapter;
   final SelectedCompanyProvider _selectedCompanyProvider;
   String _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
   bool _isLoading = false;
-  final DashboardContext dashboardContext;
 
-  AggregatedSalesDataProvider({required this.dashboardContext})
+  BalanceSheetProvider()
       : _networkAdapter = WPAPI(),
         _selectedCompanyProvider = SelectedCompanyProvider();
 
-  AggregatedSalesDataProvider.initWith(
+  BalanceSheetProvider.initWith(
     this._networkAdapter,
     this._selectedCompanyProvider,
-    this.dashboardContext,
   );
 
-  Future<AggregatedSalesData> getSalesAmounts(DateRange dateRange) async {
+  Future<BalanceSheetData> getBalance(DateRange dateRange) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
-    var url = RestaurantRetailDashboardUrls.getSalesAmountsUrl(companyId, dateRange, dashboardContext);
+    var url = BalanceSheetUrls.getBalanceSheetUrl(companyId, dateRange);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     var apiRequest = APIRequest.withId(url, _sessionId);
 
@@ -43,15 +40,15 @@ class AggregatedSalesDataProvider {
     }
   }
 
-  Future<AggregatedSalesData> _processResponse(APIResponse apiResponse) async {
+  Future<BalanceSheetData> _processResponse(APIResponse apiResponse) async {
     //returning empty list if the response is from another session
-    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<AggregatedSalesData>().future;
+    if (apiResponse.apiRequest.requestId != _sessionId) return Completer<BalanceSheetData>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
     if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
-      return AggregatedSalesData.fromJson(responseMap);
+      return BalanceSheetData.fromJson(responseMap);
     } catch (e) {
       throw InvalidResponseException();
     }

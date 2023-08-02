@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
+import '../../../../../../crm/common_widgets/performance_view_holder.dart';
 import '../../presenter/profit_loss_presenter.dart';
-import 'performance_view_holder.dart';
 
 class ProfitsLossesHeaderCard extends StatelessWidget {
   final ProfitsLossesPresenter presenter;

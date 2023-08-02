@@ -4,8 +4,8 @@ import '../../../../../../_common_widgets/shimmer/shimmer_effect.dart';
 import '../../../../../../restaurant_and_retail/common_widgets/restaurant_retail_loader_container.dart';
 import '../../../../../../restaurant_and_retail/common_widgets/sales_break_down_loader.dart';
 
-class RestaurantRetailDashboardLoader extends StatelessWidget {
-  const RestaurantRetailDashboardLoader({Key? key}) : super(key: key);
+class BalanceSheetLoader extends StatelessWidget {
+  const BalanceSheetLoader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

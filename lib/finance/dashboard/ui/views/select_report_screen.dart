@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../_shared/constants/app_colors.dart';
+import '../../../reports/financial_reports/ui/views/screens/balance_sheet_screen.dart';
 import '../../../reports/inventory_stock_report/ui/views/inventory_stock_report_screen.dart';
 import '../../../reports/profit_loss/ui/views/screens/profit_loss_screen.dart';
 
@@ -97,6 +98,25 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                     borderRadius: BorderRadius.circular(14),
                                   ),
                                   child: Center(child: Text("Profit & Loss", style: TextStyles.subTitleTextStyleBold)),
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              InkWell(
+                                splashColor: AppColors.defaultColor,
+                                onTap: () {
+                                  ScreenPresenter.present(
+                                    BalanceSheetScreen(),
+                                    context,
+                                    slideDirection: SlideDirection.fromBottom,
+                                  );
+                                },
+                                child: Container(
+                                  height: 64,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: Center(child: Text("Balance Sheet", style: TextStyles.subTitleTextStyleBold)),
                                 ),
                               ),
                               SizedBox(height: 32),
