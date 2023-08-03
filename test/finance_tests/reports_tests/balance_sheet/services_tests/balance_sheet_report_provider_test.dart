@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
-import 'package:wallpost/finance/reports/profit_loss/constants/profit_loss_urls.dart';
-import 'package:wallpost/finance/reports/profit_loss/services/profit_loss_provider.dart';
+import 'package:wallpost/finance/reports/balance_sheet/constants/balance_sheet_urls.dart';
+import 'package:wallpost/finance/reports/balance_sheet/services/balance_sheet_provider.dart';
 
 import '../../../../_mocks/mock_company.dart';
 import '../../../../_mocks/mock_company_provider.dart';
@@ -11,12 +11,12 @@ import '../../../../_mocks/mock_network_adapter.dart';
 import '../mocks.dart';
 
 main() {
-  final successfulResponse = Mocks.profitLossReportResponse;
+  final successfulResponse = Mocks.balanceSheetReportResponse;
 
   var mockNetworkAdapter = MockNetworkAdapter();
   var mockSelectedCompanyProvider = MockCompanyProvider();
   var dateFilter = DateRange();
-  var balanceSheetReportProvider = ProfitsLossesProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
+  var balanceSheetReportProvider = BalanceSheetProvider.initWith(mockNetworkAdapter, mockSelectedCompanyProvider);
 
   setUpAll(() {
     final mockCompany = MockCompany();
@@ -28,9 +28,9 @@ main() {
     Map<String, dynamic> requestParams = {};
     mockNetworkAdapter.succeed(successfulResponse);
 
-    await balanceSheetReportProvider.getProfitsLosses(dateFilter);
+    await balanceSheetReportProvider.getBalance(dateFilter);
 
-    expect(mockNetworkAdapter.apiRequest.url, ProfitsLossesUrls.getProfitsLossesUrl('someCompanyId', dateFilter));
+    expect(mockNetworkAdapter.apiRequest.url, BalanceSheetUrls.getBalanceSheetUrl('someCompanyId', dateFilter));
     expect(mockNetworkAdapter.apiRequest.parameters, requestParams);
     expect(mockNetworkAdapter.didCallGet, isTrue);
   });
@@ -39,7 +39,7 @@ main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      await balanceSheetReportProvider.getProfitsLosses(
+      await balanceSheetReportProvider.getBalance(
         dateFilter,
       );
       fail('failed to throw the network adapter failure exception');
@@ -52,7 +52,7 @@ main() {
     mockNetworkAdapter.succeed(null);
 
     try {
-      await balanceSheetReportProvider.getProfitsLosses(
+      await balanceSheetReportProvider.getBalance(
         dateFilter,
       );
       fail('failed to throw InvalidResponseException');
@@ -66,7 +66,7 @@ main() {
     mockNetworkAdapter.succeed('wrong response format');
 
     try {
-      await balanceSheetReportProvider.getProfitsLosses(
+      await balanceSheetReportProvider.getBalance(
         dateFilter,
       );
       fail('failed to throw WrongResponseFormatException');
@@ -79,13 +79,13 @@ main() {
     var didReceiveResponseForTheSecondRequest = false;
 
     mockNetworkAdapter.succeed(successfulResponse, afterDelayInMilliSeconds: 200);
-    balanceSheetReportProvider.getProfitsLosses(dateFilter).then((_) {
+    balanceSheetReportProvider.getBalance(dateFilter).then((_) {
       fail('Received the response for the first request. '
           'This response should be ignored as the session id has changed');
     });
 
     mockNetworkAdapter.succeed(successfulResponse);
-    balanceSheetReportProvider.getProfitsLosses(dateFilter).then((_) {
+    balanceSheetReportProvider.getBalance(dateFilter).then((_) {
       didReceiveResponseForTheSecondRequest = true;
     });
 
@@ -97,7 +97,7 @@ main() {
     mockNetworkAdapter.succeed(successfulResponse);
 
     try {
-      await balanceSheetReportProvider.getProfitsLosses(
+      await balanceSheetReportProvider.getBalance(
         dateFilter,
       );
     } catch (e) {
@@ -108,7 +108,7 @@ main() {
   test('test loading flag is set to true when the service is executed', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    balanceSheetReportProvider.getProfitsLosses(
+    balanceSheetReportProvider.getBalance(
       dateFilter,
     );
 
@@ -118,7 +118,7 @@ main() {
   test('test loading flag is reset after success', () async {
     mockNetworkAdapter.succeed(successfulResponse);
 
-    await balanceSheetReportProvider.getProfitsLosses(
+    await balanceSheetReportProvider.getBalance(
       dateFilter,
     );
 
@@ -129,7 +129,7 @@ main() {
     mockNetworkAdapter.fail(NetworkFailureException());
 
     try {
-      await balanceSheetReportProvider.getProfitsLosses(
+      await balanceSheetReportProvider.getBalance(
         dateFilter,
       );
       fail('failed to throw exception');
