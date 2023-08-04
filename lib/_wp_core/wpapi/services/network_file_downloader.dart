@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -32,17 +33,17 @@ class NetworkFileDownloader {
         '${dir.path}/$filename',
         onReceiveProgress: (rec, total) {
           var progress = (rec / total) * 100;
-          print("--------------------------------------------------------------------");
-          print("File download progress - $progress");
-          print("--------------------------------------------------------------------");
+          debugPrint("--------------------------------------------------------------------");
+          debugPrint("File download progress - $progress");
+          debugPrint("--------------------------------------------------------------------");
           if (onDownloadProgress != null) onDownloadProgress(progress);
         },
       );
 
-      print("--------------------------------------------------------------------");
-      print("File download complete");
-      print("File path - ${dir.path}/$filename");
-      print("--------------------------------------------------------------------Z");
+      debugPrint("--------------------------------------------------------------------");
+      debugPrint("File download complete");
+      debugPrint("File path - ${dir.path}/$filename");
+      debugPrint("--------------------------------------------------------------------Z");
       return File('${dir.path}/$filename');
     } catch (error) {
       throw FileDownloadException(error.toString());

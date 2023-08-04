@@ -17,7 +17,6 @@ class ProfitsLossesChildrenCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(profitLossItems.length);
     return Card(
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 class BaseUrls {
   //Sub domains
   static const String _CORE = 'core';

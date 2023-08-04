@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:wallpost/_shared/exceptions/wp_exception.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/constants/purchase_bill_detail_urls.dart';
 import 'package:wallpost/purchase_bill/purchase_bill_detail/entities/purchase_bill_detail.dart';
-
 
 class PurchaseBillDetailProvider {
   final String _companyId;
@@ -45,10 +45,9 @@ class PurchaseBillDetailProvider {
 
     var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
-      print("herere!!");
       return PurchaseBillDetail.fromJson(responseMap);
     } catch (e) {
-      print("failll - $e");
+      debugPrint("failll - $e");
       throw InvalidResponseException();
     }
   }

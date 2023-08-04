@@ -91,7 +91,6 @@ void main() {
       var _ = await dataProvider.get(month: 1, year: 2022);
       fail('failed to throw InvalidResponseException');
     } catch (e) {
-      print(e);
       expect(e is InvalidResponseException, true);
     }
   });

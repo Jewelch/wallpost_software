@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:wallpost/notification_center/entities/push_notification.dart';
 
 class FirebaseWrapper {
@@ -40,9 +41,9 @@ class FirebaseWrapper {
   }
 
   PushNotification? _initPushNotification(RemoteMessage message) {
-    print("--------------------------------------------------------------------");
-    print("INITIALIZING PUSH NOTIFICATION\n${message.toMap()}");
-    print("--------------------------------------------------------------------");
+    debugPrint("--------------------------------------------------------------------");
+    debugPrint("INITIALIZING PUSH NOTIFICATION\n${message.toMap()}");
+    debugPrint("--------------------------------------------------------------------");
     try {
       return PushNotification.fromJson(message.data);
     } catch (e) {

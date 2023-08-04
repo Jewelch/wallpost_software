@@ -67,7 +67,7 @@ class ProfitLossWidgetItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(profitLossItem.amount);
+    debugPrint(profitLossItem.amount);
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
@@ -101,7 +101,7 @@ class _AmountItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(item.amount);
+    debugPrint(item.amount);
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(

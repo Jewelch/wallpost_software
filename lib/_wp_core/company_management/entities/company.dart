@@ -9,8 +9,6 @@ import 'module.dart';
 class Company extends JSONInitializable {
   late String _id;
   late String _accountNumber;
-  late String _name;
-  late String _shortName;
   late String _commercialName;
   late String _logoUrl;
   late String _dateFormat;
@@ -27,8 +25,7 @@ class Company extends JSONInitializable {
       var financialSummaryMap = sift.readMapFromMapWithDefaultValue(jsonMap, 'financial_summary', null);
       _id = '${sift.readNumberFromMap(companyInfoMap, 'company_id')}';
       _accountNumber = '${sift.readNumberFromMap(companyInfoMap, 'account_no')}';
-      _name = sift.readStringFromMap(companyInfoMap, 'company_name');
-      _shortName = sift.readStringFromMap(companyInfoMap, 'short_name');
+
       _commercialName = sift.readStringFromMap(companyInfoMap, 'commercial_name');
       _logoUrl = sift.readStringFromMap(companyInfoMap, 'company_logo');
       _dateFormat = _initDateFormat(companyInfoMap);

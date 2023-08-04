@@ -64,7 +64,7 @@ class NetworkRequestExecutor implements NetworkAdapter {
         ),
       );
       return _processResponse(response, apiRequest);
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       throw _processError(error);
     }
   }
@@ -83,7 +83,7 @@ class NetworkRequestExecutor implements NetworkAdapter {
         ),
       );
       return _processResponse(response, apiRequest);
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       throw _processError(error);
     }
   }
@@ -101,7 +101,7 @@ class NetworkRequestExecutor implements NetworkAdapter {
     }
   }
 
-  APIException _processError(DioError error) {
+  APIException _processError(DioException error) {
     if (error.response == null || error.response!.statusCode == null) {
       //Something happened in setting up or sending the request that triggered an Error
       return RequestException(error.message ?? "");

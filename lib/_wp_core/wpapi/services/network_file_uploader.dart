@@ -21,9 +21,9 @@ class NetworkFileUploader {
       Uri.parse(url),
       onProgress: (int bytes, int total) {
         var progress = (bytes / total) * 100;
-        print("----------------------------------");
-        print("File upload progress - $progress");
-        print("----------------------------------");
+        debugPrint("----------------------------------");
+        debugPrint("File upload progress - $progress");
+        debugPrint("----------------------------------");
         if (onUploadProgress != null) onUploadProgress(progress);
       },
     );
@@ -41,9 +41,9 @@ class NetworkFileUploader {
       final response = await request.send();
       return _processResponse(response, apiRequest);
     } catch (error) {
-      print("----------------------------------");
-      print("File upload failed - ${error.toString()}");
-      print("----------------------------------");
+      debugPrint("----------------------------------");
+      debugPrint("File upload failed - ${error.toString()}");
+      debugPrint("----------------------------------");
       throw RequestException(error.toString());
     }
   }
@@ -68,15 +68,15 @@ class NetworkFileUploader {
 
     try {
       var responseData = json.decode(responseString);
-      print("----------------------------------");
-      print("File upload complete - ${apiRequest.url}");
-      print("Response - $responseData");
-      print("----------------------------------");
+      debugPrint("----------------------------------");
+      debugPrint("File upload complete - ${apiRequest.url}");
+      debugPrint("Response - $responseData");
+      debugPrint("----------------------------------");
       return APIResponse(apiRequest, 200, responseData, {});
     } catch (error) {
-      print("----------------------------------");
-      print("File upload failed - ${error.toString()}");
-      print("----------------------------------");
+      debugPrint("----------------------------------");
+      debugPrint("File upload failed - ${error.toString()}");
+      debugPrint("----------------------------------");
       throw UnexpectedResponseFormatException();
     }
   }

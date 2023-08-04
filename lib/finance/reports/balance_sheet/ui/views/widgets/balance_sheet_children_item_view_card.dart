@@ -17,7 +17,6 @@ class BalanceSheetChildrenCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(children.length);
     return Card(
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),

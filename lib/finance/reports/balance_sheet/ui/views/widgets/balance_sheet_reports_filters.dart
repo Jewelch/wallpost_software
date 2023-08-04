@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
-import '../../../date_range_selector/ui/widgets/date_range_selector.dart';
+import '../../../../../../_shared/date_range_selector/ui/widgets/date_range_selector.dart';
 import '../../../entities/profit_loss_report_filters.dart';
 
 class BalanceSheetReportsFilters extends StatefulWidget {
@@ -104,7 +104,7 @@ class _BalanceSheetReportsFiltersState extends State<BalanceSheetReportsFilters>
             SizedBox(height: 16),
             GestureDetector(
               onTap: () async {
-                var newDateFilter = await FinanceDateRangeSelector.show(
+                var newDateFilter = await DateRangeSelector.show(
                   context,
                   initialDateRange: widget.filters.dateFilters,
                 );

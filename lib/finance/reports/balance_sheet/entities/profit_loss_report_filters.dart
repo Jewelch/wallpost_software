@@ -1,7 +1,7 @@
-import '../date_range_selector/entities/date_range.dart';
+import '../../../../_shared/date_range_selector/entities/date_range.dart';
 
 class BalanceSheetReportFilters {
-  FinanceDateRange dateFilters = FinanceDateRange()..applyThisYear();
+  DateRange dateFilters = DateRange()..applyThisYear();
 
   BalanceSheetReportFilters copy() {
     var filters = BalanceSheetReportFilters();
@@ -14,6 +14,6 @@ class BalanceSheetReportFilters {
   }
 
   void reset() {
-    dateFilters = FinanceDateRange()..applyThisYear();
+    dateFilters = DateRange()..applyThisYear();
   }
 }
