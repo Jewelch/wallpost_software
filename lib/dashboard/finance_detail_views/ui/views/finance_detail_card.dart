@@ -25,18 +25,17 @@ class FinanceDetailCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Financials ", style: TextStyles.headerCardHeadingTextStyle),
-                _presenter.shouldShowDetailDisclosureIndicator()
-                    ? Container(
-                        height: 12,
-                        width: 12,
-                        child: SvgPicture.asset(
-                          'assets/icons/arrow_forward.svg',
-                          width: 12,
-                          height: 12,
-                          color: AppColors.defaultColor,
-                        ),
-                      )
-                    : Container(),
+                if (_presenter.shouldShowDetailDisclosureIndicator())
+                  Container(
+                    height: 12,
+                    width: 12,
+                    child: SvgPicture.asset(
+                      'assets/icons/arrow_forward.svg',
+                      width: 12,
+                      height: 12,
+                      color: AppColors.defaultColor,
+                    ),
+                  )
               ],
             ),
             SizedBox(height: 20),

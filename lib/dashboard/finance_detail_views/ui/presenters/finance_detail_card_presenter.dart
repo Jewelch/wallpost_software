@@ -9,7 +9,7 @@ class FinanceDetailCardPresenter {
   final FinancialSummary _summary;
   final SelectedCompanyProvider _selectedCompanyProvider;
 
-  FinanceDetailCardPresenter(this._summary): _selectedCompanyProvider = SelectedCompanyProvider();
+  FinanceDetailCardPresenter(this._summary) : _selectedCompanyProvider = SelectedCompanyProvider();
 
   FinanceDetailCardPresenter.initWith(this._summary, this._selectedCompanyProvider);
 

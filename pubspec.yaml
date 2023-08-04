@@ -12,12 +12,12 @@ dependencies:
   cupertino_icons: ^1.0.5
   uuid: ^3.0.6
   data_connection_checker_tv: 0.3.5-nullsafety
-  sift: 1.0.10
+  sift: 1.0.13
   encrypt: 5.0.1
   shared_preferences: ^2.0.18
-  device_info_plus: ^9.0.0
-  package_info_plus: ^4.0.0
-  dio: ^5.0.1
+  device_info_plus: ^9.0.3
+  package_info_plus: ^4.1.0
+  dio: ^5.3.2
   flutter_keyboard_visibility: ^5.3.0
   flutter_svg: ^2.0.2
   flutter_statusbarcolor_ns: 0.5.0
@@ -27,8 +27,8 @@ dependencies:
   mime_type: 1.0.0
   cached_network_image: ^3.2.1
   flutter_app_badger: ^1.4.0
-  shimmer: 2.0.0
-  notifiable: 1.0.6
+  shimmer: ^3.0.0
+  notifiable: 1.0.8
   google_maps_flutter: ^2.1.8
   camera: ^0.10.0
   camera_avfoundation:
@@ -36,24 +36,24 @@ dependencies:
   path:
   firebase_core: ^2.3.0
   firebase_messaging: ^14.1.1
-  fl_chart: ^0.61.0
+  fl_chart: ^0.63.0
   carousel_indicator: ^1.0.6
   url_launcher: ^6.1.5
   email_validator: ^2.1.17
   file_picker: ^5.0.1
   open_filex: ^4.0.1
-  image_picker: ^0.8.5+3
-  visibility_detector: ^0.3.3
+  image_picker: ^1.0.1
+  visibility_detector: ^0.4.0+2
   sliver_tools: ^0.2.8
   equatable: ^2.0.5
   blur: ^3.1.0
-  syncfusion_flutter_datepicker: ^20.4.38
-  share_plus: ^7.0.0
+  syncfusion_flutter_datepicker: ^21.2.3
+  share_plus: ^7.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mocktail: 0.3.0
+  mocktail: 1.0.0
   random_string: 2.3.1
 
 # The following section is specific to Flutter.
