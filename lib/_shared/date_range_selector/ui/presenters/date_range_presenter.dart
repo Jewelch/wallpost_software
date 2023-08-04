@@ -20,6 +20,9 @@ class DateRangePresenter {
       case SelectableDateRangeOptions.thisMonth:
         dateRange.applyThisMonth();
         break;
+      case SelectableDateRangeOptions.thisQuarter:
+        dateRange.applyThisQuarter();
+        break;
       case SelectableDateRangeOptions.thisYear:
         dateRange.applyThisYear();
         break;

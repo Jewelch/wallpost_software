@@ -1,41 +1,21 @@
-import 'package:wallpost/_shared/date_range_selector/entities/selectable_date_range_option.dart';
 import 'package:wallpost/_shared/extensions/date_extensions.dart';
+import 'package:wallpost/finance/reports/balance_sheet/date_range_selector/entities/selectable_date_range_option.dart';
 
-class DateRange {
+class FinanceDateRange {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
-  SelectableDateRangeOptions selectedRangeOption = SelectableDateRangeOptions.today;
+  FinanceSelectableDateRangeOptions selectedRangeOption = FinanceSelectableDateRangeOptions.thisMonth;
 
-  DateRange();
-
-  void applyToday() {
-    selectedRangeOption = SelectableDateRangeOptions.today;
-    endDate = DateTime.now();
-    startDate = DateTime.now();
-  }
-
-  void applyYesterday() {
-    selectedRangeOption = SelectableDateRangeOptions.yesterday;
-    var yesterday = DateTime.now().subtract(Duration(days: 1));
-    endDate = yesterday;
-    startDate = yesterday;
-  }
-
-  void applyThisWeek() {
-    selectedRangeOption = SelectableDateRangeOptions.thisWeek;
-    endDate = DateTime.now();
-    var recentMonday = DateTime(endDate.year, endDate.month, endDate.day - (endDate.weekday - 1));
-    startDate = recentMonday;
-  }
+  FinanceDateRange();
 
   void applyThisMonth() {
-    selectedRangeOption = SelectableDateRangeOptions.thisMonth;
+    selectedRangeOption = FinanceSelectableDateRangeOptions.thisMonth;
     endDate = DateTime.now();
     startDate = DateTime(endDate.year, endDate.month, 1);
   }
 
   void applyThisQuarter() {
-    selectedRangeOption = SelectableDateRangeOptions.thisQuarter;
+    selectedRangeOption = FinanceSelectableDateRangeOptions.thisQuarter;
     endDate = DateTime.now();
 
     int quarterStartMonth;
@@ -53,47 +33,41 @@ class DateRange {
   }
 
   void applyThisYear() {
-    selectedRangeOption = SelectableDateRangeOptions.thisYear;
+    selectedRangeOption = FinanceSelectableDateRangeOptions.thisYear;
     endDate = DateTime.now();
     startDate = DateTime(endDate.year, 1, 1);
   }
 
   void applyLastYear() {
-    selectedRangeOption = SelectableDateRangeOptions.lastYear;
+    selectedRangeOption = FinanceSelectableDateRangeOptions.lastYear;
     var today = DateTime.now();
     startDate = DateTime(today.year - 1, 1, 1);
     endDate = DateTime(today.year - 1, 12, 31);
   }
 
   void applyCustomDate(DateTime startDay, DateTime endDay) {
-    selectedRangeOption = SelectableDateRangeOptions.custom;
+    selectedRangeOption = FinanceSelectableDateRangeOptions.custom;
     startDate = startDay;
     endDate = endDay;
   }
 
   String toReadableString() {
     switch (this.selectedRangeOption) {
-      case SelectableDateRangeOptions.today:
-        return "Today";
-      case SelectableDateRangeOptions.yesterday:
-        return "Yesterday";
-      case SelectableDateRangeOptions.thisWeek:
-        return "This Week";
-      case SelectableDateRangeOptions.thisMonth:
+      case FinanceSelectableDateRangeOptions.thisMonth:
         return "This Month";
-      case SelectableDateRangeOptions.thisQuarter:
+      case FinanceSelectableDateRangeOptions.thisQuarter:
         return "This Quarter";
-      case SelectableDateRangeOptions.thisYear:
+      case FinanceSelectableDateRangeOptions.thisYear:
         return "This Year";
-      case SelectableDateRangeOptions.lastYear:
+      case FinanceSelectableDateRangeOptions.lastYear:
         return "Last Year";
-      case SelectableDateRangeOptions.custom:
+      case FinanceSelectableDateRangeOptions.custom:
         return startDate.toReadableStringWithHyphens() + " to " + endDate.toReadableStringWithHyphens();
     }
   }
 
-  DateRange copy() {
-    var copyDateRangeFilter = DateRange();
+  FinanceDateRange copy() {
+    var copyDateRangeFilter = FinanceDateRange();
     copyDateRangeFilter.selectedRangeOption = selectedRangeOption;
     copyDateRangeFilter.startDate = startDate;
     copyDateRangeFilter.endDate = endDate;
@@ -102,9 +76,9 @@ class DateRange {
 
   @override
   bool operator ==(Object other) {
-    if (other is! DateRange) return false;
+    if (other is! FinanceDateRange) return false;
     if (other.selectedRangeOption != selectedRangeOption) return false;
-    if (other.selectedRangeOption == SelectableDateRangeOptions.custom) {
+    if (other.selectedRangeOption == FinanceSelectableDateRangeOptions.custom) {
       if (other.startDate.toIso8601String() != startDate.toIso8601String()) return false;
       if (other.endDate.toIso8601String() != endDate.toIso8601String()) return false;
     }

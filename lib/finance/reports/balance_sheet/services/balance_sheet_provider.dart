@@ -4,8 +4,8 @@ import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
 
 import '../../../../_wp_core/company_management/services/selected_company_provider.dart';
-import '../../../../_shared/date_range_selector/entities/date_range.dart';
 import '../constants/balance_sheet_urls.dart';
+import '../date_range_selector/entities/date_range.dart';
 import '../entities/balance_sheet_data.dart';
 
 class BalanceSheetProvider {
@@ -23,7 +23,7 @@ class BalanceSheetProvider {
     this._selectedCompanyProvider,
   );
 
-  Future<BalanceSheetData> getBalance(DateRange dateRange) async {
+  Future<BalanceSheetData> getBalance(FinanceDateRange dateRange) async {
     var companyId = _selectedCompanyProvider.getSelectedCompanyForCurrentUser().id;
     var url = BalanceSheetUrls.getBalanceSheetUrl(companyId, dateRange);
     _sessionId = DateTime.now().millisecondsSinceEpoch.toString();

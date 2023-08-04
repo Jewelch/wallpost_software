@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 
-class ProfitsLossesErrorView extends StatelessWidget {
+class BalanceSheetErrorView extends StatelessWidget {
   final String errorMessage;
   final void Function() onRetry;
 
-  const ProfitsLossesErrorView({
+  const BalanceSheetErrorView({
     super.key,
     required this.errorMessage,
     required this.onRetry,

@@ -3,6 +3,7 @@ enum SelectableDateRangeOptions {
   yesterday,
   thisWeek,
   thisMonth,
+  thisQuarter,
   thisYear,
   lastYear,
   custom;
@@ -17,6 +18,8 @@ enum SelectableDateRangeOptions {
         return "This Week";
       case SelectableDateRangeOptions.thisMonth:
         return "This Month";
+      case SelectableDateRangeOptions.thisQuarter:
+        return "This Quarter";
       case SelectableDateRangeOptions.thisYear:
         return "This Year";
       case SelectableDateRangeOptions.lastYear:

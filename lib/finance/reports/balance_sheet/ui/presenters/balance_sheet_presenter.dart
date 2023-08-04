@@ -51,8 +51,6 @@ class BalanceSheetPresenter {
     if (newFilters == null) return;
     var oldFilter = filters;
     filters = newFilters;
-    print(newFilters.dateFilters.selectedRangeOption);
-    print(oldFilter.dateFilters.selectedRangeOption);
     if (newFilters.dateFilters != oldFilter.dateFilters) {
       await getBalance();
     }

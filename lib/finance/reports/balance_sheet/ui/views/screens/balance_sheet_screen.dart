@@ -49,7 +49,7 @@ class _State extends State<BalanceSheetScreen> implements BalanceSheetView {
             case _ScreenStates.error:
               return Scaffold(
                 appBar: BalanceSheetAppBar(presenter),
-                body: ProfitsLossesErrorView(
+                body: BalanceSheetErrorView(
                   errorMessage: errorMessage,
                   onRetry: presenter.getBalance,
                 ),
@@ -73,7 +73,7 @@ class _State extends State<BalanceSheetScreen> implements BalanceSheetView {
 
   @override
   void showFilter() async {
-    var newFilters = await ProfitsLossesReportsFilters.show(
+    var newFilters = await BalanceSheetReportsFilters.show(
       context,
       initialFilters: presenter.filters.copy(),
       onResetClicked: presenter.resetFilters,

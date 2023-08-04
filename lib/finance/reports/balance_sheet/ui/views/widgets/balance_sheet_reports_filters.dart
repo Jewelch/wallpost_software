@@ -4,15 +4,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../../_common_widgets/screen_presenter/modal_sheet_presenter.dart';
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
-import '../../../../../../_shared/date_range_selector/ui/widgets/date_range_selector.dart';
+import '../../../date_range_selector/ui/widgets/date_range_selector.dart';
 import '../../../entities/profit_loss_report_filters.dart';
 
-class ProfitsLossesReportsFilters extends StatefulWidget {
+class BalanceSheetReportsFilters extends StatefulWidget {
   final BalanceSheetReportFilters filters;
   final ModalSheetController modalSheetController;
   final VoidCallback onResetClicked;
 
-  const ProfitsLossesReportsFilters(
+  const BalanceSheetReportsFilters(
       {required this.filters, required this.modalSheetController, required this.onResetClicked});
 
   static Future<dynamic> show(BuildContext context,
@@ -22,7 +22,7 @@ class ProfitsLossesReportsFilters extends StatefulWidget {
     var modalSheetController = ModalSheetController();
     return ModalSheetPresenter.present(
       context: context,
-      content: ProfitsLossesReportsFilters(
+      content: BalanceSheetReportsFilters(
         filters: initialFilters,
         modalSheetController: modalSheetController,
         onResetClicked: onResetClicked,
@@ -32,10 +32,10 @@ class ProfitsLossesReportsFilters extends StatefulWidget {
   }
 
   @override
-  State<ProfitsLossesReportsFilters> createState() => _ProfitsLossesReportsFiltersState();
+  State<BalanceSheetReportsFilters> createState() => _BalanceSheetReportsFiltersState();
 }
 
-class _ProfitsLossesReportsFiltersState extends State<ProfitsLossesReportsFilters> {
+class _BalanceSheetReportsFiltersState extends State<BalanceSheetReportsFilters> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -104,7 +104,7 @@ class _ProfitsLossesReportsFiltersState extends State<ProfitsLossesReportsFilter
             SizedBox(height: 16),
             GestureDetector(
               onTap: () async {
-                var newDateFilter = await DateRangeSelector.show(
+                var newDateFilter = await FinanceDateRangeSelector.show(
                   context,
                   initialDateRange: widget.filters.dateFilters,
                 );

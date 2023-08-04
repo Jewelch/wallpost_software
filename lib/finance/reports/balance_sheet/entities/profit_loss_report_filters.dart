@@ -1,12 +1,12 @@
-import '../../../../_shared/date_range_selector/entities/date_range.dart';
+import '../date_range_selector/entities/date_range.dart';
 
 class BalanceSheetReportFilters {
-  DateRange dateFilters = DateRange()..applyThisYear();
+  FinanceDateRange dateFilters = FinanceDateRange()..applyThisYear();
 
   BalanceSheetReportFilters copy() {
-    var profitLossFilters = BalanceSheetReportFilters();
-    profitLossFilters.dateFilters = dateFilters.copy();
-    return profitLossFilters;
+    var filters = BalanceSheetReportFilters();
+    filters.dateFilters = dateFilters.copy();
+    return filters;
   }
 
   List<String> toReadableListOfString() {
@@ -14,6 +14,6 @@ class BalanceSheetReportFilters {
   }
 
   void reset() {
-    dateFilters = DateRange()..applyThisYear();
+    dateFilters = FinanceDateRange()..applyThisYear();
   }
 }
