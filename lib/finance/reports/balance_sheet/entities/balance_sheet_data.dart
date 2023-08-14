@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 
 import '../../../../_shared/exceptions/mapping_exception.dart';
@@ -25,7 +23,6 @@ class BalanceSheetData {
 
   factory BalanceSheetData.fromJson(Map<String, dynamic> json) {
     try {
-      jsonEncode(json);
       return BalanceSheetData._(
         assets: SheetDetailsModel.fromJson(json['Assets']),
         liabilities: SheetDetailsModel.fromJson(json['Liabilities']),
