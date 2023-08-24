@@ -4,7 +4,7 @@ import '../../../../../_shared/constants/app_colors.dart';
 import '../../../../../_shared/exceptions/wp_exception.dart';
 import '../../../../../_wp_core/company_management/services/selected_company_provider.dart';
 import '../../entities/balance_sheet_data.dart';
-import '../../entities/profit_loss_report_filters.dart';
+import '../../entities/balance_sheet_filters.dart';
 import '../../services/balance_sheet_provider.dart';
 import '../view_contracts/balance_sheet_view.dart';
 

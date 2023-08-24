@@ -4,7 +4,7 @@ import 'package:wallpost/_shared/date_range_selector/entities/date_range.dart';
 import 'package:wallpost/_shared/date_range_selector/entities/selectable_date_range_option.dart';
 import 'package:wallpost/_shared/exceptions/invalid_response_exception.dart';
 import 'package:wallpost/finance/reports/balance_sheet/entities/balance_sheet_data.dart';
-import 'package:wallpost/finance/reports/balance_sheet/entities/profit_loss_report_filters.dart';
+import 'package:wallpost/finance/reports/balance_sheet/entities/balance_sheet_filters.dart';
 import 'package:wallpost/finance/reports/balance_sheet/services/balance_sheet_provider.dart';
 import 'package:wallpost/finance/reports/balance_sheet/ui/presenters/balance_sheet_presenter.dart';
 import 'package:wallpost/finance/reports/balance_sheet/ui/view_contracts/balance_sheet_view.dart';

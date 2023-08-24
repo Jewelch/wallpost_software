@@ -1,5 +1,6 @@
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
+import 'package:wallpost/finance/reports/payables_and_ageing/ui/views/screens/payables_screen.dart';
 
 import '../../../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
@@ -7,6 +8,7 @@ import '../../../../../_shared/constants/app_colors.dart';
 import '../../../reports/balance_sheet/ui/views/screens/balance_sheet_screen.dart';
 import '../../../reports/inventory_stock_report/ui/views/inventory_stock_report_screen.dart';
 import '../../../reports/profit_loss/ui/views/screens/profit_loss_screen.dart';
+import '../../../reports/receivables_and_ageing/ui/views/screens/receivables_screen.dart';
 
 class SelectReportScreen extends StatefulWidget {
   const SelectReportScreen({Key? key}) : super(key: key);
@@ -119,6 +121,47 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                   child: Center(child: Text("Balance Sheet", style: TextStyles.subTitleTextStyleBold)),
                                 ),
                               ),
+                              SizedBox(height: 16),
+                              InkWell(
+                                splashColor: AppColors.defaultColor,
+                                onTap: () {
+                                  ScreenPresenter.present(
+                                    ReceivablesScreen(),
+                                    context,
+                                    slideDirection: SlideDirection.fromBottom,
+                                  );
+                                },
+                                child: Container(
+                                  height: 64,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: Center(
+                                      child: Text("Receivables & Ageing", style: TextStyles.subTitleTextStyleBold)),
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              InkWell(
+                                splashColor: AppColors.defaultColor,
+                                onTap: () {
+                                  ScreenPresenter.present(
+                                    PayablesScreen(),
+                                    context,
+                                    slideDirection: SlideDirection.fromBottom,
+                                  );
+                                },
+                                child: Container(
+                                  height: 64,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: Center(
+                                      child: Text("Payables & Ageing", style: TextStyles.subTitleTextStyleBold)),
+                                ),
+                              ),
+                              
                               SizedBox(height: 32),
                               SizedBox(
                                 height: 48,
