@@ -57,7 +57,8 @@ class ReceivablesList extends StatelessWidget {
         Container(
           width: double.maxFinite,
           padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(color: AppColors.screenBackgroundColor, 
+          decoration: BoxDecoration(
+            color: AppColors.screenBackgroundColor,
             borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
           ),
           child: Padding(
@@ -80,12 +81,14 @@ class ReceivablesList extends StatelessWidget {
                                     child: Text(
                                   item.due,
                                   style: TextStyles.titleTextStyleBold,
+                                  overflow: TextOverflow.ellipsis,
                                 )),
                                 Expanded(
                                     child: Text(
                                   item.overdue,
                                   style: TextStyles.titleTextStyleBold
                                       .copyWith(color: presenter.getOverDueTextColor(item.overdue)),
+                                  overflow: TextOverflow.ellipsis,
                                 )),
                               ],
                             ),
