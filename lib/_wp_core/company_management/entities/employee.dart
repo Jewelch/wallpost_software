@@ -58,7 +58,7 @@ class Employee extends JSONInitializable {
     return _roles.contains(Role.Owner);
   }
 
-  bool isGM() {
+  bool isGeneralManager() {
     return _roles.contains(Role.GeneralManager);
   }
 

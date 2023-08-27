@@ -23,7 +23,7 @@ void main() {
     expect(provider.shouldShowOwnerDashboard(), true);
     expect(provider.shouldShowManagerDashboard(), false);
 
-    when(() => employee.isGM()).thenReturn(true);
+    when(() => employee.isGeneralManager()).thenReturn(true);
     expect(provider.shouldShowOwnerDashboard(), true);
     expect(provider.shouldShowManagerDashboard(), false);
   });
@@ -31,7 +31,7 @@ void main() {
   test("get should show manager dashboard", () {
     var employee = MockEmployee();
     when(() => employee.isOwner()).thenReturn(false);
-    when(() => employee.isGM()).thenReturn(false);
+    when(() => employee.isGeneralManager()).thenReturn(false);
     when(() => company.employee).thenReturn(employee);
     expect(provider.shouldShowOwnerDashboard(), false);
 

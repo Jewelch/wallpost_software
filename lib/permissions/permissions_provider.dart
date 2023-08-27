@@ -1,6 +1,8 @@
 import 'package:wallpost/_wp_core/company_management/entities/module.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 
+import '../_wp_core/company_management/entities/company.dart';
+
 class PermissionsProvider {
   final SelectedCompanyProvider _companyProvider;
 
@@ -8,9 +10,13 @@ class PermissionsProvider {
 
   PermissionsProvider.initWith(this._companyProvider);
 
+  Company get company => _companyProvider.getSelectedCompanyForCurrentUser();
+
+  bool get fullAccessMembers =>
+      company.employee.isOwner() || company.employee.isGeneralManager() || company.employee.isWpManager();
+
   bool shouldShowOwnerDashboard() {
-    var company = _companyProvider.getSelectedCompanyForCurrentUser();
-    return company.employee.isOwner() || company.employee.isGM();
+    return fullAccessMembers;
   }
 
   bool shouldShowManagerDashboard() {
@@ -33,25 +39,27 @@ class PermissionsProvider {
 
   bool canAccessFinanceModule() {
     var company = _companyProvider.getSelectedCompanyForCurrentUser();
-    if (company.employee.isOwner() || company.employee.isGM()) {
+    if (fullAccessMembers) {
       return company.modules.contains(Module.Finance);
     } else {
-      return company.employee.isAFinanceManager();
+      return company.employee.isAFinanceManager() || company.employee.isWpFinance() || company.employee.isAccountant();
     }
   }
 
   bool canAccessCrmModule() {
     var company = _companyProvider.getSelectedCompanyForCurrentUser();
-    if (company.employee.isOwner() || company.employee.isGM()) {
+    if (fullAccessMembers) {
       return company.modules.contains(Module.Crm);
     } else {
-      return company.employee.isACrmManager();
+      return company.employee.isACrmManager() ||
+          company.employee.isWpSalesManager() ||
+          company.employee.isWpSalesOfficer();
     }
   }
 
   bool canAccessHrModule() {
     var company = _companyProvider.getSelectedCompanyForCurrentUser();
-    if (company.employee.isOwner() || company.employee.isGM()) {
+    if (fullAccessMembers) {
       return company.modules.contains(Module.Hr);
     } else {
       return company.employee.isAHrManager();
@@ -60,7 +68,7 @@ class PermissionsProvider {
 
   bool canAccessRestaurantModule() {
     var company = _companyProvider.getSelectedCompanyForCurrentUser();
-    if (company.employee.isOwner() || company.employee.isGM()) {
+    if (fullAccessMembers) {
       return company.modules.contains(Module.Restaurant);
     } else {
       return company.employee.isARestaurantManager();
@@ -69,7 +77,7 @@ class PermissionsProvider {
 
   bool canAccessRetailModule() {
     var company = _companyProvider.getSelectedCompanyForCurrentUser();
-    if (company.employee.isOwner() || company.employee.isGM()) {
+    if (fullAccessMembers) {
       return company.modules.contains(Module.Retail);
     } else {
       return company.employee.isARetailManager();

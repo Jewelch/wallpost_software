@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
@@ -48,7 +47,6 @@ class BalanceSheetProvider {
     if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
     try {
-      jsonEncode(apiResponse.data);
       return BalanceSheetData.fromJson(apiResponse.data);
     } catch (e) {
       throw InvalidResponseException();
