@@ -3,34 +3,29 @@ import 'package:flutter/foundation.dart';
 import '../../../../_shared/exceptions/mapping_exception.dart';
 
 class BalanceSheetData {
-  SheetDetailsModel assets;
-  SheetDetailsModel liabilities;
-  SheetDetailsModel equity;
-  AmountModel totalAssets;
-  AmountModel totalLiabilityAndOwnersEquity;
-  AmountModel profitLossAccount;
-  AmountModel difference;
+  final List<SheetDetailsModel> details;
+  final List<AmountModel> amounts;
 
-  BalanceSheetData._({
-    required this.assets,
-    required this.liabilities,
-    required this.equity,
-    required this.totalAssets,
-    required this.totalLiabilityAndOwnersEquity,
-    required this.profitLossAccount,
-    required this.difference,
+  const BalanceSheetData._({
+    required this.details,
+    required this.amounts,
   });
 
-  factory BalanceSheetData.fromJson(Map<String, dynamic> json) {
+  factory BalanceSheetData.fromJson(List<Map<String, dynamic>> json) {
     try {
+      List<SheetDetailsModel> tempDetails = [];
+      List<AmountModel> tempAmounts = [];
+
+      json.forEach((element) {
+        if (element.containsKey("group"))
+          tempDetails.add(SheetDetailsModel.fromJson(element));
+        else
+          tempAmounts.add(AmountModel.fromJson(element));
+      });
+
       return BalanceSheetData._(
-        assets: SheetDetailsModel.fromJson(json['Assets']),
-        liabilities: SheetDetailsModel.fromJson(json['Liabilities']),
-        equity: SheetDetailsModel.fromJson(json['Equity']),
-        totalAssets: AmountModel.fromJson(json['Total Assets']),
-        totalLiabilityAndOwnersEquity: AmountModel.fromJson(json['Total Liability and Owners Equity']),
-        profitLossAccount: AmountModel.fromJson(json['Profit & Loss Account']),
-        difference: AmountModel.fromJson(json['Difference']),
+        details: tempDetails,
+        amounts: tempAmounts,
       );
     } catch (error, stackTrace) {
       debugPrint(stackTrace.toString());
@@ -49,7 +44,7 @@ class SheetDetailsModel {
 
   SheetDetailsModel.fromJson(Map<String, dynamic> json)
       : id = json['id'].toString(),
-        name = json['name'],
+        name = (json['name'] as String).trim(),
         amount = json['amount'],
         group = json['group'],
         children = (json['childrens'] as List? ?? []).map((e) => SheetDetailsModel.fromJson(e)).toList();
@@ -59,8 +54,9 @@ class AmountModel {
   final String name;
   final String amount;
   num get formattedAmount => num.parse(amount.replaceAll(",", ""));
+  bool get isProfit => name.toLowerCase().contains("profit");
 
   AmountModel.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
+      : name = (json['name'] as String).trim(),
         amount = json['amount'].toString();
 }

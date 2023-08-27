@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/wpapi/services/wp_api.dart';
@@ -44,11 +45,11 @@ class BalanceSheetProvider {
     //returning empty list if the response is from another session
     if (apiResponse.apiRequest.requestId != _sessionId) return Completer<BalanceSheetData>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
-    var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
-      return BalanceSheetData.fromJson(responseMap);
+      jsonEncode(apiResponse.data);
+      return BalanceSheetData.fromJson(apiResponse.data);
     } catch (e) {
       throw InvalidResponseException();
     }

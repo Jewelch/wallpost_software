@@ -63,21 +63,30 @@ class BalanceSheetPresenter {
 
   // UI Getters
 
-  String getAssets() => balanceSheetReport.assets.amount;
+  String firstElement() => balanceSheetReport.details.first.name;
+  String firstElementValue() => balanceSheetReport.details.first.amount;
 
-  String getLiabilites() => balanceSheetReport.liabilities.amount;
+  String secondElement() => balanceSheetReport.details[1].name;
+  String secondElementValue() => balanceSheetReport.details[1].amount;
 
-  String getEquity() => balanceSheetReport.equity.amount;
+  String thirdElement() => balanceSheetReport.details[2].name;
+  String thirdElementValue() => balanceSheetReport.details[2].amount;
 
-  String getProfitLossExactTitle() => balanceSheetReport.profitLossAccount.formattedAmount > 0 ? "Profit" : "Loss";
+  String getProfitLossExactTitle() =>
+      balanceSheetReport.amounts.firstWhere((element) => element.isProfit).formattedAmount > 0 ? "Profit" : "Loss";
 
-  String getProfit() => balanceSheetReport.profitLossAccount.amount;
+  String getProfit() => balanceSheetReport.amounts.firstWhere((element) => element.isProfit).amount;
+  bool isProfit(int index) => balanceSheetReport.amounts[index].isProfit;
 
   Color getProfitLossBackgroundColor() =>
-      balanceSheetReport.profitLossAccount.formattedAmount.isNegative ? AppColors.lightRed : AppColors.lightGreen;
+      balanceSheetReport.amounts.firstWhere((element) => element.isProfit).formattedAmount.isNegative
+          ? AppColors.lightRed
+          : AppColors.lightGreen;
 
   Color getProfitLossTextColor() =>
-      balanceSheetReport.profitLossAccount.formattedAmount.isNegative ? AppColors.red : AppColors.green;
+      balanceSheetReport.amounts.firstWhere((element) => element.isProfit).formattedAmount.isNegative
+          ? AppColors.red
+          : AppColors.green;
 
   String getSelectedCompanyName() => _selectedCompanyProvider.getSelectedCompanyForCurrentUser().name;
 

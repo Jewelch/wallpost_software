@@ -82,6 +82,26 @@ class Employee extends JSONInitializable {
     return _roles.contains(Role.RetailManager);
   }
 
+  bool isWpManager() {
+    return _roles.contains(Role.WpManager);
+  }
+
+  bool isWpFinance() {
+    return _roles.contains(Role.WpFinance);
+  }
+
+  bool isAccountant() {
+    return _roles.contains(Role.Accountant);
+  }
+
+  bool isWpSalesManager() {
+    return _roles.contains(Role.WpSalesManager);
+  }
+
+  bool isWpSalesOfficer() {
+    return _roles.contains(Role.WpSalesOfficer);
+  }
+
   String get v1Id => _v1Id;
 
   String get v2Id => _v2Id;
