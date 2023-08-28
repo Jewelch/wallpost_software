@@ -22,7 +22,6 @@ class PermissionsProvider {
   bool shouldShowManagerDashboard() {
     if (shouldShowOwnerDashboard()) return false;
 
-    var company = _companyProvider.getSelectedCompanyForCurrentUser();
     return company.employee.isAFinanceManager() ||
         company.employee.isACrmManager() ||
         company.employee.isAHrManager() ||
@@ -38,7 +37,6 @@ class PermissionsProvider {
   }
 
   bool canAccessFinanceModule() {
-    var company = _companyProvider.getSelectedCompanyForCurrentUser();
     if (fullAccessMembers) {
       return company.modules.contains(Module.Finance);
     } else {
@@ -47,7 +45,6 @@ class PermissionsProvider {
   }
 
   bool canAccessCrmModule() {
-    var company = _companyProvider.getSelectedCompanyForCurrentUser();
     if (fullAccessMembers) {
       return company.modules.contains(Module.Crm);
     } else {
@@ -58,7 +55,6 @@ class PermissionsProvider {
   }
 
   bool canAccessHrModule() {
-    var company = _companyProvider.getSelectedCompanyForCurrentUser();
     if (fullAccessMembers) {
       return company.modules.contains(Module.Hr);
     } else {
@@ -67,7 +63,6 @@ class PermissionsProvider {
   }
 
   bool canAccessRestaurantModule() {
-    var company = _companyProvider.getSelectedCompanyForCurrentUser();
     if (fullAccessMembers) {
       return company.modules.contains(Module.Restaurant);
     } else {
@@ -76,7 +71,6 @@ class PermissionsProvider {
   }
 
   bool canAccessRetailModule() {
-    var company = _companyProvider.getSelectedCompanyForCurrentUser();
     if (fullAccessMembers) {
       return company.modules.contains(Module.Retail);
     } else {
