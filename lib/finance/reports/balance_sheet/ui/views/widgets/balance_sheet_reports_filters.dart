@@ -5,7 +5,7 @@ import '../../../../../../_common_widgets/screen_presenter/modal_sheet_presenter
 import '../../../../../../_common_widgets/text_styles/text_styles.dart';
 import '../../../../../../_shared/constants/app_colors.dart';
 import '../../../../../../_shared/date_range_selector/ui/widgets/date_range_selector.dart';
-import '../../../entities/profit_loss_report_filters.dart';
+import '../../../entities/balance_sheet_filters.dart';
 
 class BalanceSheetReportsFilters extends StatefulWidget {
   final BalanceSheetReportFilters filters;
