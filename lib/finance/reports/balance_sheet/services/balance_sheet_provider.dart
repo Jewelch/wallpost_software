@@ -44,11 +44,10 @@ class BalanceSheetProvider {
     //returning empty list if the response is from another session
     if (apiResponse.apiRequest.requestId != _sessionId) return Completer<BalanceSheetData>().future;
     if (apiResponse.data == null) throw InvalidResponseException();
-    if (apiResponse.data is! Map<String, dynamic>) throw WrongResponseFormatException();
+    if (apiResponse.data is! List<Map<String, dynamic>>) throw WrongResponseFormatException();
 
-    var responseMap = apiResponse.data as Map<String, dynamic>;
     try {
-      return BalanceSheetData.fromJson(responseMap);
+      return BalanceSheetData.fromJson(apiResponse.data);
     } catch (e) {
       throw InvalidResponseException();
     }

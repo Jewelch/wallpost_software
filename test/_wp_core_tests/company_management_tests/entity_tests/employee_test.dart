@@ -11,7 +11,7 @@ main() {
     var employee = Employee.fromJson(ownerMap);
 
     expect(employee.isOwner(), true);
-    expect(employee.isGM(), false);
+    expect(employee.isGeneralManager(), false);
   });
 
   test("is general manager", () {
@@ -20,7 +20,7 @@ main() {
 
     var employee = Employee.fromJson(gmMap);
 
-    expect(employee.isGM(), true);
+    expect(employee.isGeneralManager(), true);
     expect(employee.isOwner(), false);
   });
 }

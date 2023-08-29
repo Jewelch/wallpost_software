@@ -26,14 +26,14 @@ class BalanceSheetHeaderCard extends StatelessWidget {
               children: [
                 _SalesElement(
                   backgroundColor: AppColors.lightGray,
-                  label: "Assets",
-                  value: _presenter.getAssets(),
+                  label: _presenter.firstElement(),
+                  value: _presenter.firstElementValue(),
                   valueColor: AppColors.textColorBlack,
                 ),
                 _SalesElement(
                   backgroundColor: AppColors.lightGray,
-                  label: "Liability",
-                  value: _presenter.getLiabilites(),
+                  label: _presenter.secondElement(),
+                  value: _presenter.secondElementValue(),
                   valueColor: AppColors.textColorBlack,
                 ),
               ],
@@ -43,8 +43,8 @@ class BalanceSheetHeaderCard extends StatelessWidget {
               children: [
                 _SalesElement(
                   backgroundColor: AppColors.lightGray,
-                  label: "Equity",
-                  value: _presenter.getEquity(),
+                  label: _presenter.thirdElement(),
+                  value: _presenter.thirdElementValue(),
                   valueColor: AppColors.textColorBlack,
                 ),
                 _SalesElement(
@@ -87,7 +87,7 @@ class _SalesElement extends StatelessWidget {
 
     final valueStyle = TextStyles.headerCardMainValueTextStyle.copyWith(
       fontWeight: FontWeight.w800,
-      fontSize: 20.0,
+      fontSize: 18.5,
       overflow: TextOverflow.ellipsis,
     );
 

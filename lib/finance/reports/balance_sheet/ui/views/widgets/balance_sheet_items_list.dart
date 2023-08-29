@@ -18,26 +18,27 @@ class BalanceSheetList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ProfitLossWidgetItem(presenter.balanceSheetReport.assets),
-        _BalanceSheetHeaderDivider(),
-        ProfitLossWidgetItem(presenter.balanceSheetReport.liabilities),
-        _BalanceSheetHeaderDivider(),
-        ProfitLossWidgetItem(presenter.balanceSheetReport.equity),
-        _BalanceSheetHeaderDivider(),
-        _AmountItem(presenter.balanceSheetReport.totalAssets),
-        _BalanceSheetHeaderDivider(),
-        _AmountItem(presenter.balanceSheetReport.totalLiabilityAndOwnersEquity),
-        _BalanceSheetHeaderDivider(),
-        _AmountItem(
-          presenter.balanceSheetReport.profitLossAccount,
-          isProfit: true,
+        ListView.separated(
+          padding: EdgeInsets.zero,
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: presenter.balanceSheetReport.details.length,
+          itemBuilder: (BuildContext context, int index) => ProfitLossWidgetItem(
+            presenter.balanceSheetReport.details[index],
+          ),
+          separatorBuilder: (context, index) => _BalanceSheetHeaderDivider(),
         ),
-        _BalanceSheetHeaderDivider(),
-        _AmountItem(
-          presenter.balanceSheetReport.difference,
-          isProfit: true,
+        ListView.separated(
+          padding: EdgeInsets.zero,
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: presenter.balanceSheetReport.amounts.length,
+          itemBuilder: (BuildContext context, int index) => _AmountItem(
+            presenter.balanceSheetReport.amounts[index],
+            isProfit: presenter.isProfit(index),
+          ),
+          separatorBuilder: (context, index) => _BalanceSheetHeaderDivider(),
         ),
-        _BalanceSheetHeaderDivider(),
       ],
     );
   }
@@ -50,7 +51,7 @@ class _BalanceSheetHeaderDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Divider(height: 8),
+      child: Divider(height: 10),
     );
   }
 }
