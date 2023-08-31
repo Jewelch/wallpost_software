@@ -54,7 +54,6 @@ class NetworkRequestExecutor implements NetworkAdapter {
     if (await _isConnected() == false) throw NetworkFailureException();
 
     try {
-      print(apiRequest.url);
       Response<String> response = await dio.request(
         apiRequest.url,
         data: jsonEncode(apiRequest.parameters),
@@ -64,14 +63,6 @@ class NetworkRequestExecutor implements NetworkAdapter {
           validateStatus: (status) => status == 200,
         ),
       );
-      print(1);
-      print(response);
-      print(2);
-      print(response.data);
-      print(3);
-      print(response.extra);
-      print(4);
-      print(response.statusCode);
       return _processResponse(response, apiRequest);
     } on DioException catch (error) {
       throw _processError(error);

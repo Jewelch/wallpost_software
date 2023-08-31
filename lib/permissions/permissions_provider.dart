@@ -1,8 +1,6 @@
 import 'package:wallpost/_wp_core/company_management/entities/module.dart';
 import 'package:wallpost/_wp_core/company_management/services/selected_company_provider.dart';
 
-import '../_wp_core/company_management/entities/company.dart';
-
 class PermissionsProvider {
   final SelectedCompanyProvider _companyProvider;
 
@@ -10,17 +8,15 @@ class PermissionsProvider {
 
   PermissionsProvider.initWith(this._companyProvider);
 
-  Company get company => _companyProvider.getSelectedCompanyForCurrentUser();
-
-  bool get fullAccessMembers =>
-      company.employee.isOwner() || company.employee.isGeneralManager() || company.employee.isWpManager();
-
   bool shouldShowOwnerDashboard() {
-    return fullAccessMembers;
+    var company = _companyProvider.getSelectedCompanyForCurrentUser();
+    return company.employee.isOwner() || company.employee.isGeneralManager();
   }
 
   bool shouldShowManagerDashboard() {
     if (shouldShowOwnerDashboard()) return false;
+
+    var company = _companyProvider.getSelectedCompanyForCurrentUser();
 
     return company.employee.isAFinanceManager() ||
         company.employee.isACrmManager() ||
@@ -37,25 +33,29 @@ class PermissionsProvider {
   }
 
   bool canAccessFinanceModule() {
-    if (fullAccessMembers) {
+    var company = _companyProvider.getSelectedCompanyForCurrentUser();
+
+    if (company.employee.isOwner() || company.employee.isGeneralManager()) {
       return company.modules.contains(Module.Finance);
     } else {
-      return company.employee.isAFinanceManager() || company.employee.isWpFinance() || company.employee.isAccountant();
+      return company.employee.isAFinanceManager();
     }
   }
 
   bool canAccessCrmModule() {
-    if (fullAccessMembers) {
+    var company = _companyProvider.getSelectedCompanyForCurrentUser();
+
+    if (company.employee.isOwner() || company.employee.isGeneralManager()) {
       return company.modules.contains(Module.Crm);
     } else {
-      return company.employee.isACrmManager() ||
-          company.employee.isWpSalesManager() ||
-          company.employee.isWpSalesOfficer();
+      return company.employee.isACrmManager();
     }
   }
 
   bool canAccessHrModule() {
-    if (fullAccessMembers) {
+    var company = _companyProvider.getSelectedCompanyForCurrentUser();
+
+    if (company.employee.isOwner() || company.employee.isGeneralManager()) {
       return company.modules.contains(Module.Hr);
     } else {
       return company.employee.isAHrManager();
@@ -63,7 +63,9 @@ class PermissionsProvider {
   }
 
   bool canAccessRestaurantModule() {
-    if (fullAccessMembers) {
+    var company = _companyProvider.getSelectedCompanyForCurrentUser();
+
+    if (company.employee.isOwner() || company.employee.isGeneralManager()) {
       return company.modules.contains(Module.Restaurant);
     } else {
       return company.employee.isARestaurantManager();
@@ -71,7 +73,9 @@ class PermissionsProvider {
   }
 
   bool canAccessRetailModule() {
-    if (fullAccessMembers) {
+    var company = _companyProvider.getSelectedCompanyForCurrentUser();
+
+    if (company.employee.isOwner() || company.employee.isGeneralManager()) {
       return company.modules.contains(Module.Retail);
     } else {
       return company.employee.isARetailManager();
