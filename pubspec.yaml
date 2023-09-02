@@ -44,7 +44,7 @@ dependencies:
   open_filex: ^4.0.1
   image_picker: ^1.0.1
   visibility_detector: ^0.4.0+2
-  sliver_tools: ^0.2.8
+  sliver_tools: ^0.2.12
   equatable: ^2.0.5
   blur: ^3.1.0
   syncfusion_flutter_datepicker: ^21.2.3

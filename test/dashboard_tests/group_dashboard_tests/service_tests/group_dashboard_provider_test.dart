@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:wallpost/_common_widgets/app_badge/app_badge.dart';
 import 'package:wallpost/_shared/exceptions/wrong_response_format_exception.dart';
 import 'package:wallpost/_wp_core/company_management/repositories/company_repository.dart';
 import 'package:wallpost/dashboard/group_dashboard/constants/group_dashboard_urls.dart';
@@ -10,10 +13,13 @@ import '../mocks.dart';
 
 class MockCompanyRepository extends Mock implements CompanyRepository {}
 
+class MockAppBadge extends Mock implements AppBadge {}
+
 void main() {
   var successfulResponse = Mocks.groupDashboardResponse;
   var mockNetworkAdapter = MockNetworkAdapter();
-  var groupDashboardProvider = GroupDashboardDataProvider.initWith(mockNetworkAdapter);
+  var appBadge = MockAppBadge();
+  var groupDashboardProvider = GroupDashboardDataProvider.initWith(mockNetworkAdapter, appBadge);
 
   test('api request is built correctly', () async {
     Map<String, dynamic> requestParams = {};
@@ -69,7 +75,9 @@ void main() {
     }
   });
 
-  test('success', () async {
+  test('success and update badge count', () async {
+    when(() => appBadge.updateAppBadge(any())).thenReturn(Void);
+
     mockNetworkAdapter.succeed(successfulResponse);
 
     var groupDashboard = await groupDashboardProvider.get();
@@ -79,6 +87,7 @@ void main() {
     expect(groupDashboard.companies[0].financialSummary, isNotNull);
     expect(groupDashboard.companies[1].employee, isNotNull);
     expect(groupDashboard.companies[1].financialSummary, isNull);
+    verify(() => appBadge.updateAppBadge(16));
   });
 
   test('test loading flag is set to true when the service is executed', () async {
