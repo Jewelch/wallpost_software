@@ -1,5 +1,6 @@
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
+import 'package:wallpost/restaurant_and_retail/sales_reports/orders_summary/list/ui/views/screens/orders_summary_screen.dart';
 
 import '../../../../../_common_widgets/screen_presenter/screen_presenter.dart';
 import '../../../../../_common_widgets/text_styles/text_styles.dart';
@@ -121,24 +122,54 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                 ],
                               ),
                               SizedBox(height: 8),
-                              InkWell(
-                                splashColor: AppColors.defaultColor,
-                                onTap: () {
-                                  ScreenPresenter.present(
-                                    SummarySalesScreen(),
-                                    context,
-                                    slideDirection: SlideDirection.fromBottom,
-                                  );
-                                },
-                                child: Container(
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
-                                    borderRadius: BorderRadius.circular(14),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: InkWell(
+                                      splashColor: AppColors.defaultColor,
+                                      onTap: () {
+                                        ScreenPresenter.present(
+                                          SummarySalesScreen(),
+                                          context,
+                                          slideDirection: SlideDirection.fromBottom,
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 64,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                          borderRadius: BorderRadius.circular(14),
+                                        ),
+                                        child: Center(
+                                            child: Text("Sales Summary", style: TextStyles.subTitleTextStyleBold)),
+                                      ),
+                                    ),
                                   ),
-                                  child: Center(child: Text("Sales Summary", style: TextStyles.subTitleTextStyleBold)),
-                                ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: InkWell(
+                                      splashColor: AppColors.defaultColor,
+                                      onTap: () {
+                                        ScreenPresenter.present(
+                                          OrdersSummaryScreen(),
+                                          context,
+                                          slideDirection: SlideDirection.fromBottom,
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 64,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                          borderRadius: BorderRadius.circular(14),
+                                        ),
+                                        child: Center(
+                                            child: Text("Orders Summary", style: TextStyles.subTitleTextStyleBold)),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
+                              SizedBox(height: 8),
                               SizedBox(height: 32),
                               SizedBox(
                                 height: 48,
