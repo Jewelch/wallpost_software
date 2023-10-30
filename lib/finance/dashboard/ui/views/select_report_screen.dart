@@ -9,6 +9,7 @@ import '../../../reports/balance_sheet/ui/views/screens/balance_sheet_screen.dar
 import '../../../reports/inventory_stock_report/ui/views/inventory_stock_report_screen.dart';
 import '../../../reports/profit_loss/ui/views/screens/profit_loss_screen.dart';
 import '../../../reports/receivables_and_ageing/ui/views/screens/receivables_screen.dart';
+import '../../../reports/stock_expiration/ui/views/pages/stocks_expiration_page.dart';
 
 class SelectReportScreen extends StatefulWidget {
   const SelectReportScreen({Key? key}) : super(key: key);
@@ -54,133 +55,157 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                       onTap: () {},
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 24),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                          width: double.maxFinite,
-                          decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(.4), borderRadius: BorderRadius.circular(24)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 16),
-                              Text("Reports", style: TextStyles.extraLargeTitleTextStyleBold),
-                              SizedBox(height: 32),
-                              InkWell(
-                                splashColor: AppColors.defaultColor,
-                                onTap: () {
-                                  ScreenPresenter.present(
-                                    InventoryStockReportScreen(),
-                                    context,
-                                    slideDirection: SlideDirection.fromBottom,
-                                  );
-                                },
-                                child: Container(
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  child: Center(child: Text("Stock", style: TextStyles.subTitleTextStyleBold)),
-                                ),
-                              ),
-                              SizedBox(height: 16),
-                              InkWell(
-                                splashColor: AppColors.defaultColor,
-                                onTap: () {
-                                  ScreenPresenter.present(
-                                    ProfitsLossesScreen(),
-                                    context,
-                                    slideDirection: SlideDirection.fromBottom,
-                                  );
-                                },
-                                child: Container(
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  child: Center(child: Text("Profit & Loss", style: TextStyles.subTitleTextStyleBold)),
-                                ),
-                              ),
-                              SizedBox(height: 16),
-                              InkWell(
-                                splashColor: AppColors.defaultColor,
-                                onTap: () {
-                                  ScreenPresenter.present(
-                                    BalanceSheetScreen(),
-                                    context,
-                                    slideDirection: SlideDirection.fromBottom,
-                                  );
-                                },
-                                child: Container(
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  child: Center(child: Text("Balance Sheet", style: TextStyles.subTitleTextStyleBold)),
-                                ),
-                              ),
-                              SizedBox(height: 16),
-                              InkWell(
-                                splashColor: AppColors.defaultColor,
-                                onTap: () {
-                                  ScreenPresenter.present(
-                                    ReceivablesScreen(),
-                                    context,
-                                    slideDirection: SlideDirection.fromBottom,
-                                  );
-                                },
-                                child: Container(
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  child: Center(
-                                      child: Text("Receivables & Ageing", style: TextStyles.subTitleTextStyleBold)),
-                                ),
-                              ),
-                              SizedBox(height: 16),
-                              InkWell(
-                                splashColor: AppColors.defaultColor,
-                                onTap: () {
-                                  ScreenPresenter.present(
-                                    PayablesScreen(),
-                                    context,
-                                    slideDirection: SlideDirection.fromBottom,
-                                  );
-                                },
-                                child: Container(
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.screenBackgroundColor.withOpacity(.7),
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  child: Center(
-                                      child: Text("Payables & Ageing", style: TextStyles.subTitleTextStyleBold)),
-                                ),
-                              ),
-                              
-                              SizedBox(height: 32),
-                              SizedBox(
-                                height: 48,
-                                width: double.maxFinite,
-                                child: TextButton(
-                                  onPressed: Navigator.of(context).pop,
-                                  child: Text(
-                                    "Close Menu",
-                                    style: TextStyles.largeTitleTextStyleBold.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.textColorBlueGray,
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * .8,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                            width: double.maxFinite,
+                            decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(.4), borderRadius: BorderRadius.circular(24)),
+                            child: ListView(
+                              padding: EdgeInsets.zero,
+                              children: [
+                                SizedBox(height: 16),
+                                Text("Reports", style: TextStyles.extraLargeTitleTextStyleBold),
+                                SizedBox(height: 32),
+                                InkWell(
+                                  splashColor: AppColors.defaultColor,
+                                  onTap: () {
+                                    ScreenPresenter.present(
+                                      InventoryStockReportScreen(),
+                                      context,
+                                      slideDirection: SlideDirection.fromBottom,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 64,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                      borderRadius: BorderRadius.circular(14),
                                     ),
+                                    child: Center(child: Text("Stock", style: TextStyles.subTitleTextStyleBold)),
                                   ),
-                                  style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
                                 ),
-                              ),
-                              SizedBox(height: 8),
-                            ],
+                                SizedBox(height: 16),
+                                InkWell(
+                                  splashColor: AppColors.defaultColor,
+                                  onTap: () {
+                                    ScreenPresenter.present(
+                                      ProfitsLossesScreen(),
+                                      context,
+                                      slideDirection: SlideDirection.fromBottom,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 64,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child:
+                                        Center(child: Text("Profit & Loss", style: TextStyles.subTitleTextStyleBold)),
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                InkWell(
+                                  splashColor: AppColors.defaultColor,
+                                  onTap: () {
+                                    ScreenPresenter.present(
+                                      BalanceSheetScreen(),
+                                      context,
+                                      slideDirection: SlideDirection.fromBottom,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 64,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child:
+                                        Center(child: Text("Balance Sheet", style: TextStyles.subTitleTextStyleBold)),
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                InkWell(
+                                  splashColor: AppColors.defaultColor,
+                                  onTap: () {
+                                    ScreenPresenter.present(
+                                      ReceivablesScreen(),
+                                      context,
+                                      slideDirection: SlideDirection.fromBottom,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 64,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child: Center(
+                                        child: Text("Receivables & Ageing", style: TextStyles.subTitleTextStyleBold)),
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                InkWell(
+                                  splashColor: AppColors.defaultColor,
+                                  onTap: () {
+                                    ScreenPresenter.present(
+                                      StockExpirationPage(),
+                                      context,
+                                      slideDirection: SlideDirection.fromBottom,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 64,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child:
+                                        Center(child: Text("Stock Expire", style: TextStyles.subTitleTextStyleBold)),
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                InkWell(
+                                  splashColor: AppColors.defaultColor,
+                                  onTap: () {
+                                    ScreenPresenter.present(
+                                      PayablesScreen(),
+                                      context,
+                                      slideDirection: SlideDirection.fromBottom,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 64,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child: Center(
+                                        child: Text("Payables & Ageing", style: TextStyles.subTitleTextStyleBold)),
+                                  ),
+                                ),
+                                SizedBox(height: 32),
+                                SizedBox(
+                                  height: 48,
+                                  width: double.maxFinite,
+                                  child: TextButton(
+                                    onPressed: Navigator.of(context).pop,
+                                    child: Text(
+                                      "Close Menu",
+                                      style: TextStyles.largeTitleTextStyleBold.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.textColorBlueGray,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                              ],
+                            ),
                           ),
                         ),
                       ),

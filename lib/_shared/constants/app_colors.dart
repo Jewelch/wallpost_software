@@ -37,6 +37,7 @@ class AppColors {
   static const Color shapeBorder = Color.fromRGBO(209, 209, 214, 1.0);
 
   //MARK: Outcome colors
+  static const Color lightGray2 = Color.fromRGBO(142, 142, 147, 1);
   static const Color rose = Color.fromRGBO(255, 227, 201, 1);
   static const Color green = Color.fromRGBO(51, 190, 114, 1.0);
   static const Color lightGreen = Color.fromRGBO(232, 252, 243, 1.0);
