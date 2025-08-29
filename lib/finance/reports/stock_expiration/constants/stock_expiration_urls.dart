@@ -1,7 +1,7 @@
 import '../../../../../_shared/constants/base_urls.dart';
 
 class StocksExpirationUrls {
-  static String getExpiredUrl(String companyId,  int currentPage, int perPage) {
+  static String getExpiredUrl(String companyId, int currentPage, int perPage) {
     var url =
         '${BaseUrls.financeUrlV2()}/companies/$companyId/reports/stock-expiry?consumedByMobile=true&page=$currentPage&perPage=$perPage&expired=true';
     return url;

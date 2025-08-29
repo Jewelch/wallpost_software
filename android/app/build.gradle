@@ -6,15 +6,6 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def versioningProperties = new Properties()
-def versioningPropertiesFile = rootProject.file('versioning.properties')
-if (versioningPropertiesFile.exists()) {
-    versioningPropertiesFile.withReader('UTF-8') { reader ->
-        versioningProperties.load(reader)
-    }
-}
-
-
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
@@ -27,15 +18,9 @@ if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionCode = versioningProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 
-def flutterVersionName = versioningProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'

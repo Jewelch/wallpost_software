@@ -58,7 +58,7 @@ class StockExpirationLoader extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   Container(
-                    height: 500,
+                    height: 350,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: AppColors.textColorBlack,

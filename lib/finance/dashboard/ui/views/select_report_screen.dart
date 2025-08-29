@@ -147,26 +147,29 @@ class _SelectReportScreenState extends State<SelectReportScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 16),
-                                InkWell(
-                                  splashColor: AppColors.defaultColor,
-                                  onTap: () {
-                                    ScreenPresenter.present(
-                                      StockExpirationPage(),
-                                      context,
-                                      slideDirection: SlideDirection.fromBottom,
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 64,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.screenBackgroundColor.withOpacity(.7),
-                                      borderRadius: BorderRadius.circular(14),
+                                //TODO: Enable once API is available on PRODUCTION
+                                if (false)
+                                  InkWell(
+                                    splashColor: AppColors.defaultColor,
+                                    onTap: () {
+                                      ScreenPresenter.present(
+                                        StockExpirationPage(),
+                                        context,
+                                        slideDirection: SlideDirection.fromBottom,
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 64,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.screenBackgroundColor.withOpacity(.7),
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                      child:
+                                          Center(child: Text("Stock Expire", style: TextStyles.subTitleTextStyleBold)),
                                     ),
-                                    child:
-                                        Center(child: Text("Stock Expire", style: TextStyles.subTitleTextStyleBold)),
                                   ),
-                                ),
-                                SizedBox(height: 16),
+                                //TODO: Enable once API is available on PRODUCTION
+                                if (false) SizedBox(height: 16),
                                 InkWell(
                                   splashColor: AppColors.defaultColor,
                                   onTap: () {

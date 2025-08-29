@@ -6,9 +6,9 @@ import 'package:wallpost/_shared/constants/app_colors.dart';
 import '../../presenter/stock_expiration_presenter.dart';
 import '../../view_contracts/stock_expiration_view.dart';
 import '../loader/stock_expiration_loader.dart';
+import '../widgets/filters/select_expired_or_not.dart';
 import '../widgets/stock_expiration_app_bar.dart';
 import '../widgets/stock_expiration_error_view.dart';
-import '../widgets/filters/select_expired_or_not.dart';
 import '../widgets/stock_expiration_list.dart';
 
 enum _ScreenStates { loading, error, data }
@@ -85,7 +85,7 @@ class _StockExpirationPageState extends State<StockExpirationPage> implements St
               ? Padding(
                   padding: EdgeInsets.only(top: 150),
                   child: Text(
-                    "There are no stocks  for\nthe selected filters",
+                    "There are no stocks for\nthe selected filters",
                     textAlign: TextAlign.center,
                     style: TextStyles.titleTextStyle,
                   ),

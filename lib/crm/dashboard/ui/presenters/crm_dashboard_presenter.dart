@@ -177,7 +177,7 @@ class CrmDashboardPresenter {
       var staffPerformance = _getStaffPerformanceAtIndex(index);
       return CrmDashboardStaffPerformanceTile(this, staffPerformance);
     } else {
-      if (_dashboardData.staffPerformances.length == 0)
+      if (_dashboardData.servicePerformances.length == 0)
         return CrmDashboardNoPerformanceTile("There are no service performances\nfor the selected filters.");
 
       var servicePerformance = _getServicePerformanceAtIndex(index);
